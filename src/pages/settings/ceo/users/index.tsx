@@ -28,6 +28,8 @@ import toast from 'react-hot-toast'
 import LoadingButton from '@mui/lab/LoadingButton'
 import Form from 'src/@core/components/form'
 import useBranches from 'src/hooks/useBranch'
+import useRoles from 'src/hooks/useRoles'
+import showResponseError from 'src/@core/utils/show-response-error'
 
 export interface customTableProps {
     xs: number
@@ -94,23 +96,45 @@ export default function GroupsPage() {
 
     // Hooks
     const { t } = useTranslation()
-    const { updateEmployee, getEmployeeById } = useEmployee()
+    const { updateEmployee, getEmployeeById, createEmployee } = useEmployee()
+    const { roles } = useRoles()
 
     // Handle Edit dialog
     const handleEditClose = () => setOpenEdit(false)
 
     const handleSubmit = async (values: any) => {
         setLoading(true)
-        console.log(values);
+        try {
+            const employeeData = await updateEmployee(userData?.id, values, 'one')
+            setData(employeeData)
+            toast.success('Muvaffaqiyatli yangilandi', {
+                position: 'top-center'
+            })
+            setLoading(false)
+            handleEditClose()
+        } catch (err: any) {
+            setLoading(false)
+            toast.error(err.response.data, {
+                position: 'top-center'
+            })
+        }
+    }
 
 
-        const employeeData = await updateEmployee(userData?.id, values, 'one')
-        setData(employeeData)
-        toast.success('Muvaffaqiyatli yangilandi', {
-            position: 'top-center'
-        })
-        setLoading(false)
-        handleEditClose()
+    const handleSubmitCreate = async (values: any) => {
+        setLoading(true)
+        try {
+            await createEmployee(values)
+            setLoading(false)
+            setOpenAddGroup(false)
+            getEmployees()
+        } catch (err: any) {
+            setLoading(false)
+            showResponseError(err.response.data, setError)
+            toast.error(err.response.data, {
+                position: 'top-center'
+            })
+        }
     }
 
     const RowOptions = ({ id }: { id: number | string }) => {
@@ -267,9 +291,11 @@ export default function GroupsPage() {
                     </IconButton>
                 </Box>
                 <Box sx={{ px: 2, py: 4 }}>
-                    <form style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                    <Form id='dspkdjsoifh' setError={setError} onSubmit={handleSubmitCreate} sx={{ display: 'flex', flexDirection: 'column', gap: '20px' }} valueTypes='json'>
                         <TextField size='small' fullWidth label='Ism Familiya' required name='first_name' error={error?.phone} />
                         <TextField size='small' fullWidth label='Telefon raqam' required name='phone' />
+
+                        <TextField size='small' fullWidth label='Parol' required name='password' />
 
                         <FormControl fullWidth>
                             <InputLabel size='small' id='user-view-language-label'>Filial</InputLabel>
@@ -287,7 +313,25 @@ export default function GroupsPage() {
                                 }
                             </Select>
                         </FormControl>
-                    </form>
+
+                        <FormControl fullWidth>
+                            <InputLabel size='small' id='user-view-language-label'>Rol</InputLabel>
+                            <Select
+                                size='small'
+                                label='Rol'
+                                multiple
+                                id='user-view-language'
+                                labelId='user-view-language-label'
+                                name='roles'
+                                defaultValue={[]}
+                            >
+                                {
+                                    roles.map((branch, index) => <MenuItem key={index} value={branch.id}>{branch.name}</MenuItem>)
+                                }
+                            </Select>
+                        </FormControl>
+                        <LoadingButton variant='contained' loading={loading} type='submit'>Saqlash</LoadingButton>
+                    </Form>
                 </Box>
             </Drawer>
 

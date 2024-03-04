@@ -43,7 +43,7 @@ export default function useEmployee() {
         try {
             const resp = await api.get(ceoConfigs.employee_detail + id)
             setEmployeeData(resp.data)
-            
+
             return resp.data
         } catch (err) {
             console.log(err)
@@ -65,5 +65,14 @@ export default function useEmployee() {
         }
     }
 
-    return { employees, getEmployees, getEmployeeById, employeeData, updateEmployee, setEmployeeData }
+    const createEmployee = async (data: any) => {
+        try {
+            await api.post(ceoConfigs.employee_create, data)
+            setEmployeeData(undefined)
+        } catch (err) {
+            return Promise.reject(err)
+        }
+    }
+
+    return { employees, getEmployees, getEmployeeById, employeeData, updateEmployee, setEmployeeData, createEmployee }
 }
