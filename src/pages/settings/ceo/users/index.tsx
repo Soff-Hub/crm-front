@@ -213,7 +213,7 @@ export default function GroupsPage() {
 
     // hooks
     const { employees, getEmployees } = useEmployee()
-    const { branches } = useBranches()
+    const { branches, getBranches } = useBranches()
 
     useEffect(() => {
         if (employees.length < 1) {
@@ -231,7 +231,7 @@ export default function GroupsPage() {
             >
                 <Typography variant='h5'>{t("Xodimlar")}</Typography>
                 <Button
-                    onClick={() => setOpenAddGroup(true)}
+                    onClick={() => (getBranches(), setOpenAddGroup(true))}
                     variant='contained'
                     size='small'
                     startIcon={<IconifyIcon icon='ic:baseline-plus' />}
@@ -270,7 +270,7 @@ export default function GroupsPage() {
                     <form style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
                         <TextField size='small' fullWidth label='Ism Familiya' required name='first_name' error={error?.phone} />
                         <TextField size='small' fullWidth label='Telefon raqam' required name='phone' />
-                        
+
                         <FormControl fullWidth>
                             <InputLabel size='small' id='user-view-language-label'>Filial</InputLabel>
                             <Select
@@ -280,6 +280,7 @@ export default function GroupsPage() {
                                 id='user-view-language'
                                 labelId='user-view-language-label'
                                 name='branches'
+                                defaultValue={[]}
                             >
                                 {
                                     branches.map((branch, index) => <MenuItem key={index} value={branch.id}>{branch.name}</MenuItem>)
