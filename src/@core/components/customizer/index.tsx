@@ -1,9 +1,6 @@
 // ** React Imports
 import { useState } from 'react'
 
-// ** Third Party Components
-import PerfectScrollbar from 'react-perfect-scrollbar'
-
 // ** MUI Imports
 import Radio from '@mui/material/Radio'
 import Switch from '@mui/material/Switch'
@@ -129,7 +126,7 @@ const Customizer = () => {
             <Icon icon='mdi:close' fontSize={20} />
           </IconButton>
         </Box>
-        <PerfectScrollbar options={{ wheelPropagation: false }}>
+        <Box>
           <CustomizerSpacing className='customizer-body'>
             <Typography
               component='p'
@@ -385,7 +382,7 @@ const Customizer = () => {
               </Box>
             )}
           </CustomizerSpacing>
-        </PerfectScrollbar>
+        </Box>
       </Drawer>
     </div>
   )
