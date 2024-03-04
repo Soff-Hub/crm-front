@@ -19,6 +19,8 @@ const Lids = () => {
   const [openItem, setOpenItem] = useState<any>(null)
   const [openLid, setOpenLid] = useState<any>(null)
   const [leadData, setLeadData] = useState<any>([])
+  const [sourceData, setSourceData] = useState<any>([])
+  const [addSource, setAddSource] = useState<boolean>(false)
   const [loading, seLoading] = useState<boolean>(false)
   const { user } = useContext(AuthContext)
 
@@ -33,6 +35,14 @@ const Lids = () => {
     const resp = await api.get('leads/department/list')
     if (resp?.data) {
       setLeadData(resp.data.results)
+    }
+  }
+
+
+  const getSources = async () => {
+    const resp = await api.get('leads/source')
+    if (resp?.data) {
+      setSourceData(resp.data.results);
     }
   }
 
@@ -67,23 +77,24 @@ const Lids = () => {
     }
   }
 
-  // const createDepartmentStudent = async (values: any) => {
-  //   seLoading(true)
-  //   try {
-  //     await api.post('leads/department/create/', values)
-  //     seLoading(false)
-  //     setOpenItem(null)
-  //     getLeads()
-  //   }
-  //   catch (err: any) {
-  //     seLoading(false)
-  //     showResponseError(err.response.data, setError)
-  //     console.log(err)
-  //   }
-  // }
+  const createDepartmentStudent = async (values: any) => {
+    seLoading(true)
+    try {
+      await api.post('leads/department-user-create/', values)
+      seLoading(false)
+      setOpenItem(null)
+      getLeads()
+    }
+    catch (err: any) {
+      seLoading(false)
+      showResponseError(err.response.data, setError)
+      console.log(err)
+    }
+  }
 
   useEffect(() => {
     getLeads()
+    getSources()
   }, [])
 
   return user?.role === 'teacher' ? <TeacherProfile /> : (
@@ -155,20 +166,20 @@ const Lids = () => {
         </DialogContent>
       </Dialog >
 
-      <Dialog onClose={() => setOpenLid(null)} open={openLid !== null}>
+      <Dialog onClose={() => (setAddSource(false), setOpenLid(null))} open={openLid !== null}>
         <DialogTitle sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <Typography variant='h6' component='span'>
             {t("Yangi Lid")}
           </Typography>
           <IconButton
             aria-label='close'
-            onClick={() => setOpenLid(null)}
+            onClick={() => (setAddSource(false), setOpenLid(null))}
           >
             <IconifyIcon icon='mdi:close' />
           </IconButton>
         </DialogTitle>
         <DialogContent sx={{ minWidth: '320px' }}>
-          <Form setError={setError} onSubmit={createDepartmentItem} valueTypes='json' id='codasdsdassdijfo' sx={{ padding: '5px 0', width: '100%', display: 'flex', flexDirection: 'column', gap: '15px' }}>
+          <Form setError={setError} onSubmit={createDepartmentStudent} valueTypes='json' id='dqdwa' sx={{ padding: '5px 0', width: '100%', display: 'flex', flexDirection: 'column', gap: '15px' }}>
             <FormControl fullWidth>
               <InputLabel size='small' id='user-view-language-label'>{t('Bo\'lim')}</InputLabel>
               <Select
@@ -177,7 +188,7 @@ const Lids = () => {
                 label={t('Bo\'lim')}
                 id='user-view-language'
                 labelId='user-view-language-label'
-                name='source'
+                name='department'
                 defaultValue=''
                 sx={{ mb: 1 }}
               >
@@ -186,6 +197,31 @@ const Lids = () => {
                 }
               </Select>
               <FormHelperText error={error.source?.error}>{error.source?.message}</FormHelperText>
+            </FormControl>
+
+            <FormControl fullWidth>
+              <InputLabel size='small' id='user-view-language-label'>{t('Manba')}</InputLabel>
+              {!addSource ? (
+                <Select
+                  size='small'
+                  error={error.source?.error}
+                  label={t('Manba')}
+                  id='user-view-language'
+                  labelId='user-view-language-label'
+                  name='source_name'
+                  defaultValue=''
+                  onChange={(e: any) => e?.target && e?.target?.value === 0 && setAddSource(true)}
+                  sx={{ mb: 1 }}
+                >
+                  {
+                    sourceData.map((lead: any) => <MenuItem key={lead.id} value={lead.name}>{lead.name}</MenuItem>)
+                  }
+                  <MenuItem value={0} sx={{ fontWeight: '600' }}><IconifyIcon icon={'ic:baseline-add'} /> Yangi qo'shish</MenuItem>
+                </Select>
+              ) : (
+                <TextField fullWidth error={error.first_name?.error} size='small' label={t('Manba')} name='source_name' />
+              )}
+              <FormHelperText error={error.source_name?.error}>{error.source?.message}</FormHelperText>
             </FormControl>
 
             <FormControl fullWidth>

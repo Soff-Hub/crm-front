@@ -4,11 +4,12 @@ import { styled } from '@mui/material/styles'
 import MuiMenu, { MenuProps } from '@mui/material/Menu'
 import MuiMenuItem, { MenuItemProps } from '@mui/material/MenuItem'
 
-import { Box, Typography } from '@mui/material'
+import { Box, CircularProgress, Typography } from '@mui/material'
 import IconifyIcon from '../icon'
+import api from 'src/@core/utils/api'
+import KanbanItem from '../card-statistics/kanban-item'
 
 interface AccordionProps {
-    children?: ReactNode
     title?: string
     onView: () => void
     item: any
@@ -30,9 +31,11 @@ const MenuItem = styled(MuiMenuItem)<MenuItemProps>(({ theme }) => ({
     }
 }))
 
-export default function AccordionCustom({ children, onView, item }: AccordionProps) {
+export default function AccordionCustom({ onView, item }: AccordionProps) {
     const [open, setOpen] = useState<boolean>(false)
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+    const [loading, setLoading] = useState<boolean>(false)
+    const [leadData, setLeadData] = useState<any[]>([])
 
     const handleClick = (event: any) => {
         setAnchorEl(event.currentTarget)
@@ -44,6 +47,19 @@ export default function AccordionCustom({ children, onView, item }: AccordionPro
         setAnchorEl(null)
     }
 
+    const handleGetLeads = async () => {
+        setLoading(true)
+        setOpen(!open)
+        try {
+            const resp = await api.get(`leads/department-user-list/${item.id}/`)
+            setLeadData(resp.data)
+            setLoading(false)
+        } catch (err) {
+            console.log(err)
+            setLoading(false)
+        }
+    }
+
     useEffect(() => {
         if (open) onView();
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -53,9 +69,10 @@ export default function AccordionCustom({ children, onView, item }: AccordionPro
         <Box sx={{ width: '100%', border: '1px solid #cfcccc', borderRadius: 1 }}>
             <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', padding: '10px' }}>
                 <Typography fontSize={16}>{item.name}</Typography>
+                <Typography fontSize={16} fontWeight={'700'} sx={{ marginLeft: 'auto', marginRight: 2 }}>{item.student_count}</Typography>
                 <IconifyIcon
-                    style={{ marginLeft: 'auto', cursor: 'pointer', transform: open ? 'rotateZ(180deg)' : '' }}
-                    onClick={() => setOpen(!open)} icon={'mingcute:list-collapse-line'}
+                    style={{ cursor: 'pointer', transform: open ? 'rotateZ(180deg)' : '' }}
+                    onClick={() => !open ? handleGetLeads() : setOpen(!open)} icon={'mingcute:list-collapse-line'}
                 />
                 <IconifyIcon
                     icon="system-uicons:circle-menu"
@@ -66,7 +83,17 @@ export default function AccordionCustom({ children, onView, item }: AccordionPro
                 />
             </Box>
             <Box sx={{ display: 'flex', flexDirection: 'column', px: 2, gap: 2, marginY: open ? 2 : 0 }}>
-                {open && children}
+                {
+                    open ? (
+                        loading ? (
+                            <CircularProgress disableShrink sx={{ mt: 1, mb: 2, mx: 'auto' }} size={25} />
+                        ) : (
+                            leadData.length > 0 ? (
+                                leadData.map((lead) => <KanbanItem key={lead.id} status={'success'} title={lead.first_name} phone={lead.phone} />)
+                            ) : <IconifyIcon icon={'iconoir:empty-page'} />
+                        )
+                    ) : ''
+                }
             </Box>
             <Menu
                 keepMounted

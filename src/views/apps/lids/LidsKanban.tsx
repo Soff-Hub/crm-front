@@ -23,7 +23,7 @@ export default function HomeKanban({ title, status, items, setOpenItem, id, setO
                 <Button
                     sx={{ marginLeft: 'auto' }}
                     size='small'
-                    
+
                     // color={status === "new" ? "secondary" : status === "pending" ? "warning" : status}
                     color='warning'
                     onClick={() => setOpenLid(id)}
@@ -42,9 +42,7 @@ export default function HomeKanban({ title, status, items, setOpenItem, id, setO
             <Box sx={{ display: 'flex', gap: 3, alignItems: 'flex-start', width: '100%', flexDirection: 'column' }}>
                 {
                     items.map(lead => (
-                        <AccordionCustom item={lead} key={lead.id} onView={() => console.log("aa")}>
-                            <KanbanItem status={status} title={lead.name} phone='+998931231177' />
-                        </AccordionCustom>
+                        <AccordionCustom item={lead} key={lead.id} onView={() => console.log("aa")} />
                     ))
                 }
             </Box>
