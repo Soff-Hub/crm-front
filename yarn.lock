@@ -3797,8 +3797,10 @@ react-onclickoutside@^6.12.0:
   resolved "https://registry.npmjs.org/react-onclickoutside/-/react-onclickoutside-6.12.2.tgz"
   integrity sha512-NMXGa223OnsrGVp5dJHkuKxQ4czdLmXSp5jSV9OqiCky9LOpPATn3vLldc+q5fK3gKbEHvr7J1u0yhBh/xYkpA==
 
-react-perfect-scrollbar@1.5.8:
+react-perfect-scrollbar@^1.5.8:
   version "1.5.8"
+  resolved "https://registry.npmjs.org/react-perfect-scrollbar/-/react-perfect-scrollbar-1.5.8.tgz"
+  integrity sha512-bQ46m70gp/HJtiBOF3gRzBISSZn8FFGNxznTdmTG8AAwpxG1bJCyn7shrgjEvGSQ5FJEafVEiosY+ccER11OSA==
   dependencies:
     perfect-scrollbar "^1.5.0"
     prop-types "^15.6.1"
