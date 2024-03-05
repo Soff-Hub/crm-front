@@ -1,30 +1,12 @@
 import { Box, CircularProgress, Typography } from "@mui/material"
 import { useRouter } from "next/router"
 import IconifyIcon from "src/@core/components/icon"
-import { styled } from '@mui/material/styles';
-import Tooltip, { TooltipProps, tooltipClasses } from '@mui/material/Tooltip';
+import Tooltip from '@mui/material/Tooltip';
 import { useContext, useEffect, useState } from "react";
 import api from "src/@core/utils/api";
 import getMontName, { getMontNumber } from "src/@core/utils/gwt-month-name";
 import { AuthContext } from "src/context/AuthContext";
 
-
-const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
-  <Tooltip {...props} classes={{ popper: className }} placement="top" />
-))(({ theme }) => ({
-  [`& .${tooltipClasses.tooltip}`]: {
-    backgroundColor: 'white',
-    color: 'red',
-    fontSize: theme.typography.pxToRem(12),
-    border: '1px solid #dadde9',
-    bottom: '-20px'
-  },
-}));
-
-interface Result {
-  date: string;
-  year: string;
-}
 
 const today = new Date().getDate()
 
