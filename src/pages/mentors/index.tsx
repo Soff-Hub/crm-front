@@ -27,6 +27,7 @@ import showResponseError from 'src/@core/utils/show-response-error'
 import useBranches from 'src/hooks/useBranch'
 import LoadingButton from '@mui/lab/LoadingButton'
 import toast from 'react-hot-toast'
+import { useRouter } from 'next/router'
 
 export interface customTableProps {
   xs: number
@@ -69,6 +70,7 @@ export default function GroupsPage() {
 
   const { createTeacher, getTeachers, teachers, loading, deleteTeacher, updateTeacher, setLoading, setTeachersData, teacherData, getTeacherById } = useTeachers()
   const { branches, getBranches } = useBranches()
+  const { push } = useRouter()
 
   const handleDeleteTeacher = async (id: string | number) => {
     try {
@@ -219,6 +221,11 @@ export default function GroupsPage() {
     form.reset()
   }
 
+  const rowClick = (id: any) => {
+    push(`/mentors/view/security?id=${id}`)
+  }
+
+
   useEffect(() => {
     getBranches()
     getTeachers()
@@ -242,7 +249,7 @@ export default function GroupsPage() {
           {t("Yangi qo'shish")}
         </Button>
       </Box>
-      <DataTable columns={columns} data={teachers} />
+      <DataTable columns={columns} data={teachers} rowClick={rowClick} />
 
       <Drawer open={openAddGroup} hideBackdrop anchor='right' variant='persistent'>
         <Box

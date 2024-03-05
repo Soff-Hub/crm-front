@@ -84,10 +84,7 @@ export default function GroupsPage() {
   const { courses, getCourses } = useCourses()
   const { rooms, getRooms } = useRooms()
   const router = useRouter()
-
-  console.log(customWeekdays);
-  console.log(weekdays);
-
+  const { push } = router
 
   const handleDeleteTeacher = async (id: string | number) => {
     try {
@@ -298,6 +295,10 @@ export default function GroupsPage() {
     })
   }
 
+  const rowClick = (id: any) => {
+    push(`/groups/view/security?id=${id}&moonth=${getMontName(null)}`)
+  }
+
   useMemo(() => {
     getGroups()
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -327,7 +328,7 @@ export default function GroupsPage() {
         </Button>
       )}
       {!isMobile && <GroupsFilter isMobile={isMobile} />}
-      <DataTable columns={columns} data={groups} />
+      <DataTable columns={columns} data={groups} rowClick={rowClick} />
       <Pagination defaultPage={router?.query?.page ? Number(router?.query?.page) : 1} count={groupCount} variant="outlined" shape="rounded" onChange={(e: any, page) => handlePagination(e.target.value + page)} />
 
       <Drawer open={openAddGroup} hideBackdrop anchor='right' variant='persistent'>

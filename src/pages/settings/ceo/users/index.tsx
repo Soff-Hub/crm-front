@@ -30,6 +30,7 @@ import Form from 'src/@core/components/form'
 import useBranches from 'src/hooks/useBranch'
 import useRoles from 'src/hooks/useRoles'
 import showResponseError from 'src/@core/utils/show-response-error'
+import { useRouter } from 'next/router'
 
 export interface customTableProps {
     xs: number
@@ -98,6 +99,7 @@ export default function GroupsPage() {
     const { t } = useTranslation()
     const { updateEmployee, getEmployeeById, createEmployee } = useEmployee()
     const { roles } = useRoles()
+    const { push } = useRouter()
 
     // Handle Edit dialog
     const handleEditClose = () => setOpenEdit(false)
@@ -239,6 +241,11 @@ export default function GroupsPage() {
     const { employees, getEmployees } = useEmployee()
     const { branches, getBranches } = useBranches()
 
+    const rowClick = (id: any) => {
+        push(`users/view/security?id=${id}`)
+    }
+
+
     useEffect(() => {
         if (employees.length < 1) {
             getEmployees()
@@ -263,7 +270,7 @@ export default function GroupsPage() {
                     {t("Yangi qo'shish")}
                 </Button>
             </Box>
-            <DataTable columns={columns} data={employees} />
+            <DataTable columns={columns} data={employees} rowClick={rowClick} />
 
             <Drawer open={openAddGroup} hideBackdrop anchor='right' variant='persistent'>
                 <Box

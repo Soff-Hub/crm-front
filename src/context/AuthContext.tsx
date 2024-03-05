@@ -58,6 +58,7 @@ const AuthProvider = ({ children }: Props) => {
               fullName: response.data.first_name,
               username: 'admin',
               password: 'null',
+              avatar: response.data.image
             })
           })
           .catch(() => {
@@ -91,9 +92,10 @@ const AuthProvider = ({ children }: Props) => {
         setUser({
           id: 1,
           role: response.data.roles.find((el: any) => el.name === "Teacher").exists && !response.data.roles.find((el: any) => el.name === "Admin").exists && !response.data.roles.find((el: any) => el.name === "CEO").exists ? 'teacher' : 'admin',
-          fullName: response.data.phone,
+          fullName: response.data.first_name,
           username: 'admin',
           password: 'null',
+          avatar: response.data.image
         })
         !params.rememberMe ? window.localStorage.setItem('userData', JSON.stringify({ ...response.data, role: 'admin', tokens: null })) : null
 

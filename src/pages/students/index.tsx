@@ -289,6 +289,11 @@ export default function GroupsPage() {
     })
   }
 
+  const rowClick = (id: any) => {
+    router.push(`/students/view/security?student=${id}`)
+  }
+
+
   useEffect(() => {
     getStudents(searchDebounce)
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -316,7 +321,7 @@ export default function GroupsPage() {
       <Box>
         <TextField placeholder='Search...' onChange={(e: any) => setSearch(e.target.value)} size='small' sx={{ maxWidth: '350px', width: '100%' }} />
       </Box>
-      <DataTable columns={columns} data={students.data} />
+      <DataTable columns={columns} data={students.data} rowClick={rowClick} />
       {students.count > 9 && <Pagination defaultPage={router?.query?.page ? Number(router?.query?.page) : 1} count={Math.ceil(students.count / 10)} variant="outlined" shape="rounded" onChange={(e: any, page) => handlePagination(page)} />}
 
       <Drawer open={openAddGroup} hideBackdrop anchor='right' variant='persistent'>
