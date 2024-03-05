@@ -3,9 +3,10 @@ import { useRouter } from "next/router"
 import IconifyIcon from "src/@core/components/icon"
 import { styled } from '@mui/material/styles';
 import Tooltip, { TooltipProps, tooltipClasses } from '@mui/material/Tooltip';
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import api from "src/@core/utils/api";
 import getMontName, { getMontNumber } from "src/@core/utils/gwt-month-name";
+import { AuthContext } from "src/context/AuthContext";
 
 
 const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
@@ -25,12 +26,14 @@ interface Result {
   year: string;
 }
 
+const today = new Date().getDate()
+
 
 const Item = ({ defaultValue, groupId, userId, date }: { defaultValue: true | false | null | 0, groupId?: any, userId?: any, date?: any }) => {
   const [value, setValue] = useState<true | false | null | 0>(defaultValue)
 
-
   const handleClick = async (status: any) => {
+
     if (value !== status) {
       setValue(status)
       const data = {
@@ -44,8 +47,7 @@ const Item = ({ defaultValue, groupId, userId, date }: { defaultValue: true | fa
     }
   }
 
-
-  if (value === true) {
+  if (value === true || value === false || value === null) {
     return (
       <HtmlTooltip title={
         <span style={{ display: 'flex', gap: '6px', padding: '4px' }}>
@@ -54,43 +56,87 @@ const Item = ({ defaultValue, groupId, userId, date }: { defaultValue: true | fa
         </span>
       }>
         <span>
-          <IconifyIcon icon={'game-icons:check-mark'} fontSize={18} color="#4be309" />
+          {
+            value === true ? (
+              <IconifyIcon icon={'game-icons:check-mark'} fontSize={18} color="#4be309" />
+            ) : value === false ? (
+              <IconifyIcon icon={'mdi:cancel-bold'} fontSize={18} color="#e31309" />
+            ) : value === null ? (
+              <IconifyIcon icon={'fluent:square-20-regular'} fontSize={18} color="#9e9e9e" />
+            ) : ''
+          }
         </span>
       </HtmlTooltip>
     )
-  }
-
-  else if (value === false) {
+  } else {
     return (
-      <HtmlTooltip title={
-        <span style={{ display: 'flex', gap: '6px', padding: '4px' }}>
-          <IconifyIcon icon={'mdi:cancel-bold'} fontSize={18} onClick={() => handleClick(false)} color="#e31309" cursor={'pointer'} />
-          <IconifyIcon icon={'game-icons:check-mark'} fontSize={18} onClick={() => handleClick(true)} color="#4be309" cursor={'pointer'} />
-        </span>
-      }>
-        <span>
-          <IconifyIcon icon={'mdi:cancel-bold'} fontSize={18} color="#e31309" />
-        </span>
-      </HtmlTooltip>
+      <span>
+        <IconifyIcon icon={'material-symbols:lock-outline'} fontSize={18} color="#9e9e9e" />
+      </span>
     )
   }
+}
 
-  else if (value === null) {
-    return (
-      <HtmlTooltip title={
-        <span style={{ display: 'flex', gap: '6px', padding: '4px' }}>
-          <IconifyIcon icon={'mdi:cancel-bold'} fontSize={18} onClick={() => handleClick(false)} color="#e31309" cursor={'pointer'} />
-          <IconifyIcon icon={'game-icons:check-mark'} fontSize={18} onClick={() => handleClick(true)} color="#4be309" cursor={'pointer'} />
-        </span>
-      }>
-        <span>
-          <IconifyIcon icon={'fluent:square-20-regular'} fontSize={18} color="#9e9e9e" />
-        </span>
-      </HtmlTooltip>
-    )
+const ItemTeacher = ({ defaultValue, groupId, userId, date }: { defaultValue: true | false | null | 0, groupId?: any, userId?: any, date?: any }) => {
+  const [value, setValue] = useState<true | false | null | 0>(defaultValue)
+
+  const handleClick = async (status: any) => {
+
+    if (value !== status) {
+      setValue(status)
+      const data = {
+        group: groupId,
+        student: userId,
+        date: date,
+        is_available: status
+      }
+
+      await api.post('common/student-attendance/', data)
+    }
   }
+  
+  
+  if (value === true || value === false || value === null) {
+    if (today === Number(date.split('-')[2])) {
+      return (
+        <HtmlTooltip title={
+          <span style={{ display: 'flex', gap: '6px', padding: '4px' }}>
+            <IconifyIcon icon={'mdi:cancel-bold'} onClick={() => handleClick(false)} fontSize={18} color="#e31309" cursor={'pointer'} />
+            <IconifyIcon icon={'game-icons:check-mark'} onClick={() => handleClick(true)} fontSize={18} color="#4be309" cursor={'pointer'} />
+          </span>
+        }>
+          <span>
+            {
+              value === true ? (
+                <IconifyIcon icon={'game-icons:check-mark'} fontSize={18} color="#4be309" />
+              ) : value === false ? (
+                <IconifyIcon icon={'mdi:cancel-bold'} fontSize={18} color="#e31309" />
+              ) : value === null ? (
+                <IconifyIcon icon={'fluent:square-20-regular'} fontSize={18} color="#9e9e9e" />
+              ) : ''
+            }
+          </span>
+        </HtmlTooltip>
+      )
+    } else {
+      return (
+        <Tooltip title={"Ruxsat yo'q"} placement="top">
+          <span>
+            {
+              value === true ? (
+                <IconifyIcon icon={'game-icons:check-mark'} fontSize={18} color="#4be309" />
+              ) : value === false ? (
+                <IconifyIcon icon={'mdi:cancel-bold'} fontSize={18} color="#e31309" />
+              ) : value === null ? (
+                <IconifyIcon icon={'fluent:square-20-regular'} fontSize={18} color="#9e9e9e" />
+              ) : ''
+            }
+          </span>
+        </Tooltip>
+      )
+    }
 
-  else {
+  } else {
     return (
       <span>
         <IconifyIcon icon={'material-symbols:lock-outline'} fontSize={18} color="#9e9e9e" />
@@ -103,6 +149,9 @@ const UserViewSecurity = ({ invoiceData }: any) => {
   const { pathname, query, push } = useRouter()
   const start_date: any = invoiceData?.start_date ? Number(invoiceData?.start_date.split('-')[1]) : ''
   const [loading, setLoading] = useState<boolean>(false)
+  const { user } = useContext(AuthContext)
+
+
 
   const [attendance, setAttendance] = useState<any>(null)
 
@@ -138,7 +187,7 @@ const UserViewSecurity = ({ invoiceData }: any) => {
   async function getAttendance() {
     setLoading(true)
     try {
-      const resp = await api.get(`common/attendance-list/2024-${getMontNumber(query.moonth)}-01/group/${query.id}/`)
+      const resp = await api.get(`common/attendance-list/2024-${getMontNumber(query.moonth)}-01/group/1/`)
       setAttendance(resp.data)
       setLoading(false)
     } catch (err) {
@@ -168,49 +217,95 @@ const UserViewSecurity = ({ invoiceData }: any) => {
               <Typography>Yuklanmoqda...</Typography>
             </Box>
           ) : (
-            <table style={{ width: '100%' }}>
-              <thead>
-                <tr style={{}}>
-                  <td style={{ padding: '8px 0', textAlign: 'start' }}><Typography>O'quvchilar</Typography></td>
+            user?.role === "teacher" ? (
+              <table style={{ width: '100%' }}>
+                <thead>
+                  <tr style={{}}>
+                    <td style={{ padding: '8px 0', textAlign: 'start' }}><Typography>O'quvchilar</Typography></td>
+                    {
+                      attendance && attendance.days.map((hour: any) => <th key={hour.date} style={{ textAlign: 'center', minWidth: 50, padding: '8px 0' }}><Typography>{`${hour.date.split('-')[2]}`}</Typography></th>)
+                    }
+                  </tr>
+                </thead>
+                <tbody>
                   {
-                    attendance && attendance.days.map((hour: any) => <th key={hour.date} style={{ textAlign: 'center', minWidth: 50, padding: '8px 0' }}><Typography>{`${hour.date.split('-')[2]}`}</Typography></th>)
-                  }
-                </tr>
-              </thead>
-              <tbody>
-                {
-                  attendance && attendance.students.map((student: any) => (
-                    <tr key={student.id} style={{}}>
-                      <td style={{ padding: '8px 0', textAlign: 'start', fontSize: '14px' }}>{student.first_name}</td>
-                      {
-                        attendance.days.map((hour: any) => (
-                          student.attendance.some((el: any) => el.date === hour.date) && student.attendance.find((el: any) => el.date === hour.date) ? (
-                            <td key={student.attendance.find((el: any) => el.date === hour.date).date} style={{ padding: '8px 0', textAlign: 'center', cursor: 'pointer' }}>
-                              {
-                                student.attendance.find((el: any) => el.date === hour.date).is_available === true ? (
-                                  <Item defaultValue={true} groupId={invoiceData.id} userId={student.id} date={hour.date} />
-                                ) :
-                                  student.attendance.find((el: any) => el.date === hour.date).is_available === false ? (
-                                    <Item defaultValue={false} groupId={invoiceData.id} userId={student.id} date={hour.date} />
+                    attendance && attendance.students.map((student: any) => (
+                      <tr key={student.id} style={{}}>
+                        <td style={{ padding: '8px 0', textAlign: 'start', fontSize: '14px' }}>{student.first_name}</td>
+                        {
+                          attendance.days.map((hour: any) => (
+                            student.attendance.some((el: any) => el.date === hour.date) && student.attendance.find((el: any) => el.date === hour.date) ? (
+                              <td key={student.attendance.find((el: any) => el.date === hour.date).date} style={{ padding: '8px 0', textAlign: 'center', cursor: 'pointer' }}>
+                                {
+                                  student.attendance.find((el: any) => el.date === hour.date).is_available === true ? (
+                                    <ItemTeacher defaultValue={true} groupId={1} userId={student.id} date={hour.date} />
                                   ) :
-                                    student.attendance.find((el: any) => el.date === hour.date).is_available === null ? (
-                                      <Item defaultValue={null} groupId={invoiceData.id} userId={student.id} date={hour.date} />
-                                    ) : <></>
-                              }
+                                    student.attendance.find((el: any) => el.date === hour.date).is_available === false ? (
+                                      <ItemTeacher defaultValue={false} groupId={1} userId={student.id} date={hour.date} />
+                                    ) :
+                                      student.attendance.find((el: any) => el.date === hour.date).is_available === null ? (
+                                        <ItemTeacher defaultValue={null} groupId={1} userId={student.id} date={hour.date} />
+                                      ) : <></>
+                                }
+                              </td>
+                            ) : <td key={hour.date} style={{ padding: '8px 0', textAlign: 'center', cursor: 'not-allowed' }}>
+                              <span>
+                                <ItemTeacher defaultValue={0} />
+                              </span>
                             </td>
-                          ) : <td key={hour.date} style={{ padding: '8px 0', textAlign: 'center', cursor: 'not-allowed' }}>
-                            <span>
-                              <Item defaultValue={0} />
-                            </span>
-                          </td>
-                        )
-                        )
-                      }
-                    </tr>
-                  ))
-                }
-              </tbody>
-            </table>
+                          )
+                          )
+                        }
+                      </tr>
+                    ))
+                  }
+                </tbody>
+              </table>
+            ) : (
+              <table style={{ width: '100%' }}>
+                <thead>
+                  <tr style={{}}>
+                    <td style={{ padding: '8px 0', textAlign: 'start' }}><Typography>O'quvchilar</Typography></td>
+                    {
+                      attendance && attendance.days.map((hour: any) => <th key={hour.date} style={{ textAlign: 'center', minWidth: 50, padding: '8px 0' }}><Typography>{`${hour.date.split('-')[2]}`}</Typography></th>)
+                    }
+                  </tr>
+                </thead>
+                <tbody>
+                  {
+                    attendance && attendance.students.map((student: any) => (
+                      <tr key={student.id} style={{}}>
+                        <td style={{ padding: '8px 0', textAlign: 'start', fontSize: '14px' }}>{student.first_name}</td>
+                        {
+                          attendance.days.map((hour: any) => (
+                            student.attendance.some((el: any) => el.date === hour.date) && student.attendance.find((el: any) => el.date === hour.date) ? (
+                              <td key={student.attendance.find((el: any) => el.date === hour.date).date} style={{ padding: '8px 0', textAlign: 'center', cursor: 'pointer' }}>
+                                {
+                                  student.attendance.find((el: any) => el.date === hour.date).is_available === true ? (
+                                    <Item defaultValue={true} groupId={1} userId={student.id} date={hour.date} />
+                                  ) :
+                                    student.attendance.find((el: any) => el.date === hour.date).is_available === false ? (
+                                      <Item defaultValue={false} groupId={1} userId={student.id} date={hour.date} />
+                                    ) :
+                                      student.attendance.find((el: any) => el.date === hour.date).is_available === null ? (
+                                        <Item defaultValue={null} groupId={1} userId={student.id} date={hour.date} />
+                                      ) : <></>
+                                }
+                              </td>
+                            ) : <td key={hour.date} style={{ padding: '8px 0', textAlign: 'center', cursor: 'not-allowed' }}>
+                              <span>
+                                <Item defaultValue={0} />
+                              </span>
+                            </td>
+                          )
+                          )
+                        }
+                      </tr>
+                    ))
+                  }
+                </tbody>
+              </table>
+            )
           )
         }
       </Box>

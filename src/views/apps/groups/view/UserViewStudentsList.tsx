@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { Box, Dialog, DialogContent, TextField, Typography } from '@mui/material'
 import Status from 'src/@core/components/status'
 import Menu from '@mui/material/Menu';
@@ -10,6 +10,7 @@ import Tooltip, { TooltipProps, tooltipClasses } from '@mui/material/Tooltip';
 import Link from 'next/link';
 import { formatDateTime } from 'src/@core/utils/date-formatter';
 import { useRouter } from 'next/router';
+import { AuthContext } from 'src/context/AuthContext';
 
 
 interface StudentType {
@@ -51,6 +52,7 @@ export const UserViewStudentsItem = ({ item }: ItemTypes) => {
     const { student } = item
     const { first_name, phone, added_at, created_at, balance, comment, id } = student
     const { push } = useRouter()
+    const { user } = useContext(AuthContext)
 
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
@@ -71,7 +73,7 @@ export const UserViewStudentsItem = ({ item }: ItemTypes) => {
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>
             <Typography variant='body2' sx={{ width: '20px' }}>{id}.</Typography>
             <Status color={balance < 0 ? 'error' : 'success'} />
-            <HtmlTooltip className='' title={
+            {user?.role !== 'teacher' ? <HtmlTooltip className='' title={
                 <Box sx={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', padding: '10px' }}>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', py: 1 }}>
                         <Box>
@@ -108,7 +110,7 @@ export const UserViewStudentsItem = ({ item }: ItemTypes) => {
                 </Box>
             }>
                 <Typography sx={{ cursor: 'pointer' }} variant='body2' fontSize={10}>{first_name}</Typography>
-            </HtmlTooltip>
+            </HtmlTooltip> : <Typography sx={{ cursor: 'pointer' }} variant='body2' fontSize={10}>{first_name}</Typography>}
             <Typography variant='body2' fontSize={10} flexGrow={1} textAlign={'end'} mr={5}>{phone}</Typography>
             <Typography
                 fontSize={11}
@@ -116,7 +118,7 @@ export const UserViewStudentsItem = ({ item }: ItemTypes) => {
                 aria-controls={open ? 'fade-menu' : undefined}
                 aria-haspopup="true"
                 aria-expanded={open ? 'true' : undefined}
-                onClick={handleClick}
+                onClick={user?.role !== 'teacher' ? handleClick : undefined}
             >
                 <IconifyIcon icon={"charm:menu-kebab"} fontSize={11} />
             </Typography>

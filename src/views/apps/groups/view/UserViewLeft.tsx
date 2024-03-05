@@ -1,5 +1,5 @@
 // ** React Imports
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
@@ -39,6 +39,7 @@ import UserViewStudentsList from './UserViewStudentsList';
 import api from 'src/@core/utils/api';
 import { useRouter } from 'next/router';
 import useDebounce from 'src/hooks/useDebounce';
+import { AuthContext } from 'src/context/AuthContext';
 
 interface ColorsType {
   [key: string]: ThemeColor
@@ -71,6 +72,7 @@ const UserViewLeft = ({ userData }: { userData?: any }) => {
   const { t } = useTranslation()
   const { updateTeacher } = useTeachers()
   const { query } = useRouter()
+  const { user } = useContext(AuthContext)
 
   // Handle Edit dialog
   const handleEditClickOpen = (type: ActionTypes) => setOpenEdit(type)
@@ -190,14 +192,18 @@ const UserViewLeft = ({ userData }: { userData?: any }) => {
                 <Typography>{data.room_data.name}da -{data.start_at}</Typography>
               </Box>
               <Box sx={{ pt: 2, pb: 1 }}>
-                <Box sx={{ display: 'flex', mb: 2.7 }}>
-                  <Typography sx={{ mr: 2, fontWeight: 500, fontSize: '0.875rem' }}>Mentor:</Typography>
-                  <Link href={`/mentors/view/security/?id=${data.teacher_data.id}`} style={{ textDecoration: 'none' }}>
-                    <Typography variant='body2'>
-                      {data.teacher_data.first_name}
-                    </Typography>
-                  </Link>
-                </Box>
+                {
+                  user?.role !== 'teacher' ? (
+                    <Box sx={{ display: 'flex', mb: 2.7 }}>
+                      <Typography sx={{ mr: 2, fontWeight: 500, fontSize: '0.875rem' }}>Mentor:</Typography>
+                      <Link href={user?.role !== 'teacher' ? `/mentors/view/security/?id=${data.teacher_data.id}` : '/lids'} style={{ textDecoration: 'none' }}>
+                        <Typography variant='body2'>
+                          {data.teacher_data.first_name}
+                        </Typography>
+                      </Link>
+                    </Box>
+                  ) : ''
+                }
                 <Box sx={{ display: 'flex', mb: 2.7 }}>
                   <Typography sx={{ mr: 2, fontWeight: 500, fontSize: '0.875rem' }}>Ochilgan sana:</Typography>
                   <Typography variant='body2'>{data.start_date?.split('-').reverse().join(',')}</Typography>
@@ -239,23 +245,26 @@ const UserViewLeft = ({ userData }: { userData?: any }) => {
               </Box>
             </CardContent>
 
-            <CardActions sx={{ display: 'flex', justifyContent: 'center' }}>
-              <Tooltip title="O'chirish" placement='top'>
-                <Button variant='outlined' color='error' onClick={() => handleEditClickOpen('delete')}>
-                  <IconifyIcon icon='mdi-light:delete' />
-                </Button>
-              </Tooltip>
-              <Tooltip title="SMS yuborish" placement='top'>
-                <Button variant='outlined' color="warning" onClick={() => handleEditClickOpen('send-sms')}>
-                  <IconifyIcon icon='material-symbols-light:sms-outline' />
-                </Button>
-              </Tooltip>
-              <Tooltip title="O'quvchi qo'shish" placement='top'>
-                <Button variant='outlined' onClick={() => handleEditClickOpen('add-student')}>
-                  <IconifyIcon icon='mdi:user-add-outline' />
-                </Button>
-              </Tooltip>
-            </CardActions>
+            {
+              user?.role !== 'teacher' ? (
+                <CardActions sx={{ display: 'flex', justifyContent: 'center' }}>
+                  <Tooltip title="O'chirish" placement='top'>
+                    <Button variant='outlined' color='error' onClick={() => handleEditClickOpen('delete')}>
+                      <IconifyIcon icon='mdi-light:delete' />
+                    </Button>
+                  </Tooltip>
+                  <Tooltip title="SMS yuborish" placement='top'>
+                    <Button variant='outlined' color="warning" onClick={() => handleEditClickOpen('send-sms')}>
+                      <IconifyIcon icon='material-symbols-light:sms-outline' />
+                    </Button>
+                  </Tooltip>
+                  <Tooltip title="O'quvchi qo'shish" placement='top'>
+                    <Button variant='outlined' onClick={() => handleEditClickOpen('add-student')}>
+                      <IconifyIcon icon='mdi:user-add-outline' />
+                    </Button>
+                  </Tooltip>
+                </CardActions>
+              ) : ''}
           </Card>
         </Grid>
         <Grid item xs={12}>
