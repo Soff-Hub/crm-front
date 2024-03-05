@@ -85,8 +85,8 @@ const Lids = () => {
     seLoading(true)
     try {
       await api.post('leads/department-user-create/', values)
+      setOpenLid(null)
       seLoading(false)
-      setOpenItem(null)
       getLeads()
     }
     catch (err: any) {
@@ -94,6 +94,11 @@ const Lids = () => {
       showResponseError(err.response.data, setError)
       console.log(err)
     }
+  }
+
+  const closeCreateLid = () => {
+    setOpenLid(null)
+    setAddSource(false)
   }
 
   useEffect(() => {
@@ -170,7 +175,7 @@ const Lids = () => {
         </DialogContent>
       </Dialog >
 
-      <Dialog onClose={() => (setAddSource(false), setOpenLid(null))} open={openLid !== null}>
+      <Dialog onClose={closeCreateLid} open={openLid !== null}>
         <DialogTitle sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <Typography variant='h6' component='span'>
             {t("Yangi Lid")}
@@ -193,28 +198,26 @@ const Lids = () => {
                 id='user-view-language'
                 labelId='user-view-language-label'
                 name='department'
-                defaultValue=''
                 sx={{ mb: 1 }}
               >
                 {
-                  leadData.some((el: any) => el.id === openLid) ? leadData.find((el: any) => el.id === openLid).children.map((lead: any) => <MenuItem key={lead.id} value={Number(lead.id)}>{lead.name}</MenuItem>) : ''
+                  leadData.some((el: any) => el.id === openLid) ? leadData.find((el: any) => el.id === openLid).children.map((lead: any) => <MenuItem key={lead.id} value={Number(lead.id)}>{lead.name}</MenuItem>) : <></>
                 }
               </Select>
               <FormHelperText error={error.source?.error}>{error.source?.message}</FormHelperText>
             </FormControl>
 
-            <FormControl fullWidth>
-              <InputLabel size='small' id='user-view-language-label'>{t('Manba')}</InputLabel>
-              {!addSource ? (
+            {!addSource ? (
+              <FormControl fullWidth>
+                <InputLabel size='small' id='fsdgsdgsgsdfsd-label'>{t('Manba')}</InputLabel>
                 <Select
                   size='small'
                   error={error.source?.error}
                   label={t('Manba')}
-                  id='user-view-language'
-                  labelId='user-view-language-label'
+                  id='fsdgsdgsgsdfsd'
+                  labelId='fsdgsdgsgsdfsd-label'
                   name='source_name'
-                  defaultValue=''
-                  onChange={(e: any) => e?.target && e?.target?.value === 0 && setAddSource(true)}
+                  onChange={(e: any) => setAddSource(e?.target?.value === 0)}
                   sx={{ mb: 1 }}
                 >
                   {
@@ -222,11 +225,17 @@ const Lids = () => {
                   }
                   <MenuItem value={0} sx={{ fontWeight: '600' }}><IconifyIcon icon={'ic:baseline-add'} /> Yangi qo'shish</MenuItem>
                 </Select>
-              ) : (
+                <FormHelperText error={error.source_name?.error}>{error.source?.message}</FormHelperText>
+              </FormControl>
+            ) : ''}
+
+            {addSource ? (
+              <FormControl fullWidth>
                 <TextField fullWidth error={error.first_name?.error} size='small' label={t('Manba')} name='source_name' />
-              )}
-              <FormHelperText error={error.source_name?.error}>{error.source?.message}</FormHelperText>
-            </FormControl>
+                <FormHelperText error={error.source_name?.error}>{error.source?.message}</FormHelperText>
+              </FormControl>
+            ) : ''}
+
 
             <FormControl fullWidth>
               <TextField fullWidth error={error.first_name?.error} size='small' label={t('first_name')} name='first_name' />

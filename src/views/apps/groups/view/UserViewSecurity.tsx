@@ -94,8 +94,8 @@ const ItemTeacher = ({ defaultValue, groupId, userId, date }: { defaultValue: tr
       await api.post('common/student-attendance/', data)
     }
   }
-  
-  
+
+
   if (value === true || value === false || value === null) {
     if (today === Number(date.split('-')[2])) {
       return (
@@ -187,7 +187,7 @@ const UserViewSecurity = ({ invoiceData }: any) => {
   async function getAttendance() {
     setLoading(true)
     try {
-      const resp = await api.get(`common/attendance-list/2024-${getMontNumber(query.moonth)}-01/group/1/`)
+      const resp = await api.get(`common/attendance-list/2024-${getMontNumber(query.moonth)}-01/group/${query.id}/`)
       setAttendance(resp.data)
       setLoading(false)
     } catch (err) {
