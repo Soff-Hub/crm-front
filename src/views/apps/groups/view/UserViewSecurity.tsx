@@ -8,6 +8,11 @@ import getMontName, { getMontNumber } from "src/@core/utils/gwt-month-name";
 import { AuthContext } from "src/context/AuthContext";
 
 
+interface Result {
+  date: string;
+  year: string;
+}
+
 const today = new Date().getDate()
 
 
