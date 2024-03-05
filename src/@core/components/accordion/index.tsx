@@ -4,7 +4,7 @@ import { styled } from '@mui/material/styles'
 import MuiMenu, { MenuProps } from '@mui/material/Menu'
 import MuiMenuItem, { MenuItemProps } from '@mui/material/MenuItem'
 
-import { Box, CircularProgress, Typography } from '@mui/material'
+import { Box, CircularProgress, MenuItem, Typography } from '@mui/material'
 import IconifyIcon from '../icon'
 import api from 'src/@core/utils/api'
 import KanbanItem from '../card-statistics/kanban-item'
@@ -21,15 +21,6 @@ const Menu = styled(MuiMenu)<MenuProps>(({ theme }) => ({
     }
 }))
 
-// Styled MenuItem component
-const MenuItem = styled(MuiMenuItem)<MenuItemProps>(({ theme }) => ({
-    '&:focus': {
-        backgroundColor: theme.palette.primary.main,
-        '& .MuiListItemIcon-root, & .MuiListItemText-primary': {
-            color: theme.palette.common.white
-        }
-    }
-}))
 
 export default function AccordionCustom({ onView, item }: AccordionProps) {
     const [open, setOpen] = useState<boolean>(false)
