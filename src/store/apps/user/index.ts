@@ -60,7 +60,11 @@ export const appUsersSlice = createSlice({
     params: {},
     allData: []
   },
-  reducers: {},
+  reducers: {
+    addUserData: (state, action) => {
+      state.data = action.payload
+    }
+  },
   extraReducers: builder => {
     builder.addCase(fetchData.fulfilled, (state, action) => {
       state.data = action.payload.users
@@ -71,4 +75,5 @@ export const appUsersSlice = createSlice({
   }
 })
 
+export const { addUserData } = appUsersSlice.actions
 export default appUsersSlice.reducer

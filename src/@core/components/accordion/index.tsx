@@ -90,7 +90,7 @@ export default function AccordionCustom({ onView, item }: AccordionProps) {
                         ) : (
                             leadData.length > 0 ? (
                                 leadData.map((lead) => <KanbanItem key={lead.id} status={'success'} title={lead.first_name} phone={lead.phone} />)
-                            ) : <IconifyIcon icon={'iconoir:empty-page'} />
+                            ) : <Typography variant='body2' sx={{ fontStyle: 'italic', textAlign: 'center' }}>no data</Typography>
                         )
                     ) : ''
                 }

@@ -4,12 +4,14 @@ import { Box, Button, Dialog, DialogContent, DialogTitle, FormControl, FormHelpe
 import Typography from '@mui/material/Typography'
 import { useContext, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useDispatch } from 'react-redux'
 import Form from 'src/@core/components/form'
 import IconifyIcon from 'src/@core/components/icon'
 import useResponsive from 'src/@core/hooks/useResponsive'
 import api from 'src/@core/utils/api'
 import showResponseError from 'src/@core/utils/show-response-error'
 import { AuthContext } from 'src/context/AuthContext'
+import { addUserData } from 'src/store/apps/user'
 import LidsKanban from 'src/views/apps/lids/LidsKanban'
 import TeacherProfile from 'src/views/teacher-profile'
 
@@ -27,6 +29,7 @@ const Lids = () => {
   // const [createble, setCreatable] = useState<boolean>(false)
   const [error, setError] = useState<any>({})
   const { t } = useTranslation()
+  const dispatch = useDispatch()
 
   const handleClose = () => setOpen(null)
 
@@ -35,6 +38,7 @@ const Lids = () => {
     const resp = await api.get('leads/department/list')
     if (resp?.data) {
       setLeadData(resp.data.results)
+      dispatch(addUserData(resp.data.results))
     }
   }
 
