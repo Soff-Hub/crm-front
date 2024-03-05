@@ -87,6 +87,7 @@ const Lids = () => {
       await api.post('leads/department-user-create/', values)
       setOpenLid(null)
       seLoading(false)
+      setAddSource(false)
       getLeads()
     }
     catch (err: any) {

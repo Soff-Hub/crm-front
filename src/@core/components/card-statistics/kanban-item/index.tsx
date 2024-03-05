@@ -39,6 +39,7 @@ import { useSelector } from 'react-redux'
 import Form from '../../form'
 import { useTranslation } from 'react-i18next'
 import LoadingButton from '@mui/lab/LoadingButton'
+import showResponseError from 'src/@core/utils/show-response-error'
 
 // ** Styled Avatar component
 const Avatar = styled(CustomAvatar)<AvatarProps>(({ theme }) => ({
@@ -50,12 +51,13 @@ const Avatar = styled(CustomAvatar)<AvatarProps>(({ theme }) => ({
 const KanbanItem = (props: KanbarItemProps) => {
 
     // ** Props
-    const { title, phone, status } = props
+    const { title, phone, status, handleEditLead, id } = props
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
     const [error, setError] = useState<any>({})
     const { t } = useTranslation()
     const [open, setOpen] = useState<'edit' | 'merge-to' | null>(null)
     const [department, setDepartment] = useState<any>(null)
+    const [loading, setLoading] = useState<boolean>(false)
 
     const handleClick = (event: any) => {
         setAnchorEl(event.currentTarget)
@@ -67,8 +69,17 @@ const KanbanItem = (props: KanbarItemProps) => {
     //     setAnchorEl(null)
     // }
 
-    const handleSubmit = async () => { }
-
+    const handleSubmit = async (values: any) => {
+        setLoading(true)
+        try {
+            await handleEditLead(id, { first_name: title, phone, ...values })
+            setLoading(false)
+            setDepartment(null)
+        } catch (err: any) {
+            setLoading(false)
+            showResponseError(err.response.data, setError)
+        }
+    }
 
     const rowOptionsOpen = Boolean(anchorEl)
 
@@ -152,7 +163,7 @@ const KanbanItem = (props: KanbarItemProps) => {
                             <FormHelperText error={error?.phone?.error}>{error?.phone?.message}</FormHelperText>
                         </FormControl>
 
-                        <LoadingButton variant='contained'>Saqlash</LoadingButton>
+                        <LoadingButton variant='contained' type={'submit'} loading={loading}>Saqlash</LoadingButton>
                     </Form>
                 </DialogContent>
             </Dialog>
@@ -164,7 +175,7 @@ const KanbanItem = (props: KanbarItemProps) => {
                     <IconifyIcon icon={'material-symbols:close'} onClick={() => setOpen(null)} />
                 </DialogTitle>
                 <DialogContent>
-                    <Form id='ddsd' sx={{ minWidth: '280px', maxWidth: '350px', width: '100%', display: 'flex', flexDirection: 'column', gap: '15px', marginTop: '5px' }} setError={setError} onSubmit={handleSubmit} valueTypes='json'>
+                    <Form id='ddsdwqdwqd' sx={{ minWidth: '280px', maxWidth: '350px', width: '100%', display: 'flex', flexDirection: 'column', gap: '15px', marginTop: '5px' }} setError={setError} onSubmit={handleSubmit} valueTypes='json'>
                         <FormControl fullWidth>
                             <InputLabel>{t("Bo'lim")}</InputLabel>
                             <Select label={t("Bo'lim")} error={error?.department?.error} name='department' defaultValue={''} onChange={(e) => setDepartment(e.target.value)} >
@@ -185,7 +196,7 @@ const KanbanItem = (props: KanbarItemProps) => {
                             <FormHelperText error={error?.department?.error}>{error?.department?.message}</FormHelperText>
                         </FormControl>}
 
-                        <LoadingButton variant='contained'>Saqlash</LoadingButton>
+                        <LoadingButton variant='contained' type={'submit'} loading={loading}>Saqlash</LoadingButton>
                     </Form>
                 </DialogContent>
             </Dialog>

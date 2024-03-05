@@ -38,7 +38,9 @@ export type CardStatsCharacterProps = {
 
 export type KanbarItemProps = {
   title: string
+  id: any
   phone: string
   status: "pending" | "new" | "success"
   trend?: 'positive' | 'negative'
+  handleEditLead?: any
 }

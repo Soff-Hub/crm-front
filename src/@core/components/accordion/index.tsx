@@ -32,15 +32,17 @@ export default function AccordionCustom({ onView, item }: AccordionProps) {
         setAnchorEl(event.currentTarget)
     }
 
+    console.log(item);
+
     const rowOptionsOpen = Boolean(anchorEl)
 
     const handleRowOptionsClose = () => {
         setAnchorEl(null)
     }
 
-    const handleGetLeads = async () => {
+    const handleGetLeads = async (isLoad: boolean) => {
+        if (isLoad) setOpen(!open)
         setLoading(true)
-        setOpen(!open)
         try {
             const resp = await api.get(`leads/department-user-list/${item.id}/`)
             setLeadData(resp.data)
@@ -48,6 +50,17 @@ export default function AccordionCustom({ onView, item }: AccordionProps) {
         } catch (err) {
             console.log(err)
             setLoading(false)
+        }
+    }
+
+    const handleEditLead = async (id: any, values: any) => {
+        // setOpen(false)
+        try {
+            const resp = await api.patch(`leads/department-user-list/${id}/`, values)
+            await handleGetLeads(false)
+            return Promise.resolve(resp)
+        } catch (err) {
+            return Promise.reject(err)
         }
     }
 
@@ -63,7 +76,7 @@ export default function AccordionCustom({ onView, item }: AccordionProps) {
                 <Typography fontSize={16} fontWeight={'700'} sx={{ marginLeft: 'auto', marginRight: 2 }}>{item.student_count}</Typography>
                 <IconifyIcon
                     style={{ cursor: 'pointer', transform: open ? 'rotateZ(180deg)' : '' }}
-                    onClick={() => !open ? handleGetLeads() : setOpen(!open)} icon={'mingcute:list-collapse-line'}
+                    onClick={() => !open ? handleGetLeads(true) : setOpen(!open)} icon={'mingcute:list-collapse-line'}
                 />
                 <IconifyIcon
                     icon="system-uicons:circle-menu"
@@ -80,7 +93,7 @@ export default function AccordionCustom({ onView, item }: AccordionProps) {
                             <CircularProgress disableShrink sx={{ mt: 1, mb: 2, mx: 'auto' }} size={25} />
                         ) : (
                             leadData.length > 0 ? (
-                                leadData.map((lead) => <KanbanItem key={lead.id} status={'success'} title={lead.first_name} phone={lead.phone} />)
+                                leadData.map((lead) => <KanbanItem id={lead.id} handleEditLead={handleEditLead} key={lead.id} status={'success'} title={lead.first_name} phone={lead.phone} />)
                             ) : <Typography variant='body2' sx={{ fontStyle: 'italic', textAlign: 'center' }}>no data</Typography>
                         )
                     ) : ''
