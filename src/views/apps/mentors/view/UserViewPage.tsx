@@ -27,7 +27,7 @@ const UserView = () => {
         <UserViewLeft userData={teacherData} />
       </Grid>
       <Grid item xs={12} md={7} lg={8}>
-        <UserViewRight tab={url} invoiceData={[]} />
+        <UserViewRight tab={url} invoiceData={teacherData} />
       </Grid>
     </Grid>
   )

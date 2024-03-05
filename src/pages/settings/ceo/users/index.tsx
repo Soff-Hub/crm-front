@@ -5,6 +5,7 @@ import {
     DialogActions,
     DialogContent,
     DialogTitle,
+    FormHelperText,
     IconButton,
     InputLabel,
     Menu,
@@ -116,9 +117,10 @@ export default function GroupsPage() {
             handleEditClose()
         } catch (err: any) {
             setLoading(false)
-            toast.error(err.response.data, {
-                position: 'top-center'
-            })
+            showResponseError(err.response.data, setError)
+            // toast.error(JSON.stringify(err.response.data), {
+            //     position: 'top-center'
+            // })
         }
     }
 
@@ -353,7 +355,7 @@ export default function GroupsPage() {
                     Xodim ma'lumotlarini tahrirlash
                 </DialogTitle>
                 <DialogContent>
-                    {userData && <Form setError={setError} valueTypes='json' sx={{ marginTop: 10 }} onSubmit={handleSubmit} id='edit-emfdployee'>
+                    {userData && <Form setError={setError} valueTypes='form-data' sx={{ marginTop: 10 }} onSubmit={handleSubmit} id='edit-emfdployee'>
                         <Grid container spacing={6}>
                             <Grid item xs={12} sm={6}>
                                 <TextField
@@ -362,10 +364,12 @@ export default function GroupsPage() {
                                     label='Ism Familiya'
                                     name='first_name'
                                     defaultValue={userData.first_name}
+
                                 />
                             </Grid>
                             <Grid item xs={12} sm={6}>
-                                <TextField size='small' fullWidth label='Contact' name='phone' defaultValue={`${userData.phone}`} />
+                                <TextField size='small' error={error?.phone?.error} fullWidth label='Contact' name='phone' defaultValue={`${userData.phone}`} />
+                                <FormHelperText error>{error?.phone?.message}</FormHelperText>
                             </Grid>
                             <Grid item xs={12} sm={6}>
                                 <FormControl fullWidth>
@@ -373,6 +377,7 @@ export default function GroupsPage() {
                                     <Select
                                         size='small'
                                         label='Filial'
+                                        error={error?.branches?.error}
                                         multiple
                                         defaultValue={
                                             userData.branches.find(el => el.exists)
@@ -389,6 +394,7 @@ export default function GroupsPage() {
                                             </MenuItem>
                                         ))}
                                     </Select>
+                                    <FormHelperText error>{error?.branches?.message}</FormHelperText>
                                 </FormControl>
                             </Grid>
                             <Grid item xs={12} sm={6}>
@@ -406,6 +412,7 @@ export default function GroupsPage() {
                                         id='user-view-language'
                                         labelId='user-view-language-label'
                                         name='roles'
+                                        error={error?.roles?.error}
                                     >
                                         {userData.roles.map(branch => (
                                             <MenuItem key={branch?.id} value={branch.id}>
@@ -413,6 +420,7 @@ export default function GroupsPage() {
                                             </MenuItem>
                                         ))}
                                     </Select>
+                                    <FormHelperText error>{error?.roles?.message}</FormHelperText>
                                 </FormControl>
                             </Grid>
                             <Grid item xs={12} sm={6}>

@@ -31,8 +31,11 @@ const today = new Date().getDate()
 
 const Item = ({ defaultValue, groupId, userId, date }: { defaultValue: true | false | null | 0, groupId?: any, userId?: any, date?: any }) => {
   const [value, setValue] = useState<true | false | null | 0>(defaultValue)
+  const [open, setOpen] = useState<boolean>(false)
+
 
   const handleClick = async (status: any) => {
+    setOpen(false)
 
     if (value !== status) {
       setValue(status)
@@ -49,13 +52,12 @@ const Item = ({ defaultValue, groupId, userId, date }: { defaultValue: true | fa
 
   if (value === true || value === false || value === null) {
     return (
-      <HtmlTooltip title={
-        <span style={{ display: 'flex', gap: '6px', padding: '4px' }}>
+      <Box sx={{ position: 'relative' }}>
+        {open && <Box onBlur={() => setOpen(false)} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-evenly', gap: '0px', position: 'absolute', width: '60px', height: '30px', backgroundColor: 'rgba(0, 0, 0, 0.5)', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
           <IconifyIcon icon={'mdi:cancel-bold'} onClick={() => handleClick(false)} fontSize={18} color="#e31309" cursor={'pointer'} />
           <IconifyIcon icon={'game-icons:check-mark'} onClick={() => handleClick(true)} fontSize={18} color="#4be309" cursor={'pointer'} />
-        </span>
-      }>
-        <span>
+        </Box>}
+        {!open && <span onClick={() => setOpen(true)}>
           {
             value === true ? (
               <IconifyIcon icon={'game-icons:check-mark'} fontSize={18} color="#4be309" />
@@ -65,8 +67,8 @@ const Item = ({ defaultValue, groupId, userId, date }: { defaultValue: true | fa
               <IconifyIcon icon={'fluent:square-20-regular'} fontSize={18} color="#9e9e9e" />
             ) : ''
           }
-        </span>
-      </HtmlTooltip>
+        </span>}
+      </Box>
     )
   } else {
     return (
@@ -79,8 +81,10 @@ const Item = ({ defaultValue, groupId, userId, date }: { defaultValue: true | fa
 
 const ItemTeacher = ({ defaultValue, groupId, userId, date }: { defaultValue: true | false | null | 0, groupId?: any, userId?: any, date?: any }) => {
   const [value, setValue] = useState<true | false | null | 0>(defaultValue)
+  const [open, setOpen] = useState<boolean>(false)
 
   const handleClick = async (status: any) => {
+    setOpen(false)
 
     if (value !== status) {
       setValue(status)
@@ -99,13 +103,12 @@ const ItemTeacher = ({ defaultValue, groupId, userId, date }: { defaultValue: tr
   if (value === true || value === false || value === null) {
     if (today === Number(date.split('-')[2])) {
       return (
-        <HtmlTooltip title={
-          <span style={{ display: 'flex', gap: '6px', padding: '4px' }}>
+        <Box sx={{ position: 'relative' }}>
+          {open && <Box onBlur={() => setOpen(false)} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-evenly', gap: '0px', position: 'absolute', width: '60px', height: '30px', backgroundColor: 'rgba(0, 0, 0, 0.5)', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
             <IconifyIcon icon={'mdi:cancel-bold'} onClick={() => handleClick(false)} fontSize={18} color="#e31309" cursor={'pointer'} />
             <IconifyIcon icon={'game-icons:check-mark'} onClick={() => handleClick(true)} fontSize={18} color="#4be309" cursor={'pointer'} />
-          </span>
-        }>
-          <span>
+          </Box>}
+          {!open && <span onClick={() => setOpen(true)}>
             {
               value === true ? (
                 <IconifyIcon icon={'game-icons:check-mark'} fontSize={18} color="#4be309" />
@@ -115,8 +118,8 @@ const ItemTeacher = ({ defaultValue, groupId, userId, date }: { defaultValue: tr
                 <IconifyIcon icon={'fluent:square-20-regular'} fontSize={18} color="#9e9e9e" />
               ) : ''
             }
-          </span>
-        </HtmlTooltip>
+          </span>}
+        </Box>
       )
     } else {
       return (
@@ -150,7 +153,6 @@ const UserViewSecurity = ({ invoiceData }: any) => {
   const start_date: any = invoiceData?.start_date ? Number(invoiceData?.start_date.split('-')[1]) : ''
   const [loading, setLoading] = useState<boolean>(false)
   const { user } = useContext(AuthContext)
-
 
 
   const [attendance, setAttendance] = useState<any>(null)
@@ -238,13 +240,13 @@ const UserViewSecurity = ({ invoiceData }: any) => {
                               <td key={student.attendance.find((el: any) => el.date === hour.date).date} style={{ padding: '8px 0', textAlign: 'center', cursor: 'pointer' }}>
                                 {
                                   student.attendance.find((el: any) => el.date === hour.date).is_available === true ? (
-                                    <ItemTeacher defaultValue={true} groupId={1} userId={student.id} date={hour.date} />
+                                    <ItemTeacher defaultValue={true} groupId={invoiceData.id} userId={student.id} date={hour.date} />
                                   ) :
                                     student.attendance.find((el: any) => el.date === hour.date).is_available === false ? (
-                                      <ItemTeacher defaultValue={false} groupId={1} userId={student.id} date={hour.date} />
+                                      <ItemTeacher defaultValue={false} groupId={invoiceData.id} userId={student.id} date={hour.date} />
                                     ) :
                                       student.attendance.find((el: any) => el.date === hour.date).is_available === null ? (
-                                        <ItemTeacher defaultValue={null} groupId={1} userId={student.id} date={hour.date} />
+                                        <ItemTeacher defaultValue={null} groupId={invoiceData.id} userId={student.id} date={hour.date} />
                                       ) : <></>
                                 }
                               </td>
@@ -282,13 +284,13 @@ const UserViewSecurity = ({ invoiceData }: any) => {
                               <td key={student.attendance.find((el: any) => el.date === hour.date).date} style={{ padding: '8px 0', textAlign: 'center', cursor: 'pointer' }}>
                                 {
                                   student.attendance.find((el: any) => el.date === hour.date).is_available === true ? (
-                                    <Item defaultValue={true} groupId={1} userId={student.id} date={hour.date} />
+                                    <Item defaultValue={true} groupId={invoiceData.id} userId={student.id} date={hour.date} />
                                   ) :
                                     student.attendance.find((el: any) => el.date === hour.date).is_available === false ? (
-                                      <Item defaultValue={false} groupId={1} userId={student.id} date={hour.date} />
+                                      <Item defaultValue={false} groupId={invoiceData.id} userId={student.id} date={hour.date} />
                                     ) :
                                       student.attendance.find((el: any) => el.date === hour.date).is_available === null ? (
-                                        <Item defaultValue={null} groupId={1} userId={student.id} date={hour.date} />
+                                        <Item defaultValue={null} groupId={invoiceData.id} userId={student.id} date={hour.date} />
                                       ) : <></>
                                 }
                               </td>

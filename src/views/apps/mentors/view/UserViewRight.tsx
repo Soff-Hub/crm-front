@@ -23,12 +23,9 @@ import UserViewOverview from 'src/views/apps/mentors/view/UserViewOverview'
 import UserViewSecurity from 'src/views/apps/mentors/view/UserViewSecurity'
 
 
-// ** Types
-import { InvoiceType } from 'src/types/apps/invoiceTypes'
-
 interface Props {
   tab: string
-  invoiceData: InvoiceType[]
+  invoiceData: any
 }
 
 // ** Styled Tab component
@@ -100,7 +97,7 @@ const UserViewRight = ({ tab, invoiceData }: Props) => {
               <UserViewOverview />
             </TabPanel>
             <TabPanel sx={{ p: 0 }} value='security'>
-              <UserViewSecurity />
+              <UserViewSecurity data={invoiceData} />
             </TabPanel>
             <TabPanel sx={{ p: 0 }} value='billing-plan'>
               <UserViewBilling />
