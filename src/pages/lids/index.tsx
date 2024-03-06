@@ -123,7 +123,7 @@ const Lids = () => {
             <LidsKanban id={lead.id} setOpenLid={setOpenLid} setOpenItem={setOpenItem} key={lead.id} items={lead.children} title={lead.name} status='success' />
           ))
         }
-        {!isMobile && <Button onClick={() => setOpen('add-department')} sx={{ minWidth: '300px' }} size='small' variant='contained' startIcon={<IconifyIcon icon={'material-symbols:add'} />}>Yaratish</Button>}
+        {!isMobile && <Button onClick={() => setOpen('add-department')} sx={{ minWidth: '300px' }} size='small' variant='contained' startIcon={<IconifyIcon icon={'material-symbols:add'} />}>Bo'lim yaratish</Button>}
       </Box>
 
       <Dialog onClose={handleClose} open={open === "add-department"}>
