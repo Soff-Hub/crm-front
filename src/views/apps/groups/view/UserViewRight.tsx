@@ -57,7 +57,7 @@ const UserViewRight = ({ tab, invoiceData }: Props) => {
     router
       .push({
         pathname: path,
-        query: { id: router.query.id }
+        query: { id: router.query.id, moonth: router.query.moonth }
       })
       .then(() => setIsLoading(false))
   }

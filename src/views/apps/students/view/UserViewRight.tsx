@@ -32,7 +32,7 @@ const Tab = styled(MuiTab)<TabProps>(({ theme }) => ({
   }
 }))
 
-const UserViewRight = ({ tab, invoiceData, groupData }: any) => {
+const UserViewRight = ({ tab, invoiceData, groupData, rerender }: any) => {
   // ** State
   const [activeTab, setActiveTab] = useState<string>(tab)
   const [isLoading, setIsLoading] = useState<boolean>(true)
@@ -92,7 +92,7 @@ const UserViewRight = ({ tab, invoiceData, groupData }: any) => {
               <UserViewSecurity groupData={groupData?.groups || []} />
             </TabPanel>
             <TabPanel sx={{ p: 0 }} value='comments'>
-              <UserViewOverview data={groupData?.comments || []} />
+              <UserViewOverview data={groupData?.comments || []} rerender={rerender} />
             </TabPanel>
             <TabPanel sx={{ p: 0 }} value='sms'>
               {/* <UserViewOverview /> */}

@@ -31,7 +31,7 @@ const UserView = () => {
         <UserViewLeft userData={studentData} rerender={rerender} />
       </Grid>
       <Grid item xs={12} md={7} lg={8}>
-        <UserViewRight groupData={studentData} tab={url} invoiceData={[]} />
+        <UserViewRight groupData={studentData} rerender={rerender} tab={url} invoiceData={[]} />
       </Grid>
     </Grid>
   )

@@ -135,7 +135,7 @@ export const UserViewStudentsItem = ({ item }: ItemTypes) => {
             >
                 <MenuItem onClick={() => handleClose('payment')}>To'lov</MenuItem>
                 <MenuItem onClick={() => handleClose('left')}>Guruhdan chiqarish</MenuItem>
-                <MenuItem onClick={() => handleClose('notes')}>Eslatmala</MenuItem>
+                <MenuItem onClick={() => handleClose('notes')}>Eslatmalar</MenuItem>
             </Menu>
 
             <Dialog open={false}>
