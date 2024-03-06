@@ -169,7 +169,7 @@ export default function GroupsPage() {
     {
       xs: 0.3,
       title: t("ID"),
-      dataIndex: 'id'
+      dataIndex: 'index'
     },
     {
       xs: 1.5,

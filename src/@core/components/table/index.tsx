@@ -1,4 +1,5 @@
 import { Box } from '@mui/material'
+import { useRouter } from 'next/router'
 import React, { ReactNode } from 'react'
 
 export interface customTableDataProps {
@@ -17,6 +18,7 @@ interface DataTableProps {
 }
 
 export default function DataTable({ columns, data, minWidth, maxWidth, rowClick }: DataTableProps) {
+  const { query } = useRouter()
 
   const handleClick = (id: any) => {
     rowClick?.(id)
@@ -71,7 +73,7 @@ export default function DataTable({ columns, data, minWidth, maxWidth, rowClick 
             {columns.map((el: any, i) => (
               <Box key={i} sx={{ textAlign: 'start', flex: el.xs }} pt={'0 !important'} pl={'0 !important'}>
                 <Box sx={{ fontSize: 14 }}>
-                  {el.render ? el.render(item[`${el.dataIndex}`]) : el.renderId ? el.renderId(item[`${el.id}`], item[`${el.dataIndex}`]) : item[`${el.dataIndex}`]}
+                  {el.render ? el.render(item[`${el.dataIndex}`]) : el.renderId ? el.renderId(item[`${el.id}`], item[`${el.dataIndex}`]) : el.dataIndex === 'index' ? `${query.page && Number(query.page) > 1 ? ((Number(query?.page) - 1) * 10 + index + 1) : 1 + index}.` : item[`${el.dataIndex}`]}
                 </Box>
               </Box>
             ))}
