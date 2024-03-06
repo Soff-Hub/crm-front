@@ -1,11 +1,13 @@
 import { Box, CircularProgress, Typography } from "@mui/material"
 import { useRouter } from "next/router"
 import IconifyIcon from "src/@core/components/icon"
-import Tooltip from '@mui/material/Tooltip';
+import Tooltip, { TooltipProps, tooltipClasses } from '@mui/material/Tooltip';
+import ClickAwayListener from '@mui/material/ClickAwayListener';
 import { useContext, useEffect, useState } from "react";
 import api from "src/@core/utils/api";
 import getMontName, { getMontNumber } from "src/@core/utils/gwt-month-name";
 import { AuthContext } from "src/context/AuthContext";
+import { styled } from '@mui/material/styles';
 
 
 interface Result {
@@ -16,14 +18,26 @@ interface Result {
 const today = new Date().getDate()
 
 
+const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
+  <Tooltip {...props} classes={{ popper: className }} />
+))(({ theme }) => ({
+  [`& .${tooltipClasses.tooltip}`]: {
+    backgroundColor: '#f5f5f9',
+    color: 'rgba(0, 0, 0, 0.87)',
+    maxWidth: 180,
+    fontSize: theme.typography.pxToRem(12),
+    border: '1px solid #dadde9',
+  },
+}));
+
+
 const Item = ({ defaultValue, groupId, userId, date, opened_id, setOpenedId }: { defaultValue: true | false | null | 0, groupId?: any, userId?: any, date?: any, opened_id: any, setOpenedId: any }) => {
   const [value, setValue] = useState<true | false | null | 0>(defaultValue)
   const [open, setOpen] = useState<boolean>(false)
 
 
   const handleClick = async (status: any) => {
-    setOpen(false)
-
+    setOpenedId(null)
     if (value !== status) {
       setValue(status)
       const data = {
@@ -159,6 +173,7 @@ const UserViewSecurity = ({ invoiceData }: any) => {
   const [loading, setLoading] = useState<boolean>(false)
   const { user } = useContext(AuthContext)
   const [opened_id, setOpenedId] = useState<any>(null)
+  const [openTooltip, setOpenTooltip] = useState<null | string>(null)
 
 
   const [attendance, setAttendance] = useState<any>(null)
@@ -217,7 +232,7 @@ const UserViewSecurity = ({ invoiceData }: any) => {
         }
       </ul>
 
-      <Box sx={{ display: 'flex', width: '100%', paddingBottom: 3 }}>
+      <Box sx={{ display: 'flex', width: '100%', paddingBottom: 3, maxWidth: '100%', overflowX: 'scroll' }}>
         {
           loading ? (
             <Box sx={{ mt: 6, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
@@ -270,12 +285,43 @@ const UserViewSecurity = ({ invoiceData }: any) => {
                 </tbody>
               </table>
             ) : (
-              <table style={{ width: '100%' }}>
+              <table style={{ minWidth: '1000px' }}>
                 <thead>
-                  <tr style={{}}>
-                    <td style={{ padding: '8px 0', textAlign: 'start' }}><Typography>O'quvchilar</Typography></td>
+                  <tr style={{ borderBottom: '1px solid' }}>
+                    <td style={{ padding: '8px 0', textAlign: 'start', borderRight: '1px solid' }}><Typography>Mavzular</Typography></td>
                     {
-                      attendance && attendance.days.map((hour: any) => <th key={hour.date} style={{ textAlign: 'center', minWidth: 50, padding: '8px 0' }}><Typography>{`${hour.date.split('-')[2]}`}</Typography></th>)
+                      attendance && attendance.days.map((hour: any) => <td key={hour.date} style={{ textAlign: 'center', minWidth: 50, padding: '8px 0', cursor: 'pointer' }}>
+                        <div>
+                          <HtmlTooltip
+                            PopperProps={{
+                              disablePortal: true,
+                            }}
+                            onClose={() => setOpenTooltip(null)}
+                            open={openTooltip === hour.date}
+                            disableFocusListener
+                            disableHoverListener
+                            disableTouchListener
+                            arrow
+                            title={
+                              <div>
+                                <p style={{ margin: '0', marginBottom: '4px' }}>Adfsasasasasasasasasasasasasasasasas</p>
+                                <IconifyIcon icon={'iconamoon:edit-thin'} fontSize={16} style={{ marginRight: '20px' }} />
+                                <IconifyIcon icon={'fluent:delete-32-regular'} fontSize={16} color="red" />
+                              </div>
+                            }
+                          >
+                            <span onClick={() => setOpenTooltip((c) => c === hour.date ? null : hour.date)} >
+                              <IconifyIcon icon="ion:open-outline" />
+                            </span>
+                          </HtmlTooltip>
+                        </div>
+                      </td>)
+                    }
+                  </tr>
+                  <tr style={{ borderBottom: '1px solid' }}>
+                    <td style={{ padding: '8px 0', textAlign: 'start', borderRight: '1px solid', maxWidth: '100px' }}><Typography>O'quvchilar</Typography></td>
+                    {
+                      attendance && attendance.days.map((hour: any) => <th key={hour.date} style={{ textAlign: 'center', minWidth: 50, padding: '8px 0', cursor: 'pointer' }}><Typography>{`${hour.date.split('-')[2]}`}</Typography></th>)
                     }
                   </tr>
                 </thead>
@@ -283,7 +329,7 @@ const UserViewSecurity = ({ invoiceData }: any) => {
                   {
                     attendance && attendance.students.map((student: any) => (
                       <tr key={student.id} style={{}}>
-                        <td style={{ padding: '8px 0', textAlign: 'start', fontSize: '14px' }}>{student.first_name}</td>
+                        <td style={{ padding: '8px 0', textAlign: 'start', fontSize: '14px', borderRight: '1px solid' }}>{student.first_name}</td>
                         {
                           attendance.days.map((hour: any) => (
                             student.attendance.some((el: any) => el.date === hour.date) && student.attendance.find((el: any) => el.date === hour.date) ? (

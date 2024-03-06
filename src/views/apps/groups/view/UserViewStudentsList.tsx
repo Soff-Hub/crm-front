@@ -32,6 +32,7 @@ interface StudentType {
 
 interface ItemTypes {
     item: StudentType
+    index: any
 }
 
 const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
@@ -48,7 +49,7 @@ const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
     },
 }));
 
-export const UserViewStudentsItem = ({ item }: ItemTypes) => {
+export const UserViewStudentsItem = ({ item, index }: ItemTypes) => {
     const { student } = item
     const { first_name, phone, added_at, created_at, balance, comment, id } = student
     const { push } = useRouter()
@@ -63,15 +64,13 @@ export const UserViewStudentsItem = ({ item }: ItemTypes) => {
         setAnchorEl(null);
         if (value === 'notes') push(`/students/view/comments/?student=${id}`)
         else if (value === 'payment') push(`/students/view/security/?student=${id}`)
-        else if (value === 'left') {
-
-        }
+        else if (value === 'left') { }
     };
 
 
     return (
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>
-            <Typography variant='body2' sx={{ width: '20px' }}>{id}.</Typography>
+            <Typography variant='body2' sx={{ width: '20px' }}>{index}.</Typography>
             <Status color={balance < 0 ? 'error' : 'success'} />
             {user?.role !== 'teacher' ? <HtmlTooltip className='' title={
                 <Box sx={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', padding: '10px' }}>
@@ -109,7 +108,9 @@ export const UserViewStudentsItem = ({ item }: ItemTypes) => {
                     </Link>
                 </Box>
             }>
-                <Typography sx={{ cursor: 'pointer' }} variant='body2' fontSize={10}>{first_name}</Typography>
+                <Link href={`/students/view/security/?student=${id}`} style={{ textDecoration: 'underline', color: 'gray' }}>
+                    <Typography sx={{ cursor: 'pointer' }} variant='body2' fontSize={10}>{first_name}</Typography>
+                </Link>
             </HtmlTooltip> : <Typography sx={{ cursor: 'pointer' }} variant='body2' fontSize={10}>{first_name}</Typography>}
             <Typography variant='body2' fontSize={10} flexGrow={1} textAlign={'end'} mr={5}>{phone}</Typography>
             <Typography
@@ -154,8 +155,8 @@ export default function UserViewStudentsList({ data }: any) {
             <TextField autoComplete='off' placeholder='Qidirish...' size='small' fullWidth />
             <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%', mt: '10px', gap: '5px' }}>
                 {
-                    data.map((el: any) => (
-                        <UserViewStudentsItem key={el.id} item={el} />
+                    data.map((el: any, index: any) => (
+                        <UserViewStudentsItem key={el.id} item={el} index={index + 1} />
                     ))
                 }
             </Box>

@@ -4,6 +4,7 @@ import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
 import DataTable from "src/@core/components/table"
+import useResponsive from "src/@core/hooks/useResponsive"
 import api from "src/@core/utils/api"
 import { formatDateTime } from "src/@core/utils/date-formatter"
 import { formatCurrency } from "src/@core/utils/format-currency"
@@ -17,6 +18,7 @@ const UserViewSecurity = ({ groupData }: any) => {
   const { t } = useTranslation()
   const { query } = useRouter()
   const [data, setData] = useState([])
+  const { isMobile } = useResponsive()
 
   const columns: customTableProps[] = [
     {
@@ -71,7 +73,7 @@ const UserViewSecurity = ({ groupData }: any) => {
               groupData.map((group: any) => (
                 <Link key={group.id} href={`/groups/view/security/?id=${group.group_data.id}&moonth=${getMontName(null)}`} style={{ textDecoration: 'none' }}>
                   <Box sx={{ display: 'flex', gap: '20px' }} >
-                    <Card sx={{ width: '50%' }}>
+                    <Card sx={{ width: isMobile ? '100%' : '50%' }}>
                       <CardContent sx={{ display: 'flex', justifyContent: 'space-between' }}>
                         <Box sx={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
                           <Typography sx={{ fontSize: '12px' }}>{group.group_data.name}</Typography>
