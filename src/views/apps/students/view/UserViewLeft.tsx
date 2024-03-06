@@ -98,7 +98,7 @@ const UserViewLeft = ({ userData, rerender }: { userData: StudentTypes | null, r
       await api.post('auth/student/description/', { user: userData?.id, ...value })
       setLoading(false)
       setOpenEdit(null)
-      
+
       return await rerender()
     } catch (err: any) {
       showResponseError(err.response.data, setError)
@@ -284,7 +284,7 @@ const UserViewLeft = ({ userData, rerender }: { userData: StudentTypes | null, r
             To'lov qilish
           </DialogTitle>
           <DialogContent>
-            <Form reqiuredFields={['group']} setError={setError} valueTypes='json' sx={{ marginTop: 10 }} onSubmit={handleMergeToGroup} id='edit-employee-pay'>
+            <Form reqiuredFields={['group']} setError={setError} valueTypes='json' sx={{ marginTop: 10, display: 'flex', flexDirection: 'column', gap: '10px' }} onSubmit={handleMergeToGroup} id='edit-employee-pay'>
               <FormControl fullWidth>
                 <InputLabel size='small' id='user-view-language-label'>{t("To'lov usulini tanlang")}</InputLabel>
                 <Select
@@ -298,6 +298,19 @@ const UserViewLeft = ({ userData, rerender }: { userData: StudentTypes | null, r
                   }
                 </Select>
                 <FormHelperText error={error.branch?.error}>{error.branch?.message}</FormHelperText>
+              </FormControl>
+
+              <FormControl fullWidth>
+                <TextField
+                  error={error?.amount}
+                  rows={4}
+                  label="Miqdori (so'm)"
+                  size='small'
+                  name='amount'
+                  defaultValue={''}
+                  type='number'
+                />
+                <FormHelperText error={error.amount}>{error.amount?.message}</FormHelperText>
               </FormControl>
 
               <FormControl fullWidth>
@@ -419,6 +432,42 @@ const UserViewLeft = ({ userData, rerender }: { userData: StudentTypes | null, r
                   rows={4}
                   multiline
                   label="Izoh"
+                  name='description'
+                  defaultValue={''}
+                />
+                <FormHelperText error={error.description}>{error.description?.message}</FormHelperText>
+              </FormControl>
+              <DialogActions sx={{ justifyContent: 'center' }}>
+                <LoadingButton loading={loading} type='submit' variant='contained' sx={{ mr: 1 }}>
+                  {t("Saqlash")}
+                </LoadingButton>
+                <Button variant='outlined' type='button' color='secondary' onClick={handleEditClose}>
+                  {t("Bekor Qilish")}
+                </Button>
+              </DialogActions>
+            </Form>
+          </DialogContent>
+        </Dialog>
+
+        {/*   Payment  */}
+        <Dialog
+          open={openEdit === "sms"}
+          onClose={handleEditClose}
+          aria-labelledby='user-view-edit'
+          sx={{ '& .MuiPaper-root': { width: '100%', maxWidth: 450, p: [1, 3] } }}
+          aria-describedby='user-view-edit-description'
+        >
+          <DialogTitle id='user-view-edit' sx={{ textAlign: 'center', fontSize: '1.5rem !important' }}>
+            Xabar yuborish (sms)
+          </DialogTitle>
+          <DialogContent>
+            <Form setError={setError} valueTypes='json' sx={{ marginTop: 10 }} onSubmit={handleMergeToGroup} id='fsdfsdf'>
+              <FormControl fullWidth>
+                <TextField
+                  error={error?.description}
+                  rows={4}
+                  multiline
+                  label="Xabar"
                   name='description'
                   defaultValue={''}
                 />
