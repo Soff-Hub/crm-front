@@ -16,7 +16,7 @@ interface Result {
 const today = new Date().getDate()
 
 
-const Item = ({ defaultValue, groupId, userId, date }: { defaultValue: true | false | null | 0, groupId?: any, userId?: any, date?: any }) => {
+const Item = ({ defaultValue, groupId, userId, date, opened_id, setOpenedId }: { defaultValue: true | false | null | 0, groupId?: any, userId?: any, date?: any, opened_id: any, setOpenedId: any }) => {
   const [value, setValue] = useState<true | false | null | 0>(defaultValue)
   const [open, setOpen] = useState<boolean>(false)
 
@@ -37,6 +37,14 @@ const Item = ({ defaultValue, groupId, userId, date }: { defaultValue: true | fa
     }
   }
 
+  useEffect(() => {
+    if (`${userId}-${date}` === opened_id) {
+      setOpen(true)
+    } else {
+      setOpen(false)
+    }
+  }, [opened_id])
+
   if (value === true || value === false || value === null) {
     return (
       <Box sx={{ position: 'relative' }}>
@@ -45,7 +53,7 @@ const Item = ({ defaultValue, groupId, userId, date }: { defaultValue: true | fa
           <IconifyIcon icon={'game-icons:check-mark'} onClick={() => handleClick(true)} fontSize={18} color="#4be309" cursor={'pointer'} />
           <IconifyIcon icon={'material-symbols-light:square-outline'} onClick={() => handleClick(null)} fontSize={18} color="#4be309" cursor={'pointer'} />
         </Box>}
-        {!open && <span onClick={() => setOpen(true)}>
+        {!open && <span onClick={() => setOpenedId(`${userId}-${date}`)}>
           {
             value === true ? (
               <IconifyIcon icon={'game-icons:check-mark'} fontSize={18} color="#4be309" />
@@ -67,7 +75,7 @@ const Item = ({ defaultValue, groupId, userId, date }: { defaultValue: true | fa
   }
 }
 
-const ItemTeacher = ({ defaultValue, groupId, userId, date }: { defaultValue: true | false | null | 0, groupId?: any, userId?: any, date?: any }) => {
+const ItemTeacher = ({ defaultValue, groupId, userId, date, opened_id, setOpenedId }: { defaultValue: true | false | null | 0, groupId?: any, userId?: any, date?: any, opened_id: any, setOpenedId: any }) => {
   const [value, setValue] = useState<true | false | null | 0>(defaultValue)
   const [open, setOpen] = useState<boolean>(false)
 
@@ -86,6 +94,14 @@ const ItemTeacher = ({ defaultValue, groupId, userId, date }: { defaultValue: tr
       await api.post('common/student-attendance/', data)
     }
   }
+
+  useEffect(() => {
+    if (`${userId}-${date}` === opened_id) {
+      setOpen(true)
+    } else {
+      setOpen(false)
+    }
+  }, [opened_id])
 
 
   if (value === true || value === false || value === null) {
@@ -142,6 +158,7 @@ const UserViewSecurity = ({ invoiceData }: any) => {
   const start_date: any = invoiceData?.start_date ? Number(invoiceData?.start_date.split('-')[1]) : ''
   const [loading, setLoading] = useState<boolean>(false)
   const { user } = useContext(AuthContext)
+  const [opened_id, setOpenedId] = useState<any>(null)
 
 
   const [attendance, setAttendance] = useState<any>(null)
@@ -229,19 +246,19 @@ const UserViewSecurity = ({ invoiceData }: any) => {
                               <td key={student.attendance.find((el: any) => el.date === hour.date).date} style={{ padding: '8px 0', textAlign: 'center', cursor: 'pointer' }}>
                                 {
                                   student.attendance.find((el: any) => el.date === hour.date).is_available === true ? (
-                                    <ItemTeacher defaultValue={true} groupId={invoiceData.id} userId={student.id} date={hour.date} />
+                                    <ItemTeacher opened_id={opened_id} setOpenedId={setOpenedId} defaultValue={true} groupId={invoiceData.id} userId={student.id} date={hour.date} />
                                   ) :
                                     student.attendance.find((el: any) => el.date === hour.date).is_available === false ? (
-                                      <ItemTeacher defaultValue={false} groupId={invoiceData.id} userId={student.id} date={hour.date} />
+                                      <ItemTeacher opened_id={opened_id} setOpenedId={setOpenedId} defaultValue={false} groupId={invoiceData.id} userId={student.id} date={hour.date} />
                                     ) :
                                       student.attendance.find((el: any) => el.date === hour.date).is_available === null ? (
-                                        <ItemTeacher defaultValue={null} groupId={invoiceData.id} userId={student.id} date={hour.date} />
+                                        <ItemTeacher opened_id={opened_id} setOpenedId={setOpenedId} defaultValue={null} groupId={invoiceData.id} userId={student.id} date={hour.date} />
                                       ) : <></>
                                 }
                               </td>
                             ) : <td key={hour.date} style={{ padding: '8px 0', textAlign: 'center', cursor: 'not-allowed' }}>
                               <span>
-                                <ItemTeacher defaultValue={0} />
+                                <ItemTeacher opened_id={opened_id} setOpenedId={setOpenedId} defaultValue={0} />
                               </span>
                             </td>
                           )
@@ -273,19 +290,19 @@ const UserViewSecurity = ({ invoiceData }: any) => {
                               <td key={student.attendance.find((el: any) => el.date === hour.date).date} style={{ padding: '8px 0', textAlign: 'center', cursor: 'pointer' }}>
                                 {
                                   student.attendance.find((el: any) => el.date === hour.date).is_available === true ? (
-                                    <Item defaultValue={true} groupId={invoiceData.id} userId={student.id} date={hour.date} />
+                                    <Item opened_id={opened_id} setOpenedId={setOpenedId} defaultValue={true} groupId={invoiceData.id} userId={student.id} date={hour.date} />
                                   ) :
                                     student.attendance.find((el: any) => el.date === hour.date).is_available === false ? (
-                                      <Item defaultValue={false} groupId={invoiceData.id} userId={student.id} date={hour.date} />
+                                      <Item opened_id={opened_id} setOpenedId={setOpenedId} defaultValue={false} groupId={invoiceData.id} userId={student.id} date={hour.date} />
                                     ) :
                                       student.attendance.find((el: any) => el.date === hour.date).is_available === null ? (
-                                        <Item defaultValue={null} groupId={invoiceData.id} userId={student.id} date={hour.date} />
+                                        <Item opened_id={opened_id} setOpenedId={setOpenedId} defaultValue={null} groupId={invoiceData.id} userId={student.id} date={hour.date} />
                                       ) : <></>
                                 }
                               </td>
                             ) : <td key={hour.date} style={{ padding: '8px 0', textAlign: 'center', cursor: 'not-allowed' }}>
                               <span>
-                                <Item defaultValue={0} />
+                                <Item opened_id={opened_id} setOpenedId={setOpenedId} defaultValue={0} />
                               </span>
                             </td>
                           )
