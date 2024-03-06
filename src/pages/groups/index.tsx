@@ -189,7 +189,7 @@ export default function GroupsPage() {
       dataIndex: 'name'
     },
     {
-      xs: 0.8,
+      xs: 1,
       title: t("Kurs nomi"),
       dataIndex: 'course_name'
     },
@@ -212,15 +212,14 @@ export default function GroupsPage() {
 
     {
       xs: 1,
-      title: t("Guruh ochilgan sana"),
+      title: t("Ochilgan sana"),
       dataIndex: 'start_date'
     },
     {
       xs: 1,
       title: t("Dars soati"),
       dataIndex: 'start_at',
-
-      // render: (time) => timeFormatter(time)
+      render: (time) => time.split(':').splice(0, 2).join(':')
     },
     {
       xs: 1.4,
@@ -260,12 +259,11 @@ export default function GroupsPage() {
     const days = {}
 
 
-    if (weekdays === 0) {
+    if ((weekdays === null || weekdays === 0) && customWeekdays.length > 0) {
       Object.assign(days, { day_of_week: customWeekdays })
     } else {
       Object.assign(days, { day_of_week: values.day_of_week.split(',') })
     }
-    alert(JSON.stringify(days))
 
     try {
       await updateGroup(groupData?.id, obj)
@@ -283,9 +281,6 @@ export default function GroupsPage() {
       setLoading(false)
       console.log(err);
     }
-
-
-
   }
 
   const handlePagination = (page: string) => {
@@ -632,7 +627,7 @@ export default function GroupsPage() {
                           cursor: 'pointer'
                         }}>
                         <span>{TranslateWeekName[el]}</span>
-                        <input type='checkbox' onChange={() => (setWeekDays(0), setCustomWeekDays((current: any) => current.includes(el) ? [...current.filter((item: any) => item !== el)] : [...current, el]))} defaultChecked={groupData.day_of_week.includes(el)} />
+                        <input type='checkbox' onChange={() => (setCustomWeekDays((current: any) => current.includes(el) ? [...current.filter((item: any) => item !== el)] : [...current, el]))} defaultChecked={customWeekdays.includes(el)} />
                       </label>
                     ))
                   }
