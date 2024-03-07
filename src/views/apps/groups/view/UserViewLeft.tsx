@@ -40,6 +40,8 @@ import api from 'src/@core/utils/api';
 import { useRouter } from 'next/router';
 import useDebounce from 'src/hooks/useDebounce';
 import { AuthContext } from 'src/context/AuthContext';
+import { TranslateWeekName } from 'src/pages/groups';
+import getLessonDays from 'src/@core/utils/getLessonDays';
 
 interface ColorsType {
   [key: string]: ThemeColor
@@ -190,6 +192,9 @@ const UserViewLeft = ({ userData }: { userData?: any }) => {
               <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', alignItems: 'center' }}>
                 <Typography>Dars:</Typography>
                 <Typography>{data.room_data.name}da -{data.start_at}</Typography>
+              </Box>
+              <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', alignItems: 'center' }}>
+                <Typography>{getLessonDays(data.day_of_week)}</Typography>
               </Box>
               <Box sx={{ pt: 2, pb: 1 }}>
                 {
