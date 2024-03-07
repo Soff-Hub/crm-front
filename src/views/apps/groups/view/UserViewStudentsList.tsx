@@ -41,7 +41,7 @@ const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
     [`& .${tooltipClasses.tooltip}`]: {
         backgroundColor: '#f5f5f9',
         width: '300px',
-        height: '330px',
+        height: '300px',
         color: 'rgba(0, 0, 0, 0.87)',
         maxWidth: 300,
         fontSize: theme.typography.pxToRem(12),
@@ -70,8 +70,8 @@ export const UserViewStudentsItem = ({ item, index }: ItemTypes) => {
 
     return (
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>
-            <Typography variant='body2' sx={{ width: '20px' }}>{index}.</Typography>
-            <Status color={balance < 0 ? 'error' : 'success'} />
+            <Typography sx={{ width: '20px' }}>{index}.</Typography>
+            <Status color={balance < 1 ? 'error' : 'success'} />
             {user?.role !== 'teacher' ? <HtmlTooltip className='' title={
                 <Box sx={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', padding: '10px' }}>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', py: 1 }}>
@@ -102,17 +102,13 @@ export const UserViewStudentsItem = ({ item, index }: ItemTypes) => {
                         <Typography fontSize={12} fontStyle={'italic'}>{comment.comment}</Typography>
                         <Typography fontSize={12} variant='body2'>{`${comment.user} ${formatDateTime(comment.created_at)}`}</Typography>
                     </Box>}
-                    <Link href={`/students/view/security/?student=${id}`} style={{ color: 'black', marginTop: 5 }}>
-                        <span>Profilga o'tish</span>
-                        <IconifyIcon fontSize={12} icon={'ion:arrow-redo-outline'} />
-                    </Link>
                 </Box>
             }>
                 <Link href={`/students/view/security/?student=${id}`} style={{ textDecoration: 'underline', color: 'gray' }}>
-                    <Typography sx={{ cursor: 'pointer' }} variant='body2' fontSize={10}>{first_name}</Typography>
+                    <Typography sx={{ cursor: 'pointer' }} fontSize={10}>{first_name}</Typography>
                 </Link>
-            </HtmlTooltip> : <Typography sx={{ cursor: 'pointer' }} variant='body2' fontSize={10}>{first_name}</Typography>}
-            <Typography variant='body2' fontSize={10} flexGrow={1} textAlign={'end'} mr={5}>{phone}</Typography>
+            </HtmlTooltip> : <Typography sx={{ cursor: 'pointer' }} fontSize={10}>{first_name}</Typography>}
+            <Typography fontSize={10} flexGrow={1} textAlign={'end'} mr={5}>{phone}</Typography>
             <Typography
                 fontSize={11}
                 id="fade-button"

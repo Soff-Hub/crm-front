@@ -243,10 +243,41 @@ const UserViewSecurity = ({ invoiceData }: any) => {
             user?.role === "teacher" ? (
               <table style={{ width: '100%' }}>
                 <thead>
-                  <tr style={{}}>
-                    <td style={{ padding: '8px 0', textAlign: 'start' }}><Typography>O'quvchilar</Typography></td>
+                  <tr style={{ borderBottom: '1px solid #c3cccc' }}>
+                    <td style={{ padding: '8px 0', textAlign: 'start', borderRight: '1px solid #c3cccc' }}><Typography>Mavzular</Typography></td>
                     {
-                      attendance && attendance.days.map((hour: any) => <th key={hour.date} style={{ textAlign: 'center', minWidth: 50, padding: '8px 0' }}><Typography>{`${hour.date.split('-')[2]}`}</Typography></th>)
+                      attendance && attendance.days.map((hour: any) => <td key={hour.date} style={{ textAlign: 'center', minWidth: 50, padding: '8px 0', cursor: 'pointer' }}>
+                        <div>
+                          <HtmlTooltip
+                            PopperProps={{
+                              disablePortal: true,
+                            }}
+                            onClose={() => setOpenTooltip(null)}
+                            open={openTooltip === hour.date}
+                            disableFocusListener
+                            disableHoverListener
+                            disableTouchListener
+                            arrow
+                            title={
+                              <div>
+                                <p style={{ margin: '0', marginBottom: '4px' }}>Adfsasasasasasasasasasasasasasasasas</p>
+                                <IconifyIcon icon={'iconamoon:edit-thin'} fontSize={16} style={{ marginRight: '20px' }} />
+                                <IconifyIcon icon={'fluent:delete-32-regular'} fontSize={16} color="red" />
+                              </div>
+                            }
+                          >
+                            <span onClick={() => setOpenTooltip((c) => c === hour.date ? null : hour.date)} >
+                              <IconifyIcon icon="ion:open-outline" />
+                            </span>
+                          </HtmlTooltip>
+                        </div>
+                      </td>)
+                    }
+                  </tr>
+                  <tr style={{ borderBottom: '1px solid #c3cccc' }}>
+                    <td style={{ padding: '8px 0', textAlign: 'start', borderRight: '1px solid #c3cccc', maxWidth: '100px' }}><Typography>O'quvchilar</Typography></td>
+                    {
+                      attendance && attendance.days.map((hour: any) => <th key={hour.date} style={{ textAlign: 'center', minWidth: 50, padding: '8px 0', cursor: 'pointer' }}><Typography>{`${hour.date.split('-')[2]}`}</Typography></th>)
                     }
                   </tr>
                 </thead>
@@ -254,7 +285,7 @@ const UserViewSecurity = ({ invoiceData }: any) => {
                   {
                     attendance && attendance.students.map((student: any) => (
                       <tr key={student.id} style={{}}>
-                        <td style={{ padding: '8px 0', textAlign: 'start', fontSize: '14px' }}>{student.first_name}</td>
+                        <td style={{ padding: '8px 0', textAlign: 'start', fontSize: '14px', borderRight: '1px solid #c3cccc' }}>{student.first_name}</td>
                         {
                           attendance.days.map((hour: any) => (
                             student.attendance.some((el: any) => el.date === hour.date) && student.attendance.find((el: any) => el.date === hour.date) ? (
@@ -287,8 +318,8 @@ const UserViewSecurity = ({ invoiceData }: any) => {
             ) : (
               <table style={{ minWidth: '1000px' }}>
                 <thead>
-                  <tr style={{ borderBottom: '1px solid' }}>
-                    <td style={{ padding: '8px 0', textAlign: 'start', borderRight: '1px solid' }}><Typography>Mavzular</Typography></td>
+                  <tr style={{ borderBottom: '1px solid #c3cccc' }}>
+                    <td style={{ padding: '8px 0', textAlign: 'start', borderRight: '1px solid #c3cccc' }}><Typography>Mavzular</Typography></td>
                     {
                       attendance && attendance.days.map((hour: any) => <td key={hour.date} style={{ textAlign: 'center', minWidth: 50, padding: '8px 0', cursor: 'pointer' }}>
                         <div>
@@ -318,8 +349,8 @@ const UserViewSecurity = ({ invoiceData }: any) => {
                       </td>)
                     }
                   </tr>
-                  <tr style={{ borderBottom: '1px solid' }}>
-                    <td style={{ padding: '8px 0', textAlign: 'start', borderRight: '1px solid', maxWidth: '100px' }}><Typography>O'quvchilar</Typography></td>
+                  <tr style={{ borderBottom: '1px solid #c3cccc' }}>
+                    <td style={{ padding: '8px 0', textAlign: 'start', borderRight: '1px solid #c3cccc', maxWidth: '100px' }}><Typography>O'quvchilar</Typography></td>
                     {
                       attendance && attendance.days.map((hour: any) => <th key={hour.date} style={{ textAlign: 'center', minWidth: 50, padding: '8px 0', cursor: 'pointer' }}><Typography>{`${hour.date.split('-')[2]}`}</Typography></th>)
                     }
@@ -329,7 +360,7 @@ const UserViewSecurity = ({ invoiceData }: any) => {
                   {
                     attendance && attendance.students.map((student: any) => (
                       <tr key={student.id} style={{}}>
-                        <td style={{ padding: '8px 0', textAlign: 'start', fontSize: '14px', borderRight: '1px solid' }}>{student.first_name}</td>
+                        <td style={{ padding: '8px 0', textAlign: 'start', fontSize: '14px', borderRight: '1px solid #c3cccc' }}>{student.first_name}</td>
                         {
                           attendance.days.map((hour: any) => (
                             student.attendance.some((el: any) => el.date === hour.date) && student.attendance.find((el: any) => el.date === hour.date) ? (

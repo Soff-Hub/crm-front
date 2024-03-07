@@ -1,13 +1,14 @@
 // ** MUI Imports
-import React, { ReactNode, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { styled } from '@mui/material/styles'
 import MuiMenu, { MenuProps } from '@mui/material/Menu'
-import MuiMenuItem, { MenuItemProps } from '@mui/material/MenuItem'
 
-import { Box, CircularProgress, MenuItem, Typography } from '@mui/material'
+import { Box, CircularProgress, Dialog, DialogContent, DialogTitle, FormControl, MenuItem, TextField, Typography } from '@mui/material'
 import IconifyIcon from '../icon'
 import api from 'src/@core/utils/api'
 import KanbanItem from '../card-statistics/kanban-item'
+import Form from '../form'
+import LoadingButton from '@mui/lab/LoadingButton'
 
 interface AccordionProps {
     title?: string
@@ -27,12 +28,13 @@ export default function AccordionCustom({ onView, item }: AccordionProps) {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
     const [loading, setLoading] = useState<boolean>(false)
     const [leadData, setLeadData] = useState<any[]>([])
+    const [openDialog, setOpenDialog] = useState<'sms' | 'edit' | 'delete' | null>(null)
+    const [error, setError] = useState<any>({})
+    const [count, setCount] = useState<any>(item.student_count)
 
     const handleClick = (event: any) => {
         setAnchorEl(event.currentTarget)
     }
-
-    console.log(item);
 
     const rowOptionsOpen = Boolean(anchorEl)
 
@@ -46,6 +48,7 @@ export default function AccordionCustom({ onView, item }: AccordionProps) {
         try {
             const resp = await api.get(`leads/department-user-list/${item.id}/`)
             setLeadData(resp.data)
+            setCount(resp.data.length)
             setLoading(false)
         } catch (err) {
             console.log(err)
@@ -64,6 +67,14 @@ export default function AccordionCustom({ onView, item }: AccordionProps) {
         }
     }
 
+    const editDepartmentItem = () => {
+        setLoading(true)
+        setTimeout(() => {
+            setLoading(false)
+            setOpenDialog(null)
+        }, 1000);
+    }
+
     useEffect(() => {
         if (open) onView();
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -73,7 +84,7 @@ export default function AccordionCustom({ onView, item }: AccordionProps) {
         <Box sx={{ width: '100%', border: '1px solid #cfcccc', borderRadius: 1 }}>
             <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', padding: '10px' }}>
                 <Typography fontSize={16}>{item.name}</Typography>
-                <Typography fontSize={16} fontWeight={'700'} sx={{ marginLeft: 'auto', marginRight: 2 }}>{item.student_count}</Typography>
+                <Typography fontSize={16} fontWeight={'700'} sx={{ marginLeft: 'auto', marginRight: 2 }}>{count}</Typography>
                 <IconifyIcon
                     style={{ cursor: 'pointer', transform: open ? 'rotateZ(180deg)' : '' }}
                     onClick={() => !open ? handleGetLeads(true) : setOpen(!open)} icon={'mingcute:list-collapse-line'}
@@ -114,19 +125,68 @@ export default function AccordionCustom({ onView, item }: AccordionProps) {
                 }}
                 PaperProps={{ style: { minWidth: '8rem' } }}
             >
-                <MenuItem onClick={undefined} sx={{ '& svg': { mr: 2 } }}>
+                <MenuItem onClick={() => setOpenDialog('sms')} sx={{ '& svg': { mr: 2 } }}>
                     <IconifyIcon icon='mdi:sms' fontSize={20} />
                     SMS yuborish
                 </MenuItem>
-                <MenuItem onClick={undefined} sx={{ '& svg': { mr: 2 } }}>
+                <MenuItem onClick={() => setOpenDialog('edit')} sx={{ '& svg': { mr: 2 } }}>
                     <IconifyIcon icon='mdi:edit' fontSize={20} />
                     Tahrirlash
                 </MenuItem>
-                <MenuItem onClick={undefined} sx={{ '& svg': { mr: 2 } }}>
+                <MenuItem onClick={() => setOpenDialog('delete')} sx={{ '& svg': { mr: 2 } }}>
                     <IconifyIcon icon='mdi:delete' fontSize={20} />
                     O'chirish
                 </MenuItem>
             </Menu>
+
+            {/* EDIT Item*/}
+            <Dialog open={openDialog === 'edit'} onClose={() => setOpenDialog(null)}>
+                <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <Typography>Tahrirlash</Typography>
+                    <IconifyIcon onClick={() => setOpenDialog(null)} icon={'material-symbols:close'} />
+                </DialogTitle>
+                <DialogContent sx={{ minWidth: '300px' }}>
+                    <Form setError={setError} valueTypes='json' onSubmit={editDepartmentItem} id='dmowei' sx={{ paddingTop: '5px', display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                        <FormControl fullWidth>
+                            <TextField label="Nomi" size='small' defaultValue={item.name} name='name' />
+                        </FormControl>
+
+                        <FormControl fullWidth>
+                            <TextField label="Tartibi" size='small' name='order' />
+                        </FormControl>
+
+                        <LoadingButton loading={loading} type='submit' variant='outlined'>Saqlash</LoadingButton>
+                    </Form>
+                </DialogContent>
+            </Dialog>
+
+            {/* SEND SMS */}
+            <Dialog open={openDialog === 'sms'} onClose={() => setOpenDialog(null)}>
+                <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <Typography>SMS yuborish</Typography>
+                    <IconifyIcon onClick={() => setOpenDialog(null)} icon={'material-symbols:close'} />
+                </DialogTitle>
+                <DialogContent sx={{ minWidth: '300px' }}>
+                    <Form setError={setError} valueTypes='json' onSubmit={editDepartmentItem} id='dmowei' sx={{ paddingTop: '5px', display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                        <FormControl fullWidth>
+                            <TextField label="SMS matni" multiline rows={4} size='small' name='message' />
+                        </FormControl>
+
+                        <LoadingButton loading={loading} type='submit' variant='outlined'>Saqlash</LoadingButton>
+                    </Form>
+                </DialogContent>
+            </Dialog>
+
+            {/* DELETE */}
+            <Dialog open={openDialog === 'delete'} onClose={() => setOpenDialog(null)}>
+                <DialogContent sx={{ minWidth: '300px' }}>
+                    <Typography sx={{ fontSize: '24px', marginBottom: '20px', textAlign: 'center' }}>O'chirishni tasdiqlang</Typography>
+                    <Box sx={{ justifyContent: 'space-around', display: 'flex' }}>
+                        <LoadingButton variant='outlined' size='small' color='error'>Bekor qilish</LoadingButton>
+                        <LoadingButton loading={loading} size='small' variant='outlined'>Saqlash</LoadingButton>
+                    </Box>
+                </DialogContent>
+            </Dialog>
         </Box>
     )
 }

@@ -55,7 +55,7 @@ const KanbanItem = (props: KanbarItemProps) => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
     const [error, setError] = useState<any>({})
     const { t } = useTranslation()
-    const [open, setOpen] = useState<'edit' | 'merge-to' | null>(null)
+    const [open, setOpen] = useState<'edit' | 'merge-to' | 'sms' | 'delete' | null>(null)
     const [department, setDepartment] = useState<any>(null)
     const [loading, setLoading] = useState<boolean>(false)
 
@@ -70,6 +70,18 @@ const KanbanItem = (props: KanbarItemProps) => {
     // }
 
     const handleSubmit = async (values: any) => {
+        setLoading(true)
+        try {
+            await handleEditLead(id, { first_name: title, phone, ...values })
+            setLoading(false)
+            setDepartment(null)
+        } catch (err: any) {
+            setLoading(false)
+            showResponseError(err.response.data, setError)
+        }
+    }
+
+    const handleSubmitEdit = async (values: any) => {
         setLoading(true)
         try {
             await handleEditLead(id, { first_name: title, phone, ...values })
@@ -129,7 +141,7 @@ const KanbanItem = (props: KanbarItemProps) => {
                 }}
                 PaperProps={{ style: { minWidth: '8rem' } }}
             >
-                <MenuItem onClick={undefined} sx={{ '& svg': { mr: 2 } }}>
+                <MenuItem onClick={() => setOpen('sms')} sx={{ '& svg': { mr: 2 } }}>
                     <IconifyIcon icon='mdi:sms' fontSize={20} />
                     SMS yuborish
                 </MenuItem>
@@ -141,7 +153,7 @@ const KanbanItem = (props: KanbarItemProps) => {
                     <IconifyIcon icon='mdi:edit' fontSize={20} />
                     Tahrirlash
                 </MenuItem>
-                <MenuItem onClick={undefined} sx={{ '& svg': { mr: 2 } }}>
+                <MenuItem onClick={() => setOpen('delete')} sx={{ '& svg': { mr: 2 } }}>
                     <IconifyIcon icon='mdi:delete' fontSize={20} />
                     O'chirish
                 </MenuItem>
@@ -198,6 +210,34 @@ const KanbanItem = (props: KanbarItemProps) => {
 
                         <LoadingButton variant='contained' type={'submit'} loading={loading}>Saqlash</LoadingButton>
                     </Form>
+                </DialogContent>
+            </Dialog>
+
+            {/* SEND SMS */}
+            <Dialog open={open === 'sms'} onClose={() => setOpen(null)}>
+                <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <Typography>SMS yuborish</Typography>
+                    <IconifyIcon onClick={() => setOpen(null)} icon={'material-symbols:close'} />
+                </DialogTitle>
+                <DialogContent sx={{ minWidth: '300px' }}>
+                    <Form setError={setError} valueTypes='json' onSubmit={handleSubmitEdit} id='dmowei' sx={{ paddingTop: '5px', display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                        <FormControl fullWidth>
+                            <TextField label="SMS matni" multiline rows={4} size='small' name='message' />
+                        </FormControl>
+
+                        <LoadingButton loading={loading} type='submit' variant='outlined'>Saqlash</LoadingButton>
+                    </Form>
+                </DialogContent>
+            </Dialog>
+
+            {/* DELETE */}
+            <Dialog open={open === 'delete'} onClose={() => setOpen(null)}>
+                <DialogContent sx={{ minWidth: '300px' }}>
+                    <Typography sx={{ fontSize: '24px', marginBottom: '20px', textAlign: 'center' }}>O'chirishni tasdiqlang</Typography>
+                    <Box sx={{ justifyContent: 'space-around', display: 'flex' }}>
+                        <LoadingButton variant='outlined' size='small' color='error'>Bekor qilish</LoadingButton>
+                        <LoadingButton loading={loading} size='small' variant='outlined'>Saqlash</LoadingButton>
+                    </Box>
                 </DialogContent>
             </Dialog>
         </Card>
