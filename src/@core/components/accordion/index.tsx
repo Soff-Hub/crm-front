@@ -9,11 +9,13 @@ import api from 'src/@core/utils/api'
 import KanbanItem from '../card-statistics/kanban-item'
 import Form from '../form'
 import LoadingButton from '@mui/lab/LoadingButton'
+import toast from 'react-hot-toast'
 
 interface AccordionProps {
     title?: string
     onView: () => void
     item: any
+    reRender: any
 }
 
 const Menu = styled(MuiMenu)<MenuProps>(({ theme }) => ({
@@ -23,7 +25,7 @@ const Menu = styled(MuiMenu)<MenuProps>(({ theme }) => ({
 }))
 
 
-export default function AccordionCustom({ onView, item }: AccordionProps) {
+export default function AccordionCustom({ onView, item, reRender }: AccordionProps) {
     const [open, setOpen] = useState<boolean>(false)
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
     const [loading, setLoading] = useState<boolean>(false)
@@ -31,6 +33,7 @@ export default function AccordionCustom({ onView, item }: AccordionProps) {
     const [openDialog, setOpenDialog] = useState<'sms' | 'edit' | 'delete' | null>(null)
     const [error, setError] = useState<any>({})
     const [count, setCount] = useState<any>(item.student_count)
+    const [name, setName] = useState<any>(item.name)
 
     const handleClick = (event: any) => {
         setAnchorEl(event.currentTarget)
@@ -67,12 +70,52 @@ export default function AccordionCustom({ onView, item }: AccordionProps) {
         }
     }
 
-    const editDepartmentItem = () => {
+    const editDepartmentItem = async (values: any) => {
         setLoading(true)
-        setTimeout(() => {
+        try {
+            await api.patch(`leads/department-update/${item.id}`, values)
+            setName(values.name)
             setLoading(false)
             setOpenDialog(null)
-        }, 1000);
+        } catch {
+            setLoading(false)
+        }
+    }
+
+
+    const smsDepartmentItem = async (values: any) => {
+        setLoading(true)
+        try {
+            await api.post(`common/send-message-user/`, {
+                users: leadData.map(el => Number(el.id)),
+                message: values.message,
+                for_lead: true
+            })
+            toast.success('SMS muvaffaqiyatli jo\'natildi!', {
+                position: 'top-center'
+            })
+            setAnchorEl(null)
+            setLoading(false)
+            setOpenDialog(null)
+        } catch {
+            setLoading(false)
+        }
+    }
+
+
+    const deleteDepartmentItem = async () => {
+        setLoading(true)
+        try {
+            await api.patch(`leads/department-update/${item.id}`, { is_active: false })
+            setLoading(false)
+            setOpenDialog(null)
+            toast.success('Muvaffaqiyatli o\'chirildi', {
+                position: 'top-center'
+            })
+            reRender()
+        } catch {
+            setLoading(false)
+        }
     }
 
     useEffect(() => {
@@ -83,7 +126,7 @@ export default function AccordionCustom({ onView, item }: AccordionProps) {
     return (
         <Box sx={{ width: '100%', border: '1px solid #cfcccc', borderRadius: 1 }}>
             <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', padding: '10px' }}>
-                <Typography fontSize={16}>{item.name}</Typography>
+                <Typography fontSize={16}>{name}</Typography>
                 <Typography fontSize={16} fontWeight={'700'} sx={{ marginLeft: 'auto', marginRight: 2 }}>{count}</Typography>
                 <IconifyIcon
                     style={{ cursor: 'pointer', transform: open ? 'rotateZ(180deg)' : '' }}
@@ -167,7 +210,7 @@ export default function AccordionCustom({ onView, item }: AccordionProps) {
                     <IconifyIcon onClick={() => setOpenDialog(null)} icon={'material-symbols:close'} />
                 </DialogTitle>
                 <DialogContent sx={{ minWidth: '300px' }}>
-                    <Form setError={setError} valueTypes='json' onSubmit={editDepartmentItem} id='dmowei' sx={{ paddingTop: '5px', display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                    <Form setError={setError} valueTypes='json' onSubmit={smsDepartmentItem} id='dmowei' sx={{ paddingTop: '5px', display: 'flex', flexDirection: 'column', gap: '15px' }}>
                         <FormControl fullWidth>
                             <TextField label="SMS matni" multiline rows={4} size='small' name='message' />
                         </FormControl>
@@ -183,7 +226,7 @@ export default function AccordionCustom({ onView, item }: AccordionProps) {
                     <Typography sx={{ fontSize: '24px', marginBottom: '20px', textAlign: 'center' }}>O'chirishni tasdiqlang</Typography>
                     <Box sx={{ justifyContent: 'space-around', display: 'flex' }}>
                         <LoadingButton variant='outlined' size='small' color='error'>Bekor qilish</LoadingButton>
-                        <LoadingButton loading={loading} size='small' variant='outlined'>Saqlash</LoadingButton>
+                        <LoadingButton loading={loading} size='small' variant='outlined' onClick={deleteDepartmentItem}>O'chirish</LoadingButton>
                     </Box>
                 </DialogContent>
             </Dialog>

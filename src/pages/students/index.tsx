@@ -31,6 +31,7 @@ import useStudent from 'src/hooks/useStudents'
 import useGroups from 'src/hooks/useGroups'
 import useDebounce from 'src/hooks/useDebounce'
 import { useRouter } from 'next/router'
+import Status from 'src/@core/components/status'
 
 export interface customTableProps {
   xs: number
@@ -226,7 +227,7 @@ export default function GroupsPage() {
       ))
     },
     {
-      xs: 1.5,
+      xs: 1,
       title: t("Kurs davomiyligi"),
       dataIndex: 'group',
       render: (group: {
@@ -245,15 +246,15 @@ export default function GroupsPage() {
     },
     {
       xs: 0.7,
+      title: t("Status"),
+      dataIndex: 'status',
+      render: (status: string) => <div style={{ display: 'flex', alignItems: 'center', gap: '3px' }}><Status color={status == 'active' ? 'success' : status == 'new' ? 'warning' : 'error'} /> {status == 'active' ? 'aktiv' : status == 'new' ? 'sinov' : 'arxiv'}</div>
+    },
+    {
+      xs: 0.7,
       title: t("Balans"),
       dataIndex: 'balance',
       render: (balance: string) => `${+balance} so'm`
-    },
-    {
-      xs: 0.5,
-      title: t("gender"),
-      dataIndex: 'gender',
-      render: (roles_list: any) => roles_list === "male" ? "Erkak" : "Ayol"
     },
     {
       xs: 0.8,

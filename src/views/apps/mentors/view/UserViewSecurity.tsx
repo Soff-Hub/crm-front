@@ -1,11 +1,13 @@
 import { Box, Card, CardContent, Typography } from "@mui/material"
 import Link from "next/link"
 import { useEffect, useState } from "react"
+import useResponsive from "src/@core/hooks/useResponsive"
 import api from "src/@core/utils/api"
 import getMontName from "src/@core/utils/gwt-month-name"
 
 const UserViewSecurity = ({ data }: any) => {
   const [newData, setNewData] = useState<any>([])
+  const { isMobile } = useResponsive()
 
   const getGroups = async () => {
     try {
@@ -26,7 +28,7 @@ const UserViewSecurity = ({ data }: any) => {
         newData.map((_: any, index: number) => (
           <Link href={`/groups/view/security/?id=${_.id}&moonth=${getMontName(null)}`} key={index} style={{ textDecoration: 'none' }}>
             <Box sx={{ display: 'flex', gap: '20px', cursor: 'pointer' }}>
-              <Card sx={{ width: '50%' }}>
+              <Card sx={{ width: isMobile ? '100%' : '50%' }}>
                 <CardContent sx={{ display: 'flex', justifyContent: 'space-between' }}>
                   <Box sx={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
                     <Typography sx={{ fontSize: '12px' }}>{_.name}</Typography>

@@ -3,6 +3,8 @@ import { Box, Button, Dialog, DialogContent, FormControl, InputLabel, TextField,
 import AccordionCustom from 'src/@core/components/accordion';
 import IconifyIcon from 'src/@core/components/icon';
 import LoadingButton from '@mui/lab/LoadingButton';
+import api from 'src/@core/utils/api';
+import toast, { Toaster } from 'react-hot-toast';
 
 interface Props {
     title: string
@@ -11,10 +13,12 @@ interface Props {
     setOpenItem: any,
     id: any,
     setOpenLid: any
+    reRender: any
 }
 
 
-export default function HomeKanban({ title, items, setOpenItem, id, setOpenLid }: Props) {
+
+export default function HomeKanban({ title, items, setOpenItem, id, setOpenLid, reRender }: Props) {
     const [open, setOpen] = React.useState<'delete' | 'edit' | null>(null)
     const [loading, setLoading] = React.useState<any>(false)
     const [name, setName] = React.useState<any>(title)
@@ -22,15 +26,34 @@ export default function HomeKanban({ title, items, setOpenItem, id, setOpenLid }
 
     const editSubmit = async () => {
         setLoading(true)
-        setTimeout(() => {
+        try {
+            await api.patch(`leads/department-update/${id}`, { name: nameVal })
             setName(nameVal)
             setLoading(false)
             setOpen(null)
-        }, 1500);
+            return reRender()
+        } catch {
+            setLoading(false)
+        }
+    }
+
+    const deleteDepartmentItem = async () => {
+        setLoading(true)
+        try {
+            await api.patch(`leads/department-update/${id}`, { is_active: false })
+            setName(nameVal)
+            setLoading(false)
+            setOpen(null)
+            toast.success('Muvaffaqiyatli o\'chirildi')
+            return reRender()
+        } catch {
+            setLoading(false)
+        }
     }
 
     return (
         <Box sx={{ width: "100%", display: 'flex', flexDirection: 'column', maxWidth: 350, minWidth: '300px' }}>
+            <Toaster />
             <Box display={"flex"} alignItems={"center"} marginBottom={5}>
                 <Typography fontSize={22}>{name}</Typography>
                 <IconifyIcon icon={'system-uicons:user-add'} color='orange' onClick={() => setOpenLid(id)} style={{ cursor: 'pointer', marginLeft: 'auto' }} />
@@ -42,7 +65,7 @@ export default function HomeKanban({ title, items, setOpenItem, id, setOpenLid }
             <Box sx={{ display: 'flex', gap: 3, alignItems: 'flex-start', width: '100%', flexDirection: 'column' }}>
                 {
                     items.map(lead => (
-                        <AccordionCustom item={lead} key={lead.id} onView={() => console.log("aa")} />
+                        <AccordionCustom reRender={reRender} item={lead} key={lead.id} onView={() => console.log("aa")} />
                     ))
                 }
             </Box>
@@ -57,7 +80,7 @@ export default function HomeKanban({ title, items, setOpenItem, id, setOpenLid }
                     <Button color='error' variant='contained' onClick={() => setOpen(null)}>
                         Bekor qilish
                     </Button>
-                    <LoadingButton loading={loading} color='primary' variant='outlined'>
+                    <LoadingButton loading={loading} color='primary' variant='outlined' onClick={deleteDepartmentItem}>
                         O'chirish
                     </LoadingButton>
                 </Box>

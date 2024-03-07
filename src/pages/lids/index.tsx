@@ -120,7 +120,7 @@ const Lids = () => {
       >
         {
           leadData.map((lead: any) => (
-            <LidsKanban id={lead.id} setOpenLid={setOpenLid} setOpenItem={setOpenItem} key={lead.id} items={lead.children} title={lead.name} status='success' />
+            <LidsKanban id={lead.id} setOpenLid={setOpenLid} reRender={getLeads} setOpenItem={setOpenItem} key={lead.id} items={lead.children} title={lead.name} status='success' />
           ))
         }
         {!isMobile && <Button onClick={() => setOpen('add-department')} sx={{ minWidth: '300px' }} size='small' variant='contained' startIcon={<IconifyIcon icon={'material-symbols:add'} />}>Bo'lim yaratish</Button>}

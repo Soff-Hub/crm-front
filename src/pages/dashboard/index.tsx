@@ -28,6 +28,7 @@ import { Checkbox, FormControlLabel, Typography } from '@mui/material'
 import { useContext } from 'react'
 import { AuthContext } from 'src/context/AuthContext'
 import MyGroups from 'src/views/my-groups'
+import useResponsive from 'src/@core/hooks/useResponsive'
 
 // ** CalendarColors
 const calendarsColor: CalendarColors = {
@@ -71,6 +72,12 @@ const statsData: {
       title: "Sinov darsida",
       count: "14",
       color: 'primary'
+    },
+    {
+      icon: "fa-solid:chalkboard-teacher",
+      title: "O'qituvchilar",
+      count: "7",
+      color: 'success'
     },
   ]
 
@@ -128,6 +135,7 @@ const AppCalendar = () => {
   const { settings } = useSettings()
   const store = useSelector((state: RootState) => state.calendar)
   const { user } = useContext(AuthContext)
+  const { isMobile } = useResponsive()
 
   // ** Vars
   const { skin } = settings
@@ -162,13 +170,12 @@ const AppCalendar = () => {
               <Box className='row gy-4' >
                 {
                   statsData.map((_, index) => (
-                    <Box key={index} className='col-md-2'>
+                    <Box key={index} className='col-md-2 col-6'>
                       <CardStatsVertical title={_.count} stats={_.title} icon={<IconifyIcon fontSize={"4rem"} icon={_.icon} />} color={_.color} />
                     </Box>
                   ))
                 }
               </Box>
-
             </CardContent>
           </Card>
         </Grid>

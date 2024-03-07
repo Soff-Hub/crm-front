@@ -11,8 +11,7 @@ import { formatDateTime } from 'src/@core/utils/date-formatter';
 interface ItemTypes {
     id: number
     created_at: string
-    description: string
-    current_user: string | null
+    message: string
 }
 
 interface ItemChildTypes {
@@ -22,7 +21,7 @@ interface ItemChildTypes {
 
 
 export const UserViewStudentsItem = ({ item, setOpenEdit }: ItemChildTypes) => {
-    const { created_at, description, current_user } = item
+    const { created_at, message } = item
 
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
@@ -38,9 +37,8 @@ export const UserViewStudentsItem = ({ item, setOpenEdit }: ItemChildTypes) => {
         <Box sx={{ display: 'flex', gap: 3, justifyContent: 'space-between' }}>
             <Box sx={{ display: 'flex', gap: 2, flexDirection: 'column' }}>
                 <Status color='success' />
-                <Typography fontStyle={'italic'} variant='body1' fontSize={14}>{description}</Typography>
+                <Typography fontStyle={'italic'} variant='body1' fontSize={14}>{message}</Typography>
                 <Box sx={{ display: 'flex', gap: '15px' }}>
-                    <Typography sx={{ cursor: 'pointer' }} fontSize={10}>{current_user || "Unknown Sender"}</Typography>
                     <Typography fontSize={10}>{formatDateTime(created_at)}</Typography>
                 </Box>
             </Box>

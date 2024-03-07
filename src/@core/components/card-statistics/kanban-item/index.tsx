@@ -40,6 +40,8 @@ import Form from '../../form'
 import { useTranslation } from 'react-i18next'
 import LoadingButton from '@mui/lab/LoadingButton'
 import showResponseError from 'src/@core/utils/show-response-error'
+import api from 'src/@core/utils/api'
+import toast from 'react-hot-toast'
 
 // ** Styled Avatar component
 const Avatar = styled(CustomAvatar)<AvatarProps>(({ theme }) => ({
@@ -65,28 +67,45 @@ const KanbanItem = (props: KanbarItemProps) => {
 
     const { data: leadData } = useSelector((state: any) => state.user)
 
-    // const handleClose = () => {
-    //     setAnchorEl(null)
-    // }
-
     const handleSubmit = async (values: any) => {
         setLoading(true)
         try {
             await handleEditLead(id, { first_name: title, phone, ...values })
             setLoading(false)
             setDepartment(null)
+            setOpen(null)
         } catch (err: any) {
             setLoading(false)
             showResponseError(err.response.data, setError)
         }
     }
 
-    const handleSubmitEdit = async (values: any) => {
+    const smsDepartmentItem = async (values: any) => {
         setLoading(true)
         try {
-            await handleEditLead(id, { first_name: title, phone, ...values })
+            await api.post(`common/send-message-user/`, {
+                users: [id],
+                message: values.message,
+                for_lead: true
+            })
+            toast.success('SMS muvaffaqiyatli jo\'natildi!', {
+                position: 'top-center'
+            })
+            setOpen(null)
+            setAnchorEl(null)
+            setLoading(false)
+        } catch {
+            setLoading(false)
+        }
+    }
+
+    const handleDelete = async () => {
+        setLoading(true)
+        try {
+            await handleEditLead(id, { first_name: title, phone, department: null })
             setLoading(false)
             setDepartment(null)
+            setOpen(null)
         } catch (err: any) {
             setLoading(false)
             showResponseError(err.response.data, setError)
@@ -165,7 +184,7 @@ const KanbanItem = (props: KanbarItemProps) => {
                     <IconifyIcon icon={'material-symbols:close'} onClick={() => setOpen(null)} />
                 </DialogTitle>
                 <DialogContent>
-                    <Form id='ddsd' sx={{ minWidth: '280px', maxWidth: '350px', width: '100%', display: 'flex', flexDirection: 'column', gap: '20px', marginTop: '5px' }} setError={setError} onSubmit={handleSubmit} valueTypes='json'>
+                    <Form id='ddsddsdsdsd' sx={{ minWidth: '280px', maxWidth: '350px', width: '100%', display: 'flex', flexDirection: 'column', gap: '20px', marginTop: '5px' }} setError={setError} onSubmit={handleSubmit} valueTypes='json'>
                         <FormControl fullWidth>
                             <TextField label={t('first_name')} defaultValue={title} error={error?.first_name?.error} name='first_name' />
                             <FormHelperText error={error?.first_name?.error}>{error?.first_name?.message}</FormHelperText>
@@ -220,7 +239,7 @@ const KanbanItem = (props: KanbarItemProps) => {
                     <IconifyIcon onClick={() => setOpen(null)} icon={'material-symbols:close'} />
                 </DialogTitle>
                 <DialogContent sx={{ minWidth: '300px' }}>
-                    <Form setError={setError} valueTypes='json' onSubmit={handleSubmitEdit} id='dmowei' sx={{ paddingTop: '5px', display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                    <Form setError={setError} valueTypes='json' onSubmit={smsDepartmentItem} id='dxdasmowei' sx={{ paddingTop: '5px', display: 'flex', flexDirection: 'column', gap: '15px' }}>
                         <FormControl fullWidth>
                             <TextField label="SMS matni" multiline rows={4} size='small' name='message' />
                         </FormControl>
@@ -235,8 +254,8 @@ const KanbanItem = (props: KanbarItemProps) => {
                 <DialogContent sx={{ minWidth: '300px' }}>
                     <Typography sx={{ fontSize: '24px', marginBottom: '20px', textAlign: 'center' }}>O'chirishni tasdiqlang</Typography>
                     <Box sx={{ justifyContent: 'space-around', display: 'flex' }}>
-                        <LoadingButton variant='outlined' size='small' color='error'>Bekor qilish</LoadingButton>
-                        <LoadingButton loading={loading} size='small' variant='outlined'>Saqlash</LoadingButton>
+                        <LoadingButton variant='outlined' size='small' color='error' onClick={() => setOpen(null)}>Bekor qilish</LoadingButton>
+                        <LoadingButton loading={loading} size='small' variant='contained' onClick={handleDelete}>O'chirish</LoadingButton>
                     </Box>
                 </DialogContent>
             </Dialog>

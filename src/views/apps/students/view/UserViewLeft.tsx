@@ -121,6 +121,26 @@ const UserViewLeft = ({ userData, rerender }: { userData: StudentTypes | null, r
     }
   }
 
+  const handleSendSms = async (value: any) => {
+    setLoading(true)
+    const data = {
+      ...value,
+      users: [userData?.id],
+    }
+
+    try {
+      await api.post(`common/send-message-user/`, data)
+      setLoading(false)
+      setOpenEdit(null)
+
+      return await rerender()
+    } catch (err: any) {
+      showResponseError(err.response.data, setError)
+      setLoading(false)
+    }
+  }
+
+
   useEffect(() => {
     setData(userData)
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -243,7 +263,11 @@ const UserViewLeft = ({ userData, rerender }: { userData: StudentTypes | null, r
               </FormControl>}
 
               {groupDate && <FormControl sx={{ width: '100%' }}>
-                <input type="date" name='start_date' min={groupShort?.find(el => el.id === groupDate)?.start_date || ''} style={{ borderRadius: '8px', padding: '8px', outline: 'none', border: '1px solid #c3cccc' }} />
+                {/* <InputLabel htmlFor='qwqwq' size='small'>{t('Qo\'shilish sanasi')}</InputLabel> */}
+                <TextField
+                  type="date" size='small' label={t('Qo\'shilish sanasi')} name='start_date'
+                  // min={groupShort?.find(el => el.id === groupDate)?.start_date || ''} 
+                  style={{ background: 'transparent', width: '100%' }} />
                 <FormHelperText sx={{ marginBottom: '10px' }} error={error.start_date?.error}>{error.start_date?.message}</FormHelperText>
               </FormControl>}
 
@@ -449,7 +473,7 @@ const UserViewLeft = ({ userData, rerender }: { userData: StudentTypes | null, r
           </DialogContent>
         </Dialog>
 
-        {/*   Payment  */}
+        {/*   SMS  */}
         <Dialog
           open={openEdit === "sms"}
           onClose={handleEditClose}
@@ -461,25 +485,25 @@ const UserViewLeft = ({ userData, rerender }: { userData: StudentTypes | null, r
             Xabar yuborish (sms)
           </DialogTitle>
           <DialogContent>
-            <Form setError={setError} valueTypes='json' sx={{ marginTop: 10 }} onSubmit={handleMergeToGroup} id='fsdfsdf'>
+            <Form setError={setError} valueTypes='json' sx={{ marginTop: 10 }} onSubmit={handleSendSms} id='dsdsdsds'>
               <FormControl fullWidth>
                 <TextField
-                  error={error?.description}
+                  error={error?.message}
                   rows={4}
                   multiline
                   label="Xabar"
-                  name='description'
+                  name='message'
                   defaultValue={''}
                 />
-                <FormHelperText error={error.description}>{error.description?.message}</FormHelperText>
+                <FormHelperText error={error.message}>{error.message?.message}</FormHelperText>
               </FormControl>
               <DialogActions sx={{ justifyContent: 'center' }}>
-                <LoadingButton loading={loading} type='submit' variant='contained' sx={{ mr: 1 }}>
-                  {t("Saqlash")}
-                </LoadingButton>
                 <Button variant='outlined' type='button' color='secondary' onClick={handleEditClose}>
                   {t("Bekor Qilish")}
                 </Button>
+                <LoadingButton loading={loading} type='submit' variant='contained' sx={{ mr: 1 }}>
+                  {t("Yuborish")}
+                </LoadingButton>
               </DialogActions>
             </Form>
           </DialogContent>

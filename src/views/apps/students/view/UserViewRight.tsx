@@ -20,6 +20,7 @@ import Icon from 'src/@core/components/icon'
 // ** Demo Components Imports
 import UserViewOverview from 'src/views/apps/students/view/UserViewOverview'
 import UserViewSecurity from 'src/views/apps/students/view/UserViewSecurity'
+import UserSmsList from './UserSmsList'
 
 
 // ** Styled Tab component
@@ -95,7 +96,7 @@ const UserViewRight = ({ tab, invoiceData, groupData, rerender }: any) => {
               <UserViewOverview data={groupData?.comments || []} rerender={rerender} />
             </TabPanel>
             <TabPanel sx={{ p: 0 }} value='sms'>
-              {/* <UserViewOverview /> */}
+              <UserSmsList />
             </TabPanel>
           </>
         )}

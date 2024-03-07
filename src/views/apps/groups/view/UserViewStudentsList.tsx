@@ -27,6 +27,7 @@ interface StudentType {
             created_at: string
         }
         id: string
+        status: string
     }
 }
 
@@ -51,7 +52,7 @@ const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
 
 export const UserViewStudentsItem = ({ item, index }: ItemTypes) => {
     const { student } = item
-    const { first_name, phone, added_at, created_at, balance, comment, id } = student
+    const { first_name, phone, added_at, created_at, balance, comment, id, status } = student
     const { push } = useRouter()
     const { user } = useContext(AuthContext)
 
@@ -71,7 +72,7 @@ export const UserViewStudentsItem = ({ item, index }: ItemTypes) => {
     return (
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>
             <Typography sx={{ width: '20px' }}>{index}.</Typography>
-            <Status color={balance < 1 ? 'error' : 'success'} />
+            <Status color={status == 'active' ? 'success' : status == 'new' ? 'warning' : 'error'} />
             {user?.role !== 'teacher' ? <HtmlTooltip className='' title={
                 <Box sx={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', padding: '10px' }}>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', py: 1 }}>
@@ -82,7 +83,7 @@ export const UserViewStudentsItem = ({ item, index }: ItemTypes) => {
                         <Typography variant='body2' fontSize={10}>{`( ID: 134 )`}</Typography>
                     </Box>
                     <Box py={1} borderTop={'1px solid #c3cccc'}>
-                        <Typography variant='body2' fontSize={12}>Telefon</Typography>
+                        <Typography variant='body2' fontSize={12}>Tstatusefon</Typography>
                         <Typography fontSize={12}>{phone}</Typography>
                     </Box>
                     <Box py={1} borderTop={'1px solid #c3cccc'}>

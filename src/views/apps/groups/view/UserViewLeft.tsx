@@ -42,6 +42,8 @@ import useDebounce from 'src/hooks/useDebounce';
 import { AuthContext } from 'src/context/AuthContext';
 import { TranslateWeekName } from 'src/pages/groups';
 import getLessonDays from 'src/@core/utils/getLessonDays';
+import toast from 'react-hot-toast';
+import Status from 'src/@core/components/status';
 
 interface ColorsType {
   [key: string]: ThemeColor
@@ -120,6 +122,28 @@ const UserViewLeft = ({ userData }: { userData?: any }) => {
     } else {
       const resp = await api.get('auth/student/list/?search=' + searchDebounce)
       setSearchData(resp.data.results)
+    }
+  }
+
+  const smsDepartmentItem = async (values: any) => {
+    setLoading(true)
+    console.log({
+      users: students.map((el: any) => Number(el.student.id)),
+      message: values.message
+    });
+
+    try {
+      await api.post(`common/send-message-user/`, {
+        users: students.map((el: any) => Number(el.student.id)),
+        message: values.message
+      })
+      toast.success('SMS muvaffaqiyatli jo\'natildi!', {
+        position: 'top-center'
+      })
+      handleEditClose()
+      setLoading(false)
+    } catch {
+      setLoading(false)
     }
   }
 
@@ -275,6 +299,11 @@ const UserViewLeft = ({ userData }: { userData?: any }) => {
         <Grid item xs={12}>
           <Card>
             <CardContent>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '20px', marginBottom: '10px' }}>
+                {
+                  ['new', 'active', 'archive'].map(el => <div style={{ display: 'flex', alignItems: 'center', gap: '3px', cursor: 'pointer' }}><Status color={el == 'active' ? 'success' : el == 'new' ? 'warning' : 'error'} /> {el == 'active' ? 'aktiv' : el == 'new' ? 'sinov' : 'arxiv'}</div>)
+                }
+              </div>
               <UserViewStudentsList data={students} />
             </CardContent>
           </Card>
@@ -293,17 +322,17 @@ const UserViewLeft = ({ userData }: { userData?: any }) => {
             Barcha o'quvchilarga SMS yuboring
           </DialogTitle>
           <DialogContent>
-            <Form setError={setError} valueTypes='json' sx={{ marginTop: 10 }} onSubmit={handleAddNote} id='edit-employee-pay-ddas'>
+            <Form setError={setError} valueTypes='json' sx={{ marginTop: 10 }} onSubmit={smsDepartmentItem} id='edit-employee-pay-ddas'>
               <FormControl fullWidth>
                 <TextField
-                  error={error?.description}
+                  error={error?.message}
                   rows={4}
                   multiline
                   label="SMS..."
-                  name='description'
+                  name='message'
                   defaultValue={''}
                 />
-                <FormHelperText error={error.description}>{error.description?.message}</FormHelperText>
+                <FormHelperText error={error.message}>{error.message?.message}</FormHelperText>
               </FormControl>
 
               <DialogActions sx={{ justifyContent: 'center' }}>
