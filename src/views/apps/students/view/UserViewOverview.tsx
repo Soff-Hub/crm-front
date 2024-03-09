@@ -20,7 +20,7 @@ interface ItemTypes {
   data: {
     id: number
     created_at: string
-    description: string
+    message: string
     current_user: string | null
   }[]
   rerender: any
