@@ -4,7 +4,7 @@ import AccordionCustom from 'src/@core/components/accordion';
 import IconifyIcon from 'src/@core/components/icon';
 import LoadingButton from '@mui/lab/LoadingButton';
 import api from 'src/@core/utils/api';
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 
 interface Props {
     title: string
@@ -53,7 +53,6 @@ export default function HomeKanban({ title, items, setOpenItem, id, setOpenLid, 
 
     return (
         <Box sx={{ width: "100%", display: 'flex', flexDirection: 'column', maxWidth: 350, minWidth: '300px' }}>
-            <Toaster />
             <Box display={"flex"} alignItems={"center"} marginBottom={5}>
                 <Typography fontSize={22}>{name}</Typography>
                 <IconifyIcon icon={'system-uicons:user-add'} color='orange' onClick={() => setOpenLid(id)} style={{ cursor: 'pointer', marginLeft: 'auto' }} />

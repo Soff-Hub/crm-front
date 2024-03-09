@@ -88,7 +88,7 @@ const Lids = () => {
       setOpenLid(null)
       seLoading(false)
       setAddSource(false)
-      getLeads()
+      return await getLeads()
     }
     catch (err: any) {
       seLoading(false)

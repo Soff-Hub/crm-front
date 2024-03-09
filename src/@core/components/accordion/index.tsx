@@ -123,6 +123,14 @@ export default function AccordionCustom({ onView, item, reRender }: AccordionPro
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [open])
 
+    useEffect(() => {
+        if (open) {
+            handleGetLeads(false)
+        }
+        setCount(item.student_count)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [item.student_count])
+
     return (
         <Box sx={{ width: '100%', border: '1px solid #cfcccc', borderRadius: 1 }}>
             <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', padding: '10px' }}>

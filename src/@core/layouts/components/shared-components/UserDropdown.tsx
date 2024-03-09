@@ -132,6 +132,9 @@ const UserDropdown = (props: Props) => {
             </Box>
           </Box>
         </Box>
+        <Typography variant='body2' sx={{ fontSize: '0.8rem', color: 'black', paddingLeft: '20px' }}>
+          {"+998911111111"}
+        </Typography>
         <Divider sx={{ mt: '0 !important' }} />
         <Divider />
         <MenuItem sx={{ p: 0 }} onClick={() => handleDropdownClose('/pages/account-settings/account')}>

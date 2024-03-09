@@ -5,7 +5,7 @@ import { styled } from '@mui/material/styles'
 import MuiMenu, { MenuProps } from '@mui/material/Menu'
 import MuiMenuItem, { MenuItemProps } from '@mui/material/MenuItem'
 
-import { Box, Dialog, DialogContent, DialogTitle, FormControl, FormHelperText, FormLabel, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material'
+import { Box, Button, Dialog, DialogContent, DialogTitle, FormControl, FormHelperText, FormLabel, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material'
 
 const Menu = styled(MuiMenu)<MenuProps>(({ theme }) => ({
     '& .MuiMenu-paper': {
@@ -42,6 +42,8 @@ import LoadingButton from '@mui/lab/LoadingButton'
 import showResponseError from 'src/@core/utils/show-response-error'
 import api from 'src/@core/utils/api'
 import toast from 'react-hot-toast'
+import { useDispatch } from 'react-redux'
+import { addOpenedUser } from 'src/store/apps/user'
 
 // ** Styled Avatar component
 const Avatar = styled(CustomAvatar)<AvatarProps>(({ theme }) => ({
@@ -57,9 +59,16 @@ const KanbanItem = (props: KanbarItemProps) => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
     const [error, setError] = useState<any>({})
     const { t } = useTranslation()
-    const [open, setOpen] = useState<'edit' | 'merge-to' | 'sms' | 'delete' | null>(null)
+    const [open, setOpen] = useState<'edit' | 'merge-to' | 'sms' | 'delete' | 'note' | null>(null)
     const [department, setDepartment] = useState<any>(null)
     const [loading, setLoading] = useState<boolean>(false)
+    const [activeTab, setActiveTab] = useState<string>('tab-1')
+    const [leadDetail, setLeadDetail] = useState([])
+
+    const { total } = useSelector((state: any) => state.user)
+
+    const dispatch = useDispatch()
+
 
     const handleClick = (event: any) => {
         setAnchorEl(event.currentTarget)
@@ -99,6 +108,40 @@ const KanbanItem = (props: KanbarItemProps) => {
         }
     }
 
+    const getDepartmentItem = async () => {
+        setLoading(true)
+        try {
+            const resp = await api.get(`leads/lead-user-description/${id}/`)
+            setLeadDetail(resp.data)
+            console.log(resp.data);
+
+            setLoading(false)
+        } catch {
+            setLoading(false)
+        }
+    }
+
+
+    const noteDepartmentItem = async (values: any) => {
+        setLoading(true)
+        try {
+            await api.post(`leads/lead-user-description/${id}/`, {
+                anonim_user: id,
+                body: values.body
+            })
+            getDepartmentItem()
+            toast.success('Eslatma yaratildi', {
+                position: 'top-center'
+            })
+            setOpen(null)
+            setAnchorEl(null)
+            setLoading(false)
+        } catch {
+            setLoading(false)
+        }
+    }
+
+
     const handleDelete = async () => {
         setLoading(true)
         try {
@@ -118,10 +161,23 @@ const KanbanItem = (props: KanbarItemProps) => {
         setAnchorEl(null)
     }
 
+    const clickStudent = async () => {
+        if (id === total) {
+            dispatch(addOpenedUser(null))
+        } else {
+            dispatch(addOpenedUser(id))
+            return getDepartmentItem()
+        }
+    }
+
+    const togglerTab = (value: any) => {
+        setActiveTab(value)
+    }
+
     return (
         <Card sx={{ cursor: 'pointer' }}>
             <CardContent sx={{ py: theme => `${theme.spacing(2)} !important`, px: 2 }}>
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', position: 'relative' }}>
                     <Avatar skin='light' color={status === "new" ? "secondary" : status === "pending" ? "warning" : "success"} variant='rounded'>
                         <IconifyIcon
                             icon={status === "new" ?
@@ -142,7 +198,39 @@ const KanbanItem = (props: KanbarItemProps) => {
                         aria-controls='customized-menu'
                         onClick={handleClick}
                     />
+                    <Box sx={{ height: '50px', width: '280px', position: 'absolute' }} onClick={() => clickStudent()}></Box>
                 </Box>
+                {
+                    id === total ? (
+                        <Box sx={{ display: 'flex', paddingTop: '10px', flexDirection: 'column', gap: '6px' }}>
+                            <Box sx={{ display: 'flex', gap: '15px' }}>
+                                <Typography onClick={() => togglerTab('tab-1')} sx={{ fontSize: '12px', borderBottom: activeTab === 'tab-1' ? '2px solid #0d6efd' : '2px solid #c3cccc', px: 1 }} variant={activeTab === 'tab-1' ? 'body1' : 'body2'}>Eslatmalar</Typography>
+                                <Typography onClick={() => togglerTab('tab-2')} sx={{ fontSize: '12px', borderBottom: activeTab === 'tab-2' ? '2px solid #0d6efd' : '2px solid #c3cccc', px: 1 }} variant={activeTab === 'tab-2' ? 'body1' : 'body2'}>SMS tarix</Typography>
+                            </Box>
+                            {
+                                activeTab === 'tab-1' ? (
+                                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                                        {
+                                            leadDetail.map((el: any) => (
+                                                <Box sx={{ border: '1px solid #c3cccc', padding: '5px', borderRadius: '8px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                                                    <Typography fontSize={12} fontStyle={'italic'}>{el.body}</Typography>
+                                                    <Typography fontSize={12}>{el.admin} {el.created_at}</Typography>
+                                                </Box>
+                                            ))
+                                        }
+                                    </Box>
+                                ) : (
+                                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                                        <Box sx={{ border: '1px solid #c3cccc', padding: '5px', borderRadius: '8px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                                            <Typography fontSize={12} fontStyle={'italic'}>Sms Sms Sms Sms Sms Sms Sms Sms</Typography>
+                                            <Typography fontSize={12}>{'Admin'} {"18:30"}</Typography>
+                                        </Box>
+                                    </Box>
+                                )
+                            }
+                        </Box>
+                    ) : ""
+                }
             </CardContent>
 
             <Menu
@@ -160,6 +248,10 @@ const KanbanItem = (props: KanbarItemProps) => {
                 }}
                 PaperProps={{ style: { minWidth: '8rem' } }}
             >
+                <MenuItem onClick={() => setOpen('note')} sx={{ '& svg': { mr: 2 } }}>
+                    <IconifyIcon icon='ph:flag-light' fontSize={20} />
+                    Yangi eslatma
+                </MenuItem>
                 <MenuItem onClick={() => setOpen('sms')} sx={{ '& svg': { mr: 2 } }}>
                     <IconifyIcon icon='mdi:sms' fontSize={20} />
                     SMS yuborish
@@ -242,6 +334,23 @@ const KanbanItem = (props: KanbarItemProps) => {
                     <Form setError={setError} valueTypes='json' onSubmit={smsDepartmentItem} id='dxdasmowei' sx={{ paddingTop: '5px', display: 'flex', flexDirection: 'column', gap: '15px' }}>
                         <FormControl fullWidth>
                             <TextField label="SMS matni" multiline rows={4} size='small' name='message' />
+                        </FormControl>
+
+                        <LoadingButton loading={loading} type='submit' variant='outlined'>Saqlash</LoadingButton>
+                    </Form>
+                </DialogContent>
+            </Dialog>
+
+            {/* Notes */}
+            <Dialog open={open === 'note'} onClose={() => setOpen(null)}>
+                <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <Typography>Yangi eslatma</Typography>
+                    <IconifyIcon onClick={() => setOpen(null)} icon={'material-symbols:close'} />
+                </DialogTitle>
+                <DialogContent sx={{ minWidth: '300px' }}>
+                    <Form setError={setError} valueTypes='json' onSubmit={noteDepartmentItem} id='rwerwf' sx={{ paddingTop: '5px', display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                        <FormControl fullWidth>
+                            <TextField label="Eslatma" multiline rows={4} size='small' name='body' />
                         </FormControl>
 
                         <LoadingButton loading={loading} type='submit' variant='outlined'>Saqlash</LoadingButton>

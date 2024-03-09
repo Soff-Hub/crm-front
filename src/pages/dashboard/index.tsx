@@ -161,6 +161,56 @@ const AppCalendar = () => {
     })
     : null
 
+  const lessons: any[] = [
+    {
+      id: 4,
+      name: 'Dushanba',
+      lessons: [
+        {
+          id: 1,
+          group: {
+            id: 1,
+            name: 'Frontend 030'
+          },
+          teacher: "Doniyor Eshmamatov",
+          start_at: '13:00',
+          end_at: '15:30',
+          room: '1-Xona'
+        }
+      ]
+    },
+    {
+      id: 6,
+      name: 'Seshanba',
+      lessons: []
+    },
+    {
+      id: 7,
+      name: 'Chorshanba',
+      lessons: []
+    },
+    {
+      id: 5,
+      name: 'Payshanba',
+      lessons: []
+    },
+    {
+      id: 8,
+      name: 'Juma',
+      lessons: []
+    },
+    {
+      id: 7,
+      name: 'Shanba',
+      lessons: []
+    },
+    {
+      id: 3,
+      name: 'Yakshanba',
+      lessons: []
+    },
+  ]
+
   return user?.role === 'teacher' ? <MyGroups /> : (
     <>
       <Grid container spacing={6} className='mb-3'>
@@ -198,7 +248,7 @@ const AppCalendar = () => {
             ...(mdAbove ? { borderTopLeftRadius: 0, borderBottomLeftRadius: 0 } : {})
           }}
         >
-          <Box>
+          {/* <Box>
             {renderFilters}
           </Box>
           <Box sx={{ display: 'flex', width: '100%', paddingBottom: 3 }}>
@@ -224,9 +274,70 @@ const AppCalendar = () => {
                 }
               </tbody>
             </table>
+          </Box> */}
+
+
+          <Box sx={{ display: 'flex', flexDirection: 'column', py: '20px', gap: '10px' }}>
+            {
+              lessons.map((day, index) => {
+                return (
+                  <Box
+                    key={index}
+                    sx={{ padding: '5px 4px', borderRadius: '10px', boxShadow: 'rgba(17, 17, 26, 0.1) 0px 0px 16px', display: 'flex', gap: '10px', flexDirection: isMobile ? 'column' : 'row' }}>
+                    <Box sx={{ minWidth: '120px' }}>
+                      <Card sx={{ height: '100%' }}>
+                        <CardContent
+                          sx={{
+                            bgcolor: index === 0 ? 'rgba(114, 225, 40, 0.7)' : index === 1 ? 'rgba(38, 198, 249, 0.5)' : index == 2 ? 'rgba(253, 181, 40, 0.8)' : index === 3 ? 'rgba(255, 77, 73, 0.4)' : index === 4 ? 'rgba(109, 120, 141, 0.4)' : index === 5 ? 'rgba(102, 16, 242, 0.5)' : 'rgba(255, 193, 7, 0.4)',
+                            py: '6px !important',
+                            height: '100%',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            color: 'black',
+                            fontWeight: '600'
+                          }}>
+                          {day.name}
+                        </CardContent>
+                      </Card>
+                    </Box>
+                    <Box sx={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                      {
+                        Array(day.id).fill({
+                          id: 1,
+                          group: {
+                            id: 1,
+                            name: 'Frontend 030'
+                          },
+                          teacher: "Doniyor Eshmamatov",
+                          start_at: '13:00',
+                          end_at: '15:30',
+                          room: '1-Xona'
+                        }).map((lesson: any) => (
+                          <Box sx={{ flexGrow: 1, display: 'flex', gap: '10px', maxWidth: isMobile ? '100%' : '250px', flexWrap: 'wrap', borderRadius: '10px' }}>
+                            <Card sx={{ width: '100%' }}>
+                              <CardContent
+                                sx={{
+                                  bgcolor: index === 0 ? 'rgba(114, 225, 40, 0.7)' : index === 1 ? 'rgba(38, 198, 249, 0.5)' : index == 2 ? 'rgba(253, 181, 40, 0.8)' : index === 3 ? 'rgba(255, 77, 73, 0.4)' : index === 4 ? 'rgba(109, 120, 141, 0.4)' : index === 5 ? 'rgba(102, 16, 242, 0.5)' : 'rgba(255, 193, 7, 0.4)',
+                                  py: '6px !important',
+                                  width: '100%'
+                                }}>
+                                <Typography sx={{ fontSize: '12px', fontWeight: '500', color: 'black' }}>{lesson.group.name}</Typography>
+                                <Typography sx={{ fontSize: '12px', fontWeight: '500', color: 'black' }}>{lesson.start_at} - {lesson.end_at} / {lesson.room}</Typography>
+                                <Typography sx={{ fontSize: '12px', fontWeight: '500', color: 'black' }}>{lesson.teacher}</Typography>
+                              </CardContent>
+                            </Card>
+                          </Box>
+                        ))
+                      }
+                    </Box>
+                  </Box>
+                )
+              })
+            }
           </Box>
         </Box>
-      </CalendarWrapper>
+      </CalendarWrapper >
     </>
 
   )
