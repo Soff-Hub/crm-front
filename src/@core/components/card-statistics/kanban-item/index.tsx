@@ -211,12 +211,12 @@ const KanbanItem = (props: KanbarItemProps) => {
                                 activeTab === 'tab-1' ? (
                                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                                         {
-                                            leadDetail.map((el: any) => (
+                                            leadDetail.length > 0 ? leadDetail.map((el: any) => (
                                                 <Box sx={{ border: '1px solid #c3cccc', padding: '5px', borderRadius: '8px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
                                                     <Typography fontSize={12} fontStyle={'italic'}>{el.body}</Typography>
                                                     <Typography fontSize={12}>{el.admin} {el.created_at}</Typography>
                                                 </Box>
-                                            ))
+                                            )) : <Typography variant='body2' fontSize={'12px'} fontStyle={'italic'} textAlign={'center'}>no data</Typography>
                                         }
                                     </Box>
                                 ) : (
