@@ -133,7 +133,7 @@ const UserDropdown = (props: Props) => {
           </Box>
         </Box>
         <Typography variant='body2' sx={{ fontSize: '0.8rem', color: 'black', paddingLeft: '20px' }}>
-          {"+998911111111"}
+          {user?.username}
         </Typography>
         <Divider sx={{ mt: '0 !important' }} />
         <Divider />

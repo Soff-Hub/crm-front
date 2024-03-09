@@ -450,7 +450,7 @@ export default function GroupsPage() {
                             <LoadingButton type='submit' loading={loading} variant='contained' sx={{ mr: 1 }}>
                                 {t('Saqlash')}
                             </LoadingButton>
-                            <Button variant='outlined' type='button' color='secondary'>
+                            <Button variant='outlined' type='button' color='secondary' onClick={handleEditClose}>
                                 {t('Bekor Qilish')}
                             </Button>
                         </DialogActions>
