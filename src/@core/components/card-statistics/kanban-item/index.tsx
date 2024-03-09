@@ -198,7 +198,7 @@ const KanbanItem = (props: KanbarItemProps) => {
                         aria-controls='customized-menu'
                         onClick={handleClick}
                     />
-                    <Box sx={{ height: '50px', width: '280px', position: 'absolute' }} onClick={() => clickStudent()}></Box>
+                    <Box sx={{ height: '50px', width: '240px', position: 'absolute'}} onClick={() => clickStudent()}></Box>
                 </Box>
                 {
                     id === total ? (
