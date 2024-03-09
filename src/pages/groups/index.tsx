@@ -88,8 +88,9 @@ export default function GroupsPage() {
 
   const handleDeleteTeacher = async (id: string | number) => {
     try {
-      await deleteTeacher(id)
-      toast.success("Mentorlar ro'yxatidan o'chirildi", { position: 'top-center' })
+      await api.delete(`common/group/delete/${id}`)
+      toast.success("Guruhlar ro'yxatidan o'chirildi", { position: 'top-center' })
+      getGroups()
     } catch (error: any) {
       console.log(error);
     }

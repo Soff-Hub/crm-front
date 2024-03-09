@@ -277,13 +277,13 @@ const AppCalendar = () => {
           </Box> */}
 
 
-          <Box sx={{ display: 'flex', flexDirection: 'column', py: '20px', gap: '10px' }}>
+          <Box sx={{ display: 'flex', flexDirection: 'row', py: '20px', gap: '10px' }}>
             {
               lessons.map((day, index) => {
                 return (
                   <Box
                     key={index}
-                    sx={{ padding: '5px 4px', borderRadius: '10px', boxShadow: 'rgba(17, 17, 26, 0.1) 0px 0px 16px', display: 'flex', gap: '10px', flexDirection: isMobile ? 'column' : 'row' }}>
+                    sx={{ padding: '5px 4px', borderRadius: '10px', boxShadow: 'rgba(17, 17, 26, 0.1) 0px 0px 16px', display: 'flex', gap: '10px', flexDirection: 'column' }}>
                     <Box sx={{ minWidth: '120px' }}>
                       <Card sx={{ height: '100%' }}>
                         <CardContent
