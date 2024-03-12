@@ -95,10 +95,13 @@ const LoginPage = () => {
   const onSubmit = async (data: FormData) => {
     setLoading(true)
     const { phone, password } = data
-    await auth.login({ phone, password }, () => {
-      setError('phone', {
-        type: 'manual',
-        message: "To'g'ri raqam kiriting"
+    await auth.login({ phone, password }, (resp) => {
+      console.log(resp);
+      Object.keys(resp).map((el: any) => {
+        return setError(el, {
+          type: 'manual',
+          message: resp[el]
+        })
       })
     })
     setLoading(false)
