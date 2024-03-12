@@ -3,7 +3,6 @@ import { useState, ReactNode } from 'react'
 
 
 // ** MUI Components
-import Alert from '@mui/material/Alert'
 import TextField from '@mui/material/TextField'
 import InputLabel from '@mui/material/InputLabel'
 import IconButton from '@mui/material/IconButton'
@@ -25,7 +24,6 @@ import { yupResolver } from '@hookform/resolvers/yup'
 
 // ** Hooks
 import { useAuth } from 'src/hooks/useAuth'
-import useBgColor from 'src/@core/hooks/useBgColor'
 
 // ** Configs
 import themeConfig from 'src/configs/themeConfig'
@@ -62,8 +60,8 @@ const schema = yup.object().shape({
 })
 
 const defaultValues = {
-  phone: '+998911111111',
-  password: '1'
+  phone: '',
+  password: ''
 }
 
 interface FormData {
@@ -77,7 +75,6 @@ const LoginPage = () => {
 
   // ** Hooks
   const auth = useAuth()
-  const bgColors = useBgColor()
   const { isMobile } = useResponsive()
 
 
@@ -186,14 +183,9 @@ const LoginPage = () => {
           </Typography> */}
         <LoginIllustrationWrapper sx={{ maxWidth: isMobile ? '300px' : '450px' }}>
           <Box sx={{ mb: 6 }}>
-            <TypographyStyled variant='h5'>{`Welcome to ${themeConfig.templateName}! 👋🏻`}</TypographyStyled>
-            <Typography variant='body2'>Please sign-in to your account and start the adventure</Typography>
+            <TypographyStyled variant='h5'>{`Xush kelibsiz ${themeConfig.templateName}! ga 👋🏻`}</TypographyStyled>
+            <Typography variant='body2'>Iltimos tizimga kirish uchun shaxsiy malumotlaringizni kiriting</Typography>
           </Box>
-          <Alert icon={false} sx={{ py: 3, mb: 6, ...bgColors.primaryLight, '& .MuiAlert-message': { p: 0 } }}>
-            <Typography variant='caption' sx={{ mb: 2, display: 'block', color: 'primary.main' }}>
-              CEO: <strong>+998911111111</strong> / Pass: <strong>1</strong>
-            </Typography>
-          </Alert>
           <form noValidate autoComplete='off' onSubmit={handleSubmit(onSubmit)}>
             <FormControl fullWidth sx={{ mb: 4 }}>
               <Controller
