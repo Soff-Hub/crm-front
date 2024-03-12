@@ -113,7 +113,6 @@ const UserViewLeft = ({ userData }: { userData?: any }) => {
     } catch (err) {
       console.log(err)
     }
-
   }
 
   const searchStudent = async () => {

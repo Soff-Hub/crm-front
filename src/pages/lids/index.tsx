@@ -248,6 +248,11 @@ const Lids = () => {
               <FormHelperText error={error.phone?.error}>{error.phone?.message}</FormHelperText>
             </FormControl>
 
+            <FormControl fullWidth>
+              <TextField fullWidth multiline rows={4} size='small' label={t('Izoh')} name='body' error={error.body?.error} />
+              <FormHelperText error={error.body?.error}>{error.body?.message}</FormHelperText>
+            </FormControl>
+
             <LoadingButton loading={loading} type='submit' variant='outlined'>{t("Yaratish")}</LoadingButton>
           </Form>
         </DialogContent>

@@ -77,7 +77,7 @@ export default function DataTable({ columns, data, minWidth, maxWidth, rowClick 
                 </Box>
               </Box>
             ))}
-            <Box sx={{ width: '75%', height: '35px', position: 'absolute' }} onClick={() => handleClick(item.id)}></Box>
+            {rowClick && <Box sx={{ width: '75%', height: '35px', position: 'absolute' }} onClick={() => handleClick(item.id)}></Box>}
           </Box>
         )
       })}

@@ -8,7 +8,7 @@ interface FormTypes {
   reqiuredFields?: string[] | undefined
   id: string
   sx?: CSSProperties
-  valueTypes: 'json' | 'form-data'
+  valueTypes?: 'json' | 'form-data'
 }
 
 export default function Form({ children, sx, id, setError, onSubmit, reqiuredFields, valueTypes }: FormTypes) {

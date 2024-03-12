@@ -8,8 +8,28 @@ import IconifyIcon from "src/@core/components/icon"
 import DataTable from "src/@core/components/table"
 import useResponsive from "src/@core/hooks/useResponsive"
 import api from "src/@core/utils/api"
+import { formatCurrency } from "src/@core/utils/format-currency"
 import showResponseError from "src/@core/utils/show-response-error"
 import { customTableProps } from "src/pages/groups"
+
+
+export const getFormattedDate = () => {
+    const today = new Date();
+    const year = today.getFullYear();
+    let month: any = today.getMonth() + 1;
+    let day: any = today.getDate();
+
+    // Ay va kunni ikki raqamli sifatida ko'rsatish uchun tekshirish
+    if (month < 10) {
+        month = '0' + month;
+    }
+    if (day < 10) {
+        day = '0' + day;
+    }
+
+    return `${year}-${month}-${day}`;
+};
+
 
 export interface ExamType {
     id: number
@@ -30,34 +50,18 @@ const UserViewBilling = () => {
 
     const [exams, setExams] = useState<ExamType[]>([])
 
-
-
     const getExams = async () => {
         try {
-            const resp = await api.get('common/exam/' + query.id)
-            setExams(resp.data);
+            const resp = await api.get('common/group/students/' + query.id)
+            setExams(resp.data)
         } catch (err) {
             console.log(err)
         }
     }
 
-    const handleSubmit = async (values: any) => {
-        setLoading(true)
-        try {
-            await api.post('common/exam/create/', { ...values, group: Number(query.id) })
-            await getExams()
-            setLoading(false)
-            setOpen(null)
-        } catch (err: any) {
-            showResponseError(err.response.data, setError)
-            setLoading(false)
-        }
-    }
-    
-
     const handleEditOpen = async (id: any) => {
-        const findedItem = await exams.find(el => el.id === id)
-        await setEditData(findedItem)
+        const findedItem: any = await exams.find((el: any) => el.student.id === id)
+        await setEditData(findedItem.student)
         setOpen('edit')
     }
 
@@ -76,7 +80,7 @@ const UserViewBilling = () => {
     const handleDelete = async () => {
         setLoading(true)
         try {
-            await api.delete('common/exam/destroy/' + editData)
+            await api.delete(`common/personal-payment/${editData}/`)
             await getExams()
             handleClose()
         } catch (err: any) {
@@ -87,44 +91,47 @@ const UserViewBilling = () => {
     const handleEditSubmit = async (values: any) => {
         setLoading(true)
         try {
-            await api.patch('common/exam/update/' + editData.id, { ...values, group: Number(query.id) })
+            await api.post('common/personal-payment/', { ...values, student: Number(editData.id) })
             await getExams()
             handleClose()
         } catch (err: any) {
             showResponseError(err.response.data, setError)
             setLoading(false)
         }
-                                                                                                                                                                                                    }
+    }
 
     const columns: customTableProps[] = [
         {
+            xs: 0.03,
+            title: t("#"),
+            dataIndex: 'index'
+        },
+        {
             xs: 0.25,
-            title: t("Nomi"),
-            dataIndex: 'title',
+            title: t("first_name"),
+            dataIndex: 'student',
+            render: (student: any) => student.first_name
         },
         {
-            xs: 0.3,
-            title: t("Topshirish sanasi"),
-            dataIndex: 'date',
+            xs: 0.30,
+            title: t("Sana oralig'i"),
+            dataIndex: 'student',
+            render: (student: any) => student.personal_amount ? `${student.personal_amount?.from_date} / ${student.personal_amount?.end_date}` : "bo'sh"
         },
         {
-            xs: 0.2,
-            title: t("O'tish bali"),
-            dataIndex: 'min_score',
-        },
-        {
-            xs: 0.3,
-            title: t("Maksimal bal"),
-            dataIndex: 'max_score',
+            xs: 0.25,
+            title: t("Chegirma narx"),
+            dataIndex: 'student',
+            render: (student: any) => student.personal_amount ? `${formatCurrency(student.personal_amount?.amount)}` : "yo'q"
         },
         {
             xs: 0.12,
             title: t("Amallar"),
-            dataIndex: 'id',
-            render: (id) => (
+            dataIndex: 'student',
+            render: (student: any) => (
                 <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-                    <IconifyIcon icon='mdi:edit' fontSize={20} onClick={() => handleEditOpen(id)} />
-                    <IconifyIcon icon='mdi:delete' fontSize={20} onClick={() => handleDeleteOpen(id)} />
+                    <IconifyIcon icon='mdi:edit' fontSize={20} onClick={() => handleEditOpen(student.id)} />
+                    <IconifyIcon icon='mdi:delete' fontSize={20} onClick={() => handleDeleteOpen(student.id)} />
                 </div>
             )
         },
@@ -142,62 +149,7 @@ const UserViewBilling = () => {
 
     return (
         <Box className='demo-space-y'>
-            <div style={{ width: '100%', display: 'flex', justifyContent: 'flex-end', margin: 0 }}>
-                <Button variant="contained" sx={{ marginLeft: 'auto' }} size="small" onClick={() => setOpen('add')}>yaratish</Button>
-            </div>
             <DataTable maxWidth="100%" minWidth="450px" data={exams} columns={columns} />
-
-            <Drawer open={open === 'add'} anchor='right' variant='persistent'>
-                <Box
-                    className='customizer-header'
-                    sx={{
-                        position: 'relative',
-                        p: theme => theme.spacing(3.5, 5),
-                        borderBottom: theme => `1px solid ${theme.palette.divider}`,
-                        width: isMobile ? '320px' : '400px'
-                    }}
-                    onClick={handleClose}
-                >
-                    <Typography variant='h6' sx={{ fontWeight: 600 }}>
-                        {t("Imtixon qo'shish")}
-                    </Typography>
-                    <IconButton
-                        sx={{
-                            right: 20,
-                            top: '50%',
-                            position: 'absolute',
-                            color: 'text.secondary',
-                            transform: 'translateY(-50%)'
-                        }}
-                    >
-                        <IconifyIcon icon='mdi:close' fontSize={20} />
-                    </IconButton>
-                </Box>
-                <Form reqiuredFields={['title', 'date', 'max_score', 'min_score']} setError={setError} valueTypes="json" onSubmit={handleSubmit} id="create-exam" sx={{ padding: '15px', display: 'flex', flexDirection: 'column', gap: 12 }}>
-                    <FormControl>
-                        <TextField size='small' label={t("Imtixon nomi")} name='title' error={error.title?.error} />
-                        <FormHelperText error={error.title}>{error.title?.message}</FormHelperText>
-                    </FormControl>
-
-                    <FormControl>
-                        <TextField size='small' type="date" label={t("Imtixon sanasi")} name='date' error={error.date?.error} />
-                        <FormHelperText error={error.date}>{error.date?.message}</FormHelperText>
-                    </FormControl>
-
-                    <FormControl>
-                        <TextField size='small' label={t("O'tish ball")} name='min_score' error={error.min_score?.error} />
-                        <FormHelperText error={error.min_score}>{error.min_score?.message}</FormHelperText>
-                    </FormControl>
-
-                    <FormControl>
-                        <TextField size='small' label={t("Maksimal ball")} name='max_score' error={error.max_score?.error} />
-                        <FormHelperText error={error.max_score}>{error.max_score?.message}</FormHelperText>
-                    </FormControl>
-
-                    <LoadingButton loading={loading} variant="outlined" type="submit">Saqlash</LoadingButton>
-                </Form>
-            </Drawer>
-
 
             <Drawer open={open === 'edit'} anchor='right' variant='persistent'>
                 <Box
@@ -210,7 +162,7 @@ const UserViewBilling = () => {
                     }}
                 >
                     <Typography variant='h6' sx={{ fontWeight: 600 }}>
-                        {t("Imtixonni tahrirlash")}
+                        {t("O'quvchi chegirmasini tahrirlash")}
                     </Typography>
                     <IconButton
                         sx={{
@@ -227,23 +179,23 @@ const UserViewBilling = () => {
                 </Box>
                 {editData && <Form setError={setError} valueTypes="json" onSubmit={handleEditSubmit} id="update-exam" sx={{ padding: '15px', display: 'flex', flexDirection: 'column', gap: 12 }}>
                     <FormControl>
-                        <TextField size='small' label={t("Imtixon nomi")} name='title' error={error.title?.error} defaultValue={editData?.title} />
-                        <FormHelperText error={error.title}>{error.title?.message}</FormHelperText>
+                        <TextField size='small' label={t("Chegirma narx")} type="number" name='amount' error={error.amount?.error} defaultValue={editData?.amount} />
+                        <FormHelperText error={error.amount}>{error.amount?.message}</FormHelperText>
                     </FormControl>
 
                     <FormControl>
-                        <TextField size='small' type="date" label={t("Imtixon sanasi")} name='date' error={error.date?.error} defaultValue={editData?.date} />
-                        <FormHelperText error={error.date}>{error.date?.message}</FormHelperText>
+                        <TextField size='small' type="date" label={t("Sana dan")} name='from_date' error={error.from_date?.error} defaultValue={getFormattedDate()} />
+                        <FormHelperText error={error.from_date}>{error.from_date?.message}</FormHelperText>
                     </FormControl>
 
                     <FormControl>
-                        <TextField size='small' label={t("O'tish ball")} name='min_score' error={error.min_score?.error} defaultValue={editData?.min_score} />
-                        <FormHelperText error={error.min_score}>{error.min_score?.message}</FormHelperText>
+                        <TextField size='small' type="date" label={t("Sana gacha")} name='end_date' error={error.end_date?.error} defaultValue={getFormattedDate()} />
+                        <FormHelperText error={error.end_date}>{error.end_date?.message}</FormHelperText>
                     </FormControl>
 
                     <FormControl>
-                        <TextField size='small' label={t("Maksimal ball")} name='max_score' error={error.max_score?.error} defaultValue={editData?.max_score} />
-                        <FormHelperText error={error.max_score}>{error.max_score?.message}</FormHelperText>
+                        <TextField size='small' multiline rows={4} label={t("Izoh")} name='description' error={error.description?.error} />
+                        <FormHelperText error={error.description}>{error.description?.message}</FormHelperText>
                     </FormControl>
 
                     <LoadingButton loading={loading} variant="outlined" type="submit">Saqlash</LoadingButton>
