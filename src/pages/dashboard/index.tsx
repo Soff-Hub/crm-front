@@ -73,7 +73,7 @@ const statsData: {
       icon: "material-symbols-light:warning-outline",
       title: "Qarzdorlar",
       color: 'error',
-      key: 'debtor'
+      key: 'debtor_users'
     },
     {
       icon: "tabler:calendar-stats",
@@ -205,7 +205,7 @@ const AppCalendar = () => {
                 {
                   statsData.map((_, index) => (
                     <Box key={index} className='col-md-2 col-6'>
-                      <CardStatsVertical title={stats?.[_.key] || "*"} stats={_.title} icon={<IconifyIcon fontSize={"4rem"} icon={_.icon} />} color={_.color} />
+                      <CardStatsVertical title={stats?.[_.key]} stats={_.title} icon={<IconifyIcon fontSize={"4rem"} icon={_.icon} />} color={_.color} />
                     </Box>
                   ))
                 }

@@ -80,7 +80,7 @@ const UserViewBilling = () => {
     const handleDelete = async () => {
         setLoading(true)
         try {
-            await api.delete(`common/personal-payment/${editData}/`)
+            await api.delete(`common/personal-payment/${editData}`)
             await getExams()
             handleClose()
         } catch (err: any) {
@@ -113,13 +113,19 @@ const UserViewBilling = () => {
             render: (student: any) => student.first_name
         },
         {
-            xs: 0.30,
+            xs: 0.20,
             title: t("Sana oralig'i"),
             dataIndex: 'student',
             render: (student: any) => student.personal_amount ? `${student.personal_amount?.from_date} / ${student.personal_amount?.end_date}` : "bo'sh"
         },
         {
-            xs: 0.25,
+            xs: 0.30,
+            title: t("Izoh"),
+            dataIndex: 'student',
+            render: (student: any) => student.personal_amount?.description || "bo'sh"
+        },
+        {
+            xs: 0.20,
             title: t("Chegirma narx"),
             dataIndex: 'student',
             render: (student: any) => student.personal_amount ? `${formatCurrency(student.personal_amount?.amount)}` : "yo'q"
@@ -130,8 +136,10 @@ const UserViewBilling = () => {
             dataIndex: 'student',
             render: (student: any) => (
                 <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-                    <IconifyIcon icon='mdi:edit' fontSize={20} onClick={() => handleEditOpen(student.id)} />
-                    <IconifyIcon icon='mdi:delete' fontSize={20} onClick={() => handleDeleteOpen(student.id)} />
+                    {
+                        student?.personal_amount ? <IconifyIcon icon='mdi:delete' fontSize={20} onClick={() => handleDeleteOpen(student?.personal_amount?.id)} /> :
+                            <IconifyIcon icon='mdi:add' fontSize={20} onClick={() => handleEditOpen(student.id)} />
+                    }
                 </div>
             )
         },
