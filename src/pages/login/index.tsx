@@ -36,13 +36,14 @@ import BlankLayout from 'src/@core/layouts/BlankLayout'
 // ** Demo Imports
 import FooterIllustrationsV2 from 'src/views/pages/auth/FooterIllustrationsV2'
 import LoadingButton from '@mui/lab/LoadingButton'
+import useResponsive from 'src/@core/hooks/useResponsive'
 
 // ** Styled Components
 const LoginIllustrationWrapper = styled(Box)<BoxProps>(({ theme }) => ({
   padding: theme.spacing(20),
   paddingRight: '0 !important',
   [theme.breakpoints.down('lg')]: {
-    padding: theme.spacing(10)
+    padding: theme.spacing(0)
   }
 }))
 
@@ -77,6 +78,7 @@ const LoginPage = () => {
   // ** Hooks
   const auth = useAuth()
   const bgColors = useBgColor()
+  const { isMobile } = useResponsive()
 
 
   const {
@@ -179,7 +181,7 @@ const LoginPage = () => {
           <Typography variant='h6' sx={{ ml: 2, lineHeight: 1, fontWeight: 700, fontSize: '1.5rem !important' }}>
             {themeConfig.templateName}
           </Typography> */}
-        <LoginIllustrationWrapper sx={{ maxWidth: '450px' }}>
+        <LoginIllustrationWrapper sx={{ maxWidth: isMobile ? '300px' : '450px' }}>
           <Box sx={{ mb: 6 }}>
             <TypographyStyled variant='h5'>{`Welcome to ${themeConfig.templateName}! 👋🏻`}</TypographyStyled>
             <Typography variant='body2'>Please sign-in to your account and start the adventure</Typography>
