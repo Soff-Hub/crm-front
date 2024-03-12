@@ -206,19 +206,18 @@ export default function GroupsPage() {
     }
   ]
 
-  const reqiuredFields: string[] = ['first_name', 'birth_date', 'phone']
+  const reqiuredFields: string[] = ['first_name', 'phone']
 
   const handleAddTeacher = async (values: any) => {
     try {
       await createTeacher(values)
       await getTeachers()
       setOpenAddGroup(false)
+      const form: any = document.getElementById('create-teacher-form')
+      form.reset()
     } catch (error: any) {
       showResponseError(error.response.data, setError)
     }
-
-    const form: any = document.getElementById('create-teacher-form')
-    form.reset()
   }
 
   const rowClick = (id: any) => {
@@ -291,24 +290,6 @@ export default function GroupsPage() {
             <FormControl sx={{ width: '100%' }}>
               <TextField type='date' label={t("birth_date")} name='birth_date' error={error.birth_date} />
               <FormHelperText error={error.birth_date?.error}>{error.birth_date?.message}</FormHelperText>
-            </FormControl>
-
-            <FormControl fullWidth>
-              <InputLabel id='user-view-language-label'>Filial</InputLabel>
-              <Select
-                error={error.branches?.error}
-                label={t('branches')}
-                multiple
-                id='user-view-language'
-                labelId='user-view-language-label'
-                name='branches'
-                defaultValue={[]}
-              >
-                {
-                  branches.map(branch => <MenuItem key={branch.id} value={branch.id}>{branch.name}</MenuItem>)
-                }
-              </Select>
-              <FormHelperText error={error.branches?.error}>{error.branches?.message}</FormHelperText>
             </FormControl>
 
             <FormControl sx={{ width: '100%', display: 'flex', flexDirection: 'row', gap: 10 }}>
