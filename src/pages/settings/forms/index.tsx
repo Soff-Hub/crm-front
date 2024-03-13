@@ -25,7 +25,6 @@ export default function FormsPage() {
 
   const bgColors = UseBgColor()
   const { t } = useTranslation()
-
   const columns: customTableProps[] = [
     {
       xs: 0.1,
@@ -63,12 +62,22 @@ export default function FormsPage() {
     },
   ]
 
+  const BASE_URL = process.env.NEXT_PUBLIC_URL
+
   const handleClick = (id: string) => {
     const value = data.find(el => el.id === id)
-    navigator.clipboard.writeText(`http://localhost:3000/forms/r/${value.uuid}`)
-    toast.success("Link nusxalandi!", {
-      position: 'top-center'
-    })
+    const textArea = document.createElement("textarea");
+    textArea.value = `${BASE_URL}/forms/r/${value.uuid}`;
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    try {
+      document.execCommand('copy');
+    } catch (err) {
+      console.error('Unable to copy to clipboard', err);
+    }
+    document.body.removeChild(textArea);
+    toast.success("Link nusxalandi", { position: 'top-center' })
   };
 
   const getForms = async () => {
