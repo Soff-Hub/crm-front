@@ -44,6 +44,7 @@ import { TranslateWeekName } from 'src/pages/groups';
 import getLessonDays from 'src/@core/utils/getLessonDays';
 import toast from 'react-hot-toast';
 import Status from 'src/@core/components/status';
+import useGroups from 'src/hooks/useGroups';
 
 interface ColorsType {
   [key: string]: ThemeColor
@@ -59,7 +60,7 @@ const roleColors: ColorsType = {
 type ActionTypes = 'delete' | 'send-sms' | 'add-student' | 'notes'
 
 
-const UserViewLeft = ({ userData }: { userData?: any }) => {
+const UserViewLeft = ({ userData, reRender }: { userData?: any, reRender: any }) => {
   // ** States
   const [openEdit, setOpenEdit] = useState<ActionTypes | null>(null)
   const [data, setData] = useState<GroupType | null>(null)
@@ -69,7 +70,7 @@ const UserViewLeft = ({ userData }: { userData?: any }) => {
   const [students, setStudents] = useState([])
   const [search, setSearch] = useState<string>('')
   const [searchData, setSearchData] = useState<any[]>([])
-  const [selectedStudents, setSelectedStudents] = useState<any[]>([])
+  const [selectedStudents, setSelectedStudents] = useState<any>(null)
   const searchDebounce = useDebounce(search, 500)
 
   // Hooks
@@ -77,6 +78,7 @@ const UserViewLeft = ({ userData }: { userData?: any }) => {
   const { updateTeacher } = useTeachers()
   const { query } = useRouter()
   const { user } = useContext(AuthContext)
+  const { mergeStudentToGroup } = useGroups()
 
   // Handle Edit dialog
   const handleEditClickOpen = (type: ActionTypes) => setOpenEdit(type)
@@ -116,12 +118,9 @@ const UserViewLeft = ({ userData }: { userData?: any }) => {
   }
 
   const searchStudent = async () => {
-    if (searchDebounce === '') {
-      setSearchData([])
-    } else {
-      const resp = await api.get('auth/student/list/?search=' + searchDebounce)
-      setSearchData(resp.data.results)
-    }
+    setSearchData([])
+    const resp = await api.get('auth/student/list/?search=' + searchDebounce)
+    setSearchData(resp.data.results)
   }
 
   const smsDepartmentItem = async (values: any) => {
@@ -142,6 +141,27 @@ const UserViewLeft = ({ userData }: { userData?: any }) => {
       handleEditClose()
       setLoading(false)
     } catch {
+      setLoading(false)
+    }
+  }
+
+  const handleMergeToGroup = async (values: any) => {
+    setLoading(true)
+    const data = {
+      ...values,
+      student: selectedStudents,
+      group: [userData?.id]
+    }
+
+    try {
+      await mergeStudentToGroup(data)
+      setLoading(false)
+      setOpenEdit(null)
+      getStudents()
+
+      return await reRender()
+    } catch (err: any) {
+      showResponseError(err.response.data, setError)
       setLoading(false)
     }
   }
@@ -346,7 +366,7 @@ const UserViewLeft = ({ userData }: { userData?: any }) => {
           </DialogContent>
         </Dialog>
 
-        {/* SEND SMS */}
+        {/* ADD NOTE */}
         <Dialog
           open={openEdit === 'notes'}
           onClose={handleEditClose}
@@ -397,7 +417,7 @@ const UserViewLeft = ({ userData }: { userData?: any }) => {
             Guruhga o'quvchi qo'shish
           </DialogTitle>
           <DialogContent>
-            <Form setError={setError} valueTypes='form-data' sx={{ marginTop: 10 }} onSubmit={handleSubmit} id='fsdfsdfsd-fsaefsd'>
+            <Form setError={setError} valueTypes='json' sx={{ marginTop: 10 }} onSubmit={handleMergeToGroup} id='fwefsdfasfsd'>
               <FormControl fullWidth>
                 <TextField size='small' label={t('first_name')} onChange={(e) => setSearch(e.target.value)} />
               </FormControl>
@@ -409,33 +429,38 @@ const UserViewLeft = ({ userData }: { userData?: any }) => {
                 {searchData.length > 0 ? "Qidiruv natijalari..." : searchDebounce !== "" && searchData.length === 0 ? 'Natijalar topilmadi' : ''}
               </Typography>
               {
-                selectedStudents.map(user => (
-                  <Box key={user.id} onClick={() => setSelectedStudents((current) => [...current.filter(el => el.id !== user.id)])} sx={{ display: 'flex', flexDirection: 'column', gap: '5px', py: '5px', px: '5px', backgroundColor: '#ccc' }}>
+                searchData.map(user => (
+                  <Box onClick={() => (setSearchData((c) => ([...c.filter(el => el.id !== selectedStudents)])), setSelectedStudents(user.id))} sx={{ display: 'flex', flexDirection: 'column', gap: '5px', py: '5px', px: '5px', backgroundColor: selectedStudents === user.id ? '#ccc' : 'transparent' }}>
                     <Box sx={{ display: 'flex', gap: '15px', alignItems: 'center', cursor: 'pointer' }}>
                       <Typography fontSize={14}>{`[ ${user.first_name} ]`}</Typography>
                       <Typography fontSize={14}>{user.phone}</Typography>
-                      <IconifyIcon icon={'mdi:check'} fontSize={14} style={{ marginLeft: 'auto' }} />
+                      {selectedStudents === user.id && <IconifyIcon icon={'mdi:check'} fontSize={14} style={{ marginLeft: 'auto' }} />}
                     </Box>
                   </Box>
                 ))
               }
-              {
-                searchData.map(user => (
-                  <>
-                    {
-                      selectedStudents.find(item => item.id === user.id)?.id !== user.id ? (
-                        <Box onClick={() => setSelectedStudents((current) => [...current, user])} sx={{ display: 'flex', flexDirection: 'column', gap: '5px', py: '5px', px: '5px', backgroundColor: selectedStudents.includes(user.id) ? '#ccc' : 'transparent' }}>
-                          <Box sx={{ display: 'flex', gap: '15px', alignItems: 'center', cursor: 'pointer' }}>
-                            <Typography fontSize={14}>{`[ ${user.first_name} ]`}</Typography>
-                            <Typography fontSize={14}>{user.phone}</Typography>
-                            {selectedStudents.includes(user.id) && <IconifyIcon icon={'mdi:check'} fontSize={14} style={{ marginLeft: 'auto' }} />}
-                          </Box>
-                        </Box>
-                      ) : ''
-                    }
-                  </>
-                ))
-              }
+
+              {selectedStudents && <FormControl sx={{ width: '100%', margin: '10px 0' }}>
+                <TextField
+                  type="date" size='small' label={t('Qo\'shilish sanasi')} name='start_date'
+                  style={{ background: 'transparent', width: '100%' }} />
+                <FormHelperText sx={{ marginBottom: '10px' }} error={error.start_date?.error}>{error.start_date?.message}</FormHelperText>
+              </FormControl>}
+
+
+              {selectedStudents && <FormControl fullWidth>
+                <TextField
+                  error={error?.body}
+                  rows={4}
+                  multiline
+                  label="Izoh"
+                  name='body'
+                  defaultValue={''}
+                />
+                <FormHelperText error={error.body}>{error.body?.message}</FormHelperText>
+              </FormControl>}
+
+
               <DialogActions sx={{ justifyContent: 'center' }}>
                 <LoadingButton loading={loading} type='submit' variant='contained' sx={{ mr: 1 }}>
                   {t("Saqlash")}
@@ -469,7 +494,7 @@ const UserViewLeft = ({ userData }: { userData?: any }) => {
             </LoadingButton>
           </DialogActions>
         </Dialog>
-      </Grid>
+      </Grid >
     )
   } else {
     return null

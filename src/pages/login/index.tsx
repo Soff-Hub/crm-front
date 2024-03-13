@@ -35,6 +35,7 @@ import BlankLayout from 'src/@core/layouts/BlankLayout'
 import FooterIllustrationsV2 from 'src/views/pages/auth/FooterIllustrationsV2'
 import LoadingButton from '@mui/lab/LoadingButton'
 import useResponsive from 'src/@core/hooks/useResponsive'
+import toast from 'react-hot-toast'
 
 // ** Styled Components
 const LoginIllustrationWrapper = styled(Box)<BoxProps>(({ theme }) => ({
@@ -92,14 +93,17 @@ const LoginPage = () => {
   const onSubmit = async (data: FormData) => {
     setLoading(true)
     const { phone, password } = data
-    await auth.login({ phone, password }, (resp) => {
-      console.log(resp);
-      Object.keys(resp).map((el: any) => {
-        return setError(el, {
-          type: 'manual',
-          message: resp[el]
+    await auth.login({ phone, password }, (resp: any) => {
+      if (resp?.response) {
+        Object.keys(resp?.response?.data).map((el: any) => {
+          return setError(el, {
+            type: 'manual',
+            message: resp?.response?.data[el]
+          })
         })
-      })
+      } else {
+        toast.error("Network Error!", { position: 'top-center' })
+      }
     })
     setLoading(false)
   }

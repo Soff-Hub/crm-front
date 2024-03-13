@@ -105,7 +105,7 @@ const AuthProvider = ({ children }: Props) => {
       })
 
       .catch(err => {
-        if (errorCallback) errorCallback(err.response.data)
+        if (errorCallback) errorCallback(err)
       })
   }
 

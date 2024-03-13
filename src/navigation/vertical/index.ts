@@ -100,16 +100,7 @@ const Navigation = (): VerticalNavItemsType => {
         },
         {
           title: 'Formalar',
-          children: [
-            {
-              title: 'Barcha formalar',
-              path: '/settings/forms/'
-            },
-            {
-              title: 'Yangi forma yaratish',
-              path: '/settings/forms/create'
-            }
-          ]
+          path: '/settings/forms/'
         }
       ]
     }

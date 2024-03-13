@@ -4,7 +4,7 @@ import { HorizontalNavItemsType } from 'src/@core/layouts/types'
 
 const Navigation = (): HorizontalNavItemsType => {
   const { t } = useTranslation()
-  
+
   return [
     {
       title: t("Bosh sahifa"),
@@ -83,16 +83,7 @@ const Navigation = (): HorizontalNavItemsType => {
         },
         {
           title: 'Formalar',
-          children: [
-            {
-              title: 'Barcha formalar',
-              path: '/settings/forms/'
-            },
-            {
-              title: 'Yangi forma yaratish',
-              path: '/settings/forms/create'
-            }
-          ]
+          path: '/settings/forms/'
         }
       ]
     }

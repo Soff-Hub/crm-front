@@ -41,6 +41,7 @@ export type KanbarItemProps = {
   id: any
   phone: string
   status: "pending" | "new" | "success"
+  is_view: boolean
   trend?: 'positive' | 'negative'
   handleEditLead?: any
 }

@@ -24,6 +24,9 @@ const AuthGuard = (props: AuthGuardProps) => {
       }
 
       if (auth.user === null && !window.localStorage.getItem('userData')) {
+        if (router.pathname.split('/').includes('forms') && router.pathname.split('/').includes('r')) {
+          return
+        }
         if (router.asPath !== '/') {
           router.replace({
             pathname: '/login',

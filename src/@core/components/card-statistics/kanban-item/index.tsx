@@ -44,6 +44,7 @@ import api from 'src/@core/utils/api'
 import toast from 'react-hot-toast'
 import { useDispatch } from 'react-redux'
 import { addOpenedUser } from 'src/store/apps/user'
+import Status from '../../status'
 
 // ** Styled Avatar component
 const Avatar = styled(CustomAvatar)<AvatarProps>(({ theme }) => ({
@@ -55,7 +56,7 @@ const Avatar = styled(CustomAvatar)<AvatarProps>(({ theme }) => ({
 const KanbanItem = (props: KanbarItemProps) => {
 
     // ** Props
-    const { title, phone, status, handleEditLead, id } = props
+    const { title, phone, status, handleEditLead, id, is_view } = props
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
     const [error, setError] = useState<any>({})
     const { t } = useTranslation()
@@ -188,7 +189,7 @@ const KanbanItem = (props: KanbarItemProps) => {
                         />
                     </Avatar>
                     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                        <Typography fontSize={12}>{title}</Typography>
+                        <Typography sx={{ display: 'flex', alignItems: 'center', gap: '10px' }} fontSize={12}>{title} {!is_view && <Status color='success' />}</Typography>
                         <Typography fontSize={12}>{phone}</Typography>
                     </Box>
                     <IconifyIcon
@@ -198,7 +199,7 @@ const KanbanItem = (props: KanbarItemProps) => {
                         aria-controls='customized-menu'
                         onClick={handleClick}
                     />
-                    <Box sx={{ height: '50px', width: '240px', position: 'absolute'}} onClick={() => clickStudent()}></Box>
+                    <Box sx={{ height: '50px', width: '240px', position: 'absolute' }} onClick={() => clickStudent()}></Box>
                 </Box>
                 {
                     id === total ? (

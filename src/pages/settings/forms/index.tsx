@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { Box, Button, Dialog, DialogContent, DialogTitle, FormControl, FormHelperText, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material'
+import React, { useEffect, useState } from 'react'
+import { Alert, Box, Button, Dialog, DialogContent, DialogTitle, FormControl, FormHelperText, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material'
 import { customTableProps } from 'src/pages/groups'
 import DataTable from 'src/@core/components/table'
 import toast from 'react-hot-toast'
@@ -7,6 +7,8 @@ import IconifyIcon from 'src/@core/components/icon'
 import Form from 'src/@core/components/form'
 import api from 'src/@core/utils/api'
 import LoadingButton from '@mui/lab/LoadingButton'
+import UseBgColor from 'src/@core/hooks/useBgColor'
+import { useTranslation } from 'react-i18next'
 
 export default function FormsPage() {
 
@@ -16,6 +18,12 @@ export default function FormsPage() {
   const [error, setError] = useState<any>({})
   const [deleteId, setDeleteId] = useState<any>(null)
   const [loading, setLoading] = useState<boolean>(false)
+  const [data, setData] = useState<any[]>([])
+  const [sourceData, setSourceData] = useState<any>([])
+  const [addSource, setAddSource] = useState<boolean>(false)
+
+  const bgColors = UseBgColor()
+  const { t } = useTranslation()
 
   const columns: customTableProps[] = [
     {
@@ -24,19 +32,27 @@ export default function FormsPage() {
       dataIndex: "index",
     },
     {
-      xs: 0.5,
+      xs: 1,
       title: "Nomi",
-      dataIndex: "name",
+      dataIndex: "title",
     },
     {
       xs: 1,
-      title: "Nomi",
-      dataIndex: "lead",
+      title: "Lid bo'limi",
+      dataIndex: "source_department",
+      render: (source_department: any) => source_department.department
     },
     {
       xs: 1,
-      title: "Nomi",
-      dataIndex: "link"
+      title: "Manba",
+      dataIndex: "source_department",
+      render: (source_department: any) => source_department.source
+    },
+    {
+      xs: 2.4,
+      title: "Link",
+      dataIndex: "uuid",
+      render: (link: string) => `${link}`
     },
     {
       xs: 0.5,
@@ -46,40 +62,48 @@ export default function FormsPage() {
     },
   ]
 
-  const data: any[] = [
-    {
-      id: 1,
-      name: "forma 1",
-      lead: "Frontend guruhi uchun",
-      link: "https://soff.uz"
-    },
-  ]
-
   const handleClick = (id: string) => {
     const value = data.find(el => el.id === id)
-    navigator.clipboard.writeText(value.link)
+    navigator.clipboard.writeText(`http://localhost:3000/forms/r/${value.uuid}`)
     toast.success("Link nusxalandi!", {
       position: 'top-center'
     })
   };
+
+  const getForms = async () => {
+    const resp = await api.get('leads/application-form/list/')
+    setData(resp.data)
+  }
 
   async function getDepartments() {
     const resp = await api.get(`leads/department/list/`)
     setDepartments(resp.data.results);
   }
 
+
+  const getSources = async () => {
+    const resp = await api.get('leads/source')
+    if (resp?.data) {
+      setSourceData(resp.data.results);
+    }
+  }
+
   const openDialog = () => {
     setOpen('new')
     getDepartments()
+    getSources()
   }
 
   async function onSubmit(values: any) {
     setLoading(true)
-    console.log(values)
-    setTimeout(() => {
+    try {
+      await api.post('leads/application-form/create/aw/', values)
       setOpen(null)
       setLoading(false)
-    }, 800)
+    } catch (err) {
+      console.log(err)
+      setLoading(false)
+    }
   }
 
   async function onDelete() {
@@ -90,14 +114,32 @@ export default function FormsPage() {
     }, 800)
   }
 
+  useEffect(() => {
+    getForms()
+  }, [])
+
   return (
-    <Box sx={{ maxWidth: '700px' }}>
+    <Box>
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <Typography>Formalar</Typography>
+        <Typography fontSize={'18px'}>Formalar</Typography>
         <Button size='small' variant='contained' startIcon={<IconifyIcon icon={'ic:baseline-add'} />} onClick={openDialog}>Yangi</Button>
       </Box>
 
-      <DataTable columns={columns} data={data} maxWidth='700px' minWidth='500px' rowClick={handleClick} />
+      <Box sx={{ display: 'flex', gap: '10px', flexDirection: 'column', mt: '10px' }}>
+        <Alert icon={false} sx={{ py: 2, mb: 0, ...bgColors.primaryLight, '& .MuiAlert-message': { p: 0 } }}>
+          <Typography variant='caption' sx={{ display: 'block', color: 'primary.main' }}>
+            Linkni nusxalash uchun qatorning istalgan joyiga bosing
+          </Typography>
+        </Alert>
+
+        <Alert icon={false} sx={{ py: 2, mb: 0, ...bgColors.warningLight, '& .MuiAlert-message': { p: 0 } }}>
+          <Typography variant='caption' sx={{ display: 'block', color: 'black' }}>
+            Link orqali faqat saytga login qilmaganlar kira oladi
+          </Typography>
+        </Alert>
+      </Box>
+
+      <DataTable columns={columns} data={data} rowClick={handleClick} />
 
       <Dialog open={open === 'new'} onClose={() => setOpen(null)}>
         <DialogTitle minWidth={'300px'} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -140,11 +182,10 @@ export default function FormsPage() {
                   size='small'
                   error={error.department?.error}
                   label={"Quyi bo'lim"}
-                  multiple
                   id='user-view-language'
                   labelId='user-view-language-label'
                   name='department'
-                  defaultValue={[]}
+                  defaultValue={''}
                 >
                   {
                     departments.find(el => Number(el.id) === selectedDepartment).children.map((item: any) => <MenuItem key={item.id} value={item.id}>{item.name}</MenuItem>)
@@ -153,6 +194,35 @@ export default function FormsPage() {
                 <FormHelperText error={error.department?.error}>{error.department?.message}</FormHelperText>
               </FormControl>
             )}
+
+            {!addSource ? (
+              <FormControl fullWidth>
+                <InputLabel size='small' id='fsdgsdgsgsdfsd-label'>{t('Manba')}</InputLabel>
+                <Select
+                  size='small'
+                  error={error.source?.error}
+                  label={t('Manba')}
+                  id='fsdgsdgsgsdfsd'
+                  labelId='fsdgsdgsgsdfsd-label'
+                  name='source_name'
+                  onChange={(e: any) => setAddSource(e?.target?.value === 0)}
+                  sx={{ mb: 1 }}
+                >
+                  {
+                    sourceData.map((lead: any) => <MenuItem key={lead.id} value={lead.name}>{lead.name}</MenuItem>)
+                  }
+                  <MenuItem value={0} sx={{ fontWeight: '600' }}><IconifyIcon icon={'ic:baseline-add'} /> Yangi qo'shish</MenuItem>
+                </Select>
+                <FormHelperText error={error.source_name?.error}>{error.source?.message}</FormHelperText>
+              </FormControl>
+            ) : ''}
+
+            {addSource ? (
+              <FormControl fullWidth>
+                <TextField fullWidth error={error.first_name?.error} size='small' label={t('Manba')} name='source_name' />
+                <FormHelperText error={error.source_name?.error}>{error.source?.message}</FormHelperText>
+              </FormControl>
+            ) : ''}
 
             <LoadingButton loading={loading} variant='contained' type='submit'>Yaratish</LoadingButton>
           </Form>
