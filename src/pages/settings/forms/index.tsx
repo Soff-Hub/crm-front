@@ -9,6 +9,7 @@ import api from 'src/@core/utils/api'
 import LoadingButton from '@mui/lab/LoadingButton'
 import UseBgColor from 'src/@core/hooks/useBgColor'
 import { useTranslation } from 'react-i18next'
+import showResponseError from 'src/@core/utils/show-response-error'
 
 export default function FormsPage() {
 
@@ -97,11 +98,12 @@ export default function FormsPage() {
   async function onSubmit(values: any) {
     setLoading(true)
     try {
-      await api.post('leads/application-form/create/aw/', values)
+      await api.post('leads/application-form/create/', values)
       setOpen(null)
       setLoading(false)
-    } catch (err) {
+    } catch (err: any) {
       console.log(err)
+      showResponseError(err?.response.data, setError)
       setLoading(false)
     }
   }
@@ -149,10 +151,10 @@ export default function FormsPage() {
           </span>
         </DialogTitle>
         <DialogContent>
-          <Form setError={setError} reqiuredFields={['department', 'departmentParent', 'name']} id='create-form' onSubmit={onSubmit} sx={{ marginTop: '5px', display: 'flex', flexDirection: 'column', gap: '10px', maxWidth: '300px' }}>
+          <Form setError={setError} reqiuredFields={['department', 'departmentParent', 'title']} id='create-form' onSubmit={onSubmit} sx={{ marginTop: '5px', display: 'flex', flexDirection: 'column', gap: '10px', maxWidth: '300px' }}>
             <FormControl fullWidth>
-              <TextField size='small' label="Nomi" name='name' error={error?.name?.error} />
-              <FormHelperText error={error.name?.error}>{error.name?.message}</FormHelperText>
+              <TextField size='small' label="Nomi" name='title' error={error?.title?.error} />
+              <FormHelperText error={error.title?.error}>{error.title?.message}</FormHelperText>
             </FormControl>
 
             <FormControl fullWidth>
@@ -204,23 +206,23 @@ export default function FormsPage() {
                   label={t('Manba')}
                   id='fsdgsdgsgsdfsd'
                   labelId='fsdgsdgsgsdfsd-label'
-                  name='source_name'
+                  name='source'
                   onChange={(e: any) => setAddSource(e?.target?.value === 0)}
                   sx={{ mb: 1 }}
                 >
                   {
-                    sourceData.map((lead: any) => <MenuItem key={lead.id} value={lead.name}>{lead.name}</MenuItem>)
+                    sourceData.map((lead: any) => <MenuItem key={lead.id} value={lead.id}>{lead.name}</MenuItem>)
                   }
-                  <MenuItem value={0} sx={{ fontWeight: '600' }}><IconifyIcon icon={'ic:baseline-add'} /> Yangi qo'shish</MenuItem>
+                  {/* <MenuItem value={0} sx={{ fontWeight: '600' }}><IconifyIcon icon={'ic:baseline-add'} /> Yangi qo'shish</MenuItem> */}
                 </Select>
-                <FormHelperText error={error.source_name?.error}>{error.source?.message}</FormHelperText>
+                <FormHelperText error={error.source?.error}>{error.source?.message}</FormHelperText>
               </FormControl>
             ) : ''}
 
             {addSource ? (
               <FormControl fullWidth>
-                <TextField fullWidth error={error.first_name?.error} size='small' label={t('Manba')} name='source_name' />
-                <FormHelperText error={error.source_name?.error}>{error.source?.message}</FormHelperText>
+                <TextField fullWidth error={error.first_name?.error} size='small' label={t('Manba')} name='source' />
+                <FormHelperText error={error.source?.error}>{error.source?.message}</FormHelperText>
               </FormControl>
             ) : ''}
 
