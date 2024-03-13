@@ -101,6 +101,7 @@ export default function FormsPage() {
       await api.post('leads/application-form/create/', values)
       setOpen(null)
       setLoading(false)
+      getForms()
     } catch (err: any) {
       console.log(err)
       showResponseError(err?.response.data, setError)
