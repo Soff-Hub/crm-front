@@ -49,6 +49,11 @@ export default function FormsPage() {
       render: (source_department: any) => source_department.source
     },
     {
+      xs: 1,
+      title: "Tushgan lidlar soni",
+      dataIndex: "user_count",
+    },
+    {
       xs: 2.4,
       title: "Link",
       dataIndex: "uuid",
@@ -120,10 +125,15 @@ export default function FormsPage() {
 
   async function onDelete() {
     setLoading(true)
-    setTimeout(() => {
+    try {
+      await api.delete(`leads/application-form/destroy/${deleteId}`)
       setOpen(null)
       setLoading(false)
-    }, 800)
+      getForms()
+    } catch (err: any) {
+      console.log(err)
+      setLoading(false)
+    }
   }
 
   useEffect(() => {

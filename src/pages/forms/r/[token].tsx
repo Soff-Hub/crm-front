@@ -118,5 +118,4 @@ RequestForm.getLayout = (page: ReactNode) => <BlankLayout>{page}</BlankLayout>
 
 RequestForm.guestGuard = true
 
-
 export default RequestForm
