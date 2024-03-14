@@ -172,22 +172,22 @@ const AppCalendar = () => {
   async function getLessons() {
     setEvents([])
     const resp = await api.get('common/dashboard/group-list/')
-    Object.values(resp.data).map((el: any) => {
-      return setEvents((c: any[]) => ([...c,
-      ...el.map((item: any) => ({
-        id: item.group_id,
-        index: Math.floor(Math.random() * 6) + 1,
-        title: (
-          <Box>
-            <Typography sx={{ color: 'white', fontSize: '12px' }}>{item.group_name}</Typography>
-            <Typography sx={{ color: 'white', fontSize: '12px' }}>{item.room}</Typography>
-            <Typography sx={{ color: 'white', fontSize: '12px' }}>{item.teacher}</Typography>
-          </Box>
-        ),
-        start: new Date(item.start_at),
-        end: new Date(item.end_at)
-      }))]))
-    })
+    // Object.values(resp.data).map((el: any) => {
+    //   return setEvents((c: any[]) => ([...c,
+    //   ...el.map((item: any) => ({
+    //     id: item.group_id,
+    //     index: Math.floor(Math.random() * 6) + 1,
+    //     title: (
+    //       <Box>
+    //         <Typography sx={{ color: 'white', fontSize: '12px' }}>{item.group_name}</Typography>
+    //         <Typography sx={{ color: 'white', fontSize: '12px' }}>{item.room}</Typography>
+    //         <Typography sx={{ color: 'white', fontSize: '12px' }}>{item.teacher}</Typography>
+    //       </Box>
+    //     ),
+    //     start: new Date(item.start_at),
+    //     end: new Date(item.end_at)
+    //   }))]))
+    // })
   }
 
   useEffect(() => {
@@ -238,8 +238,8 @@ const AppCalendar = () => {
               day: 'Kun',
               month: 'Oy',
               today: "Bugun",
-              next: "Keyingi",
-              previous: "Oldingi",
+              next: "Keyingi kun",
+              previous: "Oldingi kun",
               date: 'Sana',
               time: 'Vaqt',
               event: 'Event',
@@ -247,9 +247,9 @@ const AppCalendar = () => {
             }}
             views={['day', 'week']}
             defaultView='day'
-            // endAccessor="end"
+            endAccessor="end"
             events={events}
-            min={new Date(new Date().setHours(6, 0))}
+            min={new Date(new Date().setHours(9, 0))}
             max={new Date(new Date().setHours(22, 1))}
             formats={{
               timeGutterFormat: 'H:mm'

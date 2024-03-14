@@ -184,6 +184,12 @@ export default function GroupsPage() {
       dataIndex: 'index'
     },
     {
+      xs: 0.4,
+      title: t("Status"),
+      dataIndex: 'status',
+      render: (status: string) => <div style={{ display: 'flex', alignItems: 'center', gap: '3px' }}><Status color={status == 'active' ? 'success' : status == 'new' ? 'warning' : 'error'} /> {status == 'active' ? 'aktiv' : status == 'new' ? 'sinov' : 'arxiv'}</div>
+    },
+    {
       xs: 1.4,
       title: t("first_name"),
       dataIndex: 'first_name'
@@ -225,30 +231,6 @@ export default function GroupsPage() {
           {item.teacher.first_name}
         </Typography>
       ))
-    },
-    {
-      xs: 1,
-      title: t("Kurs davomiyligi"),
-      dataIndex: 'group',
-      render: (group: {
-        start_at: string
-        date: string
-      }[]) => group.map((item, index) => (
-        <Typography fontSize={12} key={index}>
-          {item.date}
-        </Typography>
-      ))
-    },
-    {
-      xs: 1.2,
-      title: t("birth_date"),
-      dataIndex: 'birth_date'
-    },
-    {
-      xs: 0.7,
-      title: t("Status"),
-      dataIndex: 'status',
-      render: (status: string) => <div style={{ display: 'flex', alignItems: 'center', gap: '3px' }}><Status color={status == 'active' ? 'success' : status == 'new' ? 'warning' : 'error'} /> {status == 'active' ? 'aktiv' : status == 'new' ? 'sinov' : 'arxiv'}</div>
     },
     {
       xs: 0.7,

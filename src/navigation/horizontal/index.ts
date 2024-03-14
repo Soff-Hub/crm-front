@@ -1,9 +1,11 @@
-// ** Type import
-import { useTranslation } from 'react-i18next'
 import { HorizontalNavItemsType } from 'src/@core/layouts/types'
 
 const Navigation = (): HorizontalNavItemsType => {
-  const { t } = useTranslation()
+  // const { t } = useTranslation()
+
+  function t(title: string) {
+    return title
+  }
 
   return [
     {

@@ -37,6 +37,7 @@ import useCourses from 'src/hooks/useCourses'
 import useRooms from 'src/hooks/useRooms'
 import api from 'src/@core/utils/api'
 import getMontName from 'src/@core/utils/gwt-month-name'
+import getLessonDays from 'src/@core/utils/getLessonDays'
 
 export interface customTableProps {
   xs: number
@@ -195,9 +196,21 @@ export default function GroupsPage() {
       dataIndex: 'course_name'
     },
     {
-      xs: 1,
+      xs: 1.4,
       title: t("O'qituvchi"),
       dataIndex: 'teacher_name'
+    },
+    {
+      xs: 1,
+      title: t("Dars Kunlari"),
+      dataIndex: 'week_days',
+      render: (week_days: any) => getLessonDays(week_days)
+    },
+    {
+      xs: 1,
+      title: t("Dars vaqti"),
+      dataIndex: 'start_at',
+      render: (time) => time.split(':').splice(0, 2).join(':')
     },
     {
       xs: 1,
@@ -215,12 +228,6 @@ export default function GroupsPage() {
       xs: 1,
       title: t("Ochilgan sana"),
       dataIndex: 'start_date'
-    },
-    {
-      xs: 1,
-      title: t("Dars soati"),
-      dataIndex: 'start_at',
-      render: (time) => time.split(':').splice(0, 2).join(':')
     },
     {
       xs: 1.4,

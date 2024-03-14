@@ -1,5 +1,5 @@
-import React, { useContext } from 'react'
-import { Box, Dialog, DialogContent, TextField, Typography } from '@mui/material'
+import React, { useContext, useState } from 'react'
+import { Box, Button, Dialog, DialogContent, TextField, Typography } from '@mui/material'
 import Status from 'src/@core/components/status'
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
@@ -11,6 +11,9 @@ import Link from 'next/link';
 import { formatDateTime } from 'src/@core/utils/date-formatter';
 import { useRouter } from 'next/router';
 import { AuthContext } from 'src/context/AuthContext';
+import LoadingButton from '@mui/lab/LoadingButton';
+import api from 'src/@core/utils/api';
+import toast from 'react-hot-toast';
 
 
 interface StudentType {
@@ -53,20 +56,43 @@ const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
 export const UserViewStudentsItem = ({ item, index }: ItemTypes) => {
     const { student } = item
     const { first_name, phone, added_at, created_at, balance, comment, id, status } = student
-    const { push } = useRouter()
+    const { push, query } = useRouter()
     const { user } = useContext(AuthContext)
 
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+    const [openLeft, setOpenLeft] = useState<boolean>(false)
+    const [loading, setLoading] = useState<boolean>(false)
+
     const open = Boolean(anchorEl);
+
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
     };
+
     const handleClose = (value: 'none' | 'left' | 'payment' | 'notes') => {
         setAnchorEl(null);
         if (value === 'notes') push(`/students/view/comments/?student=${id}`)
         else if (value === 'payment') push(`/students/view/security/?student=${id}`)
-        else if (value === 'left') { }
+        else if (value === 'left') {
+            setOpenLeft(true)
+        }
     };
+
+    const handleLeft = async () => {
+        setLoading(true)
+        try {
+            await api.post('common/group-student/destroy/', {
+                group: query.id,
+                student: id
+            })
+            toast.success("O'quvchi guruhdan chetlatildi", { position: 'top-center' })
+            setLoading(false)
+            setOpenLeft(false)
+        } catch (err) {
+            console.log(err)
+            setLoading(false)
+        }
+    }
 
 
     return (
@@ -136,9 +162,14 @@ export const UserViewStudentsItem = ({ item, index }: ItemTypes) => {
                 <MenuItem onClick={() => handleClose('notes')}>Eslatmalar</MenuItem>
             </Menu>
 
-            <Dialog open={false}>
-                <DialogContent>
-                    SA
+            <Dialog open={openLeft} onClose={() => setOpenLeft(false)}>
+                <DialogContent sx={{ maxWidth: '350px' }}>
+                    <Typography sx={{ fontSize: '20px', textAlign: 'center', mb: 3 }}>O'quvchini guruhdan chetlatishni tasdiqlang</Typography>
+
+                    <Box sx={{ display: 'flex', justifyContent: 'center', gap: 4 }}>
+                        <Button onClick={() => setOpenLeft(false)} size='small' variant='outlined' color='error'>bekor qilish</Button>
+                        <LoadingButton loading={loading} onClick={handleLeft} size='small' variant='contained' color='success'>Tasdiqlash</LoadingButton>
+                    </Box>
                 </DialogContent>
             </Dialog>
         </Box>
