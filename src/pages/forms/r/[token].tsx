@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react'
 import BlankLayout from 'src/@core/layouts/BlankLayout'
 import { useState } from "react";
-import { TextField, Button, Typography, Box, FormControl, FormHelperText } from "@mui/material";
+import { TextField, Button, Typography, Box, FormControl, FormHelperText, Input } from "@mui/material";
 import Form from 'src/@core/components/form';
 import LoadingButton from '@mui/lab/LoadingButton';
 import useResponsive from 'src/@core/hooks/useResponsive';
@@ -22,15 +22,15 @@ function RequestForm() {
         setLoading(true)
         try {
             await api.post(`leads/application-user/create/${query.token}`, values)
-            toast.success("Ma'lumotlaringiz yuborildi", { position: 'top-center' })
             setTimeout(() => {
+                toast.success("Ma'lumotlaringiz yuborildi", { position: 'top-center' })
                 setLoading(false)
                 setIsSend(true)
             }, 500);
         } catch (err: any) {
             if (err?.response) {
                 setLoading(false)
-                showResponseError(err, setError)
+                showResponseError(err.response.data, setError)
             }
         }
     };
@@ -77,29 +77,51 @@ function RequestForm() {
                             backgroundRepeat: 'no-repeat'
                         }}></Box>
                 ) : (
-                    <Form id='resuf0dshfsid' onSubmit={handleSubmit} setError={setError}>
+                    <Form id='resuf0dshfsid' onSubmit={handleSubmit} setError={setError} sx={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                         <FormControl fullWidth>
-                            <TextField
+                            <Input
                                 error={error?.first_name?.error}
                                 fullWidth
-                                label="Ism Familiya"
-                                margin="normal"
+                                placeholder="Ism Familiya"
                                 name='first_name'
                                 required
+                                sx={{
+                                    border: '1.5px solid var(--Input-focusedHighlight)',
+                                    transition: 'transform .15s cubic-bezier(0.1,0.9,0.2,1)',
+                                    borderRadius: 0,
+                                    borderBottomLeftRadius: '64px 20px',
+                                    borderBottomRightRadius: '64px 20px',
+                                    padding: '5px',
+                                    '&:focus-within::before': {
+                                        transform: 'scaleX(1)',
+                                    },
+                                }}
                             />
                             <FormHelperText>{error?.first_name?.message}</FormHelperText>
                         </FormControl>
 
                         <FormControl fullWidth>
-                            <TextField
+                            <Input
+                                autoFocus
                                 error={error?.phone?.error}
                                 fullWidth
-                                label="Telefon raqam"
-                                margin="normal"
+                                type='number'
+                                startAdornment={"+998"}
                                 name='phone'
                                 required
+                                sx={{
+                                    border: '1.5px solid var(--Input-focusedHighlight)',
+                                    transition: 'transform .15s cubic-bezier(0.1,0.9,0.2,1)',
+                                    borderRadius: 0,
+                                    borderBottomLeftRadius: '64px 20px',
+                                    borderBottomRightRadius: '64px 20px',
+                                    padding: '5px',
+                                    '&:focus-within::before': {
+                                        transform: 'scaleX(1)',
+                                    },
+                                }}
                             />
-                            <FormHelperText>{error?.phone?.message}</FormHelperText>
+                            <FormHelperText error>{error?.phone?.message}</FormHelperText>
                         </FormControl>
 
                         <LoadingButton loading={loading} variant="contained" color='success' type="submit" size='large' sx={{ mt: 5 }} fullWidth>

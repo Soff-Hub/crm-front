@@ -38,9 +38,19 @@ code[class*='language-'] {
   flex-grow: 0;
 }
 
-.rbc-btn-group:nth-child(1) {
+.rbc-btn-group:nth-child(1),
+.rbc-event-label {
   display: none !important;
 }
+
+.day .rbc-time-view .rbc-time-content .rbc-day-slot {
+  min-width: 500px !important;
+}
+
+.rbc-day-slot .rbc-timeslot-group {
+  width: 100%;
+}
+
 
 
 @keyframes identifier {}
