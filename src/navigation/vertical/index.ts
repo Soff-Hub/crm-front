@@ -2,7 +2,7 @@
 import { useTranslation } from 'react-i18next'
 import { VerticalNavItemsType } from 'src/@core/layouts/types'
 
-export const TeacherNavigation = (): VerticalNavItemsType => {
+export const TeacherNavigation = (): any => {
   const { t } = useTranslation()
   
   return [

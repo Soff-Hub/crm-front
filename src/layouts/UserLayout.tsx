@@ -80,7 +80,7 @@ const UserLayout = ({ children, contentHeightFixed }: Props) => {
       {...(settings.layout === 'horizontal' && {
         horizontalLayoutProps: {
           navMenu: {
-            navItems: HorizontalNavItems()
+            navItems: user?.role === 'teacher' ? TeacherNavigation() : HorizontalNavItems()
 
             // Uncomment the below line when using server-side menu in horizontal layout and comment the above line
             // navItems: horizontalMenuItems
