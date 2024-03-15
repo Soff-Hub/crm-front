@@ -202,12 +202,12 @@ const Lids = () => {
           </IconButton>
         </DialogTitle>
         <DialogContent sx={{ minWidth: '320px' }}>
-          <Form setError={setError} onSubmit={createDepartmentStudent} valueTypes='json' id='dqdwgsfdgdfa' sx={{ padding: '5px 0', width: '100%', display: 'flex', flexDirection: 'column', gap: '15px' }}>
+          <Form setError={setError} reqiuredFields={['department', 'source_name', 'phone', 'first_name']} onSubmit={createDepartmentStudent} valueTypes='json' id='dqdwgsfdgdfa' sx={{ padding: '5px 0', width: '100%', display: 'flex', flexDirection: 'column', gap: '15px' }}>
             <FormControl fullWidth>
               <InputLabel size='small' id='user-view-language-label'>{t('Bo\'lim')}</InputLabel>
               <Select
                 size='small'
-                error={error.source?.error}
+                error={error.department?.error}
                 label={t('Bo\'lim')}
                 id='user-view-language'
                 labelId='user-view-language-label'
@@ -218,7 +218,7 @@ const Lids = () => {
                   leadData.some((el: any) => el.id === openLid) ? leadData.find((el: any) => el.id === openLid).children.map((lead: any) => <MenuItem key={lead.id} value={Number(lead.id)}>{lead.name}</MenuItem>) : <></>
                 }
               </Select>
-              <FormHelperText error={error.source?.error}>{error.source?.message}</FormHelperText>
+              <FormHelperText error={error.department?.error}>{error.department?.message}</FormHelperText>
             </FormControl>
 
             {!addSource ? (
@@ -226,7 +226,7 @@ const Lids = () => {
                 <InputLabel size='small' id='fsdgsdgsgsdfsd-label'>{t('Manba')}</InputLabel>
                 <Select
                   size='small'
-                  error={error.source?.error}
+                  error={error.source_name?.error}
                   label={t('Manba')}
                   id='fsdgsdgsgsdfsd'
                   labelId='fsdgsdgsgsdfsd-label'
@@ -239,7 +239,7 @@ const Lids = () => {
                   }
                   <MenuItem value={0} sx={{ fontWeight: '600' }}><IconifyIcon icon={'ic:baseline-add'} /> Yangi qo'shish</MenuItem>
                 </Select>
-                <FormHelperText error={error.source_name?.error}>{error.source?.message}</FormHelperText>
+                <FormHelperText error={error.source_name?.error}>{error.source_name?.message}</FormHelperText>
               </FormControl>
             ) : ''}
 
