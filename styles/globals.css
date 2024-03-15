@@ -51,6 +51,17 @@ code[class*='language-'] {
   width: 100%;
 }
 
+.rbc-event {
+  max-width: 200px;
+}
+
+@media only screen and (max-width:500px) {
+  .rbc-event {
+    max-width: 100%;
+  }
+}
+
+
 
 
 @keyframes identifier {}
