@@ -17,15 +17,30 @@ code {
   color: #d400ff;
   border-radius: 0.1335rem;
 }
+
 code:not([class*='language-']):before,
 code:not([class*='language-']):after {
   content: '`';
 }
+
 code[class*='language-'] {
   padding: 0;
 }
 
-
-@keyframes identifier {
-  
+.rbc-toolbar {
+  display: flex;
+  justify-content: flex-end !important;
+  gap: 20px;
+  flex-direction: row-reverse;
 }
+
+.rbc-toolbar .rbc-toolbar-label {
+  flex-grow: 0;
+}
+
+.rbc-btn-group:nth-child(1) {
+  display: none !important;
+}
+
+
+@keyframes identifier {}

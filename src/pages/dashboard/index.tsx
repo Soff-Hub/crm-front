@@ -25,25 +25,15 @@ import IconifyIcon from 'src/@core/components/icon'
 import { ThemeColor } from 'src/@core/layouts/types'
 
 // ** Actions
-import { Checkbox, FormControlLabel, Typography } from '@mui/material'
-import { useContext, useEffect, useMemo, useState } from 'react'
+import { Typography } from '@mui/material'
+import { useContext, useEffect, useState } from 'react'
 import { AuthContext } from 'src/context/AuthContext'
 import MyGroups from 'src/views/my-groups'
-import useResponsive from 'src/@core/hooks/useResponsive'
-import { TranslateWeekName } from '../groups'
 import { Calendar, momentLocalizer } from 'react-big-calendar'
 import moment from 'moment'
 import api from 'src/@core/utils/api'
 import { useRouter } from 'next/router'
 import getMonthName from 'src/@core/utils/gwt-month-name'
-
-
-// ** CalendarColors
-const calendarsColor: CalendarColors = {
-  "Toq kunlar": 'primary',
-  'Juft kunlar': 'error',
-  'Boshqa': 'warning',
-}
 
 const statsData: {
   icon: string
@@ -107,6 +97,7 @@ const AppCalendar = () => {
   const mdAbove = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'))
 
   const [events, setEvents] = useState<any>([])
+  const [view, setView] = useState<'day' | 'week'>('day')
 
   const eventStyleGetter = (event: any, start: any, end: any, isSelected: any) => {
     // Eventning fonga rangini belgilash
@@ -172,22 +163,22 @@ const AppCalendar = () => {
   async function getLessons() {
     setEvents([])
     const resp = await api.get('common/dashboard/group-list/')
-    // Object.values(resp.data).map((el: any) => {
-    //   return setEvents((c: any[]) => ([...c,
-    //   ...el.map((item: any) => ({
-    //     id: item.group_id,
-    //     index: Math.floor(Math.random() * 6) + 1,
-    //     title: (
-    //       <Box>
-    //         <Typography sx={{ color: 'white', fontSize: '12px' }}>{item.group_name}</Typography>
-    //         <Typography sx={{ color: 'white', fontSize: '12px' }}>{item.room}</Typography>
-    //         <Typography sx={{ color: 'white', fontSize: '12px' }}>{item.teacher}</Typography>
-    //       </Box>
-    //     ),
-    //     start: new Date(item.start_at),
-    //     end: new Date(item.end_at)
-    //   }))]))
-    // })
+    Object.values(resp.data).map((el: any) => {
+      return setEvents((c: any[]) => ([...c,
+      ...el.map((item: any) => ({
+        id: item.group_id,
+        index: Math.floor(Math.random() * 6) + 1,
+        title: (
+          <Box>
+            <Typography sx={{ color: 'white', fontSize: '11px' }}>{item.group_name} {" / "} {item.room}</Typography>
+            {/* <Typography sx={{ color: 'white', fontSize: '11px' }}>{item.room}</Typography> */}
+            <Typography sx={{ color: 'white', fontSize: '11px' }}>{item.teacher}</Typography>
+          </Box>
+        ),
+        start: new Date(item.start_at),
+        end: new Date(item.end_at)
+      }))]))
+    })
   }
 
   useEffect(() => {
@@ -227,7 +218,9 @@ const AppCalendar = () => {
             borderRadius: 1,
             boxShadow: 'none',
             backgroundColor: 'background.paper',
-            ...(mdAbove ? { borderTopLeftRadius: 0, borderBottomLeftRadius: 0 } : {})
+            ...(mdAbove ? { borderTopLeftRadius: 0, borderBottomLeftRadius: 0 } : {}),
+            maxWidth: '100%',
+            overflowX: 'scroll'
           }}
         >
           <Calendar
@@ -238,8 +231,6 @@ const AppCalendar = () => {
               day: 'Kun',
               month: 'Oy',
               today: "Bugun",
-              next: "Keyingi kun",
-              previous: "Oldingi kun",
               date: 'Sana',
               time: 'Vaqt',
               event: 'Event',
@@ -254,6 +245,8 @@ const AppCalendar = () => {
             formats={{
               timeGutterFormat: 'H:mm'
             }}
+            style={{ minWidth: '1200px' }}
+            onView={(e: any) => setView(e)}
             eventPropGetter={eventStyleGetter}
             dayLayoutAlgorithm="no-overlap"
             onSelectEvent={(e) => push(`/groups/view/security?id=${e.id}&moonth=${getMonthName(null)}`)}
