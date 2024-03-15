@@ -1,6 +1,7 @@
 import { Box, Card, CardContent, Typography } from '@mui/material'
 import Link from 'next/link'
 import React, { useEffect } from 'react'
+import getLessonDays from 'src/@core/utils/getLessonDays'
 import getMonthName from 'src/@core/utils/gwt-month-name'
 import useGroups from 'src/hooks/useGroups'
 
@@ -32,7 +33,7 @@ export default function MyGroups() {
                                             <Typography sx={{ fontSize: '12px' }}>{group.teacher_name}</Typography>
                                         </Box>
                                         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: ' flex-end', gap: '5px' }}>
-                                            <Typography sx={{ fontSize: '12px' }}>{group.start_at.split(':').splice(0, 2).join(':')} - {group.end_at.split(':').splice(0, 2).join(':')}</Typography>
+                                            <Typography sx={{ fontSize: '12px' }}>{getLessonDays(group.week_days)} {group.start_at.split(':').splice(0, 2).join(':')} - {group.end_at.split(':').splice(0, 2).join(':')}</Typography>
                                             <Typography sx={{ fontSize: '12px' }}>Boshlangan: {group.start_date}</Typography>
                                             <Typography sx={{ fontSize: '12px' }}>Yakunlanadi: {group.end_date}</Typography>
                                         </Box>

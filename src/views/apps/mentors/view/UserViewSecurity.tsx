@@ -3,6 +3,7 @@ import Link from "next/link"
 import { useEffect, useState } from "react"
 import useResponsive from "src/@core/hooks/useResponsive"
 import api from "src/@core/utils/api"
+import getLessonDays from "src/@core/utils/getLessonDays"
 import getMontName from "src/@core/utils/gwt-month-name"
 
 const UserViewSecurity = ({ data }: any) => {
@@ -37,7 +38,7 @@ const UserViewSecurity = ({ data }: any) => {
                   </Box>
                   <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: ' flex-end', gap: '5px' }}>
                     <Typography sx={{ fontSize: '12px' }}>Ochilgan sana: {_.start_date}</Typography>
-                    <Typography sx={{ fontSize: '12px' }}>{_.start_at.split(':').splice(0, 2).join(':')} - {_.end_at.split(':').splice(0, 2).join(':')}</Typography>
+                    <Typography sx={{ fontSize: '12px' }}>{getLessonDays(_.week_days)} / {_.start_at.split(':').splice(0, 2).join(':')} - {_.end_at.split(':').splice(0, 2).join(':')}</Typography>
                     <Typography sx={{ fontSize: '12px' }}>{_.student_count} ta</Typography>
                   </Box>
                 </CardContent>

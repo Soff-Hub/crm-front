@@ -215,22 +215,44 @@ const UserViewLeft = ({ userData, reRender }: { userData?: any, reRender: any })
             <CardContent>
               <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', alignItems: 'center' }}>
                 <Typography>Yo'nalishi:</Typography>
-                <Link href={`/settings/office/courses/`}>
-                  <CustomChip
-                    skin='light'
-                    size='small'
-                    label={data.course_data.name}
-                    color={roleColors['director']}
-                    sx={{
-                      height: 20,
-                      fontWeight: 600,
-                      borderRadius: '5px',
-                      fontSize: '0.875rem',
-                      textTransform: 'capitalize',
-                      '& .MuiChip-label': { mt: -0.25 },
-                      cursor: 'pointer'
-                    }}
-                  /></Link>
+                {
+                  user?.role !== 'teacher' ? (
+                    <Link href={`/settings/office/courses/`}>
+                      <CustomChip
+                        skin='light'
+                        size='small'
+                        label={data.course_data.name}
+                        color={roleColors['director']}
+                        sx={{
+                          height: 20,
+                          fontWeight: 600,
+                          borderRadius: '5px',
+                          fontSize: '0.875rem',
+                          textTransform: 'capitalize',
+                          '& .MuiChip-label': { mt: -0.25 },
+                          cursor: 'pointer'
+                        }}
+                      />
+                    </Link>
+                  ) : (
+                    <CustomChip
+                      skin='light'
+                      size='small'
+                      label={data.course_data.name}
+                      color={roleColors['director']}
+                      sx={{
+                        height: 20,
+                        fontWeight: 600,
+                        borderRadius: '5px',
+                        fontSize: '0.875rem',
+                        textTransform: 'capitalize',
+                        '& .MuiChip-label': { mt: -0.25 },
+                        cursor: 'pointer'
+                      }}
+                    />
+                  )
+                }
+
               </Box>
               <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', alignItems: 'center' }}>
                 <Typography>Dars:</Typography>

@@ -170,9 +170,9 @@ const AppCalendar = () => {
         index: Math.floor(Math.random() * 6) + 1,
         title: (
           <Box>
+            <Typography sx={{ color: 'white', fontSize: '11px' }}>{item.room}</Typography>
             <Typography sx={{ color: 'white', fontSize: '11px' }}>{item.start_at.split(' ')[1]} - {item.end_at.split(' ')[1]}</Typography>
             <Typography sx={{ color: 'white', fontSize: '11px' }}>{item.group_name}</Typography>
-            {/* <Typography sx={{ color: 'white', fontSize: '11px' }}>{item.room}</Typography> */}
             {/* <Typography sx={{ color: 'white', fontSize: '11px' }}>{item.teacher}</Typography> */}
           </Box>
         ),
