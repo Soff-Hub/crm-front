@@ -83,16 +83,29 @@ const Lids = () => {
 
   const createDepartmentStudent = async (values: any) => {
     seLoading(true)
+    const newValues = { ...values }
+    if (values.phone) {
+      const newPhone: string = values.phone.split(' ').join('')
+      if (newPhone.length === 9) {
+        Object.assign(newValues, { phone: `+998${newPhone}` })
+      } else {
+        Object.assign(newValues, { phone: `${newPhone}` })
+      }
+    }
     try {
-      await api.post('leads/department-user-create/', values)
+      await api.post('leads/department-user-create/', newValues)
       setOpenLid(null)
       seLoading(false)
       setAddSource(false)
       return await getLeads()
     }
     catch (err: any) {
+      if (err?.response) {
+        showResponseError(err.response.data, setError)
+        seLoading(false)
+        console.log(err)
+      }
       seLoading(false)
-      showResponseError(err.response.data, setError)
       console.log(err)
     }
   }
@@ -189,7 +202,7 @@ const Lids = () => {
           </IconButton>
         </DialogTitle>
         <DialogContent sx={{ minWidth: '320px' }}>
-          <Form setError={setError} onSubmit={createDepartmentStudent} valueTypes='json' id='dqdwa' sx={{ padding: '5px 0', width: '100%', display: 'flex', flexDirection: 'column', gap: '15px' }}>
+          <Form setError={setError} onSubmit={createDepartmentStudent} valueTypes='json' id='dqdwgsfdgdfa' sx={{ padding: '5px 0', width: '100%', display: 'flex', flexDirection: 'column', gap: '15px' }}>
             <FormControl fullWidth>
               <InputLabel size='small' id='user-view-language-label'>{t('Bo\'lim')}</InputLabel>
               <Select
@@ -232,7 +245,7 @@ const Lids = () => {
 
             {addSource ? (
               <FormControl fullWidth>
-                <TextField fullWidth error={error.first_name?.error} size='small' label={t('Manba')} name='source_name' />
+                <TextField fullWidth error={error.source_name?.error} size='small' label={t('Manba')} name='source_name' />
                 <FormHelperText error={error.source_name?.error}>{error.source?.message}</FormHelperText>
               </FormControl>
             ) : ''}
@@ -244,7 +257,7 @@ const Lids = () => {
             </FormControl>
 
             <FormControl fullWidth>
-              <TextField fullWidth size='small' label={t('phone')} name='phone' error={error.phone?.error} />
+              <TextField autoComplete='off' fullWidth size='small' label={t('phone')} name='phone' error={error.phone?.error} />
               <FormHelperText error={error.phone?.error}>{error.phone?.message}</FormHelperText>
             </FormControl>
 

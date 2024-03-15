@@ -10,6 +10,7 @@ import KanbanItem from '../card-statistics/kanban-item'
 import Form from '../form'
 import LoadingButton from '@mui/lab/LoadingButton'
 import toast from 'react-hot-toast'
+import showResponseError from 'src/@core/utils/show-response-error'
 
 interface AccordionProps {
     title?: string
@@ -61,11 +62,23 @@ export default function AccordionCustom({ onView, item, reRender }: AccordionPro
 
     const handleEditLead = async (id: any, values: any) => {
         // setOpen(false)
+        const newValues = { ...values }
+        if (values.phone) {
+            const newPhone: string = values.phone.split(' ').join('')
+            if (newPhone.length === 9) {
+                Object.assign(newValues, { phone: `+998${newPhone}` })
+            } else {
+                Object.assign(newValues, { phone: `${newPhone}` })
+            }
+        }
         try {
-            const resp = await api.patch(`leads/department-user-list/${id}/`, values)
+            const resp = await api.patch(`leads/department-user-list/${id}/`, newValues)
             await handleGetLeads(false)
             return Promise.resolve(resp)
-        } catch (err) {
+        } catch (err: any) {
+            if (err.response) {
+                showResponseError(err.response.data, setError)
+            }
             return Promise.reject(err)
         }
     }
