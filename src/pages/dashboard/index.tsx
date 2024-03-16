@@ -3,38 +3,36 @@ import Box from '@mui/material/Box'
 import { Theme } from '@mui/material/styles'
 import useMediaQuery from '@mui/material/useMediaQuery'
 
-// ** Redux Imports
-import { useSelector } from 'react-redux'
+// ** React Imports
+import { SyntheticEvent } from 'react'
+
+// ** MUI Imports
+import Tab from '@mui/material/Tab'
+import TabList from '@mui/lab/TabList'
+import TabPanel from '@mui/lab/TabPanel'
+import TabContext from '@mui/lab/TabContext'
 
 // ** Hooks
 import { useSettings } from 'src/@core/hooks/useSettings'
 
-// ** Types
-import { RootState } from 'src/store'
-import { CalendarColors, CalendarFiltersType } from 'src/types/apps/calendarTypes'
-
 // ** FullCalendar & App Components Imports
 import CalendarWrapper from 'src/@core/styles/libs/fullcalendar'
 
-
-import Card from '@mui/material/Card'
-import Grid from '@mui/material/Grid'
-import CardContent from '@mui/material/CardContent'
 import CardStatsVertical from 'src/@core/components/card-statistics/card-stats-vertical'
 import IconifyIcon from 'src/@core/components/icon'
 import { ThemeColor } from 'src/@core/layouts/types'
 
 // ** Actions
-import { Typography } from '@mui/material'
+import { Button, Checkbox, CircularProgress, Dialog, DialogContent, DialogTitle, FormControl, Typography } from '@mui/material'
 import { useContext, useEffect, useState } from 'react'
 import { AuthContext } from 'src/context/AuthContext'
 import MyGroups from 'src/views/my-groups'
-import { Calendar, momentLocalizer } from 'react-big-calendar'
-import moment from 'moment'
 import api from 'src/@core/utils/api'
 import { useRouter } from 'next/router'
-import getMonthName from 'src/@core/utils/gwt-month-name'
 import useResponsive from 'src/@core/hooks/useResponsive'
+import generateTimeSlots from 'src/@core/utils/generate-time-slots'
+import { lessonData } from 'src/@core/utils/db'
+import { TranslateWeekName } from '../groups'
 
 const statsData: {
   icon: string
@@ -81,81 +79,27 @@ const statsData: {
   ]
 
 const startTime = '09:00';
-const endTime = '22:00';
+const endTime = '21:01';
 
-const localizer = momentLocalizer(moment)
 
 const AppCalendar = () => {
 
   // ** Hooks
   const { settings } = useSettings()
   const { user } = useContext(AuthContext)
-  const { push } = useRouter()
+  const { push, pathname, query } = useRouter()
   const { isMobile, isTablet } = useResponsive()
-  const [stats, setStats] = useState<any>({})
+  const [stats, setStats] = useState<any>(null)
+  const [tabValue, setTabValue] = useState<string>('1')
+  const [open, setOpen] = useState<null | 'week'>(null)
+  const [weeks, setWeeks] = useState<any>(query?.weeks ? (typeof query.weeks === 'string' ? query.weeks.split(',') : query.weeks) : []);
+
 
   // ** Vars
   const { skin } = settings
   const mdAbove = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'))
 
   const [events, setEvents] = useState<any>([])
-  const [view, setView] = useState<'day' | 'week'>('day')
-
-  const eventStyleGetter = (event: any, start: any, end: any, isSelected: any) => {
-    // Eventning fonga rangini belgilash
-    const backgroundColor = event.index === 1 ? 'rgb(114, 225, 40)' : event.index === 1 ? 'rgb(38, 198, 249)' : event.index == 2 ? 'rgb(253, 181, 40)' : event.index === 3 ? 'rgb(255, 77, 73)' : event.index === 4 ? 'rgb(109, 120, 141)' : event.index === 5 ? 'rgb(102, 16, 242)' : 'rgb(255, 193, 7)'
-
-    const style = {
-      backgroundColor,
-      borderRadius: '5px',
-      opacity: 0.8,
-      color: 'white',
-      border: '0px',
-      display: 'block',
-      width: '20% !important',
-    };
-    return {
-      style,
-    };
-  };
-
-  moment.locale('uz', {
-    week: {
-      dow: 0,
-    },
-    months: [
-      'Yanvar',
-      'Fevral',
-      'Mart',
-      'Aprel',
-      'May',
-      'Iyun',
-      'Iyul',
-      'Avgust',
-      'Sentabr',
-      'Oktabr',
-      'Noyabr',
-      'Dekabr',
-    ],
-    weekdays: [
-      'Dushanba',
-      'Seshanba',
-      'Chorshanba',
-      'Payshanba',
-      'Juma',
-      'Shanba',
-      'Yakshanba',
-    ],
-    weekdaysShort: [
-      'Dush',
-      'Se',
-      'Chor',
-      'Pay',
-      'Ju',
-      'Sha',
-      'Yak',
-    ]
-  })
 
   async function getStats() {
     const resp = await api.get('common/dashboard/statistic-list/')
@@ -163,26 +107,9 @@ const AppCalendar = () => {
   }
 
   async function getLessons() {
-    setEvents([])
     const resp = await api.get('common/dashboard/group-list/')
-    Object.values(resp.data).map((el: any) => {
-      return setEvents((c: any[]) => ([...c,
-      ...el.map((item: any) => ({
-        id: item.group_id,
-        index: Math.floor(Math.random() * 6) + 1,
-        title: (
-          <Box>
-            <Typography sx={{ color: 'white', fontSize: '11px' }}>{item.room}</Typography>
-            <Typography sx={{ color: 'white', fontSize: '11px' }}>{item.start_at.split(' ')[1]} - {item.end_at.split(' ')[1]}</Typography>
-            <Typography sx={{ color: 'white', fontSize: '11px' }}>{item.group_name}</Typography>
-            {/* <Typography sx={{ color: 'white', fontSize: '11px' }}>{item.teacher}</Typography> */}
-          </Box>
-        ),
-        start: new Date(item.start_at),
-        end: new Date(item.end_at)
-      }))]))
-    })
   }
+
 
   useEffect(() => {
     getStats()
@@ -191,24 +118,23 @@ const AppCalendar = () => {
 
   return user?.role === 'teacher' ? <MyGroups /> : (
     <>
-      {/* <Box sx={{ display: 'flex', gap: '10px', flexWrap: 'wrap', justifyContent: bigMobile ? 'flex-start' : isMobile ? 'center' : 'flex-start', mb: 3 }} >
-        {
-          statsData.map((_, index) => (
-            <Box key={index} className=''>
-              <CardStatsVertical title={stats?.[_.key]} stats={_.title} icon={<IconifyIcon fontSize={"4rem"} icon={_.icon} />} color={_.color} />
-            </Box>
-          ))
-        }
-      </Box> */}
-      <Box sx={{ display: 'grid', gap: '10px', mb: 5, gridTemplateColumns: `repeat(${isMobile ? 3 : isTablet ? 4 : 8}, 1fr)` }} >
-        {
-          statsData.map((_, index) => (
-            <Box key={index} className=''>
-              <CardStatsVertical title={stats?.[_.key]} stats={_.title} icon={<IconifyIcon fontSize={"4rem"} icon={_.icon} />} color={_.color} />
-            </Box>
-          ))
-        }
-      </Box>
+      {
+        stats ? (
+          <Box sx={{ display: 'grid', gap: '10px', mb: 5, gridTemplateColumns: `repeat(${isMobile ? 3 : isTablet ? 4 : 8}, 1fr)` }} >
+            {
+              statsData.map((_, index) => (
+                <Box key={index} className=''>
+                  <CardStatsVertical title={stats?.[_.key]} stats={_.title} icon={<IconifyIcon fontSize={"4rem"} icon={_.icon} />} color={_.color} />
+                </Box>
+              ))
+            }
+          </Box>
+        ) : (
+          <Box sx={{ my: 3, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
+            <CircularProgress sx={{ mb: 4 }} />
+          </Box>
+        )
+      }
       <CalendarWrapper
         className='app-calendar'
         sx={{
@@ -223,39 +149,121 @@ const AppCalendar = () => {
             boxShadow: 'none',
             backgroundColor: 'background.paper',
             ...(mdAbove ? { borderTopLeftRadius: 0, borderBottomLeftRadius: 0 } : {}),
-            maxWidth: '100%',
-            overflowX: 'scroll'
+            maxWidth: '100%'
           }}
         >
-          <Calendar
-            localizer={localizer}
-            startAccessor="start"
-            messages={{
-              week: 'Hafta',
-              day: 'Kun',
-              month: 'Oy',
-              today: "Bugun",
-              date: 'Sana',
-              time: 'Vaqt',
-              event: 'Event',
-              allDay: 'Kun bo\'yi',
-            }}
-            views={['day', 'week']}
-            defaultView='day'
-            endAccessor="end"
-            events={events}
-            min={new Date(new Date().setHours(9, 0))}
-            max={new Date(new Date().setHours(22, 1))}
-            formats={{
-              timeGutterFormat: 'H:mm'
-            }}
-            style={{ minWidth: '1200px' }}
-            onView={(e: any) => setView(e)}
-            eventPropGetter={eventStyleGetter}
-            dayLayoutAlgorithm="no-overlap"
-            onSelectEvent={(e) => push(`/groups/view/security?id=${e.id}&moonth=${getMonthName(null)}`)}
-          />
+          <Box sx={{}}>
+            <TabContext value={tabValue}>
+              <TabList onChange={(event, value: string) => setTabValue(value)} aria-label='centered tabs example'>
+                <Tab value='1' label='Juft kunlar' sx={{ p: '0 !important', fontSize: '9px' }} />
+                <Tab value='2' label='Toq kunlar' sx={{ p: '0 !important', fontSize: '9px' }} />
+                <Tab value='3' label='Har kuni' sx={{ p: '0 !important', fontSize: '9px' }} />
+                <Tab value='4' label='Boshqa' sx={{ p: '0 !important', fontSize: '9px' }} onClick={() => setOpen('week')} />
+              </TabList>
+            </TabContext>
+          </Box>
+          <Box sx={{
+            padding: '0 15px',
+            maxWidth: '100%',
+            overflowX: 'scroll'
+          }}>
+            <table border={0}>
+              <tbody>
+                <tr>
+                  <td style={{ minWidth: '100px', fontSize: '12px' }}>
+                    Xonalar / Soat
+                  </td>
+                  <td>
+                    <Box sx={{ display: 'flex', }}>
+                      {generateTimeSlots(startTime, endTime).map((el: string) => <Box sx={{ width: '50px', height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px' }}>{el}</Box>)}
+                    </Box>
+                  </td>
+                </tr>
+                {
+                  lessonData.map(lesson => (
+                    <tr style={{ borderBottom: '1px solid #c3cccc65' }}>
+                      <td style={{ minWidth: '100px', fontSize: '12px' }}>
+                        {lesson.room}
+                      </td>
+                      <td>
+                        <Box sx={{ display: 'flex', position: 'relative', marginLeft: '25px' }}>
+                          {generateTimeSlots(startTime, endTime).map((el: string) => <Box sx={{ width: '50px', height: '45px', borderLeft: '1px solid #c3cccc', display: 'flex', alignItems: 'center', justifyContent: 'center' }}></Box>)}
+                          {
+                            lesson.lessons.map(item => (
+                              <Box sx={{ width: `${generateTimeSlots(item.start_at, item.end_at).length * 50}px`, height: '45px', position: 'absolute', padding: '5px', left: `${generateTimeSlots(startTime, endTime).findIndex(el => el === generateTimeSlots(item.start_at, item.end_at)[0]) * 50}px` }}>
+                                <Box sx={{ borderRadius: '8px', bgcolor: 'rgba(255, 165, 0, 0.8)', width: '100%', height: '100%', cursor: 'pointer', padding: '2px 6px', overflow: 'hidden' }}>
+                                  <Typography sx={{ color: 'black', fontSize: '10px' }}>{item.start_at} - {item.end_at} / Frontend 030</Typography>
+                                  <Typography sx={{ color: 'black', fontSize: '10px' }}>Doniyor Eshmamatov</Typography>
+                                </Box>
+                              </Box>
+                            ))
+                          }
+                        </Box>
+                      </td>
+                    </tr>
+                  ))
+                }
+                {/* {
+                  [1, 2, 3, 4, 5].map(() => (
+                    <tr>
+                      <td style={{ minWidth: '100px', fontSize: '12px' }}>
+                        Frontend xonasi
+                      </td>
+                      <td>
+                        <Box sx={{ display: 'flex', position: 'relative', marginLeft: '25px' }}>
+                          {generateTimeSlots(startTime, endTime).map((el: string) => <Box sx={{ width: '50px', height: '45px', borderLeft: '1px solid #c3cccc', display: 'flex', alignItems: 'center', justifyContent: 'center' }}></Box>)}
+                          {
+                            lessons.map(lesson => (
+                              <Box sx={{ width: `${generateTimeSlots(lesson.start_at, lesson.end_at).length * 50}px`, height: '45px', position: 'absolute', padding: '5px', left: `${generateTimeSlots(startTime, endTime).findIndex(el => el === generateTimeSlots(lesson.start_at, lesson.end_at)[0]) * 50}px` }}>
+                                <Box sx={{ borderRadius: '8px', bgcolor: 'rgba(255, 165, 0, 0.8)', width: '100%', height: '100%', cursor: 'pointer', padding: '2px 6px', overflow: 'hidden' }}>
+                                  <Typography sx={{ color: 'black', fontSize: '10px' }}>{lesson.start_at} - {lesson.end_at} / Frontend 030</Typography>
+                                  <Typography sx={{ color: 'black', fontSize: '10px' }}>Doniyor Eshmamatov</Typography>
+                                </Box>
+                              </Box>
+                            ))
+                          }
+                        </Box>
+                      </td>
+                    </tr>
+                  ))
+                } */}
+              </tbody>
+            </table>
+          </Box>
         </Box>
+
+        <Dialog open={open === 'week'} onClose={() => setOpen(null)}>
+          <DialogTitle sx={{ minWidth: isMobile ? '' : '300px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            Hafta kunlari
+            <IconifyIcon icon={'ic:baseline-close'} onClick={() => setOpen(null)} />
+          </DialogTitle>
+          <DialogContent>
+            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+              {
+                ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'].map(week => (
+                  <FormControl key={week}>
+                    <label style={{ display: 'flex', alignItems: 'center', flexDirection: 'row-reverse', justifyContent: 'flex-end' }}>
+                      <span>{TranslateWeekName[week]}</span>
+                      <Checkbox checked={weeks.includes(week)} onClick={() => setWeeks((c: any) => c.includes(week) ? c.filter((dd: any) => dd !== week) : [...c, week])} />
+                    </label>
+                  </FormControl>
+                ))
+              }
+              <Button
+                variant='contained'
+                onClick={() => {
+                  push({
+                    pathname,
+                    query: {
+                      weeks: weeks.join(',')
+                    }
+                  })
+                  setOpen(null)
+                }}
+              >Ko'rish</Button>
+            </Box>
+          </DialogContent>
+        </Dialog>
       </CalendarWrapper >
     </>
 
