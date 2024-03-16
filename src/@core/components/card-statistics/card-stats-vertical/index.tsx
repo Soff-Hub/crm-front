@@ -10,26 +10,28 @@ import CustomAvatar from 'src/@core/components/mui/avatar'
 
 // ** Types Imports
 import { CardStatsVerticalProps } from 'src/@core/components/card-statistics/types'
+import useResponsive from 'src/@core/hooks/useResponsive'
 
 const CardStatsVertical = (props: CardStatsVerticalProps) => {
   // ** Props
-  const { title, color, icon, stats} = props
+  const { title, color, icon, stats } = props
+
+  const { isMobile, isTablet } = useResponsive()
 
   return (
-    <Card>
-      <CardContent sx={{ display: 'flex', flexDirection: 'column' }}>
+    <Card sx={{ width: '100%' }}>
+      <CardContent sx={{ display: 'flex', flexDirection: 'column', padding: isMobile ? '10px 0px !important' : '15px 10px !important' }}>
         <Box sx={{ width: '100%', display: 'flex', alignItems: 'flex-start', justifyContent: 'center', mb: 2 }}>
-          <CustomAvatar sx={{ width: "60px", height: "60px" }} className='text-center fs-2' skin='light' variant='rounded' color={color}>
+          <CustomAvatar sx={{ width: isMobile ? '30px' : "40px", height: isMobile ? '30px' : "40px" }} className='text-center fs-2' skin='light' variant='rounded' color={color}>
             {icon}
           </CustomAvatar>
         </Box>
-        <Typography className='text-center' variant='body2' sx={{ mb: 3 }}>
+        <Typography className='text-center' variant='body2' sx={{ mb: 2, fontSize: isMobile ? '12px !important' : isTablet ? '14px !important' : '20px !important' }}>
           {stats}
         </Typography>
-        <Typography className='text-center' variant='h4' sx={{ mb: 1 }}>
+        <Typography className='text-center' variant='h4' sx={{ mb: 0, fontSize: '20px !important' }}>
           {title}
         </Typography>
-        
       </CardContent>
     </Card>
   )

@@ -34,6 +34,7 @@ import moment from 'moment'
 import api from 'src/@core/utils/api'
 import { useRouter } from 'next/router'
 import getMonthName from 'src/@core/utils/gwt-month-name'
+import useResponsive from 'src/@core/hooks/useResponsive'
 
 const statsData: {
   icon: string
@@ -90,6 +91,7 @@ const AppCalendar = () => {
   const { settings } = useSettings()
   const { user } = useContext(AuthContext)
   const { push } = useRouter()
+  const { isMobile, isTablet } = useResponsive()
   const [stats, setStats] = useState<any>({})
 
   // ** Vars
@@ -189,23 +191,24 @@ const AppCalendar = () => {
 
   return user?.role === 'teacher' ? <MyGroups /> : (
     <>
-      <Grid container spacing={6} className='mb-3'>
-        <Grid item xs={12}>
-          <Card>
-            <CardContent>
-              <Box className='row gy-4' >
-                {
-                  statsData.map((_, index) => (
-                    <Box key={index} className='col-md-2 col-6'>
-                      <CardStatsVertical title={stats?.[_.key]} stats={_.title} icon={<IconifyIcon fontSize={"4rem"} icon={_.icon} />} color={_.color} />
-                    </Box>
-                  ))
-                }
-              </Box>
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
+      {/* <Box sx={{ display: 'flex', gap: '10px', flexWrap: 'wrap', justifyContent: bigMobile ? 'flex-start' : isMobile ? 'center' : 'flex-start', mb: 3 }} >
+        {
+          statsData.map((_, index) => (
+            <Box key={index} className=''>
+              <CardStatsVertical title={stats?.[_.key]} stats={_.title} icon={<IconifyIcon fontSize={"4rem"} icon={_.icon} />} color={_.color} />
+            </Box>
+          ))
+        }
+      </Box> */}
+      <Box sx={{ display: 'grid', gap: '10px', mb: 5, gridTemplateColumns: `repeat(${isMobile ? 3 : isTablet ? 4 : 8}, 1fr)` }} >
+        {
+          statsData.map((_, index) => (
+            <Box key={index} className=''>
+              <CardStatsVertical title={stats?.[_.key]} stats={_.title} icon={<IconifyIcon fontSize={"4rem"} icon={_.icon} />} color={_.color} />
+            </Box>
+          ))
+        }
+      </Box>
       <CalendarWrapper
         className='app-calendar'
         sx={{
