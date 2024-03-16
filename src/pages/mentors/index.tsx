@@ -283,7 +283,7 @@ export default function GroupsPage() {
             </FormControl>
 
             <FormControl sx={{ width: '100%' }}>
-              <TextField label={t("phone")} name='phone' error={error.phone} />
+              <TextField label={t("phone")} name='phone' error={error.phone} defaultValue={"+998"} />
               <FormHelperText error={error.phone?.error}>{error.phone?.message}</FormHelperText>
             </FormControl>
 
@@ -360,7 +360,7 @@ export default function GroupsPage() {
             </FormControl>
 
             <FormControl sx={{ width: '100%' }}>
-              <TextField label={t("phone")} name='phone' error={error.phone} defaultValue={teacherData.phone} />
+              <TextField label={t("phone")} name='phone' error={error.phone} defaultValue={teacherData.phone}  />
               <FormHelperText error={error.phone?.error}>{error.phone?.message}</FormHelperText>
             </FormControl>
 

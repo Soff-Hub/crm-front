@@ -270,7 +270,7 @@ const Lids = () => {
             </FormControl>
 
             <FormControl fullWidth>
-              <TextField autoComplete='off' fullWidth size='small' label={t('phone')} name='phone' error={error.phone?.error} />
+              <TextField autoComplete='off' fullWidth size='small' label={t('phone')} name='phone' defaultValue={"+998"} error={error.phone?.error} />
               <FormHelperText error={error.phone?.error}>{error.phone?.message}</FormHelperText>
             </FormControl>
 
