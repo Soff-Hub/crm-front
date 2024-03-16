@@ -61,7 +61,7 @@ const schema = yup.object().shape({
 })
 
 const defaultValues = {
-  phone: '',
+  phone: '+998',
   password: ''
 }
 
@@ -198,7 +198,6 @@ const LoginPage = () => {
                 rules={{ required: true }}
                 render={({ field: { value, onChange, onBlur } }) => (
                   <TextField
-                    autoFocus
                     label='Telefon raqam'
                     value={value}
                     onBlur={onBlur}

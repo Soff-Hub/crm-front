@@ -302,7 +302,7 @@ export default function GroupsPage() {
                 <Box sx={{ px: 2, py: 4 }}>
                     <Form id='dspkdjsoifh' setError={setError} onSubmit={handleSubmitCreate} sx={{ display: 'flex', flexDirection: 'column', gap: '20px' }} valueTypes='json'>
                         <TextField size='small' fullWidth label='Ism Familiya' required name='first_name' error={error?.phone} />
-                        <TextField size='small' fullWidth label='Telefon raqam' required name='phone' />
+                        <TextField size='small' fullWidth label='Telefon raqam' required name='phone' defaultValue={"+998"} />
 
                         <TextField size='small' fullWidth label='Parol' required name='password' />
 
