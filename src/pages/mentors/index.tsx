@@ -75,7 +75,7 @@ export default function GroupsPage() {
   const handleDeleteTeacher = async (id: string | number) => {
     try {
       await deleteTeacher(id)
-      toast.success("Mentorlar ro'yxatidan o'chirildi", { position: 'top-center' })
+      toast.success("O'qituvchilar ro'yxatidan o'chirildi", { position: 'top-center' })
     } catch (error: any) {
       console.log(error);
     }
@@ -260,7 +260,7 @@ export default function GroupsPage() {
           }}
         >
           <Typography variant='h6' sx={{ fontWeight: 600 }}>
-            {t("Mentor qo'shish")}
+            {t("O'qituvchi qo'shish")}
           </Typography>
           <IconButton
             onClick={() => setOpenAddGroup(false)}
@@ -337,7 +337,7 @@ export default function GroupsPage() {
           }}
         >
           <Typography variant='h6' sx={{ fontWeight: 600 }}>
-            {t("Mentor malumotlarini tahrirlash")}
+            {t("O'qituvchi malumotlarini tahrirlash")}
           </Typography>
           <IconButton
             onClick={() => (setOpenEdit(false), setTeachersData(undefined))}

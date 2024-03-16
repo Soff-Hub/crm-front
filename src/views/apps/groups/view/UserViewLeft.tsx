@@ -265,7 +265,7 @@ const UserViewLeft = ({ userData, reRender }: { userData?: any, reRender: any })
                 {
                   user?.role !== 'teacher' ? (
                     <Box sx={{ display: 'flex', mb: 2.7 }}>
-                      <Typography sx={{ mr: 2, fontWeight: 500, fontSize: '0.875rem' }}>Mentor:</Typography>
+                      <Typography sx={{ mr: 2, fontWeight: 500, fontSize: '0.875rem' }}>O'qituvchi:</Typography>
                       <Link href={user?.role !== 'teacher' ? `/mentors/view/security/?id=${data.teacher_data.id}` : '/lids'} style={{ textDecoration: 'none' }}>
                         <Typography variant='body2'>
                           {data.teacher_data.first_name}

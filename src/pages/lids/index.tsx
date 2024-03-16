@@ -1,8 +1,9 @@
 // ** MUI Imports
 import LoadingButton from '@mui/lab/LoadingButton'
-import { Box, Button, Dialog, DialogContent, DialogTitle, FormControl, FormHelperText, IconButton, InputLabel, MenuItem, Select, TextField } from '@mui/material'
+import { Box, Button, CircularProgress, Dialog, DialogContent, DialogTitle, FormControl, FormHelperText, IconButton, InputLabel, MenuItem, Select, TextField } from '@mui/material'
 import Typography from '@mui/material/Typography'
 import { useContext, useEffect, useState } from 'react'
+import toast from 'react-hot-toast'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import Form from 'src/@core/components/form'
@@ -35,10 +36,12 @@ const Lids = () => {
 
 
   const getLeads = async () => {
-    const resp = await api.get('leads/department/list')
-    if (resp?.data) {
+    try {
+      const resp = await api.get('leads/department/list')
       setLeadData(resp.data.results)
       dispatch(addUserData(resp.data.results))
+    } catch {
+      toast.error("Network Error", { position: 'bottom-center' })
     }
   }
 
@@ -122,8 +125,6 @@ const Lids = () => {
 
   return user?.role === 'teacher' ? <TeacherProfile /> : (
     <Box sx={{ maxWidth: '100%', overflowX: 'scroll' }}>
-      <Box>
-      </Box>
       <Box
         padding={'20px 0'}
         display={'flex'}
@@ -132,11 +133,23 @@ const Lids = () => {
         flexDirection={isMobile ? 'column' : 'row'}
       >
         {
-          leadData.map((lead: any) => (
-            <LidsKanban id={lead.id} setOpenLid={setOpenLid} reRender={getLeads} setOpenItem={setOpenItem} key={lead.id} items={lead.children} title={lead.name} status='success' />
-          ))
+          leadData.length > 0 ? (
+            <>
+              {
+                leadData.map((lead: any) => (
+                  <LidsKanban id={lead.id} setOpenLid={setOpenLid} reRender={getLeads} setOpenItem={setOpenItem} key={lead.id} items={lead.children} title={lead.name} status='success' />
+                ))
+              }
+              {!isMobile && <Button onClick={() => setOpen('add-department')} sx={{ minWidth: '300px' }} size='small' variant='contained' startIcon={<IconifyIcon icon={'material-symbols:add'} />}>Bo'lim yaratish</Button>}
+            </>
+          ) : (
+            <Box sx={{ mt: 6, display: 'flex', alignItems: 'center', flexDirection: 'column', width: '100%' }}>
+              <CircularProgress sx={{ mb: 4 }} />
+              <Typography>Loading...</Typography>
+            </Box>
+          )
         }
-        {!isMobile && <Button onClick={() => setOpen('add-department')} sx={{ minWidth: '300px' }} size='small' variant='contained' startIcon={<IconifyIcon icon={'material-symbols:add'} />}>Bo'lim yaratish</Button>}
+
       </Box>
 
       <Dialog onClose={handleClose} open={open === "add-department"}>
