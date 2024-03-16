@@ -268,7 +268,7 @@ const UserViewLeft = ({ userData }: { userData?: UsersType | undefined }) => {
               aria-describedby='user-view-edit-description'
             >
               <DialogTitle id='user-view-edit' sx={{ textAlign: 'center', fontSize: '1.5rem !important' }}>
-                Mentor ma'lumotlarini tahrirlash
+              O'qituvchi ma'lumotlarini tahrirlash
               </DialogTitle>
               <DialogContent>
                 <Form reqiuredFields={['phone', 'branches', 'roles', 'first_name']} setError={setError} valueTypes='form-data' sx={{ marginTop: 10 }} onSubmit={handleSubmit} id='edit-employee'>
