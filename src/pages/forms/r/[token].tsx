@@ -20,8 +20,13 @@ function RequestForm() {
 
     const handleSubmit = async (values: any) => {
         setLoading(true)
+        const newValues = { ...values }
+        if (values.phone) {
+            const newPhone = `+998${values.phone}`
+            Object.assign(newValues, { phone: newPhone })
+        }
         try {
-            await api.post(`leads/application-user/create/${query.token}`, values)
+            await api.post(`leads/application-user/create/${query.token}`, newValues)
             setTimeout(() => {
                 toast.success("Ma'lumotlaringiz yuborildi", { position: 'top-center' })
                 setLoading(false)
