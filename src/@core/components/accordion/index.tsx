@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { styled } from '@mui/material/styles'
 import MuiMenu, { MenuProps } from '@mui/material/Menu'
 
-import { Box, CircularProgress, Dialog, DialogContent, DialogTitle, FormControl, MenuItem, TextField, Typography } from '@mui/material'
+import { Box, CircularProgress, Dialog, DialogContent, DialogTitle, FormControl, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material'
 import IconifyIcon from '../icon'
 import api from 'src/@core/utils/api'
 import KanbanItem from '../card-statistics/kanban-item'
@@ -11,6 +11,7 @@ import Form from '../form'
 import LoadingButton from '@mui/lab/LoadingButton'
 import toast from 'react-hot-toast'
 import showResponseError from 'src/@core/utils/show-response-error'
+import useSMS from 'src/hooks/useSMS'
 
 interface AccordionProps {
     title?: string
@@ -35,6 +36,10 @@ export default function AccordionCustom({ onView, item, reRender }: AccordionPro
     const [error, setError] = useState<any>({})
     const [count, setCount] = useState<any>(item.student_count)
     const [name, setName] = useState<any>(item.name)
+
+
+    const [sms, setSMS] = useState<any>("")
+    const { smsTemps } = useSMS()
 
     const handleClick = (event: any) => {
         setAnchorEl(event.currentTarget)
@@ -189,7 +194,7 @@ export default function AccordionCustom({ onView, item, reRender }: AccordionPro
                 }}
                 PaperProps={{ style: { minWidth: '8rem' } }}
             >
-                <MenuItem onClick={() => setOpenDialog('sms')} sx={{ '& svg': { mr: 2 } }}>
+                <MenuItem onClick={() => (setOpenDialog('sms'))} sx={{ '& svg': { mr: 2 } }}>
                     <IconifyIcon icon='mdi:sms' fontSize={20} />
                     SMS yuborish
                 </MenuItem>
@@ -230,10 +235,33 @@ export default function AccordionCustom({ onView, item, reRender }: AccordionPro
                     <Typography>SMS yuborish</Typography>
                     <IconifyIcon onClick={() => setOpenDialog(null)} icon={'material-symbols:close'} />
                 </DialogTitle>
+
                 <DialogContent sx={{ minWidth: '300px' }}>
                     <Form setError={setError} valueTypes='json' onSubmit={smsDepartmentItem} id='dmowei' sx={{ paddingTop: '5px', display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                        <FormControl>
+                            <InputLabel size='small' id='demo-simple-select-outlined-label'>Shablonlar</InputLabel>
+                            <Select
+                                size='small'
+                                label="Shablonlar"
+                                defaultValue=''
+                                id='demo-simple-select-outlined'
+                                labelId='demo-simple-select-outlined-label'
+                                onChange={(e) => setSMS(e.target.value)}
+                            >
+                                {
+                                    smsTemps.map((el: any) => (
+                                        <MenuItem value={el.description} sx={{ wordBreak: 'break-word' }}>
+                                            <span style={{ maxWidth: '250px', wordBreak: 'break-word', fontSize: '10px' }}>
+                                                {el.description}
+                                            </span>
+                                        </MenuItem>
+                                    ))
+                                }
+                            </Select>
+                        </FormControl>
+
                         <FormControl fullWidth>
-                            <TextField label="SMS matni" multiline rows={4} size='small' name='message' />
+                            <TextField label="SMS matni" multiline rows={4} size='small' name='message' value={sms} onChange={(e) => setSMS(e.target.value)} />
                         </FormControl>
 
                         <LoadingButton loading={loading} type='submit' variant='outlined'>Saqlash</LoadingButton>

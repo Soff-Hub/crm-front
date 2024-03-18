@@ -28,7 +28,7 @@ import { ThemeColor } from 'src/@core/layouts/types'
 import { useTranslation } from 'react-i18next'
 import IconifyIcon from 'src/@core/components/icon';
 
-import { FormHelperText, Tooltip } from '@mui/material';
+import { FormHelperText, InputLabel, MenuItem, Select, Tooltip } from '@mui/material';
 import Form from 'src/@core/components/form';
 import useTeachers from 'src/hooks/useTeachers';
 import showResponseError from 'src/@core/utils/show-response-error';
@@ -45,6 +45,7 @@ import getLessonDays from 'src/@core/utils/getLessonDays';
 import toast from 'react-hot-toast';
 import Status from 'src/@core/components/status';
 import useGroups from 'src/hooks/useGroups';
+import useSMS from 'src/hooks/useSMS';
 
 interface ColorsType {
   [key: string]: ThemeColor
@@ -79,6 +80,8 @@ const UserViewLeft = ({ userData, reRender }: { userData?: any, reRender: any })
   const { query } = useRouter()
   const { user } = useContext(AuthContext)
   const { mergeStudentToGroup } = useGroups()
+  const [sms, setSMS] = useState<any>("")
+  const { smsTemps } = useSMS()
 
   // Handle Edit dialog
   const handleEditClickOpen = (type: ActionTypes) => setOpenEdit(type)
@@ -364,14 +367,38 @@ const UserViewLeft = ({ userData, reRender }: { userData?: any, reRender: any })
           </DialogTitle>
           <DialogContent>
             <Form setError={setError} valueTypes='json' sx={{ marginTop: 10 }} onSubmit={smsDepartmentItem} id='edit-employee-pay-ddas'>
+              <FormControl sx={{ maxWidth: '100%', marginBottom: 3 }} fullWidth>
+                <InputLabel size='small' id='demo-simple-select-outlined-label'>Shablonlar</InputLabel>
+                <Select
+                  size='small'
+                  label="Shablonlar"
+                  defaultValue=''
+                  id='demo-simple-select-outlined'
+                  labelId='demo-simple-select-outlined-label'
+                  onChange={(e) => setSMS(e.target.value)}
+                >
+                  {
+                    smsTemps.map((el: any) => (
+                      <MenuItem value={el.description} sx={{ wordBreak: 'break-word' }}>
+                        <span style={{ maxWidth: '250px', wordBreak: 'break-word', fontSize: '10px' }}>
+                          {el.description}
+                        </span>
+                      </MenuItem>
+                    ))
+                  }
+                </Select>
+              </FormControl>
+
               <FormControl fullWidth>
                 <TextField
                   error={error?.message}
                   rows={4}
                   multiline
-                  label="SMS..."
+                  // label="SMS..."
                   name='message'
                   defaultValue={''}
+                  value={sms}
+                  onChange={(e) => setSMS(e.target.value)}
                 />
                 <FormHelperText error={error.message}>{error.message?.message}</FormHelperText>
               </FormControl>

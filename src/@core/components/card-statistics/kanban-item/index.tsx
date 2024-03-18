@@ -45,6 +45,7 @@ import toast from 'react-hot-toast'
 import { useDispatch } from 'react-redux'
 import { addOpenedUser } from 'src/store/apps/user'
 import Status from '../../status'
+import useSMS from 'src/hooks/useSMS'
 
 // ** Styled Avatar component
 const Avatar = styled(CustomAvatar)<AvatarProps>(({ theme }) => ({
@@ -67,6 +68,8 @@ const KanbanItem = (props: KanbarItemProps) => {
     const [leadDetail, setLeadDetail] = useState([])
 
     const { total } = useSelector((state: any) => state.user)
+    const [sms, setSMS] = useState<any>("")
+    const { smsTemps } = useSMS()
 
     const dispatch = useDispatch()
 
@@ -331,10 +334,34 @@ const KanbanItem = (props: KanbarItemProps) => {
                     <Typography>SMS yuborish</Typography>
                     <IconifyIcon onClick={() => setOpen(null)} icon={'material-symbols:close'} />
                 </DialogTitle>
+
                 <DialogContent sx={{ minWidth: '300px' }}>
                     <Form setError={setError} valueTypes='json' onSubmit={smsDepartmentItem} id='dxdasmowei' sx={{ paddingTop: '5px', display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                        <FormControl>
+                            <InputLabel size='small' id='demo-simple-select-outlined-label'>Shablonlar</InputLabel>
+                            <Select
+                                size='small'
+                                label="Shablonlar"
+                                defaultValue=''
+                                id='demo-simple-select-outlined'
+                                labelId='demo-simple-select-outlined-label'
+                                onChange={(e) => setSMS(e.target.value)}
+                            >
+                                {
+                                    smsTemps.map((el: any) => (
+                                        <MenuItem value={el.description} sx={{ wordBreak: 'break-word' }}>
+                                            <span style={{ maxWidth: '250px', wordBreak: 'break-word', fontSize: '10px' }}>
+                                                {el.description}
+                                            </span>
+                                        </MenuItem>
+                                    ))
+                                }
+                            </Select>
+                        </FormControl>
+
+
                         <FormControl fullWidth>
-                            <TextField label="SMS matni" multiline rows={4} size='small' name='message' />
+                            <TextField label="SMS matni" multiline rows={4} size='small' name='message' value={sms} onChange={(e) => setSMS(e.target.value)} />
                         </FormControl>
 
                         <LoadingButton loading={loading} type='submit' variant='outlined'>Saqlash</LoadingButton>

@@ -77,7 +77,7 @@ export default function RoomsPage() {
         async function handleDeletePosts(id: number) {
             handleRowOptionsClose()
             try {
-                await api.delete(`${ceoConfigs.rooms_delete}/${id}`)
+                await api.delete(`common/sms-form/delete/${id}`)
                 toast.success("Muvaffaqiyatli! o'chirildi", { position: 'top-center' })
                 getUsers()
             } catch (error: any) {
@@ -89,14 +89,9 @@ export default function RoomsPage() {
 
         async function handleEdit(id: number) {
             handleRowOptionsClose()
-            try {
-                setOpenAddGroupEdit(true)
-                const resp = await api.get(`${ceoConfigs.rooms_detail}/${id}`)
-                setDataRowEdit(resp.data)
-                getUsers()
-            } catch (error: any) {
-                toast.error('Xatolik yuz berdi!', { position: 'top-center' })
-            }
+            const findedItem: any = dataRow.find((el: any) => el.id === id)
+            setDataRowEdit(findedItem)
+            setOpenAddGroupEdit(true)
         }
 
         return (
@@ -123,7 +118,7 @@ export default function RoomsPage() {
                         <IconifyIcon icon='mdi:pencil-outline' fontSize={20} />
                         Tahrirlash
                     </MenuItem>
-                    
+
                     <MenuItem onClick={handleDelete} sx={{ '& svg': { mr: 2 } }}>
                         <IconifyIcon icon='mdi:delete-outline' fontSize={20} />
                         O'chirish
@@ -143,8 +138,8 @@ export default function RoomsPage() {
 
     async function getUsers() {
         try {
-            const resp = await api.get(ceoConfigs.rooms)
-            setData(resp.data.results)
+            const resp = await api.get('common/sms-form/list/')
+            setData(resp.data)
         } catch (err) {
             toast.error('Xatolik yuz berdi!', { position: 'top-center' })
         }
@@ -159,7 +154,7 @@ export default function RoomsPage() {
 
     async function handelCliclPosts(value: any) {
         try {
-            await api.post(ceoConfigs.rooms_posts, value)
+            await api.post(`common/sms-form/create/`, value)
             setOpenAddGroup(false)
             toast.success("Muvaffaqiyatli! qo'shildi", { position: 'top-center' })
             getUsers()
@@ -171,7 +166,7 @@ export default function RoomsPage() {
     // Edit functions
 
     async function handelClickEditCourses(value: any) {
-        await api.patch(`${ceoConfigs.rooms_update}/${dataRowEdit?.id}`, value)
+        await api.patch(`common/sms-form/update/${dataRowEdit?.id}`, value)
         setOpenAddGroupEdit(false)
         getUsers()
     }
@@ -184,15 +179,9 @@ export default function RoomsPage() {
         },
         {
             xs: 1,
-            title: t('Nomi'),
-            dataIndex: 'name',
-            render: () => "Kelmagan o'quvchi uchun"
-        },
-        {
-            xs: 2,
             title: t("SMS matni"),
-            dataIndex: 'branch',
-            render: () => <span>Lorem ipsum dolor sit amet consectetur.</span>
+            dataIndex: 'description',
+            render: (description) => <Typography>{description}</Typography>
         },
         {
             xs: 0.38,
@@ -262,11 +251,6 @@ export default function RoomsPage() {
                     }}
                 >
                     <FormControl fullWidth>
-                        <TextField error={error.date} label='* Nomi' size='small' name='date' />
-                        <FormHelperText error={error.date}>{error.date?.message}</FormHelperText>
-                    </FormControl>
-
-                    <FormControl fullWidth>
                         <TextField error={error.description} multiline rows={3} label='* SMS Matni' size='small' name='description' />
                         <FormHelperText error={error.description}>{error.description?.message}</FormHelperText>
                     </FormControl>
@@ -303,7 +287,7 @@ export default function RoomsPage() {
                         <IconifyIcon icon='mdi:close' fontSize={20} />
                     </IconButton>
                 </Box>
-                {dataRowEdit !== null && (
+                {dataRowEdit && (
                     <Form
                         setError={setError}
                         reqiuredFields={['name', 'branch']}
@@ -320,12 +304,7 @@ export default function RoomsPage() {
                         }}
                     >
                         <FormControl fullWidth>
-                            <TextField error={error.date} label='* Nomi' size='small' name='date' />
-                            <FormHelperText error={error.date}>{error.date?.message}</FormHelperText>
-                        </FormControl>
-
-                        <FormControl fullWidth>
-                            <TextField error={error.description} multiline rows={3} label='* SMS Matni' size='small' name='description' />
+                            <TextField error={error.description} multiline rows={3} label='* SMS Matni' size='small' name='description' defaultValue={dataRowEdit.description} />
                             <FormHelperText error={error.description}>{error.description?.message}</FormHelperText>
                         </FormControl>
 

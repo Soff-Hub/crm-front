@@ -38,6 +38,7 @@ import useBranches from 'src/hooks/useBranch'
 import showResponseError from 'src/@core/utils/show-response-error'
 import usePayment from 'src/hooks/usePayment'
 import api from 'src/@core/utils/api'
+import useSMS from 'src/hooks/useSMS'
 
 
 type ModalTypes = 'group' | 'payment' | 'sms' | 'delete' | 'edit' | 'notes'
@@ -58,6 +59,8 @@ const UserViewLeft = ({ userData, rerender }: { userData: StudentTypes | null, r
   const { updateStudent, studentData } = useStudent()
   const { getBranches, branches } = useBranches()
   const { getPaymentMethod } = usePayment()
+  const [sms, setSMS] = useState<any>("")
+  const { smsTemps } = useSMS()
 
   // Handle Edit dialog
   const handleEditClickOpen = (value: ModalTypes) => {
@@ -486,6 +489,28 @@ const UserViewLeft = ({ userData, rerender }: { userData: StudentTypes | null, r
           </DialogTitle>
           <DialogContent>
             <Form setError={setError} valueTypes='json' sx={{ marginTop: 10 }} onSubmit={handleSendSms} id='dsdsdsds'>
+              <FormControl sx={{ maxWidth: '100%', mb: 3 }} fullWidth>
+                <InputLabel size='small' id='demo-simple-select-outlined-label'>Shablonlar</InputLabel>
+                <Select
+                  size='small'
+                  label="Shablonlar"
+                  defaultValue=''
+                  id='demo-simple-select-outlined'
+                  labelId='demo-simple-select-outlined-label'
+                  onChange={(e) => setSMS(e.target.value)}
+                >
+                  {
+                    smsTemps.map((el: any) => (
+                      <MenuItem value={el.description} sx={{ wordBreak: 'break-word' }}>
+                        <span style={{ maxWidth: '250px', wordBreak: 'break-word', fontSize: '10px' }}>
+                          {el.description}
+                        </span>
+                      </MenuItem>
+                    ))
+                  }
+                </Select>
+              </FormControl>
+
               <FormControl fullWidth>
                 <TextField
                   error={error?.message}
@@ -494,6 +519,8 @@ const UserViewLeft = ({ userData, rerender }: { userData: StudentTypes | null, r
                   label="Xabar"
                   name='message'
                   defaultValue={''}
+                  value={sms}
+                  onChange={(e) => setSMS(e.target.value)}
                 />
                 <FormHelperText error={error.message}>{error.message?.message}</FormHelperText>
               </FormControl>
