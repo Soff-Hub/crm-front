@@ -81,7 +81,7 @@ const themeConfig: ThemeConfig = {
   responsiveFontSizes: true /* true | false */,
   disableRipple: false /* true | false */,
   disableCustomizer: false /* true | false */,
-  toastPosition: 'top-right' /* top-left | top-center | top-right | bottom-left | bottom-center | bottom-right */
+  toastPosition: 'top-center' /* top-left | top-center | top-right | bottom-left | bottom-center | bottom-right */
 }
 
 export default themeConfig

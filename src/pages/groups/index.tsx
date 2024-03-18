@@ -172,6 +172,11 @@ export default function GroupsPage() {
             <IconifyIcon icon='mdi:delete-outline' fontSize={20} />
             O'chirish
           </MenuItem>
+
+          <MenuItem onClick={handleDelete} sx={{ '& svg': { mr: 2 } }}>
+            <IconifyIcon icon='material-symbols-light:recommend-outline' fontSize={20} />
+            Guruhni yakunlash
+          </MenuItem>
         </Menu>
         <UserSuspendDialog handleOk={() => handleDeleteTeacher(id)} open={suspendDialogOpen} setOpen={setSuspendDialogOpen} />
       </>

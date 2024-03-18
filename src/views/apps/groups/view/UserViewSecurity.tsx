@@ -119,45 +119,26 @@ const ItemTeacher = ({ defaultValue, groupId, userId, date, opened_id, setOpened
 
 
   if (value === true || value === false || value === null) {
-    if (today === Number(date.split('-')[2])) {
-      return (
-        <Box sx={{ position: 'relative' }}>
-          {open && <Box onBlur={() => setOpen(false)} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-evenly', gap: '0px', position: 'absolute', width: '60px', height: '30px', backgroundColor: 'rgba(0, 0, 0, 0.5)', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
-            <IconifyIcon icon={'mdi:cancel-bold'} onClick={() => handleClick(false)} fontSize={18} color="#e31309" cursor={'pointer'} />
-            <IconifyIcon icon={'game-icons:check-mark'} onClick={() => handleClick(true)} fontSize={18} color="#4be309" cursor={'pointer'} />
-            <IconifyIcon icon={'material-symbols-light:square-outline'} onClick={() => handleClick(null)} fontSize={18} color="#4be309" cursor={'pointer'} />
-          </Box>}
-          {!open && <span onClick={() => setOpen(true)}>
-            {
-              value === true ? (
-                <IconifyIcon icon={'game-icons:check-mark'} fontSize={18} color="#4be309" />
-              ) : value === false ? (
-                <IconifyIcon icon={'mdi:cancel-bold'} fontSize={18} color="#e31309" />
-              ) : value === null ? (
-                <IconifyIcon icon={'fluent:square-20-regular'} fontSize={18} color="#9e9e9e" />
-              ) : ''
-            }
-          </span>}
-        </Box>
-      )
-    } else {
-      return (
-        <Tooltip title={"Ruxsat yo'q"} placement="top">
-          <span>
-            {
-              value === true ? (
-                <IconifyIcon icon={'game-icons:check-mark'} fontSize={18} color="#4be309" />
-              ) : value === false ? (
-                <IconifyIcon icon={'mdi:cancel-bold'} fontSize={18} color="#e31309" />
-              ) : value === null ? (
-                <IconifyIcon icon={'fluent:square-20-regular'} fontSize={18} color="#9e9e9e" />
-              ) : ''
-            }
-          </span>
-        </Tooltip>
-      )
-    }
-
+    return (
+      <Box sx={{ position: 'relative' }}>
+        {open && <Box onBlur={() => setOpen(false)} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-evenly', gap: '0px', position: 'absolute', width: '60px', height: '30px', backgroundColor: 'rgba(0, 0, 0, 0.5)', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
+          <IconifyIcon icon={'mdi:cancel-bold'} onClick={() => handleClick(false)} fontSize={18} color="#e31309" cursor={'pointer'} />
+          <IconifyIcon icon={'game-icons:check-mark'} onClick={() => handleClick(true)} fontSize={18} color="#4be309" cursor={'pointer'} />
+          <IconifyIcon icon={'material-symbols-light:square-outline'} onClick={() => handleClick(null)} fontSize={18} color="#4be309" cursor={'pointer'} />
+        </Box>}
+        {!open && <span onClick={() => setOpen(true)}>
+          {
+            value === true ? (
+              <IconifyIcon icon={'game-icons:check-mark'} fontSize={18} color="#4be309" />
+            ) : value === false ? (
+              <IconifyIcon icon={'mdi:cancel-bold'} fontSize={18} color="#e31309" />
+            ) : value === null ? (
+              <IconifyIcon icon={'fluent:square-20-regular'} fontSize={18} color="#9e9e9e" />
+            ) : ''
+          }
+        </span>}
+      </Box>
+    )
   } else {
     return (
       <span>
