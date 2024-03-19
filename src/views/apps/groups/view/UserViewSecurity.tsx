@@ -200,6 +200,12 @@ const UserViewSecurity = ({ invoiceData }: any) => {
     }
   }
 
+  const getTopic = async (date: any) => {
+    // try {
+    //   const resp = await api.get(``)
+    // }
+  }
+
   useEffect(() => {
     getAttendance()
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -62,7 +62,7 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
     useEffect(() => {
         getTeachers()
         getCourses()
-         // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     if (isMobile) {
@@ -79,7 +79,7 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
                             labelId='demo-simple-select-outlined-label'
                         >
                             <MenuItem value=''>
-                                <b>None</b>
+                                <b>Hammasi</b>
                             </MenuItem>
                             <MenuItem value={10}>Faol Guruhlar</MenuItem>
                             <MenuItem value={20}>Arxiv Guruhlar</MenuItem>
@@ -109,17 +109,23 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
                         <InputLabel size='small' id='demo-simple-select-outlined-label'>Kurslar bo'yicha</InputLabel>
                         <Select
                             size='small'
-                            label="Bo'lim"
+                            label="Kurslar bo'yicha"
                             defaultValue=''
                             id='demo-simple-select-outlined'
                             labelId='demo-simple-select-outlined-label'
+                            onChange={(e: any) => router.replace({
+                                pathname: router.pathname,
+                                query: { ...router.query, course: e.target.value }
+                            })}
                         >
                             <MenuItem value=''>
-                                <b>None</b>
+                                <b>Barchasi</b>
                             </MenuItem>
-                            <MenuItem value={10}>Ten</MenuItem>
-                            <MenuItem value={20}>Twenty</MenuItem>
-                            <MenuItem value={30}>Thirty</MenuItem>
+                            {
+                                courses.map(course => (
+                                    <MenuItem key={course.id} value={course.id}>{course.name}</MenuItem>
+                                ))
+                            }
                         </Select>
                     </FormControl>
                     <FormControl sx={{ width: '100%' }}>
@@ -130,13 +136,14 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
                             defaultValue=''
                             id='demo-simple-select-outlined'
                             labelId='demo-simple-select-outlined-label'
+                            onChange={(e) => router.push({ pathname: router.pathname, query: { day_of_week: e.target.value } })}
                         >
                             <MenuItem value=''>
-                                <b>None</b>
+                                <b>Barchasi</b>
                             </MenuItem>
-                            <MenuItem value={10}>Ten</MenuItem>
-                            <MenuItem value={20}>Twenty</MenuItem>
-                            <MenuItem value={30}>Thirty</MenuItem>
+                            <MenuItem value={'tuesday,thursday,saturday'}>Juft kunlari</MenuItem>
+                            <MenuItem value={'monday,wednesday,friday'}>Toq kunlari</MenuItem>
+                            <MenuItem value={'monday,tuesday,wednesday,thursday,friday,saturday,sunday'}>Har kuni</MenuItem>
                         </Select>
                     </FormControl>
                     <DatePicker
@@ -232,14 +239,14 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
                     defaultValue=''
                     id='demo-simple-select-outlined'
                     labelId='demo-simple-select-outlined-label'
+                    onChange={(e) => router.push({ pathname: router.pathname, query: { day_of_week: e.target.value } })}
                 >
                     <MenuItem value=''>
                         <b>Barchasi</b>
                     </MenuItem>
-                    <MenuItem value={10}>Juft kunlari</MenuItem>
-                    <MenuItem value={20}>Toq kunlari</MenuItem>
-                    <MenuItem value={30}>Har kuni</MenuItem>
-                    <MenuItem value={30}>Boshqa</MenuItem>
+                    <MenuItem value={'tuesday,thursday,saturday'}>Juft kunlari</MenuItem>
+                    <MenuItem value={'monday,wednesday,friday'}>Toq kunlari</MenuItem>
+                    <MenuItem value={'monday,tuesday,wednesday,thursday,friday,saturday,sunday'}>Har kuni</MenuItem>
                 </Select>
             </FormControl>
             <DatePicker

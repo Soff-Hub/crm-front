@@ -32,6 +32,8 @@ import useGroups from 'src/hooks/useGroups'
 import useDebounce from 'src/hooks/useDebounce'
 import { useRouter } from 'next/router'
 import Status from 'src/@core/components/status'
+import useCourses from 'src/hooks/useCourses'
+import useResponsive from 'src/@core/hooks/useResponsive'
 
 export interface customTableProps {
   xs: number
@@ -69,6 +71,8 @@ export default function GroupsPage() {
   const { students, getStudents, getStudentById, studentData, updateStudent, setStudentData, createStudent, deleteStudent } = useStudent()
   const { groups, getGroups } = useGroups()
   const [error, setError] = useState<any>({})
+  const { getCourses, courses } = useCourses()
+  const { isMobile } = useResponsive()
 
   const searchDebounce = useDebounce(search, 1000)
 
@@ -280,7 +284,13 @@ export default function GroupsPage() {
   useEffect(() => {
     getStudents(searchDebounce)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchDebounce, router.query.page])
+  }, [searchDebounce, router.query])
+
+
+  useEffect(() => {
+    getCourses()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
 
 
@@ -301,8 +311,56 @@ export default function GroupsPage() {
           {t("Yangi qo'shish")}
         </Button>
       </Box>
-      <Box>
-        <TextField placeholder='Search...' onChange={(e: any) => setSearch(e.target.value)} size='small' sx={{ maxWidth: '350px', width: '100%' }} />
+      <Box sx={{ display: 'flex', gap: '20px', flexDirection: isMobile ? 'column' : 'row' }}>
+        <TextField fullWidth placeholder='Search...' onChange={(e: any) => setSearch(e.target.value)} size='small' />
+
+        <FormControl fullWidth>
+          <InputLabel size='small' id='demo-simple-select-outlined-label'>Kurslar bo'yicha</InputLabel>
+          <Select
+            size='small'
+            label="Kurslar bo'yicha"
+            defaultValue=''
+            id='demo-simple-select-outlined'
+            labelId='demo-simple-select-outlined-label'
+            onChange={(e: any) => router.replace({
+              pathname: router.pathname,
+              query: e.target.value === '' ? {} : { ...router.query, course: e.target.value }
+            })}
+          >
+            <MenuItem value=''>
+              <b>Barchasi</b>
+            </MenuItem>
+            {
+              courses.map(course => (
+                <MenuItem key={course.id} value={course.id}>{course.name}</MenuItem>
+              ))
+            }
+          </Select>
+        </FormControl>
+
+        <Box sx={{ width: '100%' }}>
+          <FormControl fullWidth>
+            <InputLabel size='small' id='demo-simple-select-outlined-label'>Holati</InputLabel>
+            <Select
+              size='small'
+              label="Holati"
+              defaultValue=''
+              id='demo-simple-select-outlined'
+              labelId='demo-simple-select-outlined-label'
+              onChange={(e: any) => router.replace({
+                pathname: router.pathname,
+                query: e.target.value === '' ? {} : { ...router.query, status: e.target.value }
+              })}
+            >
+              <MenuItem value=''>
+                <b>Barchasi</b>
+              </MenuItem>
+              <MenuItem value={'active'}>{'Aktiv'}</MenuItem>
+              <MenuItem value={'archive'}>{'arxiv'}</MenuItem>
+              <MenuItem value={'new'}>{'Sinov darsida'}</MenuItem>
+            </Select>
+          </FormControl>
+        </Box>
       </Box>
       <DataTable columns={columns} data={students.data} rowClick={rowClick} />
       {students.count > 9 && <Pagination defaultPage={router?.query?.page ? Number(router?.query?.page) : 1} count={Math.ceil(students.count / 10)} variant="outlined" shape="rounded" onChange={(e: any, page) => handlePagination(page)} />}
@@ -473,6 +531,6 @@ export default function GroupsPage() {
           </Form>}
         </Box>
       </Drawer>
-    </div>
+    </div >
   )
 }
