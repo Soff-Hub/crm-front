@@ -153,12 +153,6 @@ export default function FormsPage() {
             Linkni nusxalash uchun qatorning istalgan joyiga bosing
           </Typography>
         </Alert>
-
-        <Alert icon={false} sx={{ py: 2, mb: 0, ...bgColors.errorLight, '& .MuiAlert-message': { p: 0 } }}>
-          <Typography variant='caption' sx={{ display: 'block', color: 'black' }}>
-            Iltimos formani ko'rmoqchi bo'lsangiz avval tizimdan logout qiling!
-          </Typography>
-        </Alert>
       </Box>
 
       <DataTable columns={columns} data={data} rowClick={handleClick} />

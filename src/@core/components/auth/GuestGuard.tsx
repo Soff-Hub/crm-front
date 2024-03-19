@@ -17,6 +17,10 @@ const GuestGuard = (props: GuestGuardProps) => {
   const auth = useAuth()
   const router = useRouter()
 
+  if (router.pathname.split('/').includes('r')) {
+    return <>{children}</>
+  }
+
   useEffect(() => {
     if (!router.isReady) {
       return
