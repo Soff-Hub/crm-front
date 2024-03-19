@@ -154,9 +154,9 @@ export default function FormsPage() {
           </Typography>
         </Alert>
 
-        <Alert icon={false} sx={{ py: 2, mb: 0, ...bgColors.warningLight, '& .MuiAlert-message': { p: 0 } }}>
+        <Alert icon={false} sx={{ py: 2, mb: 0, ...bgColors.errorLight, '& .MuiAlert-message': { p: 0 } }}>
           <Typography variant='caption' sx={{ display: 'block', color: 'black' }}>
-            Link orqali faqat saytga login qilmaganlar kira oladi
+            Iltimos formani ko'rmoqchi bo'lsangiz avval tizimdan logout qiling!
           </Typography>
         </Alert>
       </Box>
