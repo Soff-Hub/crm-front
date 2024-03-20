@@ -150,7 +150,7 @@ export default function AccordionCustom({ onView, item, reRender }: AccordionPro
     }, [item.student_count])
 
     return (
-        <Card sx={{ width: '100%', boxShadow: '#2D68C450 0px 0px 100px 0px inset,rgba(0, 0, 0, 0.09) 0px 3px 12px' }}>
+        <Card sx={{ width: '100%', boxShadow: 'rgba(148, 163, 184, 0.7) 0px 3px 12px' }}>
             <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', padding: '10px' }}>
                 <Typography fontSize={16}>{name}</Typography>
                 <Typography fontSize={16} fontWeight={'700'} sx={{ marginLeft: 'auto', marginRight: 2 }}>{count}</Typography>
