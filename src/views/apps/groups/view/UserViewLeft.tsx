@@ -180,7 +180,11 @@ const UserViewLeft = ({ userData, reRender }: { userData?: any, reRender: any })
   }, [])
 
   useEffect(() => {
-    searchStudent()
+    if (searchDebounce !== '') {
+      searchStudent()
+    } else {
+      setSearchData([])
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchDebounce])
 

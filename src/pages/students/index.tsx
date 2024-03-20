@@ -187,12 +187,12 @@ export default function GroupsPage() {
       title: t("ID"),
       dataIndex: 'index'
     },
-    {
-      xs: 0.4,
-      title: t("Status"),
-      dataIndex: 'status',
-      render: (status: string) => <div style={{ display: 'flex', alignItems: 'center', gap: '3px' }}><Status color={status == 'active' ? 'success' : status == 'new' ? 'warning' : 'error'} /> {status == 'active' ? 'aktiv' : status == 'new' ? 'sinov' : 'arxiv'}</div>
-    },
+    // {
+    //   xs: 0.4,
+    //   title: t("Status"),
+    //   dataIndex: 'status',
+    //   render: (status: string) => <div style={{ display: 'flex', alignItems: 'center', gap: '3px' }}><Status color={status == 'active' ? 'success' : status == 'new' ? 'warning' : 'error'} /> {status == 'active' ? 'aktiv' : status == 'new' ? 'sinov' : 'arxiv'}</div>
+    // },
     {
       xs: 1.4,
       title: t("first_name"),

@@ -70,20 +70,24 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
             <form id='mobile-filter-form'>
                 <Box display={'flex'} gap={2} flexDirection={'column'} paddingTop={isMobile ? 3 : 0} rowGap={isMobile ? 4 : 0}>
                     <FormControl sx={{ width: '100%' }}>
-                        <InputLabel size='small' id='demo-simple-select-outlined-label'>Guruhlar</InputLabel>
+                        <InputLabel size='small' id='demo-simple-select-outlined-label'>Holati</InputLabel>
                         <Select
                             size='small'
-                            label="Guruhlar"
+                            label="Holati"
                             defaultValue=''
                             id='demo-simple-select-outlined'
                             labelId='demo-simple-select-outlined-label'
+                            onChange={(e: any) => router.replace({
+                                pathname: router.pathname,
+                                query: e.target.value === '' ? {} : { ...router.query, status: e.target.value }
+                            })}
                         >
                             <MenuItem value=''>
-                                <b>Hammasi</b>
+                                <b>Barchasi</b>
                             </MenuItem>
-                            <MenuItem value={10}>Faol Guruhlar</MenuItem>
-                            <MenuItem value={20}>Arxiv Guruhlar</MenuItem>
-                            <MenuItem value={30}>Yakunlangan Guruhlar</MenuItem>
+                            <MenuItem value={'active'}>{'Aktiv'}</MenuItem>
+                            <MenuItem value={'archive'}>{'arxiv'}</MenuItem>
+                            <MenuItem value={'new'}>{'Sinov darsida'}</MenuItem>
                         </Select>
                     </FormControl>
                     <FormControl sx={{ width: '100%' }}>
@@ -169,20 +173,24 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
     return (
         <Box display={'flex'} gap={2} flexWrap={'nowrap'} >
             <FormControl sx={{ maxWidth: 220, width: '100%' }}>
-                <InputLabel size='small' id='demo-simple-select-outlined-label'>Guruhlar</InputLabel>
+                <InputLabel size='small' id='demo-simple-select-outlined-label'>Holati</InputLabel>
                 <Select
                     size='small'
-                    label="Guruhlar"
+                    label="Holati"
                     defaultValue=''
                     id='demo-simple-select-outlined'
                     labelId='demo-simple-select-outlined-label'
+                    onChange={(e: any) => router.replace({
+                        pathname: router.pathname,
+                        query: e.target.value === '' ? {} : { ...router.query, status: e.target.value }
+                    })}
                 >
                     <MenuItem value=''>
                         <b>Barchasi</b>
                     </MenuItem>
-                    <MenuItem value={10}>Faol Guruhlar</MenuItem>
-                    <MenuItem value={20}>Arxiv Guruhlar</MenuItem>
-                    <MenuItem value={30}>Yakunlangan Guruhlar</MenuItem>
+                    <MenuItem value={'active'}>{'Aktiv'}</MenuItem>
+                    <MenuItem value={'archived'}>{'Arxivlangan'}</MenuItem>
+                    <MenuItem value={'new'}>{'Yangi'}</MenuItem>
                 </Select>
             </FormControl>
             <FormControl sx={{ maxWidth: 180, width: '100%' }}>
