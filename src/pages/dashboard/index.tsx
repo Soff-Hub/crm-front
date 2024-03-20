@@ -40,42 +40,49 @@ const statsData: {
   title: string
   color: ThemeColor
   key: string
+  link: string
 }[] = [
     {
       icon: "mdi:user-check-outline",
       title: "Faol Lidlar",
       color: 'success',
-      key: 'leads_count'
+      key: 'leads_count',
+      link: '/lids'
     },
     {
       icon: "arcticons:studentid",
       title: "Faol talabalar",
       color: 'info',
-      key: 'active_students'
+      key: 'active_students',
+      link: '/students'
     },
     {
       icon: "la:layer-group",
       title: "Guruhlar",
       color: 'warning',
-      key: 'active_groups'
+      key: 'active_groups',
+      link: '/groups'
     },
     {
       icon: "material-symbols-light:warning-outline",
       title: "Qarzdorlar",
       color: 'error',
-      key: 'debtor_users'
+      key: 'debtor_users',
+      link: ''
     },
     {
       icon: "tabler:calendar-stats",
       title: "Sinov darsida",
       color: 'primary',
-      key: 'test_students'
+      key: 'test_students',
+      link: '/students'
     },
     {
       icon: "fa-solid:chalkboard-teacher",
       title: "O'qituvchilar",
       color: 'success',
-      key: 'teacher_count'
+      key: 'teacher_count',
+      link: '/mentors'
     },
   ]
 
@@ -131,7 +138,7 @@ const AppCalendar = () => {
           <Box sx={{ display: 'grid', gap: '10px', mb: 5, gridTemplateColumns: `repeat(${isMobile ? 3 : isTablet ? 4 : 8}, 1fr)` }} >
             {
               statsData.map((_, index) => (
-                <Box key={index} className=''>
+                <Box key={index} className='' sx={{ cursor: 'pointer' }} onClick={() => push(_.link)}>
                   <CardStatsVertical title={stats?.[_.key]} stats={_.title} icon={<IconifyIcon fontSize={"4rem"} icon={_.icon} />} color={_.color} />
                 </Box>
               ))
