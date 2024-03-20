@@ -85,7 +85,7 @@ const UserViewOverview = ({ data, rerender }: ItemTypes) => {
               <TextField
                 rows={4}
                 multiline
-                label="yozing..."
+                label="Izoh"
                 name='description'
                 defaultValue={''}
               />

@@ -68,7 +68,7 @@ export const UserViewStudentsItem = ({ item, setOpenEdit }: ItemChildTypes) => {
                 TransitionComponent={Fade}
             >
                 <MenuItem onClick={() => handleClose('notes')}>Yangi eslatma</MenuItem>
-                <MenuItem onClick={() => handleClose('delete')}>O'chirish</MenuItem>
+                {/* <MenuItem onClick={() => handleClose('delete')}>O'chirish</MenuItem> */}
             </Menu>
         </Box>
     )
