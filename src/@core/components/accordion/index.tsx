@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { styled } from '@mui/material/styles'
 import MuiMenu, { MenuProps } from '@mui/material/Menu'
 
-import { Box, CircularProgress, Dialog, DialogContent, DialogTitle, FormControl, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material'
+import { Box, Card, CircularProgress, Dialog, DialogContent, DialogTitle, FormControl, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material'
 import IconifyIcon from '../icon'
 import api from 'src/@core/utils/api'
 import KanbanItem from '../card-statistics/kanban-item'
@@ -150,7 +150,7 @@ export default function AccordionCustom({ onView, item, reRender }: AccordionPro
     }, [item.student_count])
 
     return (
-        <Box sx={{ width: '100%', border: '1px solid #cfcccc', borderRadius: 1 }}>
+        <Card sx={{ width: '100%', boxShadow: '#2D68C450 0px 0px 100px 0px inset,rgba(0, 0, 0, 0.09) 0px 3px 12px' }}>
             <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', padding: '10px' }}>
                 <Typography fontSize={16}>{name}</Typography>
                 <Typography fontSize={16} fontWeight={'700'} sx={{ marginLeft: 'auto', marginRight: 2 }}>{count}</Typography>
@@ -279,6 +279,6 @@ export default function AccordionCustom({ onView, item, reRender }: AccordionPro
                     </Box>
                 </DialogContent>
             </Dialog>
-        </Box>
+        </Card>
     )
 }

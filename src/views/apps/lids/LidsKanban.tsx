@@ -61,7 +61,7 @@ export default function HomeKanban({ title, items, setOpenItem, id, setOpenLid, 
                 <IconifyIcon icon={'mingcute:delete-line'} color='red' onClick={() => setOpen('delete')} style={{ cursor: 'pointer', fontSize: '20px' }} />
             </Box>
 
-            <Box sx={{ display: 'flex', gap: 3, alignItems: 'flex-start', width: '100%', flexDirection: 'column' }}>
+            <Box sx={{ display: 'flex', gap: 5, alignItems: 'flex-start', width: '100%', flexDirection: 'column' }}>
                 {
                     items.map(lead => (
                         <AccordionCustom reRender={reRender} item={lead} key={lead.id} onView={() => console.log("aa")} />

@@ -127,7 +127,7 @@ const Lids = () => {
   return user?.role === 'teacher' ? <TeacherProfile /> : (
     <Box sx={{ maxWidth: '100%', overflowX: 'scroll' }}>
       <Box
-        padding={'20px 0'}
+        padding={'10px'}
         display={'flex'}
         gap={5}
         sx={{ minHeight: 600, alignItems: 'flex-start' }}
