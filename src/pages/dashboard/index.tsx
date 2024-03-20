@@ -33,6 +33,7 @@ import useResponsive from 'src/@core/hooks/useResponsive'
 import generateTimeSlots from 'src/@core/utils/generate-time-slots'
 import { lessonData } from 'src/@core/utils/db'
 import { TranslateWeekName } from '../groups'
+import { hourFormatter } from 'src/@core/utils/hourFormatter'
 
 const statsData: {
   icon: string
@@ -79,10 +80,11 @@ const statsData: {
   ]
 
 const startTime = '09:00';
-const endTime = '21:01';
+const endTime = '22:01';
 
 
 const AppCalendar = () => {
+  const currenWeek: string = `${new Date()}`.split(' ')[0].toLocaleLowerCase()
 
   // ** Hooks
   const { settings } = useSettings()
@@ -90,9 +92,9 @@ const AppCalendar = () => {
   const { push, pathname, query } = useRouter()
   const { isMobile, isTablet } = useResponsive()
   const [stats, setStats] = useState<any>(null)
-  const [tabValue, setTabValue] = useState<string>('1')
+  const [tabValue, setTabValue] = useState<string>(currenWeek === 'mon' || currenWeek === 'wed' || currenWeek === 'fri' ? '2' : '1')
   const [open, setOpen] = useState<null | 'week'>(null)
-  const [weeks, setWeeks] = useState<any>(query?.weeks ? (typeof query.weeks === 'string' ? query.weeks.split(',') : query.weeks) : []);
+  const [weeks, setWeeks] = useState<any>(query?.weeks ? (typeof query.weeks === 'string' ? query.weeks.split(',') : query.weeks) : ['monday', 'wednesday', 'friday']);
 
 
   // ** Vars
@@ -107,14 +109,20 @@ const AppCalendar = () => {
   }
 
   async function getLessons() {
-    const resp = await api.get('common/dashboard/group-list/')
+    const resp = await api.get(`common/dashboard/?day_of_week=${query?.weeks || weeks}`)
+    setEvents(resp.data.room_list)
   }
+
+
 
 
   useEffect(() => {
     getStats()
-    getLessons()
   }, [])
+
+  useEffect(() => {
+    getLessons()
+  }, [weeks, query])
 
   return user?.role === 'teacher' ? <MyGroups /> : (
     <>
@@ -155,9 +163,22 @@ const AppCalendar = () => {
           <Box sx={{}}>
             <TabContext value={tabValue}>
               <TabList onChange={(event, value: string) => setTabValue(value)} aria-label='centered tabs example'>
-                <Tab value='1' label='Juft kunlar' sx={{ p: '0 !important', fontSize: '9px' }} />
-                <Tab value='2' label='Toq kunlar' sx={{ p: '0 !important', fontSize: '9px' }} />
-                <Tab value='3' label='Har kuni' sx={{ p: '0 !important', fontSize: '9px' }} />
+                <Tab value='1' label='Juft kunlar' sx={{ p: '0 !important', fontSize: '9px' }} onClick={() => {
+                  push({
+                    pathname,
+                    query: {
+                      weeks: ['tuesday', 'thursday', 'saturday']
+                    }
+                  })
+                }} />
+                <Tab value='2' label='Toq kunlar' sx={{ p: '0 !important', fontSize: '9px' }} onClick={() => {
+                  push({
+                    pathname,
+                    query: {
+                      weeks: ['monday', 'wednesday', 'friday']
+                    }
+                  })
+                }} />
                 <Tab value='4' label='Boshqa' sx={{ p: '0 !important', fontSize: '9px' }} onClick={() => setOpen('week')} />
               </TabList>
             </TabContext>
@@ -180,20 +201,20 @@ const AppCalendar = () => {
                   </td>
                 </tr>
                 {
-                  lessonData.map(lesson => (
-                    <tr style={{ borderBottom: '1px solid #c3cccc65' }}>
+                  events.map((lesson: any) => (
+                    <tr style={{ borderBottom: '1px solid #c3cccc65' }} key={lesson.room_id}>
                       <td style={{ minWidth: '100px', fontSize: '12px' }}>
-                        {lesson.room}
+                        {lesson.room_name}
                       </td>
                       <td>
                         <Box sx={{ display: 'flex', position: 'relative', marginLeft: '25px' }}>
                           {generateTimeSlots(startTime, endTime).map((el: string) => <Box sx={{ width: '50px', height: '45px', borderLeft: '1px solid #c3cccc', display: 'flex', alignItems: 'center', justifyContent: 'center' }}></Box>)}
                           {
-                            lesson.lessons.map(item => (
+                            lesson.lessons.map((item: any) => (
                               <Box sx={{ width: `${generateTimeSlots(item.start_at, item.end_at).length * 50}px`, height: '45px', position: 'absolute', padding: '5px', left: `${generateTimeSlots(startTime, endTime).findIndex(el => el === generateTimeSlots(item.start_at, item.end_at)[0]) * 50}px` }}>
                                 <Box sx={{ borderRadius: '8px', bgcolor: 'rgba(255, 165, 0, 0.8)', width: '100%', height: '100%', cursor: 'pointer', padding: '2px 6px', overflow: 'hidden' }}>
-                                  <Typography sx={{ color: 'black', fontSize: '10px' }}>{item.start_at} - {item.end_at} / Frontend 030</Typography>
-                                  <Typography sx={{ color: 'black', fontSize: '10px' }}>Doniyor Eshmamatov</Typography>
+                                  <Typography sx={{ color: 'black', fontSize: '10px' }}>{hourFormatter(item.start_at)} - {hourFormatter(item.end_at)} / {item.name}</Typography>
+                                  <Typography sx={{ color: 'black', fontSize: '10px' }}>{item.teacher_name}</Typography>
                                 </Box>
                               </Box>
                             ))
