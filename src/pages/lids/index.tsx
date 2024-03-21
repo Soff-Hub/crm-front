@@ -46,7 +46,7 @@ const Lids = () => {
         dispatch(addUserData(resp.data))
         setLeadData(resp.data)
       } else {
-        dispatch(addUserData(searched))
+        // dispatch(addUserData(searched))
         setLeadData(searched)
       }
     } catch {
