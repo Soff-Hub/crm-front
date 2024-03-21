@@ -101,7 +101,7 @@ const AppCalendar = () => {
   const [stats, setStats] = useState<any>(null)
   const [tabValue, setTabValue] = useState<string>(currenWeek === 'mon' || currenWeek === 'wed' || currenWeek === 'fri' ? '2' : '1')
   const [open, setOpen] = useState<null | 'week'>(null)
-  const [weeks, setWeeks] = useState<any>(query?.weeks ? (typeof query.weeks === 'string' ? query.weeks.split(',') : query.weeks) : ['monday', 'wednesday', 'friday']);
+  const [weeks, setWeeks] = useState<any>(query?.weeks ? (typeof query.weeks === 'string' ? query.weeks.split(',') : query.weeks) : currenWeek === 'mon' || currenWeek === 'wed' || currenWeek === 'fri' ? ['monday', 'wednesday', 'friday'] : ['tuesday', 'thursday', 'saturday']);
 
 
   // ** Vars
