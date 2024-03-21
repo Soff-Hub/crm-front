@@ -1,10 +1,6 @@
 import { useState } from "react"
 import api from "src/@core/utils/api";
 
-// interface BranchTypes {
-//     id: string,
-//     name: string
-// }
 
 export default function usePayment() {
     const [paymentMethods, setPaymentMethods] = useState<any>([])
@@ -21,19 +17,22 @@ export default function usePayment() {
 
     const createPaymentMethod = async (data: any) => {
         try {
-            const resp = await api.post('common/payment-type/create/', data)
+            await api.post('common/payment-type/create/', data)
 
-            return [...paymentMethods, resp.data]
+            return true
         } catch (err) {
             return Promise.reject(err)
         }
     }
 
-    const createPayment = async (data: any) => {
+    const updatePaymentMethod = async (id: any, data: any) => {
         try {
-            await api.post('common/student-payment/create/', data)
+            await api.patch(`common/payment-type/update/${id}/`, data)
+            getPaymentMethod()
+
+            return true
         } catch (err) {
-            return err
+            return Promise.reject(err)
         }
     }
 
@@ -46,5 +45,13 @@ export default function usePayment() {
         }
     }
 
-    return { getPaymentMethod, paymentMethods, createPaymentMethod, paymentData, getPaymentList, createPayment }
+    const createPayment = async (data: any) => {
+        try {
+            await api.post('common/student-payment/create/', data)
+        } catch (err) {
+            return Promise.reject(err)
+        }
+    }
+
+    return { getPaymentMethod, paymentMethods, createPaymentMethod, paymentData, getPaymentList, createPayment, updatePaymentMethod }
 }

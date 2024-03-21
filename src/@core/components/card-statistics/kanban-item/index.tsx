@@ -69,7 +69,7 @@ const KanbanItem = (props: KanbarItemProps) => {
 
     const { total } = useSelector((state: any) => state.user)
     const [sms, setSMS] = useState<any>("")
-    const { smsTemps } = useSMS()
+    const { smsTemps, getSMSTemps } = useSMS()
 
     const dispatch = useDispatch()
 
@@ -256,7 +256,7 @@ const KanbanItem = (props: KanbarItemProps) => {
                     <IconifyIcon icon='ph:flag-light' fontSize={20} />
                     Yangi eslatma
                 </MenuItem>
-                <MenuItem onClick={() => setOpen('sms')} sx={{ '& svg': { mr: 2 } }}>
+                <MenuItem onClick={() => (getSMSTemps(), setOpen('sms'))} sx={{ '& svg': { mr: 2 } }}>
                     <IconifyIcon icon='mdi:sms' fontSize={20} />
                     SMS yuborish
                 </MenuItem>

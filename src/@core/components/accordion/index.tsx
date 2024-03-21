@@ -12,6 +12,7 @@ import LoadingButton from '@mui/lab/LoadingButton'
 import toast from 'react-hot-toast'
 import showResponseError from 'src/@core/utils/show-response-error'
 import useSMS from 'src/hooks/useSMS'
+import { useRouter } from 'next/router'
 
 interface AccordionProps {
     title?: string
@@ -39,7 +40,8 @@ export default function AccordionCustom({ onView, item, reRender }: AccordionPro
 
 
     const [sms, setSMS] = useState<any>("")
-    const { smsTemps } = useSMS()
+    const { smsTemps, getSMSTemps } = useSMS()
+    const { query } = useRouter()
 
     const handleClick = (event: any) => {
         setAnchorEl(event.currentTarget)
@@ -55,7 +57,7 @@ export default function AccordionCustom({ onView, item, reRender }: AccordionPro
         if (isLoad) setOpen(!open)
         setLoading(true)
         try {
-            const resp = await api.get(`leads/department-user-list/${item.id}/`)
+            const resp = await api.get(`leads/department-user-list/${item.id}/?search=${query?.search || ''}`)
             setLeadData(resp.data)
             setCount(resp.data.length)
             setLoading(false)
@@ -194,7 +196,7 @@ export default function AccordionCustom({ onView, item, reRender }: AccordionPro
                 }}
                 PaperProps={{ style: { minWidth: '8rem' } }}
             >
-                <MenuItem onClick={() => (setOpenDialog('sms'))} sx={{ '& svg': { mr: 2 } }}>
+                <MenuItem onClick={() => (getSMSTemps(), setOpenDialog('sms'))} sx={{ '& svg': { mr: 2 } }}>
                     <IconifyIcon icon='mdi:sms' fontSize={20} />
                     SMS yuborish
                 </MenuItem>

@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { Box, Button, TextField, Typography } from '@mui/material'
+import { Box, Button, Dialog, DialogContent, TextField, Typography } from '@mui/material'
 import IconifyIcon from 'src/@core/components/icon'
 import useResponsive from 'src/@core/hooks/useResponsive'
 import usePayment from 'src/hooks/usePayment'
 import useBranches from 'src/hooks/useBranch'
+import LoadingButton from '@mui/lab/LoadingButton'
 
 export default function AllSettings() {
 
@@ -11,11 +12,12 @@ export default function AllSettings() {
     const [editable, setEditable] = useState<null | 'title' | 'logo'>(null)
     const [createble, setCreatable] = useState<null | 'branch' | 'payment-type'>(null)
     const [id, setId] = useState<null | { key: 'branch' | 'payment-type', id: any }>(null)
+    const [deleteId, setDeleteId] = useState<null | { open: null | 'payment-type', id: any }>(null)
     const [name, setName] = useState<string>('')
-    const [loading, setLoading] = useState<null | 'create'>(null)
+    const [loading, setLoading] = useState<null | 'create' | 'delete'>(null)
 
 
-    const { getPaymentMethod, paymentMethods, createPaymentMethod } = usePayment()
+    const { getPaymentMethod, paymentMethods, createPaymentMethod, updatePaymentMethod } = usePayment()
     const { getBranches, branches } = useBranches()
 
 
@@ -41,7 +43,7 @@ export default function AllSettings() {
     }, [])
 
     return (
-        <Box sx={{ display: 'flex', gap: '15px', flexDirection: isMobile ? 'column' : 'row' }}>
+        <Box sx={{ display: 'flex', gap: '15px', flexDirection: isMobile ? 'column' : 'row', px: 4 }}>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: '15px', width: '100%' }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
                     <Typography sx={{ minWidth: isMobile ? '90px' : '120px', fontSize: isMobile ? '13px' : '16px' }}>Tashkilot nomi:</Typography>
@@ -67,7 +69,7 @@ export default function AllSettings() {
                                         id?.id === branch.id && id?.key === 'branch' ? (
                                             <TextField size='small' focused defaultValue={branch.name} onBlur={(e) => console.log(e.target.value)} />
                                         ) : (
-                                            <TextField size='small' value={branch.name} onBlur={(e) => console.log(e.target.value)} />
+                                            <TextField size='small' value={branch.name} />
                                         )
                                     }
                                     <IconifyIcon icon={'basil:edit-outline'} style={{ cursor: 'pointer' }} onClick={() => setId({ id: branch.id, key: 'branch' })} />
@@ -96,13 +98,13 @@ export default function AllSettings() {
                                 <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }} key={method.id}>
                                     {
                                         id?.id === method.id && id?.key === 'payment-type' ? (
-                                            <TextField size='small' focused defaultValue={method.name} onBlur={(e) => console.log(e.target.value)} />
+                                            <TextField size='small' focused defaultValue={method.name} onBlur={(e) => updatePaymentMethod(method.id, { name: e.target.value })} />
                                         ) : (
                                             <TextField size='small' value={method.name} onBlur={(e) => console.log(e.target.value)} />
                                         )
                                     }
                                     <IconifyIcon icon={'basil:edit-outline'} style={{ cursor: 'pointer' }} onClick={() => setId({ id: method.id, key: 'payment-type' })} />
-                                    <IconifyIcon icon={'fluent:delete-20-regular'} style={{ cursor: 'pointer' }} />
+                                    <IconifyIcon icon={'fluent:delete-20-regular'} style={{ cursor: 'pointer' }} onClick={() => setDeleteId({ open: 'payment-type', id: method.id })} />
                                 </Box>
                             ))
                         }
@@ -120,6 +122,26 @@ export default function AllSettings() {
                 </Box>
             </Box>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: '15px', width: '100%' }}></Box>
+
+
+            <Dialog open={deleteId?.open === 'payment-type'} onClose={() => setDeleteId(null)}>
+                <DialogContent>
+                    <Typography sx={{ fontSize: '20px', margin: '10px 10px 20px' }}>O'chirishni tasdiqlang</Typography>
+                    <Box sx={{ display: 'flex', gap: 1 }}>
+                        <Button variant='outlined' color='success' onClick={() => setDeleteId(null)}>Bekor qilish</Button>
+                        <LoadingButton loading={loading === 'delete'} variant='contained' color='error' onClick={async () => {
+                            setLoading('delete')
+                            try {
+                                await updatePaymentMethod(deleteId?.id, { is_active: false })
+                                setDeleteId(null)
+                                setLoading(null)
+                            } catch {
+                                setLoading(null)
+                            }
+                        }}>Ok</LoadingButton>
+                    </Box>
+                </DialogContent>
+            </Dialog>
         </Box>
     )
 }

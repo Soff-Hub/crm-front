@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import api from "src/@core/utils/api";
 
 
@@ -14,9 +14,6 @@ export default function useSMS() {
         }
     }
 
-    useEffect(() => {
-        getSMSTemps()
-    }, [])
 
     return { getSMSTemps, smsTemps }
 }

@@ -40,10 +40,15 @@ const Lids = () => {
 
   const getLeads = async () => {
     try {
-      const resp = await api.get('leads/department/list')
-      const searched = resp.data.results.map((el: any) => ({ ...el, children: el.children.filter((item: any) => item.student_count > 0) }))
-      setLeadData(resp.data.results)
-      dispatch(addUserData(resp.data.results))
+      const resp = await api.get(`leads/department/list/?search=${query?.search || ''}`)
+      const searched = resp.data.map((el: any) => ({ ...el, children: el.children.filter((item: any) => item.student_count > 0) }))
+      if (!query?.search || query?.search === '') {
+        dispatch(addUserData(resp.data))
+        setLeadData(resp.data)
+      } else {
+        dispatch(addUserData(searched))
+        setLeadData(searched)
+      }
     } catch {
       toast.error("Network Error", { position: 'bottom-center' })
     }
@@ -124,9 +129,12 @@ const Lids = () => {
   }
 
   useEffect(() => {
-    getLeads()
     getSources()
   }, [])
+
+  useEffect(() => {
+    getLeads()
+  }, [query?.search])
 
   return user?.role === 'teacher' ? <TeacherProfile /> : (
     <Box sx={{ maxWidth: '100%', overflowX: 'scroll', padding: '10px' }}>

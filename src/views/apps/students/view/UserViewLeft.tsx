@@ -39,6 +39,7 @@ import showResponseError from 'src/@core/utils/show-response-error'
 import usePayment from 'src/hooks/usePayment'
 import api from 'src/@core/utils/api'
 import useSMS from 'src/hooks/useSMS'
+import { useRouter } from 'next/router'
 
 
 type ModalTypes = 'group' | 'payment' | 'sms' | 'delete' | 'edit' | 'notes'
@@ -58,9 +59,10 @@ const UserViewLeft = ({ userData, rerender }: { userData: StudentTypes | null, r
   const { mergeStudentToGroup, getGroupShort, groupShort } = useGroups()
   const { updateStudent, studentData } = useStudent()
   const { getBranches, branches } = useBranches()
-  const { getPaymentMethod } = usePayment()
+  const { getPaymentMethod, paymentMethods, createPayment } = usePayment()
   const [sms, setSMS] = useState<any>("")
-  const { smsTemps } = useSMS()
+  const { smsTemps, getSMSTemps } = useSMS()
+  const { query } = useRouter()
 
   // Handle Edit dialog
   const handleEditClickOpen = (value: ModalTypes) => {
@@ -143,6 +145,25 @@ const UserViewLeft = ({ userData, rerender }: { userData: StudentTypes | null, r
     }
   }
 
+  const handlePayment = async (value: any) => {
+    setLoading(true)
+    const data = {
+      ...value,
+      student: query?.student,
+    }
+
+    try {
+      await createPayment(data)
+      setLoading(false)
+      setOpenEdit(null)
+
+      return await rerender()
+    } catch (err: any) {
+      showResponseError(err.response.data, setError)
+      setLoading(false)
+    }
+  }
+
 
   useEffect(() => {
     setData(userData)
@@ -188,7 +209,7 @@ const UserViewLeft = ({ userData, rerender }: { userData: StudentTypes | null, r
             </CardContent>
             <Box sx={{ display: 'flex', justifyContent: 'center', pb: 3 }}>
               <Tooltip title="SMS yuborish" placement='bottom'>
-                <Button size='small' color="warning" onClick={() => handleEditClickOpen('sms')}>
+                <Button size='small' color="warning" onClick={() => (getSMSTemps(), handleEditClickOpen('sms'))}>
                   <IconifyIcon icon='material-symbols-light:sms-outline' />
                 </Button>
               </Tooltip>
@@ -311,21 +332,39 @@ const UserViewLeft = ({ userData, rerender }: { userData: StudentTypes | null, r
             To'lov qilish
           </DialogTitle>
           <DialogContent>
-            <Form reqiuredFields={['group']} setError={setError} valueTypes='json' sx={{ marginTop: 10, display: 'flex', flexDirection: 'column', gap: '10px' }} onSubmit={handleMergeToGroup} id='edit-employee-pay'>
-              <FormControl fullWidth>
+            <Form setError={setError} valueTypes='json' sx={{ marginTop: 10, display: 'flex', flexDirection: 'column', gap: '10px' }} onSubmit={handlePayment} id='edifsdt-employee-pay'>
+              <FormControl fullWidth error={error.payment_type?.error}>
                 <InputLabel size='small' id='user-view-language-label'>{t("To'lov usulini tanlang")}</InputLabel>
                 <Select
                   size='small'
                   label={t("To'lov usulini tanlang")}
                   id='user-view-language'
                   labelId='user-view-language-label'
+                  name='payment_type'
                 >
                   {
-                    ['Karta', 'Naqd'].map(branch => <MenuItem key={branch} value={branch}>{branch}</MenuItem>)
+                    paymentMethods.map((branch: any) => <MenuItem key={branch.id} value={branch.id}>{branch.name}</MenuItem>)
                   }
                 </Select>
-                <FormHelperText error={error.branch?.error}>{error.branch?.message}</FormHelperText>
+                <FormHelperText error={error.payment_type?.error}>{error.payment_type?.message}</FormHelperText>
               </FormControl>
+
+              <FormControl fullWidth error={error.group?.error}>
+                <InputLabel size='small' id='user-view-language-label'>{t("Qaysi guruh uchun?")}</InputLabel>
+                <Select
+                  size='small'
+                  label={t("Qaysi guruh uchun?")}
+                  id='user-view-language'
+                  labelId='user-view-language-label'
+                  name='group'
+                >
+                  {
+                    userData?.groups.map((branch: any) => <MenuItem key={branch.id} value={branch.group_data.id}>{branch.group_data.name}</MenuItem>)
+                  }
+                </Select>
+                <FormHelperText error={error.group?.error}>{error.group?.message}</FormHelperText>
+              </FormControl>
+
 
               <FormControl fullWidth>
                 <TextField
@@ -353,7 +392,7 @@ const UserViewLeft = ({ userData, rerender }: { userData: StudentTypes | null, r
               </FormControl>
 
               <FormControl sx={{ width: '100%' }}>
-                <input type="date" style={{ borderRadius: '8px', padding: '10px', outline: 'none', border: '1px solid gray', marginTop: '10px' }} />
+                <input type="date" style={{ borderRadius: '8px', padding: '10px', outline: 'none', border: '1px solid gray', marginTop: '10px' }} name='payment_date' />
                 <FormHelperText error={error.start_date?.error}>{error.start_date?.message}</FormHelperText>
               </FormControl>
 

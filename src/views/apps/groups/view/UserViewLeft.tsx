@@ -81,7 +81,7 @@ const UserViewLeft = ({ userData, reRender }: { userData?: any, reRender: any })
   const { user } = useContext(AuthContext)
   const { mergeStudentToGroup } = useGroups()
   const [sms, setSMS] = useState<any>("")
-  const { smsTemps } = useSMS()
+  const { smsTemps, getSMSTemps } = useSMS()
 
   // Handle Edit dialog
   const handleEditClickOpen = (type: ActionTypes) => setOpenEdit(type)
@@ -331,7 +331,7 @@ const UserViewLeft = ({ userData, reRender }: { userData?: any, reRender: any })
                     </Button>
                   </Tooltip>
                   <Tooltip title="SMS yuborish" placement='top'>
-                    <Button variant='outlined' color="warning" onClick={() => handleEditClickOpen('send-sms')}>
+                    <Button variant='outlined' color="warning" onClick={() => (getSMSTemps(), handleEditClickOpen('send-sms'))}>
                       <IconifyIcon icon='material-symbols-light:sms-outline' />
                     </Button>
                   </Tooltip>
