@@ -82,7 +82,7 @@ const UserViewRight = ({ tab, invoiceData }: Props) => {
         aria-label='forced scroll tabs example'
         sx={{ borderBottom: theme => `1px solid ${theme.palette.divider}` }}
       >
-        <Tab value='security' label='Tarix' icon={<Icon icon='mdi:unarchive' />} />
+        <Tab value='security' label='Guruhlar' icon={<Icon icon='mdi:unarchive' />} />
         <Tab value='billing-plan' label='Ish haqi' icon={<Icon icon='mdi:account-clock' />} />
       </TabList>
       <Box sx={{ mt: 6 }}>

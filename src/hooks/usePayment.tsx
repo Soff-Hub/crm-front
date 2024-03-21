@@ -12,7 +12,7 @@ export default function usePayment() {
 
     const getPaymentMethod = async () => {
         try {
-            const resp = await api.get('payment-type/list/')
+            const resp = await api.get('common/payment-type/list/')
             setPaymentMethods(resp.data.results)
         } catch (err) {
             return err
@@ -21,15 +21,17 @@ export default function usePayment() {
 
     const createPaymentMethod = async (data: any) => {
         try {
-            await api.post('payment-type/create/', data)
+            const resp = await api.post('common/payment-type/create/', data)
+
+            return [...paymentMethods, resp.data]
         } catch (err) {
-            return err
+            return Promise.reject(err)
         }
     }
 
     const createPayment = async (data: any) => {
         try {
-            await api.post('student-payment/create/', data)
+            await api.post('common/student-payment/create/', data)
         } catch (err) {
             return err
         }
@@ -37,7 +39,7 @@ export default function usePayment() {
 
     const getPaymentList = async (id: any) => {
         try {
-            const resp = await api.get('student-payment/list/' + id)
+            const resp = await api.get('common/student-payment/list/' + id)
             setPaymentData(resp.data)
         } catch (err) {
             return err

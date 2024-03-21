@@ -12,7 +12,7 @@ import TableContainer from '@mui/material/TableContainer'
 import TablePagination from '@mui/material/TablePagination'
 
 interface Column {
-  id: 'name' | 'code' | 'population' | 'size' | 'density'
+  id: 'student_count' | 'student_amount' | 'group' | 'date_interval' | 'all'
   label: string
   minWidth?: number
   align?: 'right'
@@ -20,25 +20,23 @@ interface Column {
 }
 
 const columns: readonly Column[] = [
-  { id: 'name', label: 'Name', minWidth: 170 },
-  { id: 'code', label: 'ISO\u00a0Code', minWidth: 100 },
+  { id: 'student_count', label: "O'quvchi soni", minWidth: 170 },
+  { id: 'student_amount', label: 'Har biri uchun', minWidth: 100 },
   {
-    id: 'population',
-    label: 'Population',
+    id: 'group',
+    label: 'Guruhi',
     minWidth: 170,
-    align: 'right',
     format: (value: number) => value.toLocaleString('en-US')
   },
   {
-    id: 'size',
-    label: 'Size\u00a0(km\u00b2)',
+    id: 'date_interval',
+    label: "Sana oralig'i",
     minWidth: 170,
-    align: 'right',
     format: (value: number) => value.toLocaleString('en-US')
   },
   {
-    id: 'density',
-    label: 'Density',
+    id: 'all',
+    label: 'Umumiy summa',
     minWidth: 170,
     align: 'right',
     format: (value: number) => value.toFixed(2)
@@ -46,35 +44,20 @@ const columns: readonly Column[] = [
 ]
 
 interface Data {
-  name: string
-  code: string
-  size: number
-  density: number
-  population: number
+  student_count: string
+  student_amount: string
+  group: string
+  date_interval: string
+  all: string
 }
 
-function createData(name: string, code: string, population: number, size: number): Data {
-  const density = population / size
+function createData(student_count: string, student_amount: string, group: string, date_interval: string, all: string): Data {
 
-  return { name, code, population, size, density }
+  return { student_count, student_amount, group, date_interval, all }
 }
 
 const rows = [
-  createData('India', 'IN', 1324171354, 3287263),
-  createData('China', 'CN', 1403500365, 9596961),
-  createData('Italy', 'IT', 60483973, 301340),
-  createData('United States', 'US', 327167434, 9833520),
-  createData('Canada', 'CA', 37602103, 9984670),
-  createData('Australia', 'AU', 25475400, 7692024),
-  createData('Germany', 'DE', 83019200, 357578),
-  createData('Ireland', 'IE', 4857000, 70273),
-  createData('Mexico', 'MX', 126577691, 1972550),
-  createData('Japan', 'JP', 126317000, 377973),
-  createData('France', 'FR', 67022000, 640679),
-  createData('United Kingdom', 'GB', 67545757, 242495),
-  createData('Russia', 'RU', 146793744, 17098246),
-  createData('Nigeria', 'NG', 200962417, 923768),
-  createData('Brazil', 'BR', 210147125, 8515767)
+  createData('6 ta', '300 000', 'Frontend 030', '12.03.2024 / 12.04.2024', '1 200 000'),
 ]
 
 const TableStickyHeader = () => {
@@ -107,7 +90,7 @@ const TableStickyHeader = () => {
           <TableBody>
             {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(row => {
               return (
-                <TableRow hover role='checkbox' tabIndex={-1} key={row.code}>
+                <TableRow hover role='checkbox' tabIndex={-1} key={row.group}>
                   {columns.map(column => {
                     const value = row[column.id]
 

@@ -2,6 +2,7 @@
 import LoadingButton from '@mui/lab/LoadingButton'
 import { Box, Button, CircularProgress, Dialog, DialogContent, DialogTitle, FormControl, FormHelperText, IconButton, InputLabel, MenuItem, Select, TextField } from '@mui/material'
 import Typography from '@mui/material/Typography'
+import { useRouter } from 'next/router'
 import { useContext, useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import { useTranslation } from 'react-i18next'
@@ -26,11 +27,13 @@ const Lids = () => {
   const [addSource, setAddSource] = useState<boolean>(false)
   const [loading, seLoading] = useState<boolean>(false)
   const { user } = useContext(AuthContext)
+  const [search, setSearch] = useState<string>('')
 
   // const [createble, setCreatable] = useState<boolean>(false)
   const [error, setError] = useState<any>({})
   const { t } = useTranslation()
   const dispatch = useDispatch()
+  const { push, pathname, query } = useRouter()
 
   const handleClose = () => setOpen(null)
 
@@ -38,6 +41,7 @@ const Lids = () => {
   const getLeads = async () => {
     try {
       const resp = await api.get('leads/department/list')
+      const searched = resp.data.results.map((el: any) => ({ ...el, children: el.children.filter((item: any) => item.student_count > 0) }))
       setLeadData(resp.data.results)
       dispatch(addUserData(resp.data.results))
     } catch {
@@ -125,9 +129,16 @@ const Lids = () => {
   }, [])
 
   return user?.role === 'teacher' ? <TeacherProfile /> : (
-    <Box sx={{ maxWidth: '100%', overflowX: 'scroll' }}>
+    <Box sx={{ maxWidth: '100%', overflowX: 'scroll', padding: '10px' }}>
+      <form style={{ display: 'flex', alignItems: 'center', gap: '5px' }} onSubmit={(e) => {
+        e.preventDefault()
+        push({ pathname, query: { search } })
+      }}>
+        <TextField defaultValue={query?.search || ''} autoComplete='off' autoFocus size='small' sx={{ maxWidth: '300px', width: '100%' }} color='primary' placeholder='Qidirish...' onChange={(e) => setSearch(e.target.value)} />
+        <Button variant='outlined' onClick={() => push({ pathname, query: { search } })}>Qidirish</Button>
+      </form>
       <Box
-        padding={'10px'}
+        padding={'10px 0'}
         display={'flex'}
         gap={5}
         sx={{ minHeight: 600, alignItems: 'flex-start' }}
