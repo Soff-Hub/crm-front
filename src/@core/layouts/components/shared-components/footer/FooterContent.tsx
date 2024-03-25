@@ -32,7 +32,7 @@ const FooterContent = () => {
   //         </Link>
   //         <Link
   //           target='_blank'
-  //           href='https://pixinvent.com/demo/materialize-mui-react-nextjs-admin-template/documentation'
+  //           href='https://pixinvent.com/demo/soff-crm/documentation'
   //         >
   //           Documentation
   //         </Link>
