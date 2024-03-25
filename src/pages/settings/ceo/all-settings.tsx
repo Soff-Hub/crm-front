@@ -112,7 +112,7 @@ export default function AllSettings() {
 
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
                     <Typography sx={{ minWidth: isMobile ? '90px' : '120px', fontSize: isMobile ? '13px' : '16px' }}>Logo:</Typography>
-                    <img src={companyInfo?.logo} width={40} />
+                    <img src={companyInfo?.logo} height={40} />
                     <Button
                         component="label"
                         role={undefined}

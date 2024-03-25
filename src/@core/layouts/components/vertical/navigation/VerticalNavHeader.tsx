@@ -130,7 +130,7 @@ const VerticalNavHeader = (props: Props) => {
         userNavMenuBranding(props)
       ) : (
         <StyledLink href='/'>
-          <img src={companyInfo?.logo} width={40} />
+          <img src={companyInfo?.logo} height={40} />
           <HeaderTitle variant='h6' sx={{ ...menuCollapsedStyles, ...(navCollapsed && !navHover ? {} : { ml: 2 }) }}>
             {companyInfo.training_center_name}
           </HeaderTitle>

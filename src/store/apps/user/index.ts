@@ -62,7 +62,7 @@ export const appUsersSlice = createSlice({
     companyInfo: {
       id: 1,
       training_center_name: "StudyCRM",
-      logo: "https://crmapi.soffstudy.uz/media/canter_logo/white.png",
+      logo: 'null',
       work_start_time: "10:00",
       work_end_time: "22:00"
     }
