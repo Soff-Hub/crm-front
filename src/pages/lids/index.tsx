@@ -142,7 +142,12 @@ const Lids = () => {
         e.preventDefault()
         push({ pathname, query: { search } })
       }}>
-        <TextField defaultValue={query?.search || ''} autoComplete='off' autoFocus size='small' sx={{ maxWidth: '300px', width: '100%' }} color='primary' placeholder='Qidirish...' onChange={(e) => setSearch(e.target.value)} />
+        <TextField defaultValue={query?.search || ''} autoComplete='off' autoFocus size='small' sx={{ maxWidth: '300px', width: '100%' }} color='primary' placeholder='Qidirish...' onChange={(e) => {
+          setSearch(e.target.value)
+          if (e.target.value === '') {
+            push({ pathname, query: { search: '' } })
+          }
+        }} />
         <Button variant='outlined' onClick={() => push({ pathname, query: { search } })}>Qidirish</Button>
       </form>
       <Box

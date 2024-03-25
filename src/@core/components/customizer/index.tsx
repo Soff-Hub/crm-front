@@ -110,9 +110,9 @@ const Customizer = () => {
           }}
         >
           <Typography variant='h6' sx={{ fontWeight: 600, textTransform: 'uppercase' }}>
-            Theme Customizer
+            Mavzu sozlamalari
           </Typography>
-          <Typography sx={{ color: 'text.secondary' }}>Customize & Preview in Real Time</Typography>
+          <Typography sx={{ color: 'text.secondary' }}>O'zingizga mos ko'rinishni tanlang</Typography>
           <IconButton
             onClick={() => setOpen(false)}
             sx={{
@@ -128,39 +128,31 @@ const Customizer = () => {
         </Box>
         <Box>
           <CustomizerSpacing className='customizer-body'>
-            <Typography
-              component='p'
-              variant='caption'
-              sx={{ mb: 4, color: 'text.disabled', textTransform: 'uppercase' }}
-            >
-              Theming
-            </Typography>
-
             {/* Skin */}
             <Box sx={{ mb: 4 }}>
-              <Typography>Skin</Typography>
+              <Typography>Asosiy ko'rinish</Typography>
               <RadioGroup
                 row
                 value={skin}
                 onChange={e => handleChange('skin', e.target.value as Settings['skin'])}
                 sx={{ '& .MuiFormControlLabel-label': { fontSize: '.875rem', color: 'text.secondary' } }}
               >
-                <FormControlLabel value='default' label='Default' control={<Radio />} />
-                <FormControlLabel value='bordered' label='Bordered' control={<Radio />} />
+                <FormControlLabel value='default' label='Soyali' control={<Radio />} />
+                <FormControlLabel value='bordered' label='Chiziqli' control={<Radio />} />
               </RadioGroup>
             </Box>
 
             {/* Mode */}
             <Box sx={{ mb: 4 }}>
-              <Typography>Mode</Typography>
+              <Typography>Rejim</Typography>
               <RadioGroup
                 row
                 value={mode}
                 onChange={e => handleChange('mode', e.target.value as any)}
                 sx={{ '& .MuiFormControlLabel-label': { fontSize: '.875rem', color: 'text.secondary' } }}
               >
-                <FormControlLabel value='light' label='Light' control={<Radio />} />
-                <FormControlLabel value='dark' label='Dark' control={<Radio />} />
+                <FormControlLabel value='light' label="Yorqin" control={<Radio />} />
+                <FormControlLabel value='dark' label="Tungi" control={<Radio />} />
                 {layout === 'horizontal' ? null : (
                   <FormControlLabel value='semi-dark' label='Semi Dark' control={<Radio />} />
                 )}
@@ -169,7 +161,7 @@ const Customizer = () => {
 
             {/* Color Picker */}
             <div>
-              <Typography sx={{ mb: 2.5 }}>Primary Color</Typography>
+              <Typography sx={{ mb: 2.5 }}>Asosiy rang</Typography>
               <Box sx={{ display: 'flex' }}>
                 <ColorBox
                   onClick={() => handleChange('themeColor', 'primary')}
@@ -234,30 +226,23 @@ const Customizer = () => {
           <Divider sx={{ m: '0 !important' }} />
 
           <CustomizerSpacing className='customizer-body'>
-            <Typography
-              component='p'
-              variant='caption'
-              sx={{ mb: 4, color: 'text.disabled', textTransform: 'uppercase' }}
-            >
-              Layout
-            </Typography>
 
             {/* Content Width */}
             <Box sx={{ mb: 4 }}>
-              <Typography>Content Width</Typography>
+              <Typography>Sahifa o'lchami</Typography>
               <RadioGroup
                 row
                 value={contentWidth}
                 onChange={e => handleChange('contentWidth', e.target.value as Settings['contentWidth'])}
                 sx={{ '& .MuiFormControlLabel-label': { fontSize: '.875rem', color: 'text.secondary' } }}
               >
-                <FormControlLabel value='full' label='Full' control={<Radio />} />
-                <FormControlLabel value='boxed' label='Boxed' control={<Radio />} />
+                <FormControlLabel value='full' label="To'liq" control={<Radio />} />
+                <FormControlLabel value='boxed' label='Chegaralangan' control={<Radio />} />
               </RadioGroup>
             </Box>
 
             {/* AppBar */}
-            <Box sx={{ mb: 4 }}>
+            {/* <Box sx={{ mb: 4 }}>
               <Typography>AppBar Type</Typography>
               <RadioGroup
                 row
@@ -271,10 +256,10 @@ const Customizer = () => {
                   <FormControlLabel value='hidden' label='Hidden' control={<Radio />} />
                 )}
               </RadioGroup>
-            </Box>
+            </Box> */}
 
             {/* Footer */}
-            <Box sx={{ mb: 4 }}>
+            {/* <Box sx={{ mb: 4 }}>
               <Typography>Footer Type</Typography>
               <RadioGroup
                 row
@@ -286,21 +271,21 @@ const Customizer = () => {
                 <FormControlLabel value='static' label='Static' control={<Radio />} />
                 <FormControlLabel value='hidden' label='Hidden' control={<Radio />} />
               </RadioGroup>
-            </Box>
+            </Box> */}
 
             {/* AppBar Blur */}
-            <Box sx={{ mb: 4, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            {/* <Box sx={{ mb: 4, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <Typography>AppBar Blur</Typography>
               <Switch
                 name='appBarBlur'
                 checked={appBarBlur}
                 onChange={e => handleChange('appBarBlur', e.target.checked)}
               />
-            </Box>
+            </Box> */}
 
             {/* RTL */}
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <Typography>RTL</Typography>
+              <Typography>O'ngdan Chapga</Typography>
               <Switch
                 name='direction'
                 checked={direction === 'rtl'}
@@ -312,17 +297,10 @@ const Customizer = () => {
           <Divider sx={{ m: '0 !important' }} />
 
           <CustomizerSpacing className='customizer-body'>
-            <Typography
-              component='p'
-              variant='caption'
-              sx={{ mb: 4, color: 'text.disabled', textTransform: 'uppercase' }}
-            >
-              Menu
-            </Typography>
 
             {/* Menu Layout */}
             <Box sx={{ mb: layout === 'horizontal' && appBar === 'hidden' ? {} : 4 }}>
-              <Typography>Menu Layout</Typography>
+              <Typography>Menu ko'rinishi</Typography>
               <RadioGroup
                 row
                 value={layout}
@@ -335,13 +313,13 @@ const Customizer = () => {
                 }}
                 sx={{ '& .MuiFormControlLabel-label': { fontSize: '.875rem', color: 'text.secondary' } }}
               >
-                <FormControlLabel value='vertical' label='Vertical' control={<Radio />} />
-                <FormControlLabel value='horizontal' label='Horizontal' control={<Radio />} />
+                <FormControlLabel value='vertical' label='Vertikal' control={<Radio />} />
+                <FormControlLabel value='horizontal' label='Gorizontal' control={<Radio />} />
               </RadioGroup>
             </Box>
 
             {/* Menu Toggle */}
-            {navHidden || layout === 'horizontal' ? null : (
+            {/* {navHidden || layout === 'horizontal' ? null : (
               <Box sx={{ mb: 4 }}>
                 <Typography>Menu Toggle</Typography>
                 <RadioGroup
@@ -356,10 +334,10 @@ const Customizer = () => {
                   <FormControlLabel value='collapse' label='Collapse' control={<Radio />} />
                 </RadioGroup>
               </Box>
-            )}
+            )} */}
 
             {/* Menu Collapsed */}
-            {navHidden || layout === 'horizontal' ? null : (
+            {/* {navHidden || layout === 'horizontal' ? null : (
               <Box sx={{ mb: 4, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <Typography>Menu Collapsed</Typography>
                 <Switch
@@ -368,12 +346,12 @@ const Customizer = () => {
                   onChange={e => handleChange('navCollapsed', e.target.checked)}
                 />
               </Box>
-            )}
+            )} */}
 
             {/* Menu Hidden */}
             {layout === 'horizontal' && appBar === 'hidden' ? null : (
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <Typography>Menu Hidden</Typography>
+                <Typography>Menu ni yashirish</Typography>
                 <Switch
                   name='navHidden'
                   checked={navHidden}

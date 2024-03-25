@@ -13,6 +13,8 @@ import authConfig from 'src/configs/auth'
 // ** Types
 import { AuthValuesType, RegisterParams, LoginParams, ErrCallbackType, UserDataType } from './types'
 import api from 'src/@core/utils/api'
+import { useDispatch } from 'react-redux'
+import { setCompanyInfo } from 'src/store/apps/user'
 
 // ** Defaults
 const defaultProvider: AuthValuesType = {
@@ -38,6 +40,7 @@ const AuthProvider = ({ children }: Props) => {
 
   // ** Hooks
   const router = useRouter()
+  const dispatch = useDispatch()
 
   useEffect(() => {
     const initAuth = async (): Promise<void> => {
@@ -71,6 +74,9 @@ const AuthProvider = ({ children }: Props) => {
               router.replace('/login')
             }
           })
+
+        const resp = await api.get('common/settings/list/')
+        dispatch(setCompanyInfo(resp.data[0]))
       } else {
         setLoading(false)
       }
@@ -88,6 +94,9 @@ const AuthProvider = ({ children }: Props) => {
           ? window.localStorage.setItem(authConfig.storageTokenKeyName, response.data.tokens.access)
           : null
         const returnUrl = router.query.returnUrl
+
+        const resp = await api.get('common/settings/list/')
+        dispatch(setCompanyInfo(resp.data[0]))
 
         setUser({
           id: 1,

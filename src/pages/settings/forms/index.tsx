@@ -92,7 +92,7 @@ export default function FormsPage() {
 
   async function getDepartments() {
     const resp = await api.get(`leads/department/list/`)
-    setDepartments(resp.data.results);
+    setDepartments(resp.data);
   }
 
 

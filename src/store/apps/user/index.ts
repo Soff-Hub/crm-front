@@ -58,7 +58,14 @@ export const appUsersSlice = createSlice({
     data: [],
     total: null,
     params: {},
-    allData: []
+    allData: [],
+    companyInfo: {
+      id: 1,
+      training_center_name: "StudyCRM",
+      logo: "https://crmapi.soffstudy.uz/media/canter_logo/white.png",
+      work_start_time: "10:00",
+      work_end_time: "22:00"
+    }
   },
   reducers: {
     addUserData: (state, action) => {
@@ -66,6 +73,9 @@ export const appUsersSlice = createSlice({
     },
     addOpenedUser: (state, action) => {
       state.total = action.payload
+    },
+    setCompanyInfo: (state, action) => {
+      state.companyInfo = action.payload
     }
   },
   extraReducers: builder => {
@@ -78,5 +88,5 @@ export const appUsersSlice = createSlice({
   }
 })
 
-export const { addUserData, addOpenedUser } = appUsersSlice.actions
+export const { addUserData, addOpenedUser, setCompanyInfo } = appUsersSlice.actions
 export default appUsersSlice.reducer

@@ -5,6 +5,23 @@ import useResponsive from 'src/@core/hooks/useResponsive'
 import usePayment from 'src/hooks/usePayment'
 import useBranches from 'src/hooks/useBranch'
 import LoadingButton from '@mui/lab/LoadingButton'
+import api from 'src/@core/utils/api'
+import { useDispatch } from 'react-redux'
+import { setCompanyInfo } from 'src/store/apps/user'
+import { useSelector } from 'react-redux'
+import { styled } from '@mui/material/styles';
+
+const VisuallyHiddenInput = styled('input')({
+    clip: 'rect(0 0 0 0)',
+    clipPath: 'inset(50%)',
+    height: 1,
+    overflow: 'hidden',
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    whiteSpace: 'nowrap',
+    width: 1,
+});
 
 export default function AllSettings() {
 
@@ -17,8 +34,12 @@ export default function AllSettings() {
     const [loading, setLoading] = useState<null | 'create' | 'delete'>(null)
 
 
+
     const { getPaymentMethod, paymentMethods, createPaymentMethod, updatePaymentMethod } = usePayment()
     const { getBranches, branches } = useBranches()
+    const dispatch = useDispatch()
+    const { companyInfo } = useSelector((state: any) => state.user)
+
 
 
     const createPaymentType = async () => {
@@ -36,10 +57,33 @@ export default function AllSettings() {
         }
     }
 
+    const getSettings = async () => {
+        try {
+            const resp = await api.get('common/settings/list/')
+            dispatch(setCompanyInfo(resp.data[0]))
+            dispatch
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+    const updateSettings = async (key: any, value: any) => {
+        try {
+            const formData: any = new FormData()
+            formData.append(key, value)
+            const resp = await api.patch('common/settings/update/', formData)
+            dispatch(setCompanyInfo(resp.data))
+            setEditable(null)
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
 
     useEffect(() => {
         getPaymentMethod()
         getBranches()
+        getSettings()
     }, [])
 
     return (
@@ -48,15 +92,39 @@ export default function AllSettings() {
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
                     <Typography sx={{ minWidth: isMobile ? '90px' : '120px', fontSize: isMobile ? '13px' : '16px' }}>Tashkilot nomi:</Typography>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                        <TextField value={'Soff Study'} size='small' placeholder='Tashkilot Nomi' onBlur={(e) => console.log(e.target.value)} />
-                        <IconifyIcon icon={'basil:edit-outline'} style={{ cursor: 'pointer' }} />
+                        {
+                            editable === 'title' ? (
+                                <>
+                                    <TextField size='small' focused defaultValue={companyInfo?.training_center_name} onChange={(e) => setName(e.target.value)} />
+                                    <IconifyIcon icon={'ic:baseline-check'} style={{ cursor: 'pointer' }} onClick={() => {
+                                        updateSettings('training_center_name', name)
+                                    }} />
+                                </>
+                            ) : (
+                                <>
+                                    <TextField value={companyInfo?.training_center_name} size='small' placeholder='Tashkilot Nomi' onBlur={(e) => console.log(e.target.value)} />
+                                    <IconifyIcon icon={'basil:edit-outline'} style={{ cursor: 'pointer' }} onClick={() => setEditable('title')} />
+                                </>
+                            )
+                        }
                     </Box>
                 </Box>
 
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
                     <Typography sx={{ minWidth: isMobile ? '90px' : '120px', fontSize: isMobile ? '13px' : '16px' }}>Logo:</Typography>
-                    <img src='/images/soff-logo.png' width={120} />
-                    <IconifyIcon icon={'basil:edit-outline'} style={{ cursor: 'pointer' }} />
+                    <img src={companyInfo?.logo} width={40} />
+                    <Button
+                        component="label"
+                        role={undefined}
+                        variant="contained"
+                        tabIndex={-1}
+                        startIcon={<IconifyIcon icon={'mynaui:upload'} />}
+                    >
+                        Yangilash
+                        <VisuallyHiddenInput type="file" onChange={(e: any) => {
+                            updateSettings('logo', e.target.files[0])
+                        }} />
+                    </Button>
                 </Box>
 
                 <Box sx={{ display: 'flex', gap: '20px' }}>
@@ -72,7 +140,13 @@ export default function AllSettings() {
                                             <TextField size='small' value={branch.name} />
                                         )
                                     }
-                                    <IconifyIcon icon={'basil:edit-outline'} style={{ cursor: 'pointer' }} onClick={() => setId({ id: branch.id, key: 'branch' })} />
+                                    {
+                                        id?.id === branch.id && id?.key === 'branch' ? (
+                                            <IconifyIcon icon={'ic:baseline-check'} style={{ cursor: 'pointer' }} />
+                                        ) : (
+                                            <IconifyIcon icon={'basil:edit-outline'} style={{ cursor: 'pointer' }} onClick={() => setId({ id: branch.id, key: 'branch' })} />
+                                        )
+                                    }
                                     <IconifyIcon icon={'fluent:delete-20-regular'} style={{ cursor: 'pointer' }} />
                                 </Box>
                             ))
@@ -103,7 +177,13 @@ export default function AllSettings() {
                                             <TextField size='small' value={method.name} onBlur={(e) => console.log(e.target.value)} />
                                         )
                                     }
-                                    <IconifyIcon icon={'basil:edit-outline'} style={{ cursor: 'pointer' }} onClick={() => setId({ id: method.id, key: 'payment-type' })} />
+                                    {
+                                        id?.id === method.id && id?.key === 'payment-type' ? (
+                                            <IconifyIcon icon={'ic:baseline-check'} style={{ cursor: 'pointer' }} onClick={() => setId(null)} />
+                                        ) : (
+                                            <IconifyIcon icon={'basil:edit-outline'} style={{ cursor: 'pointer' }} onClick={() => setId({ id: method.id, key: 'payment-type' })} />
+                                        )
+                                    }
                                     <IconifyIcon icon={'fluent:delete-20-regular'} style={{ cursor: 'pointer' }} onClick={() => setDeleteId({ open: 'payment-type', id: method.id })} />
                                 </Box>
                             ))

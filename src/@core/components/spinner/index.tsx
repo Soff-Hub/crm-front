@@ -1,8 +1,10 @@
 // ** MUI Import
 import Box, { BoxProps } from '@mui/material/Box'
 import CircularProgress from '@mui/material/CircularProgress'
+import { useSelector } from 'react-redux'
 
 const FallbackSpinner = ({ sx }: { sx?: BoxProps['sx'] }) => {
+  const { companyInfo } = useSelector((state: any) => state.user)
 
   return (
     <Box
@@ -15,7 +17,7 @@ const FallbackSpinner = ({ sx }: { sx?: BoxProps['sx'] }) => {
         ...sx
       }}
     >
-      <img src='https://placehold.co/60x30' alt='site logo'/>
+      <img src={companyInfo?.logo} width={40} />
       <CircularProgress disableShrink sx={{ mt: 6 }} />
     </Box>
   )

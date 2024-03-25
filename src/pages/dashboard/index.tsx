@@ -135,7 +135,7 @@ const AppCalendar = () => {
     <>
       {
         stats ? (
-          <Box sx={{ display: 'grid', gap: '10px', mb: 5, gridTemplateColumns: `repeat(${isMobile ? 3 : isTablet ? 4 : 8}, 1fr)` }} >
+          <Box sx={{ display: 'grid', gap: '10px', mb: 5, gridTemplateColumns: `repeat(${isMobile ? 3 : isTablet ? 4 : 6}, 1fr)` }} >
             {
               statsData.map((_, index) => (
                 <Box key={index} className='' sx={{ cursor: 'pointer' }} onClick={() => push(_.link)}>

@@ -15,6 +15,7 @@ import Icon from 'src/@core/components/icon'
 
 // ** Configs
 import themeConfig from 'src/configs/themeConfig'
+import { useSelector } from 'react-redux'
 
 interface Props {
   navHover: boolean
@@ -70,6 +71,7 @@ const VerticalNavHeader = (props: Props) => {
   const theme = useTheme()
   const { mode, direction, navCollapsed } = settings
   const menuCollapsedStyles = navCollapsed && !navHover ? { opacity: 0 } : { opacity: 1 }
+  const { companyInfo } = useSelector((state: any) => state.user)
 
   const svgFillSecondary = () => {
     if (mode === 'semi-dark') {
@@ -128,9 +130,9 @@ const VerticalNavHeader = (props: Props) => {
         userNavMenuBranding(props)
       ) : (
         <StyledLink href='/'>
-          <img src='https://placehold.co/60x30' alt='site-logo'/>
+          <img src={companyInfo?.logo} width={40} />
           <HeaderTitle variant='h6' sx={{ ...menuCollapsedStyles, ...(navCollapsed && !navHover ? {} : { ml: 2 }) }}>
-            {themeConfig.templateName}
+            {companyInfo.training_center_name}
           </HeaderTitle>
         </StyledLink>
       )}

@@ -86,7 +86,7 @@ const restoreSettings = (): Settings | null => {
     const storedData: string | null = window.localStorage.getItem('settings')
 
     if (storedData) {
-      settings = { ...JSON.parse(storedData), ...staticSettings }
+      settings = { ...staticSettings, ...JSON.parse(storedData) }
     } else {
       settings = initialSettings
     }
@@ -101,12 +101,12 @@ const restoreSettings = (): Settings | null => {
 const storeSettings = (settings: Settings) => {
   const initSettings = Object.assign({}, settings)
 
-  delete initSettings.appBar
-  delete initSettings.footer
-  delete initSettings.layout
-  delete initSettings.navHidden
-  delete initSettings.lastLayout
-  delete initSettings.toastPosition
+  // delete initSettings.appBar
+  // delete initSettings.footer
+  // delete initSettings.layout
+  // delete initSettings.navHidden
+  // delete initSettings.lastLayout
+  // delete initSettings.toastPosition
   window.localStorage.setItem('settings', JSON.stringify(initSettings))
 }
 
