@@ -5,6 +5,7 @@ import IconifyIcon from 'src/@core/components/icon';
 import LoadingButton from '@mui/lab/LoadingButton';
 import api from 'src/@core/utils/api';
 import toast from 'react-hot-toast';
+import useResponsive from 'src/@core/hooks/useResponsive';
 
 interface Props {
     title: string
@@ -23,6 +24,7 @@ export default function HomeKanban({ title, items, setOpenItem, id, setOpenLid, 
     const [loading, setLoading] = React.useState<any>(false)
     const [name, setName] = React.useState<any>(title)
     const [nameVal, setNameVal] = React.useState<any>(title)
+    const { isMobile } = useResponsive()
 
     const editSubmit = async () => {
         setLoading(true)
@@ -53,7 +55,7 @@ export default function HomeKanban({ title, items, setOpenItem, id, setOpenLid, 
 
     return (
         <Box sx={{ width: "100%", display: 'flex', flexDirection: 'column', maxWidth: 350, minWidth: '300px' }}>
-            <Box display={"flex"} alignItems={"center"} marginBottom={5}>
+            <Box display={"flex"} alignItems={"center"} marginBottom={5} sx={!isMobile ? { position: 'fixed', bgcolor: '#F7F7F9', width: '100%', maxWidth: 340, minWidth: '290px', p: '10px 5px' } : {}}>
                 <Typography fontSize={22}>{name}</Typography>
                 <IconifyIcon icon={'system-uicons:user-add'} color='orange' onClick={() => setOpenLid(id)} style={{ cursor: 'pointer', marginLeft: 'auto' }} />
                 <IconifyIcon icon={'iconoir:grid-add'} color='orange' onClick={() => setOpenItem(id)} style={{ cursor: 'pointer', margin: '0 10px' }} />
@@ -61,7 +63,7 @@ export default function HomeKanban({ title, items, setOpenItem, id, setOpenLid, 
                 <IconifyIcon icon={'mingcute:delete-line'} color='red' onClick={() => setOpen('delete')} style={{ cursor: 'pointer', fontSize: '20px' }} />
             </Box>
 
-            <Box sx={{ display: 'flex', gap: 5, alignItems: 'flex-start', width: '100%', flexDirection: 'column' }}>
+            <Box sx={{ display: 'flex', gap: 5, alignItems: 'flex-start', width: '100%', flexDirection: 'column', pt: isMobile ? '0px' : '50px' }}>
                 {
                     items.map(lead => (
                         <AccordionCustom reRender={reRender} item={lead} key={lead.id} onView={() => console.log("aa")} />

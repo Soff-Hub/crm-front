@@ -137,24 +137,26 @@ const Lids = () => {
   }, [query?.search])
 
   return user?.role === 'teacher' ? <TeacherProfile /> : (
-    <Box sx={{ maxWidth: '100%', overflowX: 'scroll', padding: '10px' }}>
-      <form style={{ display: 'flex', alignItems: 'center', gap: '5px' }} onSubmit={(e) => {
-        e.preventDefault()
-        push({ pathname, query: { search } })
-      }}>
-        <TextField defaultValue={query?.search || ''} autoComplete='off' autoFocus size='small' sx={{ maxWidth: '300px', width: '100%' }} color='primary' placeholder='Qidirish...' onChange={(e) => {
-          setSearch(e.target.value)
-          if (e.target.value === '') {
-            push({ pathname, query: { search: '' } })
-          }
-        }} />
-        <Button variant='outlined' onClick={() => push({ pathname, query: { search } })}>Qidirish</Button>
-      </form>
+    <Box sx={{ maxWidth: '100%', overflowX: 'scroll', padding: '10px', pt: isMobile ? '0' : '35px' }}>
+      <Box sx={{ position: isMobile ? 'static' : 'fixed', backgroundColor: '#F7F7F9', width: '100%', top: isMobile ? '0' : '127px', p: '10px 0' }}>
+        <form style={{ display: 'flex', alignItems: 'center', gap: '5px' }} onSubmit={(e) => {
+          e.preventDefault()
+          push({ pathname, query: { search } })
+        }}>
+          <TextField defaultValue={query?.search || ''} autoComplete='off' autoFocus size='small' sx={{ maxWidth: '300px', width: '100%' }} color='primary' placeholder='Qidirish...' onChange={(e) => {
+            setSearch(e.target.value)
+            if (e.target.value === '') {
+              push({ pathname, query: { search: '' } })
+            }
+          }} />
+          <Button variant='outlined' onClick={() => push({ pathname, query: { search } })}>Qidirish</Button>
+        </form>
+      </Box>
       <Box
-        padding={'10px 0'}
+        padding={isMobile ? '10px 0' : '0'}
         display={'flex'}
         gap={5}
-        sx={{ minHeight: 600, alignItems: 'flex-start' }}
+        sx={{ minHeight: 600, alignItems: isMobile ? 'center' : 'flex-start' }}
         flexDirection={isMobile ? 'column' : 'row'}
       >
         {

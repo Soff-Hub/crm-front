@@ -146,8 +146,8 @@ export default function RoomsPage() {
 
     async function getUsers() {
         try {
-            const resp = await api.get(ceoConfigs.rooms)
-            setData(resp.data.results)
+            const resp = await api.get('common/weekend/list/')
+            setData(resp.data)
         } catch (err) {
             toast.error('Xatolik yuz berdi!', { position: 'top-center' })
         }
@@ -162,7 +162,7 @@ export default function RoomsPage() {
 
     async function handelCliclPosts(value: any) {
         try {
-            await api.post(ceoConfigs.rooms_posts, value)
+            await api.post('common/weekend/create/', value)
             setOpenAddGroup(false)
             toast.success("Muvaffaqiyatli! qo'shildi", { position: 'top-center' })
             getUsers()
@@ -174,7 +174,7 @@ export default function RoomsPage() {
     // Edit functions
 
     async function handelClickEditCourses(value: any) {
-        await api.patch(`${ceoConfigs.rooms_update}/${dataRowEdit?.id}`, value)
+        await api.patch(`$common/weekend/update/${dataRowEdit?.id}`, value)
         setOpenAddGroupEdit(false)
         getUsers()
     }
@@ -193,7 +193,7 @@ export default function RoomsPage() {
         },
         {
             xs: 2,
-            title: t('izoh'),
+            title: t('Sabab'),
             dataIndex: 'branch',
             render: () => <span>Lorem ipsum dolor sit amet consectetur.</span>
         },
@@ -254,7 +254,7 @@ export default function RoomsPage() {
                     setError={setError}
                     valueTypes='json'
                     onSubmit={handelCliclPosts}
-                    id='posts-courses-id'
+                    id='posts-sASSasAs-id'
                     sx={{
                         padding: '10px 20px',
                         width: '100%',
@@ -270,7 +270,7 @@ export default function RoomsPage() {
                     </FormControl>
 
                     <FormControl fullWidth>
-                        <TextField error={error.description} multiline rows={3} label='* Izoh' size='small' name='description' />
+                        <TextField error={error.description} multiline rows={3} label='* Sabab' size='small' name='description' />
                         <FormHelperText error={error.description}>{error.description?.message}</FormHelperText>
                     </FormControl>
 
@@ -328,7 +328,7 @@ export default function RoomsPage() {
                         </FormControl>
 
                         <FormControl fullWidth>
-                            <TextField error={error.description} multiline rows={3} label='* Izoh' size='small' name='description' />
+                            <TextField error={error.description} multiline rows={3} label='* Sabab' size='small' name='description' />
                             <FormHelperText error={error.description}>{error.description?.message}</FormHelperText>
                         </FormControl>
 
