@@ -4,7 +4,7 @@ import { VerticalNavItemsType } from 'src/@core/layouts/types'
 
 export const TeacherNavigation = (): any => {
   const { t } = useTranslation()
-  
+
   return [
     {
       title: t("Guruhlar"),
@@ -21,7 +21,7 @@ export const TeacherNavigation = (): any => {
 
 const Navigation = (): VerticalNavItemsType => {
   const { t } = useTranslation()
-  
+
   return [
     {
       title: t("Bosh sahifa"),
@@ -103,7 +103,12 @@ const Navigation = (): VerticalNavItemsType => {
           path: '/settings/forms/'
         }
       ]
-    }
+    },
+    {
+      title: t("Moliya"),
+      icon: 'material-symbols-light:finance-mode',
+      path: '/finance'
+    },
   ]
 }
 

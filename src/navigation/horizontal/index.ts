@@ -88,7 +88,12 @@ const Navigation = (): HorizontalNavItemsType => {
           path: '/settings/forms/'
         }
       ]
-    }
+    },
+    {
+      title: t("Moliya"),
+      icon: 'material-symbols-light:finance-mode',
+      path: '/finance'
+    },
   ]
 }
 

@@ -149,7 +149,7 @@ const KanbanItem = (props: KanbarItemProps) => {
     const handleDelete = async () => {
         setLoading(true)
         try {
-            await handleEditLead(id, { first_name: title, phone, department: null })
+            await handleEditLead(id, { first_name: title, phone, is_active: false })
             setLoading(false)
             setDepartment(null)
             setOpen(null)

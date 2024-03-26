@@ -45,7 +45,7 @@ const CardStatsHorizontal = (props: CardStatsHorizontalProps) => {
                 </Typography>
               </Box>
             </Box>
-            <Typography variant='caption'>{title}</Typography>
+            <Typography sx={{ fontSize: '14px' }} variant='caption'>{title}</Typography>
           </Box>
         </Box>
       </CardContent>
