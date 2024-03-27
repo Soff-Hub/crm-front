@@ -16,6 +16,11 @@ import LanguageDropdown from 'src/@core/layouts/components/shared-components/Lan
 //   NotificationsType
 // } from 'src/@core/layouts/components/shared-components/NotificationDropdown'
 import BranchDropdown from 'src/@core/layouts/components/shared-components/BranchDropdown'
+import Clock from 'src/@core/components/clock'
+import { Typography } from '@mui/material'
+import IconifyIcon from 'src/@core/components/icon'
+import { useSelector } from 'react-redux'
+import useResponsive from 'src/@core/hooks/useResponsive'
 
 interface Props {
   hidden: boolean
@@ -73,6 +78,8 @@ interface Props {
 const AppBarContent = (props: Props) => {
   // ** Props
   const { hidden, settings, saveSettings, toggleNavVisibility } = props
+  const { companyInfo } = useSelector((state: any) => state.user)
+  const { isMobile } = useResponsive()
 
 
   return (
@@ -85,6 +92,14 @@ const AppBarContent = (props: Props) => {
         ) : null}
         <BranchDropdown />
       </Box>
+      {!isMobile && <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+        <Clock />
+        <Typography variant='body2'>|</Typography>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+          <IconifyIcon style={{ fontSize: '18px', color: '#40c0e7' }} icon={'la:user-clock'} />
+          <Typography variant='body2'>{`Ish vaqti`} {companyInfo?.work_start_time} - {companyInfo?.work_end_time}</Typography>
+        </Box>
+      </Box>}
       <Box className='actions-right' sx={{ display: 'flex', alignItems: 'center' }}>
         <LanguageDropdown settings={settings} saveSettings={saveSettings} />
         <ModeToggler settings={settings} saveSettings={saveSettings} />

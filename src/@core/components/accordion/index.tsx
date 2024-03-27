@@ -198,7 +198,7 @@ export default function AccordionCustom({ onView, item, reRender }: AccordionPro
             >
                 {
                     query?.is_active !== 'false' ? (
-                        <>
+                        <Box>
                             <MenuItem onClick={() => (getSMSTemps(), setOpenDialog('sms'))} sx={{ '& svg': { mr: 2 } }}>
                                 <IconifyIcon icon='mdi:sms' fontSize={20} />
                                 SMS yuborish
@@ -211,14 +211,12 @@ export default function AccordionCustom({ onView, item, reRender }: AccordionPro
                                 <IconifyIcon icon='mdi:delete' fontSize={20} />
                                 O'chirish
                             </MenuItem>
-                        </>
+                        </Box>
                     ) : (
-                        <>
-                            <MenuItem onClick={() => (getSMSTemps(), setOpenDialog('sms'))} sx={{ '& svg': { mr: 2 } }}>
-                                <IconifyIcon icon='mdi:reload' fontSize={20} />
-                                Tiklash
-                            </MenuItem>
-                        </>
+                        <MenuItem onClick={() => (getSMSTemps(), setOpenDialog('sms'))} sx={{ '& svg': { mr: 2 } }}>
+                            <IconifyIcon icon='mdi:reload' fontSize={20} />
+                            Tiklash
+                        </MenuItem>
                     )
                 }
             </Menu>

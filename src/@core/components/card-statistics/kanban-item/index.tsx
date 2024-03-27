@@ -256,7 +256,7 @@ const KanbanItem = (props: KanbarItemProps) => {
             >
                 {
                     query?.is_active !== 'false' ? (
-                        <>
+                        <Box>
                             <MenuItem onClick={() => setOpen('note')} sx={{ '& svg': { mr: 2 } }}>
                                 <IconifyIcon icon='ph:flag-light' fontSize={20} />
                                 Yangi eslatma
@@ -277,7 +277,7 @@ const KanbanItem = (props: KanbarItemProps) => {
                                 <IconifyIcon icon='mdi:delete' fontSize={20} />
                                 O'chirish
                             </MenuItem>
-                        </>
+                        </Box>
                     ) : (
                         <MenuItem onClick={() => null} sx={{ '& svg': { mr: 2 } }}>
                             <IconifyIcon icon='mdi:reload' fontSize={20} />

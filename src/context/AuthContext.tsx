@@ -15,6 +15,8 @@ import { AuthValuesType, RegisterParams, LoginParams, ErrCallbackType, UserDataT
 import api from 'src/@core/utils/api'
 import { useDispatch } from 'react-redux'
 import { setCompanyInfo } from 'src/store/apps/user'
+import { useTranslation } from 'react-i18next'
+import { useSettings } from 'src/@core/hooks/useSettings'
 
 // ** Defaults
 const defaultProvider: AuthValuesType = {
@@ -37,6 +39,8 @@ const AuthProvider = ({ children }: Props) => {
   // ** States
   const [user, setUser] = useState<UserDataType | null>(defaultProvider.user)
   const [loading, setLoading] = useState<boolean>(defaultProvider.loading)
+  const { i18n } = useTranslation()
+  // const { settings } = useSettings()
 
   // ** Hooks
   const router = useRouter()
@@ -46,6 +50,11 @@ const AuthProvider = ({ children }: Props) => {
     const initAuth = async (): Promise<void> => {
       const storedToken = window.localStorage.getItem(authConfig.storageTokenKeyName)!
       if (storedToken) {
+
+        const settings: any = window.localStorage.getItem('settings')
+        i18n.changeLanguage(JSON.parse(settings).locale)
+
+
         setLoading(true)
         await api
           .get(authConfig.meEndpoint, {

@@ -75,7 +75,11 @@ export const appUsersSlice = createSlice({
       state.total = action.payload
     },
     setCompanyInfo: (state, action) => {
-      state.companyInfo = action.payload
+      state.companyInfo = {
+        ...action.payload,
+        work_start_time: `${action.payload.work_start_time.split(':')?.[0]}:${action.payload.work_start_time.split(':')?.[1]}`,
+        work_end_time: `${action.payload.work_end_time.split(':')?.[0]}:${action.payload.work_end_time.split(':')?.[1]}`
+      }
     }
   },
   extraReducers: builder => {

@@ -110,7 +110,7 @@ export default function AllSettings() {
 
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
                     <Typography sx={{ minWidth: isMobile ? '90px' : '120px', fontSize: isMobile ? '13px' : '16px' }}>Logo:</Typography>
-                    <img src={companyInfo?.logo} height={40} />
+                    <img src={companyInfo?.logo} height={35} />
                     <Button
                         component="label"
                         role={undefined}
@@ -214,7 +214,7 @@ export default function AllSettings() {
                                         defaultValue={companyInfo?.work_start_time}
                                         onChange={(e) => setName(e.target.value)}
                                         onBlur={() => {
-                                            updateSettings('work_end_time', name)
+                                            updateSettings('work_start_time', name)
                                         }}
                                     />
                                     <IconifyIcon icon={'ic:baseline-check'} style={{ cursor: 'pointer' }} onClick={() => {
@@ -223,7 +223,7 @@ export default function AllSettings() {
                                 </>
                             ) : (
                                 <>
-                                    <TextField type='text' value={`${companyInfo?.work_start_time.split(':')?.[0]}:${companyInfo?.work_start_time.split(':')?.[1]}`} size='small' placeholder='Boshlanish vaqti' onBlur={(e) => console.log(e.target.value)} />
+                                    <TextField type='text' value={`${companyInfo?.work_start_time}`} size='small' placeholder='Boshlanish vaqti' onBlur={(e) => console.log(e.target.value)} />
                                     <IconifyIcon icon={'basil:edit-outline'} style={{ cursor: 'pointer' }} onClick={() => setEditable('start-time')} />
                                 </>
                             )
@@ -252,7 +252,7 @@ export default function AllSettings() {
                                 </>
                             ) : (
                                 <>
-                                    <TextField type='text' value={`${companyInfo?.work_end_time.split(':')?.[0]}:${companyInfo?.work_end_time.split(':')?.[1]}`} size='small' placeholder='Boshlanish vaqti' onBlur={(e) => console.log(e.target.value)} />
+                                    <TextField type='text' value={`${companyInfo?.work_end_time}`} size='small' placeholder='Boshlanish vaqti' onBlur={(e) => console.log(e.target.value)} />
                                     <IconifyIcon icon={'basil:edit-outline'} style={{ cursor: 'pointer' }} onClick={() => setEditable('end-time')} />
                                 </>
                             )

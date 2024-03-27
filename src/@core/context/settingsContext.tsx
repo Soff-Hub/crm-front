@@ -25,6 +25,7 @@ export type Settings = {
   lastLayout?: 'vertical' | 'horizontal'
   verticalNavToggleType: VerticalNavToggle
   toastPosition?: 'top-left' | 'top-center' | 'top-right' | 'bottom-left' | 'bottom-center' | 'bottom-right',
+  locale?: 'uz' | 'ru' | 'en'
 }
 
 export type PageSpecificSettings = {
@@ -41,7 +42,7 @@ export type PageSpecificSettings = {
   layout?: 'vertical' | 'horizontal'
   lastLayout?: 'vertical' | 'horizontal'
   verticalNavToggleType?: VerticalNavToggle
-  toastPosition?: 'top-left' | 'top-center' | 'top-right' | 'bottom-left' | 'bottom-center' | 'bottom-right'
+  toastPosition?: 'top-left' | 'top-center' | 'top-right' | 'bottom-left' | 'bottom-center' | 'bottom-right',
 }
 export type SettingsContextValue = {
   settings: Settings
@@ -68,6 +69,7 @@ const initialSettings: Settings = {
   toastPosition: themeConfig.toastPosition,
   verticalNavToggleType: themeConfig.verticalNavToggleType,
   appBar: themeConfig.layout === 'horizontal' && themeConfig.appBar === 'hidden' ? 'fixed' : themeConfig.appBar,
+  locale: 'uz'
 }
 
 const staticSettings = {
@@ -76,7 +78,7 @@ const staticSettings = {
   layout: initialSettings.layout,
   navHidden: initialSettings.navHidden,
   lastLayout: initialSettings.lastLayout,
-  toastPosition: initialSettings.toastPosition
+  toastPosition: initialSettings.toastPosition,
 }
 
 const restoreSettings = (): Settings | null => {

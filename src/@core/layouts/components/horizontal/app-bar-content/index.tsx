@@ -12,6 +12,8 @@ import { LayoutProps } from 'src/@core/layouts/types'
 // ** Theme Config Import
 import themeConfig from 'src/configs/themeConfig'
 import { useSelector } from 'react-redux'
+import Clock from 'src/@core/components/clock'
+import IconifyIcon from 'src/@core/components/icon'
 
 interface Props {
   hidden: LayoutProps['hidden']
@@ -42,12 +44,20 @@ const AppBarContent = (props: Props) => {
         userAppBarBranding(props)
       ) : (
         <StyledLink href='/'>
-          <img src={companyInfo?.logo} height={40} />
+          <img src={companyInfo?.logo} height={35} />
           <Typography variant='h6' sx={{ ml: 2, fontWeight: 700, lineHeight: 1.2 }}>
             {companyInfo.training_center_name}
           </Typography>
         </StyledLink>
       )}
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+        <Clock />
+        <Typography variant='body2'>|</Typography>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+          <IconifyIcon style={{ fontSize: '18px', color: '#40c0e7' }} icon={'la:user-clock'} />
+          <Typography variant='body2'>{`Ish vaqti`} {companyInfo?.work_start_time} - {companyInfo?.work_end_time}</Typography>
+        </Box>
+      </Box>
       {userAppBarContent ? userAppBarContent(props) : null}
     </Box>
   )

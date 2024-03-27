@@ -24,11 +24,12 @@ const LanguageDropdown = ({ settings, saveSettings }: Props) => {
 
   const handleLangItemClick = (lang: 'uz' | 'ru' | 'en') => {
     i18n.changeLanguage(lang)
+    saveSettings({ ...settings, locale: lang })
   }
 
   return (
     <OptionsMenu
-      icon={<Icon icon='mdi:translate' />}
+      icon={<Icon icon={`flagpack:${i18n.language}`} />}
       menuProps={{ sx: { '& .MuiMenu-paper': { mt: 4, minWidth: 130 } } }}
       iconButtonProps={{ color: 'inherit', sx: { ...(layout === 'vertical' ? { mr: 0.75 } : { mx: 0.75 }) } }}
       options={[
@@ -39,7 +40,6 @@ const LanguageDropdown = ({ settings, saveSettings }: Props) => {
             selected: i18n.language === 'uz',
             onClick: () => {
               handleLangItemClick('uz')
-              saveSettings({ ...settings, direction: 'ltr' })
             }
           }
         },
@@ -50,7 +50,6 @@ const LanguageDropdown = ({ settings, saveSettings }: Props) => {
             selected: i18n.language === 'ru',
             onClick: () => {
               handleLangItemClick('ru')
-              saveSettings({ ...settings, direction: 'ltr' })
             }
           }
         }

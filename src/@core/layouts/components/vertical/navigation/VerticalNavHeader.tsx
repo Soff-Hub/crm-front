@@ -16,6 +16,9 @@ import Icon from 'src/@core/components/icon'
 // ** Configs
 import themeConfig from 'src/configs/themeConfig'
 import { useSelector } from 'react-redux'
+import Clock from 'src/@core/components/clock'
+import IconifyIcon from 'src/@core/components/icon'
+import useResponsive from 'src/@core/hooks/useResponsive'
 
 interface Props {
   navHover: boolean
@@ -72,6 +75,7 @@ const VerticalNavHeader = (props: Props) => {
   const { mode, direction, navCollapsed } = settings
   const menuCollapsedStyles = navCollapsed && !navHover ? { opacity: 0 } : { opacity: 1 }
   const { companyInfo } = useSelector((state: any) => state.user)
+  const { isMobile } = useResponsive()
 
   const svgFillSecondary = () => {
     if (mode === 'semi-dark') {
@@ -129,12 +133,20 @@ const VerticalNavHeader = (props: Props) => {
       {userNavMenuBranding ? (
         userNavMenuBranding(props)
       ) : (
-        <StyledLink href='/'>
-          <img src={companyInfo?.logo} height={40} />
-          <HeaderTitle variant='h6' sx={{ ...menuCollapsedStyles, ...(navCollapsed && !navHover ? {} : { ml: 2 }) }}>
-            {companyInfo.training_center_name}
-          </HeaderTitle>
-        </StyledLink>
+        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+          <StyledLink href='/' sx={{ marginBottom: isMobile ? '8px' : 0 }}>
+            <img src={companyInfo?.logo} height={isMobile ? 28 : 35} />
+            <HeaderTitle variant='h6' sx={{ ...menuCollapsedStyles, ...(navCollapsed && !navHover ? {} : { ml: 2 }) }}>
+              {companyInfo.training_center_name}
+            </HeaderTitle>
+          </StyledLink>
+          {
+            isMobile && <Box sx={{ display: 'flex', alignItems: 'center', gap: '5px', pl: '8px' }}>
+              <IconifyIcon style={{ fontSize: '16px', color: '#40c0e7' }} icon={'la:user-clock'} />
+              <Typography fontSize={'13px'} variant='body2'>{`Ish vaqti`} {companyInfo?.work_start_time} - {companyInfo?.work_end_time}</Typography>
+            </Box>
+          }
+        </Box>
       )}
 
       {hidden ? (
