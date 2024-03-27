@@ -29,7 +29,7 @@ const LanguageDropdown = ({ settings, saveSettings }: Props) => {
 
   return (
     <OptionsMenu
-      icon={<Icon icon={`flagpack:${i18n.language}`} />}
+      icon={<Icon icon={`circle-flags:${i18n.language}`} />}
       menuProps={{ sx: { '& .MuiMenu-paper': { mt: 4, minWidth: 130 } } }}
       iconButtonProps={{ color: 'inherit', sx: { ...(layout === 'vertical' ? { mr: 0.75 } : { mx: 0.75 }) } }}
       options={[

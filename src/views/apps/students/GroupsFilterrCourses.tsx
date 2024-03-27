@@ -38,7 +38,7 @@ export const GroupsFilterrCourses = ({ isMobile }: GroupsFilterProps) => {
     };
 
     const CustomInput = forwardRef((props: PickerProps, ref) => {
-        const startDate = format(props.start, 'MM/dd/yyyy');
+        const startDate = format(props?.start || new Date(), 'MM/dd/yyyy');
         const endDate = props.end !== null ? format(props.end, 'MM/dd/yyyy') : '';
 
         const value = `${startDate}${endDate !== '' ? '-' + endDate : ''}`;
