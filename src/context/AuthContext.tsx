@@ -52,7 +52,7 @@ const AuthProvider = ({ children }: Props) => {
       if (storedToken) {
 
         const settings: any = window.localStorage.getItem('settings')
-        i18n.changeLanguage(JSON.parse(settings).locale)
+        i18n.changeLanguage(JSON.parse(settings)?.locale || 'uz')
 
 
         setLoading(true)
@@ -88,6 +88,7 @@ const AuthProvider = ({ children }: Props) => {
         dispatch(setCompanyInfo(resp.data[0]))
       } else {
         setLoading(false)
+        window.localStorage.clear()
       }
     }
 
@@ -115,7 +116,11 @@ const AuthProvider = ({ children }: Props) => {
           password: 'null',
           avatar: response.data.image
         })
+
         !params.rememberMe ? window.localStorage.setItem('userData', JSON.stringify({ ...response.data, role: 'admin', tokens: null })) : null
+
+        const settings: any = window.localStorage.getItem('settings')
+        i18n.changeLanguage(JSON.parse(settings)?.locale || 'uz')
 
         const redirectURL = returnUrl && returnUrl !== '/' ? returnUrl : '/'
 
