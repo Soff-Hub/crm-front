@@ -1,6 +1,6 @@
 // ** MUI Imports
 import LoadingButton from '@mui/lab/LoadingButton'
-import { Box, Button, CircularProgress, Dialog, DialogContent, DialogTitle, FormControl, FormHelperText, IconButton, InputLabel, MenuItem, Select, TextField } from '@mui/material'
+import { Box, Button, CircularProgress, Dialog, DialogContent, DialogTitle, FormControl, FormHelperText, IconButton, InputLabel, MenuItem, Select, Switch, TextField } from '@mui/material'
 import Typography from '@mui/material/Typography'
 import { useRouter } from 'next/router'
 import { useContext, useEffect, useState } from 'react'
@@ -40,9 +40,9 @@ const Lids = () => {
 
   const getLeads = async () => {
     try {
-      const resp = await api.get(`leads/department/list/?search=${query?.search || ''}`)
+      const resp = await api.get(`leads/department/list/?search=${query?.search || ''}&is_active=${query?.is_active === undefined ? true : query.is_active}`)
       const searched = resp.data.map((el: any) => ({ ...el, children: el.children.filter((item: any) => item.student_count > 0) }))
-      if (!query?.search || query?.search === '') {
+      if ((!query?.search || query?.search === '') && query?.is_active !== 'false') {
         dispatch(addUserData(resp.data))
         setLeadData(resp.data)
       } else {
@@ -56,7 +56,7 @@ const Lids = () => {
 
 
   const getSources = async () => {
-    const resp = await api.get('leads/source')
+    const resp = await api.get('leads/source/')
     if (resp?.data) {
       setSourceData(resp.data.results);
     }
@@ -134,26 +134,33 @@ const Lids = () => {
 
   useEffect(() => {
     getLeads()
-  }, [query?.search])
+  }, [query])
 
   return user?.role === 'teacher' ? <TeacherProfile /> : (
-    <Box sx={{ maxWidth: '100%', overflowX: 'scroll', padding: '10px', pt: isMobile ? '0' : '35px' }}>
-      <Box sx={{ position: isMobile ? 'static' : 'fixed', backgroundColor: '#F7F7F9', width: '100%', top: isMobile ? '0' : '127px', p: '10px 0' }}>
+    <Box sx={{ maxWidth: '100%', overflowX: 'scroll', padding: '10px', pt: 0 }}>
+      <Box sx={{ backgroundColor: '#F7F7F9', width: '100%', p: '10px 0' }}>
         <form style={{ display: 'flex', alignItems: 'center', gap: '5px' }} onSubmit={(e) => {
           e.preventDefault()
-          push({ pathname, query: { search } })
+          push({ pathname, query: { ...query, search: '' } })
         }}>
           <TextField defaultValue={query?.search || ''} autoComplete='off' autoFocus size='small' sx={{ maxWidth: '300px', width: '100%' }} color='primary' placeholder='Qidirish...' onChange={(e) => {
             setSearch(e.target.value)
             if (e.target.value === '') {
-              push({ pathname, query: { search: '' } })
+              push({ pathname, query: { ...query, search: '' } })
             }
           }} />
           <Button variant='outlined' onClick={() => push({ pathname, query: { search } })}>Qidirish</Button>
+          <label>
+            <Switch checked={query?.is_active === 'false'} onChange={(e) => {
+              push({ pathname, query: { search, is_active: query?.is_active === undefined || query?.is_active === 'true' ? false : true } })
+              console.log(e.target.value)
+            }} />
+            Arxiv
+          </label>
         </form>
       </Box>
       <Box
-        padding={isMobile ? '10px 0' : '0'}
+        padding={'10px 0'}
         display={'flex'}
         gap={5}
         sx={{ minHeight: 600, alignItems: isMobile ? 'center' : 'flex-start' }}

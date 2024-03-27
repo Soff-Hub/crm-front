@@ -57,7 +57,7 @@ export default function AccordionCustom({ onView, item, reRender }: AccordionPro
         if (isLoad) setOpen(!open)
         setLoading(true)
         try {
-            const resp = await api.get(`leads/department-user-list/${item.id}/?search=${query?.search || ''}`)
+            const resp = await api.get(`leads/department-user-list/${item.id}/?is_active=${query?.is_active === undefined ? true : query.is_active}`)
             setLeadData(resp.data)
             setCount(resp.data.length)
             setLoading(false)
@@ -196,18 +196,31 @@ export default function AccordionCustom({ onView, item, reRender }: AccordionPro
                 }}
                 PaperProps={{ style: { minWidth: '8rem' } }}
             >
-                <MenuItem onClick={() => (getSMSTemps(), setOpenDialog('sms'))} sx={{ '& svg': { mr: 2 } }}>
-                    <IconifyIcon icon='mdi:sms' fontSize={20} />
-                    SMS yuborish
-                </MenuItem>
-                <MenuItem onClick={() => setOpenDialog('edit')} sx={{ '& svg': { mr: 2 } }}>
-                    <IconifyIcon icon='mdi:edit' fontSize={20} />
-                    Tahrirlash
-                </MenuItem>
-                <MenuItem onClick={() => setOpenDialog('delete')} sx={{ '& svg': { mr: 2 } }}>
-                    <IconifyIcon icon='mdi:delete' fontSize={20} />
-                    O'chirish
-                </MenuItem>
+                {
+                    query?.is_active !== 'false' ? (
+                        <>
+                            <MenuItem onClick={() => (getSMSTemps(), setOpenDialog('sms'))} sx={{ '& svg': { mr: 2 } }}>
+                                <IconifyIcon icon='mdi:sms' fontSize={20} />
+                                SMS yuborish
+                            </MenuItem>
+                            <MenuItem onClick={() => setOpenDialog('edit')} sx={{ '& svg': { mr: 2 } }}>
+                                <IconifyIcon icon='mdi:edit' fontSize={20} />
+                                Tahrirlash
+                            </MenuItem>
+                            <MenuItem onClick={() => setOpenDialog('delete')} sx={{ '& svg': { mr: 2 } }}>
+                                <IconifyIcon icon='mdi:delete' fontSize={20} />
+                                O'chirish
+                            </MenuItem>
+                        </>
+                    ) : (
+                        <>
+                            <MenuItem onClick={() => (getSMSTemps(), setOpenDialog('sms'))} sx={{ '& svg': { mr: 2 } }}>
+                                <IconifyIcon icon='mdi:reload' fontSize={20} />
+                                Tiklash
+                            </MenuItem>
+                        </>
+                    )
+                }
             </Menu>
 
             {/* EDIT Item*/}

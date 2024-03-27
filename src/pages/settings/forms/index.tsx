@@ -97,7 +97,7 @@ export default function FormsPage() {
 
 
   const getSources = async () => {
-    const resp = await api.get('leads/source')
+    const resp = await api.get('leads/source/')
     if (resp?.data) {
       setSourceData(resp.data.results);
     }

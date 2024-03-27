@@ -46,6 +46,7 @@ import { useDispatch } from 'react-redux'
 import { addOpenedUser } from 'src/store/apps/user'
 import Status from '../../status'
 import useSMS from 'src/hooks/useSMS'
+import { useRouter } from 'next/router'
 
 // ** Styled Avatar component
 const Avatar = styled(CustomAvatar)<AvatarProps>(({ theme }) => ({
@@ -70,6 +71,7 @@ const KanbanItem = (props: KanbarItemProps) => {
     const { total } = useSelector((state: any) => state.user)
     const [sms, setSMS] = useState<any>("")
     const { smsTemps, getSMSTemps } = useSMS()
+    const { query } = useRouter()
 
     const dispatch = useDispatch()
 
@@ -252,26 +254,37 @@ const KanbanItem = (props: KanbarItemProps) => {
                 }}
                 PaperProps={{ style: { minWidth: '8rem' } }}
             >
-                <MenuItem onClick={() => setOpen('note')} sx={{ '& svg': { mr: 2 } }}>
-                    <IconifyIcon icon='ph:flag-light' fontSize={20} />
-                    Yangi eslatma
-                </MenuItem>
-                <MenuItem onClick={() => (getSMSTemps(), setOpen('sms'))} sx={{ '& svg': { mr: 2 } }}>
-                    <IconifyIcon icon='mdi:sms' fontSize={20} />
-                    SMS yuborish
-                </MenuItem>
-                <MenuItem onClick={() => setOpen('merge-to')} sx={{ '& svg': { mr: 2 } }}>
-                    <IconifyIcon icon='subway:round-arrow-2' fontSize={17} />
-                    Boshqa bo'limga
-                </MenuItem>
-                <MenuItem onClick={() => setOpen('edit')} sx={{ '& svg': { mr: 2 } }}>
-                    <IconifyIcon icon='mdi:edit' fontSize={20} />
-                    Tahrirlash
-                </MenuItem>
-                <MenuItem onClick={() => setOpen('delete')} sx={{ '& svg': { mr: 2 } }}>
-                    <IconifyIcon icon='mdi:delete' fontSize={20} />
-                    O'chirish
-                </MenuItem>
+                {
+                    query?.is_active !== 'false' ? (
+                        <>
+                            <MenuItem onClick={() => setOpen('note')} sx={{ '& svg': { mr: 2 } }}>
+                                <IconifyIcon icon='ph:flag-light' fontSize={20} />
+                                Yangi eslatma
+                            </MenuItem>
+                            <MenuItem onClick={() => (getSMSTemps(), setOpen('sms'))} sx={{ '& svg': { mr: 2 } }}>
+                                <IconifyIcon icon='mdi:sms' fontSize={20} />
+                                SMS yuborish
+                            </MenuItem>
+                            <MenuItem onClick={() => setOpen('merge-to')} sx={{ '& svg': { mr: 2 } }}>
+                                <IconifyIcon icon='subway:round-arrow-2' fontSize={17} />
+                                Boshqa bo'limga
+                            </MenuItem>
+                            <MenuItem onClick={() => setOpen('edit')} sx={{ '& svg': { mr: 2 } }}>
+                                <IconifyIcon icon='mdi:edit' fontSize={20} />
+                                Tahrirlash
+                            </MenuItem>
+                            <MenuItem onClick={() => setOpen('delete')} sx={{ '& svg': { mr: 2 } }}>
+                                <IconifyIcon icon='mdi:delete' fontSize={20} />
+                                O'chirish
+                            </MenuItem>
+                        </>
+                    ) : (
+                        <MenuItem onClick={() => null} sx={{ '& svg': { mr: 2 } }}>
+                            <IconifyIcon icon='mdi:reload' fontSize={20} />
+                            Tiklash
+                        </MenuItem>
+                    )
+                }
             </Menu>
 
             <Dialog open={open === 'edit'} onClose={() => setOpen(null)}>

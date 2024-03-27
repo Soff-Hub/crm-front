@@ -6,6 +6,7 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import api from 'src/@core/utils/api';
 import toast from 'react-hot-toast';
 import useResponsive from 'src/@core/hooks/useResponsive';
+import { useRouter } from 'next/router';
 
 interface Props {
     title: string
@@ -25,6 +26,7 @@ export default function HomeKanban({ title, items, setOpenItem, id, setOpenLid, 
     const [name, setName] = React.useState<any>(title)
     const [nameVal, setNameVal] = React.useState<any>(title)
     const { isMobile } = useResponsive()
+    const { query } = useRouter()
 
     const editSubmit = async () => {
         setLoading(true)
@@ -55,15 +57,19 @@ export default function HomeKanban({ title, items, setOpenItem, id, setOpenLid, 
 
     return (
         <Box sx={{ width: "100%", display: 'flex', flexDirection: 'column', maxWidth: 350, minWidth: '300px' }}>
-            <Box display={"flex"} alignItems={"center"} marginBottom={5} sx={!isMobile ? { position: 'fixed', bgcolor: '#F7F7F9', width: '100%', maxWidth: 340, minWidth: '290px', p: '10px 5px' } : {}}>
+            <Box display={"flex"} alignItems={"center"} marginBottom={5} >
                 <Typography fontSize={22}>{name}</Typography>
-                <IconifyIcon icon={'system-uicons:user-add'} color='orange' onClick={() => setOpenLid(id)} style={{ cursor: 'pointer', marginLeft: 'auto' }} />
-                <IconifyIcon icon={'iconoir:grid-add'} color='orange' onClick={() => setOpenItem(id)} style={{ cursor: 'pointer', margin: '0 10px' }} />
-                <IconifyIcon icon={'mingcute:edit-line'} color='orange' onClick={() => setOpen('edit')} style={{ cursor: 'pointer', fontSize: '20px', marginRight: '5px' }} />
-                <IconifyIcon icon={'mingcute:delete-line'} color='red' onClick={() => setOpen('delete')} style={{ cursor: 'pointer', fontSize: '20px' }} />
+                {query?.is_active !== 'false' ? (
+                    <>
+                        <IconifyIcon icon={'system-uicons:user-add'} color='orange' onClick={() => setOpenLid(id)} style={{ cursor: 'pointer', marginLeft: 'auto' }} />
+                        <IconifyIcon icon={'iconoir:grid-add'} color='orange' onClick={() => setOpenItem(id)} style={{ cursor: 'pointer', margin: '0 10px' }} />
+                        <IconifyIcon icon={'mingcute:edit-line'} color='orange' onClick={() => setOpen('edit')} style={{ cursor: 'pointer', fontSize: '20px', marginRight: '5px' }} />
+                        <IconifyIcon icon={'mingcute:delete-line'} color='red' onClick={() => setOpen('delete')} style={{ cursor: 'pointer', fontSize: '20px' }} />
+                    </>
+                ) : ''}
             </Box>
 
-            <Box sx={{ display: 'flex', gap: 5, alignItems: 'flex-start', width: '100%', flexDirection: 'column', pt: isMobile ? '0px' : '50px' }}>
+            <Box sx={{ display: 'flex', gap: 5, alignItems: 'flex-start', width: '100%', flexDirection: 'column', pt: 0 }}>
                 {
                     items.map(lead => (
                         <AccordionCustom reRender={reRender} item={lead} key={lead.id} onView={() => console.log("aa")} />
