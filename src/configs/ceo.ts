@@ -28,7 +28,7 @@ const ceoConfigs = {
     merge_student: 'common/group-student-create/',
     group_short_list: 'common/group-check-list/?branch=',
 
-    students: 'auth/student/list',
+    students: 'auth/student/list/',
     students_detail: 'auth/student/detail/',
     students_update: 'auth/student/update/',
     students_create: 'auth/student-create/',

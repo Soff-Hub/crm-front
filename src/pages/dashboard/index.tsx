@@ -34,6 +34,7 @@ import generateTimeSlots from 'src/@core/utils/generate-time-slots'
 import { lessonData } from 'src/@core/utils/db'
 import { TranslateWeekName } from '../groups'
 import { hourFormatter } from 'src/@core/utils/hourFormatter'
+import { useSelector } from 'react-redux'
 
 const statsData: {
   icon: string
@@ -86,8 +87,7 @@ const statsData: {
     },
   ]
 
-const startTime = '09:00';
-const endTime = '22:01';
+
 
 
 const AppCalendar = () => {
@@ -103,6 +103,10 @@ const AppCalendar = () => {
   const [open, setOpen] = useState<null | 'week'>(null)
   const [weeks, setWeeks] = useState<any>(query?.weeks ? (typeof query.weeks === 'string' ? query.weeks.split(',') : query.weeks) : currenWeek === 'mon' || currenWeek === 'wed' || currenWeek === 'fri' ? ['monday', 'wednesday', 'friday'] : ['tuesday', 'thursday', 'saturday']);
 
+  const { companyInfo } = useSelector((state: any) => state.user)
+  const startTime = companyInfo?.work_start_time
+  const endTime = companyInfo?.work_end_time
+  
 
   // ** Vars
   const { skin } = settings
@@ -203,7 +207,7 @@ const AppCalendar = () => {
                   </td>
                   <td>
                     <Box sx={{ display: 'flex', }}>
-                      {generateTimeSlots(startTime, endTime).map((el: string) => <Box sx={{ width: '50px', height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px' }}>{el}</Box>)}
+                      {generateTimeSlots(startTime, endTime).map((el: string) => <Box key={el} sx={{ width: '50px', height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px' }}>{el}</Box>)}
                     </Box>
                   </td>
                 </tr>
@@ -215,10 +219,10 @@ const AppCalendar = () => {
                       </td>
                       <td>
                         <Box sx={{ display: 'flex', position: 'relative', marginLeft: '25px' }}>
-                          {generateTimeSlots(startTime, endTime).map((el: string) => <Box sx={{ width: '50px', height: '45px', borderLeft: '1px solid #c3cccc', display: 'flex', alignItems: 'center', justifyContent: 'center' }}></Box>)}
+                          {generateTimeSlots(startTime, endTime).map((el: string) => <Box key={el} sx={{ width: '50px', height: '45px', borderLeft: '1px solid #c3cccc', display: 'flex', alignItems: 'center', justifyContent: 'center' }}></Box>)}
                           {
                             lesson.lessons.map((item: any) => (
-                              <Box sx={{ width: `${generateTimeSlots(item.start_at, item.end_at).length * 50}px`, height: '45px', position: 'absolute', padding: '5px', left: `${generateTimeSlots(startTime, endTime).findIndex(el => el === generateTimeSlots(item.start_at, item.end_at)[0]) * 50}px` }}>
+                              <Box key={item.id} sx={{ width: `${generateTimeSlots(item.start_at, item.end_at).length * 50}px`, height: '45px', position: 'absolute', padding: '5px', left: `${generateTimeSlots(startTime, endTime).findIndex(el => el === generateTimeSlots(item.start_at, item.end_at)[0]) * 50}px` }}>
                                 <Box sx={{ borderRadius: '8px', bgcolor: 'rgba(255, 165, 0, 0.8)', width: '100%', height: '100%', cursor: 'pointer', padding: '2px 6px', overflow: 'hidden' }}>
                                   <Typography sx={{ color: 'black', fontSize: '10px' }}>{hourFormatter(item.start_at)} - {hourFormatter(item.end_at)} / {item.name}</Typography>
                                   <Typography sx={{ color: 'black', fontSize: '10px' }}>{item.teacher_name}</Typography>

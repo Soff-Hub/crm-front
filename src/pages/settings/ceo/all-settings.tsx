@@ -26,7 +26,7 @@ const VisuallyHiddenInput = styled('input')({
 export default function AllSettings() {
 
     const { isMobile } = useResponsive()
-    const [editable, setEditable] = useState<null | 'title' | 'logo'>(null)
+    const [editable, setEditable] = useState<null | 'title' | 'logo' | 'start-time' | 'end-time'>(null)
     const [createble, setCreatable] = useState<null | 'branch' | 'payment-type'>(null)
     const [id, setId] = useState<null | { key: 'branch' | 'payment-type', id: any }>(null)
     const [deleteId, setDeleteId] = useState<null | { open: null | 'payment-type', id: any }>(null)
@@ -57,15 +57,14 @@ export default function AllSettings() {
         }
     }
 
-    const getSettings = async () => {
-        try {
-            const resp = await api.get('common/settings/list/')
-            dispatch(setCompanyInfo(resp.data[0]))
-            dispatch
-        } catch (err) {
-            console.log(err)
-        }
-    }
+    // const getSettings = async () => {
+    //     try {
+    //         const resp = await api.get('common/settings/list/')
+    //         dispatch(setCompanyInfo(resp.data[0]))
+    //     } catch (err) {
+    //         console.log(err)
+    //     }
+    // }
 
     const updateSettings = async (key: any, value: any) => {
         try {
@@ -83,7 +82,6 @@ export default function AllSettings() {
     useEffect(() => {
         getPaymentMethod()
         getBranches()
-        getSettings()
     }, [])
 
     return (
@@ -117,6 +115,7 @@ export default function AllSettings() {
                         component="label"
                         role={undefined}
                         variant="contained"
+                        size='small'
                         tabIndex={-1}
                         startIcon={<IconifyIcon icon={'mynaui:upload'} />}
                     >
@@ -201,7 +200,66 @@ export default function AllSettings() {
                     </Box>
                 </Box>
             </Box>
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: '15px', width: '100%' }}></Box>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: '15px', width: '100%' }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+                    <Typography sx={{ minWidth: isMobile ? '90px' : '120px', fontSize: isMobile ? '13px' : '16px' }}>Ish boshlanish vaqti:</Typography>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        {
+                            editable === 'start-time' ? (
+                                <>
+                                    <TextField
+                                        type='time'
+                                        size='small'
+                                        focused
+                                        defaultValue={companyInfo?.work_start_time}
+                                        onChange={(e) => setName(e.target.value)}
+                                        onBlur={() => {
+                                            updateSettings('work_end_time', name)
+                                        }}
+                                    />
+                                    <IconifyIcon icon={'ic:baseline-check'} style={{ cursor: 'pointer' }} onClick={() => {
+                                        updateSettings('work_start_time', name)
+                                    }} />
+                                </>
+                            ) : (
+                                <>
+                                    <TextField type='text' value={`${companyInfo?.work_start_time.split(':')?.[0]}:${companyInfo?.work_start_time.split(':')?.[1]}`} size='small' placeholder='Boshlanish vaqti' onBlur={(e) => console.log(e.target.value)} />
+                                    <IconifyIcon icon={'basil:edit-outline'} style={{ cursor: 'pointer' }} onClick={() => setEditable('start-time')} />
+                                </>
+                            )
+                        }
+                    </Box>
+                </Box>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+                    <Typography sx={{ minWidth: isMobile ? '90px' : '160px', fontSize: isMobile ? '13px' : '16px' }}>Ish tugash vaqti:</Typography>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        {
+                            editable === 'end-time' ? (
+                                <>
+                                    <TextField
+                                        type='time'
+                                        size='small'
+                                        focused
+                                        defaultValue={companyInfo?.work_end_time}
+                                        onChange={(e) => setName(e.target.value)}
+                                        onBlur={() => {
+                                            updateSettings('work_end_time', name)
+                                        }}
+                                    />
+                                    <IconifyIcon icon={'ic:baseline-check'} style={{ cursor: 'pointer' }} onClick={() => {
+                                        updateSettings('work_end_time', name)
+                                    }} />
+                                </>
+                            ) : (
+                                <>
+                                    <TextField type='text' value={`${companyInfo?.work_end_time.split(':')?.[0]}:${companyInfo?.work_end_time.split(':')?.[1]}`} size='small' placeholder='Boshlanish vaqti' onBlur={(e) => console.log(e.target.value)} />
+                                    <IconifyIcon icon={'basil:edit-outline'} style={{ cursor: 'pointer' }} onClick={() => setEditable('end-time')} />
+                                </>
+                            )
+                        }
+                    </Box>
+                </Box>
+            </Box>
 
 
             <Dialog open={deleteId?.open === 'payment-type'} onClose={() => setDeleteId(null)}>

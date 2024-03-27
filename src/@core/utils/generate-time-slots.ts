@@ -9,7 +9,7 @@ export default function generateTimeSlots(startTime: string, endTime: string) {
     const startHour = parseInt(startSplit[0]);
     const startMinute = parseInt(startSplit[1]);
     const endHour = parseInt(endSplit[0]);
-    const endMinute = parseInt(endSplit[1]);
+    const endMinute = parseInt(endSplit[1]) + 1;
 
     // Boshlang'ich vaqtni belgilash
     let currentHour = startHour;

@@ -63,8 +63,8 @@ export const appUsersSlice = createSlice({
       id: 1,
       training_center_name: "StudyCRM",
       logo: 'null',
-      work_start_time: "10:00",
-      work_end_time: "22:00"
+      work_start_time: "00:00",
+      work_end_time: "00:00"
     }
   },
   reducers: {
