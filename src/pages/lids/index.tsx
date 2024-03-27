@@ -143,19 +143,19 @@ const Lids = () => {
           e.preventDefault()
           push({ pathname, query: { ...query, search: '' } })
         }}>
-          <TextField defaultValue={query?.search || ''} autoComplete='off' autoFocus size='small' sx={{ maxWidth: '300px', width: '100%' }} color='primary' placeholder='Qidirish...' onChange={(e) => {
+          <TextField defaultValue={query?.search || ''} autoComplete='off' autoFocus size='small' sx={{ maxWidth: '300px', width: '100%' }} color='primary' placeholder={`${t("Qidirish")}...`} onChange={(e) => {
             setSearch(e.target.value)
             if (e.target.value === '') {
               push({ pathname, query: { ...query, search: '' } })
             }
           }} />
-          <Button variant='outlined' onClick={() => push({ pathname, query: { search } })}>Qidirish</Button>
+          <Button variant='outlined' onClick={() => push({ pathname, query: { search } })}>{t("Qidirish")}</Button>
           <label>
             <Switch checked={query?.is_active === 'false'} onChange={(e) => {
               push({ pathname, query: { search, is_active: query?.is_active === undefined || query?.is_active === 'true' ? false : true } })
               console.log(e.target.value)
             }} />
-            Arxiv
+            {t("Arxiv")}
           </label>
         </form>
       </Box>
@@ -174,7 +174,7 @@ const Lids = () => {
                   <LidsKanban id={lead.id} setOpenLid={setOpenLid} reRender={getLeads} setOpenItem={setOpenItem} key={lead.id} items={lead.children} title={lead.name} status='success' />
                 ))
               }
-              {!isMobile && <Button onClick={() => setOpen('add-department')} sx={{ minWidth: '300px' }} size='small' variant='contained' startIcon={<IconifyIcon icon={'material-symbols:add'} />}>Bo'lim yaratish</Button>}
+              {!isMobile && <Button onClick={() => setOpen('add-department')} sx={{ minWidth: '300px' }} size='small' variant='contained' startIcon={<IconifyIcon icon={'material-symbols:add'} />}>{t("Bo'lim yaratish")}</Button>}
             </>
           ) : (
             <Box sx={{ mt: 6, display: 'flex', alignItems: 'center', flexDirection: 'column', width: '100%' }}>
@@ -200,8 +200,8 @@ const Lids = () => {
         </DialogTitle>
         <DialogContent sx={{ minWidth: '320px' }}>
           <Form onSubmit={createDepartment} valueTypes='json' id='ddassdscd' sx={{ padding: '5px 0', width: '100%', display: 'flex', flexDirection: 'column', gap: '15px' }}>
-            <TextField fullWidth size='small' label="Bo'lim nomi" name='name' />
-            <TextField fullWidth size='small' label="Bo'lim tartibi" type='number' name='order' />
+            <TextField fullWidth size='small' label={t("Bo'lim nomi")} name='name' />
+            <TextField fullWidth size='small' label={t("Bo'lim tartibi")} type='number' name='order' />
             <Button type='submit' variant='outlined'>{t("Yaratish")}</Button>
           </Form>
         </DialogContent>
@@ -222,12 +222,12 @@ const Lids = () => {
         <DialogContent sx={{ minWidth: '320px' }}>
           <Form setError={setError} onSubmit={createDepartmentItem} valueTypes='json' id='cosczdasfwdijfo' sx={{ padding: '5px 0', width: '100%', display: 'flex', flexDirection: 'column', gap: '15px' }}>
             <FormControl fullWidth>
-              <TextField fullWidth error={error.name?.error} size='small' label="Item nomi" name='name' />
+              <TextField fullWidth error={error.name?.error} size='small' label={t("Bo'lim nomi")} name='name' />
               <FormHelperText error={error.name?.error}>{error.name?.message}</FormHelperText>
             </FormControl>
 
             <FormControl fullWidth>
-              <TextField fullWidth size='small' label="Item tartibi" type='number' name='order' />
+            <TextField fullWidth size='small' label={t("Bo'lim tartibi")} type='number' name='order' />
               <FormHelperText error={error.order?.error}>{error.order?.message}</FormHelperText>
             </FormControl>
 
@@ -284,7 +284,7 @@ const Lids = () => {
                   {
                     sourceData.map((lead: any) => <MenuItem key={lead.id} value={lead.name}>{lead.name}</MenuItem>)
                   }
-                  <MenuItem value={0} sx={{ fontWeight: '600' }}><IconifyIcon icon={'ic:baseline-add'} /> Yangi qo'shish</MenuItem>
+                  <MenuItem value={0} sx={{ fontWeight: '600' }}><IconifyIcon icon={'ic:baseline-add'} /> {t("Yangi qo'shish")}</MenuItem>
                 </Select>
                 <FormHelperText error={error.source_name?.error}>{error.source_name?.message}</FormHelperText>
               </FormControl>

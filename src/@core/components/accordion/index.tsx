@@ -13,6 +13,7 @@ import toast from 'react-hot-toast'
 import showResponseError from 'src/@core/utils/show-response-error'
 import useSMS from 'src/hooks/useSMS'
 import { useRouter } from 'next/router'
+import { useTranslation } from 'react-i18next'
 
 interface AccordionProps {
     title?: string
@@ -37,6 +38,7 @@ export default function AccordionCustom({ onView, item, reRender }: AccordionPro
     const [error, setError] = useState<any>({})
     const [count, setCount] = useState<any>(item.student_count)
     const [name, setName] = useState<any>(item.name)
+    const { t } = useTranslation()
 
 
     const [sms, setSMS] = useState<any>("")
@@ -111,7 +113,7 @@ export default function AccordionCustom({ onView, item, reRender }: AccordionPro
                 message: values.message,
                 for_lead: true
             })
-            toast.success('SMS muvaffaqiyatli jo\'natildi!', {
+            toast.success(`${t("SMS muvaffaqiyatli jo'natildi!")}`, {
                 position: 'top-center'
             })
             setAnchorEl(null)
@@ -176,7 +178,7 @@ export default function AccordionCustom({ onView, item, reRender }: AccordionPro
                         ) : (
                             leadData.length > 0 ? (
                                 leadData.map((lead) => <KanbanItem is_view={lead.is_view} id={lead.id} handleEditLead={handleEditLead} key={lead.id} status={'success'} title={lead.first_name} phone={lead.phone} />)
-                            ) : <Typography variant='body2' sx={{ fontStyle: 'italic', textAlign: 'center' }}>no data</Typography>
+                            ) : <Typography variant='body2' sx={{ fontStyle: 'italic', textAlign: 'center' }}>{t("Bo'sh")}</Typography>
                         )
                     ) : ''
                 }
@@ -201,21 +203,21 @@ export default function AccordionCustom({ onView, item, reRender }: AccordionPro
                         <Box>
                             <MenuItem onClick={() => (getSMSTemps(), setOpenDialog('sms'))} sx={{ '& svg': { mr: 2 } }}>
                                 <IconifyIcon icon='mdi:sms' fontSize={20} />
-                                SMS yuborish
+                                {t("SMS yuborish")}
                             </MenuItem>
                             <MenuItem onClick={() => setOpenDialog('edit')} sx={{ '& svg': { mr: 2 } }}>
                                 <IconifyIcon icon='mdi:edit' fontSize={20} />
-                                Tahrirlash
+                                {t("Tahrirlash")}
                             </MenuItem>
                             <MenuItem onClick={() => setOpenDialog('delete')} sx={{ '& svg': { mr: 2 } }}>
                                 <IconifyIcon icon='mdi:delete' fontSize={20} />
-                                O'chirish
+                                {t("O'chirish")}
                             </MenuItem>
                         </Box>
                     ) : (
                         <MenuItem onClick={() => (getSMSTemps(), setOpenDialog('sms'))} sx={{ '& svg': { mr: 2 } }}>
                             <IconifyIcon icon='mdi:reload' fontSize={20} />
-                            Tiklash
+                            {t("Tiklash")}
                         </MenuItem>
                     )
                 }
@@ -224,20 +226,20 @@ export default function AccordionCustom({ onView, item, reRender }: AccordionPro
             {/* EDIT Item*/}
             <Dialog open={openDialog === 'edit'} onClose={() => setOpenDialog(null)}>
                 <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <Typography>Tahrirlash</Typography>
+                    <Typography>{t("Tahrirlash")}</Typography>
                     <IconifyIcon onClick={() => setOpenDialog(null)} icon={'material-symbols:close'} />
                 </DialogTitle>
                 <DialogContent sx={{ minWidth: '300px' }}>
                     <Form setError={setError} valueTypes='json' onSubmit={editDepartmentItem} id='dmowei' sx={{ paddingTop: '5px', display: 'flex', flexDirection: 'column', gap: '15px' }}>
                         <FormControl fullWidth>
-                            <TextField label="Nomi" size='small' defaultValue={item.name} name='name' />
+                            <TextField label={t("Bo'lim nomi")} size='small' defaultValue={item.name} name='name' />
                         </FormControl>
 
                         <FormControl fullWidth>
-                            <TextField label="Tartibi" size='small' name='order' />
+                            <TextField label={t("Bo'lim tartibi")} size='small' name='order' />
                         </FormControl>
 
-                        <LoadingButton loading={loading} type='submit' variant='outlined'>Saqlash</LoadingButton>
+                        <LoadingButton loading={loading} type='submit' variant='outlined'>{t("Saqlash")}</LoadingButton>
                     </Form>
                 </DialogContent>
             </Dialog>
@@ -245,14 +247,14 @@ export default function AccordionCustom({ onView, item, reRender }: AccordionPro
             {/* SEND SMS */}
             <Dialog open={openDialog === 'sms'} onClose={() => setOpenDialog(null)}>
                 <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <Typography>SMS yuborish</Typography>
+                    <Typography>{t("SMS yuborish")}</Typography>
                     <IconifyIcon onClick={() => setOpenDialog(null)} icon={'material-symbols:close'} />
                 </DialogTitle>
 
                 <DialogContent sx={{ minWidth: '300px' }}>
                     <Form setError={setError} valueTypes='json' onSubmit={smsDepartmentItem} id='dmowei' sx={{ paddingTop: '5px', display: 'flex', flexDirection: 'column', gap: '15px' }}>
                         <FormControl>
-                            <InputLabel size='small' id='demo-simple-select-outlined-label'>Shablonlar</InputLabel>
+                            <InputLabel size='small' id='demo-simple-select-outlined-label'>{t("Shablonlar")}</InputLabel>
                             <Select
                                 size='small'
                                 label="Shablonlar"
@@ -274,10 +276,10 @@ export default function AccordionCustom({ onView, item, reRender }: AccordionPro
                         </FormControl>
 
                         <FormControl fullWidth>
-                            <TextField label="SMS matni" multiline rows={4} size='small' name='message' value={sms} onChange={(e) => setSMS(e.target.value)} />
+                            <TextField label={t("SMS matni")} multiline rows={4} size='small' name='message' value={sms} onChange={(e) => setSMS(e.target.value)} />
                         </FormControl>
 
-                        <LoadingButton loading={loading} type='submit' variant='outlined'>Saqlash</LoadingButton>
+                        <LoadingButton loading={loading} type='submit' variant='outlined'>{t("Saqlash")}</LoadingButton>
                     </Form>
                 </DialogContent>
             </Dialog>
@@ -285,10 +287,10 @@ export default function AccordionCustom({ onView, item, reRender }: AccordionPro
             {/* DELETE */}
             <Dialog open={openDialog === 'delete'} onClose={() => setOpenDialog(null)}>
                 <DialogContent sx={{ minWidth: '300px' }}>
-                    <Typography sx={{ fontSize: '24px', marginBottom: '20px', textAlign: 'center' }}>O'chirishni tasdiqlang</Typography>
+                    <Typography sx={{ fontSize: '24px', marginBottom: '20px', textAlign: 'center' }}>{t("O'chirishni tasdiqlang")}</Typography>
                     <Box sx={{ justifyContent: 'space-around', display: 'flex' }}>
-                        <LoadingButton variant='outlined' size='small' color='error'>Bekor qilish</LoadingButton>
-                        <LoadingButton loading={loading} size='small' variant='outlined' onClick={deleteDepartmentItem}>O'chirish</LoadingButton>
+                        <LoadingButton variant='outlined' size='small' color='error'>{t("Bekor qilish")}</LoadingButton>
+                        <LoadingButton loading={loading} size='small' variant='outlined' onClick={deleteDepartmentItem}>{t("O'chirish")}</LoadingButton>
                     </Box>
                 </DialogContent>
             </Dialog>

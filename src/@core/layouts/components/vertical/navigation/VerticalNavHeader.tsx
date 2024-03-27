@@ -19,6 +19,7 @@ import { useSelector } from 'react-redux'
 import Clock from 'src/@core/components/clock'
 import IconifyIcon from 'src/@core/components/icon'
 import useResponsive from 'src/@core/hooks/useResponsive'
+import { useTranslation } from 'react-i18next'
 
 interface Props {
   navHover: boolean
@@ -76,6 +77,7 @@ const VerticalNavHeader = (props: Props) => {
   const menuCollapsedStyles = navCollapsed && !navHover ? { opacity: 0 } : { opacity: 1 }
   const { companyInfo } = useSelector((state: any) => state.user)
   const { isMobile } = useResponsive()
+  const { t } = useTranslation()
 
   const svgFillSecondary = () => {
     if (mode === 'semi-dark') {
@@ -143,7 +145,7 @@ const VerticalNavHeader = (props: Props) => {
           {
             isMobile && <Box sx={{ display: 'flex', alignItems: 'center', gap: '5px', pl: '8px' }}>
               <IconifyIcon style={{ fontSize: '16px', color: '#40c0e7' }} icon={'la:user-clock'} />
-              <Typography fontSize={'13px'} variant='body2'>{`Ish vaqti`} {companyInfo?.work_start_time} - {companyInfo?.work_end_time}</Typography>
+              <Typography fontSize={'13px'} variant='body2'>{t(`Ish vaqti`)} {companyInfo?.work_start_time} - {companyInfo?.work_end_time}</Typography>
             </Box>
           }
         </Box>

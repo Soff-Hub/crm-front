@@ -14,6 +14,7 @@ import themeConfig from 'src/configs/themeConfig'
 import { useSelector } from 'react-redux'
 import Clock from 'src/@core/components/clock'
 import IconifyIcon from 'src/@core/components/icon'
+import { useTranslation } from 'react-i18next'
 
 interface Props {
   hidden: LayoutProps['hidden']
@@ -35,6 +36,8 @@ const AppBarContent = (props: Props) => {
   const { appBarContent: userAppBarContent, appBarBranding: userAppBarBranding } = props
   const { companyInfo } = useSelector((state: any) => state.user)
 
+  const { t } = useTranslation()
+
   // ** Hooks
   const theme = useTheme()
 
@@ -55,7 +58,7 @@ const AppBarContent = (props: Props) => {
         <Typography variant='body2'>|</Typography>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
           <IconifyIcon style={{ fontSize: '18px', color: '#40c0e7' }} icon={'la:user-clock'} />
-          <Typography variant='body2'>{`Ish vaqti`} {companyInfo?.work_start_time} - {companyInfo?.work_end_time}</Typography>
+          <Typography variant='body2'>{t(`Ish vaqti`)} {companyInfo?.work_start_time} - {companyInfo?.work_end_time}</Typography>
         </Box>
       </Box>
       {userAppBarContent ? userAppBarContent(props) : null}

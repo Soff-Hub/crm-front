@@ -7,6 +7,7 @@ import api from 'src/@core/utils/api';
 import toast from 'react-hot-toast';
 import useResponsive from 'src/@core/hooks/useResponsive';
 import { useRouter } from 'next/router';
+import { useTranslation } from 'react-i18next';
 
 interface Props {
     title: string
@@ -27,6 +28,7 @@ export default function HomeKanban({ title, items, setOpenItem, id, setOpenLid, 
     const [nameVal, setNameVal] = React.useState<any>(title)
     const { isMobile } = useResponsive()
     const { query } = useRouter()
+    const { t } = useTranslation()
 
     const editSubmit = async () => {
         setLoading(true)
@@ -48,7 +50,7 @@ export default function HomeKanban({ title, items, setOpenItem, id, setOpenLid, 
             setName(nameVal)
             setLoading(false)
             setOpen(null)
-            toast.success('Muvaffaqiyatli o\'chirildi')
+            toast.success("Muvaffaqiyatli o'chirildi")
             return reRender()
         } catch {
             setLoading(false)
@@ -80,31 +82,31 @@ export default function HomeKanban({ title, items, setOpenItem, id, setOpenLid, 
             <Dialog open={open === 'delete'}>
                 <DialogContent sx={{ minWidth: '320px', padding: '20px 0' }}>
                     <Typography sx={{ fontSize: '24px', textAlign: 'center' }}>
-                        O'chirmoqchimisiz?
+                        {t("O'chirmoqchimisiz?")}
                     </Typography>
                 </DialogContent>
                 <Box sx={{ padding: '0 0 20px', display: 'flex', justifyContent: 'center', gap: '10px' }}>
                     <Button color='error' variant='contained' onClick={() => setOpen(null)}>
-                        Bekor qilish
+                        {t("Bekor qilish")}
                     </Button>
                     <LoadingButton loading={loading} color='primary' variant='outlined' onClick={deleteDepartmentItem}>
-                        O'chirish
+                        {t("O'chirish")}
                     </LoadingButton>
                 </Box>
             </Dialog>
 
-            <Dialog open={open === 'edit'}>
+            <Dialog open={open === 'edit'} onClose={() => setOpen(null)}>
                 <DialogContent sx={{ minWidth: '320px', padding: '20px' }}>
                     <FormControl fullWidth>
-                        <TextField label="Nomi" onChange={(e) => setNameVal(e.target.value)} defaultValue={name} />
+                        <TextField label={t("Bo'lim nomi")} onChange={(e) => setNameVal(e.target.value)} defaultValue={name} />
                     </FormControl>
                 </DialogContent>
                 <Box sx={{ padding: '0 0 20px', display: 'flex', justifyContent: 'center', gap: '10px' }}>
                     <Button color='error' variant='contained' onClick={() => setOpen(null)}>
-                        Bekor qilish
+                        {t("Bekor qilish")}
                     </Button>
                     <LoadingButton loading={loading} color='primary' variant='outlined' onClick={editSubmit}>
-                        Saqlash
+                        {t("Saqlash")}
                     </LoadingButton>
                 </Box>
             </Dialog>

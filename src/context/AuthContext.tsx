@@ -40,13 +40,14 @@ const AuthProvider = ({ children }: Props) => {
   const [user, setUser] = useState<UserDataType | null>(defaultProvider.user)
   const [loading, setLoading] = useState<boolean>(defaultProvider.loading)
   const { i18n } = useTranslation()
-  // const { settings } = useSettings()
+  const router = useRouter()
+  const { locales, locale: activeLocale, pathname, query, asPath } = router;
 
   // ** Hooks
-  const router = useRouter()
   const dispatch = useDispatch()
 
   useEffect(() => {
+
     const initAuth = async (): Promise<void> => {
       const storedToken = window.localStorage.getItem(authConfig.storageTokenKeyName)!
       if (storedToken) {
@@ -95,6 +96,10 @@ const AuthProvider = ({ children }: Props) => {
     initAuth()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  useEffect(() => {
+    router.push({ pathname, query }, asPath, { locale: i18n.language })
+  }, [i18n.language])
 
   const handleLogin = (params: LoginParams, errorCallback?: ErrCallbackType) => {
     api

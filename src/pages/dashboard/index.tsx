@@ -180,7 +180,7 @@ const AppCalendar = () => {
           <Box sx={{}}>
             <TabContext value={tabValue}>
               <TabList onChange={(event, value: string) => setTabValue(value)} aria-label='centered tabs example'>
-                <Tab value='1' label='Juft kunlar' sx={{ p: '0 !important', fontSize: '9px' }} onClick={() => {
+                <Tab value='1' label={t('Juft kunlar')} sx={{ p: '0 !important', fontSize: '9px' }} onClick={() => {
                   push({
                     pathname,
                     query: {
@@ -188,7 +188,7 @@ const AppCalendar = () => {
                     }
                   })
                 }} />
-                <Tab value='2' label='Toq kunlar' sx={{ p: '0 !important', fontSize: '9px' }} onClick={() => {
+                <Tab value='2' label={t('Toq kunlar')} sx={{ p: '0 !important', fontSize: '9px' }} onClick={() => {
                   push({
                     pathname,
                     query: {
@@ -196,7 +196,7 @@ const AppCalendar = () => {
                     }
                   })
                 }} />
-                <Tab value='4' label='Boshqa' sx={{ p: '0 !important', fontSize: '9px' }} onClick={() => setOpen('week')} />
+                <Tab value='4' label={t('Boshqa')} sx={{ p: '0 !important', fontSize: '9px' }} onClick={() => setOpen('week')} />
               </TabList>
             </TabContext>
           </Box>
@@ -209,7 +209,7 @@ const AppCalendar = () => {
               <tbody>
                 <tr>
                   <td style={{ minWidth: '100px', fontSize: '12px' }}>
-                    Xonalar / Soat
+                    {t("Xonalar")} {" / "}{t('Soat')}
                   </td>
                   <td>
                     <Box sx={{ display: 'flex', }}>
