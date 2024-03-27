@@ -35,57 +35,8 @@ import { lessonData } from 'src/@core/utils/db'
 import { TranslateWeekName } from '../groups'
 import { hourFormatter } from 'src/@core/utils/hourFormatter'
 import { useSelector } from 'react-redux'
+import { useTranslation } from 'react-i18next'
 
-const statsData: {
-  icon: string
-  title: string
-  color: ThemeColor
-  key: string
-  link: string
-}[] = [
-    {
-      icon: "mdi:user-check-outline",
-      title: "Faol Lidlar",
-      color: 'success',
-      key: 'leads_count',
-      link: '/lids'
-    },
-    {
-      icon: "arcticons:studentid",
-      title: "Faol talabalar",
-      color: 'info',
-      key: 'active_students',
-      link: '/students'
-    },
-    {
-      icon: "la:layer-group",
-      title: "Guruhlar",
-      color: 'warning',
-      key: 'active_groups',
-      link: '/groups'
-    },
-    {
-      icon: "material-symbols-light:warning-outline",
-      title: "Qarzdorlar",
-      color: 'error',
-      key: 'debtor_users',
-      link: ''
-    },
-    {
-      icon: "tabler:calendar-stats",
-      title: "Sinov darsida",
-      color: 'primary',
-      key: 'test_students',
-      link: '/students'
-    },
-    {
-      icon: "fa-solid:chalkboard-teacher",
-      title: "O'qituvchilar",
-      color: 'success',
-      key: 'teacher_count',
-      link: '/mentors'
-    },
-  ]
 
 
 
@@ -106,7 +57,9 @@ const AppCalendar = () => {
   const { companyInfo } = useSelector((state: any) => state.user)
   const startTime = companyInfo?.work_start_time
   const endTime = companyInfo?.work_end_time
-  
+
+  const { t } = useTranslation()
+
 
   // ** Vars
   const { skin } = settings
@@ -123,6 +76,59 @@ const AppCalendar = () => {
     const resp = await api.get(`common/dashboard/?day_of_week=${query?.weeks || weeks}`)
     setEvents(resp.data.room_list)
   }
+
+
+  const statsData: {
+    icon: string
+    title: string
+    color: ThemeColor
+    key: string
+    link: string
+  }[] = [
+      {
+        icon: "mdi:user-check-outline",
+        title: t("Faol Lidlar"),
+        color: 'success',
+        key: 'leads_count',
+        link: '/lids'
+      },
+      {
+        icon: "arcticons:studentid",
+        title: t("Faol talabalar"),
+        color: 'info',
+        key: 'active_students',
+        link: '/students'
+      },
+      {
+        icon: "la:layer-group",
+        title: t('Guruhlar'),
+        color: 'warning',
+        key: 'active_groups',
+        link: '/groups'
+      },
+      {
+        icon: "material-symbols-light:warning-outline",
+        title: t("Qarzdorlar"),
+        color: 'error',
+        key: 'debtor_users',
+        link: ''
+      },
+      {
+        icon: "tabler:calendar-stats",
+        title: t("Sinov darsida"),
+        color: 'primary',
+        key: 'test_students',
+        link: '/students'
+      },
+      {
+        icon: "fa-solid:chalkboard-teacher",
+        title: t("O'qituvchilar"),
+        color: 'success',
+        key: 'teacher_count',
+        link: '/mentors'
+      },
+    ]
+
 
 
 
