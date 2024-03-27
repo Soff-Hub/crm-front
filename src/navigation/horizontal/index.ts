@@ -1,11 +1,7 @@
 import { HorizontalNavItemsType } from 'src/@core/layouts/types'
 
-const Navigation = (): HorizontalNavItemsType => {
+const Navigation = (t:any): HorizontalNavItemsType => {
   // const { t } = useTranslation()
-
-  function t(title: string) {
-    return title
-  }
 
   return [
     {

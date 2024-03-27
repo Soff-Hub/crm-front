@@ -24,6 +24,7 @@ import HorizontalAppBarContent from './components/horizontal/AppBarContent'
 // ** Hook Import
 import { useSettings } from 'src/@core/hooks/useSettings'
 import { AuthContext } from 'src/context/AuthContext'
+import { useTranslation } from 'react-i18next'
 
 interface Props {
   children: ReactNode
@@ -34,6 +35,7 @@ const UserLayout = ({ children, contentHeightFixed }: Props) => {
   // ** Hooks
   const { settings, saveSettings } = useSettings()
   const { user } = useContext(AuthContext)
+  const { t } = useTranslation()
 
   // ** Vars for server side navigation
   // const { menuItems: verticalMenuItems } = ServerSideVerticalNavItems()
@@ -61,7 +63,7 @@ const UserLayout = ({ children, contentHeightFixed }: Props) => {
       contentHeightFixed={contentHeightFixed}
       verticalLayoutProps={{
         navMenu: {
-          navItems: user?.role === 'teacher' ? TeacherNavigation() : VerticalNavItems()
+          navItems: user?.role === 'teacher' ? TeacherNavigation(t) : VerticalNavItems(t)
 
           // Uncomment the below line when using server-side menu in vertical layout and comment the above line
           // navItems: verticalMenuItems
@@ -80,7 +82,7 @@ const UserLayout = ({ children, contentHeightFixed }: Props) => {
       {...(settings.layout === 'horizontal' && {
         horizontalLayoutProps: {
           navMenu: {
-            navItems: user?.role === 'teacher' ? TeacherNavigation() : HorizontalNavItems()
+            navItems: user?.role === 'teacher' ? TeacherNavigation(t) : HorizontalNavItems(t)
 
             // Uncomment the below line when using server-side menu in horizontal layout and comment the above line
             // navItems: horizontalMenuItems
