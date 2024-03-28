@@ -8,9 +8,9 @@ import useStudent from 'src/hooks/useStudents'
 import UserViewLeft from 'src/views/apps/students/view/UserViewLeft'
 import UserViewRight from 'src/views/apps/students/view/UserViewRight'
 
-const UserView = () => {
+const UserView = ({ tab }: any) => {
   const router = useRouter()
-  const url = `${router.query.tab}`
+  const url = tab
 
 
   // hooks

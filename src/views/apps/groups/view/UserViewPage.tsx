@@ -8,9 +8,9 @@ import useGroups from 'src/hooks/useGroups'
 import UserViewLeft from 'src/views/apps/groups/view/UserViewLeft'
 import UserViewRight from 'src/views/apps/groups/view/UserViewRight'
 
-const UserView = () => {
+const UserView = ({ tab }: any) => {
   const router = useRouter()
-  const url = `${router.query.tab}`
+  const url = `${tab}`
 
 
   // hooks

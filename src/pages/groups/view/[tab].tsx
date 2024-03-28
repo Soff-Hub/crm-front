@@ -1,8 +1,28 @@
+import { GetStaticPaths, GetStaticProps, GetStaticPropsContext, InferGetStaticPropsType } from 'next/types'
 import UserViewPage from 'src/views/apps/groups/view/UserViewPage'
 
-const UserView = () => {
+const UserView = ({ tab }: InferGetStaticPropsType<typeof getStaticProps>) => {
+  return <UserViewPage tab={tab} />
+}
 
-  return <UserViewPage />
+export const getStaticPaths: GetStaticPaths = () => {
+  return {
+    paths: [
+      { params: { tab: 'security' } },
+      { params: { tab: 'exams' } },
+      { params: { tab: 'notes' } },
+      { params: { tab: 'discount' } },
+    ],
+    fallback: false
+  }
+}
+
+export const getStaticProps: GetStaticProps = async ({ params }: GetStaticPropsContext) => {
+  return {
+    props: {
+      tab: params?.tab
+    }
+  }
 }
 
 export default UserView

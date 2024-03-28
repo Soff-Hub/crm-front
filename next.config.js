@@ -26,8 +26,8 @@ module.exports = withTM({
 
     return config
   },
-  i18n: {
-    locales: ["uz", "en", "ru"],
-    defaultLocale: "uz",
-  },
+  // i18n: {
+  //   locales: ["uz", "en", "ru"],
+  //   defaultLocale: "uz",
+  // },
 })

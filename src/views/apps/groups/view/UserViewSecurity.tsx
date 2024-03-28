@@ -151,9 +151,19 @@ const UserViewSecurity = ({ invoiceData }: any) => {
     }
   }
 
+  // const getTopics = async () => {
+  //   try {
+  //     const resp = await api.get(`common/topic/list/date/${query?.year || new Date().getFullYear()}-${getMontNumber(query.moonth)}-01/group/${query.id}/`)
+  //     console.log(resp.data);
+  //   } catch (err) {
+  //     console.log(err)
+  //   }
+  // }
+
   useEffect(() => {
     getAttendance()
     getDates()
+    // getTopics()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query.moonth])
 
