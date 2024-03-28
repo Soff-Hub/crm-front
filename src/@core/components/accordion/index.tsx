@@ -59,7 +59,7 @@ export default function AccordionCustom({ onView, item, reRender }: AccordionPro
         if (isLoad) setOpen(!open)
         setLoading(true)
         try {
-            const resp = await api.get(`leads/department-user-list/${item.id}/?is_active=${query?.is_active === undefined ? true : query.is_active}`)
+            const resp = await api.get(`leads/department-user-list/${item.id}/?is_active=${query?.is_active === undefined ? true : query.is_active}&search=${query?.search}`)
             setLeadData(resp.data)
             setCount(resp.data.length)
             setLoading(false)

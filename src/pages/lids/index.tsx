@@ -141,11 +141,15 @@ const Lids = () => {
       <Box sx={{ width: '100%', p: '10px 0' }}>
         <form style={{ display: 'flex', alignItems: 'center', gap: '5px' }} onSubmit={(e) => {
           e.preventDefault()
-          push({ pathname, query: { ...query, search: '' } })
+          if (search === '') {
+            push({ pathname, query: { ...query, search: '' } })
+          } else {
+            push({ pathname, query: { ...query, search: search } })
+          }
         }}>
           <TextField defaultValue={query?.search || ''} autoComplete='off' autoFocus size='small' sx={{ maxWidth: '300px', width: '100%' }} color='primary' placeholder={`${t("Qidirish")}...`} onChange={(e) => {
             setSearch(e.target.value)
-            if (e.target.value === '') {
+            if (search === '') {
               push({ pathname, query: { ...query, search: '' } })
             }
           }} />
@@ -227,7 +231,7 @@ const Lids = () => {
             </FormControl>
 
             <FormControl fullWidth>
-            <TextField fullWidth size='small' label={t("Bo'lim tartibi")} type='number' name='order' />
+              <TextField fullWidth size='small' label={t("Bo'lim tartibi")} type='number' name='order' />
               <FormHelperText error={error.order?.error}>{error.order?.message}</FormHelperText>
             </FormControl>
 
