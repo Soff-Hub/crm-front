@@ -75,7 +75,7 @@ export default function GroupsPage() {
   const handleDeleteTeacher = async (id: string | number) => {
     try {
       await deleteTeacher(id)
-      toast.success("O'qituvchilar ro'yxatidan o'chirildi", { position: 'top-center' })
+      toast.success(`${t("O'qituvchilar ro'yxatidan o'chirildi")}`, { position: 'top-center' })
     } catch (error: any) {
       console.log(error);
     }
@@ -147,15 +147,15 @@ export default function GroupsPage() {
             href={`/mentors/view/security?id=${id}`}
           >
             <IconifyIcon icon='mdi:eye-outline' fontSize={20} />
-            Ko'rish
+            {t("Ko'rish")}
           </MenuItem>
           <MenuItem onClick={() => handleEdit(id)} sx={{ '& svg': { mr: 2 } }}>
             <IconifyIcon icon='mdi:pencil-outline' fontSize={20} />
-            Tahrirlash
+            {t("Tahrirlash")}
           </MenuItem>
           <MenuItem onClick={handleDelete} sx={{ '& svg': { mr: 2 } }}>
             <IconifyIcon icon='mdi:delete-outline' fontSize={20} />
-            O'chirish
+            {t("O'chirish")}
           </MenuItem>
         </Menu>
         <UserSuspendDialog handleOk={() => handleDeleteTeacher(id)} open={suspendDialogOpen} setOpen={setSuspendDialogOpen} />
@@ -191,12 +191,6 @@ export default function GroupsPage() {
       xs: 1.3,
       title: t("birth_date"),
       dataIndex: 'birth_date'
-    },
-    {
-      xs: 1.3,
-      title: t("gender"),
-      dataIndex: 'gender',
-      render: (roles_list: any) => roles_list === "male" ? "Erkak" : "Ayol"
     },
     {
       xs: 1,
@@ -295,11 +289,11 @@ export default function GroupsPage() {
             <FormControl sx={{ width: '100%', display: 'flex', flexDirection: 'row', gap: 10 }}>
               <FormLabel>
                 <Radio checked={gender === "male"} onChange={() => setGender('male')} />
-                <span>Erkak</span>
+                <span>{t("Erkak")}</span>
               </FormLabel>
               <FormLabel>
                 <Radio checked={gender === "female"} onChange={() => setGender('female')} />
-                <span>Ayol</span>
+                <span>{t("Ayol")}</span>
               </FormLabel>
             </FormControl>
 
@@ -312,7 +306,7 @@ export default function GroupsPage() {
                 color='warning'
                 startIcon={<IconifyIcon icon={'subway:cloud-upload'} />}
               >
-                Rasm qo'shish
+                {t("Rasm qo'shish")}
                 <VisuallyHiddenInput name='image' type="file" accept='.png, .jpg, .jpeg, .webp, .HEIC, .heic' />
               </Button>
             </FormControl>
@@ -322,7 +316,7 @@ export default function GroupsPage() {
               <FormHelperText error={error.password?.error}>{error.password?.message}</FormHelperText>
             </FormControl>
 
-            <LoadingButton loading={loading} variant='contained' type='submit' fullWidth>Saqlash</LoadingButton>
+            <LoadingButton loading={loading} variant='contained' type='submit' fullWidth>{t("Saqlash")}</LoadingButton>
           </Form>
         </Box>
       </Drawer>
@@ -360,7 +354,7 @@ export default function GroupsPage() {
             </FormControl>
 
             <FormControl sx={{ width: '100%' }}>
-              <TextField label={t("phone")} name='phone' error={error.phone} defaultValue={teacherData.phone}  />
+              <TextField label={t("phone")} name='phone' error={error.phone} defaultValue={teacherData.phone} />
               <FormHelperText error={error.phone?.error}>{error.phone?.message}</FormHelperText>
             </FormControl>
 
@@ -390,11 +384,11 @@ export default function GroupsPage() {
             <FormControl sx={{ width: '100%', display: 'flex', flexDirection: 'row', gap: 10 }}>
               <FormLabel>
                 <Radio checked={teacherData.gender === "male"} onChange={() => setGender('male')} />
-                <span>Erkak</span>
+                <span>{t("Erkak")}</span>
               </FormLabel>
               <FormLabel>
                 <Radio checked={teacherData.gender === "female"} onChange={() => setGender('female')} />
-                <span>Ayol</span>
+                <span>{t("Ayol")}</span>
               </FormLabel>
             </FormControl>
 
@@ -407,7 +401,7 @@ export default function GroupsPage() {
                 color='warning'
                 startIcon={<IconifyIcon icon={'subway:cloud-upload'} />}
               >
-                Rasm qo'shish
+                {t("Rasm qo'shish")}
                 <VisuallyHiddenInput name='image' type="file" accept='.png, .jpg, .jpeg, .webp, .HEIC, .heic' />
               </Button>
             </FormControl>
@@ -417,7 +411,7 @@ export default function GroupsPage() {
               <FormHelperText error={error.password?.error}>{error.password?.message}</FormHelperText>
             </FormControl>
 
-            <LoadingButton loading={loading} variant='contained' type='submit' fullWidth>Saqlash</LoadingButton>
+            <LoadingButton loading={loading} variant='contained' type='submit' fullWidth>{t("Saqlash")}</LoadingButton>
           </Form> : ""}
         </Box>
       </Drawer>

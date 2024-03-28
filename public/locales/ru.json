@@ -1,7 +1,7 @@
 {
     "Bosh sahifa": "Главная страница",
     "Lidlar": "Лиды",
-    "Mentorlar": "Наставники",
+    "Mentorlar": "Учителя",
     "O'quvchilar": "Студенты",
     "Guruhlar": "Группы",
     "Sozlamalar": "Настройки",
@@ -105,5 +105,18 @@
     "Yangi eslatma": "Новая заметка",
     "Boshqa Filialga": "В другой филиал",
     "Boshqa bo'limga": "В другой раздел",
-    "Lidni tahrirlash": "Редактировать лид"
+    "Lidni tahrirlash": "Редактировать лид",
+    "O'qituvchilar ro'yxatidan o'chirildi": "Удален из списка учителей",
+    "O'qituvchi qo'shish": "Добавить учителя",
+    "Erkak": "мужской пол",
+    "Ayol": "женский пол",
+    "Rasm qo'shish": "Добавить изображение",
+    "O'qituvchi malumotlarini tahrirlash": "Редактировать информацию об учителе",
+    "Ishonchingiz komilmi?": "Вы уверены?",
+    "Siz bu jarayonni ortqa qaytara olmaysiz qaytara olmaysiz!": "Вы не можете отменить этот процесс!",
+    "Muvaffaqiyatli!": "Успешный!",
+    "Muvaffaqiyatli o'chirilidi!": "Удален успешно!",
+    "Bekor qilindi": "Отменено",
+    "O'chirish  bekor qilindi": "Удаление отменено",
+    "Yaxshi": "Хорошо"
 }
