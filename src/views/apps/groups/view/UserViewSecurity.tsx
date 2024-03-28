@@ -161,8 +161,10 @@ const UserViewSecurity = ({ invoiceData }: any) => {
   // }
 
   useEffect(() => {
-    getAttendance()
-    getDates()
+    if (query?.moonth) {
+      getAttendance()
+      getDates()
+    }
     // getTopics()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query.moonth])

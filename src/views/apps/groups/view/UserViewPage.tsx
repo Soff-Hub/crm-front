@@ -10,7 +10,7 @@ import UserViewRight from 'src/views/apps/groups/view/UserViewRight'
 
 const UserView = ({ tab }: any) => {
   const router = useRouter()
-  const url = `${tab}`
+  const url = `${router.query.tab}`
 
 
   // hooks
