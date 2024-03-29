@@ -336,7 +336,7 @@ export default function GroupsPage() {
         </Button>
       )}
       {!isMobile && <GroupsFilter isMobile={isMobile} />}
-      <DataTable columns={columns} data={groups} rowClick={rowClick} />
+      <DataTable columns={columns} data={groups} rowClick={rowClick} color />
       <Pagination defaultPage={router?.query?.page ? Number(router?.query?.page) : 1} count={groupCount} variant="outlined" shape="rounded" onChange={(e: any, page) => handlePagination(e.target.value + page)} />
 
       <Drawer open={openAddGroup} hideBackdrop anchor='right' variant='persistent'>

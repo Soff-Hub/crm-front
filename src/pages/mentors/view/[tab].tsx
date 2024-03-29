@@ -13,7 +13,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   return {
     props: {
-      id: query.id,
+      id: query?.id || null,
       tab: params?.tab
     },
   };

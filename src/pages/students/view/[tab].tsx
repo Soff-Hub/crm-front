@@ -11,7 +11,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   return {
     props: {
-      students: query.student,
+      students: query?.student || null,
       tab: params?.tab
     },
   };

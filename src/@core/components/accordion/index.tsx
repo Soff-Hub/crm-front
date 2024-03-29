@@ -14,6 +14,8 @@ import showResponseError from 'src/@core/utils/show-response-error'
 import useSMS from 'src/hooks/useSMS'
 import { useRouter } from 'next/router'
 import { useTranslation } from 'react-i18next'
+import { useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 
 interface AccordionProps {
     title?: string
@@ -34,16 +36,18 @@ export default function AccordionCustom({ onView, item, reRender }: AccordionPro
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
     const [loading, setLoading] = useState<boolean>(false)
     const [leadData, setLeadData] = useState<any[]>([])
-    const [openDialog, setOpenDialog] = useState<'sms' | 'edit' | 'delete' | null>(null)
+    const [openDialog, setOpenDialog] = useState<'sms' | 'edit' | 'delete' | 'recover' | null>(null)
     const [error, setError] = useState<any>({})
     const [count, setCount] = useState<any>(item.student_count)
     const [name, setName] = useState<any>(item.name)
     const { t } = useTranslation()
+    const { departmentsState } = useSelector((state: any) => state.user)
 
 
     const [sms, setSMS] = useState<any>("")
     const { smsTemps, getSMSTemps } = useSMS()
     const { query } = useRouter()
+    const dispatch = useDispatch()
 
     const handleClick = (event: any) => {
         setAnchorEl(event.currentTarget)
@@ -140,6 +144,18 @@ export default function AccordionCustom({ onView, item, reRender }: AccordionPro
         }
     }
 
+
+    const recoverDepartmentItem = async (values: any) => {
+        setLoading(true)
+        try {
+            await api.patch(`leads/department-update/${item.id}`, { ...values, is_active: true })
+            setLoading(false)
+            setOpenDialog(null)
+        } catch {
+            setLoading(false)
+        }
+    }
+
     useEffect(() => {
         if (open) onView();
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -215,7 +231,7 @@ export default function AccordionCustom({ onView, item, reRender }: AccordionPro
                             </MenuItem>
                         </Box>
                     ) : (
-                        <MenuItem onClick={() => (getSMSTemps(), setOpenDialog('sms'))} sx={{ '& svg': { mr: 2 } }}>
+                        <MenuItem onClick={() => (getSMSTemps(), setOpenDialog('recover'))} sx={{ '& svg': { mr: 2 } }}>
                             <IconifyIcon icon='mdi:reload' fontSize={20} />
                             {t("Tiklash")}
                         </MenuItem>
@@ -292,6 +308,42 @@ export default function AccordionCustom({ onView, item, reRender }: AccordionPro
                         <LoadingButton variant='outlined' size='small' color='error'>{t("Bekor qilish")}</LoadingButton>
                         <LoadingButton loading={loading} size='small' variant='outlined' onClick={deleteDepartmentItem}>{t("O'chirish")}</LoadingButton>
                     </Box>
+                </DialogContent>
+            </Dialog>
+
+            <Dialog open={openDialog === 'recover'} onClose={() => setOpenDialog(null)}>
+                <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <Typography>{t("Tiklash")}</Typography>
+                    <IconifyIcon onClick={() => setOpenDialog(null)} icon={'material-symbols:close'} />
+                </DialogTitle>
+                <DialogContent sx={{ minWidth: '300px' }}>
+                    <Form setError={setError} valueTypes='json' onSubmit={recoverDepartmentItem} id='dasweq423' sx={{ paddingTop: '5px', display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                        <FormControl fullWidth>
+                            <TextField label={t("Bo'lim nomi")} size='small' defaultValue={item.name} name='name' />
+                        </FormControl>
+
+                        <FormControl>
+                            <InputLabel size='small' id='demo-simple-select-outlined-label'>{t("Bo'lim")}</InputLabel>
+                            <Select
+                                size='small'
+                                label={t("Bo'lim")}
+                                defaultValue=''
+                                id='demo-simple-select-outlined'
+                                labelId='demo-simple-select-outlined-label'
+                                name='parent'
+                            >
+                                {
+                                    departmentsState.map((el: any) => (
+                                        <MenuItem value={el.id} sx={{ wordBreak: 'break-word' }}>
+                                            {el.name}
+                                        </MenuItem>
+                                    ))
+                                }
+                            </Select>
+                        </FormControl>
+
+                        <LoadingButton loading={loading} type='submit' variant='outlined'>{t("Saqlash")}</LoadingButton>
+                    </Form>
                 </DialogContent>
             </Dialog>
         </Card>

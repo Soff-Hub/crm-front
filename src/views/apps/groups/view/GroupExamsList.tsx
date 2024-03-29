@@ -27,6 +27,7 @@ const GroupExamsList = () => {
     const [open, setOpen] = useState<'add' | 'edit' | 'delete' | null>(null)
     const [loading, setLoading] = useState<boolean>(false)
     const [editData, setEditData] = useState<any>()
+    const [result, setResult] = useState<any>(null)
 
     const [exams, setExams] = useState<ExamType[]>([])
 
@@ -53,7 +54,7 @@ const GroupExamsList = () => {
             setLoading(false)
         }
     }
-    
+
 
     const handleEditOpen = async (id: any) => {
         const findedItem = await exams.find(el => el.id === id)
@@ -94,7 +95,7 @@ const GroupExamsList = () => {
             showResponseError(err.response.data, setError)
             setLoading(false)
         }
-                                                                                                                                                                                                    }
+    }
 
     const columns: customTableProps[] = [
         {
@@ -143,7 +144,8 @@ const GroupExamsList = () => {
     return (
         <Box className='demo-space-y'>
             <div style={{ width: '100%', display: 'flex', justifyContent: 'flex-end', margin: 0 }}>
-                <Button variant="contained" sx={{ marginLeft: 'auto' }} size="small" onClick={() => setOpen('add')}>yaratish</Button>
+                <Button variant="outlined" sx={{ marginLeft: 'auto' }} size="small">Natijalarni kiritish</Button>
+                <Button variant="contained" sx={{ marginLeft: '15px' }} size="small" onClick={() => setOpen('add')}>yaratish</Button>
             </div>
             <DataTable maxWidth="100%" minWidth="450px" data={exams} columns={columns} />
 

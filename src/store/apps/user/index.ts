@@ -65,7 +65,8 @@ export const appUsersSlice = createSlice({
       logo: 'null',
       work_start_time: "00:00",
       work_end_time: "00:00"
-    }
+    },
+    departmentsState: []
   },
   reducers: {
     addUserData: (state, action) => {
@@ -80,7 +81,10 @@ export const appUsersSlice = createSlice({
         work_start_time: `${action.payload.work_start_time.split(':')?.[0]}:${action.payload.work_start_time.split(':')?.[1]}`,
         work_end_time: `${action.payload.work_end_time.split(':')?.[0]}:${action.payload.work_end_time.split(':')?.[1]}`
       }
-    }
+    },
+    setDepartmentsState: (state, action) => {
+      state.departmentsState = action.payload
+    },
   },
   extraReducers: builder => {
     builder.addCase(fetchData.fulfilled, (state, action) => {
@@ -92,5 +96,5 @@ export const appUsersSlice = createSlice({
   }
 })
 
-export const { addUserData, addOpenedUser, setCompanyInfo } = appUsersSlice.actions
+export const { addUserData, addOpenedUser, setCompanyInfo, setDepartmentsState } = appUsersSlice.actions
 export default appUsersSlice.reducer

@@ -11,9 +11,6 @@ import UserViewRight from 'src/views/apps/mentors/view/UserViewRight'
 const UserView = ({ tab }: any) => {
   const router = useRouter()
   const url = tab
-  console.log(url);
-
-
 
   // hooks
   const { getTeacherById, teacherData } = useTeachers()

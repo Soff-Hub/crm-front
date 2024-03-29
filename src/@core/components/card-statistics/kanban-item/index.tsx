@@ -63,13 +63,13 @@ const KanbanItem = (props: KanbarItemProps) => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
     const [error, setError] = useState<any>({})
     const { t } = useTranslation()
-    const [open, setOpen] = useState<'edit' | 'merge-to' | 'sms' | 'delete' | 'note' | 'branch' | null>(null)
+    const [open, setOpen] = useState<'edit' | 'merge-to' | 'sms' | 'delete' | 'note' | 'branch' | 'recover' | null>(null)
     const [department, setDepartment] = useState<any>(null)
     const [loading, setLoading] = useState<boolean>(false)
     const [activeTab, setActiveTab] = useState<string>('tab-1')
     const [leadDetail, setLeadDetail] = useState([])
 
-    const { total } = useSelector((state: any) => state.user)
+    const { total, departmentsState } = useSelector((state: any) => state.user)
     const [sms, setSMS] = useState<any>("")
     const { smsTemps, getSMSTemps } = useSMS()
     const { query } = useRouter()
@@ -199,6 +199,17 @@ const KanbanItem = (props: KanbarItemProps) => {
         setActiveTab(value)
     }
 
+    const recoverDepartmentItem = async (values: any) => {
+        setLoading(true)
+        try {
+            await handleEditLead(id, { ...values, is_active: true, first_name: title, phone })
+            setLoading(false)
+            setOpen(null)
+        } catch {
+            setLoading(false)
+        }
+    }
+
     return (
         <Card sx={{ cursor: 'pointer' }}>
             <CardContent sx={{ py: theme => `${theme.spacing(2)} !important`, px: 2 }}>
@@ -302,7 +313,7 @@ const KanbanItem = (props: KanbarItemProps) => {
                             </MenuItem>
                         </Box>
                     ) : (
-                        <MenuItem onClick={() => null} sx={{ '& svg': { mr: 2 } }}>
+                        <MenuItem onClick={() => setOpen('recover')} sx={{ '& svg': { mr: 2 } }}>
                             <IconifyIcon icon='mdi:reload' fontSize={20} />
                             Tiklash
                         </MenuItem>
@@ -478,6 +489,58 @@ const KanbanItem = (props: KanbarItemProps) => {
                         <LoadingButton variant='outlined' size='small' color='error' onClick={() => setOpen(null)}>{t("Bekor qilish")}</LoadingButton>
                         <LoadingButton loading={loading} size='small' variant='contained' onClick={handleDelete}>{t("O'chirish")}</LoadingButton>
                     </Box>
+                </DialogContent>
+            </Dialog>
+
+            <Dialog open={open === 'recover'} onClose={() => setOpen(null)}>
+                <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <Typography>{t("Tiklash")}</Typography>
+                    <IconifyIcon onClick={() => setOpen(null)} icon={'material-symbols:close'} />
+                </DialogTitle>
+                <DialogContent sx={{ minWidth: '300px' }}>
+                    <Form setError={setError} valueTypes='json' onSubmit={recoverDepartmentItem} id='dasweq423' sx={{ paddingTop: '5px', display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                        <FormControl>
+                            <InputLabel size='small' id='demo-simple-select-outlined-label'>{t("Bo'lim")}</InputLabel>
+                            <Select
+                                size='small'
+                                label={t("Bo'lim")}
+                                defaultValue=''
+                                id='demo-simple-select-outlined'
+                                labelId='demo-simple-select-outlined-label'
+                                onChange={(e) => setSelectBranch(e.target.value)}
+                            >
+                                {
+                                    departmentsState.map((el: any) => (
+                                        <MenuItem value={el.id} sx={{ wordBreak: 'break-word' }}>
+                                            {el.name}
+                                        </MenuItem>
+                                    ))
+                                }
+                            </Select>
+                        </FormControl>
+
+                        {selectBranch && <FormControl>
+                            <InputLabel size='small' id='wrwerwerwerwerwerwe'>{t("Bo'lim")}</InputLabel>
+                            <Select
+                                size='small'
+                                label={t("Bo'lim")}
+                                defaultValue=''
+                                id='osdlg'
+                                labelId='wrwerwerwerwerwerwe'
+                                name='department'
+                            >
+                                {
+                                    departmentsState.find((item: any) => item.id === selectBranch).children.map((el: any) => (
+                                        <MenuItem value={el.id} sx={{ wordBreak: 'break-word' }}>
+                                            {el.name}
+                                        </MenuItem>
+                                    ))
+                                }
+                            </Select>
+                        </FormControl>}
+
+                        <LoadingButton loading={loading} type='submit' variant='outlined'>{t("Saqlash")}</LoadingButton>
+                    </Form>
                 </DialogContent>
             </Dialog>
         </Card>

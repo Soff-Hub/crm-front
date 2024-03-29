@@ -280,7 +280,7 @@ export default function GroupsPage() {
           {t("Yangi kurs qo'shish")}
         </Button>
       </Box>
-      <DataTable columns={columns} data={dataRow} />
+      <DataTable columns={columns} data={dataRow} color />
 
       <Drawer open={openAddGroup} hideBackdrop anchor='right' variant='persistent'>
         <Box
@@ -387,6 +387,17 @@ export default function GroupsPage() {
               defaultValue={''}
             />
             <FormHelperText error={error.description}>{error.description?.message}</FormHelperText>
+          </FormControl>
+
+          <FormControl fullWidth>
+            <TextField
+              error={error?.color}
+              label="Rangi"
+              name='color'
+              type='color'
+              defaultValue={'#FFFFFF'}
+            />
+            <FormHelperText error={error.color}>{error.color?.message}</FormHelperText>
           </FormControl>
           <Button type='submit' variant='contained' color='success' fullWidth>
             {' '}
@@ -519,6 +530,17 @@ export default function GroupsPage() {
                 defaultValue={dataRowEdit?.description}
               />
               <FormHelperText error={error.description}>{error.description?.message}</FormHelperText>
+            </FormControl>
+
+            <FormControl fullWidth>
+              <TextField
+                error={error?.color}
+                label="Rangi"
+                name='color'
+                type='color'
+                defaultValue={dataRowEdit?.color}
+              />
+              <FormHelperText error={error.color}>{error.color?.message}</FormHelperText>
             </FormControl>
             <Button type='submit' variant='contained' color='success' fullWidth>
               {' '}

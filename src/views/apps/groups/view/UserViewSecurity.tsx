@@ -1,4 +1,4 @@
-import { Box, CircularProgress, Typography } from "@mui/material"
+import { Box, Button, CircularProgress, TextField, Typography } from "@mui/material"
 import { useRouter } from "next/router"
 import IconifyIcon from "src/@core/components/icon"
 import Tooltip, { TooltipProps, tooltipClasses } from '@mui/material/Tooltip';
@@ -7,6 +7,7 @@ import api from "src/@core/utils/api";
 import getMontName, { getMontNumber } from "src/@core/utils/gwt-month-name";
 import { AuthContext } from "src/context/AuthContext";
 import { styled } from '@mui/material/styles';
+import { t } from "i18next";
 
 
 interface Result {
@@ -96,6 +97,7 @@ const UserViewSecurity = ({ invoiceData }: any) => {
   const [opened_id, setOpenedId] = useState<any>(null)
   const [openTooltip, setOpenTooltip] = useState<null | string>(null)
   const [month, setMonth] = useState<any>(null)
+  const [topic, setTopic] = useState<any>('')
 
 
   const [attendance, setAttendance] = useState<any>(null)
@@ -177,8 +179,6 @@ const UserViewSecurity = ({ invoiceData }: any) => {
 
   useEffect(() => {
     if (month) {
-      console.log('month =>', month);
-
       getAttendance(`${query?.year || new Date().getFullYear()}-${getMontNumber(month)}`, invoiceData.id)
       getDates(`${query?.year || new Date().getFullYear()}-${getMontNumber(month)}`, invoiceData.id)
     }
@@ -205,9 +205,9 @@ const UserViewSecurity = ({ invoiceData }: any) => {
             <table style={{ minWidth: '1000px' }}>
               <thead>
                 <tr style={{ borderBottom: '1px solid #c3cccc' }}>
-                  <td style={{ padding: '8px 0', textAlign: 'start' }}><Typography>Imtixonlar</Typography></td>
+                  <td style={{ padding: '8px 0', textAlign: 'start' }}><Typography>Mavzular</Typography></td>
                   {
-                    attendance && days.map((hour: any) => <td key={hour.date} style={{ textAlign: 'center', minWidth: 50, padding: '8px 0', cursor: 'pointer' }}>
+                    attendance && days.map((hour: any) => <td key={hour.date} style={{ textAlign: 'center', minWidth: 50, padding: '8px 0', cursor: 'pointer', backgroundColor: hour.exam ? '#96f3a5' : hour.lesson ? '#a7c0fb' : 'transparent' }}>
                       <div>
                         {
                           hour.exam ? (
@@ -229,10 +229,72 @@ const UserViewSecurity = ({ invoiceData }: any) => {
                               }
                             >
                               <span onClick={() => setOpenTooltip((c) => c === hour.date ? null : hour.date)} >
-                                <IconifyIcon icon="maki:racetrack" />
+                                imtixon
                               </span>
                             </HtmlTooltip>
-                          ) : ''
+                          ) : hour.lesson ? (
+                            <HtmlTooltip
+                              PopperProps={{
+                                disablePortal: true,
+                              }}
+                              onClose={() => setOpenTooltip(null)}
+                              open={openTooltip === hour.date}
+                              disableFocusListener
+                              disableHoverListener
+                              disableTouchListener
+                              arrow
+                              title={
+                                <div>
+                                  <p style={{ margin: '0', marginBottom: '4px' }}>{hour.lesson.topic}</p>
+                                </div>
+                              }
+                            >
+                              <span onClick={() => setOpenTooltip((c) => c === hour.date ? null : hour.date)} >
+                                mavzu
+                              </span>
+                            </HtmlTooltip>
+                          ) : (
+                            <HtmlTooltip
+                              PopperProps={{
+                                disablePortal: true,
+                              }}
+                              onClose={() => setOpenTooltip(null)}
+                              open={openTooltip === hour.date}
+                              disableFocusListener
+                              disableHoverListener
+                              disableTouchListener
+                              arrow
+                              title={
+                                <form
+                                  style={{
+                                    display: 'flex',
+                                    alignItems: 'stretch',
+                                    width: '100%',
+                                    padding: '5px',
+                                    flexDirection: 'column',
+                                    gap: '3px'
+                                  }}
+                                  onSubmit={async (e) => {
+                                    e.preventDefault()
+                                    try {
+                                      await api.post('common/topic/create/', { topic, group: invoiceData.id, date: hour.date })
+                                      getDates(`${query?.year || new Date().getFullYear()}-${getMontNumber(month)}`, invoiceData.id)
+                                      setOpenTooltip(null)
+                                    } catch (err) {
+                                      console.log(err)
+                                    }
+                                  }}
+                                >
+                                  <TextField autoComplete="off" onChange={(e) => setTopic(e.target.value)} size="small" placeholder="Yozing.." />
+                                  <Button type="submit">{t("Saqlash")}</Button>
+                                </form>
+                              }
+                            >
+                              <span onClick={() => setOpenTooltip((c) => c === hour.date ? null : hour.date)} >
+                                <IconifyIcon icon={'iconamoon:file-add-light'} />
+                              </span>
+                            </HtmlTooltip>
+                          )
                         }
                       </div>
                     </td>)

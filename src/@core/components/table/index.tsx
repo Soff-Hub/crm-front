@@ -14,10 +14,11 @@ interface DataTableProps {
   data: any[]
   minWidth?: string | undefined
   maxWidth?: string | undefined
-  rowClick?: any
+  rowClick?: any,
+  color?: boolean | undefined
 }
 
-export default function DataTable({ columns, data, minWidth, maxWidth, rowClick }: DataTableProps) {
+export default function DataTable({ columns, data, minWidth, maxWidth, rowClick, color }: DataTableProps) {
   const { query } = useRouter()
 
   const handleClick = (id: any) => {
@@ -67,7 +68,8 @@ export default function DataTable({ columns, data, minWidth, maxWidth, rowClick 
                 transition: 'all 0.3s ease',
                 boxShadow: 'rgba(0, 0, 0, 0.16) 0px 0px 0px, rgba(0, 0, 0, 0.23) 0px 0px 5px'
               },
-              position: 'relative'
+              position: 'relative',
+              backgroundColor: color ? item.color : 'transparent'
             }}
           >
             {columns.map((el: any, i) => (

@@ -12,8 +12,8 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   return {
     props: {
-      id: query.id,
-      month: query.month,
+      id: query?.id || null,
+      month: query?.month || null,
       tab: params?.tab
     },
   };

@@ -13,7 +13,7 @@ import useResponsive from 'src/@core/hooks/useResponsive'
 import api from 'src/@core/utils/api'
 import showResponseError from 'src/@core/utils/show-response-error'
 import { AuthContext } from 'src/context/AuthContext'
-import { addUserData } from 'src/store/apps/user'
+import { addUserData, setDepartmentsState } from 'src/store/apps/user'
 import LidsKanban from 'src/views/apps/lids/LidsKanban'
 import TeacherProfile from 'src/views/teacher-profile'
 
@@ -38,21 +38,32 @@ const Lids = () => {
   const handleClose = () => setOpen(null)
 
 
+  const getLeadsAll = async () => {
+    try {
+      const resp = await api.get(`leads/department/list/`)
+      dispatch(setDepartmentsState(resp.data))
+    } catch {
+      toast.error("Network Error", { position: 'bottom-center' })
+    }
+  }
+
   const getLeads = async () => {
     try {
       const resp = await api.get(`leads/department/list/?search=${query?.search || ''}&is_active=${query?.is_active === undefined ? true : query.is_active}`)
       const searched = resp.data.map((el: any) => ({ ...el, children: el.children.filter((item: any) => item.student_count > 0) }))
-      if ((!query?.search || query?.search === '') && query?.is_active !== 'false') {
+      if ((query?.search && query?.search !== "") || (query?.is_active === undefined ? true : query.is_active)) {
+        dispatch(addUserData(resp.data))
+        setLeadData(searched)
+        getLeadsAll()
+      } else {
         dispatch(addUserData(resp.data))
         setLeadData(resp.data)
-      } else {
-        // dispatch(addUserData(searched))
-        setLeadData(searched)
       }
     } catch {
       toast.error("Network Error", { position: 'bottom-center' })
     }
   }
+
 
 
   const getSources = async () => {
@@ -135,6 +146,7 @@ const Lids = () => {
   useEffect(() => {
     getLeads()
   }, [query])
+
 
   return user?.role === 'teacher' ? <TeacherProfile /> : (
     <Box sx={{ maxWidth: '100%', overflowX: 'scroll', padding: '10px', pt: 0 }}>
