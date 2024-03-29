@@ -95,6 +95,7 @@ const UserViewSecurity = ({ invoiceData }: any) => {
   const { user } = useContext(AuthContext)
   const [opened_id, setOpenedId] = useState<any>(null)
   const [openTooltip, setOpenTooltip] = useState<null | string>(null)
+  const [month, setMonth] = useState<any>(null)
 
 
   const [attendance, setAttendance] = useState<any>(null)
@@ -166,17 +167,24 @@ const UserViewSecurity = ({ invoiceData }: any) => {
   // }
 
   useEffect(() => {
-    getAttendance(`${query?.year || new Date().getFullYear()}-${getMontNumber(query.month)}`, invoiceData.id)
-    getDates(`${query?.year || new Date().getFullYear()}-${getMontNumber(query.month)}`, invoiceData.id)
-    // getTopics()
+    setMonth(query?.month)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  useEffect(() => {
+    if (month) {
+      getAttendance(`${query?.year || new Date().getFullYear()}-${getMontNumber(month)}`, invoiceData.id)
+      getDates(`${query?.year || new Date().getFullYear()}-${getMontNumber(month)}`, invoiceData.id)
+    }
+    // getTopics()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [month])
 
   return (
     <Box className='demo-space-y'>
       <ul style={{ display: 'flex', listStyle: 'none', margin: 0, padding: 0, gap: '15px', marginBottom: 12 }}>
         {
-          generateDates(getMontName(start_date), invoiceData.month_duration).map(item => <li key={item.date} onClick={() => handleClick(item)} style={{ borderBottom: query?.month === item.date ? '2px solid #c3cccc' : '2px solid transparent', cursor: 'pointer' }}>{item.date}</li>)
+          generateDates(getMontName(start_date), invoiceData.month_duration).map(item => <li key={item.date} onClick={() => handleClick(item)} style={{ borderBottom: month === item.date ? '2px solid #c3cccc' : '2px solid transparent', cursor: 'pointer' }}>{item.date}</li>)
         }
       </ul>
 
