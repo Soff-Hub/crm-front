@@ -49,7 +49,7 @@ const UserViewRight = ({ tab, invoiceData, groupData, rerender }: any) => {
     router
       .push({
         pathname: path,
-        query: { student: router.query.student }
+        query: { student: groupData.id }
       })
       .then(() => setIsLoading(false))
   }
