@@ -194,8 +194,8 @@ export default function RoomsPage() {
         {
             xs: 2,
             title: t('Sabab'),
-            dataIndex: 'branch',
-            render: () => <span>Lorem ipsum dolor sit amet consectetur.</span>
+            dataIndex: 'description',
+            render: (description) => <span>{description}</span>
         },
         {
             xs: 0.38,
