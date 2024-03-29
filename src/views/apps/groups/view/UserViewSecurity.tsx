@@ -166,13 +166,19 @@ const UserViewSecurity = ({ invoiceData }: any) => {
   //   }
   // }
 
+
+
   useEffect(() => {
-    setMonth(query?.month)
+    if (query?.month) {
+      setMonth(query?.month)
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [query?.month])
 
   useEffect(() => {
     if (month) {
+      console.log('month =>', month);
+
       getAttendance(`${query?.year || new Date().getFullYear()}-${getMontNumber(month)}`, invoiceData.id)
       getDates(`${query?.year || new Date().getFullYear()}-${getMontNumber(month)}`, invoiceData.id)
     }
