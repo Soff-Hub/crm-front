@@ -1,36 +1,22 @@
 // ** Next Import
-import { GetStaticProps, GetStaticPaths, GetStaticPropsContext, InferGetStaticPropsType } from 'next/types'
-
-// ** Third Party Imports
-import axios from 'axios'
-
-// ** Types
-import { InvoiceType } from 'src/types/apps/invoiceTypes'
+import { GetServerSidePropsContext, InferGetStaticPropsType } from 'next/types'
 
 // ** Demo Components Imports
 import UserViewPage from 'src/views/apps/mentors/view/UserViewPage'
 
-const UserView = ({ tab }: InferGetStaticPropsType<typeof getStaticProps>) => {
+const UserView = ({ tab }: InferGetStaticPropsType<typeof getServerSideProps>) => {
   return <UserViewPage tab={tab} />
 }
 
-export const getStaticPaths: GetStaticPaths = () => {
-  return {
-    paths: [
-      { params: { tab: 'overview' } },
-      { params: { tab: 'security' } },
-      { params: { tab: 'billing-plan' } },
-    ],
-    fallback: false
-  }
-}
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const { query, params } = context;
 
-export const getStaticProps: GetStaticProps = async ({ params }: GetStaticPropsContext) => {
   return {
     props: {
+      id: query.id,
       tab: params?.tab
-    }
-  }
+    },
+  };
 }
 
 export default UserView
