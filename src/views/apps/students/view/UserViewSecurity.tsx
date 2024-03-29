@@ -52,7 +52,7 @@ const UserViewSecurity = ({ groupData }: any) => {
 
   async function getPayments() {
     try {
-      const resp = await api.get(`common/student-payment/list/${query.student}`)
+      const resp = await api.get(`common/student-payment/list/${query.student}/`)
       setData(resp.data)
     } catch (err) {
       console.log(err)
@@ -71,7 +71,7 @@ const UserViewSecurity = ({ groupData }: any) => {
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
             {
               groupData.map((group: any) => (
-                <Link key={group.id} href={`/groups/view/security/?id=${group.group_data.id}&moonth=${getMontName(null)}`} style={{ textDecoration: 'none' }}>
+                <Link key={group.id} href={`/groups/view/security/?id=${group.group_data.id}&month=${getMontName(null)}`} style={{ textDecoration: 'none' }}>
                   <Box sx={{ display: 'flex', gap: '20px' }} >
                     <Card sx={{ width: isMobile ? '100%' : '50%' }}>
                       <CardContent sx={{ display: 'flex', justifyContent: 'space-between' }}>

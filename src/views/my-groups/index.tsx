@@ -23,7 +23,7 @@ export default function MyGroups() {
             <Box sx={{ display: 'flex', gap: '15px', mb: 3, flexWrap: 'wrap' }}>
                 {
                     groups.map((group: any) => (
-                        <Link key={'group.id'} href={`/groups/view/security/?id=${group.id}&moonth=${getMonthName(null)}`} style={{ textDecoration: 'none' }}>
+                        <Link key={'group.id'} href={`/groups/view/security/?id=${group.id}&month=${getMonthName(null)}`} style={{ textDecoration: 'none' }}>
                             <Box sx={{ display: 'flex', gap: '20px' }} >
                                 <Card>
                                     <CardContent sx={{ display: 'flex', justifyContent: 'space-between', minWidth: '320px' }}>

@@ -122,18 +122,12 @@ const UserViewSecurity = ({ invoiceData }: any) => {
   };
 
 
-  const handleClick = (value: any) => {
 
-    push({
-      pathname,
-      query: { ...query, moonth: value.date, year: value.year }
-    })
-  }
 
-  async function getAttendance() {
+  async function getAttendance(date: any, group: any) {
     setLoading(true)
     try {
-      const resp = await api.get(`common/attendance-list/${query?.year || new Date().getFullYear()}-${getMontNumber(query.moonth)}-01/group/${query.id}/`)
+      const resp = await api.get(`common/attendance-list/${date}-01/group/${group}/`)
       setAttendance(resp.data)
       setLoading(false)
     } catch (err) {
@@ -142,18 +136,29 @@ const UserViewSecurity = ({ invoiceData }: any) => {
     }
   }
 
-  const getDates = async () => {
+  const getDates = async (date: any, group: any) => {
     try {
-      const resp = await api.get(`common/day-of-week/${query.id}/date/${query?.year || new Date().getFullYear()}-${getMontNumber(query.moonth)}-01/`)
+      const resp = await api.get(`common/day-of-week/${group}/date/${date}-01/`)
       setDays(resp.data);
     } catch (err) {
       console.log(err)
     }
   }
 
+  const handleClick = (value: any) => {
+
+    getAttendance(`${value.year}-${getMontNumber(value.date)}`, invoiceData.id)
+    getDates(`${value.year}-${getMontNumber(value.date)}`, invoiceData.id)
+
+    push({
+      pathname,
+      query: { ...query, month: value.date, year: value.year, id: invoiceData.id }
+    })
+  }
+
   // const getTopics = async () => {
   //   try {
-  //     const resp = await api.get(`common/topic/list/date/${query?.year || new Date().getFullYear()}-${getMontNumber(query.moonth)}-01/group/${query.id}/`)
+  //     const resp = await api.get(`common/topic/list/date/${query?.year || new Date().getFullYear()}-${getMontNumber(query.month)}-01/group/${query.id}/`)
   //     console.log(resp.data);
   //   } catch (err) {
   //     console.log(err)
@@ -161,19 +166,17 @@ const UserViewSecurity = ({ invoiceData }: any) => {
   // }
 
   useEffect(() => {
-    if (query?.moonth) {
-      getAttendance()
-      getDates()
-    }
+    getAttendance(`${query?.year || new Date().getFullYear()}-${getMontNumber(query.month)}`, invoiceData.id)
+    getDates(`${query?.year || new Date().getFullYear()}-${getMontNumber(query.month)}`, invoiceData.id)
     // getTopics()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [query.moonth])
+  }, [])
 
   return (
     <Box className='demo-space-y'>
       <ul style={{ display: 'flex', listStyle: 'none', margin: 0, padding: 0, gap: '15px', marginBottom: 12 }}>
         {
-          generateDates(getMontName(start_date), invoiceData.month_duration).map(item => <li key={item.date} onClick={() => handleClick(item)} style={{ borderBottom: query?.moonth === item.date ? '2px solid #c3cccc' : '2px solid transparent', cursor: 'pointer' }}>{item.date}</li>)
+          generateDates(getMontName(start_date), invoiceData.month_duration).map(item => <li key={item.date} onClick={() => handleClick(item)} style={{ borderBottom: query?.month === item.date ? '2px solid #c3cccc' : '2px solid transparent', cursor: 'pointer' }}>{item.date}</li>)
         }
       </ul>
 

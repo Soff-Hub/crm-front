@@ -17,7 +17,7 @@ export const getStaticPaths: GetStaticPaths = () => {
   }
 }
 
-export const getStaticProps: GetStaticProps = async ({ params }: GetStaticPropsContext) => {
+export const getStaticProps: GetStaticProps = async ({ params, previewData }: GetStaticPropsContext) => {
   return {
     props: {
       tab: params?.tab

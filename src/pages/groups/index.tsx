@@ -158,7 +158,7 @@ export default function GroupsPage() {
             component={Link}
             sx={{ '& svg': { mr: 2 } }}
             onClick={handleRowOptionsClose}
-            href={`/groups/view/security?id=${id}&moonth=${getMontName(null)}`}
+            href={`/groups/view/security?id=${id}&month=${getMontName(null)}`}
           >
             <IconifyIcon icon='mdi:eye-outline' fontSize={20} />
             Ko'rish
@@ -304,7 +304,7 @@ export default function GroupsPage() {
   }
 
   const rowClick = (id: any) => {
-    push(`/groups/view/security?id=${id}&moonth=${getMontName(null)}`)
+    push(`/groups/view/security?id=${id}&month=${getMontName(null)}`)
   }
 
   useMemo(() => {

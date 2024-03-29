@@ -27,7 +27,7 @@ const UserViewSecurity = ({ data }: any) => {
     <Box className='demo-space-y' sx={{ display: 'flex', flexDirection: 'column' }}>
       {
         newData.map((_: any, index: number) => (
-          <Link href={`/groups/view/security/?id=${_.id}&moonth=${getMontName(null)}`} key={index} style={{ textDecoration: 'none' }}>
+          <Link href={`/groups/view/security/?id=${_.id}&month=${getMontName(null)}`} key={index} style={{ textDecoration: 'none' }}>
             <Box sx={{ display: 'flex', gap: '20px', cursor: 'pointer' }}>
               <Card sx={{ width: isMobile ? '100%' : '50%' }}>
                 <CardContent sx={{ display: 'flex', justifyContent: 'space-between' }}>

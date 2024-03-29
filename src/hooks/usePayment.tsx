@@ -38,7 +38,7 @@ export default function usePayment() {
 
     const getPaymentList = async (id: any) => {
         try {
-            const resp = await api.get('common/student-payment/list/' + id)
+            const resp = await api.get('common/student-payment/list/' + id + '/')
             setPaymentData(resp.data)
         } catch (err) {
             return err
