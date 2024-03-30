@@ -36,7 +36,8 @@ interface StudentType {
 
 interface ItemTypes {
     item: StudentType
-    index: any
+    index: any,
+    status?:any
 }
 
 const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
@@ -53,9 +54,9 @@ const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
     },
 }));
 
-export const UserViewStudentsItem = ({ item, index }: ItemTypes) => {
+export const UserViewStudentsItem = ({ item, index,status }: ItemTypes) => {
     const { student } = item
-    const { first_name, phone, added_at, created_at, balance, comment, id, status } = student
+    const { first_name, phone, added_at, created_at, balance, comment, id } = student
     const { push, query } = useRouter()
     const { user } = useContext(AuthContext)
 
@@ -104,12 +105,12 @@ export const UserViewStudentsItem = ({ item, index }: ItemTypes) => {
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', py: 1 }}>
                         <Box>
                             <Typography fontSize={12}>{first_name}</Typography>
-                            <Typography variant='body2' fontSize={12}>Faol</Typography>
+                            <Typography variant='body2' fontSize={12}>{status == 'active' ? 'Faol' : status == 'new' ? 'Sinov darsida' : 'Arxiv'}</Typography>
                         </Box>
                         <Typography variant='body2' fontSize={10}>{`( ID: 134 )`}</Typography>
                     </Box>
                     <Box py={1} borderTop={'1px solid #c3cccc'}>
-                        <Typography variant='body2' fontSize={12}>Tstatusefon</Typography>
+                        <Typography variant='body2' fontSize={12}>Telefon</Typography>
                         <Typography fontSize={12}>{phone}</Typography>
                     </Box>
                     <Box py={1} borderTop={'1px solid #c3cccc'}>
@@ -121,7 +122,7 @@ export const UserViewStudentsItem = ({ item, index }: ItemTypes) => {
                         <Typography fontSize={12}>{added_at}</Typography>
                     </Box>
                     <Box py={1} borderTop={'1px solid #c3cccc'}>
-                        <Typography variant='body2' fontSize={12}>Faollashtirilgan</Typography>
+                        <Typography variant='body2' fontSize={12}>Qo'shilgan sana</Typography>
                         <Typography fontSize={12}>{formatDateTime(created_at)}</Typography>
                     </Box>
                     {comment && <Box py={1} borderTop={'1px solid #c3cccc'}>
@@ -184,7 +185,7 @@ export default function UserViewStudentsList({ data }: any) {
             <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%', mt: '10px', gap: '5px' }}>
                 {
                     data.map((el: any, index: any) => (
-                        <UserViewStudentsItem key={el.id} item={el} index={index + 1} />
+                        <UserViewStudentsItem key={el.id} item={el} index={index + 1} status={el.status} />
                     ))
                 }
             </Box>
