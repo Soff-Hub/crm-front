@@ -250,10 +250,10 @@ export default function AccordionCustom({ onView, item, reRender }: AccordionPro
                         <FormControl fullWidth>
                             <TextField label={t("Bo'lim nomi")} size='small' defaultValue={item.name} name='name' />
                         </FormControl>
-
+{/* 
                         <FormControl fullWidth>
                             <TextField label={t("Bo'lim tartibi")} size='small' name='order' />
-                        </FormControl>
+                        </FormControl> */}
 
                         <LoadingButton loading={loading} type='submit' variant='outlined'>{t("Saqlash")}</LoadingButton>
                     </Form>

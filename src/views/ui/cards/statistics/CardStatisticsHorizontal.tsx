@@ -21,7 +21,12 @@ const CardStatsHorizontal = ({ data }: Props) => {
         {data.map((item: CardStatsHorizontalProps, index: number) => {
           return (
             <Grid item xs={12} md={3} sm={6} key={index}>
-              <CardStatisticsHorizontal {...item} icon={<Icon icon={item.icon as string} />} />
+              {item.id ? (
+                <a href={item.id} style={{ textDecoration: 'none', cursor: 'pointer' }}>
+                  <CardStatisticsHorizontal {...item} icon={<Icon icon={item.icon as string} />} />
+                </a>
+              ) : <CardStatisticsHorizontal {...item} icon={<Icon icon={item.icon as string} />} />
+              }
             </Grid>
           )
         })}

@@ -18,7 +18,8 @@ import CardStatisticsMarketingSales from 'src/views/ui/cards/statistics/CardStat
 import KeenSliderWrapper from 'src/@core/styles/libs/keen-slider'
 import ApexChartWrapper from 'src/@core/styles/libs/react-apexcharts'
 import { Typography } from '@mui/material'
-import EditableTable from 'src/@core/components/table/editable-table'
+import GroupFinanceTable from 'src/views/apps/finance/GroupTable'
+import FinanceEditableTable from 'src/views/apps/finance/GroupEditableTable'
 
 const CardStatistics = () => {
 
@@ -30,29 +31,33 @@ const CardStatistics = () => {
                 trend: 'negative',
                 icon: 'mdi:trending-up',
                 trendNumber: '12.6%',
-                title: 'Umumiy Tushum'
+                title: 'Tushum (oxirgi oy)',
+                id: '#tushumlar'
             },
             {
                 stats: '31,412,000',
                 color: 'error',
                 icon: 'mdi:trending-down',
                 trendNumber: '22.5%',
-                title: 'Umumiy Chiqim'
+                title: 'Chiqim (oxirgi oy)',
+                id: '#chiqimlar'
             },
             {
-                icon: 'ph:student-light',
+                color: 'success',
+                stats: '64,550,000',
                 trend: 'negative',
-                trendNumber: '7.2%',
-                title: "O'quvchilar statistikasi",
-                stats: '313',
-                color: 'warning',
+                icon: 'mdi:trending-up',
+                trendNumber: '12.6%',
+                title: 'Tushum (oxirgi yil)',
+                id: '#tushumlar'
             },
             {
-                stats: '250',
-                trend: 'positive',
-                trendNumber: '8.1%',
-                title: 'Lidlar statistikasi',
-                icon: 'mdi:account-outline'
+                stats: '31,412,000',
+                color: 'error',
+                icon: 'mdi:trending-down',
+                trendNumber: '22.5%',
+                title: 'Chiqim (oxirgi yil)',
+                id: '#chiqimlar'
             }
         ],
         statsVertical: [
@@ -162,25 +167,31 @@ const CardStatistics = () => {
                         <CardStatisticsLiveVisitors />
                     </Grid>
 
-                    <Grid item xs={12} md={12}>
-                        <EditableTable />
+                    <div id='tushumlar'></div>
+                    <Grid item xs={12}>
+                        <Typography>Guruh to'lovlari</Typography>
                     </Grid>
 
-                    {/* <Grid item xs={12}>
+                    <Grid item xs={12} md={12}>
+                        <GroupFinanceTable />
+                    </Grid>
+
+                    <Grid item xs={12}>
+                        <Typography>Chiqimlar hisoboti</Typography>
+                    </Grid>
+                    <div id='chiqimlar'></div>
+
+                    <Grid item xs={12} md={12} >
+                        <FinanceEditableTable />
+                    </Grid>
+
+                    <Grid item xs={12}>
                         <CardStatisticsCharacters data={apiData.statsCharacter} />
-                    </Grid> */}
+                    </Grid>
 
                     <Grid item xs={12}>
                         <CardStatisticsVertical data={apiData.statsVertical} />
                     </Grid>
-
-                    <Grid item xs={12}>
-                        <CardStatisticsCharts />
-                    </Grid>
-
-                    {/* <Grid item xs={12}>
-                        <CardStatisticsCharts2 />
-                    </Grid> */}
                 </Grid>
             </KeenSliderWrapper>
         </ApexChartWrapper>

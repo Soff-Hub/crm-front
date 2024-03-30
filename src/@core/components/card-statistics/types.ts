@@ -11,7 +11,8 @@ export type CardStatsHorizontalProps = {
   icon: ReactNode
   color?: ThemeColor
   trendNumber?: string
-  trend?: 'positive' | 'negative'
+  trend?: 'positive' | 'negative',
+  id?: string
 }
 
 export type CardStatsVerticalProps = {
@@ -22,7 +23,8 @@ export type CardStatsVerticalProps = {
   color?: ThemeColor
   trendNumber?: string;
   trend?: 'positive' | 'negative'
-  optionsMenuProps?: OptionsMenuType
+  optionsMenuProps?: OptionsMenuType,
+  id?: string
 }
 
 export type CardStatsCharacterProps = {

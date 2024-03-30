@@ -51,14 +51,31 @@ const Lids = () => {
     try {
       const resp = await api.get(`leads/department/list/?search=${query?.search || ''}&is_active=${query?.is_active === undefined ? true : query.is_active}`)
       const searched = resp.data.map((el: any) => ({ ...el, children: el.children.filter((item: any) => item.student_count > 0) }))
-      if ((query?.search && query?.search !== "") || (query?.is_active === undefined ? true : query.is_active)) {
-        dispatch(addUserData(resp.data))
-        setLeadData(searched)
-        getLeadsAll()
-      } else {
-        dispatch(addUserData(resp.data))
-        setLeadData(resp.data)
+      
+      if (!query?.search) {
+        if (query?.is_active === 'false') {
+          setLeadData(searched)
+        } else {
+          dispatch(addUserData(resp.data))
+          setLeadData(resp.data)
+        }
       }
+      else {
+        if (query?.search === '') {
+          if (query?.is_active === 'false') {
+            setLeadData(searched)
+          } else {
+            dispatch(addUserData(resp.data))
+            setLeadData(resp.data)
+          }
+        }
+        else {
+          setLeadData(searched)
+          dispatch(addUserData(resp.data))
+        }
+      }
+
+      getLeadsAll()
     } catch {
       toast.error("Network Error", { position: 'bottom-center' })
     }
@@ -217,7 +234,7 @@ const Lids = () => {
         <DialogContent sx={{ minWidth: '320px' }}>
           <Form onSubmit={createDepartment} valueTypes='json' id='ddassdscd' sx={{ padding: '5px 0', width: '100%', display: 'flex', flexDirection: 'column', gap: '15px' }}>
             <TextField fullWidth size='small' label={t("Bo'lim nomi")} name='name' />
-            <TextField fullWidth size='small' label={t("Bo'lim tartibi")} type='number' name='order' />
+            {/* <TextField fullWidth size='small' label={t("Bo'lim tartibi")} type='number' name='order' /> */}
             <Button type='submit' variant='outlined'>{t("Yaratish")}</Button>
           </Form>
         </DialogContent>
@@ -242,10 +259,10 @@ const Lids = () => {
               <FormHelperText error={error.name?.error}>{error.name?.message}</FormHelperText>
             </FormControl>
 
-            <FormControl fullWidth>
+            {/* <FormControl fullWidth>
               <TextField fullWidth size='small' label={t("Bo'lim tartibi")} type='number' name='order' />
               <FormHelperText error={error.order?.error}>{error.order?.message}</FormHelperText>
-            </FormControl>
+            </FormControl> */}
 
             <LoadingButton loading={loading} type='submit' variant='outlined'>{t("Yaratish")}</LoadingButton>
           </Form>

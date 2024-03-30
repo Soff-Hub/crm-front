@@ -285,7 +285,7 @@ const UserViewSecurity = ({ invoiceData }: any) => {
                                     }
                                   }}
                                 >
-                                  <TextField autoComplete="off" onChange={(e) => setTopic(e.target.value)} size="small" placeholder="Yozing.." />
+                                  <TextField autoComplete="off" onChange={(e) => setTopic(e.target.value)} size="small" placeholder="Mavzu.." />
                                   <Button type="submit">{t("Saqlash")}</Button>
                                 </form>
                               }
