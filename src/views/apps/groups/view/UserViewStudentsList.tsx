@@ -100,7 +100,7 @@ export const UserViewStudentsItem = ({ item, index, status, activeId }: ItemType
     const handleActivate = async () => {
         setLoading(true)
         try {
-            await api.post(`common/group/student/update/${activeId}`, {
+            await api.patch(`common/group-student-update/${activeId}`, {
                 status: 'active'
             })
             toast.success("O'quvchi guruhdan chetlatildi", { position: 'top-center' })
