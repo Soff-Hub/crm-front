@@ -1,5 +1,6 @@
-import { Box, Card, Paper, Radio, Typography, styled } from '@mui/material'
+import { Box, Card, Checkbox, Paper, Radio, Typography, styled } from '@mui/material'
 import React from 'react'
+import IconifyIcon from 'src/@core/components/icon'
 import { formatCurrency } from 'src/@core/utils/format-currency'
 import { hexToRGBA } from 'src/@core/utils/hex-to-rgba'
 
@@ -9,6 +10,13 @@ interface GroupStatsType {
     student_count: number
     plan: number
     income: number
+}
+
+
+interface ExpensesType {
+    id: Number
+    description: string
+    amount: number
 }
 
 const NavigationMenu = styled(Paper)(({ theme }) => ({
@@ -54,70 +62,34 @@ export default function GroupFinanceTable() {
         income: 5700000
     }
 
+    const expenses: ExpensesType = {
+        id: 1,
+        amount: 300000,
+        description: "Ofis uchun 2ta monitor"
+    }
+
     return (
         <Card>
             <Box sx={{ padding: '5px 0' }}>
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    <label style={{ display: 'flex', alignItems: 'center' }}>
-                        <Radio name='year_month' value={false} />
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+                    <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
+                        <Radio name='year_month' checked={true} />
                         <Typography>Yillik</Typography>
                     </label>
-                    <label style={{ display: 'flex', alignItems: 'center' }}>
-                        <Radio name='year_month' value={true} />
+                    <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
+                        <Radio name='year_month' />
                         <Typography>Oylik</Typography>
                     </label>
+
+                    <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
+                        <Checkbox name='comments' checked={false} />
+                        <Typography>Izohlar</Typography>
+                    </label>
+
                 </Box>
             </Box>
             <Card sx={{ display: 'flex', p: '15px', gap: '5px' }}>
-                <Box className='header' sx={{ minWidth: '150px' }}>
-                    <Div sx={{ mb: '5px' }}>2024</Div>
-                    <Box>
-                        <Box sx={{ border: '1px solid #c3cccc', p: '5px' }} >Nomi / Guruh</Box>
-                        <Box sx={{ border: '1px solid #c3cccc', p: '5px' }} >O'quvchi soni</Box>
-                        <Box sx={{ border: '1px solid #c3cccc', p: '5px' }} >Reja</Box>
-                        <Box sx={{ border: '1px solid #c3cccc', p: '5px' }} >Tushum</Box>
-                    </Box>
-                </Box>
-                <Box className='header' sx={{ minWidth: '150px' }}>
-                    <Div sx={{ mb: '5px' }}>Umumiy</Div>
-                    <Box>
-                        <Box sx={{ border: '1px solid #c3cccc', p: '5px' }}>20 ta guruh</Box>
-                        <Box sx={{ border: '1px solid #c3cccc', p: '5px' }}>120 ta o'quvchi</Box>
-                        <Box sx={{ border: '1px solid #c3cccc', p: '5px' }}>{formatCurrency(30000000)}</Box>
-                        <Box sx={{ border: '1px solid #c3cccc', p: '5px' }}>{formatCurrency(27000000)}</Box>
-                    </Box>
-                </Box>
-                <Box className='body' sx={{ flexGrow: 1 }}>
-                    <Div sx={{ textAlign: 'center', mb: '5px' }}>Mart</Div>
-                    <NavigationMenu sx={{ display: 'flex', maxWidth: '1050px', overflowX: 'auto' }}>
-                        {
-                            Array(20).fill(data).map((group: GroupStatsType) => (
-                                <Box sx={{ minWidth: '150px' }}>
-                                    <Box sx={{ border: '1px solid #c3cccc', p: '5px' }}>
-                                        <Typography>
-                                            {group.name}
-                                        </Typography>
-                                    </Box>
-                                    <Box sx={{ border: '1px solid #c3cccc', p: '5px' }}>
-                                        <Typography>
-                                            {group.student_count}
-                                        </Typography>
-                                    </Box>
-                                    <Box sx={{ border: '1px solid #c3cccc', p: '5px' }}>
-                                        <Typography>
-                                            {formatCurrency(group.plan)}
-                                        </Typography>
-                                    </Box>
-                                    <Box sx={{ border: '1px solid #c3cccc', p: '5px' }}>
-                                        <Typography>
-                                            {formatCurrency(group.income)}
-                                        </Typography>
-                                    </Box>
-                                </Box>
-                            ))
-                        }
-                    </NavigationMenu>
-                </Box>
+                
             </Card>
         </Card>
     )

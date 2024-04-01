@@ -5,14 +5,8 @@ import Grid from '@mui/material/Grid'
 import { CardStatsType } from 'src/@fake-db/types'
 
 // ** Demo Components Imports
-import CardStatisticsSales from 'src/views/ui/cards/statistics/CardStatisticsSales'
-import CardStatisticsCharts from 'src/views/ui/cards/statistics/CardStatisticsCharts'
-import CardStatisticsCharts2 from 'src/views/ui/cards/statistics/CardStatisticsCharts2'
-import CardStatisticsVertical from 'src/views/ui/cards/statistics/CardStatisticsVertical'
 import CardStatisticsHorizontal from 'src/views/ui/cards/statistics/CardStatisticsHorizontal'
-import CardStatisticsCharacters from 'src/views/ui/cards/statistics/CardStatisticsCharacters'
 import CardStatisticsLiveVisitors from 'src/views/ui/cards/statistics/CardStatisticsLiveVisitors'
-import CardStatisticsMarketingSales from 'src/views/ui/cards/statistics/CardStatisticsMarketingSales'
 
 // ** Styled Component Import
 import KeenSliderWrapper from 'src/@core/styles/libs/keen-slider'
@@ -183,14 +177,6 @@ const CardStatistics = () => {
 
                     <Grid item xs={12} md={12} >
                         <FinanceEditableTable />
-                    </Grid>
-
-                    <Grid item xs={12}>
-                        <CardStatisticsCharacters data={apiData.statsCharacter} />
-                    </Grid>
-
-                    <Grid item xs={12}>
-                        <CardStatisticsVertical data={apiData.statsVertical} />
                     </Grid>
                 </Grid>
             </KeenSliderWrapper>
