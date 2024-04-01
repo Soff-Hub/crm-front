@@ -37,7 +37,8 @@ interface StudentType {
 interface ItemTypes {
     item: StudentType
     index: any,
-    status?:any
+    status?: any,
+    activeId?: any
 }
 
 const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
@@ -54,7 +55,7 @@ const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
     },
 }));
 
-export const UserViewStudentsItem = ({ item, index,status }: ItemTypes) => {
+export const UserViewStudentsItem = ({ item, index, status, activeId }: ItemTypes) => {
     const { student } = item
     const { first_name, phone, added_at, created_at, balance, comment, id } = student
     const { push, query } = useRouter()
@@ -62,6 +63,7 @@ export const UserViewStudentsItem = ({ item, index,status }: ItemTypes) => {
 
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [openLeft, setOpenLeft] = useState<boolean>(false)
+    const [activate, setActivate] = useState<boolean>(false)
     const [loading, setLoading] = useState<boolean>(false)
 
     const open = Boolean(anchorEl);
@@ -94,6 +96,22 @@ export const UserViewStudentsItem = ({ item, index,status }: ItemTypes) => {
             setLoading(false)
         }
     }
+
+    const handleActivate = async () => {
+        setLoading(true)
+        try {
+            await api.post(`common/group/student/update/${activeId}`, {
+                status: 'active'
+            })
+            toast.success("O'quvchi guruhdan chetlatildi", { position: 'top-center' })
+            setLoading(false)
+            setOpenLeft(false)
+        } catch (err) {
+            console.log(err)
+            setLoading(false)
+        }
+    }
+
 
 
     return (
@@ -161,6 +179,7 @@ export const UserViewStudentsItem = ({ item, index,status }: ItemTypes) => {
                 <MenuItem onClick={() => handleClose('payment')}>To'lov</MenuItem>
                 <MenuItem onClick={() => handleClose('left')}>Guruhdan chiqarish</MenuItem>
                 <MenuItem onClick={() => handleClose('notes')}>Eslatmalar</MenuItem>
+                <MenuItem onClick={() => setActivate(true)}>Aktivlashtirish</MenuItem>
             </Menu>
 
             <Dialog open={openLeft} onClose={() => setOpenLeft(false)}>
@@ -170,6 +189,17 @@ export const UserViewStudentsItem = ({ item, index,status }: ItemTypes) => {
                     <Box sx={{ display: 'flex', justifyContent: 'center', gap: 4 }}>
                         <Button onClick={() => setOpenLeft(false)} size='small' variant='outlined' color='error'>bekor qilish</Button>
                         <LoadingButton loading={loading} onClick={handleLeft} size='small' variant='contained' color='success'>Tasdiqlash</LoadingButton>
+                    </Box>
+                </DialogContent>
+            </Dialog>
+
+            <Dialog open={activate} onClose={() => setActivate(false)}>
+                <DialogContent sx={{ maxWidth: '350px' }}>
+                    <Typography sx={{ fontSize: '20px', textAlign: 'center', mb: 3 }}>O'quvchini aktivlashtiring</Typography>
+
+                    <Box sx={{ display: 'flex', justifyContent: 'center', gap: 4 }}>
+                        <Button onClick={() => setActivate(false)} size='small' variant='outlined' color='error'>bekor qilish</Button>
+                        <LoadingButton loading={loading} onClick={handleActivate} size='small' variant='contained' color='success'>Tasdiqlash</LoadingButton>
                     </Box>
                 </DialogContent>
             </Dialog>
@@ -185,7 +215,7 @@ export default function UserViewStudentsList({ data }: any) {
             <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%', mt: '10px', gap: '5px' }}>
                 {
                     data.map((el: any, index: any) => (
-                        <UserViewStudentsItem key={el.id} item={el} index={index + 1} status={el.status} />
+                        <UserViewStudentsItem key={el.id} activeId={el.id} item={el} index={index + 1} status={el.status} />
                     ))
                 }
             </Box>
