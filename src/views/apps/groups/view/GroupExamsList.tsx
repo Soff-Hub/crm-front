@@ -205,11 +205,11 @@ const GroupExamsList = () => {
 
 
     const sendResult = async (values: any) => {
-        // setLoading(true)
+        setLoading(true)
         const findedStudent = result.find((el: any) => el.result.id === resultEdit)
 
         try {
-            await api[findedStudent.result.score > 0 ? 'patch' : 'post'](`common/exam/student/${findedStudent.result.score > 0 ? `update/${findedStudent.result.score > 0 ? findedStudent.result.result_id : resultEdit}` : 'create'}`, {
+            await api[findedStudent.result.score > 0 ? 'patch' : 'post'](`common/exam/student/${findedStudent.result.score > 0 ? `update/${findedStudent.result.score > 0 ? findedStudent.result.result_id : resultEdit}` : 'create/'}`, {
                 student: resultEdit,
                 description: values.description,
                 score: values.score,
