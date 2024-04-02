@@ -167,7 +167,7 @@ const GroupExamsList = () => {
             render: (result: any) => result.first_name
         },
         {
-            xs: 0.2,
+            xs: 0.12,
             title: t("Natija"),
             dataIndex: 'result',
             render: (result: any) => result.score
@@ -177,6 +177,12 @@ const GroupExamsList = () => {
             title: t("Maksimal bal"),
             dataIndex: 'result',
             render: (result: any) => result.max_score
+        },
+        {
+            xs: 0.2,
+            title: t("Holati"),
+            dataIndex: 'result',
+            render: (result: any) => result.status === "bad" ? "yiqildi" : result.status === "new" ? "kelmagan" : result.status === "good" ? "yaxshi" : "A'lo"
         },
         {
             xs: 0.6,
