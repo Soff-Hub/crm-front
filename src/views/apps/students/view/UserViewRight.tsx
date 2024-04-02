@@ -21,6 +21,7 @@ import Icon from 'src/@core/components/icon'
 import UserViewOverview from 'src/views/apps/students/view/UserViewOverview'
 import UserViewSecurity from 'src/views/apps/students/view/UserViewSecurity'
 import UserSmsList from './UserSmsList'
+import { useTranslation } from 'react-i18next'
 
 
 // ** Styled Tab component
@@ -37,6 +38,7 @@ const UserViewRight = ({ tab, invoiceData, groupData, rerender }: any) => {
   // ** State
   const [activeTab, setActiveTab] = useState<string>(tab)
   const [isLoading, setIsLoading] = useState<boolean>(true)
+  const { t } = useTranslation()
 
   // ** Hooks
   const router = useRouter()
@@ -85,7 +87,7 @@ const UserViewRight = ({ tab, invoiceData, groupData, rerender }: any) => {
         {isLoading ? (
           <Box sx={{ mt: 6, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
             <CircularProgress sx={{ mb: 4 }} />
-            <Typography>Loading...</Typography>
+            <Typography>{t("Loading...")}</Typography>
           </Box>
         ) : (
           <>

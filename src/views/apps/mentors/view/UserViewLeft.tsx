@@ -172,7 +172,7 @@ const UserViewLeft = ({ userData }: { userData?: UsersType | undefined }) => {
                     <IconifyIcon icon='la:users' />
                   </CustomAvatar>
                   <div>
-                    <Typography variant='body2'>Faol Guruhlari</Typography>
+                    <Typography variant='body2'>{t("Faol Guruhlari")}</Typography>
                     <Typography variant='h6' sx={{ lineHeight: 1.3 }}>
                       {data?._groups?.length || 0} ta
                     </Typography>
@@ -183,7 +183,7 @@ const UserViewLeft = ({ userData }: { userData?: UsersType | undefined }) => {
                     <IconifyIcon icon='mdi:briefcase-variant-outline' />
                   </CustomAvatar>
                   <div>
-                    <Typography variant='body2'>Rollari</Typography>
+                    <Typography variant='body2'>{t("Rollari")}</Typography>
                     <Typography variant='h6' sx={{ lineHeight: 1.3 }}>
                       {data.roles.filter(el => el.exists).length} ta
                     </Typography>
@@ -193,9 +193,9 @@ const UserViewLeft = ({ userData }: { userData?: UsersType | undefined }) => {
             </CardContent>
 
             <CardContent>
-              <Typography variant='h6' sx={{ textAlign: 'center', mb: 4 }}>Boshqa Tafsilotlar</Typography>
+              <Typography variant='h6' sx={{ textAlign: 'center', mb: 4 }}>{t("Boshqa Tafsilotlar")}</Typography>
               <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', alignItems: 'center' }}>
-                Tizimdagi rollari: {
+                {t("Tizimdagi rollari")} : {
                   data.roles.map((role) => {
                     return role.exists ? (<CustomChip
                       key={role.id}
@@ -217,17 +217,17 @@ const UserViewLeft = ({ userData }: { userData?: UsersType | undefined }) => {
               </Box>
               <Box sx={{ pt: 2, pb: 1 }}>
                 <Box sx={{ display: 'flex', mb: 2.7 }}>
-                  <Typography sx={{ mr: 2, fontWeight: 500, fontSize: '0.875rem' }}>Aloqa:</Typography>
+                  <Typography sx={{ mr: 2, fontWeight: 500, fontSize: '0.875rem' }}>{t("phone")}:</Typography>
                   <Typography variant='body2'>{data.phone}</Typography>
                 </Box>
                 <Box sx={{ display: 'flex', mb: 2.7 }}>
-                  <Typography sx={{ mr: 2, fontWeight: 500, fontSize: '0.875rem' }}>Tug'ilgan sanasi:</Typography>
+                  <Typography sx={{ mr: 2, fontWeight: 500, fontSize: '0.875rem' }}>{t("birth_date")}:</Typography>
                   <Typography variant='body2'>{data.birth_date?.split('-').reverse().join(',')}</Typography>
                 </Box>
               </Box>
               <Box sx={{ pt: 2, pb: 1 }}>
                 <Box sx={{ display: 'flex', mb: 2.7 }}>
-                  <Typography sx={{ mr: 2, fontWeight: 500, fontSize: '0.875rem' }}>Biriktirilgan Filiallar:</Typography>
+                  <Typography sx={{ mr: 2, fontWeight: 500, fontSize: '0.875rem' }}>{t("Biriktirilgan Filiallar")}:</Typography>
                   <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', alignItems: 'center' }}>
                     {
                       data.branches.map((branch, index) => {
@@ -256,7 +256,7 @@ const UserViewLeft = ({ userData }: { userData?: UsersType | undefined }) => {
 
             <CardActions sx={{ display: 'flex', justifyContent: 'center' }}>
               <Button variant='contained' sx={{ mr: 2 }} onClick={handleEditClickOpen}>
-                Tahrirlash
+                {t("Tahrirlash")}
               </Button>
             </CardActions>
 
@@ -268,7 +268,7 @@ const UserViewLeft = ({ userData }: { userData?: UsersType | undefined }) => {
               aria-describedby='user-view-edit-description'
             >
               <DialogTitle id='user-view-edit' sx={{ textAlign: 'center', fontSize: '1.5rem !important' }}>
-              O'qituvchi ma'lumotlarini tahrirlash
+                {t("O'qituvchi ma'lumotlarini tahrirlash")}
               </DialogTitle>
               <DialogContent>
                 <Form reqiuredFields={['phone', 'branches', 'roles', 'first_name']} setError={setError} valueTypes='form-data' sx={{ marginTop: 10 }} onSubmit={handleSubmit} id='edit-employee'>
@@ -308,7 +308,7 @@ const UserViewLeft = ({ userData }: { userData?: UsersType | undefined }) => {
                     </Grid>
                     <Grid item xs={12} sm={6}>
                       <FormControl fullWidth>
-                        <InputLabel id='user-view-country-label' size='small'>Roli</InputLabel>
+                        <InputLabel id='user-view-country-label' size='small'>{t("Roli")}</InputLabel>
                         <Select
                           error={error.roles?.error}
                           size='small'
@@ -336,7 +336,7 @@ const UserViewLeft = ({ userData }: { userData?: UsersType | undefined }) => {
                           tabIndex={-1}
                           startIcon={<IconifyIcon icon={'subway:cloud-upload'} />}
                         >
-                          Rasm qo'shish
+                          {t("Rasm qo'shish")}
                           <VisuallyHiddenInput onChange={(e: any) => setFile(e.target.files[0])} type="file" accept='.png, .jpg, .jpeg, .webp, .HEIC, .heic' />
                         </Button>
                       </FormControl>

@@ -212,7 +212,7 @@ const Lids = () => {
           ) : (
             <Box sx={{ mt: 6, display: 'flex', alignItems: 'center', flexDirection: 'column', width: '100%' }}>
               <CircularProgress sx={{ mb: 4 }} />
-              <Typography>Loading...</Typography>
+              <Typography>{t("Loading...")}</Typography>
             </Box>
           )
         }

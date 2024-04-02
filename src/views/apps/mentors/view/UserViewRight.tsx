@@ -21,6 +21,7 @@ import Icon from 'src/@core/components/icon'
 import UserViewBilling from 'src/views/apps/mentors/view/UserViewBilling'
 import UserViewOverview from 'src/views/apps/mentors/view/UserViewOverview'
 import UserViewSecurity from 'src/views/apps/mentors/view/UserViewSecurity'
+import { useTranslation } from 'react-i18next'
 
 
 interface Props {
@@ -42,6 +43,7 @@ const UserViewRight = ({ tab, invoiceData }: Props) => {
   // ** State
   const [activeTab, setActiveTab] = useState<string>(tab)
   const [isLoading, setIsLoading] = useState<boolean>(true)
+  const { t } = useTranslation()
 
   // ** Hooks
   const router = useRouter()
@@ -82,14 +84,14 @@ const UserViewRight = ({ tab, invoiceData }: Props) => {
         aria-label='forced scroll tabs example'
         sx={{ borderBottom: theme => `1px solid ${theme.palette.divider}` }}
       >
-        <Tab value='security' label='Guruhlar' icon={<Icon icon='mdi:unarchive' />} />
-        <Tab value='billing-plan' label='Ish haqi' icon={<Icon icon='mdi:account-clock' />} />
+        <Tab value='security' label={t('Guruhlar')} icon={<Icon icon='mdi:unarchive' />} />
+        <Tab value='billing-plan' label={t('Ish haqi')} icon={<Icon icon='mdi:account-clock' />} />
       </TabList>
       <Box sx={{ mt: 6 }}>
         {isLoading ? (
           <Box sx={{ mt: 6, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
             <CircularProgress sx={{ mb: 4 }} />
-            <Typography>Loading...</Typography>
+            <Typography>{t("Loading...")}</Typography>
           </Box>
         ) : (
           <>

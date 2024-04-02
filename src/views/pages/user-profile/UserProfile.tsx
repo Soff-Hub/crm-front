@@ -34,6 +34,7 @@ import Profile from 'src/views/pages/user-profile/profile'
 import Projects from 'src/views/pages/user-profile/projects'
 import Connections from 'src/views/pages/user-profile/connections'
 import UserProfileHeader from 'src/views/pages/user-profile/UserProfileHeader'
+import { useTranslation } from 'react-i18next'
 
 const TabList = styled(MuiTabList)<TabListProps>(({ theme }) => ({
   '& .MuiTabs-indicator': {
@@ -57,6 +58,7 @@ const UserProfile = ({ tab, data }: { tab: string; data: UserProfileActiveTab })
   // ** State
   const [activeTab, setActiveTab] = useState<string>(tab)
   const [isLoading, setIsLoading] = useState<boolean>(true)
+  const { t } = useTranslation()
 
   // ** Hooks
   const router = useRouter()
@@ -151,7 +153,7 @@ const UserProfile = ({ tab, data }: { tab: string; data: UserProfileActiveTab })
                 {isLoading ? (
                   <Box sx={{ mt: 6, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
                     <CircularProgress sx={{ mb: 4 }} />
-                    <Typography>Loading...</Typography>
+                    <Typography>{t("Loading...")}</Typography>
                   </Box>
                 ) : (
                   <TabPanel sx={{ p: 0 }} value={activeTab}>
