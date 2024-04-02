@@ -182,7 +182,7 @@ const GroupExamsList = () => {
             xs: 0.2,
             title: t("Holati"),
             dataIndex: 'result',
-            render: (result: any) => result.status === "bad" ? "yiqildi" : result.status === "new" ? "kelmagan" : result.status === "good" ? "yaxshi" : "A'lo"
+            render: (result: any) => !result.status ? "boshlanmagan" : result.status === "bad" ? "yiqildi" : result.status === "new" ? "kelmagan" : result.status === "good" ? "yaxshi" : "A'lo"
         },
         {
             xs: 0.6,
