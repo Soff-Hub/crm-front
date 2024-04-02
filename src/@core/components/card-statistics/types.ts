@@ -17,7 +17,7 @@ export type CardStatsHorizontalProps = {
 
 export type CardStatsVerticalProps = {
   title: string
-  stats: string
+  stats: string | undefined
   icon?: ReactNode
   chipText?: string
   color?: ThemeColor

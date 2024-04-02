@@ -7,15 +7,58 @@ import { CardStatsType } from 'src/@fake-db/types'
 // ** Demo Components Imports
 import CardStatisticsHorizontal from 'src/views/ui/cards/statistics/CardStatisticsHorizontal'
 import CardStatisticsLiveVisitors from 'src/views/ui/cards/statistics/CardStatisticsLiveVisitors'
+import CardStatisticsVertical from 'src/views/ui/cards/statistics/CardStatisticsVertical'
 
 // ** Styled Component Import
 import KeenSliderWrapper from 'src/@core/styles/libs/keen-slider'
 import ApexChartWrapper from 'src/@core/styles/libs/react-apexcharts'
-import { Typography } from '@mui/material'
+import { Box, Button, Dialog, DialogContent, DialogTitle, TextField, Typography } from '@mui/material'
 import GroupFinanceTable from 'src/views/apps/finance/GroupTable'
-import FinanceEditableTable from 'src/views/apps/finance/GroupEditableTable'
+import { formatCurrency } from 'src/@core/utils/format-currency'
+import CardStatsVertical from 'src/@core/components/card-statistics/card-stats-vertical'
+import IconifyIcon from 'src/@core/components/icon'
+import { useRouter } from 'next/router'
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import { forwardRef, useState } from 'react'
+import { addDays, format } from 'date-fns'
+import { useTranslation } from 'react-i18next'
+
+
+type DateType = Date
+
+interface PickerProps {
+    label?: string;
+    end: Date | number;
+    start: Date | number;
+}
+
 
 const CardStatistics = () => {
+
+    const { push } = useRouter()
+    const { t } = useTranslation()
+
+    const [startDateRange, setStartDateRange] = useState<DateType>(new Date());
+    const [endDateRange, setEndDateRange] = useState<DateType>(addDays(new Date(), 45));
+    const [nameVal, setNameVal] = useState<string>('');
+    const [open, setOpen] = useState<'create' | null>(null);
+
+
+    const handleOnChangeRange = (dates: any) => {
+        const [start, end] = dates;
+        setStartDateRange(start);
+        setEndDateRange(end);
+    };
+
+    const CustomInput = forwardRef((props: PickerProps, ref) => {
+        const startDate = format(props?.start || new Date(), 'MM/dd/yyyy')
+        const endDate = props.end !== null ? format(props.end, 'MM/dd/yyyy') : '';
+
+        const value = `${startDate}${endDate !== '' ? '-' + endDate : ''}`;
+
+        return <TextField size='small' inputRef={ref} label={props.label || ''} {...props} value={value} />;
+    });
 
     const apiData: CardStatsType = {
         statsHorizontal: [
@@ -56,91 +99,13 @@ const CardStatistics = () => {
         ],
         statsVertical: [
             {
-                stats: '155k',
-                color: 'primary',
-                icon: 'mdi:cart-plus',
-                trendNumber: '+22%',
-                title: 'Total Orders',
-                chipText: 'Last 4 Month'
-            },
-            {
-                stats: '$89.34k',
+                stats: formatCurrency(3000000),
                 color: 'warning',
-                trend: 'negative',
-                trendNumber: '-18%',
-                title: 'Total Profit',
-                icon: 'mdi:wallet-giftcard',
-                chipText: 'Last One Year'
-            },
-            {
-                icon: 'mdi:link',
-                color: 'info',
-                stats: '142.8k',
-                trendNumber: '+62%',
-                chipText: 'Last One Year',
-                title: 'Total Impression'
-            },
-            {
-                stats: '$13.4k',
-                color: 'success',
-                trendNumber: '+38%',
-                icon: 'mdi:currency-usd',
-                title: 'Total Sales',
-                chipText: 'Last Six Months'
-            },
-            {
-                color: 'error',
-                stats: '$8.16k',
-                trend: 'negative',
-                trendNumber: '-16%',
-                title: 'Total Expenses',
-                icon: 'mdi:briefcase-outline',
-                chipText: 'Last One Month'
-            },
-            {
-                stats: '$2.55k',
-                color: 'secondary',
-                icon: 'mdi:trending-up',
-                trendNumber: '+46%',
-                title: 'Transactions',
-                chipText: 'Last One Year'
+                icon: 'tdesign:money',
+                title: 'Marketing',
             }
         ],
-        statsCharacter: [
-            {
-                stats: '8.14k',
-                title: 'Ratings',
-                chipColor: 'primary',
-                trendNumber: '+15.6%',
-                chipText: 'Year of 2022',
-                src: '/images/cards/card-stats-img-1.png'
-            },
-            {
-                stats: '12.2k',
-                trend: 'negative',
-                title: 'Sessions',
-                chipColor: 'success',
-                trendNumber: '-25.5%',
-                chipText: 'Last Month',
-                src: '/images/cards/card-stats-img-2.png'
-            },
-            {
-                stats: '42.4k',
-                title: 'Customers',
-                chipColor: 'warning',
-                trendNumber: '+9.2%',
-                chipText: 'Daily Customers',
-                src: '/images/cards/card-stats-img-3.png'
-            },
-            {
-                stats: '4.25k',
-                trendNumber: '+10.8%',
-                chipColor: 'secondary',
-                title: 'Total Orders',
-                chipText: 'Last Week',
-                src: '/images/cards/card-stats-img-4.png'
-            }
-        ]
+        statsCharacter: []
     }
 
 
@@ -163,7 +128,7 @@ const CardStatistics = () => {
 
                     <div id='tushumlar'></div>
                     <Grid item xs={12}>
-                        <Typography>Guruh to'lovlari</Typography>
+                        <Typography sx={{ fontSize: '20px' }}>Guruh to'lovlari</Typography>
                     </Grid>
 
                     <Grid item xs={12} md={12}>
@@ -171,15 +136,57 @@ const CardStatistics = () => {
                     </Grid>
 
                     <Grid item xs={12}>
-                        <Typography>Chiqimlar hisoboti</Typography>
+                        <Box sx={{ display: 'flex', gap: '10px' }}>
+                            <Typography sx={{ fontSize: '20px', flexGrow: 1 }}>Chiqimlar hisoboti</Typography>
+                            <Button variant='contained' onClick={() => setOpen('create')}>+ {t("Bo'lim")}</Button>
+                            <Box>
+                                <DatePicker
+                                    selectsRange
+                                    monthsShown={2}
+                                    endDate={endDateRange}
+                                    selected={startDateRange}
+                                    startDate={startDateRange}
+                                    shouldCloseOnSelect={false}
+                                    id='date-range-picker-months'
+                                    onChange={handleOnChangeRange}
+                                    popperPlacement={'bottom-start'}
+                                    customInput={
+                                        <CustomInput
+                                            label="Sana bo'yicha"
+                                            end={endDateRange as Date | number}
+                                            start={startDateRange as Date | number}
+                                        />
+                                    }
+                                />
+                            </Box>
+                        </Box>
                     </Grid>
                     <div id='chiqimlar'></div>
 
                     <Grid item xs={12} md={12} >
-                        <FinanceEditableTable />
+                        {/* <CardStatisticsVertical data={apiData.statsVertical} /> */}
+                        {
+                            apiData.statsVertical.map((_, index) => (
+                                <Box key={index} className='' sx={{ cursor: 'pointer', maxWidth: '200px' }} onClick={() => push(`/finance/costs/${12}`)}>
+                                    <CardStatsVertical title={_.title} stats={_.stats} icon={<IconifyIcon fontSize={"4rem"} icon={'tdesign:money'} />} color={_.color} />
+                                </Box>
+                            ))
+                        }
                     </Grid>
                 </Grid>
             </KeenSliderWrapper>
+
+
+            <Dialog open={open === 'create'} onClose={() => setOpen(null)}>
+                <DialogTitle sx={{ display: 'flex', alignItems: 'center', minWidth: '300px', justifyContent: 'space-between' }}>
+                    <Typography>Xarajatlar bo'limini yaratish</Typography>
+                    <IconifyIcon icon={'mdi:close'} onClick={() => setOpen(null)} />
+                </DialogTitle>
+                <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                    <TextField autoComplete='off' size='small' placeholder={t("Bo'lim nomi")} fullWidth onChange={(e) => setNameVal(e.target.value)} />
+                    <Button variant='contained'>{t("Saqlash")}</Button>
+                </DialogContent>
+            </Dialog>
         </ApexChartWrapper>
     )
 }
