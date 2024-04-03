@@ -46,6 +46,8 @@ import toast from 'react-hot-toast';
 import Status from 'src/@core/components/status';
 import useGroups from 'src/hooks/useGroups';
 import useSMS from 'src/hooks/useSMS';
+import useCourses from 'src/hooks/useCourses';
+import useRooms from 'src/hooks/useRooms';
 
 interface ColorsType {
   [key: string]: ThemeColor
@@ -58,7 +60,7 @@ const roleColors: ColorsType = {
   director: 'success',
 }
 
-type ActionTypes = 'delete' | 'send-sms' | 'add-student' | 'notes'
+type ActionTypes = 'delete' | 'send-sms' | 'add-student' | 'notes' | 'edit'
 
 
 const UserViewLeft = ({ userData, reRender }: { userData?: any, reRender: any }) => {
@@ -73,15 +75,19 @@ const UserViewLeft = ({ userData, reRender }: { userData?: any, reRender: any })
   const [searchData, setSearchData] = useState<any[]>([])
   const [selectedStudents, setSelectedStudents] = useState<any>(null)
   const searchDebounce = useDebounce(search, 500)
+  const [weekdays, setWeekDays] = useState<any>(null)
+  const [customWeekdays, setCustomWeekDays] = useState<string[]>([])
 
   // Hooks
   const { t } = useTranslation()
-  const { updateTeacher } = useTeachers()
+  const { updateTeacher, teachers, getTeachers } = useTeachers()
   const { query } = useRouter()
   const { user } = useContext(AuthContext)
-  const { mergeStudentToGroup } = useGroups()
+  const { mergeStudentToGroup, updateGroup } = useGroups()
   const [sms, setSMS] = useState<any>("")
   const { smsTemps, getSMSTemps } = useSMS()
+  const { courses, getCourses } = useCourses()
+  const { rooms, getRooms } = useRooms()
 
   // Handle Edit dialog
   const handleEditClickOpen = (type: ActionTypes) => setOpenEdit(type)
@@ -166,6 +172,36 @@ const UserViewLeft = ({ userData, reRender }: { userData?: any, reRender: any })
     } catch (err: any) {
       showResponseError(err.response.data, setError)
       setLoading(false)
+    }
+  }
+
+
+
+  const handleEditSubmit = async (values: any) => {
+    setLoading(true)
+    const obj = { ...values }
+    const days = {}
+
+
+    if ((weekdays === null || weekdays === 0) && customWeekdays.length > 0) {
+      Object.assign(days, { day_of_week: customWeekdays })
+    } else {
+      Object.assign(days, { day_of_week: values.day_of_week.split(',') })
+    }
+
+    try {
+      await updateGroup(data?.id, obj)
+      await api.post('common/lesson-days-update/', {
+        group: data?.id,
+        ...days
+      })
+      reRender()
+      setOpenEdit(null)
+      setLoading(false)
+      setWeekDays(null)
+    } catch (err) {
+      setLoading(false)
+      console.log(err);
     }
   }
 
@@ -328,6 +364,16 @@ const UserViewLeft = ({ userData, reRender }: { userData?: any, reRender: any })
                   <Tooltip title="O'chirish" placement='top'>
                     <Button variant='outlined' color='error' onClick={() => handleEditClickOpen('delete')}>
                       <IconifyIcon icon='mdi-light:delete' />
+                    </Button>
+                  </Tooltip>
+                  <Tooltip title={t('Tahrirlash')} placement='top'>
+                    <Button variant='outlined' color='success' onClick={() => {
+                      getTeachers()
+                      getCourses()
+                      getRooms()
+                      handleEditClickOpen('edit')
+                    }}>
+                      <IconifyIcon icon='circum:edit' />
                     </Button>
                   </Tooltip>
                   <Tooltip title="SMS yuborish" placement='top'>
@@ -546,6 +592,161 @@ const UserViewLeft = ({ userData, reRender }: { userData?: any, reRender: any })
               {t("Bekor Qilish")}
             </LoadingButton>
           </DialogActions>
+        </Dialog>
+
+
+        {/* ADD STUDENT */}
+        <Dialog
+          open={openEdit === 'edit'}
+          onClose={handleEditClose}
+          aria-labelledby='user-view-edit'
+          sx={{ '& .MuiPaper-root': { width: '100%', maxWidth: 450, p: [1, 2] } }}
+          aria-describedby='user-view-edit-description'
+        >
+          <DialogTitle id='user-view-edit' sx={{ textAlign: 'center', fontSize: '1.5rem !important' }}>
+            Guruhni tahrirlash
+          </DialogTitle>
+          <DialogContent>
+            {teachers.length > 0 && rooms.length > 0 && courses.length > 0 && <Form valueTypes='json' onSubmit={(values: any) => handleEditSubmit(values)} id='dasdadasdasdqw' setError={setError} sx={{ display: 'flex', flexDirection: 'column', width: '100%', alignItems: 'baseline', padding: '20px 10px', gap: '10px' }}>
+              <FormControl sx={{ width: '100%' }}>
+                <TextField size='small' label={t("Guruh nomi")} name='name' error={error.name?.error} defaultValue={data.name} />
+                <FormHelperText error={error.name}>{error.name?.message}</FormHelperText>
+              </FormControl>
+
+              <FormControl fullWidth>
+                <InputLabel size='small' id='user-view-language-label'>Kursni tanlash</InputLabel>
+                <Select
+                  size='small'
+                  error={error.course?.error}
+                  label={t('Kursni tanlash')}
+                  id='user-view-language'
+                  labelId='user-view-language-label'
+                  name='course'
+                  defaultValue={courses.find(el => el.id === data.course_data.id)?.id || ''}
+                >
+                  {
+                    courses.map(course => <MenuItem key={course.id} value={+course.id}>{course.name}</MenuItem>)
+                  }
+                </Select>
+                <FormHelperText error={error.course?.error}>{error.course?.message}</FormHelperText>
+              </FormControl>
+
+              <FormControl fullWidth>
+                <InputLabel size='small' id='user-view-language-label'>O'qituvchi</InputLabel>
+                <Select
+                  size='small'
+                  error={error.teacher?.error}
+                  label={t("O'qituvchi")}
+                  id='user-view-language'
+                  labelId='user-view-language-label'
+                  name='teacher'
+                  defaultValue={teachers.find(el => el.id === data.teacher_data.id)?.id || ''}
+                >
+                  {
+                    teachers.map(teacher => <MenuItem key={teacher.id} value={+teacher.id}>{teacher.first_name}</MenuItem>)
+                  }
+                </Select>
+                <FormHelperText error={error.teacher?.error}>{error.teacher?.message}</FormHelperText>
+              </FormControl>
+
+              <FormControl fullWidth>
+                <InputLabel size='small' id='user-view-language-label'>Xona</InputLabel>
+                <Select
+                  size='small'
+                  error={error.room?.error}
+                  label={t('Xona')}
+                  id='user-view-language'
+                  labelId='user-view-language-label'
+                  name='room'
+                  defaultValue={rooms.find(el => el.id === data.room_data.id)?.id || ''}
+                >
+                  {
+                    rooms.map(branch => <MenuItem key={branch.id} value={+branch.id}>{branch.name}</MenuItem>)
+                  }
+                </Select>
+                <FormHelperText error={error.room?.error}>{error.room?.message}</FormHelperText>
+              </FormControl>
+
+              <FormControl sx={{ width: '100%' }}>
+                <TextField size='small' label={t("Oylik to'lovi")} name='monthly_amount' error={error.monthly_amount} defaultValue={data.monthly_amount} />
+                <FormHelperText error={error.monthly_amount?.error}>{error.monthly_amount?.message}</FormHelperText>
+              </FormControl>
+
+              <FormControl sx={{ width: '100%' }}>
+                <TextField size='small' type='date' label={t("Boshlanish sanasi")} name='start_date' error={error.start_date} defaultValue={data.start_date} />
+                <FormHelperText error={error.start_date?.error}>{error.start_date?.message}</FormHelperText>
+              </FormControl>
+
+              <FormControl fullWidth>
+                <InputLabel size='small' id='user-view-language-label'>Hafta kunlari</InputLabel>
+                <Select
+                  size='small'
+                  label="Kunlar boyicha"
+                  id='demo-simple-select-outlined'
+                  name='day_of_week'
+                  labelId='demo-simple-select-outlined-label'
+                  onChange={(e) => setWeekDays(e.target.value)}
+                  defaultValue={
+                    data.day_of_week.join(',') === 'tuesday,thursday,saturday' ?
+                      'tuesday,thursday,saturday' :
+                      data.day_of_week.join(',') === 'monday,wednesday,friday' ?
+                        'monday,wednesday,friday' :
+                        data.day_of_week.join(',') === 'tuesday,thursday,saturday,monday,wednesday,friday' ?
+                          'tuesday,thursday,saturday,monday,wednesday,friday' : 0
+                  }
+                >
+                  <MenuItem value={`tuesday,thursday,saturday`}>Juft kunlari</MenuItem>
+                  <MenuItem value={`monday,wednesday,friday`}>Toq kunlari</MenuItem>
+                  <MenuItem value={`tuesday,thursday,saturday,monday,wednesday,friday`}>Har kuni</MenuItem>
+                  <MenuItem value={0}>Boshqa</MenuItem>
+                </Select>
+                <FormHelperText error={error.room?.error}>{error.room?.message}</FormHelperText>
+              </FormControl>
+
+              {
+                ((
+                  data.day_of_week.join(',') !== 'tuesday,thursday,saturday' &&
+                  data.day_of_week.join(',') !== 'monday,wednesday,friday' &&
+                  data.day_of_week.join(',') !== 'tuesday,thursday,saturday,monday,wednesday,friday'
+                ) && weekdays === null) || weekdays === 0 ? (
+                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                    {
+                      ['tuesday', 'thursday', 'saturday', 'monday', 'wednesday', 'friday', 'sunday'].map(el => (
+                        <label
+                          key={el}
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            flexDirection: 'row-reverse',
+                            border: '1px solid #c3cccc',
+                            padding: '0 5px',
+                            borderRadius: '7px',
+                            gap: '4px',
+                            cursor: 'pointer'
+                          }}>
+                          <span>{TranslateWeekName[el]}</span>
+                          <input type='checkbox' onChange={() => (setCustomWeekDays((current: any) => current.includes(el) ? [...current.filter((item: any) => item !== el)] : [...current, el]))} defaultChecked={customWeekdays.includes(el)} />
+                        </label>
+                      ))
+                    }
+                  </Box>
+                ) : ''
+              }
+
+              <FormControl sx={{ width: '100%' }}>
+                <TextField size='small' type='time' label={t("Boshlanish vaqi")} name='start_at' error={error.start_at} defaultValue={data.start_at} />
+                <FormHelperText error={error.start_at?.error}>{error.start_at?.message}</FormHelperText>
+              </FormControl>
+
+              <FormControl sx={{ width: '100%' }}>
+                <TextField size='small' type='time' label={t("Tugash vaqi")} name='end_at' error={error.end_at} defaultValue={data.end_at} />
+                <FormHelperText error={error.end_at?.error}>{error.end_at?.message}</FormHelperText>
+              </FormControl>
+
+
+              <LoadingButton loading={loading} variant='contained' type='submit' fullWidth>Saqlash</LoadingButton>
+            </Form>}
+          </DialogContent>
         </Dialog>
       </Grid >
     )
