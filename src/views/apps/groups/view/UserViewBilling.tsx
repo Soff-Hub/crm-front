@@ -114,9 +114,9 @@ const UserViewBilling = () => {
         },
         {
             xs: 0.20,
-            title: t("Sana oralig'i"),
+            title: t("Chegirma soni"),
             dataIndex: 'student',
-            render: (student: any) => student.personal_amount ? `${student.personal_amount?.from_date} / ${student.personal_amount?.end_date}` : "bo'sh"
+            render: (student: any) => student.personal_amount?.discount_count || "bo'sh"
         },
         {
             xs: 0.30,
@@ -192,13 +192,8 @@ const UserViewBilling = () => {
                     </FormControl>
 
                     <FormControl>
-                        <TextField size='small' type="date" label={t("Sana dan")} name='from_date' error={error.from_date?.error} defaultValue={getFormattedDate()} />
-                        <FormHelperText error={error.from_date}>{error.from_date?.message}</FormHelperText>
-                    </FormControl>
-
-                    <FormControl>
-                        <TextField size='small' type="date" label={t("Sana gacha")} name='end_date' error={error.end_date?.error} defaultValue={getFormattedDate()} />
-                        <FormHelperText error={error.end_date}>{error.end_date?.message}</FormHelperText>
+                        <TextField size='small' type="number" label={t("Chegirma soni")} name='discount_count' error={error.discount_count?.error} />
+                        <FormHelperText error={error.discount_count}>{error.discount_count?.message}</FormHelperText>
                     </FormControl>
 
                     <FormControl>

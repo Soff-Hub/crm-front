@@ -59,7 +59,7 @@ export const UserViewStudentsItem = ({ item, index, status, activeId }: ItemType
     const { student } = item
     const { first_name, phone, added_at, created_at, balance, comment, id } = student
     const { push, query } = useRouter()
-    const { user } = useContext(AuthContext)
+    const { user } = useContext(AuthContext) 
 
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [openLeft, setOpenLeft] = useState<boolean>(false)
@@ -137,11 +137,11 @@ export const UserViewStudentsItem = ({ item, index, status, activeId }: ItemType
                     </Box>
                     <Box py={1} borderTop={'1px solid #c3cccc'}>
                         <Typography variant='body2' fontSize={12}>Talaba qo'shilgan sana</Typography>
-                        <Typography fontSize={12}>{added_at}</Typography>
+                        <Typography fontSize={12}>{formatDateTime(added_at)}</Typography>
                     </Box>
                     <Box py={1} borderTop={'1px solid #c3cccc'}>
                         <Typography variant='body2' fontSize={12}>Qo'shilgan sana</Typography>
-                        <Typography fontSize={12}>{formatDateTime(created_at)}</Typography>
+                        <Typography fontSize={12}>{formatDateTime(added_at)}</Typography>
                     </Box>
                     {comment && <Box py={1} borderTop={'1px solid #c3cccc'}>
                         <Typography variant='body2' fontSize={12}>Eslatma</Typography>
