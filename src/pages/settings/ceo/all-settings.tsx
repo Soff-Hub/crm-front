@@ -212,9 +212,8 @@ export default function AllSettings() {
                                         size='small'
                                         focused
                                         defaultValue={companyInfo?.work_start_time}
-                                        onChange={(e) => setName(e.target.value)}
-                                        onBlur={() => {
-                                            updateSettings('work_start_time', name)
+                                        onBlur={(e) => {
+                                            updateSettings('work_start_time', e.target.value)
                                         }}
                                     />
                                     <IconifyIcon icon={'ic:baseline-check'} style={{ cursor: 'pointer' }} onClick={() => {
@@ -241,9 +240,8 @@ export default function AllSettings() {
                                         size='small'
                                         focused
                                         defaultValue={companyInfo?.work_end_time}
-                                        onChange={(e) => setName(e.target.value)}
-                                        onBlur={() => {
-                                            updateSettings('work_end_time', name)
+                                        onBlur={(e) => {
+                                            updateSettings('work_end_time', e.target.value)
                                         }}
                                     />
                                     <IconifyIcon icon={'ic:baseline-check'} style={{ cursor: 'pointer' }} onClick={() => {

@@ -202,12 +202,12 @@ const UserViewSecurity = ({ invoiceData }: any) => {
               <Typography>Yuklanmoqda...</Typography>
             </Box>
           ) : (
-            <table style={{ minWidth: '1000px' }}>
+            <table>
               <thead>
                 <tr style={{ borderBottom: '1px solid #c3cccc' }}>
-                  <td style={{ padding: '8px 0', textAlign: 'start' }}><Typography>Mavzular</Typography></td>
+                  <td style={{ padding: '8px 0', textAlign: 'start', minWidth: '150px' }}><Typography>Mavzular</Typography></td>
                   {
-                    attendance && days.map((hour: any) => <td key={hour.date} style={{ textAlign: 'center', minWidth: 50, padding: '8px 0', cursor: 'pointer', backgroundColor: hour.exam ? '#96f3a5' : hour.lesson ? '#a7c0fb' : 'transparent' }}>
+                    attendance && days.map((hour: any) => <td key={hour.date} style={{ textAlign: 'center', minWidth: '45px', padding: '8px 0', cursor: 'pointer', backgroundColor: hour.exam ? '#96f3a5' : hour.lesson ? '#a7c0fb' : 'transparent' }}>
                       <div>
                         {
                           hour.exam ? (
@@ -303,7 +303,7 @@ const UserViewSecurity = ({ invoiceData }: any) => {
                 <tr style={{ borderBottom: '1px solid #c3cccc' }}>
                   <td style={{ padding: '8px 0', textAlign: 'start', borderRight: '1px solid #c3cccc', maxWidth: '100px' }}><Typography>O'quvchilar</Typography></td>
                   {
-                    attendance && days.map((hour: any) => <th key={hour.date} style={{ textAlign: 'center', minWidth: 50, padding: '8px 0', cursor: 'pointer' }}><Typography>{`${hour.date.split('-')[2]}`}</Typography></th>)
+                    attendance && days.map((hour: any) => <th key={hour.date} style={{ textAlign: 'center', minWidth: '50px', padding: '8px 0', cursor: 'pointer' }}><Typography>{`${hour.date.split('-')[2]}`}</Typography></th>)
                   }
                 </tr>
               </thead>
