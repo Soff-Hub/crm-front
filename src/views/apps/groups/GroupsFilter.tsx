@@ -74,15 +74,15 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
                         <Select
                             size='small'
                             label="Holati"
-                            defaultValue=''
+                            defaultValue={router.query.status === undefined ? 'active' : router.query.status}
                             id='demo-simple-select-outlined'
                             labelId='demo-simple-select-outlined-label'
                             onChange={(e: any) => router.replace({
                                 pathname: router.pathname,
-                                query: e.target.value === '' ? {} : { ...router.query, status: e.target.value }
+                                query: e.target.value === '' ? { ...router.query, status: 'all' } : { ...router.query, status: e.target.value }
                             })}
                         >
-                            <MenuItem value=''>
+                            <MenuItem value='all'>
                                 <b>Barchasi</b>
                             </MenuItem>
                             <MenuItem value={'active'}>{'Aktiv'}</MenuItem>
@@ -177,15 +177,15 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
                 <Select
                     size='small'
                     label="Holati"
-                    defaultValue=''
+                    defaultValue={router.query.status === undefined ? 'active' : router.query.status}
                     id='demo-simple-select-outlined'
                     labelId='demo-simple-select-outlined-label'
                     onChange={(e: any) => router.replace({
                         pathname: router.pathname,
-                        query: e.target.value === '' ? {} : { ...router.query, status: e.target.value }
+                        query: e.target.value === '' ? { ...router.query, status: 'all' } : { ...router.query, status: e.target.value }
                     })}
                 >
-                    <MenuItem value=''>
+                    <MenuItem value='all'>
                         <b>Barchasi</b>
                     </MenuItem>
                     <MenuItem value={'active'}>{'Aktiv'}</MenuItem>

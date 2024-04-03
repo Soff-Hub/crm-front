@@ -19,7 +19,7 @@ export default function useGroups() {
 
     const getGroups = async () => {
         try {
-            const resp = await api.get(ceoConfigs.groups, { params: router.query })
+            const resp = await api.get(ceoConfigs.groups, { params: { ...router.query, status: router.query.status === undefined ? 'active' : router.query.status === 'all' ? '' : router.query.status } })
             setGroups(resp.data.results)
             setGroupCount(Math.ceil(resp.data.count / 10))
         } catch (err) {

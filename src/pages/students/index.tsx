@@ -349,7 +349,7 @@ export default function GroupsPage() {
               labelId='demo-simple-select-outlined-label'
               onChange={(e: any) => router.replace({
                 pathname: router.pathname,
-                query: e.target.value === '' ? {} : { ...router.query, status: e.target.value }
+                query: e.target.value === '' ? { ...router.query, status: 'all' } : { ...router.query, status: e.target.value }
               })}
             >
               <MenuItem value=''>
