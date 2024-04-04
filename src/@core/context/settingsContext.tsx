@@ -25,7 +25,7 @@ export type Settings = {
   lastLayout?: 'vertical' | 'horizontal'
   verticalNavToggleType: VerticalNavToggle
   toastPosition?: 'top-left' | 'top-center' | 'top-right' | 'bottom-left' | 'bottom-center' | 'bottom-right',
-  locale?: 'uz' | 'ru' | 'en'
+  locale?: 'uz' | 'ru' | 'en' | 'fr' | 'ar'
 }
 
 export type PageSpecificSettings = {

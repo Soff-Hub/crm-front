@@ -73,6 +73,7 @@ export default function GroupsPage() {
   const [error, setError] = useState<any>({})
   const { getCourses, courses } = useCourses()
   const { isMobile } = useResponsive()
+  const { query } = useRouter()
 
   const searchDebounce = useDebounce(search, 1000)
 
@@ -81,6 +82,16 @@ export default function GroupsPage() {
     setIsPassword(false)
     setStudentData(null)
     setError({})
+  }
+
+  const handleActivateStudent = async (id: string | number) => {
+    try {
+      await updateStudent(id, { status: 'active' })
+      await getStudents(searchDebounce)
+      toast.success("O'quvchi aktivlashtirildi", { position: 'top-center' })
+    } catch (error: any) {
+      console.log(error);
+    }
   }
 
   const handleDeleteTeacher = async (id: string | number) => {
@@ -121,6 +132,7 @@ export default function GroupsPage() {
     // ** State
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
     const [suspendDialogOpen, setSuspendDialogOpen] = useState<boolean>(false)
+    const [recoveModal, setRecoveModal] = useState<boolean>(false)
 
     const rowOptionsOpen = Boolean(anchorEl)
 
@@ -171,12 +183,22 @@ export default function GroupsPage() {
             <IconifyIcon icon='mdi:pencil-outline' fontSize={20} />
             Tahrirlash
           </MenuItem>
-          <MenuItem onClick={handleDelete} sx={{ '& svg': { mr: 2 } }}>
-            <IconifyIcon icon='mdi:delete-outline' fontSize={20} />
-            O'chirish
-          </MenuItem>
+          {
+            query?.status === 'archive' ? (
+              <MenuItem onClick={() => setRecoveModal(true)} sx={{ '& svg': { mr: 2 } }}>
+                <IconifyIcon icon='bytesize:reload' fontSize={20} />
+                Tiklash
+              </MenuItem>
+            ) : (
+              <MenuItem onClick={handleDelete} sx={{ '& svg': { mr: 2 } }}>
+                <IconifyIcon icon='mdi:delete-outline' fontSize={20} />
+                O'chirish
+              </MenuItem>
+            )
+          }
         </Menu>
         <UserSuspendDialog handleOk={() => handleDeleteTeacher(id)} open={suspendDialogOpen} setOpen={setSuspendDialogOpen} />
+        <UserSuspendDialog handleOk={() => handleActivateStudent(id)} open={recoveModal} setOpen={setRecoveModal} okText='Tiklash' />
       </>
     )
   }
@@ -187,12 +209,6 @@ export default function GroupsPage() {
       title: t("ID"),
       dataIndex: 'index'
     },
-    // {
-    //   xs: 0.4,
-    //   title: t("Status"),
-    //   dataIndex: 'status',
-    //   render: (status: string) => <div style={{ display: 'flex', alignItems: 'center', gap: '3px' }}><Status color={status == 'active' ? 'success' : status == 'new' ? 'warning' : 'error'} /> {status == 'active' ? 'aktiv' : status == 'new' ? 'sinov' : 'arxiv'}</div>
-    // },
     {
       xs: 1.4,
       title: t("first_name"),

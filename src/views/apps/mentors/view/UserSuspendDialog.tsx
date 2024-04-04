@@ -16,12 +16,13 @@ import { useTranslation } from 'react-i18next'
 type Props = {
   open: boolean
   setOpen: (val: boolean) => void
-  handleOk?: () => any
+  handleOk?: () => any,
+  okText?: string | undefined
 }
 
 const UserSuspendDialog = (props: Props) => {
   // ** Props
-  const { open, setOpen, handleOk } = props
+  const { open, setOpen, handleOk, okText } = props
   const { t } = useTranslation()
 
   // ** States
@@ -79,7 +80,7 @@ const UserSuspendDialog = (props: Props) => {
             color='error'
             onClick={() => handleConfirmation('yes')}
           >
-            {t("O'chirish")}
+            {okText ? okText : t("O'chirish")}
           </Button>
           <Button
             variant='outlined'
