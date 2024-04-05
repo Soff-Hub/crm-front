@@ -416,7 +416,6 @@ const UserViewLeft = ({ userData, reRender }: { userData?: any, reRender: any })
                   {
                     archiveUrl === 'archive' ? "Arxivni yopish" : "Arxivdagi o'quvchilarni ko'rish"
                   }
-
                 </Button>
               </Box>
             </CardContent>
