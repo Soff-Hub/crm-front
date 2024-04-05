@@ -53,5 +53,22 @@ export default function usePayment() {
         }
     }
 
-    return { getPaymentMethod, paymentMethods, createPaymentMethod, paymentData, getPaymentList, createPayment, updatePaymentMethod }
+    const updatePayment = async (id: any, data: any) => {
+        try {
+            await api.patch(`common/student-payment/update/${id}`, data)
+        } catch (err) {
+            return Promise.reject(err)
+        }
+    }
+
+
+    const deletePayment = async (id: any) => {
+        try {
+            await api.delete(`common/student-payment/update/${id}`)
+        } catch (err) {
+            return Promise.reject(err)
+        }
+    }
+
+    return { getPaymentMethod, paymentMethods, createPaymentMethod, paymentData, getPaymentList, createPayment, updatePaymentMethod, updatePayment, deletePayment }
 }

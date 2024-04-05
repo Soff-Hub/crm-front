@@ -398,7 +398,7 @@ const UserViewLeft = ({ userData, reRender }: { userData?: any, reRender: any })
                   ['new', 'active', 'archive'].map(el => <div key={el} style={{ display: 'flex', alignItems: 'center', gap: '3px', cursor: 'pointer' }}><Status color={el == 'active' ? 'success' : el == 'new' ? 'warning' : 'error'} /> {el == 'active' ? 'aktiv' : el == 'new' ? 'sinov' : 'arxiv'}</div>)
                 }
               </div>
-              <UserViewStudentsList data={students} />
+              <UserViewStudentsList data={students} reRender={getStudents} />
             </CardContent>
           </Card>
         </Grid>

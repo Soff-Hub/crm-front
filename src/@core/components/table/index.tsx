@@ -73,13 +73,13 @@ export default function DataTable({ columns, data, minWidth, maxWidth, rowClick,
             }}
           >
             {columns.map((el: any, i) => (
-              <Box key={i} sx={{ textAlign: 'start', flex: el.xs }} pt={'0 !important'} pl={'0 !important'}>
+              <Box key={i} sx={{ textAlign: 'start', flex: el.xs, pb: '5px' }} pt={'5px !important'} pl={'0 !important'}>
                 <Box sx={{ fontSize: 14 }}>
                   {el.render ? el.render(item[`${el.dataIndex}`]) : el.renderId ? el.renderId(item[`${el.id}`], item[`${el.dataIndex}`]) : el.dataIndex === 'index' ? `${query.page && Number(query.page) > 1 ? ((Number(query?.page) - 1) * 10 + index + 1) : 1 + index}.` : item[`${el.dataIndex}`]}
                 </Box>
               </Box>
             ))}
-            {rowClick && <Box sx={{ width: '75%', height: '35px', position: 'absolute' }} onClick={() => handleClick(item.id)}></Box>}
+            {rowClick && <Box sx={{ width: '75%', height: '36px', position: 'absolute' }} onClick={() => handleClick(item.id)}></Box>}
           </Box>
         )
       })}

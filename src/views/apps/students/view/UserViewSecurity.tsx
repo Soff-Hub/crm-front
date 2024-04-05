@@ -1,14 +1,18 @@
-import { Box, Card, CardContent, Typography } from "@mui/material"
+import LoadingButton from "@mui/lab/LoadingButton"
+import { Box, Button, Card, CardContent, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormHelperText, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
+import Form from "src/@core/components/form"
+import IconifyIcon from "src/@core/components/icon"
 import DataTable from "src/@core/components/table"
 import useResponsive from "src/@core/hooks/useResponsive"
 import api from "src/@core/utils/api"
 import { formatDateTime } from "src/@core/utils/date-formatter"
 import { formatCurrency } from "src/@core/utils/format-currency"
 import getMontName from "src/@core/utils/gwt-month-name"
+import usePayment from "src/hooks/usePayment"
 import { customTableProps } from "src/pages/groups"
 
 
@@ -19,6 +23,11 @@ const UserViewSecurity = ({ groupData }: any) => {
   const { query } = useRouter()
   const [data, setData] = useState([])
   const { isMobile } = useResponsive()
+  const [edit, setEdit] = useState<any>(null)
+  const [error, setError] = useState<any>({})
+  const [loading, setLoading] = useState<any>(null)
+
+  const { paymentMethods, getPaymentMethod } = usePayment()
 
   const columns: customTableProps[] = [
     {
@@ -47,6 +56,17 @@ const UserViewSecurity = ({ groupData }: any) => {
       xs: 1,
       title: t("Qabul qildi"),
       dataIndex: 'admin',
+    },
+    {
+      xs: 1,
+      title: t("Amallar"),
+      dataIndex: 'id',
+      render: (id) => (
+        <Box sx={{ display: 'flex', gap: '10px' }}>
+          <IconifyIcon onClick={() => setEdit(id)} icon='mdi:pencil-outline' fontSize={20} />
+          <IconifyIcon onClick={() => setEdit(id)} icon='mdi:delete-outline' fontSize={20} />
+        </Box>
+      )
     }
   ]
 
@@ -59,10 +79,12 @@ const UserViewSecurity = ({ groupData }: any) => {
     }
   }
 
-  useEffect(() => {
-    getPayments()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  const updatePayment = async () =>
+
+    useEffect(() => {
+      getPayments()
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
   return (
     <Box className='demo-space-y'>
@@ -94,6 +116,95 @@ const UserViewSecurity = ({ groupData }: any) => {
 
       <Typography sx={{ my: 3, fontSize: '20px' }}>To'lov tarixi</Typography>
       <DataTable maxWidth="100%" minWidth="450px" data={data} columns={columns} />
+
+
+      <Dialog
+        open={edit}
+        onClose={() => setEdit(null)}
+        aria-labelledby='user-view-edit'
+        sx={{ '& .MuiPaper-root': { width: '100%', maxWidth: 450, p: [1, 3] } }}
+        aria-describedby='user-view-edit-description'
+      >
+        <DialogTitle id='user-view-edit' sx={{ textAlign: 'center', fontSize: '1.5rem !important' }}>
+          To'lovni tahrirlash
+        </DialogTitle>
+        <DialogContent>
+          <Form setError={setError} valueTypes='json' sx={{ marginTop: 10, display: 'flex', flexDirection: 'column', gap: '10px' }} onSubmit={updatePayment} id='edifsdt-employee-pay'>
+            <FormControl fullWidth error={error.payment_type?.error}>
+              <InputLabel size='small' id='user-view-language-label'>{t("To'lov usulini tanlang")}</InputLabel>
+              <Select
+                size='small'
+                label={t("To'lov usulini tanlang")}
+                id='user-view-language'
+                labelId='user-view-language-label'
+                name='payment_type'
+              >
+                {
+                  paymentMethods.map((branch: any) => <MenuItem key={branch.id} value={branch.id}>{branch.name}</MenuItem>)
+                }
+              </Select>
+              <FormHelperText error={error.payment_type?.error}>{error.payment_type?.message}</FormHelperText>
+            </FormControl>
+
+            <FormControl fullWidth error={error.group?.error}>
+              <InputLabel size='small' id='user-view-language-label'>{t("Qaysi guruh uchun?")}</InputLabel>
+              <Select
+                size='small'
+                label={t("Qaysi guruh uchun?")}
+                id='user-view-language'
+                labelId='user-view-language-label'
+                name='group'
+              >
+                {
+                  groupData?.map((branch: any) => <MenuItem key={branch.id} value={branch.group_data.id}>{branch.group_data.name}</MenuItem>)
+                }
+              </Select>
+              <FormHelperText error={error.group?.error}>{error.group?.message}</FormHelperText>
+            </FormControl>
+
+
+            <FormControl fullWidth>
+              <TextField
+                error={error?.amount}
+                rows={4}
+                label="Miqdori (so'm)"
+                size='small'
+                name='amount'
+                defaultValue={''}
+                type='number'
+              />
+              <FormHelperText error={error.amount}>{error.amount?.message}</FormHelperText>
+            </FormControl>
+
+            <FormControl fullWidth>
+              <TextField
+                error={error?.description}
+                rows={4}
+                multiline
+                label="Izoh"
+                name='description'
+                defaultValue={''}
+              />
+              <FormHelperText error={error.description}>{error.description?.message}</FormHelperText>
+            </FormControl>
+
+            <FormControl sx={{ width: '100%' }}>
+              <input type="date" style={{ borderRadius: '8px', padding: '10px', outline: 'none', border: '1px solid gray', marginTop: '10px' }} name='payment_date' />
+              <FormHelperText error={error.start_date?.error}>{error.start_date?.message}</FormHelperText>
+            </FormControl>
+
+
+            <DialogActions sx={{ justifyContent: 'center' }}>
+              <LoadingButton loading={loading} type='submit' variant='contained' sx={{ mr: 1 }}>
+                {t("Saqlash")}
+              </LoadingButton>
+              <Button variant='outlined' type='button' color='secondary' onClick={() => setEdit(null)}>
+                {t("Bekor Qilish")}
+              </Button>
+            </DialogActions>
+          </Form>
+        </DialogContent>
+      </Dialog>
     </Box >
   )
 }

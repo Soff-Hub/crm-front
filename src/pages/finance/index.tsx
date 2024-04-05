@@ -20,9 +20,11 @@ import IconifyIcon from 'src/@core/components/icon'
 import { useRouter } from 'next/router'
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { forwardRef, useState } from 'react'
+import { forwardRef, useRef, useState } from 'react'
 import { addDays, format } from 'date-fns'
 import { useTranslation } from 'react-i18next'
+import { customTableDataProps } from 'src/@core/components/lid-table'
+import DataTable from 'src/@core/components/table'
 
 
 type DateType = Date
@@ -56,6 +58,14 @@ const CardStatistics = () => {
         const endDate = props.end !== null ? format(props.end, 'MM/dd/yyyy') : '';
 
         const value = `${startDate}${endDate !== '' ? '-' + endDate : ''}`;
+
+        return <TextField size='small' inputRef={ref} label={props.label || ''} {...props} value={value} />;
+    });
+
+    const CustomInputDate = forwardRef((props: PickerProps, ref) => {
+        const startDate = format(props?.start || new Date(), 'MM/dd/yyyy')
+
+        const value = `${startDate}`;
 
         return <TextField size='small' inputRef={ref} label={props.label || ''} {...props} value={value} />;
     });
@@ -108,12 +118,66 @@ const CardStatistics = () => {
         statsCharacter: []
     }
 
+    const [firstClickTime, setFirstClickTime] = useState<any>(null);
+    const secondClickTimeRef = useRef(null);
+
+    const handleEditable = () => {
+        if (!firstClickTime) {
+            setFirstClickTime(Date.now());
+        } else {
+            const secondClickTime = Date.now();
+            const timeDifference = secondClickTime - firstClickTime;
+            if (timeDifference < 300) {
+                console.log('Biror matn chiqarish');
+            }
+            setFirstClickTime(null);
+        }
+    };
+
+
+    const salaryCol: customTableDataProps[] = [
+        {
+            xs: 0.03,
+            title: "#",
+            dataIndex: "index"
+        },
+        {
+            xs: 0.2,
+            title: t("first_name"),
+            dataIndex: "id"
+        },
+        {
+            xs: 0.2,
+            title: t("phone"),
+            dataIndex: "id"
+        },
+        {
+            xs: 0.2,
+            title: t("Ish haqqi"),
+            dataIndex: "id"
+        },
+        {
+            xs: 0.2,
+            title: t("Amallar"),
+            dataIndex: "id"
+        }
+    ]
+
+    const data = [
+        {
+            id: "dasdasdasdasd"
+        }
+    ]
+
 
     return (
         <ApexChartWrapper>
+            <Box>
+                <button onClick={handleEditable}>ffffffffffffffffffffffffffffffffffff</button>
+            </Box>
+
             <KeenSliderWrapper>
                 <Grid container spacing={4}>
-
                     <Grid item xs={12}>
                         <Typography>Umumiy raqamlar</Typography>
                     </Grid>
@@ -173,8 +237,38 @@ const CardStatistics = () => {
                             ))
                         }
                     </Grid>
+
+                    <Grid item xs={12}>
+                        <Box sx={{ display: 'flex', gap: '10px' }}>
+                            <Typography sx={{ fontSize: '20px', flexGrow: 1 }}>Maoshlar hisoboti</Typography>
+                            <Box>
+                                <DatePicker
+                                    monthsShown={1}
+                                    startDate={startDateRange}
+                                    shouldCloseOnSelect={false}
+                                    id='date-range-picker-months'
+                                    onChange={handleOnChangeRange}
+                                    popperPlacement={'bottom-start'}
+                                    customInput={
+                                        <CustomInputDate
+                                            label="Sana bo'yicha"
+                                            end={endDateRange as Date | number}
+                                            start={startDateRange as Date | number}
+                                        />
+                                    }
+                                />
+                            </Box>
+                        </Box>
+                    </Grid>
+                    <div id='chiqimlar'></div>
+
+                    <Grid item xs={12} md={12} >
+                        <DataTable columns={salaryCol} data={data} />
+                    </Grid>
                 </Grid>
             </KeenSliderWrapper>
+
+
 
 
             <Dialog open={open === 'create'} onClose={() => setOpen(null)}>

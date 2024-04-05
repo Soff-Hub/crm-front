@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react'
-import { Box, Button, Dialog, DialogContent, TextField, Typography } from '@mui/material'
+import { Box, Button, Dialog, DialogContent, FormControl, FormHelperText, InputLabel, Select, TextField, Typography } from '@mui/material'
 import Status from 'src/@core/components/status'
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
@@ -14,6 +14,8 @@ import { AuthContext } from 'src/context/AuthContext';
 import LoadingButton from '@mui/lab/LoadingButton';
 import api from 'src/@core/utils/api';
 import toast from 'react-hot-toast';
+import Form from 'src/@core/components/form';
+import showResponseError from 'src/@core/utils/show-response-error';
 
 
 interface StudentType {
@@ -23,6 +25,7 @@ interface StudentType {
         phone: string
         balance: number
         added_at: string
+        activated_at: string
         created_at: string
         comment: {
             comment: string
@@ -39,6 +42,7 @@ interface ItemTypes {
     index: any,
     status?: any,
     activeId?: any
+    reRender: any
 }
 
 const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
@@ -55,11 +59,12 @@ const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
     },
 }));
 
-export const UserViewStudentsItem = ({ item, index, status, activeId }: ItemTypes) => {
+export const UserViewStudentsItem = ({ item, index, status, activeId, reRender }: ItemTypes) => {
     const { student } = item
-    const { first_name, phone, added_at, created_at, balance, comment, id } = student
+    const { first_name, phone, added_at, created_at, balance, comment, id, activated_at } = student
     const { push, query } = useRouter()
-    const { user } = useContext(AuthContext) 
+    const { user } = useContext(AuthContext)
+    const [error, setError] = useState<any>({})
 
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [openLeft, setOpenLeft] = useState<boolean>(false)
@@ -91,23 +96,23 @@ export const UserViewStudentsItem = ({ item, index, status, activeId }: ItemType
             toast.success("O'quvchi guruhdan chetlatildi", { position: 'top-center' })
             setLoading(false)
             setOpenLeft(false)
+            reRender()
         } catch (err) {
             console.log(err)
             setLoading(false)
         }
     }
 
-    const handleActivate = async () => {
+    const handleActivate = async (values: any) => {
         setLoading(true)
         try {
-            await api.patch(`common/group-student-update/${activeId}`, {
-                status: 'active'
-            })
-            toast.success("O'quvchi guruhdan chetlatildi", { position: 'top-center' })
+            await api.patch(`common/group-student-update/${activeId}`, values)
+            toast.success("O'quvchi malumotlari o'zgartirildi", { position: 'top-center' })
             setLoading(false)
-            setOpenLeft(false)
-        } catch (err) {
-            console.log(err)
+            setActivate(false)
+            reRender()
+        } catch (err: any) {
+            showResponseError(err?.response?.data, setError)
             setLoading(false)
         }
     }
@@ -140,8 +145,8 @@ export const UserViewStudentsItem = ({ item, index, status, activeId }: ItemType
                         <Typography fontSize={12}>{formatDateTime(added_at)}</Typography>
                     </Box>
                     <Box py={1} borderTop={'1px solid #c3cccc'}>
-                        <Typography variant='body2' fontSize={12}>Qo'shilgan sana</Typography>
-                        <Typography fontSize={12}>{formatDateTime(added_at)}</Typography>
+                        <Typography variant='body2' fontSize={12}>Aktivlashtirilgan sana</Typography>
+                        <Typography fontSize={12}>{formatDateTime(activated_at)}</Typography>
                     </Box>
                     {comment && <Box py={1} borderTop={'1px solid #c3cccc'}>
                         <Typography variant='body2' fontSize={12}>Eslatma</Typography>
@@ -179,7 +184,7 @@ export const UserViewStudentsItem = ({ item, index, status, activeId }: ItemType
                 <MenuItem onClick={() => handleClose('payment')}>To'lov</MenuItem>
                 <MenuItem onClick={() => handleClose('left')}>Guruhdan chiqarish</MenuItem>
                 <MenuItem onClick={() => handleClose('notes')}>Eslatmalar</MenuItem>
-                <MenuItem onClick={() => setActivate(true)}>Aktivlashtirish</MenuItem>
+                <MenuItem onClick={() => setActivate(true)}>Tahrirlash</MenuItem>
             </Menu>
 
             <Dialog open={openLeft} onClose={() => setOpenLeft(false)}>
@@ -194,20 +199,51 @@ export const UserViewStudentsItem = ({ item, index, status, activeId }: ItemType
             </Dialog>
 
             <Dialog open={activate} onClose={() => setActivate(false)}>
-                <DialogContent sx={{ maxWidth: '350px' }}>
-                    <Typography sx={{ fontSize: '20px', textAlign: 'center', mb: 3 }}>O'quvchini aktivlashtiring</Typography>
+                <DialogContent sx={{ minWidth: '350px' }}>
+                    <Typography sx={{ fontSize: '20px', textAlign: 'center', mb: 3 }}>O'quvchini tahrirlash</Typography>
 
-                    <Box sx={{ display: 'flex', justifyContent: 'center', gap: 4 }}>
-                        <Button onClick={() => setActivate(false)} size='small' variant='outlined' color='error'>bekor qilish</Button>
-                        <LoadingButton loading={loading} onClick={handleActivate} size='small' variant='contained' color='success'>Tasdiqlash</LoadingButton>
-                    </Box>
+                    <Form id='weqe' onSubmit={handleActivate} setError={setError} sx={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+
+                        <FormControl>
+                            <TextField defaultValue={added_at} name='added_at' type='date' error={error?.added_at?.error} label={"Qo'shilgan sana"} size='small' />
+                            <FormHelperText error={error?.added_at?.error}>{error?.added_at?.message}</FormHelperText>
+                        </FormControl>
+
+                        <FormControl>
+                            <TextField defaultValue={activated_at} name='activated_at' type='date' error={error?.activated_at?.error} label={"Qo'shilgan sana"} size='small' />
+                            <FormHelperText error={error?.activated_at?.error}>{error?.activated_at?.message}</FormHelperText>
+                        </FormControl>
+
+                        <FormControl sx={{ maxWidth: '100%', marginBottom: 3 }} fullWidth>
+                            <InputLabel size='small' id='demo-simple-select-outlined-label'>Status (holati)</InputLabel>
+                            <Select
+                                size='small'
+                                label="Status (holati)"
+                                defaultValue={status}
+                                id='demo-simple-select-outlined'
+                                labelId='demo-simple-select-outlined-label'
+                                name='status'
+                            >
+                                <MenuItem value={'active'}>Aktivlashtirish</MenuItem>
+                                <MenuItem value={'new'}>Sinov darsi</MenuItem>
+                                <MenuItem value={'archive'}>Arxivlash</MenuItem>
+                            </Select>
+                        </FormControl>
+
+
+                        <Box sx={{ display: 'flex', justifyContent: 'center', gap: 4 }}>
+                            <Button onClick={() => setActivate(false)} size='small' variant='outlined' color='error'>bekor qilish</Button>
+                            <LoadingButton loading={loading} type='submit' size='small' variant='contained' color='success'>Saqlash</LoadingButton>
+                        </Box>
+                    </Form>
+
                 </DialogContent>
             </Dialog>
         </Box>
     )
 }
 
-export default function UserViewStudentsList({ data }: any) {
+export default function UserViewStudentsList({ data, reRender }: any) {
 
     return (
         <Box>
@@ -215,7 +251,7 @@ export default function UserViewStudentsList({ data }: any) {
             <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%', mt: '10px', gap: '5px' }}>
                 {
                     data.map((el: any, index: any) => (
-                        <UserViewStudentsItem key={el.id} activeId={el.id} item={el} index={index + 1} status={el.status} />
+                        <UserViewStudentsItem reRender={reRender} key={el.id} activeId={el.id} item={el} index={index + 1} status={el.status} />
                     ))
                 }
             </Box>
