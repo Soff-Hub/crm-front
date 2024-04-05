@@ -98,6 +98,7 @@ const UserViewSecurity = ({ invoiceData }: any) => {
   const [openTooltip, setOpenTooltip] = useState<null | string>(null)
   const [month, setMonth] = useState<any>(null)
   const [topic, setTopic] = useState<any>('')
+  const [archiveUrl, setArchiveUrl] = useState<'active,new' | 'archive'>('active,new')
 
 
   const [attendance, setAttendance] = useState<any>(null)
@@ -130,7 +131,7 @@ const UserViewSecurity = ({ invoiceData }: any) => {
   async function getAttendance(date: any, group: any) {
     setLoading(true)
     try {
-      const resp = await api.get(`common/attendance-list/${date}-01/group/${group}/`)
+      const resp = await api.get(`common/attendance-list/${date}-01/group/${group}/?status=${archiveUrl}`)
       setAttendance(resp.data)
       setLoading(false)
     } catch (err) {
@@ -184,7 +185,7 @@ const UserViewSecurity = ({ invoiceData }: any) => {
     }
     // getTopics()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [month])
+  }, [month, archiveUrl])
 
   return (
     <Box className='demo-space-y'>
@@ -202,145 +203,166 @@ const UserViewSecurity = ({ invoiceData }: any) => {
               <Typography>Yuklanmoqda...</Typography>
             </Box>
           ) : (
-            <table>
-              <thead>
-                <tr style={{ borderBottom: '1px solid #c3cccc' }}>
-                  <td style={{ padding: '8px 0', textAlign: 'start', minWidth: '150px' }}><Typography>Mavzular</Typography></td>
+            <Box>
+              <table>
+                <thead>
+                  <tr style={{ borderBottom: '1px solid #c3cccc' }}>
+                    <td style={{ padding: '8px 0', textAlign: 'start', minWidth: '150px' }}><Typography>Mavzular</Typography></td>
+                    {
+                      attendance && days.map((hour: any) => <td key={hour.date} style={{ textAlign: 'center', minWidth: '45px', padding: '8px 0', cursor: 'pointer', backgroundColor: hour.exam ? '#96f3a5' : hour.lesson ? '#a7c0fb' : 'transparent' }}>
+                        <div>
+                          {
+                            hour.exam ? (
+                              <HtmlTooltip
+                                PopperProps={{
+                                  disablePortal: true,
+                                }}
+                                onClose={() => setOpenTooltip(null)}
+                                open={openTooltip === hour.date}
+                                disableFocusListener
+                                disableHoverListener
+                                disableTouchListener
+                                arrow
+                                title={
+                                  <div>
+                                    <p style={{ margin: '0', marginBottom: '4px' }}>{hour.exam.title}</p>
+                                    <p style={{ margin: '0', marginBottom: '4px' }}>Ball: {hour.exam.min_score} / {hour.exam.max_score}</p>
+                                  </div>
+                                }
+                              >
+                                <span onClick={() => setOpenTooltip((c) => c === hour.date ? null : hour.date)} >
+                                  imtixon
+                                </span>
+                              </HtmlTooltip>
+                            ) : hour.lesson ? (
+                              <HtmlTooltip
+                                PopperProps={{
+                                  disablePortal: true,
+                                }}
+                                onClose={() => setOpenTooltip(null)}
+                                open={openTooltip === hour.date}
+                                disableFocusListener
+                                disableHoverListener
+                                disableTouchListener
+                                arrow
+                                title={
+                                  <div>
+                                    <p style={{ margin: '0', marginBottom: '4px' }}>{hour.lesson.topic}</p>
+                                  </div>
+                                }
+                              >
+                                <span onClick={() => setOpenTooltip((c) => c === hour.date ? null : hour.date)} >
+                                  mavzu
+                                </span>
+                              </HtmlTooltip>
+                            ) : (
+                              <HtmlTooltip
+                                PopperProps={{
+                                  disablePortal: true,
+                                }}
+                                onClose={() => setOpenTooltip(null)}
+                                open={openTooltip === hour.date}
+                                disableFocusListener
+                                disableHoverListener
+                                disableTouchListener
+                                arrow
+                                title={
+                                  <form
+                                    style={{
+                                      display: 'flex',
+                                      alignItems: 'stretch',
+                                      width: '100%',
+                                      padding: '5px',
+                                      flexDirection: 'column',
+                                      gap: '3px'
+                                    }}
+                                    onSubmit={async (e) => {
+                                      e.preventDefault()
+                                      try {
+                                        await api.post('common/topic/create/', { topic, group: invoiceData.id, date: hour.date })
+                                        getDates(`${query?.year || new Date().getFullYear()}-${getMontNumber(month)}`, invoiceData.id)
+                                        setOpenTooltip(null)
+                                      } catch (err) {
+                                        console.log(err)
+                                      }
+                                    }}
+                                  >
+                                    <TextField autoComplete="off" onChange={(e) => setTopic(e.target.value)} size="small" placeholder="Mavzu.." />
+                                    <Button type="submit">{t("Saqlash")}</Button>
+                                  </form>
+                                }
+                              >
+                                <span onClick={() => setOpenTooltip((c) => c === hour.date ? null : hour.date)} >
+                                  <IconifyIcon icon={'iconamoon:file-add-light'} />
+                                </span>
+                              </HtmlTooltip>
+                            )
+                          }
+                        </div>
+                      </td>)
+                    }
+                  </tr>
+                  <tr style={{ borderBottom: '1px solid #c3cccc' }}>
+                    <td style={{ padding: '8px 0', textAlign: 'start', borderRight: '1px solid #c3cccc', maxWidth: '100px' }}><Typography>O'quvchilar</Typography></td>
+                    {
+                      attendance && days.map((hour: any) => <th key={hour.date} style={{ textAlign: 'center', minWidth: '50px', padding: '8px 0', cursor: 'pointer' }}><Typography>{`${hour.date.split('-')[2]}`}</Typography></th>)
+                    }
+                  </tr>
+                </thead>
+                <tbody>
                   {
-                    attendance && days.map((hour: any) => <td key={hour.date} style={{ textAlign: 'center', minWidth: '45px', padding: '8px 0', cursor: 'pointer', backgroundColor: hour.exam ? '#96f3a5' : hour.lesson ? '#a7c0fb' : 'transparent' }}>
-                      <div>
+                    attendance && attendance.students.map((student: any) => (
+                      <tr key={student.id} style={{}}>
+                        <td style={{ padding: '8px 0', textAlign: 'start', fontSize: '14px', borderRight: '1px solid #c3cccc' }}>{student.first_name}</td>
                         {
-                          hour.exam ? (
-                            <HtmlTooltip
-                              PopperProps={{
-                                disablePortal: true,
-                              }}
-                              onClose={() => setOpenTooltip(null)}
-                              open={openTooltip === hour.date}
-                              disableFocusListener
-                              disableHoverListener
-                              disableTouchListener
-                              arrow
-                              title={
-                                <div>
-                                  <p style={{ margin: '0', marginBottom: '4px' }}>{hour.exam.title}</p>
-                                  <p style={{ margin: '0', marginBottom: '4px' }}>Ball: {hour.exam.min_score} / {hour.exam.max_score}</p>
-                                </div>
-                              }
-                            >
-                              <span onClick={() => setOpenTooltip((c) => c === hour.date ? null : hour.date)} >
-                                imtixon
+                          days.map((hour: any) => (
+                            student.attendance.some((el: any) => el.date === hour.date) && student.attendance.find((el: any) => el.date === hour.date) ? (
+                              <td key={student.attendance.find((el: any) => el.date === hour.date).date} style={{ padding: '8px 0', textAlign: 'center', cursor: 'pointer' }}>
+                                {
+                                  student.attendance.find((el: any) => el.date === hour.date).is_available === true ? (
+                                    <Item opened_id={opened_id} setOpenedId={setOpenedId} defaultValue={true} groupId={invoiceData.id} userId={student.id} date={hour.date} />
+                                  ) :
+                                    student.attendance.find((el: any) => el.date === hour.date).is_available === false ? (
+                                      <Item opened_id={opened_id} setOpenedId={setOpenedId} defaultValue={false} groupId={invoiceData.id} userId={student.id} date={hour.date} />
+                                    ) :
+                                      student.attendance.find((el: any) => el.date === hour.date).is_available === null ? (
+                                        <Item opened_id={opened_id} setOpenedId={setOpenedId} defaultValue={null} groupId={invoiceData.id} userId={student.id} date={hour.date} />
+                                      ) : <></>
+                                }
+                              </td>
+                            ) : <td key={hour.date} style={{ padding: '8px 0', textAlign: 'center', cursor: 'not-allowed' }}>
+                              <span>
+                                <Item opened_id={opened_id} setOpenedId={setOpenedId} defaultValue={0} />
                               </span>
-                            </HtmlTooltip>
-                          ) : hour.lesson ? (
-                            <HtmlTooltip
-                              PopperProps={{
-                                disablePortal: true,
-                              }}
-                              onClose={() => setOpenTooltip(null)}
-                              open={openTooltip === hour.date}
-                              disableFocusListener
-                              disableHoverListener
-                              disableTouchListener
-                              arrow
-                              title={
-                                <div>
-                                  <p style={{ margin: '0', marginBottom: '4px' }}>{hour.lesson.topic}</p>
-                                </div>
-                              }
-                            >
-                              <span onClick={() => setOpenTooltip((c) => c === hour.date ? null : hour.date)} >
-                                mavzu
-                              </span>
-                            </HtmlTooltip>
-                          ) : (
-                            <HtmlTooltip
-                              PopperProps={{
-                                disablePortal: true,
-                              }}
-                              onClose={() => setOpenTooltip(null)}
-                              open={openTooltip === hour.date}
-                              disableFocusListener
-                              disableHoverListener
-                              disableTouchListener
-                              arrow
-                              title={
-                                <form
-                                  style={{
-                                    display: 'flex',
-                                    alignItems: 'stretch',
-                                    width: '100%',
-                                    padding: '5px',
-                                    flexDirection: 'column',
-                                    gap: '3px'
-                                  }}
-                                  onSubmit={async (e) => {
-                                    e.preventDefault()
-                                    try {
-                                      await api.post('common/topic/create/', { topic, group: invoiceData.id, date: hour.date })
-                                      getDates(`${query?.year || new Date().getFullYear()}-${getMontNumber(month)}`, invoiceData.id)
-                                      setOpenTooltip(null)
-                                    } catch (err) {
-                                      console.log(err)
-                                    }
-                                  }}
-                                >
-                                  <TextField autoComplete="off" onChange={(e) => setTopic(e.target.value)} size="small" placeholder="Mavzu.." />
-                                  <Button type="submit">{t("Saqlash")}</Button>
-                                </form>
-                              }
-                            >
-                              <span onClick={() => setOpenTooltip((c) => c === hour.date ? null : hour.date)} >
-                                <IconifyIcon icon={'iconamoon:file-add-light'} />
-                              </span>
-                            </HtmlTooltip>
+                            </td>
+                          )
                           )
                         }
-                      </div>
-                    </td>)
+                      </tr>
+                    ))
                   }
-                </tr>
-                <tr style={{ borderBottom: '1px solid #c3cccc' }}>
-                  <td style={{ padding: '8px 0', textAlign: 'start', borderRight: '1px solid #c3cccc', maxWidth: '100px' }}><Typography>O'quvchilar</Typography></td>
+                </tbody>
+              </table>
+              <Box sx={{ width: '100%', display: 'flex', pt: '10px' }}>
+                <Button
+                  startIcon={<IconifyIcon style={{ fontSize: '12px' }} icon={`icon-park-outline:to-${archiveUrl === 'archive' ? 'top' : 'bottom'}`} />}
+                  sx={{ fontSize: '10px', marginLeft: 'auto' }}
+                  size='small'
+                  color={archiveUrl === 'archive' ? 'primary' : 'error'}
+                  variant='text'
+                  onClick={() => {
+                    if (archiveUrl === 'archive') {
+                      setArchiveUrl('active,new')
+                    } else setArchiveUrl('archive')
+                  }}
+                >
                   {
-                    attendance && days.map((hour: any) => <th key={hour.date} style={{ textAlign: 'center', minWidth: '50px', padding: '8px 0', cursor: 'pointer' }}><Typography>{`${hour.date.split('-')[2]}`}</Typography></th>)
+                    archiveUrl === 'archive' ? "Arxivni yopish" : "Arxivdagi o'quvchilarni ko'rish"
                   }
-                </tr>
-              </thead>
-              <tbody>
-                {
-                  attendance && attendance.students.map((student: any) => (
-                    <tr key={student.id} style={{}}>
-                      <td style={{ padding: '8px 0', textAlign: 'start', fontSize: '14px', borderRight: '1px solid #c3cccc' }}>{student.first_name}</td>
-                      {
-                        days.map((hour: any) => (
-                          student.attendance.some((el: any) => el.date === hour.date) && student.attendance.find((el: any) => el.date === hour.date) ? (
-                            <td key={student.attendance.find((el: any) => el.date === hour.date).date} style={{ padding: '8px 0', textAlign: 'center', cursor: 'pointer' }}>
-                              {
-                                student.attendance.find((el: any) => el.date === hour.date).is_available === true ? (
-                                  <Item opened_id={opened_id} setOpenedId={setOpenedId} defaultValue={true} groupId={invoiceData.id} userId={student.id} date={hour.date} />
-                                ) :
-                                  student.attendance.find((el: any) => el.date === hour.date).is_available === false ? (
-                                    <Item opened_id={opened_id} setOpenedId={setOpenedId} defaultValue={false} groupId={invoiceData.id} userId={student.id} date={hour.date} />
-                                  ) :
-                                    student.attendance.find((el: any) => el.date === hour.date).is_available === null ? (
-                                      <Item opened_id={opened_id} setOpenedId={setOpenedId} defaultValue={null} groupId={invoiceData.id} userId={student.id} date={hour.date} />
-                                    ) : <></>
-                              }
-                            </td>
-                          ) : <td key={hour.date} style={{ padding: '8px 0', textAlign: 'center', cursor: 'not-allowed' }}>
-                            <span>
-                              <Item opened_id={opened_id} setOpenedId={setOpenedId} defaultValue={0} />
-                            </span>
-                          </td>
-                        )
-                        )
-                      }
-                    </tr>
-                  ))
-                }
-              </tbody>
-            </table>
+                  
+                </Button>
+              </Box>
+            </Box>
           )
         }
       </Box>

@@ -77,6 +77,7 @@ const UserViewLeft = ({ userData, reRender }: { userData?: any, reRender: any })
   const searchDebounce = useDebounce(search, 500)
   const [weekdays, setWeekDays] = useState<any>(null)
   const [customWeekdays, setCustomWeekDays] = useState<string[]>([])
+  const [archiveUrl, setArchiveUrl] = useState<'active,new' | 'archive'>('active,new')
 
   // Hooks
   const { t } = useTranslation()
@@ -119,7 +120,7 @@ const UserViewLeft = ({ userData, reRender }: { userData?: any, reRender: any })
 
   const getStudents = async () => {
     try {
-      const resp = await api.get('common/group/students/' + query.id)
+      const resp = await api.get(`common/group/students/${query.id}?status=${archiveUrl}`)
       setStudents(resp.data)
     } catch (err) {
       console.log(err)
@@ -213,7 +214,7 @@ const UserViewLeft = ({ userData, reRender }: { userData?: any, reRender: any })
   useEffect(() => {
     getStudents()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [archiveUrl])
 
   useEffect(() => {
     if (searchDebounce !== '') {
@@ -399,6 +400,25 @@ const UserViewLeft = ({ userData, reRender }: { userData?: any, reRender: any })
                 }
               </div>
               <UserViewStudentsList data={students} reRender={getStudents} />
+              <Box sx={{ width: '100%', display: 'flex', pt: '10px' }}>
+                <Button
+                  startIcon={<IconifyIcon style={{ fontSize: '12px' }} icon={`icon-park-outline:to-${archiveUrl === 'archive' ? 'top' : 'bottom'}`} />}
+                  sx={{ fontSize: '10px', marginLeft: 'auto' }}
+                  size='small'
+                  color={archiveUrl === 'archive' ? 'primary' : 'error'}
+                  variant='text'
+                  onClick={() => {
+                    if (archiveUrl === 'archive') {
+                      setArchiveUrl('active,new')
+                    } else setArchiveUrl('archive')
+                  }}
+                >
+                  {
+                    archiveUrl === 'archive' ? "Arxivni yopish" : "Arxivdagi o'quvchilarni ko'rish"
+                  }
+
+                </Button>
+              </Box>
             </CardContent>
           </Card>
         </Grid>
