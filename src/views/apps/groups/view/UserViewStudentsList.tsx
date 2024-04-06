@@ -224,9 +224,9 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, reRender }
                                 labelId='demo-simple-select-outlined-label'
                                 name='status'
                             >
-                                <MenuItem value={'active'}>Aktivlashtirish</MenuItem>
+                                <MenuItem value={'active'}>Aktiv</MenuItem>
                                 <MenuItem value={'new'}>Sinov darsi</MenuItem>
-                                <MenuItem value={'archive'}>Arxivlash</MenuItem>
+                                <MenuItem value={'archive'}>Arxiv</MenuItem>
                             </Select>
                         </FormControl>
 
