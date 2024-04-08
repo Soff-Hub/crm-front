@@ -210,7 +210,7 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, reRender }
                         </FormControl>
 
                         <FormControl>
-                            <TextField defaultValue={activated_at} name='activated_at' type='date' error={error?.activated_at?.error} label={"Qo'shilgan sana"} size='small' />
+                            <TextField defaultValue={activated_at} name='activated_at' type='date' error={error?.activated_at?.error} label={"Aktivlashtirilgan sana"} size='small' />
                             <FormHelperText error={error?.activated_at?.error}>{error?.activated_at?.message}</FormHelperText>
                         </FormControl>
 
