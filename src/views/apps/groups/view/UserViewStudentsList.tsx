@@ -227,6 +227,7 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, reRender }
                                 <MenuItem value={'active'}>Aktiv</MenuItem>
                                 <MenuItem value={'new'}>Sinov darsi</MenuItem>
                                 <MenuItem value={'archive'}>Arxiv</MenuItem>
+                                <MenuItem value={'frozen'}>Muzlatish</MenuItem>
                             </Select>
                         </FormControl>
 

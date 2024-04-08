@@ -48,6 +48,7 @@ import Status from '../../status'
 import useSMS from 'src/hooks/useSMS'
 import { useRouter } from 'next/router'
 import useBranches from 'src/hooks/useBranch'
+import useGroups from 'src/hooks/useGroups'
 
 // ** Styled Avatar component
 const Avatar = styled(CustomAvatar)<AvatarProps>(({ theme }) => ({
@@ -63,7 +64,7 @@ const KanbanItem = (props: KanbarItemProps) => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
     const [error, setError] = useState<any>({})
     const { t } = useTranslation()
-    const [open, setOpen] = useState<'edit' | 'merge-to' | 'sms' | 'delete' | 'note' | 'branch' | 'recover' | null>(null)
+    const [open, setOpen] = useState<'edit' | 'merge-to' | 'sms' | 'delete' | 'note' | 'branch' | 'recover' | 'add-group' | null>(null)
     const [department, setDepartment] = useState<any>(null)
     const [loading, setLoading] = useState<boolean>(false)
     const [activeTab, setActiveTab] = useState<string>('tab-1')
@@ -74,6 +75,7 @@ const KanbanItem = (props: KanbarItemProps) => {
     const { smsTemps, getSMSTemps } = useSMS()
     const { query } = useRouter()
     const { branches, getBranches } = useBranches()
+    const { getGroups, groups } = useGroups()
 
     const [selectBranch, setSelectBranch] = useState<any>(null)
     const [selectDepartment, setSelectDepartment] = useState<any>([])
@@ -210,6 +212,7 @@ const KanbanItem = (props: KanbarItemProps) => {
         }
     }
 
+
     return (
         <Card sx={{ cursor: 'pointer' }}>
             <CardContent sx={{ py: theme => `${theme.spacing(2)} !important`, px: 2 }}>
@@ -303,6 +306,10 @@ const KanbanItem = (props: KanbarItemProps) => {
                                 <IconifyIcon icon='subway:round-arrow-2' fontSize={17} />
                                 {t("Boshqa bo'limga")}
                             </MenuItem>
+                            <MenuItem onClick={() => (getGroups(), setOpen('add-group'))} sx={{ '& svg': { mr: 2 } }}>
+                                <IconifyIcon icon='material-symbols:group-add' fontSize={17} />
+                                {t("Guruhga qo'shish")}
+                            </MenuItem>
                             <MenuItem onClick={() => setOpen('edit')} sx={{ '& svg': { mr: 2 } }}>
                                 <IconifyIcon icon='mdi:edit' fontSize={20} />
                                 {t("Tahrirlash")}
@@ -320,6 +327,33 @@ const KanbanItem = (props: KanbarItemProps) => {
                     )
                 }
             </Menu>
+
+            <Dialog open={open === 'add-group'} onClose={() => setOpen(null)}>
+                <DialogTitle sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <Typography>{t("Guruhga qo'shish")}</Typography>
+                    <IconifyIcon icon={'material-symbols:close'} onClick={() => setOpen(null)} />
+                </DialogTitle>
+                <DialogContent>
+                    <Form id='xsddnerernererera' sx={{ minWidth: '280px', maxWidth: '350px', width: '100%', display: 'flex', flexDirection: 'column', gap: '15px', marginTop: '5px' }} setError={setError} onSubmit={handleSubmit} valueTypes='json'>
+                        <FormControl fullWidth>
+                            <InputLabel size='small'>{t("Guruh")}</InputLabel>
+                            <Select size='small' label={t("Guruh")} error={error?.group?.error} name='group' defaultValue={''} >
+                                {
+                                    groups.map((el: any) => <MenuItem key={el.id} value={el.id}>{el.name}</MenuItem>)
+                                }
+                            </Select>
+                            <FormHelperText error={error?.group?.error}>{error?.group?.message}</FormHelperText>
+                        </FormControl>
+
+                        <FormControl fullWidth>
+                            <TextField size='small' type='date' name='date' label={t("Qo'shilish sanasi")} />
+                            <FormHelperText error={error?.date?.error}>{error?.date?.message}</FormHelperText>
+                        </FormControl>
+
+                        <LoadingButton variant='contained' type={'submit'} loading={loading}>{t("Saqlash")}</LoadingButton>
+                    </Form>
+                </DialogContent>
+            </Dialog>
 
             <Dialog open={open === 'edit'} onClose={() => setOpen(null)}>
                 <DialogTitle sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>

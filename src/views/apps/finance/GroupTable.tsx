@@ -9,6 +9,7 @@ interface GroupStatsType {
     student_count: number
     plan: number
     income: number
+    distance: number
 }
 
 const NavigationMenu = styled(Paper)(({ theme }) => ({
@@ -51,7 +52,8 @@ export default function GroupFinanceTable() {
         name: "Frontend 001",
         student_count: 12,
         plan: 6500000,
-        income: 5700000
+        income: 5700000,
+        distance: 200000
     }
 
     return (
@@ -63,6 +65,7 @@ export default function GroupFinanceTable() {
                     <Box sx={{ border: '1px solid #c3cccc', p: '5px' }} >O'quvchi soni</Box>
                     <Box sx={{ border: '1px solid #c3cccc', p: '5px' }} >Reja</Box>
                     <Box sx={{ border: '1px solid #c3cccc', p: '5px' }} >Tushum</Box>
+                    <Box sx={{ border: '1px solid #c3cccc', p: '5px' }} >Farq</Box>
                 </Box>
             </Box>
             <Box className='header' sx={{ minWidth: '150px' }}>
@@ -72,6 +75,7 @@ export default function GroupFinanceTable() {
                     <Box sx={{ border: '1px solid #c3cccc', p: '5px' }}>120 ta o'quvchi</Box>
                     <Box sx={{ border: '1px solid #c3cccc', p: '5px' }}>{formatCurrency(30000000)}</Box>
                     <Box sx={{ border: '1px solid #c3cccc', p: '5px' }}>{formatCurrency(27000000)}</Box>
+                    <Box sx={{ border: '1px solid #c3cccc', p: '5px' }}>{formatCurrency(1500000)}</Box>
                 </Box>
             </Box>
             <Box className='body' sx={{ flexGrow: 1 }}>
@@ -98,6 +102,11 @@ export default function GroupFinanceTable() {
                                 <Box sx={{ border: '1px solid #c3cccc', p: '5px' }}>
                                     <Typography>
                                         {formatCurrency(group.income)}
+                                    </Typography>
+                                </Box>
+                                <Box sx={{ border: '1px solid #c3cccc', p: '5px' }}>
+                                    <Typography>
+                                        {formatCurrency(group.distance)}
                                     </Typography>
                                 </Box>
                             </Box>

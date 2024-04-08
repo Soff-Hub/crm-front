@@ -144,30 +144,34 @@ const CardStatistics = () => {
         {
             xs: 0.2,
             title: t("first_name"),
-            dataIndex: "id"
+            dataIndex: "first_name"
         },
         {
             xs: 0.2,
             title: t("phone"),
-            dataIndex: "id"
+            dataIndex: "phone"
         },
         {
             xs: 0.2,
-            title: t("Ish haqqi"),
-            dataIndex: "id"
-        },
-        {
-            xs: 0.2,
-            title: t("Amallar"),
-            dataIndex: "id"
+            title: t("roles_list"),
+            dataIndex: "roles_list",
+            render: (roles_list: any) => roles_list.join(", ")
         }
     ]
 
     const data = [
         {
-            id: "dasdasdasdasd"
+            id: "dasdasdasdasd",
+            first_name: "John Doe",
+            phone: "+998999999999",
+            roles_list: ["Teacher", "Adminstrator"]
         }
     ]
+
+
+    const handleRow = (id:string) => {
+        push(`/finance/salaries/${id}`)
+    }
 
 
     return (
@@ -263,7 +267,7 @@ const CardStatistics = () => {
                     <div id='chiqimlar'></div>
 
                     <Grid item xs={12} md={12} >
-                        <DataTable columns={salaryCol} data={data} />
+                        <DataTable columns={salaryCol} rowClick={handleRow} data={data} />
                     </Grid>
                 </Grid>
             </KeenSliderWrapper>
