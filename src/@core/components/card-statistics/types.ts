@@ -45,5 +45,6 @@ export type KanbarItemProps = {
   status: "pending" | "new" | "success"
   is_view: boolean
   trend?: 'positive' | 'negative'
-  handleEditLead?: any
+  handleEditLead?: any,
+  reRender?: any
 }

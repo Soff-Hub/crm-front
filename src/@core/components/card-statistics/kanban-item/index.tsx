@@ -65,7 +65,7 @@ export const today = `${new Date().getFullYear()}-${(new Date().getMonth() + 1) 
 const KanbanItem = (props: KanbarItemProps) => {
 
     // ** Props
-    const { title, phone, status, handleEditLead, id, is_view } = props
+    const { title, phone, status, handleEditLead, id, is_view, reRender } = props
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
     const [error, setError] = useState<any>({})
     const { t } = useTranslation()
@@ -220,12 +220,14 @@ const KanbanItem = (props: KanbarItemProps) => {
     const addToGroup = async (values: any) => {
         setLoading(true)
         try {
-            await api.post(`leads/lead-to-student/`, {
+            const resp = await api.post(`leads/lead-to-student/`, {
                 lead: id,
                 ...values
             })
+            toast.success(`${resp.data?.msg}`)
             setLoading(false)
             setDepartment(null)
+            reRender(false)
             setOpen(null)
         } catch (err: any) {
             setLoading(false)

@@ -193,7 +193,7 @@ export default function AccordionCustom({ onView, item, reRender }: AccordionPro
                             <CircularProgress disableShrink sx={{ mt: 1, mb: 2, mx: 'auto' }} size={25} />
                         ) : (
                             leadData.length > 0 ? (
-                                leadData.map((lead) => <KanbanItem is_view={lead.is_view} id={lead.id} handleEditLead={handleEditLead} key={lead.id} status={'success'} title={lead.first_name} phone={lead.phone} />)
+                                leadData.map((lead) => <KanbanItem reRender={handleGetLeads} is_view={lead.is_view} id={lead.id} handleEditLead={handleEditLead} key={lead.id} status={'success'} title={lead.first_name} phone={lead.phone} />)
                             ) : <Typography variant='body2' sx={{ fontStyle: 'italic', textAlign: 'center' }}>{t("Bo'sh")}</Typography>
                         )
                     ) : ''
