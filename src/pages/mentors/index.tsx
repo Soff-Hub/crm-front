@@ -28,6 +28,7 @@ import useBranches from 'src/hooks/useBranch'
 import LoadingButton from '@mui/lab/LoadingButton'
 import toast from 'react-hot-toast'
 import { useRouter } from 'next/router'
+import { today } from 'src/@core/components/card-statistics/kanban-item'
 
 export interface customTableProps {
   xs: number
@@ -282,7 +283,7 @@ export default function GroupsPage() {
             </FormControl>
 
             <FormControl sx={{ width: '100%' }}>
-              <TextField type='date' label={t("birth_date")} name='birth_date' error={error.birth_date} />
+              <TextField type='date' label={t("birth_date")} name='birth_date' error={error.birth_date} defaultValue={today} />
               <FormHelperText error={error.birth_date?.error}>{error.birth_date?.message}</FormHelperText>
             </FormControl>
 

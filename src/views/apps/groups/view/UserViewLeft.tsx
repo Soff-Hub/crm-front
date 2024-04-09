@@ -48,6 +48,7 @@ import useGroups from 'src/hooks/useGroups';
 import useSMS from 'src/hooks/useSMS';
 import useCourses from 'src/hooks/useCourses';
 import useRooms from 'src/hooks/useRooms';
+import { today } from 'src/@core/components/card-statistics/kanban-item';
 
 interface ColorsType {
   [key: string]: ThemeColor
@@ -561,6 +562,7 @@ const UserViewLeft = ({ userData, reRender }: { userData?: any, reRender: any })
               {selectedStudents && <FormControl sx={{ width: '100%', margin: '10px 0' }}>
                 <TextField
                   type="date" size='small' label={t('Qo\'shilish sanasi')} name='start_date'
+                  defaultValue={today}
                   style={{ background: 'transparent', width: '100%' }} />
                 <FormHelperText sx={{ marginBottom: '10px' }} error={error.start_date?.error}>{error.start_date?.message}</FormHelperText>
               </FormControl>}

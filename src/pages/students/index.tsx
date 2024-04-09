@@ -34,6 +34,7 @@ import { useRouter } from 'next/router'
 import Status from 'src/@core/components/status'
 import useCourses from 'src/hooks/useCourses'
 import useResponsive from 'src/@core/hooks/useResponsive'
+import { today } from 'src/@core/components/card-statistics/kanban-item'
 
 export interface customTableProps {
   xs: number
@@ -419,7 +420,7 @@ export default function GroupsPage() {
             </FormControl>
 
             <FormControl sx={{ width: '100%' }}>
-              <TextField size='small' type='date' label={t("birth_date")} name='birth_date' error={error.birth_date} />
+              <TextField size='small' type='date' label={t("birth_date")} name='birth_date' error={error.birth_date} defaultValue={today} />
               <FormHelperText error={error.birth_date?.error}>{error.birth_date?.message}</FormHelperText>
             </FormControl>
 
@@ -454,7 +455,7 @@ export default function GroupsPage() {
                   </Select>
                   <FormHelperText error={error.branches?.error}>{error.branches?.message}</FormHelperText>
 
-                  <TextField size='small' type='date' label={t("Qo'shilish sanasi")} name='start_at' error={error.start_at} />
+                  <TextField size='small' type='date' label={t("Qo'shilish sanasi")} name='start_at' error={error.start_at} defaultValue={today} />
                   <FormHelperText error={error.start_at?.error}>{error.start_at?.message}</FormHelperText>
                 </FormControl>
               ) : ''

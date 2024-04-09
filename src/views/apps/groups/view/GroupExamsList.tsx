@@ -3,6 +3,7 @@ import { Box, Button, Checkbox, Dialog, DialogActions, DialogContent, Drawer, Fo
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
+import { today } from "src/@core/components/card-statistics/kanban-item"
 import Form from "src/@core/components/form"
 import IconifyIcon from "src/@core/components/icon"
 import DataTable from "src/@core/components/table"
@@ -381,7 +382,7 @@ const GroupExamsList = () => {
                                             </FormControl>
 
                                             <FormControl>
-                                                <TextField size='small' type="date" label={t("Imtixon sanasi")} name='date' error={error.date?.error} />
+                                                <TextField size='small' type="date" label={t("Imtixon sanasi")} name='date' error={error.date?.error} defaultValue={today} />
                                                 <FormHelperText error={error.date}>{error.date?.message}</FormHelperText>
                                             </FormControl>
 

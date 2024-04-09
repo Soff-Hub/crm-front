@@ -57,6 +57,11 @@ const Avatar = styled(CustomAvatar)<AvatarProps>(({ theme }) => ({
     marginRight: theme.spacing(4)
 }))
 
+
+export const today = `${new Date().getFullYear()}-${(new Date().getMonth() + 1) > 9 ? new Date().getMonth() + 1 : `0${new Date().getMonth() + 1}`}-${new Date().getDate() > 9 ? new Date().getDate() : `0${new Date().getDate()}`}`
+
+
+
 const KanbanItem = (props: KanbarItemProps) => {
 
     // ** Props
@@ -212,6 +217,23 @@ const KanbanItem = (props: KanbarItemProps) => {
         }
     }
 
+    const addToGroup = async (values: any) => {
+        setLoading(true)
+        try {
+            await api.post(`leads/lead-to-student/`, {
+                lead: id,
+                ...values
+            })
+            setLoading(false)
+            setDepartment(null)
+            setOpen(null)
+        } catch (err: any) {
+            setLoading(false)
+            toast.error(JSON.stringify(err.response.data), { position: 'bottom-center' })
+            showResponseError(err.response.data, setError)
+        }
+    }
+
 
     return (
         <Card sx={{ cursor: 'pointer' }}>
@@ -334,7 +356,7 @@ const KanbanItem = (props: KanbarItemProps) => {
                     <IconifyIcon icon={'material-symbols:close'} onClick={() => setOpen(null)} />
                 </DialogTitle>
                 <DialogContent>
-                    <Form id='xsddnerernererera' sx={{ minWidth: '280px', maxWidth: '350px', width: '100%', display: 'flex', flexDirection: 'column', gap: '15px', marginTop: '5px' }} setError={setError} onSubmit={handleSubmit} valueTypes='json'>
+                    <Form id='xsddnerernererera' sx={{ minWidth: '280px', maxWidth: '350px', width: '100%', display: 'flex', flexDirection: 'column', gap: '15px', marginTop: '5px' }} setError={setError} onSubmit={addToGroup} valueTypes='json'>
                         <FormControl fullWidth>
                             <InputLabel size='small'>{t("Guruh")}</InputLabel>
                             <Select size='small' label={t("Guruh")} error={error?.group?.error} name='group' defaultValue={''} >
@@ -346,8 +368,8 @@ const KanbanItem = (props: KanbarItemProps) => {
                         </FormControl>
 
                         <FormControl fullWidth>
-                            <TextField size='small' type='date' name='date' label={t("Qo'shilish sanasi")} />
-                            <FormHelperText error={error?.date?.error}>{error?.date?.message}</FormHelperText>
+                            <TextField size='small' type='date' name='added_at' label={t("Qo'shilish sanasi")} defaultValue={today} />
+                            <FormHelperText error={error?.added_at?.error}>{error?.added_at?.message}</FormHelperText>
                         </FormControl>
 
                         <LoadingButton variant='contained' type={'submit'} loading={loading}>{t("Saqlash")}</LoadingButton>

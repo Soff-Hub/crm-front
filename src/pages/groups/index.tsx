@@ -38,6 +38,7 @@ import useRooms from 'src/hooks/useRooms'
 import api from 'src/@core/utils/api'
 import getMontName from 'src/@core/utils/gwt-month-name'
 import getLessonDays from 'src/@core/utils/getLessonDays'
+import { today } from 'src/@core/components/card-statistics/kanban-item'
 
 export interface customTableProps {
   xs: number
@@ -197,7 +198,7 @@ export default function GroupsPage() {
     },
     {
       xs: 1,
-      title: t("Kurs nomi"),
+      title: t("Kurs"),
       dataIndex: 'course_name'
     },
     {
@@ -431,7 +432,7 @@ export default function GroupsPage() {
             </FormControl>
 
             <FormControl sx={{ width: '100%' }}>
-              <TextField size='small' type='date' label={t("Boshlanish sanasi")} name='start_date' error={error.start_date} />
+              <TextField size='small' type='date' label={t("Boshlanish sanasi")} defaultValue={today} name='start_date' error={error.start_date} />
               <FormHelperText error={error.start_date?.error}>{error.start_date?.message}</FormHelperText>
             </FormControl>
 

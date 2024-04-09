@@ -4,6 +4,7 @@ import Link from "next/link"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
+import { today } from "src/@core/components/card-statistics/kanban-item"
 import Form from "src/@core/components/form"
 import IconifyIcon from "src/@core/components/icon"
 import DataTable from "src/@core/components/table"
@@ -189,7 +190,7 @@ const UserViewSecurity = ({ groupData }: any) => {
             </FormControl>
 
             <FormControl sx={{ width: '100%' }}>
-              <input type="date" style={{ borderRadius: '8px', padding: '10px', outline: 'none', border: '1px solid gray', marginTop: '10px' }} name='payment_date' />
+              <input type="date" style={{ borderRadius: '8px', padding: '10px', outline: 'none', border: '1px solid gray', marginTop: '10px' }} name='payment_date' defaultValue={today} />
               <FormHelperText error={error.start_date?.error}>{error.start_date?.message}</FormHelperText>
             </FormControl>
 

@@ -22,6 +22,7 @@ import api from 'src/@core/utils/api'
 import ceoConfigs from 'src/configs/ceo'
 import Form from 'src/@core/components/form'
 import toast from 'react-hot-toast'
+import { today } from 'src/@core/components/card-statistics/kanban-item'
 
 export interface customTableProps {
     xs: number
@@ -265,7 +266,7 @@ export default function RoomsPage() {
                     }}
                 >
                     <FormControl fullWidth>
-                        <TextField error={error.date} label='* Sanasi' size='small' name='date' type='date' defaultValue={`${new Date().getFullYear()}-01-01`} />
+                        <TextField error={error.date} label='* Sanasi' size='small' name='date' type='date' defaultValue={today} />
                         <FormHelperText error={error.date}>{error.date?.message}</FormHelperText>
                     </FormControl>
 
@@ -323,7 +324,7 @@ export default function RoomsPage() {
                         }}
                     >
                         <FormControl fullWidth>
-                            <TextField error={error.date} label='* Sanasi' size='small' name='date' type='date' defaultValue={`${new Date().getFullYear()}-01-01`} />
+                            <TextField error={error.date} label='* Sanasi' size='small' name='date' type='date' defaultValue={today} />
                             <FormHelperText error={error.date}>{error.date?.message}</FormHelperText>
                         </FormControl>
 

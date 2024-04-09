@@ -36,6 +36,7 @@ import { TranslateWeekName } from '../groups'
 import { hourFormatter } from 'src/@core/utils/hourFormatter'
 import { useSelector } from 'react-redux'
 import { useTranslation } from 'react-i18next'
+import getMonthName from 'src/@core/utils/gwt-month-name'
 
 
 
@@ -228,7 +229,7 @@ const AppCalendar = () => {
                           {generateTimeSlots(startTime, endTime).map((el: string) => <Box key={el} sx={{ width: '50px', height: '45px', borderLeft: '1px solid #c3cccc', display: 'flex', alignItems: 'center', justifyContent: 'center' }}></Box>)}
                           {
                             lesson.lessons.map((item: any) => (
-                              <Box key={item.id} sx={{ width: `${generateTimeSlots(item.start_at, item.end_at).length * 50}px`, height: '45px', position: 'absolute', padding: '5px', left: `${generateTimeSlots(startTime, endTime).findIndex(el => el === generateTimeSlots(item.start_at, item.end_at)[0]) * 50}px` }}>
+                              <Box onClick={() => push(`/groups/view/security?id=${item.id}&month=${getMonthName(null)}`)} key={item.id} sx={{ width: `${generateTimeSlots(item.start_at, item.end_at).length * 50}px`, height: '45px', position: 'absolute', padding: '5px', left: `${generateTimeSlots(startTime, endTime).findIndex(el => el === generateTimeSlots(item.start_at, item.end_at)[0]) * 50}px` }}>
                                 <Box sx={{ borderRadius: '8px', backgroundColor: `${item.color}`, width: '100%', height: '100%', cursor: 'pointer', padding: '2px 6px', overflow: 'hidden' }}>
                                   <Typography sx={{ color: 'black', fontSize: '10px' }}>{hourFormatter(item.start_at)} - {hourFormatter(item.end_at)} / {item.name}</Typography>
                                   <Typography sx={{ color: 'black', fontSize: '10px' }}>{item.teacher_name}</Typography>

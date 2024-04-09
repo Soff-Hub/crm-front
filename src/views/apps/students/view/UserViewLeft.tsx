@@ -40,6 +40,7 @@ import usePayment from 'src/hooks/usePayment'
 import api from 'src/@core/utils/api'
 import useSMS from 'src/hooks/useSMS'
 import { useRouter } from 'next/router'
+import { today } from 'src/@core/components/card-statistics/kanban-item'
 
 
 type ModalTypes = 'group' | 'payment' | 'sms' | 'delete' | 'edit' | 'notes'
@@ -291,6 +292,7 @@ const UserViewLeft = ({ userData, rerender }: { userData: StudentTypes | null, r
                 <TextField
                   type="date" size='small' label={t('Qo\'shilish sanasi')} name='start_date'
                   // min={groupShort?.find(el => el.id === groupDate)?.start_date || ''} 
+                  defaultValue={today}
                   style={{ background: 'transparent', width: '100%' }} />
                 <FormHelperText sx={{ marginBottom: '10px' }} error={error.start_date?.error}>{error.start_date?.message}</FormHelperText>
               </FormControl>}
@@ -392,7 +394,7 @@ const UserViewLeft = ({ userData, rerender }: { userData: StudentTypes | null, r
               </FormControl>
 
               <FormControl sx={{ width: '100%' }}>
-                <input type="date" style={{ borderRadius: '8px', padding: '10px', outline: 'none', border: '1px solid gray', marginTop: '10px' }} name='payment_date' />
+                <input type="date" style={{ borderRadius: '8px', padding: '10px', outline: 'none', border: '1px solid gray', marginTop: '10px' }} name='payment_date' defaultValue={today} />
                 <FormHelperText error={error.start_date?.error}>{error.start_date?.message}</FormHelperText>
               </FormControl>
 

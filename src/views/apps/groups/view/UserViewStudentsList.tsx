@@ -16,6 +16,7 @@ import api from 'src/@core/utils/api';
 import toast from 'react-hot-toast';
 import Form from 'src/@core/components/form';
 import showResponseError from 'src/@core/utils/show-response-error';
+import { today } from 'src/@core/components/card-statistics/kanban-item';
 
 
 interface StudentType {
@@ -205,12 +206,12 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, reRender }
                     <Form id='weqe' onSubmit={handleActivate} setError={setError} sx={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
 
                         <FormControl>
-                            <TextField defaultValue={added_at} name='added_at' type='date' error={error?.added_at?.error} label={"Qo'shilgan sana"} size='small' />
+                            <TextField defaultValue={added_at || today} name='added_at' type='date' error={error?.added_at?.error} label={"Qo'shilgan sana"} size='small' />
                             <FormHelperText error={error?.added_at?.error}>{error?.added_at?.message}</FormHelperText>
                         </FormControl>
 
                         <FormControl>
-                            <TextField defaultValue={activated_at} name='activated_at' type='date' error={error?.activated_at?.error} label={"Aktivlashtirilgan sana"} size='small' />
+                            <TextField defaultValue={activated_at || today} name='activated_at' type='date' error={error?.activated_at?.error} label={"Aktivlashtirilgan sana"} size='small' />
                             <FormHelperText error={error?.activated_at?.error}>{error?.activated_at?.message}</FormHelperText>
                         </FormControl>
 
