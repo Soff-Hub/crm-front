@@ -231,7 +231,7 @@ const UserViewSecurity = ({ invoiceData }: any) => {
                                 }
                               >
                                 <span onClick={() => setOpenTooltip((c) => c === hour.date ? null : hour.date)} >
-                                  imtixon
+                                  {hour.exam?.title}
                                 </span>
                               </HtmlTooltip>
                             ) : hour.lesson ? (
