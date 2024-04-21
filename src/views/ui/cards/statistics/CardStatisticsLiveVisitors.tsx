@@ -1,8 +1,6 @@
 // ** MUI Imports
 import Card from '@mui/material/Card'
 import { useTheme } from '@mui/material/styles'
-import CardHeader from '@mui/material/CardHeader'
-import CardContent from '@mui/material/CardContent'
 
 // ** Third Party Imports
 import { ApexOptions } from 'apexcharts'
@@ -12,6 +10,10 @@ import ReactApexcharts from 'src/@core/components/react-apexcharts'
 
 // ** Util Import
 import { hexToRGBA } from 'src/@core/utils/hex-to-rgba'
+import { formatCurrency } from 'src/@core/utils/format-currency'
+import { Box, FormControl, InputLabel, MenuItem, Select, Typography } from '@mui/material'
+import { useTranslation } from 'react-i18next'
+import { useState } from 'react'
 
 const series = [
   {
@@ -26,14 +28,17 @@ const series = [
   }
 ]
 
-const CardWidgetsWeeklyOverview = () => {
+const CardWidgetsWeeklyOverview = ({ data }: any) => {
   // ** Hook
   const theme = useTheme()
+  const { t } = useTranslation()
+
+  const [type, setType] = useState<'expense' | 'benefit'>('benefit')
 
   const options: ApexOptions = {
     chart: {
-      offsetY: -9,
-      offsetX: -16,
+      offsetY: 3,
+      offsetX: -30,
       parentHeightOffset: 0,
       toolbar: { show: true, tools: { zoom: false, zoomin: false, zoomout: false } }
     },
@@ -90,11 +95,11 @@ const CardWidgetsWeeklyOverview = () => {
     },
     yaxis: {
       min: 0,
-      max: 90,
+      // max: 90,
       show: true,
-      tickAmount: 3,
+      tickAmount: 5,
       labels: {
-        formatter: value => `${value > 999 ? `${(value / 1000).toFixed(0)}` : value}k`,
+        formatter: value => `${formatCurrency(value)}`,
         style: {
           fontSize: '0.75rem',
           colors: theme.palette.text.disabled
@@ -104,13 +109,46 @@ const CardWidgetsWeeklyOverview = () => {
   }
 
   return (
-    <Card>
-      <CardHeader
-        title='Yillik summa'
-      />
-      <CardContent sx={{ '& .apexcharts-xcrosshairs.apexcharts-active': { opacity: 0 } }}>
-        <ReactApexcharts type='line' height={208} series={series} options={options} />
-      </CardContent>
+    <Card sx={{ p: '20px' }}>
+      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+        <Typography sx={{ fontSize: '22px' }}>Yillik summa</Typography>
+        <FormControl className='ms-auto'>
+          <InputLabel size='small' id='user-view-language-label'>{t('Yil')}</InputLabel>
+          <Select
+            size='small'
+            label={t('Yil')}
+            id='user-view-language'
+            labelId='user-view-language-label'
+            sx={{ mb: 1 }}
+            defaultValue={2024}
+          >
+            {
+              [2024, 2025, 2026, 2027, 2028].map(year => (
+                <MenuItem value={year}>{year}</MenuItem>
+              ))
+            }
+          </Select>
+        </FormControl>
+        <FormControl className='ms-2'>
+          <InputLabel size='small' id='user-view-language-label'>{t('Tur')}</InputLabel>
+          <Select
+            size='small'
+            label={t('Tur')}
+            id='user-view-language'
+            labelId='user-view-language-label'
+            name='department'
+            sx={{ mb: 1 }}
+            defaultValue={'benefit'}
+            onChange={(e: any) => setType(e.target.value)}
+          >
+            <MenuItem value={"benefit"}>{"Tushum"}</MenuItem>
+            <MenuItem value={"expense"}>{"Chiqim"}</MenuItem>
+          </Select>
+        </FormControl>
+      </Box>
+      <Box>
+        <ReactApexcharts type='line' height={208} series={data?.[type] || []} options={options} />
+      </Box>
     </Card>
   )
 }

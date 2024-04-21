@@ -7,7 +7,6 @@ import { CardStatsType } from 'src/@fake-db/types'
 // ** Demo Components Imports
 import CardStatisticsHorizontal from 'src/views/ui/cards/statistics/CardStatisticsHorizontal'
 import CardStatisticsLiveVisitors from 'src/views/ui/cards/statistics/CardStatisticsLiveVisitors'
-import CardStatisticsVertical from 'src/views/ui/cards/statistics/CardStatisticsVertical'
 
 // ** Styled Component Import
 import KeenSliderWrapper from 'src/@core/styles/libs/keen-slider'
@@ -20,11 +19,14 @@ import IconifyIcon from 'src/@core/components/icon'
 import { useRouter } from 'next/router'
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { forwardRef, useRef, useState } from 'react'
+import { forwardRef, useEffect, useRef, useState } from 'react'
 import { addDays, format } from 'date-fns'
 import { useTranslation } from 'react-i18next'
 import { customTableDataProps } from 'src/@core/components/lid-table'
 import DataTable from 'src/@core/components/table'
+import api from 'src/@core/utils/api'
+import LoadingButton from '@mui/lab/LoadingButton'
+import CardFinanceCategory from 'src/@core/components/card-statistics/card-finance-category'
 
 
 type DateType = Date
@@ -35,6 +37,12 @@ interface PickerProps {
     start: Date | number;
 }
 
+interface AllNumbersType {
+    last_month_benefit: string,
+    last_year_benefit: string,
+    last_month_expense: string,
+    last_year_expense: string
+}
 
 const CardStatistics = () => {
 
@@ -45,7 +53,16 @@ const CardStatistics = () => {
     const [endDateRange, setEndDateRange] = useState<DateType>(addDays(new Date(), 45));
     const [nameVal, setNameVal] = useState<string>('');
     const [open, setOpen] = useState<'create' | null>(null);
-
+    const [label, setLabel] = useState<AllNumbersType>({
+        last_month_benefit: '0',
+        last_year_benefit: '0',
+        last_month_expense: '0',
+        last_year_expense: '0'
+    }
+    );
+    const [graphData, setGraphData] = useState<any>(null);
+    const [loading, setLoading] = useState<boolean>(false);
+    const [categryData, setCategryData] = useState<any>([]);
 
     const handleOnChangeRange = (dates: any) => {
         const [start, end] = dates;
@@ -74,7 +91,7 @@ const CardStatistics = () => {
         statsHorizontal: [
             {
                 color: 'success',
-                stats: '64,550,000',
+                stats: label.last_month_benefit,
                 trend: 'negative',
                 icon: 'mdi:trending-up',
                 trendNumber: '12.6%',
@@ -82,7 +99,7 @@ const CardStatistics = () => {
                 id: '#tushumlar'
             },
             {
-                stats: '31,412,000',
+                stats: label.last_month_expense,
                 color: 'error',
                 icon: 'mdi:trending-down',
                 trendNumber: '22.5%',
@@ -91,7 +108,7 @@ const CardStatistics = () => {
             },
             {
                 color: 'success',
-                stats: '64,550,000',
+                stats: label.last_year_benefit,
                 trend: 'negative',
                 icon: 'mdi:trending-up',
                 trendNumber: '12.6%',
@@ -99,7 +116,7 @@ const CardStatistics = () => {
                 id: '#tushumlar'
             },
             {
-                stats: '31,412,000',
+                stats: label.last_year_expense,
                 color: 'error',
                 icon: 'mdi:trending-down',
                 trendNumber: '22.5%',
@@ -168,17 +185,72 @@ const CardStatistics = () => {
         }
     ]
 
+    const getAllNumbers = async () => {
+        const resp = await api.get(`common/finance/dashboard/`)
+        setLabel(resp.data.label)
+        const benefit = [
+            {
+                type: 'column',
+                name: 'Tushumlar',
+                data: Object.values(resp.data.benefit)
+            }, {
+                type: 'line',
+                name: 'Tushumlar',
+                data: Object.values(resp.data.benefit)
+            }
+        ]
+        const expense = [
+            {
+                type: 'column',
+                name: 'Chiqimlar',
+                data: Object.values(resp.data.expense)
+            }, {
+                type: 'line',
+                name: 'Chiqimlar',
+                data: Object.values(resp.data.expense)
+            }
+        ]
+        setGraphData({
+            benefit,
+            expense
+        })
+    }
 
-    const handleRow = (id:string) => {
+    const getExpenseCategroy = async () => {
+        const resp = await api.get(`common/finance/expense-category/list/`)
+        setCategryData(resp.data?.results)
+    }
+
+    const createExpenseCategroy = async () => {
+        setLoading(true)
+        try {
+            const resp = await api.post(`common/finance/expense-category/create/`, { name: nameVal })
+            setOpen(null)
+            getExpenseCategroy()
+            console.log(resp.data)
+        } catch (err) {
+            console.log(err)
+        } finally {
+            console.log('finally');
+            setLoading(false)
+        }
+    }
+
+    const handleRow = (id: string) => {
         push(`/finance/salaries/${id}`)
     }
+
+    useEffect(() => {
+        getAllNumbers()
+        getExpenseCategroy()
+    }, [])
 
 
     return (
         <ApexChartWrapper>
-            <Box>
+            {/* <Box>
                 <button onClick={handleEditable}>ffffffffffffffffffffffffffffffffffff</button>
-            </Box>
+            </Box> */}
 
             <KeenSliderWrapper>
                 <Grid container spacing={4}>
@@ -191,7 +263,7 @@ const CardStatistics = () => {
                     </Grid>
 
                     <Grid item xs={12} md={12}>
-                        <CardStatisticsLiveVisitors />
+                        <CardStatisticsLiveVisitors data={graphData} />
                     </Grid>
 
                     <div id='tushumlar'></div>
@@ -207,39 +279,20 @@ const CardStatistics = () => {
                         <Box sx={{ display: 'flex', gap: '10px' }}>
                             <Typography sx={{ fontSize: '20px', flexGrow: 1 }}>Chiqimlar hisoboti</Typography>
                             <Button variant='contained' onClick={() => setOpen('create')}>+ {t("Bo'lim")}</Button>
-                            <Box>
-                                <DatePicker
-                                    selectsRange
-                                    monthsShown={2}
-                                    endDate={endDateRange}
-                                    selected={startDateRange}
-                                    startDate={startDateRange}
-                                    shouldCloseOnSelect={false}
-                                    id='date-range-picker-months'
-                                    onChange={handleOnChangeRange}
-                                    popperPlacement={'bottom-start'}
-                                    customInput={
-                                        <CustomInput
-                                            label="Sana bo'yicha"
-                                            end={endDateRange as Date | number}
-                                            start={startDateRange as Date | number}
-                                        />
-                                    }
-                                />
-                            </Box>
                         </Box>
                     </Grid>
                     <div id='chiqimlar'></div>
 
                     <Grid item xs={12} md={12} >
-                        {/* <CardStatisticsVertical data={apiData.statsVertical} /> */}
-                        {
-                            apiData.statsVertical.map((_, index) => (
-                                <Box key={index} className='' sx={{ cursor: 'pointer', maxWidth: '200px' }} onClick={() => push(`/finance/costs/${12}`)}>
-                                    <CardStatsVertical title={_.title} stats={_.stats} icon={<IconifyIcon fontSize={"4rem"} icon={'tdesign:money'} />} color={_.color} />
-                                </Box>
-                            ))
-                        }
+                        <Grid container spacing={6}>
+                            {
+                                categryData.map((_: any, index: any) => (
+                                    <Grid item xs={12} sm={6} lg={2} key={index} onClick={() => push(`/finance/costs/${_.id}`)} sx={{ cursor: 'pointer' }}>
+                                        <CardFinanceCategory title={_.name} stats={_.total_expense} icon={<IconifyIcon fontSize={"3rem"} icon={''} />} color={'warning'} />
+                                    </Grid>
+                                ))
+                            }
+                        </Grid>
                     </Grid>
 
                     <Grid item xs={12}>
@@ -281,8 +334,8 @@ const CardStatistics = () => {
                     <IconifyIcon icon={'mdi:close'} onClick={() => setOpen(null)} />
                 </DialogTitle>
                 <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                    <TextField autoComplete='off' size='small' placeholder={t("Bo'lim nomi")} fullWidth onChange={(e) => setNameVal(e.target.value)} />
-                    <Button variant='contained'>{t("Saqlash")}</Button>
+                    <TextField required autoComplete='off' size='small' placeholder={t("Bo'lim nomi")} fullWidth onChange={(e) => setNameVal(e.target.value)} />
+                    <LoadingButton loading={loading} onClick={() => createExpenseCategroy()} variant='contained'>{t("Saqlash")}</LoadingButton>
                 </DialogContent>
             </Dialog>
         </ApexChartWrapper>

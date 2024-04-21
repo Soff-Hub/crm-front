@@ -82,8 +82,8 @@ export default function GroupFinanceTable() {
                 <Div sx={{ textAlign: 'center', mb: '5px' }}>Mart</Div>
                 <NavigationMenu sx={{ display: 'flex', maxWidth: '1050px', overflowX: 'auto' }}>
                     {
-                        Array(20).fill(data).map((group: GroupStatsType) => (
-                            <Box sx={{ minWidth: '150px' }}>
+                        Array(20).fill(data).map((group: GroupStatsType, i) => (
+                            <Box sx={{ minWidth: '150px' }} key={i}>
                                 <Box sx={{ border: '1px solid #c3cccc', p: '5px' }}>
                                     <Typography>
                                         {group.name}

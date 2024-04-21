@@ -1,10 +1,12 @@
 import { Box, Button, Dialog, DialogContent, DialogTitle, TextField, Typography, styled } from '@mui/material';
+import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next';
 import IconifyIcon from 'src/@core/components/icon';
 import useResponsive from 'src/@core/hooks/useResponsive';
 import { useSettings } from 'src/@core/hooks/useSettings';
+import api from 'src/@core/utils/api';
 import { formatCurrency } from 'src/@core/utils/format-currency';
 import { hexToRGBA } from 'src/@core/utils/hex-to-rgba';
 
@@ -13,6 +15,7 @@ import { hexToRGBA } from 'src/@core/utils/hex-to-rgba';
 
 function Slug(props: { slug: string }) {
     const { settings } = useSettings()
+    const { query } = useRouter()
 
     const { themeColor } = settings
     const mainColor = themeColor === 'primary' ? '#666CFF' : themeColor === 'secondary' ? '#6D788D' : themeColor === 'success' ? '#72E128' : themeColor === 'error' ? '#FF4D49' : themeColor === 'warning' ? '#FDB528' : '#26C6F9'
@@ -37,8 +40,13 @@ function Slug(props: { slug: string }) {
     const [nameVal, setNameVal] = useState<string>('');
     const [description, seDescription] = useState<string>('');
     const [open, setOpen] = useState<'create' | null>(null);
+    const [data2, setData] = useState<any[]>([]);
 
 
+    const getExpense = async (id: any) => {
+        const resp = await api.get(`common/finance/expense/list/2024-04-21/`)
+        setData(resp.data.result);
+    }
 
 
 
@@ -91,6 +99,10 @@ function Slug(props: { slug: string }) {
         ]
 
 
+    useEffect(() => {
+        getExpense(query?.slug)
+    }, [])
+
 
     return (
         <Box>
@@ -102,12 +114,12 @@ function Slug(props: { slug: string }) {
             </Box>
             <Box sx={{ display: 'flex', alignItems: isMobile ? 'center' : 'flex-start', gap: '15px', flexDirection: isMobile ? 'column' : 'row' }}>
                 {
-                    data.map((item, i: number) => (
-                        <Column key={i} sx={{ width: isMobile ? '100%' : '180px', display: 'flex', flexDirection: 'column', gap: '12px', p: '5px' }}>
+                    data2.map((item, i: number) => (
+                        <Column key={i} sx={{ minWidth: isMobile ? '100%' : '180px', display: 'flex', flexDirection: 'column', gap: '12px', p: '5px' }}>
                             <Th>
-                                {item.date}
+                                {Object.keys(item)}
                             </Th>
-                            {
+                            {/* {
                                 item.costs.map((el, j: number) => (
                                     <Box key={j} sx={{ borderBottom: `2px dashed ${mainColor}` }}>
                                         <Box>
@@ -118,7 +130,7 @@ function Slug(props: { slug: string }) {
                                         </Box>
                                     </Box>
                                 ))
-                            }
+                            } */}
                             <Button variant='outlined' onClick={() => setOpen('create')} size='small'>Yangi</Button>
                         </Column>
                     ))
