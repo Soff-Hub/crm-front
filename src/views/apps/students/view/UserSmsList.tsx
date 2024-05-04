@@ -36,7 +36,9 @@ const UserSmsList = () => {
             setLoading(false)
             setOpen(false)
         } catch (err: any) {
-            showResponseError(err.response.data, setError)
+            if (err?.response?.data) {
+                showResponseError(err?.response?.data, setError)
+            }
             setLoading(false)
         }
     }

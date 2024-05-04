@@ -1,7 +1,7 @@
-import React, { ReactNode } from 'react'
+import React, { ReactNode, useEffect } from 'react'
 import BlankLayout from 'src/@core/layouts/BlankLayout'
 import { useState } from "react";
-import { TextField, Button, Typography, Box, FormControl, FormHelperText, Input } from "@mui/material";
+import { TextField, Button, Typography, Box, FormControl, FormHelperText, Input, Checkbox } from "@mui/material";
 import Form from 'src/@core/components/form';
 import LoadingButton from '@mui/lab/LoadingButton';
 import useResponsive from 'src/@core/hooks/useResponsive';
@@ -9,24 +9,158 @@ import toast from 'react-hot-toast';
 import api from 'src/@core/utils/api';
 import { useRouter } from 'next/router';
 import showResponseError from 'src/@core/utils/show-response-error';
+import { useTranslation } from 'react-i18next';
+import { GetServerSidePropsContext, InferGetStaticPropsType } from 'next/types';
 
-function RequestForm() {
+
+export function CreatedComponent({
+    type,
+    label,
+    variants,
+    setResponse,
+    id,
+    response,
+    error
+}: {
+    type: 'varchar' | 'description' | 'single' | 'multiple',
+    label: string,
+    variants: any[],
+    setResponse: any,
+    id: any,
+    response: any,
+    error: any
+}) {
+
+    const [values, setValues] = useState<any>([])
+    const [isError, setIsError] = useState<any>(null)
+
+    const handleChange = (value: any) => {
+        if (type === 'single') {
+            setResponse((c: any) => ({ ...c, [id]: { value: [value], type } }))
+        }
+        else if (type === 'multiple') {
+            setResponse((c: any) => ({ ...c, [id]: { value, type } }))
+        } else if (type === 'description' || type === 'varchar') {
+            setResponse((c: any) => ({ ...c, [id]: { value, type } }))
+        }
+    }
+
+    useEffect(() => {
+        if (values && values?.length) {
+            handleChange(values)
+        }
+    }, [values])
+
+    useEffect(() => {
+        if (error?.[id]) {
+            setIsError(error?.[id])
+        } else {
+            setIsError(null)
+        }
+    }, [error])
+
+
+    // console.log(response);
+
+    if (type === "varchar") {
+        return (
+            <FormControl fullWidth>
+                <TextField error={isError} label={label} size='small' variant='filled' onChange={(e) => handleChange(e.target.value)} />
+                <FormHelperText error={isError}>{isError}</FormHelperText>
+            </FormControl>
+        )
+    }
+
+    else if (type === "description") {
+        return (
+            <FormControl fullWidth>
+                <TextField error={isError} multiline label={label} rows={4} size='small' variant='filled' onChange={(e) => handleChange(e.target.value)} />
+            </FormControl>
+        )
+    }
+
+
+    else if (type === "single") {
+        return (
+            <FormControl fullWidth>
+                <Typography style={isError ? { color: 'red' } : { color: 'rgba(76, 78, 100, 0.87)' }}>{label} * {isError}</Typography>
+                <Box>
+                    {
+                        variants.map((el, i) => (
+                            <label key={i} style={{ display: 'flex', alignItems: 'center' }}>
+                                <Checkbox checked={Number(response?.[id]?.value) === Number(el.id)} onChange={() => handleChange(el.id)} />
+                                <Typography>{el.value}</Typography>
+                            </label>
+                        ))
+                    }
+                </Box>
+            </FormControl>
+        )
+    }
+
+    else if (type === "multiple") {
+        return (
+            <FormControl fullWidth>
+                <Typography>{label} *</Typography>
+                <Box>
+                    {
+                        variants.map((el, i) => (
+                            <label key={i} style={{ display: 'flex', alignItems: 'center' }}>
+                                <Checkbox checked={values.includes(el.id)} onChange={() => {
+                                    if (values.includes(el.id)) {
+                                        setValues([...values.filter((item: number) => item !== el.id)])
+                                    } else {
+                                        setValues([...values, el.id])
+                                    }
+                                }} />
+                                <Typography>{el.value}</Typography>
+                            </label>
+                        ))
+                    }
+                </Box>
+            </FormControl>
+        )
+    }
+
+    else {
+        return <></>
+    }
+}
+
+
+function RequestForm({ uuid }: InferGetStaticPropsType<typeof getServerSideProps>) {
 
     const [loading, setLoading] = useState<boolean>(false);
     const [isSend, setIsSend] = useState<boolean>(false);
-    const [error, setError] = useState<any>({});
+    const [error, setError] = useState<any>(null);
+    const [components, setComponents] = useState<any>([])
+    const [formData, setFormData] = useState<any>({})
+
+    const [response, setResponse] = useState<any>({})
+
     const { isMobile } = useResponsive()
     const { query } = useRouter()
+    const { t } = useTranslation()
 
     const handleSubmit = async (values: any) => {
         setLoading(true)
-        const newValues = { ...values }
+        const application_answer: any[] = []
+
+        Object.keys(response).forEach(key => {
+            if (response[key].type === "description" || response[key].type === "varchar") {
+                application_answer.push({ question: Number(key), description: response[key].value, answer: [] })
+            } else {
+                application_answer.push({ question: Number(key), answer: response[key].value })
+            }
+        })
+
+        const newValues = { ...values, application_answer }
         if (values.phone) {
-            const newPhone = `+998${values.phone}`
+            const newPhone = `${values.phone}`
             Object.assign(newValues, { phone: newPhone })
         }
         try {
-            await api.post(`leads/application-user/create/${query.token}`, newValues)
+            await api.post(`leads/forms/answer/${query.token}/`, { anonim_user: newValues })
             setTimeout(() => {
                 toast.success("Ma'lumotlaringiz yuborildi", { position: 'top-center' })
                 setLoading(false)
@@ -40,6 +174,21 @@ function RequestForm() {
         }
     };
 
+    const getFormData = async () => {
+        try {
+            const resp = await api.get(`leads/forms/get/${uuid}/`)
+            setComponents(resp.data?.responce?.[0]?.questions)
+            setFormData(resp.data?.responce?.[0])
+        } catch (err: any) {
+            console.log(err)
+        }
+    };
+
+    useEffect(() => {
+        getFormData()
+        setError({ 68: "Kiritish majburiy" })
+    }, [])
+
 
     return (
         <Box
@@ -47,28 +196,27 @@ function RequestForm() {
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                height: "100vh",
-                backgroundImage: `url('/images/request-form-bg.svg')`
+                height: "100%",
+                backgroundImage: `url('/images/request-form-bg.svg')`,
+                backgroundRepeat: 'repeat-y',
+                overflowY: 'scroll',
+                paddingTop: '50px',
             }}
         >
             <Box
                 sx={{
-                    maxWidth: isMobile ? 400 : 450, mx: "auto",
-                    minWidth: isMobile ? 350 : 400,
+                    maxWidth: isMobile ? 400 : 600, mx: "auto",
+                    minWidth: isMobile ? 350 : 600,
                     p: isMobile ? '40px 25px' : '40px 50px',
                     backgroundColor: 'white',
                     borderRadius: '0',
-                    position: 'absolute',
-                    top: '45%',
-                    left: '50%',
-                    transform: 'translate(-50%,-50%)',
-                    zIndex: 10
+                    marginBottom: '100px'
                 }}>
                 <Box sx={{ display: 'flex' }}>
                     <img src='/images/soff-logo.png' width={160} style={{ margin: '10px auto' }} />
                 </Box>
                 <Typography align="center" mb={isMobile ? 1 : 2} sx={{ fontSize: isMobile ? '20px' : '24px' }}>
-                    {isSend ? "Ma'lumot jo'natganingiz uchun raxmat!" : "Aloqa uchun kontakt qoldiring"}
+                    {isSend ? "Ma'lumot jo'natganingiz uchun raxmat!" : formData.title}
                 </Typography>
                 {isSend ? (
                     <Box
@@ -83,51 +231,44 @@ function RequestForm() {
                         }}></Box>
                 ) : (
                     <Form id='resuf0dshfsid' onSubmit={handleSubmit} setError={setError} sx={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-                        <FormControl fullWidth>
-                            <Input
+                        <FormControl>
+                            <TextField
                                 error={error?.first_name?.error}
                                 fullWidth
                                 placeholder="Ism Familiya"
                                 name='first_name'
+                                label={t("first_name")}
+                                size='small'
+                                variant='filled'
                                 required
-                                sx={{
-                                    border: '1.5px solid var(--Input-focusedHighlight)',
-                                    transition: 'transform .15s cubic-bezier(0.1,0.9,0.2,1)',
-                                    borderRadius: 0,
-                                    borderBottomLeftRadius: '64px 20px',
-                                    borderBottomRightRadius: '64px 20px',
-                                    padding: '5px',
-                                    '&:focus-within::before': {
-                                        transform: 'scaleX(1)',
-                                    },
-                                }}
                             />
-                            <FormHelperText>{error?.first_name?.message}</FormHelperText>
                         </FormControl>
 
                         <FormControl fullWidth>
-                            <Input
-                                autoFocus
+                            <TextField
+                                label={t("phone")}
+                                size='small'
+                                variant='filled'
+                                defaultValue={"+998"}
                                 error={error?.phone?.error}
                                 fullWidth
-                                type='number'
-                                startAdornment={"+998"}
                                 name='phone'
                                 required
-                                sx={{
-                                    border: '1.5px solid var(--Input-focusedHighlight)',
-                                    transition: 'transform .15s cubic-bezier(0.1,0.9,0.2,1)',
-                                    borderRadius: 0,
-                                    borderBottomLeftRadius: '64px 20px',
-                                    borderBottomRightRadius: '64px 20px',
-                                    padding: '5px',
-                                    '&:focus-within::before': {
-                                        transform: 'scaleX(1)',
-                                    },
-                                }}
                             />
-                            <FormHelperText error>{error?.phone?.message}</FormHelperText>
                         </FormControl>
+
+                        {
+                            components.map((el: any, i: number) => <CreatedComponent
+                                setResponse={setResponse}
+                                variants={el.question_variants}
+                                key={i}
+                                type={el.input_type}
+                                label={el.title}
+                                id={el.id}
+                                response={response}
+                                error={error}
+                            />)
+                        }
 
                         <LoadingButton loading={loading} variant="contained" color='success' type="submit" size='large' sx={{ mt: 5 }} fullWidth>
                             Yuborish
@@ -135,11 +276,21 @@ function RequestForm() {
                     </Form>
                 )}
             </Box>
-            <Box sx={{ position: 'absolute', top: isMobile ? '20px' : '0', left: isMobile ? '-200px' : '10%', zIndex: 9, width: '500px', height: '500px', bgcolor: 'transparent', backdropFilter: 'invert(100%)' }}></Box>
-            <Box sx={{ position: 'absolute', top: '50%', left: '50%', zIndex: 9, width: '500px', height: '600px', bgcolor: 'transparent', backdropFilter: 'blur(20px)', transform: 'translate(-50%, -50%)' }}></Box>
         </Box>
     );
 }
+
+
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+    const { params } = context;
+
+    return {
+        props: {
+            uuid: params?.token
+        },
+    };
+}
+
 
 RequestForm.getLayout = (page: ReactNode) => <BlankLayout>{page}</BlankLayout>
 

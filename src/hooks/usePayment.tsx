@@ -55,7 +55,7 @@ export default function usePayment() {
 
     const updatePayment = async (id: any, data: any) => {
         try {
-            await api.patch(`common/student-payment/update/${id}`, data)
+            await api.patch(`common/student-payment/${id}/`, data)
         } catch (err) {
             return Promise.reject(err)
         }
@@ -64,7 +64,7 @@ export default function usePayment() {
 
     const deletePayment = async (id: any) => {
         try {
-            await api.delete(`common/student-payment/update/${id}`)
+            await api.delete(`common/student-payment/delete/${id}/`)
         } catch (err) {
             return Promise.reject(err)
         }

@@ -13,6 +13,7 @@ import api from "src/@core/utils/api"
 import { formatDateTime } from "src/@core/utils/date-formatter"
 import { formatCurrency } from "src/@core/utils/format-currency"
 import getMontName from "src/@core/utils/gwt-month-name"
+import showResponseError from "src/@core/utils/show-response-error"
 import usePayment from "src/hooks/usePayment"
 import { customTableProps } from "src/pages/groups"
 
@@ -25,10 +26,15 @@ const UserViewSecurity = ({ groupData }: any) => {
   const [data, setData] = useState([])
   const { isMobile } = useResponsive()
   const [edit, setEdit] = useState<any>(null)
+  const [deleteId, setDelete] = useState<any>(null)
   const [error, setError] = useState<any>({})
   const [loading, setLoading] = useState<any>(null)
 
-  const { paymentMethods, getPaymentMethod } = usePayment()
+  const { paymentMethods, getPaymentMethod, updatePayment, deletePayment } = usePayment()
+
+  const handleEdit = (id: any) => {
+    setEdit(data.find((el: any) => el.id === id))
+  }
 
   const columns: customTableProps[] = [
     {
@@ -64,8 +70,8 @@ const UserViewSecurity = ({ groupData }: any) => {
       dataIndex: 'id',
       render: (id) => (
         <Box sx={{ display: 'flex', gap: '10px' }}>
-          <IconifyIcon onClick={() => setEdit(id)} icon='mdi:pencil-outline' fontSize={20} />
-          <IconifyIcon onClick={() => setEdit(id)} icon='mdi:delete-outline' fontSize={20} />
+          <IconifyIcon onClick={() => handleEdit(id)} icon='mdi:pencil-outline' fontSize={20} />
+          <IconifyIcon onClick={() => setDelete(id)} icon='mdi:delete-outline' fontSize={20} />
         </Box>
       )
     }
@@ -80,12 +86,38 @@ const UserViewSecurity = ({ groupData }: any) => {
     }
   }
 
-  const updatePayment = async () =>
+  const onUpdatePayment = async (value: {}) => {
+    setLoading(true)
+    const data = {
+      ...value,
+      student: query?.student,
+    }
 
-    useEffect(() => {
-      getPayments()
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    try {
+      await updatePayment(edit?.id, data)
+      setLoading(false)
+      setEdit(null)
+
+      return await getPayments()
+    } catch (err: any) {
+      showResponseError(err.response.data, setError)
+      setLoading(false)
+    }
+  }
+
+  const onHandleDelete = async () => {
+    setLoading(true)
+    await deletePayment(deleteId)
+    setLoading(false)
+    setDelete(false)
+    getPayments()
+  }
+
+  useEffect(() => {
+    getPayments()
+    getPaymentMethod()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <Box className='demo-space-y'>
@@ -130,7 +162,7 @@ const UserViewSecurity = ({ groupData }: any) => {
           To'lovni tahrirlash
         </DialogTitle>
         <DialogContent>
-          <Form setError={setError} valueTypes='json' sx={{ marginTop: 10, display: 'flex', flexDirection: 'column', gap: '10px' }} onSubmit={updatePayment} id='edifsdt-employee-pay'>
+          <Form setError={setError} valueTypes='json' sx={{ marginTop: 10, display: 'flex', flexDirection: 'column', gap: '10px' }} onSubmit={onUpdatePayment} id='edifsdt-employee-pay'>
             <FormControl fullWidth error={error.payment_type?.error}>
               <InputLabel size='small' id='user-view-language-label'>{t("To'lov usulini tanlang")}</InputLabel>
               <Select
@@ -139,6 +171,7 @@ const UserViewSecurity = ({ groupData }: any) => {
                 id='user-view-language'
                 labelId='user-view-language-label'
                 name='payment_type'
+                defaultValue={edit?.payment_type}
               >
                 {
                   paymentMethods.map((branch: any) => <MenuItem key={branch.id} value={branch.id}>{branch.name}</MenuItem>)
@@ -147,23 +180,6 @@ const UserViewSecurity = ({ groupData }: any) => {
               <FormHelperText error={error.payment_type?.error}>{error.payment_type?.message}</FormHelperText>
             </FormControl>
 
-            <FormControl fullWidth error={error.group?.error}>
-              <InputLabel size='small' id='user-view-language-label'>{t("Qaysi guruh uchun?")}</InputLabel>
-              <Select
-                size='small'
-                label={t("Qaysi guruh uchun?")}
-                id='user-view-language'
-                labelId='user-view-language-label'
-                name='group'
-              >
-                {
-                  groupData?.map((branch: any) => <MenuItem key={branch.id} value={branch.group_data.id}>{branch.group_data.name}</MenuItem>)
-                }
-              </Select>
-              <FormHelperText error={error.group?.error}>{error.group?.message}</FormHelperText>
-            </FormControl>
-
-
             <FormControl fullWidth>
               <TextField
                 error={error?.amount}
@@ -171,7 +187,7 @@ const UserViewSecurity = ({ groupData }: any) => {
                 label="Miqdori (so'm)"
                 size='small'
                 name='amount'
-                defaultValue={''}
+                defaultValue={edit?.amount}
                 type='number'
               />
               <FormHelperText error={error.amount}>{error.amount?.message}</FormHelperText>
@@ -184,14 +200,14 @@ const UserViewSecurity = ({ groupData }: any) => {
                 multiline
                 label="Izoh"
                 name='description'
-                defaultValue={''}
+                defaultValue={edit?.description}
               />
               <FormHelperText error={error.description}>{error.description?.message}</FormHelperText>
             </FormControl>
 
             <FormControl sx={{ width: '100%' }}>
               <input type="date" style={{ borderRadius: '8px', padding: '10px', outline: 'none', border: '1px solid gray', marginTop: '10px' }} name='payment_date' defaultValue={today} />
-              <FormHelperText error={error.start_date?.error}>{error.start_date?.message}</FormHelperText>
+              <FormHelperText defaultValue={edit?.payment_date} error={error.payment_date?.error}>{error.payment_date?.message}</FormHelperText>
             </FormControl>
 
 
@@ -204,6 +220,25 @@ const UserViewSecurity = ({ groupData }: any) => {
               </Button>
             </DialogActions>
           </Form>
+        </DialogContent>
+      </Dialog>
+
+
+      <Dialog
+        open={deleteId}
+        onClose={() => setDelete(null)}
+        aria-labelledby='user-view-edit'
+        sx={{ '& .MuiPaper-root': { width: '100%', maxWidth: 350, p: [1, 3] } }}
+        aria-describedby='user-view-edit-description'
+      >
+        <DialogTitle id='user-view-edit' sx={{ textAlign: 'center', fontSize: '1.5rem !important' }}>
+          To'lovni o'chirishni tasdiqlang
+        </DialogTitle>
+        <DialogContent>
+          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+            <Button onClick={() => setDelete(null)}>{t("Bekor qilish")}</Button>
+            <LoadingButton variant="outlined" color="error" onClick={onHandleDelete} loading={loading}>{t("O'chirish")}</LoadingButton>
+          </Box>
         </DialogContent>
       </Dialog>
     </Box >

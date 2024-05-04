@@ -44,69 +44,45 @@ const Div = styled(Box)(({ theme }) => ({
 
 
 
-export default function GroupFinanceTable() {
-
-
-    const data: GroupStatsType = {
-        id: 1,
-        name: "Frontend 001",
-        student_count: 12,
-        plan: 6500000,
-        income: 5700000,
-        distance: 200000
-    }
+export default function GroupFinanceTable({ data }: any) {
 
     return (
         <Card sx={{ display: 'flex', p: '15px', gap: '5px' }}>
             <Box className='header' sx={{ minWidth: '150px' }}>
                 <Div sx={{ mb: '5px' }}>2024</Div>
                 <Box>
-                    <Box sx={{ border: '1px solid #c3cccc', p: '5px' }} >Nomi / Guruh</Box>
-                    <Box sx={{ border: '1px solid #c3cccc', p: '5px' }} >O'quvchi soni</Box>
-                    <Box sx={{ border: '1px solid #c3cccc', p: '5px' }} >Reja</Box>
-                    <Box sx={{ border: '1px solid #c3cccc', p: '5px' }} >Tushum</Box>
-                    <Box sx={{ border: '1px solid #c3cccc', p: '5px' }} >Farq</Box>
+                    <Box sx={{ border: '1px solid #c3cccc', p: '5px', fontSize: 13 }} >Nomi / Guruh</Box>
+                    <Box sx={{ border: '1px solid #c3cccc', p: '5px', fontSize: 13 }} >O'quvchi soni</Box>
+                    <Box sx={{ border: '1px solid #c3cccc', p: '5px', fontSize: 13 }} >Tushum</Box>
                 </Box>
             </Box>
             <Box className='header' sx={{ minWidth: '150px' }}>
                 <Div sx={{ mb: '5px' }}>Umumiy</Div>
                 <Box>
-                    <Box sx={{ border: '1px solid #c3cccc', p: '5px' }}>20 ta guruh</Box>
-                    <Box sx={{ border: '1px solid #c3cccc', p: '5px' }}>120 ta o'quvchi</Box>
-                    <Box sx={{ border: '1px solid #c3cccc', p: '5px' }}>{formatCurrency(30000000)}</Box>
-                    <Box sx={{ border: '1px solid #c3cccc', p: '5px' }}>{formatCurrency(27000000)}</Box>
-                    <Box sx={{ border: '1px solid #c3cccc', p: '5px' }}>{formatCurrency(1500000)}</Box>
+                    <Box sx={{ border: '1px solid #c3cccc', p: '5px', fontSize: 13 }}>{data?.result?.length} ta guruh</Box>
+                    <Box sx={{ border: '1px solid #c3cccc', p: '5px', fontSize: 13 }}>{data?.students_count} ta o'quvchi</Box>
+                    <Box sx={{ border: '1px solid #c3cccc', p: '5px', fontSize: 13 }}>{formatCurrency(data.total_payments)}</Box>
                 </Box>
             </Box>
             <Box className='body' sx={{ flexGrow: 1 }}>
                 <Div sx={{ textAlign: 'center', mb: '5px' }}>Mart</Div>
                 <NavigationMenu sx={{ display: 'flex', maxWidth: '1050px', overflowX: 'auto' }}>
                     {
-                        Array(20).fill(data).map((group: GroupStatsType, i) => (
-                            <Box sx={{ minWidth: '150px' }} key={i}>
+                        data?.result.map((group: any, i: number) => (
+                            <Box sx={{ minWidth: '160px' }} key={i}>
                                 <Box sx={{ border: '1px solid #c3cccc', p: '5px' }}>
-                                    <Typography>
-                                        {group.name}
+                                    <Typography fontSize={13}>
+                                        {group.group}
                                     </Typography>
                                 </Box>
                                 <Box sx={{ border: '1px solid #c3cccc', p: '5px' }}>
-                                    <Typography>
+                                    <Typography fontSize={13}>
                                         {group.student_count}
                                     </Typography>
                                 </Box>
                                 <Box sx={{ border: '1px solid #c3cccc', p: '5px' }}>
-                                    <Typography>
-                                        {formatCurrency(group.plan)}
-                                    </Typography>
-                                </Box>
-                                <Box sx={{ border: '1px solid #c3cccc', p: '5px' }}>
-                                    <Typography>
-                                        {formatCurrency(group.income)}
-                                    </Typography>
-                                </Box>
-                                <Box sx={{ border: '1px solid #c3cccc', p: '5px' }}>
-                                    <Typography>
-                                        {formatCurrency(group.distance)}
+                                    <Typography fontSize={13}>
+                                        {formatCurrency(group.total_payment)}
                                     </Typography>
                                 </Box>
                             </Box>

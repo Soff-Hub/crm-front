@@ -7,7 +7,7 @@ export default function useRoles() {
 
     const getRoles = async () => {
         try {
-            const resp = await api.get('auth/role-list')
+            const resp = await api.get('auth/role-list/')
             setRoles(resp.data.results)
         } catch (err) {
             return err

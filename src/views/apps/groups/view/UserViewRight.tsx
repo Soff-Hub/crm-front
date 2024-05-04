@@ -26,6 +26,7 @@ import UserViewSecurity from 'src/views/apps/groups/view/UserViewSecurity'
 // ** Types
 import GroupExamsList from './GroupExamsList'
 import { useTranslation } from 'react-i18next'
+import GroupSalaries from './GroupSalaries'
 
 interface Props {
   tab: string
@@ -91,6 +92,7 @@ const UserViewRight = ({ tab, invoiceData }: Props) => {
         <Tab value='notes' label='Eslatmalar' icon={<Icon icon='mdi:notebook-check-outline' />} />
         <Tab value='exams' label='Imtixon' icon={<Icon icon='mdi:puzzle-check-outline' />} />
         <Tab value='discount' label='Chegirmalar' icon={<Icon icon='mdi:sale' />} />
+        <Tab value='money' label="Maosh" icon={<Icon icon='mdi:money' />} />
       </TabList>
       <Box sx={{ mt: 2 }}>
         {isLoading ? (
@@ -111,6 +113,9 @@ const UserViewRight = ({ tab, invoiceData }: Props) => {
             </TabPanel>
             <TabPanel sx={{ p: 0 }} value='discount'>
               <UserViewBilling />
+            </TabPanel>
+            <TabPanel sx={{ p: 0 }} value='money'>
+              <GroupSalaries group={invoiceData} />
             </TabPanel>
           </>
         )}

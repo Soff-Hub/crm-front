@@ -10,6 +10,7 @@ import LoadingButton from '@mui/lab/LoadingButton'
 import UseBgColor from 'src/@core/hooks/useBgColor'
 import { useTranslation } from 'react-i18next'
 import showResponseError from 'src/@core/utils/show-response-error'
+import { useRouter } from 'next/router'
 
 export default function FormsPage() {
 
@@ -25,6 +26,7 @@ export default function FormsPage() {
 
   const bgColors = UseBgColor()
   const { t } = useTranslation()
+  const { push } = useRouter()
   const columns: customTableProps[] = [
     {
       xs: 0.1,
@@ -144,7 +146,8 @@ export default function FormsPage() {
     <Box>
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <Typography fontSize={'18px'}>Formalar</Typography>
-        <Button size='small' variant='contained' startIcon={<IconifyIcon icon={'ic:baseline-add'} />} onClick={openDialog}>Yangi</Button>
+        {/* <Button size='small' variant='contained' startIcon={<IconifyIcon icon={'ic:baseline-add'} />} onClick={openDialog}>Yangi</Button> */}
+        <Button size='small' variant='contained' startIcon={<IconifyIcon icon={'ic:baseline-add'} />} onClick={() => push(`/settings/forms/create`)}>Yangi</Button>
       </Box>
 
       <Box sx={{ display: 'flex', gap: '10px', flexDirection: 'column', mt: '10px' }}>

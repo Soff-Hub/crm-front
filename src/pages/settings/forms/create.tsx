@@ -1,7 +1,311 @@
-import React from 'react'
+import LoadingButton from '@mui/lab/LoadingButton'
+import { Box, Button, ButtonGroup, Checkbox, Dialog, DialogContent, DialogTitle, FormControl, Input, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material'
+import { useRouter } from 'next/router'
+import React, { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import Form from 'src/@core/components/form'
+import IconifyIcon from 'src/@core/components/icon'
+import useResponsive from 'src/@core/hooks/useResponsive'
+import api from 'src/@core/utils/api'
 
-export default function CreateForm() {
+type Props = {}
+
+export function CreatedComponent({ type, label, variants }: { type: 'varchar' | 'description' | 'single' | 'multiple', label: string, variants: any[] }) {
+    if (type === "varchar") {
+        return (
+            <FormControl fullWidth>
+                <TextField label={label} size='small' variant='filled' />
+            </FormControl>
+        )
+    }
+
+    else if (type === "description") {
+        return (
+            <FormControl fullWidth>
+                <TextField multiline label={label} rows={4} size='small' variant='filled' />
+            </FormControl>
+        )
+    }
+
+    else if (type === "single" || type === "multiple") {
+        return (
+            <FormControl fullWidth>
+                <Typography>{label}</Typography>
+                <Box>
+                    {
+                        variants.map((el, i) => (
+                            <Box key={i} sx={{ display: 'flex', alignItems: 'center' }}>
+                                <Checkbox />
+                                <Typography>{el.value}</Typography>
+                            </Box>
+                        ))
+                    }
+                </Box>
+            </FormControl>
+        )
+    }
+
+    else {
+        return <></>
+    }
+}
+
+export default function CreateForm({ }: Props) {
+
+    const { isMobile } = useResponsive()
+    const { t } = useTranslation()
+    const { push } = useRouter()
+
+    const [open, setOpen] = useState<any>(null)
+    const [fields, setFields] = useState<any>("Aloqa uchun kontakt qoldiring")
+    const [components, setComponents] = useState<any>([])
+    const [variants, setVariants] = useState<any>([])
+    const [name, setName] = useState<any>(null)
+
+    const [departments, setDepartments] = useState<any[]>([])
+    const [selectedDepartment, setSelectedDepartment] = useState<any>(null)
+    const [sourceData, setSourceData] = useState<any>([])
+    const [addSource, setAddSource] = useState<boolean>(false)
+    const [department, setDepartment] = useState<any>(null)
+    const [loading, setLoading] = useState(false)
+    const [selectType, setSelectType] = useState<'single' | 'multiple'>('single')
+
+
+    const handleClose = () => {
+        setOpen(null)
+        setVariants([])
+        setName("")
+    }
+
+    const createComponent = (input_type: 'varchar' | 'description' | 'single' | 'multiple', title: string) => {
+        setComponents((c: any[]) => ([...c, { input_type, title, id: new Date().getTime(), question_variants: [...variants], oreder: components.length + 1, required: true }]))
+        handleClose()
+    }
+
+    const deleteComponent = (id: any) => {
+        setComponents((c: any[]) => ([...c.filter(el => el.id !== id)]))
+    }
+
+    const createForm = async () => {
+        setLoading(true)
+        try {
+            await api.post(`leads/forms/create/`, {
+                title: fields,
+                department,
+                source: addSource,
+                type: 'lead_form',
+                application_form_types: [...components]
+            })
+            push('/settings/forms')
+        } catch (err) {
+            console.log(err)
+        }
+        setLoading(false)
+    }
+
+    async function getDepartments() {
+        const resp = await api.get(`leads/department/list/`)
+        setDepartments(resp.data);
+    }
+
+    const getSources = async () => {
+        const resp = await api.get('leads/source/')
+        if (resp?.data) {
+            setSourceData(resp.data.results);
+        }
+    }
+
+    console.log(components);
+
+
+    useEffect(() => {
+        getDepartments()
+        getSources()
+    }, [])
+
+
     return (
-        <div>CreateForm</div>
+        <Box sx={{ display: 'flex', justifyContent: 'space-around' }}>
+            <Box sx={{ flex: 0.4 }}>
+                <Box sx={{ display: 'block', maxWidth: 400, mx: 'auto' }}>
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: '20px',
+                            py: '20px',
+                        }}
+                    >
+                        <FormControl fullWidth>
+                            <InputLabel size='small' id='user-view-language-label'>Bo'lim</InputLabel>
+                            <Select
+                                size='small'
+                                label={"Bo'lim"}
+
+                                id='user-view-language'
+                                labelId='user-view-language-label'
+                                name='departmentParent'
+                                defaultValue={''}
+                                onChange={(e: any) => setSelectedDepartment(e.target.value)}
+                            >
+                                {
+                                    departments.map(item => <MenuItem key={item.id} value={item.id}>{item.name}</MenuItem>)
+                                }
+                            </Select>
+                        </FormControl>
+
+                        {selectedDepartment && (
+                            <FormControl fullWidth>
+                                <InputLabel size='small' id='user-view-language-label'>Quyi bo'lim</InputLabel>
+                                <Select
+                                    size='small'
+                                    label={"Quyi bo'lim"}
+                                    id='user-view-language'
+                                    labelId='user-view-language-label'
+                                    name='department'
+                                    defaultValue={''}
+                                    onChange={(e) => setDepartment(e.target.value)}
+                                >
+                                    {
+                                        departments.find(el => Number(el.id) === selectedDepartment).children.map((item: any) => <MenuItem key={item.id} value={item.id}>{item.name}</MenuItem>)
+                                    }
+                                </Select>
+                            </FormControl>
+                        )}
+
+                        <FormControl fullWidth>
+                            <InputLabel size='small' id='fsdgsdgsgsdfsd-label'>{t('Manba')}</InputLabel>
+                            <Select
+                                size='small'
+                                label={t('Manba')}
+                                id='fsdgsdgsgsdfsd'
+                                labelId='fsdgsdgsgsdfsd-label'
+                                name='source'
+                                onChange={(e: any) => setAddSource(e?.target?.value)}
+                                sx={{ mb: 1 }}
+                            >
+                                {
+                                    sourceData.map((lead: any) => <MenuItem key={lead.id} value={lead.id}>{lead.name}</MenuItem>)
+                                }
+                            </Select>
+                        </FormControl>
+
+                        <FormControl>
+                            <TextField label="Forma nomi" size='small' onChange={(e) => e.target.value === "" ? setFields("Aloqa uchun kontakt qoldiring") : setFields(e.target.value)} />
+                        </FormControl>
+
+                        {
+                            components.map((el: any, i: number) => (
+                                <Box key={i} sx={{ display: 'flex', alignItems: 'center', position: 'relative' }}>
+                                    <CreatedComponent type={el.input_type} label={el.title} variants={el.question_variants} />
+                                    <button style={{ margin: 0, border: 'unset', backgroundColor: 'unset', position: 'absolute', right: 0 }}>
+                                        <IconifyIcon icon={'line-md:remove'} onClick={() => deleteComponent(el.id)} />
+                                    </button>
+                                </Box>
+                            ))
+                        }
+                    </Box>
+                    <Box sx={{ display: 'flex', gap: 3 }}>
+                        <Button variant='outlined' size='small' onClick={() => setOpen('input')} startIcon={<IconifyIcon icon={'ic:baseline-add'} />}>Input</Button>
+                        <Button variant='outlined' size='small' onClick={() => setOpen('single')} startIcon={<IconifyIcon icon={'ic:baseline-add'} />}>savol</Button>
+                        <Button variant='outlined' size='small' onClick={() => setOpen('description')} startIcon={<IconifyIcon icon={'ic:baseline-add'} />}>Matn</Button>
+                        <LoadingButton loading={loading} variant='contained' size='small' onClick={createForm}>Yaratish</LoadingButton>
+                    </Box>
+                </Box>
+            </Box>
+            <Box sx={{ flex: 0.5 }}>
+                <Box
+                    sx={{
+                        maxWidth: 500, mx: "auto",
+                        minWidth: isMobile ? 350 : 400,
+                        p: isMobile ? '40px 25px' : '40px 50px',
+                        // backgroundColor: 'white',
+                        borderRadius: '0',
+                    }}>
+
+                    <Box sx={{ display: 'flex' }}>
+                        <img src='/images/soff-logo.png' width={160} style={{ margin: '10px auto' }} />
+                    </Box>
+
+                    <Typography align="center" mb={isMobile ? 1 : 2} sx={{ fontSize: isMobile ? '20px' : '24px' }}>
+                        {fields}
+                    </Typography>
+
+                    <Form id='resuf0dshfsid' onSubmit={() => null} sx={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                        <FormControl>
+                            <TextField label={t("first_name")} size='small' variant='filled' />
+                        </FormControl>
+
+                        <FormControl fullWidth>
+                            <TextField label={t("phone")} size='small' variant='filled' defaultValue={"+998"} />
+                        </FormControl>
+                        {
+                            components.map((el: any, i: number) => <CreatedComponent variants={el.question_variants} key={i} type={el.input_type} label={el.name} />)
+                        }
+
+                        <LoadingButton variant="contained" color='success' type="submit" size='large' sx={{ mt: 5 }} fullWidth>
+                            Yuborish
+                        </LoadingButton>
+                    </Form>
+                </Box>
+            </Box>
+
+
+
+            <Dialog open={open === 'input'} onClose={handleClose}>
+                <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                    <FormControl>
+                        <TextField label="Input nomi (Nima yozish uchun?)" size='small' onChange={(e) => setName(e.target.value)} />
+                    </FormControl>
+
+                    <Box sx={{ display: 'flex', justifyContent: 'center', gap: 4, mt: 4 }}>
+                        <LoadingButton onClick={handleClose} variant='outlined'>{t("Bekor qilish")}</LoadingButton>
+                        <LoadingButton color='success' variant='contained' onClick={() => createComponent('varchar', name)}>{t("Qo'shish")}</LoadingButton>
+                    </Box>
+                </DialogContent>
+            </Dialog>
+
+            <Dialog open={open === 'description'} onClose={handleClose}>
+                <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                    <FormControl>
+                        <TextField label="Ko'proq matn yozish uchun" size='small' onChange={(e) => setName(e.target.value)} />
+                    </FormControl>
+
+                    <Box sx={{ display: 'flex', justifyContent: 'center', gap: 4, mt: 4 }}>
+                        <LoadingButton onClick={handleClose} variant='outlined'>{t("Bekor qilish")}</LoadingButton>
+                        <LoadingButton color='success' variant='contained' onClick={() => createComponent('description', name)}>{t("Qo'shish")}</LoadingButton>
+                    </Box>
+                </DialogContent>
+            </Dialog>
+
+            <Dialog open={open === 'single'} onClose={handleClose}>
+                <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: '20px', minWidth: '350px' }}>
+                    <ButtonGroup size='small'>
+                        <Button onClick={() => setSelectType('single')} variant={selectType === 'single' ? 'outlined' : 'text'} size='medium'>Bitta javob</Button>
+                        <Button onClick={() => setSelectType('multiple')} variant={selectType === 'multiple' ? 'outlined' : 'text'} size='medium'>Bir nechta javob</Button>
+                    </ButtonGroup>
+                    <FormControl>
+                        <TextField label="Savol matni" multiline rows={2} size='small' onChange={(e) => setName(e.target.value)} />
+                    </FormControl>
+
+                    {
+                        variants.map((el: any, i: number) => <TextField
+                            key={i}
+                            label={el.value}
+                            size='small'
+                            variant='standard'
+                            onChange={(e) => setVariants((c: any) => ([...c.filter((item: any) => item.id !== el.id), { id: new Date().getTime(), value: e.target.value, order: el.order }]))}
+                        />)
+                    }
+
+                    <Button startIcon={<IconifyIcon icon={'ic:baseline-add'} />} onClick={() => setVariants((c: any) => ([...c, { id: new Date().getTime(), value: `Variant ${variants.length + 1}`, order: variants.length + 1 }]))} size='small'>Javob varianti qo'shish</Button>
+
+                    <Box sx={{ display: 'flex', justifyContent: 'center', gap: 4, mt: 6 }}>
+                        <LoadingButton onClick={handleClose} variant='outlined'>{t("Bekor qilish")}</LoadingButton>
+                        <LoadingButton color='success' variant='contained' onClick={() => createComponent(selectType, name)}>{t("Qo'shish")}</LoadingButton>
+                    </Box>
+                </DialogContent>
+            </Dialog>
+        </Box>
     )
 }

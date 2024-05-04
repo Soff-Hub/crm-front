@@ -1,4 +1,5 @@
 import axios from "axios";
+import toast from "react-hot-toast";
 
 const baseURL = process.env.NEXT_PUBLIC_BASE_URL
 import authConfg from 'src/configs/auth'
@@ -20,6 +21,19 @@ api.interceptors.request.use(
         return config
     },
     (err) => err
+)
+
+api.interceptors.response.use(
+    (resp) => resp,
+    (err) => {
+
+        if (err.response && [403, 401].includes(err.response.status)) {
+            toast.error(`${err.response.config.url} ${err.response.data.detail}`)
+            return Promise.reject({ message: err.response.data })
+        }
+
+        return Promise.reject(err)
+    }
 )
 
 export default api

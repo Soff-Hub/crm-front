@@ -1,3 +1,4 @@
+import LoadingButton from '@mui/lab/LoadingButton';
 import { Box, Button, Dialog, DialogContent, DialogTitle, TextField, Typography, styled } from '@mui/material';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
@@ -8,8 +9,16 @@ import useResponsive from 'src/@core/hooks/useResponsive';
 import { useSettings } from 'src/@core/hooks/useSettings';
 import api from 'src/@core/utils/api';
 import { formatCurrency } from 'src/@core/utils/format-currency';
-import { hexToRGBA } from 'src/@core/utils/hex-to-rgba';
+import 'react-datepicker/dist/react-datepicker.css';
 
+
+interface PickerProps {
+    label?: string;
+    start: Date | number;
+}
+
+
+type DateType = Date
 
 
 
@@ -37,101 +46,94 @@ function Slug(props: { slug: string }) {
     const { t } = useTranslation()
     const { isMobile } = useResponsive()
 
-    const [nameVal, setNameVal] = useState<string>('');
-    const [description, seDescription] = useState<string>('');
     const [open, setOpen] = useState<'create' | null>(null);
     const [data2, setData] = useState<any[]>([]);
+    const [loading, setLoading] = useState<boolean>(false);
+
+    const [amount, setAmount] = useState<string>('');
+    const [description, seDescription] = useState<string>('');
+    const [date, setDate] = useState<string>('');
+    const [today, setToday] = useState<string>('');
+    const [name, setName] = useState<string>('');
+    const [allAmount, setAllAmount] = useState<string>('');
+
+    const handleOnChangeRange = (dates: any) => {
+        setToday(dates.target.value)
+    };
 
 
-    const getExpense = async (id: any) => {
-        const resp = await api.get(`common/finance/expense/list/2024-04-21/`)
-        setData(resp.data.result);
+    const updateCategory = async (value: any) => {
+        try {
+            await api.patch(`common/finance/expense-category/update/${query?.slug}/`, { name })
+            getExpense(query?.slug)
+        } catch (err) {
+            console.log(err)
+        }
+
     }
 
+    const getExpense = async (id: any) => {
+        const resp = await api.get(`common/finance/expense/list/${query?.slug}/?date_str=${today}-1`)
+        setData(resp.data.result);
+        setName(resp.data?.category_name);
+        setAllAmount(resp.data?.total_expense);
+    }
 
-
-    const data: {
-        date: string,
-        costs: {
-            amount: number,
-            description: string
-        }[]
-    }[] = [
-            {
-                date: '01.01.2024',
-                costs: [
-                    {
-                        amount: 500000,
-                        description: "Novza wifi uchun"
-                    },
-                    {
-                        amount: 500000,
-                        description: "Novza wifi uchun"
-                    },
-                    {
-                        amount: 500000,
-                        description: "Novza wifi uchun"
-                    }
-                ]
-            },
-            {
-                date: '01.01.2024',
-                costs: [
-                    {
-                        amount: 500000,
-                        description: "rqw eq434 qrfq3er rqwr r werwerw"
-                    }
-                ]
-            },
-            {
-                date: '01.01.2024',
-                costs: [
-                    {
-                        amount: 500000,
-                        description: "Novza wifi uchun"
-                    },
-                    {
-                        amount: 500000,
-                        description: "Novza wifi uchun"
-                    }
-                ]
-            }
-        ]
-
+    const createExpense = async () => {
+        setLoading(true)
+        try {
+            await api.post(`common/finance/expense/create/`, { amount, description, expense_category: query.slug, date })
+            setOpen(null)
+            getExpense(query?.slug)
+        } catch (err) {
+            console.log(err)
+        } finally {
+            console.log('finally');
+            setLoading(false)
+        }
+    }
 
     useEffect(() => {
         getExpense(query?.slug)
-    }, [])
+    }, [today])
 
 
     return (
         <Box>
             <Box className='header'>
-                <Box sx={{ display: 'flex', alignItems: 'center', mb: 4, px: 2, justifyContent: 'space-between' }}>
-                    <Typography sx={{ fontSize: '18px' }}>Marketing</Typography>
-                    <Typography sx={{ fontSize: '18px', color: 'error.main' }}>Umumiy xarajat - &ensp;{formatCurrency(5000000)}</Typography>
+                <Box sx={{ display: 'flex', alignItems: 'center', mb: 4, px: 2 }}>
+                    <TextField onBlur={updateCategory} size='small' sx={{ fontSize: '20px', marginRight: 'auto' }} value={name} onChange={(e) => setName(e.target.value)} />
+                    <Box>
+                        <TextField size='small' type='month' value={today} onChange={handleOnChangeRange} />
+                    </Box>
+                    <Typography sx={{ fontSize: '14px', color: 'error.main', ml: 3, display: 'flex', flexDirection: 'column' }} >
+                        <span>Umumiy</span>
+                        <span>
+                            {formatCurrency(allAmount)}
+                        </span>
+                    </Typography>
                 </Box>
             </Box>
-            <Box sx={{ display: 'flex', alignItems: isMobile ? 'center' : 'flex-start', gap: '15px', flexDirection: isMobile ? 'column' : 'row' }}>
+            <Box sx={{ display: 'flex', alignItems: isMobile ? 'center' : 'flex-start', gap: '15px', flexDirection: isMobile ? 'column' : 'row', overflowX: 'scroll' }}>
                 {
                     data2.map((item, i: number) => (
                         <Column key={i} sx={{ minWidth: isMobile ? '100%' : '180px', display: 'flex', flexDirection: 'column', gap: '12px', p: '5px' }}>
-                            <Th>
-                                {Object.keys(item)}
+                            <Th textAlign={'center'}>
+                                {Number(item.date?.split('-')?.[2])}
                             </Th>
-                            {/* {
-                                item.costs.map((el, j: number) => (
+                            {
+                                item.value.map((el: any, j: number) => (
                                     <Box key={j} sx={{ borderBottom: `2px dashed ${mainColor}` }}>
                                         <Box>
                                             {formatCurrency(el.amount)}
                                         </Box>
-                                        <Box>
+                                        <Box sx={{ fontSize: '14px' }}>
                                             {el.description}
                                         </Box>
                                     </Box>
                                 ))
-                            } */}
-                            <Button variant='outlined' onClick={() => setOpen('create')} size='small'>Yangi</Button>
+                            }
+                            <Button variant='outlined' onClick={() => (setDate(item.date), setOpen('create'))} size='small'>Yangi</Button>
                         </Column>
                     ))
                 }
@@ -145,9 +147,9 @@ function Slug(props: { slug: string }) {
                     <IconifyIcon icon={'mdi:close'} onClick={() => setOpen(null)} />
                 </DialogTitle>
                 <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                    <TextField autoComplete='off' size='small' placeholder={t("Summa")} type='number' fullWidth onChange={(e) => setNameVal(e.target.value)} />
+                    <TextField autoComplete='off' size='small' placeholder={t("Summa")} type='number' fullWidth onChange={(e) => setAmount(e.target.value)} />
                     <TextField autoComplete='off' size='small' multiline minRows={4} placeholder={t("Izoh")} fullWidth onChange={(e) => seDescription(e.target.value)} />
-                    <Button variant='contained'>{t("Saqlash")}</Button>
+                    <LoadingButton loading={loading} onClick={createExpense} variant='contained'>{t("Saqlash")}</LoadingButton>
                 </DialogContent>
             </Dialog>
         </Box>

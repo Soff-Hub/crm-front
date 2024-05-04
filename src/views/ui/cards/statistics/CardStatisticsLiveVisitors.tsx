@@ -38,7 +38,7 @@ const CardWidgetsWeeklyOverview = ({ data }: any) => {
   const options: ApexOptions = {
     chart: {
       offsetY: 3,
-      offsetX: -30,
+      offsetX: 0,
       parentHeightOffset: 0,
       toolbar: { show: true, tools: { zoom: false, zoomin: false, zoomout: false } }
     },
@@ -124,7 +124,7 @@ const CardWidgetsWeeklyOverview = ({ data }: any) => {
           >
             {
               [2024, 2025, 2026, 2027, 2028].map(year => (
-                <MenuItem value={year}>{year}</MenuItem>
+                <MenuItem key={year} value={year}>{year}</MenuItem>
               ))
             }
           </Select>

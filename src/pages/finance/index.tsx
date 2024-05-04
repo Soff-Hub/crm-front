@@ -11,7 +11,7 @@ import CardStatisticsLiveVisitors from 'src/views/ui/cards/statistics/CardStatis
 // ** Styled Component Import
 import KeenSliderWrapper from 'src/@core/styles/libs/keen-slider'
 import ApexChartWrapper from 'src/@core/styles/libs/react-apexcharts'
-import { Box, Button, Dialog, DialogContent, DialogTitle, TextField, Typography } from '@mui/material'
+import { Box, Button, Dialog, DialogContent, DialogTitle, FormControl, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material'
 import GroupFinanceTable from 'src/views/apps/finance/GroupTable'
 import { formatCurrency } from 'src/@core/utils/format-currency'
 import CardStatsVertical from 'src/@core/components/card-statistics/card-stats-vertical'
@@ -27,6 +27,7 @@ import DataTable from 'src/@core/components/table'
 import api from 'src/@core/utils/api'
 import LoadingButton from '@mui/lab/LoadingButton'
 import CardFinanceCategory from 'src/@core/components/card-statistics/card-finance-category'
+import { today } from 'src/@core/components/card-statistics/kanban-item'
 
 
 type DateType = Date
@@ -52,7 +53,8 @@ const CardStatistics = () => {
     const [startDateRange, setStartDateRange] = useState<DateType>(new Date());
     const [endDateRange, setEndDateRange] = useState<DateType>(addDays(new Date(), 45));
     const [nameVal, setNameVal] = useState<string>('');
-    const [open, setOpen] = useState<'create' | null>(null);
+    const [open, setOpen] = useState<'create' | 'add-salary' | 'edit-salary' | 'delete-salary' | null>(null);
+    const [editId, setEditId] = useState<any>(null);
     const [label, setLabel] = useState<AllNumbersType>({
         last_month_benefit: '0',
         last_year_benefit: '0',
@@ -60,9 +62,21 @@ const CardStatistics = () => {
         last_year_expense: '0'
     }
     );
+    const [salaryAmount, setSalaryAmount] = useState<any>('');
+    const [salaryUser, setSalaryUser] = useState<any>('');
+    const [salaryDate, setSalaryDate] = useState<any>(today);
+
+
     const [graphData, setGraphData] = useState<any>(null);
     const [loading, setLoading] = useState<boolean>(false);
     const [categryData, setCategryData] = useState<any>([]);
+
+    const [groupPays, setGropPays] = useState<any>(null);
+    const [employeeSalary, setEmployeeSalary] = useState<any>([]);
+    const [employeePays, setEmployeePays] = useState<any>([]);
+    const [employees, setEmployees] = useState<any>([])
+
+
 
     const handleOnChangeRange = (dates: any) => {
         const [start, end] = dates;
@@ -152,37 +166,44 @@ const CardStatistics = () => {
     };
 
 
-    const salaryCol: customTableDataProps[] = [
+    const employeePaycol: customTableDataProps[] = [
         {
             xs: 0.03,
             title: "#",
             dataIndex: "index"
         },
         {
-            xs: 0.2,
+            xs: 0.4,
             title: t("first_name"),
-            dataIndex: "first_name"
+            dataIndex: "employee_name"
         },
         {
-            xs: 0.2,
-            title: t("phone"),
-            dataIndex: "phone"
+            xs: 0.4,
+            title: t("Maoshi"),
+            dataIndex: "amount",
+            render: (amount) => `${formatCurrency(amount)} so'm`
         },
         {
-            xs: 0.2,
-            title: t("roles_list"),
-            dataIndex: "roles_list",
-            render: (roles_list: any) => roles_list.join(", ")
-        }
-    ]
-
-    const data = [
+            xs: 0.1,
+            title: t("Tahrir"),
+            dataIndex: "id",
+            render: (id) => <IconifyIcon onClick={() => {
+                const find = employeeSalary.find((el: any) => el.id === id)
+                getEmployees()
+                setEditId(find)
+                setOpen('edit-salary')
+            }} icon={'basil:edit-outline'} />
+        },
         {
-            id: "dasdasdasdasd",
-            first_name: "John Doe",
-            phone: "+998999999999",
-            roles_list: ["Teacher", "Adminstrator"]
-        }
+            xs: 0.1,
+            title: t("O'chir"),
+            dataIndex: "id",
+            render: (id) => <IconifyIcon onClick={() => {
+                const find = employeeSalary.find((el: any) => el.id === id)
+                setEditId(find)
+                setOpen('delete-salary')
+            }} icon={'fluent:delete-20-regular'} />
+        },
     ]
 
     const getAllNumbers = async () => {
@@ -236,6 +257,120 @@ const CardStatistics = () => {
         }
     }
 
+    const getGroupPays = async () => {
+        const resp = await api.get(`/common/finance/group-payments/`)
+        setGropPays(resp.data)
+    }
+
+
+    const getEmployeSalary = async () => {
+        const resp = await api.get(`/common/employee-salary/list/`)
+        setEmployeeSalary(resp.data.results)
+    }
+
+    const getEmployePays = async () => {
+        const resp = await api.get(`/common/finance/employee-salary/list/`)
+        setEmployeePays(resp.data.results)
+    }
+
+
+    const getEmployees = async () => {
+        const resp = await api.get(`common/employees/`)
+        setEmployees(resp.data);
+    }
+
+    const mergeSalary = async () => {
+        setLoading(true)
+        try {
+            await api.post(`/common/employee-salary/create/`, {
+                employee: salaryUser,
+                date: salaryDate,
+                amount: salaryAmount
+            })
+            setOpen(null)
+            getEmployeSalary()
+        } catch (err) {
+            console.log(err)
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    const updateSalary = async () => {
+        setLoading(true)
+        try {
+            await api.patch(`/common/employee-salary/update/${editId.id}/`, {
+                date: salaryDate,
+                amount: salaryAmount
+            })
+            setOpen(null)
+            getEmployeSalary()
+        } catch (err) {
+            console.log(err)
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    const deleteSalary = async () => {
+        setLoading(true)
+        try {
+            await api.delete(`/common/employee-salary/destroy/${editId.id}/`)
+            setOpen(null)
+            setEditId(null)
+            getEmployeSalary()
+        } catch (err) {
+            console.log(err)
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    const salaryCol: customTableDataProps[] = [
+        {
+            xs: 0.03,
+            title: "#",
+            dataIndex: "index"
+        },
+        {
+            xs: 0.4,
+            title: t("first_name"),
+            dataIndex: "employee_name"
+        },
+        {
+            xs: 0.4,
+            title: t("Maoshi"),
+            dataIndex: "amount",
+            render: (amount) => `${formatCurrency(amount)} so'm`
+        },
+        {
+            xs: 0.1,
+            title: t("Tahrir"),
+            dataIndex: "id",
+            render: (id) => <IconifyIcon onClick={() => {
+                const find = employeeSalary.find((el: any) => el.id === id)
+                getEmployees()
+                setEditId(find)
+                setOpen('edit-salary')
+            }} icon={'basil:edit-outline'} />
+        },
+        {
+            xs: 0.1,
+            title: t("O'chir"),
+            dataIndex: "id",
+            render: (id) => <IconifyIcon onClick={() => {
+                const find = employeeSalary.find((el: any) => el.id === id)
+                setEditId(find)
+                setOpen('delete-salary')
+            }} icon={'fluent:delete-20-regular'} />
+        },
+    ]
+
+    console.log(editId);
+
+
+
+
     const handleRow = (id: string) => {
         push(`/finance/salaries/${id}`)
     }
@@ -243,6 +378,9 @@ const CardStatistics = () => {
     useEffect(() => {
         getAllNumbers()
         getExpenseCategroy()
+        getGroupPays()
+        getEmployeSalary()
+        getEmployePays()
     }, [])
 
 
@@ -253,7 +391,7 @@ const CardStatistics = () => {
             </Box> */}
 
             <KeenSliderWrapper>
-                <Grid container spacing={4}>
+                <Grid container spacing={2} columnSpacing={10}>
                     <Grid item xs={12}>
                         <Typography>Umumiy raqamlar</Typography>
                     </Grid>
@@ -262,7 +400,7 @@ const CardStatistics = () => {
                         <CardStatisticsHorizontal data={apiData.statsHorizontal} />
                     </Grid>
 
-                    <Grid item xs={12} md={12}>
+                    <Grid item xs={12} md={12} mb={10}>
                         <CardStatisticsLiveVisitors data={graphData} />
                     </Grid>
 
@@ -271,8 +409,8 @@ const CardStatistics = () => {
                         <Typography sx={{ fontSize: '20px' }}>Guruh to'lovlari</Typography>
                     </Grid>
 
-                    <Grid item xs={12} md={12}>
-                        <GroupFinanceTable />
+                    <Grid item xs={12} md={12} mb={10}>
+                        {groupPays && <GroupFinanceTable data={groupPays} />}
                     </Grid>
 
                     <Grid item xs={12}>
@@ -284,7 +422,7 @@ const CardStatistics = () => {
                     <div id='chiqimlar'></div>
 
                     <Grid item xs={12} md={12} >
-                        <Grid container spacing={6}>
+                        <Grid container spacing={6} mb={10}>
                             {
                                 categryData.map((_: any, index: any) => (
                                     <Grid item xs={12} sm={6} lg={2} key={index} onClick={() => push(`/finance/costs/${_.id}`)} sx={{ cursor: 'pointer' }}>
@@ -295,32 +433,33 @@ const CardStatistics = () => {
                         </Grid>
                     </Grid>
 
-                    <Grid item xs={12}>
+                    {/* <Grid item xs={12}>
                         <Box sx={{ display: 'flex', gap: '10px' }}>
-                            <Typography sx={{ fontSize: '20px', flexGrow: 1 }}>Maoshlar hisoboti</Typography>
+                            <Box sx={{ display: 'flex', gap: '10px', flexGrow: 1 }}>
+                                <Typography sx={{ fontSize: '20px', flexGrow: 1 }}>Xodimlar maoshi</Typography>
+                                <Button variant='contained' onClick={() => setOpen('create')}>+</Button>
+                            </Box>
                             <Box>
-                                <DatePicker
-                                    monthsShown={1}
-                                    startDate={startDateRange}
-                                    shouldCloseOnSelect={false}
-                                    id='date-range-picker-months'
-                                    onChange={handleOnChangeRange}
-                                    popperPlacement={'bottom-start'}
-                                    customInput={
-                                        <CustomInputDate
-                                            label="Sana bo'yicha"
-                                            end={endDateRange as Date | number}
-                                            start={startDateRange as Date | number}
-                                        />
-                                    }
-                                />
+                                <TextField size='small' type='month' onChange={(e) => console.log(e.target.value)} />
                             </Box>
                         </Box>
-                    </Grid>
+                    </Grid> */}
                     <div id='chiqimlar'></div>
 
-                    <Grid item xs={12} md={12} >
-                        <DataTable columns={salaryCol} rowClick={handleRow} data={data} />
+                    <Grid item xs={12} md={6} >
+                        <Box sx={{ display: 'flex', gap: '10px' }}>
+                            <Box sx={{ display: 'flex', gap: '10px', flexGrow: 1 }}>
+                                <Typography sx={{ fontSize: '20px', flexGrow: 1 }}>Xodimlar doimiy maoshi</Typography>
+                                <Button variant='contained' onClick={() => (getEmployees(), setOpen('add-salary'))}>+</Button>
+                            </Box>
+                        </Box>
+                        <DataTable maxWidth='100%' minWidth='0' columns={salaryCol} rowClick={handleRow} data={employeeSalary} />
+                    </Grid>
+                    <Grid item xs={12} md={6} >
+                        <Box sx={{ display: 'flex', gap: '10px', flexGrow: 1 }}>
+                            <Typography sx={{ fontSize: '20px', flexGrow: 1 }}>Oxirgi oydagi to'lovlar</Typography>
+                        </Box>
+                        <DataTable maxWidth='100%' minWidth='0' columns={employeePaycol} rowClick={handleRow} data={employeePays} />
                     </Grid>
                 </Grid>
             </KeenSliderWrapper>
@@ -337,6 +476,60 @@ const CardStatistics = () => {
                     <TextField required autoComplete='off' size='small' placeholder={t("Bo'lim nomi")} fullWidth onChange={(e) => setNameVal(e.target.value)} />
                     <LoadingButton loading={loading} onClick={() => createExpenseCategroy()} variant='contained'>{t("Saqlash")}</LoadingButton>
                 </DialogContent>
+            </Dialog>
+
+
+            <Dialog open={open === 'add-salary'} onClose={() => setOpen(null)}>
+                <DialogTitle sx={{ display: 'flex', alignItems: 'center', minWidth: '300px', justifyContent: 'space-between' }}>
+                    <Typography>Xodimga oylik maosh kiritish</Typography>
+                    <IconifyIcon icon={'mdi:close'} onClick={() => setOpen(null)} />
+                </DialogTitle>
+                <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                    <FormControl fullWidth sx={{ mt: '10px' }}>
+                        <InputLabel size='small' id='user-view-language-label'>Xodim</InputLabel>
+                        <Select
+                            required
+                            size='small'
+                            label="Xodim"
+                            id='demo-simple-select-outlined'
+                            labelId='demo-simple-select-outlined-label'
+                            onChange={(e) => setSalaryUser(e.target.value)}
+                        >
+                            {
+                                employees.map((el: any) => <MenuItem key={el.id} value={el.id}>{el.first_name}</MenuItem>)
+                            }
+                        </Select>
+                    </FormControl>
+                    <TextField required autoComplete='off' size='small' placeholder={t("Summa")} type='number' fullWidth onChange={(e) => setSalaryAmount(e.target.value)} />
+                    <TextField required autoComplete='off' size='small' defaultValue={today} placeholder={t("Sana")} type='date' fullWidth onChange={(e) => setSalaryDate(e.target.value)} />
+                    <LoadingButton loading={loading} onClick={() => mergeSalary()} variant='contained'>{t("Saqlash")}</LoadingButton>
+                </DialogContent>
+            </Dialog>
+
+            <Dialog open={open === 'edit-salary'} onClose={() => (setOpen(null), setEditId(null))}>
+                <DialogTitle sx={{ display: 'flex', alignItems: 'center', minWidth: '300px', justifyContent: 'space-between' }}>
+                    <Typography>Xodimga oylik maosh tahrirlash</Typography>
+                    <IconifyIcon icon={'mdi:close'} onClick={() => (setOpen(null), setEditId(null))} />
+                </DialogTitle>
+                {editId && <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                    <TextField defaultValue={editId.amount} required autoComplete='off' size='small' placeholder={t("Summa")} type='number' fullWidth onChange={(e) => setSalaryAmount(e.target.value)} />
+                    <TextField defaultValue={editId.date} required autoComplete='off' size='small' placeholder={t("Sana")} type='date' fullWidth onChange={(e) => setSalaryDate(e.target.value)} />
+                    <LoadingButton loading={loading} onClick={() => updateSalary()} variant='contained'>{t("Saqlash")}</LoadingButton>
+                </DialogContent>}
+            </Dialog>
+
+            <Dialog open={open === 'delete-salary'} onClose={() => setOpen(null)}>
+                <DialogTitle sx={{ display: 'flex', alignItems: 'center', minWidth: '300px', justifyContent: 'space-between' }}>
+                    <Typography></Typography>
+                    <IconifyIcon icon={'mdi:close'} onClick={() => setOpen(null)} />
+                </DialogTitle>
+                {<DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                    <Typography>Xodimni maoshini olib tashlamoqchimisiz?</Typography>
+                    <Box sx={{ display: 'flex', justifyContent: 'center', gap: 4, mt: 10 }}>
+                        <LoadingButton onClick={() => (setOpen(null), setEditId(null))} variant='outlined'>{t("Bekor qilish")}</LoadingButton>
+                        <LoadingButton loading={loading} onClick={() => deleteSalary()} color='error' variant='contained'>{t("O'chirish")}</LoadingButton>
+                    </Box>
+                </DialogContent>}
             </Dialog>
         </ApexChartWrapper>
     )

@@ -211,7 +211,7 @@ export default function GroupsPage() {
 
     const columns: customTableProps[] = [
         {
-            xs: 0.3,
+            xs: 0.1,
             title: t("ID"),
             dataIndex: 'id'
         },
@@ -226,10 +226,16 @@ export default function GroupsPage() {
             dataIndex: 'phone'
         },
         {
-            xs: 2,
+            xs: 0.6,
             title: t("Kasbi"),
             dataIndex: 'roles_list',
             render: (roles_list: any) => roles_list.join(', ')
+        },
+        {
+            xs: 0.6,
+            title: t("Maosh"),
+            dataIndex: 'phone',
+            render: () => 0
         },
         {
             xs: 0.5,
