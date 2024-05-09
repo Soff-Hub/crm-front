@@ -160,7 +160,7 @@ function RequestForm({ uuid }: InferGetStaticPropsType<typeof getServerSideProps
             Object.assign(newValues, { phone: newPhone })
         }
         try {
-            await api.post(`leads/forms/answer/${query.token}/`, { anonim_user: newValues })
+            await api.post(`leads/forms/answer/${query.token}/`, newValues)
             setTimeout(() => {
                 toast.success("Ma'lumotlaringiz yuborildi", { position: 'top-center' })
                 setLoading(false)
@@ -169,7 +169,7 @@ function RequestForm({ uuid }: InferGetStaticPropsType<typeof getServerSideProps
         } catch (err: any) {
             if (err?.response) {
                 setLoading(false)
-                showResponseError(err.response.data, setError)
+                toast.error(`${err?.response?.data?.application_answer?.[0]}`)
             }
         }
     };
@@ -186,7 +186,7 @@ function RequestForm({ uuid }: InferGetStaticPropsType<typeof getServerSideProps
 
     useEffect(() => {
         getFormData()
-        setError({ 68: "Kiritish majburiy" })
+        setError({ 21: "Kiritish majburiy" })
     }, [])
 
 

@@ -46,7 +46,7 @@ function Slug(props: { slug: string }) {
     const { t } = useTranslation()
     const { isMobile } = useResponsive()
 
-    const [open, setOpen] = useState<'create' | null>(null);
+    const [open, setOpen] = useState<'create' | 'delete' | null>(null);
     const [data2, setData] = useState<any[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
 
@@ -56,6 +56,7 @@ function Slug(props: { slug: string }) {
     const [today, setToday] = useState<string>('');
     const [name, setName] = useState<string>('');
     const [allAmount, setAllAmount] = useState<string>('');
+    const [deleteId, setDeleteId] = useState<string>('');
 
     const handleOnChangeRange = (dates: any) => {
         setToday(dates.target.value)
@@ -93,6 +94,22 @@ function Slug(props: { slug: string }) {
         }
     }
 
+
+    const deleteExpense = async () => {
+        setLoading(true)
+        try {
+            await api.delete(`common/finance/expense/destroy/${deleteId}/`)
+            setOpen(null)
+            getExpense(query?.slug)
+        } catch (err) {
+            console.log(err)
+        } finally {
+            console.log('finally');
+            setLoading(false)
+        }
+    }
+
+
     useEffect(() => {
         getExpense(query?.slug)
     }, [today])
@@ -117,18 +134,21 @@ function Slug(props: { slug: string }) {
             <Box sx={{ display: 'flex', alignItems: isMobile ? 'center' : 'flex-start', gap: '15px', flexDirection: isMobile ? 'column' : 'row', overflowX: 'scroll' }}>
                 {
                     data2.map((item, i: number) => (
-                        <Column key={i} sx={{ minWidth: isMobile ? '100%' : '180px', display: 'flex', flexDirection: 'column', gap: '12px', p: '5px' }}>
+                        <Column key={i} sx={{ minWidth: isMobile ? '100%' : '220px', display: 'flex', flexDirection: 'column', gap: '12px', p: '5px' }}>
                             <Th textAlign={'center'}>
                                 {Number(item.date?.split('-')?.[2])}
                             </Th>
                             {
                                 item.value.map((el: any, j: number) => (
-                                    <Box key={j} sx={{ borderBottom: `2px dashed ${mainColor}` }}>
+                                    <Box key={j} sx={{ borderBottom: `2px dashed ${mainColor}`, position: 'relative' }}>
                                         <Box>
                                             {formatCurrency(el.amount)}
                                         </Box>
                                         <Box sx={{ fontSize: '14px' }}>
                                             {el.description}
+                                        </Box>
+                                        <Box sx={{ textAlign: 'center', py: 1, position: 'absolute', right: 0, top: '-5px' }}>
+                                            <IconifyIcon onClick={() => (setOpen('delete'), setDeleteId(el.id))} icon={'material-symbols-light:delete-outline'} cursor={'pointer'} />
                                         </Box>
                                     </Box>
                                 ))
@@ -150,6 +170,17 @@ function Slug(props: { slug: string }) {
                     <TextField autoComplete='off' size='small' placeholder={t("Summa")} type='number' fullWidth onChange={(e) => setAmount(e.target.value)} />
                     <TextField autoComplete='off' size='small' multiline minRows={4} placeholder={t("Izoh")} fullWidth onChange={(e) => seDescription(e.target.value)} />
                     <LoadingButton loading={loading} onClick={createExpense} variant='contained'>{t("Saqlash")}</LoadingButton>
+                </DialogContent>
+            </Dialog>
+
+            <Dialog open={open === 'delete'} onClose={() => setOpen(null)}>
+                <DialogTitle sx={{ display: 'flex', alignItems: 'center', minWidth: '300px', justifyContent: 'space-between' }}>
+                    <Typography fontSize={18}>Xarajatlarni o'chirish</Typography>
+                    <IconifyIcon icon={'mdi:close'} onClick={() => setOpen(null)} />
+                </DialogTitle>
+                <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                    <LoadingButton onClick={() => setOpen(null)} variant='outlined'>{t("Bekor qilish")}</LoadingButton>
+                    <LoadingButton loading={loading} onClick={deleteExpense} variant='contained'>{t("O'chirish")}</LoadingButton>
                 </DialogContent>
             </Dialog>
         </Box>

@@ -5,7 +5,7 @@ import { styled } from '@mui/material/styles'
 import MuiMenu, { MenuProps } from '@mui/material/Menu'
 import MuiMenuItem, { MenuItemProps } from '@mui/material/MenuItem'
 
-import { Box, Button, Dialog, DialogContent, DialogTitle, FormControl, FormHelperText, FormLabel, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material'
+import { Box, Button, Checkbox, Dialog, DialogContent, DialogTitle, FormControl, FormHelperText, FormLabel, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material'
 
 const Menu = styled(MuiMenu)<MenuProps>(({ theme }) => ({
     '& .MuiMenu-paper': {
@@ -49,6 +49,7 @@ import useSMS from 'src/hooks/useSMS'
 import { useRouter } from 'next/router'
 import useBranches from 'src/hooks/useBranch'
 import useGroups from 'src/hooks/useGroups'
+import { formatDateTime } from 'src/@core/utils/date-formatter'
 
 // ** Styled Avatar component
 const Avatar = styled(CustomAvatar)<AvatarProps>(({ theme }) => ({
@@ -140,10 +141,10 @@ const KanbanItem = (props: KanbarItemProps) => {
         }
     }
 
-    const getDepartmentItem = async () => {
+    const getDepartmentItem = async (endpoint: 'lead-user-description' | 'anonim-user' | 'sms-history') => {
         setLoading(true)
         try {
-            const resp = await api.get(`leads/lead-user-description/${id}/`)
+            const resp = await api.get(`leads/${endpoint}/${id}/`)
             setLeadDetail(resp.data)
             console.log(resp.data);
 
@@ -161,7 +162,7 @@ const KanbanItem = (props: KanbarItemProps) => {
                 anonim_user: id,
                 body: values.body
             })
-            getDepartmentItem()
+            getDepartmentItem('lead-user-description')
             toast.success(`${t("Eslatma yaratildi")}`, {
                 position: 'top-center'
             })
@@ -198,11 +199,18 @@ const KanbanItem = (props: KanbarItemProps) => {
             dispatch(addOpenedUser(null))
         } else {
             dispatch(addOpenedUser(id))
-            return getDepartmentItem()
+            return getDepartmentItem('anonim-user')
         }
     }
 
     const togglerTab = (value: any) => {
+        if (value === 'tab-1') {
+            getDepartmentItem('anonim-user')
+        } else if (value === 'tab-2') {
+            getDepartmentItem('lead-user-description')
+        } else {
+            getDepartmentItem('sms-history')
+        }
         setActiveTab(value)
     }
 
@@ -267,11 +275,26 @@ const KanbanItem = (props: KanbarItemProps) => {
                     id === total ? (
                         <Box sx={{ display: 'flex', paddingTop: '10px', flexDirection: 'column', gap: '6px' }}>
                             <Box sx={{ display: 'flex', gap: '15px' }}>
-                                <Typography onClick={() => togglerTab('tab-1')} sx={{ fontSize: '12px', borderBottom: activeTab === 'tab-1' ? '2px solid #0d6efd' : '2px solid #c3cccc', px: 1 }} variant={activeTab === 'tab-1' ? 'body1' : 'body2'}>{t("Eslatmalar")}</Typography>
-                                <Typography onClick={() => togglerTab('tab-2')} sx={{ fontSize: '12px', borderBottom: activeTab === 'tab-2' ? '2px solid #0d6efd' : '2px solid #c3cccc', px: 1 }} variant={activeTab === 'tab-2' ? 'body1' : 'body2'}>{t("SMS tarix")}</Typography>
+                                <Typography onClick={() => togglerTab('tab-1')} sx={{ fontSize: '12px', borderBottom: activeTab === 'tab-1' ? '2px solid #0d6efd' : '2px solid #c3cccc', px: 1 }} variant={activeTab === 'tab-1' ? 'body1' : 'body2'}>{t("Malumtlari")}</Typography>
+                                <Typography onClick={() => togglerTab('tab-2')} sx={{ fontSize: '12px', borderBottom: activeTab === 'tab-2' ? '2px solid #0d6efd' : '2px solid #c3cccc', px: 1 }} variant={activeTab === 'tab-2' ? 'body1' : 'body2'}>{t("Eslatmalar")}</Typography>
+                                <Typography onClick={() => togglerTab('tab-3')} sx={{ fontSize: '12px', borderBottom: activeTab === 'tab-3' ? '2px solid #0d6efd' : '2px solid #c3cccc', px: 1 }} variant={activeTab === 'tab-3' ? 'body1' : 'body2'}>{t("SMS tarix")}</Typography>
                             </Box>
                             {
                                 activeTab === 'tab-1' ? (
+                                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                                        {
+                                            leadDetail.length > 0 ? leadDetail.map((el: any) => (
+                                                <Box sx={{ border: '1px solid #c3cccc', padding: '5px', borderRadius: '8px', display: 'flex', flexDirection: 'column', gap: el?.variants?.length ? '0px' : '6px' }}>
+                                                    <Typography fontSize={12}>Savol: {el.application_form}</Typography>
+                                                    <Typography fontSize={12}>{el.admin} {el.answer}</Typography>
+                                                    {
+                                                        el?.variants?.map((item: any) => <Typography style={{ display: 'flex', alignItems: 'center' }} fontSize={10}><Checkbox size='small' checked={item?.is_checked} /> {item.value}</Typography>)
+                                                    }
+                                                </Box>
+                                            )) : <Typography variant='body2' fontSize={'12px'} fontStyle={'italic'} textAlign={'center'}>{t("Bo'sh")}</Typography>
+                                        }
+                                    </Box>
+                                ) : activeTab === 'tab-2' ? (
                                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                                         {
                                             leadDetail.length > 0 ? leadDetail.map((el: any) => (
@@ -284,10 +307,14 @@ const KanbanItem = (props: KanbarItemProps) => {
                                     </Box>
                                 ) : (
                                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                                        <Box sx={{ border: '1px solid #c3cccc', padding: '5px', borderRadius: '8px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                                            <Typography fontSize={12} fontStyle={'italic'}>Sms Sms Sms Sms Sms Sms Sms Sms</Typography>
-                                            <Typography fontSize={12}>{'Admin'} {"18:30"}</Typography>
-                                        </Box>
+                                        {
+                                            leadDetail.length > 0 ? leadDetail.map((el: any) => (
+                                                <Box sx={{ border: '1px solid #c3cccc', padding: '5px', borderRadius: '8px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                                                    <Typography fontSize={12} fontStyle={'italic'}>{el.message}</Typography>
+                                                    <Typography fontSize={12}>{el.user} {formatDateTime(el.created_at)}</Typography>
+                                                </Box>
+                                            )) : <Typography variant='body2' fontSize={'12px'} fontStyle={'italic'} textAlign={'center'}>{t("Bo'sh")}</Typography>
+                                        }
                                     </Box>
                                 )
                             }
