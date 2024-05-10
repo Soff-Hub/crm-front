@@ -73,7 +73,7 @@ const KanbanItem = (props: KanbarItemProps) => {
     const [open, setOpen] = useState<'edit' | 'merge-to' | 'sms' | 'delete' | 'note' | 'branch' | 'recover' | 'add-group' | null>(null)
     const [department, setDepartment] = useState<any>(null)
     const [loading, setLoading] = useState<boolean>(false)
-    const [activeTab, setActiveTab] = useState<string>('tab-1')
+    const [activeTab, setActiveTab] = useState<string>('tab-2')
     const [leadDetail, setLeadDetail] = useState([])
 
     const { total, departmentsState } = useSelector((state: any) => state.user)
@@ -281,8 +281,8 @@ const KanbanItem = (props: KanbarItemProps) => {
                     id === total ? (
                         <Box sx={{ display: 'flex', paddingTop: '10px', flexDirection: 'column', gap: '6px' }}>
                             <Box sx={{ display: 'flex', gap: '15px' }}>
-                                <Typography onClick={() => togglerTab('tab-1')} sx={{ fontSize: '12px', borderBottom: activeTab === 'tab-1' ? '2px solid #0d6efd' : '2px solid #c3cccc', px: 1 }} variant={activeTab === 'tab-1' ? 'body1' : 'body2'}>{t("Malumtlari")}</Typography>
                                 <Typography onClick={() => togglerTab('tab-2')} sx={{ fontSize: '12px', borderBottom: activeTab === 'tab-2' ? '2px solid #0d6efd' : '2px solid #c3cccc', px: 1 }} variant={activeTab === 'tab-2' ? 'body1' : 'body2'}>{t("Eslatmalar")}</Typography>
+                                <Typography onClick={() => togglerTab('tab-1')} sx={{ fontSize: '12px', borderBottom: activeTab === 'tab-1' ? '2px solid #0d6efd' : '2px solid #c3cccc', px: 1 }} variant={activeTab === 'tab-1' ? 'body1' : 'body2'}>{t("Malumtlari")}</Typography>
                                 <Typography onClick={() => togglerTab('tab-3')} sx={{ fontSize: '12px', borderBottom: activeTab === 'tab-3' ? '2px solid #0d6efd' : '2px solid #c3cccc', px: 1 }} variant={activeTab === 'tab-3' ? 'body1' : 'body2'}>{t("SMS tarix")}</Typography>
                             </Box>
                             {
