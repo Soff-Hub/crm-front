@@ -199,7 +199,13 @@ const KanbanItem = (props: KanbarItemProps) => {
             dispatch(addOpenedUser(null))
         } else {
             dispatch(addOpenedUser(id))
-            return getDepartmentItem('anonim-user')
+            if (activeTab === 'tab-1') {
+                getDepartmentItem('anonim-user')
+            } else if (activeTab === 'tab-2') {
+                getDepartmentItem('lead-user-description')
+            } else {
+                getDepartmentItem('sms-history')
+            }
         }
     }
 
