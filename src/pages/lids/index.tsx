@@ -157,12 +157,16 @@ const Lids = () => {
   }
 
   useEffect(() => {
-    getSources()
-  }, [])
+    if (user?.role.length !== 1 && !user?.role.includes('teacher')) {
+      getSources()
+    }
+  }, [user])
 
   useEffect(() => {
-    getLeads()
-  }, [query])
+    if (user?.role.length !== 1 && !user?.role.includes('teacher')) {
+      getLeads()
+    }
+  }, [query, user])
 
 
   return user?.role.length === 1 && user?.role.includes('teacher') ? <TeacherProfile /> : (
