@@ -67,11 +67,12 @@ const AuthProvider = ({ children }: Props) => {
             setLoading(false)
             setUser({
               id: 1,
-              role: response.data.roles.find((el: any) => el.name === "Teacher").exists && !response.data.roles.find((el: any) => el.name === "Admin").exists && !response.data.roles.find((el: any) => el.name === "CEO").exists ? 'teacher' : 'admin',
+              // role: response.data.roles.find((el: any) => el.name === "Teacher").exists && !response.data.roles.find((el: any) => el.name === "Admin").exists && !response.data.roles.find((el: any) => el.name === "CEO").exists ? 'teacher' : 'admin',
               fullName: response.data.first_name,
               username: response.data.phone,
               password: 'null',
-              avatar: response.data.image
+              avatar: response.data.image,
+              role: response.data.roles.filter((el: any) => el.exists).map((el: any) => el.name?.toLowerCase())
             })
           })
           .catch(() => {
@@ -115,11 +116,12 @@ const AuthProvider = ({ children }: Props) => {
 
         setUser({
           id: 1,
-          role: response.data.roles.find((el: any) => el.name === "Teacher").exists && !response.data.roles.find((el: any) => el.name === "Admin").exists && !response.data.roles.find((el: any) => el.name === "CEO").exists ? 'teacher' : 'admin',
+          // role: response.data.roles.find((el: any) => el.name === "Teacher").exists && !response.data.roles.find((el: any) => el.name === "Admin").exists && !response.data.roles.find((el: any) => el.name === "CEO").exists ? 'teacher' : 'admin',
           fullName: response.data.first_name,
           username: response.data.phone,
           password: 'null',
-          avatar: response.data.image
+          avatar: response.data.image,
+          role: response.data.roles.filter((el: any) => el.exists).map((el: any) => el.name?.toLowerCase())
         })
 
         !params.rememberMe ? window.localStorage.setItem('userData', JSON.stringify({ ...response.data, role: 'admin', tokens: null })) : null

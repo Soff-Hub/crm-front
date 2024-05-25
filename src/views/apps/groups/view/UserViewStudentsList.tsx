@@ -124,7 +124,7 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, reRender }
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>
             <Typography sx={{ width: '20px' }}>{index}.</Typography>
             <Status color={status == 'active' ? 'success' : status == 'new' ? 'warning' : 'error'} />
-            {user?.role !== 'teacher' ? <HtmlTooltip className='' title={
+            {user?.role.length === 1 && user?.role.includes('teacher') ? <HtmlTooltip className='' title={
                 <Box sx={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', padding: '10px' }}>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', py: 1 }}>
                         <Box>
@@ -167,7 +167,7 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, reRender }
                 aria-controls={open ? 'fade-menu' : undefined}
                 aria-haspopup="true"
                 aria-expanded={open ? 'true' : undefined}
-                onClick={user?.role !== 'teacher' ? handleClick : undefined}
+                onClick={user?.role.length === 1 && user?.role.includes('teacher') ? handleClick : undefined}
             >
                 <IconifyIcon icon={"charm:menu-kebab"} fontSize={11} />
             </Typography>

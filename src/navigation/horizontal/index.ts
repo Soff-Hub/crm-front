@@ -1,9 +1,12 @@
+import { useContext } from 'react'
 import { HorizontalNavItemsType } from 'src/@core/layouts/types'
+import { AuthContext } from 'src/context/AuthContext'
 
-const Navigation = (t:any): HorizontalNavItemsType => {
+const Navigation = (t: any): HorizontalNavItemsType => {
   // const { t } = useTranslation()
+  const { user } = useContext(AuthContext)
 
-  return [
+  const items = [
     {
       title: t("Bosh sahifa"),
       icon: 'mdi:home-outline',
@@ -91,6 +94,9 @@ const Navigation = (t:any): HorizontalNavItemsType => {
       path: '/finance'
     },
   ]
+
+
+  return user?.role.includes('casher') ? items : items.filter(el => el.path !== '/finance')
 }
 
 export default Navigation

@@ -1,7 +1,9 @@
 // ** Type import
+import { useContext } from 'react'
 import { VerticalNavItemsType } from 'src/@core/layouts/types'
+import { AuthContext } from 'src/context/AuthContext'
 
-export const TeacherNavigation = (t:any): any => {
+export const TeacherNavigation = (t: any): any => {
 
   return [
     {
@@ -19,7 +21,9 @@ export const TeacherNavigation = (t:any): any => {
 
 const Navigation = (t: any): VerticalNavItemsType => {
 
-  return [
+  const { user } = useContext(AuthContext)
+
+  const items = [
     {
       title: t("Bosh sahifa"),
       icon: 'mdi:home-outline',
@@ -36,14 +40,14 @@ const Navigation = (t: any): VerticalNavItemsType => {
       path: '/mentors'
     },
     {
-      title: t("O'quvchilar"),
-      icon: 'mdi:account-student',
-      path: '/students'
-    },
-    {
       title: t("Guruhlar"),
       icon: 'uil:layer-group',
       path: '/groups'
+    },
+    {
+      title: t("O'quvchilar"),
+      icon: 'mdi:account-student',
+      path: '/students'
     },
     {
       title: t("Sozlamalar"),
@@ -107,6 +111,9 @@ const Navigation = (t: any): VerticalNavItemsType => {
       path: '/finance'
     },
   ]
+
+
+  return user?.role.includes('casher') ? items : items.filter(el => el.path !== '/finance')
 }
 
 export default Navigation

@@ -17,6 +17,26 @@ import showResponseError from "src/@core/utils/show-response-error"
 import usePayment from "src/hooks/usePayment"
 import { customTableProps } from "src/pages/groups"
 
+// Rasm yuklab olish misoli
+export async function downloadImage(filename: string, url: string) {
+  await fetch(url, {
+    headers: {
+      'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+    }
+  })
+    .then(response => response.blob())
+    .then(blob => {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    })
+    .catch(console.error);
+}
 
 
 const UserViewSecurity = ({ groupData }: any) => {
@@ -34,6 +54,16 @@ const UserViewSecurity = ({ groupData }: any) => {
 
   const handleEdit = (id: any) => {
     setEdit(data.find((el: any) => el.id === id))
+  }
+
+  async function getReceipt(id: any) {
+    setLoading(true)
+    try {
+      await downloadImage(`receipt-${new Date().getTime()}.pdf`, `https://crmapi.soffstudy.uz/api/v1/common/generate-check/${id}/`)
+      setLoading(false)
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   const columns: customTableProps[] = [
@@ -72,6 +102,7 @@ const UserViewSecurity = ({ groupData }: any) => {
         <Box sx={{ display: 'flex', gap: '10px' }}>
           <IconifyIcon onClick={() => handleEdit(id)} icon='mdi:pencil-outline' fontSize={20} />
           <IconifyIcon onClick={() => setDelete(id)} icon='mdi:delete-outline' fontSize={20} />
+          {loading ? <IconifyIcon icon={'la:spinner'} fontSize={20} /> : <IconifyIcon onClick={() => getReceipt(id)} icon={`ph:receipt-light`} fontSize={20} />}
         </Box>
       )
     }
@@ -85,6 +116,8 @@ const UserViewSecurity = ({ groupData }: any) => {
       console.log(err)
     }
   }
+
+
 
   const onUpdatePayment = async (value: {}) => {
     setLoading(true)

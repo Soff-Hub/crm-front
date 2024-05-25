@@ -257,8 +257,8 @@ const CardStatistics = () => {
         }
     }
 
-    const getGroupPays = async () => {
-        const resp = await api.get(`/common/finance/group-payments/`)
+    const getGroupPays = async (date: string) => {
+        const resp = await api.get(`/common/finance/group-payments/?date=${date}-01`)
         setGropPays(resp.data)
     }
 
@@ -366,11 +366,6 @@ const CardStatistics = () => {
         },
     ]
 
-    console.log(editId);
-
-
-
-
     const handleRow = (id: string) => {
         push(`/finance/salaries/${id}`)
     }
@@ -378,7 +373,7 @@ const CardStatistics = () => {
     useEffect(() => {
         getAllNumbers()
         getExpenseCategroy()
-        getGroupPays()
+        getGroupPays(`${new Date().getFullYear()}-${Number(new Date().getMonth()) + 1 < 10 ? "0" + (1 + new Date().getMonth()) : new Date().getMonth() + 1}`)
         getEmployeSalary()
         getEmployePays()
     }, [])
@@ -386,10 +381,6 @@ const CardStatistics = () => {
 
     return (
         <ApexChartWrapper>
-            {/* <Box>
-                <button onClick={handleEditable}>ffffffffffffffffffffffffffffffffffff</button>
-            </Box> */}
-
             <KeenSliderWrapper>
                 <Grid container spacing={2} columnSpacing={10}>
                     <Grid item xs={12}>
@@ -410,7 +401,7 @@ const CardStatistics = () => {
                     </Grid>
 
                     <Grid item xs={12} md={12} mb={10}>
-                        {groupPays && <GroupFinanceTable data={groupPays} />}
+                        {groupPays && <GroupFinanceTable data={groupPays} updateData={getGroupPays} />}
                     </Grid>
 
                     <Grid item xs={12}>

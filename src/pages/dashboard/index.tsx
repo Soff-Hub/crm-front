@@ -142,7 +142,7 @@ const AppCalendar = () => {
     getLessons()
   }, [weeks, query])
 
-  return user?.role === 'teacher' ? <MyGroups /> : (
+  return user?.role.length === 1 && user?.role.includes('teacher') ? <MyGroups /> : (
     <>
       {
         stats ? (

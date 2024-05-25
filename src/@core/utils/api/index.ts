@@ -15,7 +15,7 @@ api.interceptors.request.use(
 
         if (storedToken) {
             config.headers['Authorization'] = `Bearer ${storedToken}`
-            config.headers['Accept-Language'] = `uz`
+            config.headers['Accept-Language'] = localStorage.getItem('i18nextLng')
         }
 
         return config
@@ -29,6 +29,8 @@ api.interceptors.response.use(
 
         if (err.response && [403, 401].includes(err.response.status)) {
             toast.error(`${err.response.config.url} ${err.response.data.detail}`)
+            localStorage.removeItem(authConfg.storageTokenKeyName)
+            window.location.href = '/'
             return Promise.reject({ message: err.response.data })
         }
 

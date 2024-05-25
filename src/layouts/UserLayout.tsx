@@ -37,18 +37,6 @@ const UserLayout = ({ children, contentHeightFixed }: Props) => {
   const { user } = useContext(AuthContext)
   const { t } = useTranslation()
 
-  // ** Vars for server side navigation
-  // const { menuItems: verticalMenuItems } = ServerSideVerticalNavItems()
-  // const { menuItems: horizontalMenuItems } = ServerSideHorizontalNavItems()
-
-  /**
-   *  The below variable will hide the current layout menu at given screen size.
-   *  The menu will be accessible from the Hamburger icon only (Vertical Overlay Menu).
-   *  You can change the screen size from which you want to hide the current layout menu.
-   *  Please refer useMediaQuery() hook: https://mui.com/material-ui/react-use-media-query/,
-   *  to know more about what values can be passed to this hook.
-   *  ! Do not change this value unless you know what you are doing. It can break the template.
-   */
   const hidden = useMediaQuery((theme: Theme) => theme.breakpoints.down('lg'))
 
   if (hidden && settings.layout === 'horizontal') {
@@ -63,7 +51,7 @@ const UserLayout = ({ children, contentHeightFixed }: Props) => {
       contentHeightFixed={contentHeightFixed}
       verticalLayoutProps={{
         navMenu: {
-          navItems: user?.role === 'teacher' ? TeacherNavigation(t) : VerticalNavItems(t)
+          navItems: user?.role.length === 1 && user?.role.includes('teacher') ? TeacherNavigation(t) : VerticalNavItems(t)
 
           // Uncomment the below line when using server-side menu in vertical layout and comment the above line
           // navItems: verticalMenuItems
@@ -82,7 +70,7 @@ const UserLayout = ({ children, contentHeightFixed }: Props) => {
       {...(settings.layout === 'horizontal' && {
         horizontalLayoutProps: {
           navMenu: {
-            navItems: user?.role === 'teacher' ? TeacherNavigation(t) : HorizontalNavItems(t)
+            navItems: user?.role.length === 1 && user?.role.includes('teacher') ? TeacherNavigation(t) : HorizontalNavItems(t)
 
             // Uncomment the below line when using server-side menu in horizontal layout and comment the above line
             // navItems: horizontalMenuItems

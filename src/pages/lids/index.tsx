@@ -165,7 +165,7 @@ const Lids = () => {
   }, [query])
 
 
-  return user?.role === 'teacher' ? <TeacherProfile /> : (
+  return user?.role.length === 1 && user?.role.includes('teacher') ? <TeacherProfile /> : (
     <Box sx={{ maxWidth: '100%', overflowX: 'scroll', padding: '10px', pt: 0 }}>
       <Box sx={{ width: '100%', p: '10px 0' }}>
         <form style={{ display: 'flex', alignItems: 'center', gap: '5px' }} onSubmit={(e) => {
