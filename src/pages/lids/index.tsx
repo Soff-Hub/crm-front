@@ -51,7 +51,7 @@ const Lids = () => {
     try {
       const resp = await api.get(`leads/department/list/?search=${query?.search || ''}&is_active=${query?.is_active === undefined ? true : query.is_active}`)
       const searched = resp.data.map((el: any) => ({ ...el, children: el.children.filter((item: any) => item.student_count > 0) }))
-      
+
       if (!query?.search) {
         if (query?.is_active === 'false') {
           setLeadData(searched)
@@ -157,15 +157,11 @@ const Lids = () => {
   }
 
   useEffect(() => {
-    if (user?.role.length !== 1 && !user?.role.includes('teacher')) {
-      getSources()
-    }
+    getSources()
   }, [user])
 
   useEffect(() => {
-    if (user?.role.length !== 1 && !user?.role.includes('teacher')) {
-      getLeads()
-    }
+    getLeads()
   }, [query, user])
 
 
@@ -194,6 +190,7 @@ const Lids = () => {
             }} />
             {t("Arxiv")}
           </label>
+          <Button variant='outlined' onClick={() => push('/lids/stats')}>{t("Hisobot")}</Button>
         </form>
       </Box>
       <Box
