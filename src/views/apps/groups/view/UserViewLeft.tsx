@@ -261,7 +261,7 @@ const UserViewLeft = ({ userData, reRender }: { userData?: any, reRender: any })
               <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', alignItems: 'center' }}>
                 <Typography>Yo'nalishi:</Typography>
                 {
-                  user?.role.length === 1 && user?.role.includes('teacher') ? (
+                  !(user?.role.length === 1 && user?.role.includes('teacher') )? (
                     <Link href={`/settings/office/courses/`}>
                       <CustomChip
                         skin='light'
@@ -308,10 +308,10 @@ const UserViewLeft = ({ userData, reRender }: { userData?: any, reRender: any })
               </Box>
               <Box sx={{ pt: 2, pb: 1 }}>
                 {
-                  user?.role.length === 1 && user?.role.includes('teacher') ? (
+                  !(user?.role.length === 1 && user?.role.includes('teacher')) ? (
                     <Box sx={{ display: 'flex', mb: 2.7 }}>
                       <Typography sx={{ mr: 2, fontWeight: 500, fontSize: '0.875rem' }}>O'qituvchi:</Typography>
-                      <Link href={user?.role.includes('teacher') ? `/mentors/view/security/?id=${data.teacher_data.id}` : '/lids'} style={{ textDecoration: 'none' }}>
+                      <Link href={`/mentors/view/security/?id=${data.teacher_data.id}`}>
                         <Typography variant='body2'>
                           {data.teacher_data.first_name}
                         </Typography>
@@ -361,7 +361,7 @@ const UserViewLeft = ({ userData, reRender }: { userData?: any, reRender: any })
             </CardContent>
 
             {
-              user?.role.length === 1 && user?.role.includes('teacher') ? (
+              !(user?.role.length === 1 && user?.role.includes('teacher')) ? (
                 <CardActions sx={{ display: 'flex', justifyContent: 'center' }}>
                   <Tooltip title="O'chirish" placement='top'>
                     <Button variant='outlined' color='error' onClick={() => handleEditClickOpen('delete')}>
