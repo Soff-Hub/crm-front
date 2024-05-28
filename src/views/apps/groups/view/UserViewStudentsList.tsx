@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react'
-import { Box, Button, Dialog, DialogContent, FormControl, FormHelperText, InputLabel, Select, TextField, Typography } from '@mui/material'
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormHelperText, InputLabel, Select, TextField, Typography } from '@mui/material'
 import Status from 'src/@core/components/status'
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
@@ -17,6 +17,8 @@ import toast from 'react-hot-toast';
 import Form from 'src/@core/components/form';
 import showResponseError from 'src/@core/utils/show-response-error';
 import { today } from 'src/@core/components/card-statistics/kanban-item';
+import useSMS from 'src/hooks/useSMS';
+import { useTranslation } from 'react-i18next';
 
 
 interface StudentType {
@@ -71,6 +73,11 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, reRender }
     const [openLeft, setOpenLeft] = useState<boolean>(false)
     const [activate, setActivate] = useState<boolean>(false)
     const [loading, setLoading] = useState<boolean>(false)
+    const [modalRef, setModalRef] = useState<'sms' | 'note' | null>(null)
+    const { smsTemps, getSMSTemps } = useSMS()
+    const [sms, setSMS] = useState<any>('')
+    const { t } = useTranslation()
+
 
     const open = Boolean(anchorEl);
 
@@ -78,9 +85,10 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, reRender }
         setAnchorEl(event.currentTarget);
     };
 
-    const handleClose = (value: 'none' | 'left' | 'payment' | 'notes') => {
+    const handleClose = (value: 'none' | 'left' | 'payment' | 'notes' | 'sms') => {
         setAnchorEl(null);
-        if (value === 'notes') push(`/students/view/comments/?student=${id}`)
+        if (value === 'notes') setModalRef('note')
+        else if (value === 'sms') setModalRef('sms')
         else if (value === 'payment') push(`/students/view/security/?student=${id}`)
         else if (value === 'left') {
             setOpenLeft(true)
@@ -114,6 +122,30 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, reRender }
             reRender()
         } catch (err: any) {
             showResponseError(err?.response?.data, setError)
+            setLoading(false)
+        }
+    }
+
+    const handleAddSms = async (value: any) => {
+        setLoading(true)
+        try {
+            await api.post('common/send-message-user/', { user: id, ...value })
+            setLoading(false)
+            setModalRef(null)
+        } catch (err: any) {
+            showResponseError(err.response.data, setError)
+            setLoading(false)
+        }
+    }
+
+    const handleAddNote = async (value: any) => {
+        setLoading(true)
+        try {
+            await api.post('auth/student/description/', { user: id, ...value })
+            setLoading(false)
+            setModalRef(null)
+        } catch (err: any) {
+            showResponseError(err.response.data, setError)
             setLoading(false)
         }
     }
@@ -184,7 +216,8 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, reRender }
             >
                 <MenuItem onClick={() => handleClose('payment')}>To'lov</MenuItem>
                 <MenuItem onClick={() => handleClose('left')}>Guruhdan chiqarish</MenuItem>
-                <MenuItem onClick={() => handleClose('notes')}>Eslatmalar</MenuItem>
+                <MenuItem onClick={() => handleClose('notes')}>Eslatma +</MenuItem>
+                <MenuItem onClick={() => (handleClose('sms'), getSMSTemps())}>Xabar (sms) +</MenuItem>
                 <MenuItem onClick={() => setActivate(true)}>Tahrirlash</MenuItem>
             </Menu>
 
@@ -239,6 +272,86 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, reRender }
                         </Box>
                     </Form>
 
+                </DialogContent>
+            </Dialog>
+
+
+            <Dialog open={modalRef === 'note'} onClose={() => setModalRef(null)}>
+                <DialogContent sx={{ minWidth: '350px' }}>
+                    <Typography sx={{ fontSize: '20px', textAlign: 'center', mb: 3 }}>Yangi eslatma yaratish</Typography>
+
+                    <Form id='fe3feeer' onSubmit={handleAddNote} setError={setError} sx={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+
+                        <FormControl>
+                            <TextField name='description' rows={4} multiline error={error?.description?.error} label={"Izoh"} size='small' />
+                            <FormHelperText error={error?.description?.error}>{error?.description?.message}</FormHelperText>
+                        </FormControl>
+
+                        <Box sx={{ display: 'flex', justifyContent: 'center', gap: 4 }}>
+                            <Button onClick={() => setModalRef(null)} size='small' variant='outlined' color='error'>Bekor qilish</Button>
+                            <LoadingButton loading={loading} type='submit' size='small' variant='contained' color='success'>Saqlash</LoadingButton>
+                        </Box>
+                    </Form>
+
+                </DialogContent>
+            </Dialog>
+
+            <Dialog
+                open={modalRef === 'sms'}
+                onClose={() => setModalRef(null)}
+                aria-labelledby='user-view-edit'
+                sx={{ '& .MuiPaper-root': { width: '100%', maxWidth: 450, p: [1, 3] } }}
+                aria-describedby='user-view-edit-description'
+            >
+                <DialogTitle id='user-view-edit' sx={{ textAlign: 'center', fontSize: '1.5rem !important' }}>
+                    Xabar yuborish (sms)
+                </DialogTitle>
+                <DialogContent>
+                    <Form setError={setError} valueTypes='json' sx={{ marginTop: 10 }} onSubmit={handleAddSms} id='dsdsdsds'>
+                        <FormControl sx={{ maxWidth: '100%', mb: 3 }} fullWidth>
+                            <InputLabel size='small' id='demo-simple-select-outlined-label'>Shablonlar</InputLabel>
+                            <Select
+                                size='small'
+                                label="Shablonlar"
+                                defaultValue=''
+                                id='demo-simple-select-outlined'
+                                labelId='demo-simple-select-outlined-label'
+                                onChange={(e) => setSMS(e.target.value)}
+                            >
+                                {
+                                    smsTemps.map((el: any) => (
+                                        <MenuItem value={el.description} sx={{ wordBreak: 'break-word' }}>
+                                            <span style={{ maxWidth: '250px', wordBreak: 'break-word', fontSize: '10px' }}>
+                                                {el.description}
+                                            </span>
+                                        </MenuItem>
+                                    ))
+                                }
+                            </Select>
+                        </FormControl>
+
+                        <FormControl fullWidth>
+                            <TextField
+                                error={error?.message}
+                                rows={4}
+                                multiline
+                                label="Xabar"
+                                name='message'
+                                defaultValue={''}
+                                value={sms}
+                                onChange={(e) => setSMS(e.target.value)}
+                            />
+                            <FormHelperText error={error.message}>{error.message?.message}</FormHelperText>
+                        </FormControl>
+                        <DialogActions sx={{ justifyContent: 'center' }}>
+                            <Button variant='outlined' type='button' color='secondary' onClick={() => setModalRef(null)}>
+                                {t("Bekor Qilish")}
+                            </Button>
+                            <LoadingButton loading={loading} type='submit' variant='contained' sx={{ mr: 1 }}>
+                                {t("Yuborish")}
+                            </LoadingButton>
+                        </DialogActions>
+                    </Form>
                 </DialogContent>
             </Dialog>
         </Box>

@@ -1,5 +1,5 @@
 // ** MUI Imports
-import { Box, Button, Card, CardContent, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, TextField } from '@mui/material'
+import { Box, Button, Card, CardContent, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormHelperText, InputLabel, MenuItem, Select, TextField } from '@mui/material'
 
 
 // ** Types
@@ -14,6 +14,7 @@ import LoadingButton from '@mui/lab/LoadingButton'
 import { useTranslation } from 'react-i18next'
 import showResponseError from 'src/@core/utils/show-response-error'
 import { useRouter } from 'next/router'
+import useSMS from 'src/hooks/useSMS'
 
 
 
@@ -23,10 +24,9 @@ const UserSmsList = () => {
     const [loading, setLoading] = useState<boolean>(false)
     const { t } = useTranslation()
     const { query } = useRouter()
-
-    const setError = (val: any) => {
-        console.log(val);
-    }
+    const { smsTemps, getSMSTemps } = useSMS()
+    const [error, setError] = useState<any>({})
+    const [sms, setSMS] = useState<any>('')
 
     const getSmsList = async () => {
         setLoading(true)
@@ -64,7 +64,7 @@ const UserSmsList = () => {
     return (
         <Box>
             <Box sx={{ width: '100%', display: 'flex' }}>
-                <Button startIcon={<IconifyIcon icon='ic:baseline-add' />} onClick={() => setOpen(true)} sx={{ marginLeft: 'auto' }} variant='contained' size='small'>Yangi Eslatma</Button>
+                <Button startIcon={<IconifyIcon icon='ic:baseline-add' />} onClick={() => (setOpen(true), getSMSTemps())} sx={{ marginLeft: 'auto' }} variant='contained' size='small'>Yangi Eslatma</Button>
             </Box>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                 {
@@ -86,27 +86,52 @@ const UserSmsList = () => {
                 aria-describedby='user-view-edit-description'
             >
                 <DialogTitle id='user-view-edit' sx={{ textAlign: 'center', fontSize: '1.5rem !important' }}>
-                    Yangi eslatma qo'shing
+                    Xabar yuborish (sms)
                 </DialogTitle>
                 <DialogContent>
-                    <Form valueTypes='json' sx={{ marginTop: 10 }} onSubmit={handleAddNote} id='edit-employee-pay-ddas'>
-                        <FormControl fullWidth>
-                            <TextField
-                                rows={4}
-                                multiline
-                                label="yozing..."
-                                name='description'
-                                defaultValue={''}
-                            />
+                    <Form setError={setError} valueTypes='json' sx={{ marginTop: 10 }} onSubmit={handleAddNote} id='dsdsdsds'>
+                        <FormControl sx={{ maxWidth: '100%', mb: 3 }} fullWidth>
+                            <InputLabel size='small' id='demo-simple-select-outlined-label'>Shablonlar</InputLabel>
+                            <Select
+                                size='small'
+                                label="Shablonlar"
+                                defaultValue=''
+                                id='demo-simple-select-outlined'
+                                labelId='demo-simple-select-outlined-label'
+                                onChange={(e) => setSMS(e.target.value)}
+                            >
+                                {
+                                    smsTemps.map((el: any) => (
+                                        <MenuItem value={el.description} sx={{ wordBreak: 'break-word' }}>
+                                            <span style={{ maxWidth: '250px', wordBreak: 'break-word', fontSize: '10px' }}>
+                                                {el.description}
+                                            </span>
+                                        </MenuItem>
+                                    ))
+                                }
+                            </Select>
                         </FormControl>
 
+                        <FormControl fullWidth>
+                            <TextField
+                                error={error?.message}
+                                rows={4}
+                                multiline
+                                label="Xabar"
+                                name='message'
+                                defaultValue={''}
+                                value={sms}
+                                onChange={(e) => setSMS(e.target.value)}
+                            />
+                            <FormHelperText error={error.message}>{error.message?.message}</FormHelperText>
+                        </FormControl>
                         <DialogActions sx={{ justifyContent: 'center' }}>
-                            <LoadingButton loading={loading} type='submit' variant='contained' sx={{ mr: 1 }}>
-                                {t("Saqlash")}
-                            </LoadingButton>
                             <Button variant='outlined' type='button' color='secondary' onClick={() => setOpen(false)}>
                                 {t("Bekor Qilish")}
                             </Button>
+                            <LoadingButton loading={loading} type='submit' variant='contained' sx={{ mr: 1 }}>
+                                {t("Yuborish")}
+                            </LoadingButton>
                         </DialogActions>
                     </Form>
                 </DialogContent>
