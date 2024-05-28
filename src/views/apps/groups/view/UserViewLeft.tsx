@@ -261,7 +261,7 @@ const UserViewLeft = ({ userData, reRender }: { userData?: any, reRender: any })
               <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', alignItems: 'center' }}>
                 <Typography>Yo'nalishi:</Typography>
                 {
-                  !(user?.role.length === 1 && user?.role.includes('teacher') )? (
+                  !(user?.role.length === 1 && user?.role.includes('teacher')) ? (
                     <Link href={`/settings/office/courses/`}>
                       <CustomChip
                         skin='light'

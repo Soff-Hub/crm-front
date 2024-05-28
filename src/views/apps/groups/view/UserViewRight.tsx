@@ -1,5 +1,5 @@
 // ** React Imports
-import { SyntheticEvent, useState, useEffect } from 'react'
+import { SyntheticEvent, useState, useEffect, useContext } from 'react'
 
 // ** Next Import
 import { useRouter } from 'next/router'
@@ -27,6 +27,7 @@ import UserViewSecurity from 'src/views/apps/groups/view/UserViewSecurity'
 import GroupExamsList from './GroupExamsList'
 import { useTranslation } from 'react-i18next'
 import GroupSalaries from './GroupSalaries'
+import { AuthContext } from 'src/context/AuthContext'
 
 interface Props {
   tab: string
@@ -48,6 +49,7 @@ const UserViewRight = ({ tab, invoiceData }: Props) => {
   const [activeTab, setActiveTab] = useState<string>(tab)
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const { t } = useTranslation()
+  const { user } = useContext(AuthContext)
 
   // ** Hooks
   const router = useRouter()
@@ -89,10 +91,10 @@ const UserViewRight = ({ tab, invoiceData }: Props) => {
         sx={{ borderBottom: theme => `1px solid ${theme.palette.divider}` }}
       >
         <Tab value='security' label='Davomat' icon={<Icon icon='mdi:account-clock' />} />
-        <Tab value='notes' label='Eslatmalar' icon={<Icon icon='mdi:notebook-check-outline' />} />
+        {!(user?.role.length === 1 && user?.role.includes('teacher')) && <Tab value='notes' label='Eslatmalar' icon={<Icon icon='mdi:notebook-check-outline' />} />}
         <Tab value='exams' label='Imtixon' icon={<Icon icon='mdi:puzzle-check-outline' />} />
-        <Tab value='discount' label='Chegirmalar' icon={<Icon icon='mdi:sale' />} />
-        <Tab value='money' label="Maosh" icon={<Icon icon='mdi:money' />} />
+        {!(user?.role.length === 1 && user?.role.includes('teacher')) && <Tab value='discount' label='Chegirmalar' icon={<Icon icon='mdi:sale' />} />}
+        {!(user?.role.length === 1 && user?.role.includes('teacher')) && <Tab value='money' label="Maosh" icon={<Icon icon='mdi:money' />} />}
       </TabList>
       <Box sx={{ mt: 2 }}>
         {isLoading ? (
