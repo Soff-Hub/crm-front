@@ -14,13 +14,10 @@ import ApexChartWrapper from 'src/@core/styles/libs/react-apexcharts'
 import { Box, Button, Dialog, DialogContent, DialogTitle, FormControl, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material'
 import GroupFinanceTable from 'src/views/apps/finance/GroupTable'
 import { formatCurrency } from 'src/@core/utils/format-currency'
-import CardStatsVertical from 'src/@core/components/card-statistics/card-stats-vertical'
 import IconifyIcon from 'src/@core/components/icon'
 import { useRouter } from 'next/router'
-import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { forwardRef, useEffect, useRef, useState } from 'react'
-import { addDays, format } from 'date-fns'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { customTableDataProps } from 'src/@core/components/lid-table'
 import DataTable from 'src/@core/components/table'
@@ -50,10 +47,8 @@ const CardStatistics = () => {
     const { push } = useRouter()
     const { t } = useTranslation()
 
-    const [startDateRange, setStartDateRange] = useState<DateType>(new Date());
-    const [endDateRange, setEndDateRange] = useState<DateType>(addDays(new Date(), 45));
     const [nameVal, setNameVal] = useState<string>('');
-    const [open, setOpen] = useState<'create' | 'add-salary' | 'edit-salary' | 'delete-salary' | null>(null);
+    const [open, setOpen] = useState<'create' | 'add-salary' | 'edit-salary' | 'delete-salary' | 'approve-salary' | null>(null);
     const [editId, setEditId] = useState<any>(null);
     const [label, setLabel] = useState<AllNumbersType>({
         last_month_benefit: '0',
@@ -75,31 +70,9 @@ const CardStatistics = () => {
     const [employeeSalary, setEmployeeSalary] = useState<any>([]);
     const [employeePays, setEmployeePays] = useState<any>([]);
     const [employees, setEmployees] = useState<any>([])
+    const [withdraw, setWithdraw] = useState<any>([])
 
 
-
-    const handleOnChangeRange = (dates: any) => {
-        const [start, end] = dates;
-        setStartDateRange(start);
-        setEndDateRange(end);
-    };
-
-    const CustomInput = forwardRef((props: PickerProps, ref) => {
-        const startDate = format(props?.start || new Date(), 'MM/dd/yyyy')
-        const endDate = props.end !== null ? format(props.end, 'MM/dd/yyyy') : '';
-
-        const value = `${startDate}${endDate !== '' ? '-' + endDate : ''}`;
-
-        return <TextField size='small' inputRef={ref} label={props.label || ''} {...props} value={value} />;
-    });
-
-    const CustomInputDate = forwardRef((props: PickerProps, ref) => {
-        const startDate = format(props?.start || new Date(), 'MM/dd/yyyy')
-
-        const value = `${startDate}`;
-
-        return <TextField size='small' inputRef={ref} label={props.label || ''} {...props} value={value} />;
-    });
 
     const apiData: CardStatsType = {
         statsHorizontal: [
@@ -149,23 +122,6 @@ const CardStatistics = () => {
         statsCharacter: []
     }
 
-    const [firstClickTime, setFirstClickTime] = useState<any>(null);
-    const secondClickTimeRef = useRef(null);
-
-    const handleEditable = () => {
-        if (!firstClickTime) {
-            setFirstClickTime(Date.now());
-        } else {
-            const secondClickTime = Date.now();
-            const timeDifference = secondClickTime - firstClickTime;
-            if (timeDifference < 300) {
-                console.log('Biror matn chiqarish');
-            }
-            setFirstClickTime(null);
-        }
-    };
-
-
     const employeePaycol: customTableDataProps[] = [
         {
             xs: 0.03,
@@ -205,6 +161,110 @@ const CardStatistics = () => {
             }} icon={'fluent:delete-20-regular'} />
         },
     ]
+
+    const withdrawCol: customTableDataProps[] = [
+        {
+            xs: 0.03,
+            title: "#",
+            dataIndex: "index"
+        },
+        {
+            xs: 0.2,
+            title: t("O'qituvchi"),
+            dataIndex: "data",
+            render: (data: any) => data.teacher_name
+        },
+        {
+            xs: 0.2,
+            title: t("Guruh"),
+            dataIndex: "data",
+            render: (data: any) => data.group_name
+        },
+        {
+            xs: 0.2,
+            title: t("Talabalar soni"),
+            dataIndex: "students_count",
+        },
+        {
+            xs: 0.2,
+            title: t("Jarimalar soni"),
+            dataIndex: 'fines_count'
+        },
+        {
+            xs: 0.2,
+            title: t("Status"),
+            dataIndex: 'status',
+            render: (status) => status === 'moderation' ? "Tekshirilmoqda" : status === 'frozen' ? "Muzlatilgan" : "Tasdiqlangan"
+        },
+        {
+            xs: 0.2,
+            title: t("Tasdiqlash"),
+            dataIndex: "id",
+            render: (id) => {
+                const finded = withdraw.find((el: any) => el.id === id)
+                if (finded?.status === 'moderation') {
+                    return (
+                        <Box onClick={() => {
+                            const find = withdraw.find((el: any) => el.id === id)
+                            setEditId(find)
+                            setOpen('approve-salary')
+                        }} sx={{ display: 'flex', gap: '10px' }}>
+                            <span>Tasdiqlash</span>
+                            <IconifyIcon icon={'mingcute:edit-line'} />
+                        </Box>
+                    )
+                }
+                else {
+                    return (
+                        <Box sx={{ display: 'flex', gap: '10px', color: 'red' }}>
+                            Imkonsiz
+                        </Box>
+                    )
+                }
+            }
+        },
+        {
+            xs: 0.1,
+            title: t("Amallar"),
+            dataIndex: "id",
+            render: (id) => {
+                const finded = withdraw.find((el: any) => el.id === id)
+                if (finded?.status === 'moderation') {
+                    return (
+                        <Box sx={{ display: 'flex', gap: '10px' }}>
+
+                            <IconifyIcon onClick={() => {
+                                const find = withdraw.find((el: any) => el.id === id)
+                                setEditId(find)
+                                setOpen('edit-salary')
+                            }} icon={'mingcute:edit-line'} />
+
+                            <IconifyIcon onClick={() => {
+                                const find = withdraw.find((el: any) => el.id === id)
+                                setEditId(find)
+                                setOpen('delete-salary')
+                            }} icon={'fluent:delete-20-regular'} />
+
+                        </Box>
+                    )
+                } else if (finded.status === 'approved') {
+                    return (
+                        <Box sx={{ display: 'flex', gap: '10px', color: 'red' }}>
+                            Imkonsiz
+                        </Box>
+                    )
+                }
+                else {
+                    return (
+                        <Box sx={{ display: 'flex', gap: '10px', color: 'red' }}>
+                            Imkonsiz
+                        </Box>
+                    )
+                }
+            }
+        },
+    ]
+
 
     const getAllNumbers = async () => {
         const resp = await api.get(`common/finance/dashboard/`)
@@ -273,6 +333,11 @@ const CardStatistics = () => {
         setEmployeePays(resp.data.results)
     }
 
+    const getWithdrawSalary = async () => {
+        const resp = await api.get(`common/withdraw-salary/list/`)
+        setWithdraw(resp.data)
+    }
+
 
     const getEmployees = async () => {
         const resp = await api.get(`common/employees/`)
@@ -299,72 +364,48 @@ const CardStatistics = () => {
     const updateSalary = async () => {
         setLoading(true)
         try {
-            await api.patch(`/common/employee-salary/update/${editId.id}/`, {
-                date: salaryDate,
-                amount: salaryAmount
+            await api.patch(`/common/withdraw-salary/${editId.id}/`, {
+                students_count: salaryDate,
+                fines_count: salaryAmount
             })
             setOpen(null)
-            getEmployeSalary()
+            getWithdrawSalary()
         } catch (err) {
             console.log(err)
         } finally {
             setLoading(false)
         }
     }
+
+    const approveSalary = async () => {
+        setLoading(true)
+        try {
+            await api.post(`/common/withdraw-salary/confirmation/`, {
+                withdraw: editId.id
+            })
+            setOpen(null)
+            getWithdrawSalary()
+        } catch (err) {
+            console.log(err)
+        } finally {
+            setLoading(false)
+        }
+    }
+
 
     const deleteSalary = async () => {
         setLoading(true)
         try {
-            await api.delete(`/common/employee-salary/destroy/${editId.id}/`)
+            await api.delete(`/common/withdraw-salary/${editId.id}/`)
             setOpen(null)
             setEditId(null)
-            getEmployeSalary()
+            getWithdrawSalary()
         } catch (err) {
             console.log(err)
         } finally {
             setLoading(false)
         }
     }
-
-    const salaryCol: customTableDataProps[] = [
-        {
-            xs: 0.03,
-            title: "#",
-            dataIndex: "index"
-        },
-        {
-            xs: 0.4,
-            title: t("first_name"),
-            dataIndex: "employee_name"
-        },
-        {
-            xs: 0.4,
-            title: t("Maoshi"),
-            dataIndex: "amount",
-            render: (amount) => `${formatCurrency(amount)} so'm`
-        },
-        {
-            xs: 0.1,
-            title: t("Tahrir"),
-            dataIndex: "id",
-            render: (id) => <IconifyIcon onClick={() => {
-                const find = employeeSalary.find((el: any) => el.id === id)
-                getEmployees()
-                setEditId(find)
-                setOpen('edit-salary')
-            }} icon={'basil:edit-outline'} />
-        },
-        {
-            xs: 0.1,
-            title: t("O'chir"),
-            dataIndex: "id",
-            render: (id) => <IconifyIcon onClick={() => {
-                const find = employeeSalary.find((el: any) => el.id === id)
-                setEditId(find)
-                setOpen('delete-salary')
-            }} icon={'fluent:delete-20-regular'} />
-        },
-    ]
 
     const handleRow = (id: string) => {
         push(`/finance/salaries/${id}`)
@@ -376,6 +417,7 @@ const CardStatistics = () => {
         getGroupPays(`${new Date().getFullYear()}-${Number(new Date().getMonth()) + 1 < 10 ? "0" + (1 + new Date().getMonth()) : new Date().getMonth() + 1}`)
         getEmployeSalary()
         getEmployePays()
+        getWithdrawSalary()
     }, [])
 
 
@@ -424,29 +466,15 @@ const CardStatistics = () => {
                         </Grid>
                     </Grid>
 
-                    {/* <Grid item xs={12}>
-                        <Box sx={{ display: 'flex', gap: '10px' }}>
-                            <Box sx={{ display: 'flex', gap: '10px', flexGrow: 1 }}>
-                                <Typography sx={{ fontSize: '20px', flexGrow: 1 }}>Xodimlar maoshi</Typography>
-                                <Button variant='contained' onClick={() => setOpen('create')}>+</Button>
-                            </Box>
-                            <Box>
-                                <TextField size='small' type='month' onChange={(e) => console.log(e.target.value)} />
-                            </Box>
-                        </Box>
-                    </Grid> */}
                     <div id='chiqimlar'></div>
 
-                    <Grid item xs={12} md={6} >
-                        <Box sx={{ display: 'flex', gap: '10px' }}>
-                            <Box sx={{ display: 'flex', gap: '10px', flexGrow: 1 }}>
-                                <Typography sx={{ fontSize: '20px', flexGrow: 1 }}>Xodimlar doimiy maoshi</Typography>
-                                <Button variant='contained' onClick={() => (getEmployees(), setOpen('add-salary'))}>+</Button>
-                            </Box>
+                    <Grid item xs={12} md={12} >
+                        <Box sx={{ display: 'flex', gap: '10px', flexGrow: 1 }}>
+                            <Typography sx={{ fontSize: '20px', flexGrow: 1 }}>Tekshirish uchun maoshlar</Typography>
                         </Box>
-                        <DataTable maxWidth='100%' minWidth='0' columns={salaryCol} rowClick={handleRow} data={employeeSalary} />
+                        <DataTable maxWidth='100%' minWidth='0' columns={withdrawCol} rowClick={handleRow} data={withdraw} />
                     </Grid>
-                    <Grid item xs={12} md={6} >
+                    <Grid item xs={12} md={12} >
                         <Box sx={{ display: 'flex', gap: '10px', flexGrow: 1 }}>
                             <Typography sx={{ fontSize: '20px', flexGrow: 1 }}>Oxirgi oydagi to'lovlar</Typography>
                         </Box>
@@ -503,9 +531,19 @@ const CardStatistics = () => {
                     <IconifyIcon icon={'mdi:close'} onClick={() => (setOpen(null), setEditId(null))} />
                 </DialogTitle>
                 {editId && <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                    <TextField defaultValue={editId.amount} required autoComplete='off' size='small' placeholder={t("Summa")} type='number' fullWidth onChange={(e) => setSalaryAmount(e.target.value)} />
-                    <TextField defaultValue={editId.date} required autoComplete='off' size='small' placeholder={t("Sana")} type='date' fullWidth onChange={(e) => setSalaryDate(e.target.value)} />
+                    <TextField label="Jarimalar soni" defaultValue={editId.fines_count} required autoComplete='off' size='small' fullWidth onChange={(e) => setSalaryAmount(e.target.value)} style={{ margin: '15px 0' }} />
+                    <TextField label="Talablar soni" defaultValue={editId.students_count} required autoComplete='off' size='small' fullWidth onChange={(e) => setSalaryDate(e.target.value)} />
                     <LoadingButton loading={loading} onClick={() => updateSalary()} variant='contained'>{t("Saqlash")}</LoadingButton>
+                </DialogContent>}
+            </Dialog>
+
+            <Dialog open={open === 'approve-salary'} onClose={() => (setOpen(null), setEditId(null))}>
+                <DialogTitle sx={{ display: 'flex', alignItems: 'center', minWidth: '300px', justifyContent: 'flex-end' }}>
+                    <IconifyIcon icon={'mdi:close'} onClick={() => (setOpen(null), setEditId(null))} />
+                </DialogTitle>
+                {editId && <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                    <Typography marginBottom={'40px'} fontSize={'20px'}>Xodim maoshini tasdiqlamoqchimiz?</Typography>
+                    <LoadingButton loading={loading} onClick={() => approveSalary()} variant='contained'>{t("Saqlash")}</LoadingButton>
                 </DialogContent>}
             </Dialog>
 
