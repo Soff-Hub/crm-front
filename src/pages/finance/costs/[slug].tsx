@@ -2,7 +2,7 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import { Box, Button, Dialog, DialogContent, DialogTitle, TextField, Typography, styled } from '@mui/material';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next';
 import IconifyIcon from 'src/@core/components/icon';
 import useResponsive from 'src/@core/hooks/useResponsive';
@@ -57,6 +57,10 @@ function Slug(props: { slug: string }) {
     const [name, setName] = useState<string>('');
     const [allAmount, setAllAmount] = useState<string>('');
     const [deleteId, setDeleteId] = useState<string>('');
+
+    const todayDate: any = new Date().getDate(); // Bugungi kunni olish
+    const scrollContainerRef: any = useRef(null);
+    const dateRefs: any = useRef([]);
 
     const handleOnChangeRange = (dates: any) => {
         setToday(dates.target.value)
@@ -115,6 +119,13 @@ function Slug(props: { slug: string }) {
     }, [today])
 
 
+    useEffect(() => {
+        if (scrollContainerRef.current && dateRefs.current[todayDate - 1]) {
+            dateRefs.current[todayDate - 1].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        }
+    }, [todayDate, data2]);
+
+
     return (
         <Box>
             <Box className='header'>
@@ -134,7 +145,9 @@ function Slug(props: { slug: string }) {
             <Box sx={{ display: 'flex', alignItems: isMobile ? 'center' : 'flex-start', gap: '15px', flexDirection: isMobile ? 'column' : 'row', overflowX: 'scroll' }}>
                 {
                     data2.map((item, i: number) => (
-                        <Column key={i} sx={{ minWidth: isMobile ? '100%' : '220px', display: 'flex', flexDirection: 'column', gap: '12px', p: '5px' }}>
+                        <Column
+                            ref={item => dateRefs.current[i] = item}
+                            sx={{ minWidth: isMobile ? '100%' : '220px', display: 'flex', flexDirection: 'column', gap: '12px', p: '5px' }}>
                             <Th textAlign={'center'}>
                                 {Number(item.date?.split('-')?.[2])}
                             </Th>
