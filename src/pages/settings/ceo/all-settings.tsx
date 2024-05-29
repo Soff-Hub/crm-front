@@ -29,7 +29,7 @@ export default function AllSettings() {
     const [editable, setEditable] = useState<null | 'title' | 'logo' | 'start-time' | 'end-time'>(null)
     const [createble, setCreatable] = useState<null | 'branch' | 'payment-type'>(null)
     const [id, setId] = useState<null | { key: 'branch' | 'payment-type', id: any }>(null)
-    const [deleteId, setDeleteId] = useState<null | { open: null | 'payment-type', id: any }>(null)
+    const [deleteId, setDeleteId] = useState<null | { open: null | 'payment-type' | 'branch', id: any }>(null)
     const [name, setName] = useState<string>('')
     const [loading, setLoading] = useState<null | 'create' | 'delete'>(null)
 
@@ -57,6 +57,35 @@ export default function AllSettings() {
         }
     }
 
+    const createBranch = async () => {
+        setLoading('create')
+        try {
+            await api.post(`/common/branch/create`, { name })
+            setTimeout(() => {
+                setLoading(null)
+                setCreatable(null)
+                getBranches()
+            }, 400);
+        } catch (err) {
+            setLoading(null)
+            console.log(err)
+        }
+    }
+
+    const updateBranch = async () => {
+        setLoading('create')
+        try {
+            await api.patch(`/common/branch/update/${id?.id}`, { name })
+            setCreatable(null)
+            setLoading(null)
+            getBranches()
+            setId(null)
+        } catch (err) {
+            setLoading(null)
+            console.log(err)
+        }
+    }
+
     // const getSettings = async () => {
     //     try {
     //         const resp = await api.get('common/settings/list/')
@@ -73,6 +102,7 @@ export default function AllSettings() {
             const resp = await api.patch('common/settings/update/', formData)
             dispatch(setCompanyInfo(resp.data))
             setEditable(null)
+            setId(null)
         } catch (err) {
             console.log(err)
         }
@@ -134,19 +164,19 @@ export default function AllSettings() {
                                 <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }} key={branch.id}>
                                     {
                                         id?.id === branch.id && id?.key === 'branch' ? (
-                                            <TextField size='small' focused defaultValue={branch.name} onBlur={(e) => console.log(e.target.value)} />
+                                            <TextField size='small' focused defaultValue={branch.name} onChange={(e) => setName(e.target.value)} onBlur={updateBranch} />
                                         ) : (
                                             <TextField size='small' value={branch.name} />
                                         )
                                     }
                                     {
                                         id?.id === branch.id && id?.key === 'branch' ? (
-                                            <IconifyIcon icon={'ic:baseline-check'} style={{ cursor: 'pointer' }} />
+                                            <IconifyIcon icon={'ic:baseline-check'} style={{ cursor: 'pointer' }} onClick={updateBranch} />
                                         ) : (
                                             <IconifyIcon icon={'basil:edit-outline'} style={{ cursor: 'pointer' }} onClick={() => setId({ id: branch.id, key: 'branch' })} />
                                         )
                                     }
-                                    <IconifyIcon icon={'fluent:delete-20-regular'} style={{ cursor: 'pointer' }} />
+                                    <IconifyIcon icon={'fluent:delete-20-regular'} style={{ cursor: 'pointer' }} onClick={() => setDeleteId({ open: 'branch', id: branch.id })} />
                                 </Box>
                             ))
                         }
@@ -154,7 +184,7 @@ export default function AllSettings() {
                             createble === 'branch' && (
                                 <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                                     <TextField size='small' placeholder="Yangi filial" onChange={(e) => setName(e.target.value)} />
-                                    <IconifyIcon icon={loading === 'create' ? 'line-md:loading-loop' : 'ic:baseline-check'} style={{ cursor: 'pointer' }} onClick={createPaymentType} />
+                                    <IconifyIcon icon={loading === 'create' ? 'line-md:loading-loop' : 'ic:baseline-check'} style={{ cursor: 'pointer' }} onClick={createBranch} />
                                     <IconifyIcon icon={'ic:outline-close'} style={{ cursor: 'pointer' }} onClick={() => setCreatable(null)} />
                                 </Box>
                             )
@@ -271,6 +301,26 @@ export default function AllSettings() {
                                 await updatePaymentMethod(deleteId?.id, { is_active: false })
                                 setDeleteId(null)
                                 setLoading(null)
+                            } catch {
+                                setLoading(null)
+                            }
+                        }}>Ok</LoadingButton>
+                    </Box>
+                </DialogContent>
+            </Dialog>
+
+            <Dialog open={deleteId?.open === 'branch'} onClose={() => setDeleteId(null)}>
+                <DialogContent>
+                    <Typography sx={{ fontSize: '20px', margin: '10px 10px 20px' }}>O'chirishni tasdiqlang</Typography>
+                    <Box sx={{ display: 'flex', gap: 1 }}>
+                        <Button variant='outlined' color='success' onClick={() => setDeleteId(null)}>Bekor qilish</Button>
+                        <LoadingButton loading={loading === 'delete'} variant='contained' color='error' onClick={async () => {
+                            setLoading('delete')
+                            try {
+                                await api.delete(`common/branch/delete/${deleteId?.id}`)
+                                setDeleteId(null)
+                                setLoading(null)
+                                getBranches()
                             } catch {
                                 setLoading(null)
                             }
