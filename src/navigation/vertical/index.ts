@@ -19,6 +19,22 @@ export const TeacherNavigation = (t: any): any => {
   ]
 }
 
+export const CPanelNavigation = (t: any): any => {
+
+  return [
+    {
+      title: t("CPanel"),
+      icon: 'mdi:home-outline',
+      path: '/c-panel',
+    },
+    {
+      title: t("Sozlamalar"),
+      icon: 'mdi:receipt-text-edit-outline',
+      path: '/c-panel/settings'
+    }
+  ]
+}
+
 const Navigation = (t: any): VerticalNavItemsType => {
 
   const { user } = useContext(AuthContext)
