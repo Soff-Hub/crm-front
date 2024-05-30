@@ -48,7 +48,7 @@ const CardStatistics = () => {
     const { t } = useTranslation()
 
     const [nameVal, setNameVal] = useState<string>('');
-    const [open, setOpen] = useState<'create' | 'add-salary' | 'edit-salary' | 'delete-salary' | 'approve-salary' | null>(null);
+    const [open, setOpen] = useState<'create' | 'add-salary' | 'edit-salary' | 'delete-salary' | 'approve-salary' | 'update-cash' | 'delete-cash' | 'approve-cash' | null>(null);
     const [editId, setEditId] = useState<any>(null);
     const [label, setLabel] = useState<AllNumbersType>({
         last_month_benefit: '0',
@@ -60,6 +60,7 @@ const CardStatistics = () => {
     const [salaryAmount, setSalaryAmount] = useState<any>('');
     const [salaryUser, setSalaryUser] = useState<any>('');
     const [salaryDate, setSalaryDate] = useState<any>(today);
+    const [edit, setEdit] = useState<'amount' | 'status' | null>(null)
 
 
     const [graphData, setGraphData] = useState<any>(null);
@@ -71,6 +72,8 @@ const CardStatistics = () => {
     const [employeePays, setEmployeePays] = useState<any>([]);
     const [employees, setEmployees] = useState<any>([])
     const [withdraw, setWithdraw] = useState<any>([])
+
+    const [isHover, setIsHover] = useState<null | string>(null)
 
 
 
@@ -129,25 +132,53 @@ const CardStatistics = () => {
             dataIndex: "index"
         },
         {
-            xs: 0.4,
+            xs: 0.2,
             title: t("first_name"),
             dataIndex: "employee_name"
         },
         {
-            xs: 0.4,
+            xs: 0.2,
+            title: t("Sana"),
+            dataIndex: "employee_name"
+        },
+        {
+            xs: 0.2,
             title: t("Maoshi"),
             dataIndex: "amount",
             render: (amount) => `${formatCurrency(amount)} so'm`
+        },
+        {
+            xs: 0.2,
+            title: t("Holati"),
+            dataIndex: "status",
+            render: (status) => status === 'moderation' ? "To'lanmagan" : "To'langan"
+        },
+        {
+            xs: 0.1,
+            title: t("To'lash"),
+            dataIndex: "id",
+            render: (id) => <IconifyIcon onClick={() => {
+                const find = employeePays.find((el: any) => el.id === id)
+                if (find.status === 'moderation') {
+                    setEditId(find)
+                    setOpen('approve-cash')
+                } else {
+                    <span style={{ color: 'red' }}>Imkonsiz</span>
+                }
+            }} icon={'mingcute:card-pay-line'} />
         },
         {
             xs: 0.1,
             title: t("Tahrir"),
             dataIndex: "id",
             render: (id) => <IconifyIcon onClick={() => {
-                const find = employeeSalary.find((el: any) => el.id === id)
-                getEmployees()
-                setEditId(find)
-                setOpen('edit-salary')
+                const find = employeePays.find((el: any) => el.id === id)
+                if (find.status === 'moderation') {
+                    setEditId(find)
+                    setOpen('update-cash')
+                } else {
+                    <span style={{ color: 'red' }}>Imkonsiz</span>
+                }
             }} icon={'basil:edit-outline'} />
         },
         {
@@ -155,9 +186,9 @@ const CardStatistics = () => {
             title: t("O'chir"),
             dataIndex: "id",
             render: (id) => <IconifyIcon onClick={() => {
-                const find = employeeSalary.find((el: any) => el.id === id)
+                const find = employeePays.find((el: any) => el.id === id)
                 setEditId(find)
-                setOpen('delete-salary')
+                setOpen('delete-cash')
             }} icon={'fluent:delete-20-regular'} />
         },
     ]
@@ -407,6 +438,86 @@ const CardStatistics = () => {
         }
     }
 
+
+
+
+    const updateMonthly = async () => {
+        setLoading(true)
+        try {
+            await api.patch(`/common/employee-salary/update/${editId.id}/`, {
+                amount: salaryAmount
+            })
+            setEdit(null)
+            getEmployePays()
+        } catch (err) {
+            console.log(err)
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    const approveMonthly = async () => {
+        setLoading(true)
+        try {
+            await api.post(`/common/withdraw-salary/confirmation/`, {
+                withdraw: editId.id
+            })
+            setEdit(null)
+            getEmployePays()
+        } catch (err) {
+            console.log(err)
+        } finally {
+            setLoading(false)
+        }
+    }
+
+
+    const updateCash = async () => {
+        setLoading(true)
+        try {
+            await api.patch(`/common/employee-salary/update/${editId.id}/`, {
+                amount: salaryAmount
+            })
+            setOpen(null)
+            getEmployePays()
+        } catch (err) {
+            console.log(err)
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    const approveCash = async () => {
+        setLoading(true)
+        try {
+            await api.patch(`/common/employee-salary/${editId.id}/`, {
+                students_count: salaryDate,
+                fines_count: salaryAmount
+            })
+            setOpen(null)
+            getEmployePays()
+        } catch (err) {
+            console.log(err)
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    const deleteCash = async () => {
+        setLoading(true)
+        try {
+            await api.delete(`/common/withdraw-salary/delete/${editId.id}/`)
+            setOpen(null)
+            getEmployePays()
+        } catch (err) {
+            console.log(err)
+        } finally {
+            setLoading(false)
+        }
+    }
+
+
+
     const handleRow = (id: string) => {
         push(`/finance/salaries/${id}`)
     }
@@ -458,8 +569,11 @@ const CardStatistics = () => {
                         <Grid container spacing={6} mb={10}>
                             {
                                 categryData.map((_: any, index: any) => (
-                                    <Grid item xs={12} sm={6} lg={2} key={index} onClick={() => push(`/finance/costs/${_.id}`)} sx={{ cursor: 'pointer' }}>
-                                        <CardFinanceCategory title={_.name} stats={_.total_expense} icon={<IconifyIcon fontSize={"3rem"} icon={''} />} color={'warning'} />
+                                    <Grid item xs={12} sm={6} lg={2} key={index} onMouseEnter={() => setIsHover(_.id)} onMouseLeave={() => setIsHover(null)} sx={{ position: 'relative' }}>
+                                        <Box onClick={() => push(`/finance/costs/${_.id}`)} sx={{ cursor: 'pointer' }}>
+                                            <CardFinanceCategory title={_.name} stats={_.total_expense} icon={<IconifyIcon fontSize={"3rem"} icon={''} />} color={'warning'} />
+                                            {isHover === _.id && <IconifyIcon style={{ position: 'absolute', zIndex: 999, bottom: 0, right: 0 }} icon={'fluent:delete-20-regular'} />}
+                                        </Box>
                                     </Grid>
                                 ))
                             }
@@ -474,11 +588,12 @@ const CardStatistics = () => {
                         </Box>
                         <DataTable maxWidth='100%' minWidth='0' columns={withdrawCol} rowClick={handleRow} data={withdraw} />
                     </Grid>
+                    <Box sx={{ margin: '20px' }}></Box>
                     <Grid item xs={12} md={12} >
                         <Box sx={{ display: 'flex', gap: '10px', flexGrow: 1 }}>
                             <Typography sx={{ fontSize: '20px', flexGrow: 1 }}>Oxirgi oydagi to'lovlar</Typography>
                         </Box>
-                        <DataTable maxWidth='100%' minWidth='0' columns={employeePaycol} rowClick={handleRow} data={employeePays} />
+                        <DataTable maxWidth='100%' minWidth='0' columns={employeePaycol} data={employeePays} />
                     </Grid>
                 </Grid>
             </KeenSliderWrapper>
@@ -537,6 +652,60 @@ const CardStatistics = () => {
                 </DialogContent>}
             </Dialog>
 
+            <Dialog open={open === 'update-cash'} onClose={() => (setOpen(null), setEditId(null))}>
+                <DialogTitle sx={{ display: 'flex', alignItems: 'center', minWidth: '300px', justifyContent: 'space-between' }}>
+                    <Typography>Xodim oylik maosh tahrirlash</Typography>
+                    <IconifyIcon icon={'mdi:close'} onClick={() => (setOpen(null), setEditId(null))} />
+                </DialogTitle>
+                {editId && <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                    <TextField label="Summa" defaultValue={editId.amount} required autoComplete='off' size='small' fullWidth onChange={(e) => setSalaryAmount(e.target.value)} style={{ margin: '15px 0' }} />
+                    <LoadingButton loading={loading} onClick={() => updateCash()} variant='contained'>{t("Saqlash")}</LoadingButton>
+                </DialogContent>}
+            </Dialog>
+
+            <Dialog open={open === 'delete-cash'} onClose={() => setOpen(null)}>
+                <DialogTitle sx={{ display: 'flex', alignItems: 'center', minWidth: '300px', justifyContent: 'space-between' }}>
+                    <Typography></Typography>
+                    <IconifyIcon icon={'mdi:close'} onClick={() => setOpen(null)} />
+                </DialogTitle>
+                {<DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                    <Typography>Xodimni maoshini olib tashlamoqchimisiz?</Typography>
+                    <Box sx={{ display: 'flex', justifyContent: 'center', gap: 4, mt: 10 }}>
+                        <LoadingButton onClick={() => (setOpen(null), setEditId(null))} variant='outlined'>{t("Bekor qilish")}</LoadingButton>
+                        <LoadingButton loading={loading} onClick={() => deleteCash()} color='error' variant='contained'>{t("O'chirish")}</LoadingButton>
+                    </Box>
+                </DialogContent>}
+            </Dialog>
+
+            <Dialog open={open === 'approve-cash'} onClose={() => setOpen(null)}>
+                <DialogTitle sx={{ display: 'flex', alignItems: 'center', minWidth: '300px', justifyContent: 'space-between' }}>
+                    <Typography></Typography>
+                    <IconifyIcon icon={'mdi:close'} onClick={() => setOpen(null)} />
+                </DialogTitle>
+                {<DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                    <Typography>Xodimni maoshini olib to'lash</Typography>
+                    <FormControl fullWidth sx={{ mt: '10px' }}>
+                        <InputLabel size='small' id='user-view-language-label'>Chiqim yozib qo'yish</InputLabel>
+                        <Select
+                            required
+                            size='small'
+                            label="Chiqim yozib qo'yish"
+                            id='demo-simple-select-outlined'
+                            labelId='demo-simple-select-outlined-label'
+                            onChange={(e) => setSalaryUser(e.target.value)}
+                        >
+                            {
+                                categryData.map((el: any) => <MenuItem key={el.id} value={el.id}>{el.name}</MenuItem>)
+                            }
+                        </Select>
+                    </FormControl>
+                    <Box sx={{ display: 'flex', justifyContent: 'center', gap: 4, mt: 5 }}>
+                        <LoadingButton onClick={() => (setOpen(null), setEditId(null))} variant='outlined'>{t("Bekor qilish")}</LoadingButton>
+                        <LoadingButton loading={loading} onClick={() => approveCash()} color='success' variant='contained'>{t("Tadiqlash")}</LoadingButton>
+                    </Box>
+                </DialogContent>}
+            </Dialog>
+
             <Dialog open={open === 'approve-salary'} onClose={() => (setOpen(null), setEditId(null))}>
                 <DialogTitle sx={{ display: 'flex', alignItems: 'center', minWidth: '300px', justifyContent: 'flex-end' }}>
                     <IconifyIcon icon={'mdi:close'} onClick={() => (setOpen(null), setEditId(null))} />
@@ -558,6 +727,30 @@ const CardStatistics = () => {
                         <LoadingButton onClick={() => (setOpen(null), setEditId(null))} variant='outlined'>{t("Bekor qilish")}</LoadingButton>
                         <LoadingButton loading={loading} onClick={() => deleteSalary()} color='error' variant='contained'>{t("O'chirish")}</LoadingButton>
                     </Box>
+                </DialogContent>}
+            </Dialog>
+
+
+
+
+            <Dialog open={edit === 'amount'} onClose={() => (setEdit(null), setEditId(null))}>
+                <DialogTitle sx={{ display: 'flex', alignItems: 'center', minWidth: '300px', justifyContent: 'space-between' }}>
+                    <Typography>Xodimga oylik maosh tahrirlash</Typography>
+                    <IconifyIcon icon={'mdi:close'} onClick={() => (setEdit(null), setEditId(null))} />
+                </DialogTitle>
+                {editId && <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                    <TextField label="Summa" defaultValue={editId.amount} required autoComplete='off' size='small' fullWidth onChange={(e) => setSalaryAmount(e.target.value)} style={{ margin: '15px 0' }} />
+                    <LoadingButton loading={loading} onClick={() => updateMonthly()} variant='contained'>{t("Saqlash")}</LoadingButton>
+                </DialogContent>}
+            </Dialog>
+
+            <Dialog open={edit === 'status'} onClose={() => (setEdit(null), setEditId(null))}>
+                <DialogTitle sx={{ display: 'flex', alignItems: 'center', minWidth: '300px', justifyContent: 'flex-end' }}>
+                    <IconifyIcon icon={'mdi:close'} onClick={() => (setEdit(null), setEditId(null))} />
+                </DialogTitle>
+                {editId && <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                    <Typography marginBottom={'40px'} fontSize={'20px'}>Xodim maoshini tasdiqlamoqchimiz?</Typography>
+                    <LoadingButton loading={loading} onClick={() => approveMonthly()} variant='contained'>{t("Saqlash")}</LoadingButton>
                 </DialogContent>}
             </Dialog>
         </ApexChartWrapper>
