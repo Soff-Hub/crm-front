@@ -10,7 +10,7 @@ import useMediaQuery from '@mui/material/useMediaQuery'
 import Layout from 'src/@core/layouts/Layout'
 
 // ** Navigation Imports
-import VerticalNavItems, { TeacherNavigation } from 'src/navigation/vertical'
+import VerticalNavItems, { CPanelNavigation, TeacherNavigation } from 'src/navigation/vertical'
 import HorizontalNavItems from 'src/navigation/horizontal'
 
 // ** Component Import
@@ -25,6 +25,7 @@ import HorizontalAppBarContent from './components/horizontal/AppBarContent'
 import { useSettings } from 'src/@core/hooks/useSettings'
 import { AuthContext } from 'src/context/AuthContext'
 import { useTranslation } from 'react-i18next'
+import { useRouter } from 'next/router'
 
 interface Props {
   children: ReactNode
@@ -39,6 +40,8 @@ const UserLayout = ({ children, contentHeightFixed }: Props) => {
 
   const hidden = useMediaQuery((theme: Theme) => theme.breakpoints.down('lg'))
 
+  const router = useRouter()
+
   if (hidden && settings.layout === 'horizontal') {
     settings.layout = 'vertical'
   }
@@ -51,10 +54,7 @@ const UserLayout = ({ children, contentHeightFixed }: Props) => {
       contentHeightFixed={contentHeightFixed}
       verticalLayoutProps={{
         navMenu: {
-          navItems: user?.role.length === 1 && user?.role.includes('teacher') ? TeacherNavigation(t) : VerticalNavItems(t)
-
-          // Uncomment the below line when using server-side menu in vertical layout and comment the above line
-          // navItems: verticalMenuItems
+          navItems: router.pathname.split('/')?.[1] === 'c-panel' ? CPanelNavigation(t) : user?.role.length === 1 && user?.role.includes('teacher') ? TeacherNavigation(t) : VerticalNavItems(t)
         },
         appBar: {
           content: props => (
@@ -70,7 +70,7 @@ const UserLayout = ({ children, contentHeightFixed }: Props) => {
       {...(settings.layout === 'horizontal' && {
         horizontalLayoutProps: {
           navMenu: {
-            navItems: user?.role.length === 1 && user?.role.includes('teacher') ? TeacherNavigation(t) : HorizontalNavItems(t)
+            navItems: router.pathname.split('/')?.[1] === 'c-panel' ? CPanelNavigation(t) : user?.role.length === 1 && user?.role.includes('teacher') ? TeacherNavigation(t) : HorizontalNavItems(t)
 
             // Uncomment the below line when using server-side menu in horizontal layout and comment the above line
             // navItems: horizontalMenuItems
@@ -82,7 +82,6 @@ const UserLayout = ({ children, contentHeightFixed }: Props) => {
       })}
     >
       {children}
-
     </Layout>
   )
 }

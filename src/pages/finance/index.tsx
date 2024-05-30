@@ -61,6 +61,7 @@ const CardStatistics = () => {
     const [salaryUser, setSalaryUser] = useState<any>('');
     const [salaryDate, setSalaryDate] = useState<any>(today);
     const [edit, setEdit] = useState<'amount' | 'status' | null>(null)
+    const [students_count, setStudentCount] = useState<any>(0)
 
 
     const [graphData, setGraphData] = useState<any>(null);
@@ -157,39 +158,49 @@ const CardStatistics = () => {
             xs: 0.1,
             title: t("To'lash"),
             dataIndex: "id",
-            render: (id) => <IconifyIcon onClick={() => {
+            render: (id) => {
                 const find = employeePays.find((el: any) => el.id === id)
                 if (find.status === 'moderation') {
-                    setEditId(find)
-                    setOpen('approve-cash')
+                    <IconifyIcon onClick={() => {
+                        setEditId(find)
+                        setOpen('approve-cash')
+                    }} icon={'mingcute:card-pay-line'} />
                 } else {
-                    <span style={{ color: 'red' }}>Imkonsiz</span>
+                    return <span style={{ color: 'red' }}>Imkonsiz</span>
                 }
-            }} icon={'mingcute:card-pay-line'} />
+            }
         },
         {
             xs: 0.1,
             title: t("Tahrir"),
             dataIndex: "id",
-            render: (id) => <IconifyIcon onClick={() => {
+            render: (id) => {
                 const find = employeePays.find((el: any) => el.id === id)
                 if (find.status === 'moderation') {
-                    setEditId(find)
-                    setOpen('update-cash')
+                    <IconifyIcon onClick={() => {
+                        setEditId(find)
+                        setOpen('update-cash')
+                    }} icon={'mingcute:card-pay-line'} />
                 } else {
-                    <span style={{ color: 'red' }}>Imkonsiz</span>
+                    return <span style={{ color: 'red' }}>Imkonsiz</span>
                 }
-            }} icon={'basil:edit-outline'} />
+            }
         },
         {
             xs: 0.1,
-            title: t("O'chir"),
+            title: t("O'chirish"),
             dataIndex: "id",
-            render: (id) => <IconifyIcon onClick={() => {
+            render: (id) => {
                 const find = employeePays.find((el: any) => el.id === id)
-                setEditId(find)
-                setOpen('delete-cash')
-            }} icon={'fluent:delete-20-regular'} />
+                if (find.status === 'moderation') {
+                    <IconifyIcon onClick={() => {
+                        setEditId(find)
+                        setOpen('delete-cash')
+                    }} icon={'fluent:delete-20-regular'} />
+                } else {
+                    return <span style={{ color: 'red' }}>Imkonsiz</span>
+                }
+            }
         },
     ]
 
@@ -238,6 +249,7 @@ const CardStatistics = () => {
                         <Box onClick={() => {
                             const find = withdraw.find((el: any) => el.id === id)
                             setEditId(find)
+                            setStudentCount(find.students_count)
                             setOpen('approve-salary')
                         }} sx={{ display: 'flex', gap: '10px' }}>
                             <span>Tasdiqlash</span>
@@ -267,6 +279,8 @@ const CardStatistics = () => {
                             <IconifyIcon onClick={() => {
                                 const find = withdraw.find((el: any) => el.id === id)
                                 setEditId(find)
+                                setStudentCount(find.students_count)
+                                setSalaryAmount(find.fines_count)
                                 setOpen('edit-salary')
                             }} icon={'mingcute:edit-line'} />
 
@@ -396,11 +410,12 @@ const CardStatistics = () => {
         setLoading(true)
         try {
             await api.patch(`/common/withdraw-salary/${editId.id}/`, {
-                students_count: salaryDate,
+                students_count,
                 fines_count: salaryAmount
             })
             setOpen(null)
             getWithdrawSalary()
+            getEmployeSalary()
         } catch (err) {
             console.log(err)
         } finally {
@@ -490,9 +505,9 @@ const CardStatistics = () => {
     const approveCash = async () => {
         setLoading(true)
         try {
-            await api.patch(`/common/employee-salary/${editId.id}/`, {
-                students_count: salaryDate,
-                fines_count: salaryAmount
+            await api.post(`/common/employee-salary/confirmation/`, {
+                employee_salary: editId.id,
+                expense_category: salaryUser
             })
             setOpen(null)
             getEmployePays()
@@ -506,7 +521,7 @@ const CardStatistics = () => {
     const deleteCash = async () => {
         setLoading(true)
         try {
-            await api.delete(`/common/withdraw-salary/delete/${editId.id}/`)
+            await api.delete(`/common/employee-salary/destroy/${editId.id}/`)
             setOpen(null)
             getEmployePays()
         } catch (err) {
@@ -647,7 +662,7 @@ const CardStatistics = () => {
                 </DialogTitle>
                 {editId && <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                     <TextField label="Jarimalar soni" defaultValue={editId.fines_count} required autoComplete='off' size='small' fullWidth onChange={(e) => setSalaryAmount(e.target.value)} style={{ margin: '15px 0' }} />
-                    <TextField label="Talablar soni" defaultValue={editId.students_count} required autoComplete='off' size='small' fullWidth onChange={(e) => setSalaryDate(e.target.value)} />
+                    <TextField label="Talabalar soni" defaultValue={editId.students_count} required autoComplete='off' size='small' fullWidth onChange={(e) => setStudentCount(e.target.value)} />
                     <LoadingButton loading={loading} onClick={() => updateSalary()} variant='contained'>{t("Saqlash")}</LoadingButton>
                 </DialogContent>}
             </Dialog>
@@ -729,9 +744,6 @@ const CardStatistics = () => {
                     </Box>
                 </DialogContent>}
             </Dialog>
-
-
-
 
             <Dialog open={edit === 'amount'} onClose={() => (setEdit(null), setEditId(null))}>
                 <DialogTitle sx={{ display: 'flex', alignItems: 'center', minWidth: '300px', justifyContent: 'space-between' }}>
