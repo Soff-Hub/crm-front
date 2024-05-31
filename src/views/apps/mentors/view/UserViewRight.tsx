@@ -85,7 +85,7 @@ const UserViewRight = ({ tab, invoiceData }: Props) => {
         sx={{ borderBottom: theme => `1px solid ${theme.palette.divider}` }}
       >
         <Tab value='security' label={t('Guruhlar')} icon={<Icon icon='mdi:unarchive' />} />
-        <Tab value='billing-plan' label={t('Ish haqi')} icon={<Icon icon='mdi:account-clock' />} />
+        {/* <Tab value='billing-plan' label={t('Ish haqi')} icon={<Icon icon='mdi:account-clock' />} /> */}
       </TabList>
       <Box sx={{ mt: 6 }}>
         {isLoading ? (

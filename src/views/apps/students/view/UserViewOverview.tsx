@@ -55,7 +55,7 @@ const UserViewOverview = ({ data, rerender }: ItemTypes) => {
   return (
     <Box>
       <Box sx={{ width: '100%', display: 'flex' }}>
-        <Button startIcon={<IconifyIcon icon='ic:baseline-add' />} onClick={() => setOpen(true)} sx={{ marginLeft: 'auto' }} variant='contained' size='small'>Yangi Eslatma</Button>
+        <Button startIcon={<IconifyIcon icon='ic:baseline-add' />} onClick={() => setOpen(true)} sx={{ marginLeft: 'auto' }} variant='contained' size='small'>{t('Yangi eslatma')}</Button>
       </Box>
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
         {
@@ -77,7 +77,7 @@ const UserViewOverview = ({ data, rerender }: ItemTypes) => {
         aria-describedby='user-view-edit-description'
       >
         <DialogTitle id='user-view-edit' sx={{ textAlign: 'center', fontSize: '1.5rem !important' }}>
-          Yangi eslatma qo'shing
+          {t("Yangi eslatma qo'shing")}
         </DialogTitle>
         <DialogContent>
           <Form valueTypes='json' sx={{ marginTop: 10 }} onSubmit={handleAddNote} id='edit-employee-pay-ddas'>
@@ -85,7 +85,7 @@ const UserViewOverview = ({ data, rerender }: ItemTypes) => {
               <TextField
                 rows={4}
                 multiline
-                label="Izoh"
+                label={t("Izoh")}
                 name='description'
                 defaultValue={''}
               />
@@ -96,7 +96,7 @@ const UserViewOverview = ({ data, rerender }: ItemTypes) => {
                 {t("Saqlash")}
               </LoadingButton>
               <Button variant='outlined' type='button' color='secondary' onClick={() => setOpen(false)}>
-                {t("Bekor Qilish")}
+                {t("Bekor qilish")}
               </Button>
             </DialogActions>
           </Form>

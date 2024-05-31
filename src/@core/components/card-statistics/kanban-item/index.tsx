@@ -379,7 +379,7 @@ const KanbanItem = (props: KanbarItemProps) => {
                     ) : (
                         <MenuItem onClick={() => setOpen('recover')} sx={{ '& svg': { mr: 2 } }}>
                             <IconifyIcon icon='mdi:reload' fontSize={20} />
-                            Tiklash
+                            {t("Tiklash")}
                         </MenuItem>
                     )
                 }

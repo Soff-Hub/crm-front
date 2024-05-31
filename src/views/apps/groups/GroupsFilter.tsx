@@ -13,6 +13,7 @@ import addDays from 'date-fns/addDays';
 import useTeachers from 'src/hooks/useTeachers';
 import { useRouter } from 'next/router';
 import useCourses from 'src/hooks/useCourses';
+import { useTranslation } from 'react-i18next';
 
 // ** Types
 type DateType = Date
@@ -37,6 +38,7 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
     const { getTeachers, teachers } = useTeachers()
     const { getCourses, courses } = useCourses()
     const router = useRouter()
+    const { t } = useTranslation()
 
     const handleOnChangeRange = (dates: any) => {
         const [start, end] = dates;
@@ -70,10 +72,10 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
             <form id='mobile-filter-form'>
                 <Box display={'flex'} gap={2} flexDirection={'column'} paddingTop={isMobile ? 3 : 0} rowGap={isMobile ? 4 : 0}>
                     <FormControl sx={{ width: '100%' }}>
-                        <InputLabel size='small' id='demo-simple-select-outlined-label'>Holati</InputLabel>
+                        <InputLabel size='small' id='demo-simple-select-outlined-label'>{t("Holat")}</InputLabel>
                         <Select
                             size='small'
-                            label="Holati"
+                            label={t("Holat")}
                             defaultValue={router.query.status === undefined ? 'active' : router.query.status}
                             id='demo-simple-select-outlined'
                             labelId='demo-simple-select-outlined-label'
@@ -91,10 +93,10 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
                         </Select>
                     </FormControl>
                     <FormControl sx={{ width: '100%' }}>
-                        <InputLabel size='small' id='demo-simple-select-outlined-label'>O'qituvchi</InputLabel>
+                        <InputLabel size='small' id='demo-simple-select-outlined-label'>{t("O'qituvchi")}</InputLabel>
                         <Select
                             size='small'
-                            label="O'qituvchi"
+                            label={t("O'qituvchi")}
                             defaultValue=''
                             id='demo-simple-select-outlined'
                             labelId='demo-simple-select-outlined-label'
@@ -110,10 +112,10 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
                         </Select>
                     </FormControl>
                     <FormControl sx={{ width: '100%' }}>
-                        <InputLabel size='small' id='demo-simple-select-outlined-label'>Kurslar bo'yicha</InputLabel>
+                        <InputLabel size='small' id='demo-simple-select-outlined-label'>{t("Kurslar bo'yicha")}</InputLabel>
                         <Select
                             size='small'
-                            label="Kurslar bo'yicha"
+                            label={t("Kurslar bo'yicha")}
                             defaultValue=''
                             id='demo-simple-select-outlined'
                             labelId='demo-simple-select-outlined-label'
@@ -133,10 +135,10 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
                         </Select>
                     </FormControl>
                     <FormControl sx={{ width: '100%' }}>
-                        <InputLabel size='small' id='demo-simple-select-outlined-label'>Kunlar bo'yicha</InputLabel>
+                        <InputLabel size='small' id='demo-simple-select-outlined-label'>{t("Kunlar bo'yicha")}</InputLabel>
                         <Select
                             size='small'
-                            label="Kunlar boyicha"
+                            label={t("Kunlar boyicha")}
                             defaultValue=''
                             id='demo-simple-select-outlined'
                             labelId='demo-simple-select-outlined-label'
@@ -160,7 +162,7 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
                         shouldCloseOnSelect={false}
                         popperPlacement={"top"}
                         customInput={
-                            <CustomInput label="Sana bo'yicha" start={startDate as Date | number} end={endDate as Date | number} />
+                            <CustomInput label={t("Sana bo'yicha")} start={startDate as Date | number} end={endDate as Date | number} />
                         }
                     />
                 </Box >
@@ -173,10 +175,10 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
     return (
         <Box display={'flex'} gap={2} flexWrap={'nowrap'} >
             <FormControl sx={{ maxWidth: 220, width: '100%' }}>
-                <InputLabel size='small' id='demo-simple-select-outlined-label'>Holati</InputLabel>
+                <InputLabel size='small' id='demo-simple-select-outlined-label'>{t("Holat")}</InputLabel>
                 <Select
                     size='small'
-                    label="Holati"
+                    label={t("Holat")}
                     defaultValue={router.query.status === undefined ? 'active' : router.query.status}
                     id='demo-simple-select-outlined'
                     labelId='demo-simple-select-outlined-label'
@@ -194,10 +196,10 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
                 </Select>
             </FormControl>
             <FormControl sx={{ maxWidth: 180, width: '100%' }}>
-                <InputLabel size='small' id='demo-simple-select-outlined-label'>O'qituvchi</InputLabel>
+                <InputLabel size='small' id='demo-simple-select-outlined-label'>{t("O'qituvchi")}</InputLabel>
                 <Select
                     size='small'
-                    label="O'qituvchi"
+                    label={t("O'qituvchi")}
                     defaultValue={router.query.teacher}
                     id='demo-simple-select-outlined'
                     labelId='demo-simple-select-outlined-label'
@@ -217,10 +219,10 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
                 </Select>
             </FormControl>
             <FormControl sx={{ maxWidth: 180, width: '100%' }}>
-                <InputLabel size='small' id='demo-simple-select-outlined-label'>Kurslar bo'yicha</InputLabel>
+                <InputLabel size='small' id='demo-simple-select-outlined-label'>{t("Kurslar bo'yicha")}</InputLabel>
                 <Select
                     size='small'
-                    label="Kurslar bo'yicha"
+                    label={t("Kurslar bo'yicha")}
                     defaultValue={router.query.course}
                     id='demo-simple-select-outlined'
                     labelId='demo-simple-select-outlined-label'
@@ -240,10 +242,10 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
                 </Select>
             </FormControl>
             <FormControl sx={{ maxWidth: 180, width: '100%' }}>
-                <InputLabel size='small' id='demo-simple-select-outlined-label'>Kunlar bo'yicha</InputLabel>
+                <InputLabel size='small' id='demo-simple-select-outlined-label'>{t("Kunlar bo'yicha")}</InputLabel>
                 <Select
                     size='small'
-                    label="Kunlar boyicha"
+                    label={t("Kunlar boyicha")}
                     defaultValue=''
                     id='demo-simple-select-outlined'
                     labelId='demo-simple-select-outlined-label'
@@ -269,7 +271,7 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
                 popperPlacement={'bottom-start'}
                 customInput={
                     <CustomInput
-                        label="Sana bo'yicha"
+                        label={t("Sana bo'yicha")}
                         end={endDateRange as Date | number}
                         start={startDateRange as Date | number}
                     />

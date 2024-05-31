@@ -178,22 +178,22 @@ export default function GroupsPage() {
             href={`/students/view/security?student=${id}`}
           >
             <IconifyIcon icon='mdi:eye-outline' fontSize={20} />
-            Ko'rish
+            {t("Ko'rish")}
           </MenuItem>
           <MenuItem onClick={() => handleEdit(id)} sx={{ '& svg': { mr: 2 } }}>
             <IconifyIcon icon='mdi:pencil-outline' fontSize={20} />
-            Tahrirlash
+            {t("Tahrirlash")}
           </MenuItem>
           {
             query?.status === 'archive' ? (
               <MenuItem onClick={() => setRecoveModal(true)} sx={{ '& svg': { mr: 2 } }}>
                 <IconifyIcon icon='bytesize:reload' fontSize={20} />
-                Tiklash
+                {t("Tiklash")}
               </MenuItem>
             ) : (
               <MenuItem onClick={handleDelete} sx={{ '& svg': { mr: 2 } }}>
                 <IconifyIcon icon='mdi:delete-outline' fontSize={20} />
-                O'chirish
+                {t("O'chirish")}
               </MenuItem>
             )
           }
@@ -222,7 +222,7 @@ export default function GroupsPage() {
     },
     {
       xs: 1.3,
-      title: t("Guruhlari"),
+      title: t("Guruhlar"),
       dataIndex: 'group',
       render: (group: {
         group_data: {
@@ -329,13 +329,13 @@ export default function GroupsPage() {
         </Button>
       </Box>
       <Box sx={{ display: 'flex', gap: '20px', flexDirection: isMobile ? 'column' : 'row' }}>
-        <TextField fullWidth placeholder='Search...' onChange={(e: any) => setSearch(e.target.value)} size='small' />
+        <TextField fullWidth placeholder={t('Qidirish')} onChange={(e: any) => setSearch(e.target.value)} size='small' />
 
         <FormControl fullWidth>
-          <InputLabel size='small' id='demo-simple-select-outlined-label'>Kurslar bo'yicha</InputLabel>
+          <InputLabel size='small' id='demo-simple-select-outlined-label'>{t('Kurslar')}</InputLabel>
           <Select
             size='small'
-            label="Kurslar bo'yicha"
+            label={t('Kurslar')}
             defaultValue=''
             id='demo-simple-select-outlined'
             labelId='demo-simple-select-outlined-label'
@@ -345,7 +345,7 @@ export default function GroupsPage() {
             })}
           >
             <MenuItem value=''>
-              <b>Barchasi</b>
+              <b>{t('Barchasi')}</b>
             </MenuItem>
             {
               courses.map(course => (
@@ -357,10 +357,10 @@ export default function GroupsPage() {
 
         <Box sx={{ width: '100%' }}>
           <FormControl fullWidth>
-            <InputLabel size='small' id='demo-simple-select-outlined-label'>Holati</InputLabel>
+            <InputLabel size='small' id='demo-simple-select-outlined-label'>{t('Holat')}</InputLabel>
             <Select
               size='small'
-              label="Holati"
+              label={t('Holat')}
               defaultValue=''
               id='demo-simple-select-outlined'
               labelId='demo-simple-select-outlined-label'
@@ -370,11 +370,11 @@ export default function GroupsPage() {
               })}
             >
               <MenuItem value=''>
-                <b>Barchasi</b>
+                <b>{t('Barchasi')}</b>
               </MenuItem>
-              <MenuItem value={'active'}>{'Aktiv'}</MenuItem>
-              <MenuItem value={'archive'}>{'arxiv'}</MenuItem>
-              <MenuItem value={'new'}>{'Sinov darsida'}</MenuItem>
+              <MenuItem value={'active'}>{t('aktiv')}</MenuItem>
+              <MenuItem value={'archive'}>{t('arxiv')}</MenuItem>
+              <MenuItem value={'new'}>{t('sinov')}</MenuItem>
             </Select>
           </FormControl>
         </Box>
@@ -427,11 +427,11 @@ export default function GroupsPage() {
             <FormControl sx={{ width: '100%', display: 'flex', flexDirection: 'row', gap: 10 }}>
               <FormLabel>
                 <Radio checked={gender === "male"} onChange={() => setGender('male')} />
-                <span>Erkak</span>
+                <span>{t('Erkak')}</span>
               </FormLabel>
               <FormLabel>
                 <Radio checked={gender === "female"} onChange={() => setGender('female')} />
-                <span>Ayol</span>
+                <span>{t('Ayol')}</span>
               </FormLabel>
             </FormControl>
 
@@ -470,10 +470,10 @@ export default function GroupsPage() {
               ) : ''
             }
 
-            <LoadingButton loading={loading} variant='contained' type='submit' fullWidth>Saqlash</LoadingButton>
+            <LoadingButton loading={loading} variant='contained' type='submit' fullWidth>{t('Saqlash')}</LoadingButton>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
-              {!isGroup && <Button onClick={() => (getGroups(), setIsGroup(true))} type='button' variant='outlined' size='small' startIcon={<IconifyIcon icon={'material-symbols:add'} />}>Guruhga qo'shish</Button>}
-              {!isPassword && <Button onClick={() => setIsPassword(true)} type='button' variant='outlined' size='small' color='warning' startIcon={<IconifyIcon icon={'lucide:key-round'} />}>Parol qo'shish</Button>}
+              {!isGroup && <Button onClick={() => (getGroups(), setIsGroup(true))} type='button' variant='outlined' size='small' startIcon={<IconifyIcon icon={'material-symbols:add'} />}>{t("Guruhga qo'shish")}</Button>}
+              {!isPassword && <Button onClick={() => setIsPassword(true)} type='button' variant='outlined' size='small' color='warning' startIcon={<IconifyIcon icon={'lucide:key-round'} />}>{t("Parol qo'shish")}</Button>}
             </Box>
           </Form>
         </Box>
@@ -524,11 +524,11 @@ export default function GroupsPage() {
             <FormControl sx={{ width: '100%', display: 'flex', flexDirection: 'row', gap: 10 }}>
               <FormLabel onClick={() => setGender('male')}>
                 <Radio checked={gender === "male"} defaultChecked={studentData.gender === "male"} />
-                <span>Erkak</span>
+                <span>{t("Erkak")}</span>
               </FormLabel>
               <FormLabel onClick={() => setGender('female')}>
                 <Radio checked={gender === "female"} defaultChecked={studentData.gender === "female"} />
-                <span>Ayol</span>
+                <span>{t('Ayol')}</span>
               </FormLabel>
             </FormControl>
 
@@ -541,9 +541,9 @@ export default function GroupsPage() {
               ) : ''
             }
 
-            <LoadingButton loading={loading} variant='contained' type='submit' fullWidth>Saqlash</LoadingButton>
+            <LoadingButton loading={loading} variant='contained' type='submit' fullWidth>{t('Saqlash')}</LoadingButton>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
-              {!isPassword && <Button onClick={() => setIsPassword(true)} type='button' variant='outlined' size='small' color='warning' startIcon={<IconifyIcon icon={'lucide:key-round'} />}>Parol qo'shish</Button>}
+              {!isPassword && <Button onClick={() => setIsPassword(true)} type='button' variant='outlined' size='small' color='warning' startIcon={<IconifyIcon icon={'lucide:key-round'} />}>{t("Parol qo'shish")}</Button>}
             </Box>
           </Form>}
         </Box>

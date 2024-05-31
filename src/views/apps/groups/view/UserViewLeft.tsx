@@ -250,8 +250,8 @@ const UserViewLeft = ({ userData, reRender }: { userData?: any, reRender: any })
                     <IconifyIcon icon='la:users' />
                   </CustomAvatar>
                   <div>
-                    <Typography>O'quvchilar soni</Typography>
-                    <Typography variant='body2'>{data.student_count} ta</Typography>
+                    <Typography>{t("O'quvchilar soni")}</Typography>
+                    <Typography variant='body2'>{data.student_count}</Typography>
                   </div>
                 </Box>
               </Box>
@@ -259,7 +259,7 @@ const UserViewLeft = ({ userData, reRender }: { userData?: any, reRender: any })
 
             <CardContent>
               <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', alignItems: 'center' }}>
-                <Typography>Yo'nalishi:</Typography>
+                <Typography>{t("Kurs")}:</Typography>
                 {
                   !(user?.role.length === 1 && user?.role.includes('teacher')) ? (
                     <Link href={`/settings/office/courses/`}>
@@ -300,8 +300,8 @@ const UserViewLeft = ({ userData, reRender }: { userData?: any, reRender: any })
 
               </Box>
               <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', alignItems: 'center' }}>
-                <Typography>Dars:</Typography>
-                <Typography>{data.room_data.name}da -{data.start_at}</Typography>
+                <Typography>{t("Dars vaqti")}:</Typography>
+                <Typography>{data.room_data.name} -{data.start_at}</Typography>
               </Box>
               <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', alignItems: 'center' }}>
                 <Typography>{getLessonDays(data.day_of_week)}</Typography>
@@ -310,7 +310,7 @@ const UserViewLeft = ({ userData, reRender }: { userData?: any, reRender: any })
                 {
                   !(user?.role.length === 1 && user?.role.includes('teacher')) ? (
                     <Box sx={{ display: 'flex', mb: 2.7 }}>
-                      <Typography sx={{ mr: 2, fontWeight: 500, fontSize: '0.875rem' }}>O'qituvchi:</Typography>
+                      <Typography sx={{ mr: 2, fontWeight: 500, fontSize: '0.875rem' }}>{t("O'qituvchi")}:</Typography>
                       <Link href={`/mentors/view/security/?id=${data.teacher_data.id}`}>
                         <Typography variant='body2'>
                           {data.teacher_data.first_name}
@@ -320,12 +320,12 @@ const UserViewLeft = ({ userData, reRender }: { userData?: any, reRender: any })
                   ) : ''
                 }
                 <Box sx={{ display: 'flex', mb: 2.7 }}>
-                  <Typography sx={{ mr: 2, fontWeight: 500, fontSize: '0.875rem' }}>Ochilgan sana:</Typography>
+                  <Typography sx={{ mr: 2, fontWeight: 500, fontSize: '0.875rem' }}>{t("Ochilgan sana")}:</Typography>
                   <Typography variant='body2'>{data.start_date?.split('-').reverse().join(',')}</Typography>
                 </Box>
               </Box>
               <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', alignItems: 'center' }}>
-                <Typography>Filial:</Typography>
+                <Typography>{t("branch")}:</Typography>
                 <CustomChip
                   skin='light'
                   size='small'
@@ -342,7 +342,7 @@ const UserViewLeft = ({ userData, reRender }: { userData?: any, reRender: any })
                 />
               </Box>
               <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', alignItems: 'center' }}>
-                <Typography>Kurs narxi:</Typography>
+                <Typography>{t("Kurs narxi")}:</Typography>
                 <CustomChip
                   skin='light'
                   size='small'
@@ -397,7 +397,7 @@ const UserViewLeft = ({ userData, reRender }: { userData?: any, reRender: any })
             <CardContent>
               <div style={{ display: 'flex', alignItems: 'center', gap: '20px', marginBottom: '10px' }}>
                 {
-                  ['new', 'active', 'archive'].map(el => <div key={el} style={{ display: 'flex', alignItems: 'center', gap: '3px', cursor: 'pointer' }}><Status color={el == 'active' ? 'success' : el == 'new' ? 'warning' : 'error'} /> {el == 'active' ? 'aktiv' : el == 'new' ? 'sinov' : 'arxiv'}</div>)
+                  ['new', 'active', 'archive'].map(el => <div key={el} style={{ display: 'flex', alignItems: 'center', gap: '3px', cursor: 'pointer' }}><Status color={el == 'active' ? 'success' : el == 'new' ? 'warning' : 'error'} /> {el == 'active' ? t('aktiv') : el == 'new' ? t('sinov') : t('arxiv')}</div>)
                 }
               </div>
               <UserViewStudentsList data={students} reRender={getStudents} />
@@ -415,7 +415,7 @@ const UserViewLeft = ({ userData, reRender }: { userData?: any, reRender: any })
                   }}
                 >
                   {
-                    archiveUrl === 'archive' ? "Arxivni yopish" : "Arxivdagi o'quvchilarni ko'rish"
+                    archiveUrl === 'archive' ? t("Arxivni yopish") : t("Arxivdagi o'quvchilarni ko'rish")
                   }
                 </Button>
               </Box>
@@ -433,15 +433,15 @@ const UserViewLeft = ({ userData, reRender }: { userData?: any, reRender: any })
           aria-describedby='user-view-edit-description'
         >
           <DialogTitle id='user-view-edit' sx={{ textAlign: 'center', fontSize: '1.5rem !important' }}>
-            Barcha o'quvchilarga SMS yuboring
+            {t("Barcha o'quvchilarga SMS yuboring")}
           </DialogTitle>
           <DialogContent>
             <Form setError={setError} valueTypes='json' sx={{ marginTop: 10 }} onSubmit={smsDepartmentItem} id='edit-employee-pay-ddas'>
               <FormControl sx={{ maxWidth: '100%', marginBottom: 3 }} fullWidth>
-                <InputLabel size='small' id='demo-simple-select-outlined-label'>Shablonlar</InputLabel>
+                <InputLabel size='small' id='demo-simple-select-outlined-label'>{t("Shablonlar")}</InputLabel>
                 <Select
                   size='small'
-                  label="Shablonlar"
+                  label={t("Shablonlar")}
                   defaultValue=''
                   id='demo-simple-select-outlined'
                   labelId='demo-simple-select-outlined-label'
@@ -478,7 +478,7 @@ const UserViewLeft = ({ userData, reRender }: { userData?: any, reRender: any })
                   {t("Saqlash")}
                 </LoadingButton>
                 <Button variant='outlined' type='button' color='secondary' onClick={handleEditClose}>
-                  {t("Bekor Qilish")}
+                  {t("Bekor qilish")}
                 </Button>
               </DialogActions>
             </Form>
@@ -533,7 +533,7 @@ const UserViewLeft = ({ userData, reRender }: { userData?: any, reRender: any })
           aria-describedby='user-view-edit-description'
         >
           <DialogTitle id='user-view-edit' sx={{ textAlign: 'center', fontSize: '1.5rem !important' }}>
-            Guruhga o'quvchi qo'shish
+            {t("Guruhga o'quvchi qo'shish")}
           </DialogTitle>
           <DialogContent>
             <Form setError={setError} valueTypes='json' sx={{ marginTop: 10 }} onSubmit={handleMergeToGroup} id='fwefsdfasfsd'>
@@ -545,7 +545,7 @@ const UserViewLeft = ({ userData, reRender }: { userData?: any, reRender: any })
                 mt={2}
                 fontStyle={'italic'}
               >
-                {searchData.length > 0 ? "Qidiruv natijalari..." : searchDebounce !== "" && searchData.length === 0 ? 'Natijalar topilmadi' : ''}
+                {searchData.length > 0 ? t("Qidiruv natijalari") : searchDebounce !== "" && searchData.length === 0 ? t('Natijalar topilmadi') : ''}
               </Typography>
               {
                 searchData.map(user => (
@@ -603,14 +603,14 @@ const UserViewLeft = ({ userData, reRender }: { userData?: any, reRender: any })
           aria-describedby='user-view-edit-description'
         >
           <DialogTitle id='user-view-edit' sx={{ textAlign: 'center', fontSize: '1.5rem !important' }}>
-            Guruh o'chirib tashlash
+            {t("Guruh o'chirib tashlash")}
           </DialogTitle>
           <DialogActions sx={{ justifyContent: 'center' }}>
             <Button variant='outlined' color='error' onClick={handleEditClose}>
-              {t("Ha o'chirish")}
+              {t("O'chirish")}
             </Button>
             <LoadingButton loading={loading} color='secondary' onClick={handleEditClose} variant='outlined' sx={{ mr: 1 }}>
-              {t("Bekor Qilish")}
+              {t("Bekor qilish")}
             </LoadingButton>
           </DialogActions>
         </Dialog>
@@ -625,7 +625,7 @@ const UserViewLeft = ({ userData, reRender }: { userData?: any, reRender: any })
           aria-describedby='user-view-edit-description'
         >
           <DialogTitle id='user-view-edit' sx={{ textAlign: 'center', fontSize: '1.5rem !important' }}>
-            Guruhni tahrirlash
+            {t("Guruhni tahrirlash")}
           </DialogTitle>
           <DialogContent>
             {teachers.length > 0 && rooms.length > 0 && courses.length > 0 && <Form valueTypes='json' onSubmit={(values: any) => handleEditSubmit(values)} id='dasdadasdasdqw' setError={setError} sx={{ display: 'flex', flexDirection: 'column', width: '100%', alignItems: 'baseline', padding: '20px 10px', gap: '10px' }}>
@@ -635,11 +635,11 @@ const UserViewLeft = ({ userData, reRender }: { userData?: any, reRender: any })
               </FormControl>
 
               <FormControl fullWidth>
-                <InputLabel size='small' id='user-view-language-label'>Kursni tanlash</InputLabel>
+                <InputLabel size='small' id='user-view-language-label'>{t("Kurs")}</InputLabel>
                 <Select
                   size='small'
                   error={error.course?.error}
-                  label={t('Kursni tanlash')}
+                  label={t('Kurs')}
                   id='user-view-language'
                   labelId='user-view-language-label'
                   name='course'
@@ -653,7 +653,7 @@ const UserViewLeft = ({ userData, reRender }: { userData?: any, reRender: any })
               </FormControl>
 
               <FormControl fullWidth>
-                <InputLabel size='small' id='user-view-language-label'>O'qituvchi</InputLabel>
+                <InputLabel size='small' id='user-view-language-label'>{t("O'qituvchi")}</InputLabel>
                 <Select
                   size='small'
                   error={error.teacher?.error}
@@ -671,11 +671,11 @@ const UserViewLeft = ({ userData, reRender }: { userData?: any, reRender: any })
               </FormControl>
 
               <FormControl fullWidth>
-                <InputLabel size='small' id='user-view-language-label'>Xona</InputLabel>
+                <InputLabel size='small' id='user-view-language-label'>{t("Xonalar")}</InputLabel>
                 <Select
                   size='small'
                   error={error.room?.error}
-                  label={t('Xona')}
+                  label={t("Xonalar")}
                   id='user-view-language'
                   labelId='user-view-language-label'
                   name='room'
@@ -699,10 +699,10 @@ const UserViewLeft = ({ userData, reRender }: { userData?: any, reRender: any })
               </FormControl>
 
               <FormControl fullWidth>
-                <InputLabel size='small' id='user-view-language-label'>Hafta kunlari</InputLabel>
+                <InputLabel size='small' id='user-view-language-label'>{t("Hafta kunlari")}</InputLabel>
                 <Select
                   size='small'
-                  label="Kunlar boyicha"
+                  label={t("Hafta kunlari")}
                   id='demo-simple-select-outlined'
                   name='day_of_week'
                   labelId='demo-simple-select-outlined-label'
@@ -716,10 +716,10 @@ const UserViewLeft = ({ userData, reRender }: { userData?: any, reRender: any })
                           'tuesday,thursday,saturday,monday,wednesday,friday' : 0
                   }
                 >
-                  <MenuItem value={`tuesday,thursday,saturday`}>Juft kunlari</MenuItem>
-                  <MenuItem value={`monday,wednesday,friday`}>Toq kunlari</MenuItem>
-                  <MenuItem value={`tuesday,thursday,saturday,monday,wednesday,friday`}>Har kuni</MenuItem>
-                  <MenuItem value={0}>Boshqa</MenuItem>
+                  <MenuItem value={`tuesday,thursday,saturday`}>{t('Juft kunlar')}</MenuItem>
+                  <MenuItem value={`monday,wednesday,friday`}>{t('Toq kunlar')}</MenuItem>
+                  <MenuItem value={`tuesday,thursday,saturday,monday,wednesday,friday`}>{t("Har kun")}</MenuItem>
+                  <MenuItem value={0}>{t("Boshqa")}</MenuItem>
                 </Select>
                 <FormHelperText error={error.room?.error}>{error.room?.message}</FormHelperText>
               </FormControl>
@@ -732,7 +732,7 @@ const UserViewLeft = ({ userData, reRender }: { userData?: any, reRender: any })
                 ) && weekdays === null) || weekdays === 0 ? (
                   <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
                     {
-                      ['tuesday', 'thursday', 'saturday', 'monday', 'wednesday', 'friday', 'sunday'].map(el => (
+                      ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'].map(el => (
                         <label
                           key={el}
                           style={{
@@ -745,7 +745,7 @@ const UserViewLeft = ({ userData, reRender }: { userData?: any, reRender: any })
                             gap: '4px',
                             cursor: 'pointer'
                           }}>
-                          <span>{TranslateWeekName[el]}</span>
+                          <span>{t(el)}</span>
                           <input type='checkbox' onChange={() => (setCustomWeekDays((current: any) => current.includes(el) ? [...current.filter((item: any) => item !== el)] : [...current, el]))} defaultChecked={customWeekdays.includes(el)} />
                         </label>
                       ))
@@ -755,17 +755,17 @@ const UserViewLeft = ({ userData, reRender }: { userData?: any, reRender: any })
               }
 
               <FormControl sx={{ width: '100%' }}>
-                <TextField size='small' type='time' label={t("Boshlanish vaqi")} name='start_at' error={error.start_at} defaultValue={data.start_at} />
+                <TextField size='small' type='time' label={t("Boshlanish vaqti")} name='start_at' error={error.start_at} defaultValue={data.start_at} />
                 <FormHelperText error={error.start_at?.error}>{error.start_at?.message}</FormHelperText>
               </FormControl>
 
               <FormControl sx={{ width: '100%' }}>
-                <TextField size='small' type='time' label={t("Tugash vaqi")} name='end_at' error={error.end_at} defaultValue={data.end_at} />
+                <TextField size='small' type='time' label={t("Tugash vaqti")} name='end_at' error={error.end_at} defaultValue={data.end_at} />
                 <FormHelperText error={error.end_at?.error}>{error.end_at?.message}</FormHelperText>
               </FormControl>
 
 
-              <LoadingButton loading={loading} variant='contained' type='submit' fullWidth>Saqlash</LoadingButton>
+              <LoadingButton loading={loading} variant='contained' type='submit' fullWidth>{t("Saqlash")}</LoadingButton>
             </Form>}
           </DialogContent>
         </Dialog>

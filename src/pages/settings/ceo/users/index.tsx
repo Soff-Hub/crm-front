@@ -193,15 +193,15 @@ export default function GroupsPage() {
                         href={`users/view/security?id=${id}`}
                     >
                         <IconifyIcon icon='mdi:eye-outline' fontSize={20} />
-                        Ko'rish
+                        {t("Ko'rish")}
                     </MenuItem>
                     <MenuItem onClick={getUserById} sx={{ '& svg': { mr: 2 } }}>
                         <IconifyIcon icon='mdi:pencil-outline' fontSize={20} />
-                        Tahrirlash
+                        {t('Tahrirlash')}
                     </MenuItem>
                     <MenuItem onClick={handleDelete} sx={{ '& svg': { mr: 2 } }}>
                         <IconifyIcon icon='mdi:delete-outline' fontSize={20} />
-                        O'chirish
+                        {t("O'chirish")}
                     </MenuItem>
                 </Menu>
                 <UserSuspendDialog open={suspendDialogOpen} setOpen={setSuspendDialogOpen} />
@@ -212,12 +212,12 @@ export default function GroupsPage() {
     const columns: customTableProps[] = [
         {
             xs: 0.1,
-            title: t("ID"),
+            title: t("#"),
             dataIndex: 'id'
         },
         {
             xs: 0.5,
-            title: t("Ism Familiya"),
+            title: t("first_name"),
             dataIndex: 'first_name'
         },
         {
@@ -290,7 +290,7 @@ export default function GroupsPage() {
                     }}
                 >
                     <Typography variant='h6' sx={{ fontWeight: 600 }}>
-                        {t("Xodim qo'shish")}
+                        {t("Yangi qo'shish")}
                     </Typography>
                     <IconButton
                         onClick={() => setOpenAddGroup(false)}
@@ -307,16 +307,16 @@ export default function GroupsPage() {
                 </Box>
                 <Box sx={{ px: 2, py: 4 }}>
                     <Form id='dspkdjsoifh' setError={setError} onSubmit={handleSubmitCreate} sx={{ display: 'flex', flexDirection: 'column', gap: '20px' }} valueTypes='json'>
-                        <TextField size='small' fullWidth label='Ism Familiya' required name='first_name' error={error?.phone} />
-                        <TextField size='small' fullWidth label='Telefon raqam' required name='phone' defaultValue={"+998"} />
+                        <TextField size='small' fullWidth label={t('first_name')} required name='first_name' error={error?.phone} />
+                        <TextField size='small' fullWidth label={t('phone')} required name='phone' defaultValue={"+998"} />
 
-                        <TextField size='small' fullWidth label='Parol' required name='password' />
+                        <TextField size='small' fullWidth label={t('password')} required name='password' />
 
                         <FormControl fullWidth>
-                            <InputLabel size='small' id='user-view-language-label'>Filial</InputLabel>
+                            <InputLabel size='small' id='user-view-language-label'>{t('branch')}</InputLabel>
                             <Select
                                 size='small'
-                                label='Filial'
+                                label={t('branch')}
                                 multiple
                                 id='user-view-language'
                                 labelId='user-view-language-label'
@@ -345,7 +345,7 @@ export default function GroupsPage() {
                                 }
                             </Select>
                         </FormControl>
-                        <LoadingButton variant='contained' loading={loading} type='submit'>Saqlash</LoadingButton>
+                        <LoadingButton variant='contained' loading={loading} type='submit'>{t('Saqlash')}</LoadingButton>
                     </Form>
                 </Box>
             </Drawer>
@@ -358,7 +358,7 @@ export default function GroupsPage() {
                 aria-describedby='user-view-edit-description'
             >
                 <DialogTitle id='user-view-edit' sx={{ textAlign: 'center', fontSize: '1.5rem !important' }}>
-                    Xodim ma'lumotlarini tahrirlash
+                    {t("Xodim ma'lumotlarini tahrirlash")}
                 </DialogTitle>
                 <DialogContent>
                     {userData && <Form setError={setError} valueTypes='form-data' sx={{ marginTop: 10 }} onSubmit={handleSubmit} id='edit-emfdployee'>
@@ -367,22 +367,22 @@ export default function GroupsPage() {
                                 <TextField
                                     size='small'
                                     fullWidth
-                                    label='Ism Familiya'
+                                    label={t('first_name')}
                                     name='first_name'
                                     defaultValue={userData.first_name}
 
                                 />
                             </Grid>
                             <Grid item xs={12} sm={6}>
-                                <TextField size='small' error={error?.phone?.error} fullWidth label='Contact' name='phone' defaultValue={`${userData.phone}`} />
+                                <TextField size='small' error={error?.phone?.error} fullWidth label={t('phone')} name='phone' defaultValue={`${userData.phone}`} />
                                 <FormHelperText error>{error?.phone?.message}</FormHelperText>
                             </Grid>
                             <Grid item xs={12} sm={6}>
                                 <FormControl fullWidth>
-                                    <InputLabel id='user-view-language-label'>Filial</InputLabel>
+                                    <InputLabel id='user-view-language-label'>{t('branch')}</InputLabel>
                                     <Select
                                         size='small'
-                                        label='Filial'
+                                        label={t('branch')}
                                         error={error?.branches?.error}
                                         multiple
                                         defaultValue={
@@ -405,10 +405,10 @@ export default function GroupsPage() {
                             </Grid>
                             <Grid item xs={12} sm={6}>
                                 <FormControl fullWidth>
-                                    <InputLabel id='user-view-country-label'>Roli</InputLabel>
+                                    <InputLabel id='user-view-country-label'>Rol</InputLabel>
                                     <Select
                                         size='small'
-                                        label='Roli'
+                                        label='Rol'
                                         multiple
                                         defaultValue={
                                             userData.roles.find(el => el.exists)
@@ -438,7 +438,7 @@ export default function GroupsPage() {
                                         tabIndex={-1}
                                         startIcon={<IconifyIcon icon={'subway:cloud-upload'} />}
                                     >
-                                        Rasm qo'shish
+                                        {t("Rasm qo'shish")}
                                         <VisuallyHiddenInput
 
                                             // name='image'
@@ -449,7 +449,7 @@ export default function GroupsPage() {
                                 </FormControl>
                             </Grid>
                             <Grid item xs={12} sm={6}>
-                                <TextField size='small' fullWidth label='Yangi parol' name='password' />
+                                <TextField size='small' fullWidth label={t('Yangi parol')} name='password' />
                             </Grid>
                         </Grid>
                         <DialogActions sx={{ justifyContent: 'center' }}>
@@ -457,7 +457,7 @@ export default function GroupsPage() {
                                 {t('Saqlash')}
                             </LoadingButton>
                             <Button variant='outlined' type='button' color='secondary' onClick={handleEditClose}>
-                                {t('Bekor Qilish')}
+                                {t('Bekor qilish')}
                             </Button>
                         </DialogActions>
                     </Form>}

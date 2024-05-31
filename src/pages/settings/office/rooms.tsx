@@ -123,12 +123,12 @@ export default function RoomsPage() {
         >
           <MenuItem onClick={() => handleEdit(id)} sx={{ '& svg': { mr: 2 } }}>
             <IconifyIcon icon='mdi:pencil-outline' fontSize={20} />
-            Tahrirlash
+            {t("Tahrirlash")}
           </MenuItem>
           {dataRow?.some((item: any) => item?.id == id && item?.is_delete) ? (
             <MenuItem onClick={handleDelete} sx={{ '& svg': { mr: 2 } }}>
               <IconifyIcon icon='mdi:delete-outline' fontSize={20} />
-              O'chirish
+              {t("O'chirish")}
             </MenuItem>
           ) : (
             <></>
@@ -165,7 +165,7 @@ export default function RoomsPage() {
 
   async function handelCliclPosts(value: any) {
     try {
-       await api.post(ceoConfigs.rooms_posts, value)
+      await api.post(ceoConfigs.rooms_posts, value)
       setOpenAddGroup(false)
       toast.success("Muvaffaqiyatli! qo'shildi", { position: 'top-center' })
       getUsers()
@@ -177,25 +177,25 @@ export default function RoomsPage() {
   // Edit functions
 
   async function handelClickEditCourses(value: any) {
-     await api.patch(`${ceoConfigs.rooms_update}/${dataRowEdit?.id}`, value)
+    await api.patch(`${ceoConfigs.rooms_update}/${dataRowEdit?.id}`, value)
     setOpenAddGroupEdit(false)
     getUsers()
   }
 
   const columns: customTableProps[] = [
     {
-      xs: 0.8,
+      xs: 0.2,
       title: t('ID'),
       dataIndex: 'id'
     },
     {
-      xs: 1,
-      title: t('Xona'),
+      xs: 1.4,
+      title: t('Nomi'),
       dataIndex: 'name'
     },
     {
-      xs: 2,
-      title: t('Filial'),
+      xs: 1.5,
+      title: t('branch'),
       dataIndex: 'branch',
       render: (branch: any) => <span>{branch?.name}</span>
     },
@@ -236,7 +236,7 @@ export default function RoomsPage() {
           }}
         >
           <Typography variant='h6' sx={{ fontWeight: 600 }}>
-            {t("Xona qo'shish")}
+            {t("Yangi xona qo'shish")}
           </Typography>
           <IconButton
             onClick={() => setOpenAddGroup(false)}
@@ -268,17 +268,17 @@ export default function RoomsPage() {
           }}
         >
           <FormControl fullWidth>
-            <TextField error={error.name} label='* Xona nomi' size='small' name='name' />
+            <TextField error={error.name} label={t('Nomi')} size='small' name='name' />
             <FormHelperText error={error.name}>{error.name?.message}</FormHelperText>
           </FormControl>
           <FormControl fullWidth>
             <InputLabel size='small' id='demo-simple-select-outlined-label'>
-              * Filial tanlang
+              {t('branch')}
             </InputLabel>
             <Select
               error={error.branch}
               size='small'
-              label='* Filial tanlang'
+              label={t('branch')}
               id='demo-simple-select-outlined'
               labelId='demo-simple-select-outlined-label'
               name='branch'
@@ -292,7 +292,7 @@ export default function RoomsPage() {
 
           <Button type='submit' variant='contained' color='success' fullWidth>
             {' '}
-            Saqlash
+            {t('Saqlash')}
           </Button>
         </Form>
       </Drawer>
@@ -307,7 +307,7 @@ export default function RoomsPage() {
           }}
         >
           <Typography variant='h6' sx={{ fontWeight: 600 }}>
-            {t('Xona Tahrirlash')}
+            {t('Tahrirlash')}
           </Typography>
           <IconButton
             onClick={() => setOpenAddGroupEdit(false)}
@@ -341,7 +341,7 @@ export default function RoomsPage() {
             <FormControl fullWidth>
               <TextField
                 error={error.name}
-                label='* Kurs nomi'
+                label={t('Nomi')}
                 size='small'
                 name='name'
                 defaultValue={dataRowEdit?.name}
@@ -350,12 +350,12 @@ export default function RoomsPage() {
             </FormControl>
             <FormControl fullWidth>
               <InputLabel size='small' id='demo-simple-select-outlined-label'>
-                * Filial tanlang
+                {t('branch')}
               </InputLabel>
               <Select
                 error={error.branch}
                 size='small'
-                label='* Filial tanlang'
+                label={t('branch')}
                 id='demo-simple-select-outlined'
                 labelId='demo-simple-select-outlined-label'
                 name='branch'
@@ -369,7 +369,7 @@ export default function RoomsPage() {
             </FormControl>
             <Button type='submit' variant='contained' color='success' fullWidth>
               {' '}
-              Saqlash
+              {t('Saqlash')}
             </Button>
           </Form>
         )}

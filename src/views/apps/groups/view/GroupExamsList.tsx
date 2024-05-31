@@ -174,7 +174,7 @@ const GroupExamsList = () => {
             render: (result: any) => result.score
         },
         {
-            xs: 0.2,
+            xs: 0.3,
             title: t("Maksimal bal"),
             dataIndex: 'result',
             render: (result: any) => result.max_score
@@ -294,7 +294,7 @@ const GroupExamsList = () => {
                 ) : (
                     <Box className='demo-space-y'>
                         <div style={{ width: '100%', display: 'flex', justifyContent: 'flex-end', margin: 0 }}>
-                            <Button variant="contained" sx={{ marginLeft: '15px' }} size="small" onClick={() => setOpen('add')}>yaratish</Button>
+                            <Button variant="contained" sx={{ marginLeft: '15px' }} size="small" onClick={() => setOpen('add')}>{t('Yaratish')}</Button>
                         </div>
 
                         <DataTable rowClick={(id: any) => (getResults(id), setResultId(id))} maxWidth="100%" minWidth="450px" data={exams} columns={columns} />
@@ -332,10 +332,10 @@ const GroupExamsList = () => {
                                 </label>
 
                                 {reExam && <FormControl fullWidth>
-                                    <InputLabel size='small' id='demo-simple-select-outlined-label'>Qaysi imtixon uchun?</InputLabel>
+                                    <InputLabel size='small' id='demo-simple-select-outlined-label'>{t('Qaysi imtixon uchun?')}</InputLabel>
                                     <Select
                                         size='small'
-                                        label="Qaysi imtixon uchun?"
+                                        label={t("Qaysi imtixon uchun?")}
                                         defaultValue=''
                                         id='demo-simple-select-outlined'
                                         labelId='demo-simple-select-outlined-label'
@@ -368,7 +368,7 @@ const GroupExamsList = () => {
                                             </FormControl>
 
                                             <FormControl>
-                                                <TextField size='small' defaultValue={parent.max_score} label={t("Maksimal ball")} name='max_score' error={error.max_score?.error} />
+                                                <TextField size='small' defaultValue={parent.max_score} label={t("Maksimal bal")} name='max_score' error={error.max_score?.error} />
                                                 <FormHelperText error={error.max_score}>{error.max_score?.message}</FormHelperText>
                                             </FormControl>
                                         </>
@@ -392,14 +392,14 @@ const GroupExamsList = () => {
                                             </FormControl>
 
                                             <FormControl>
-                                                <TextField size='small' label={t("Maksimal ball")} name='max_score' error={error.max_score?.error} />
+                                                <TextField size='small' label={t("Maksimal bal")} name='max_score' error={error.max_score?.error} />
                                                 <FormHelperText error={error.max_score}>{error.max_score?.message}</FormHelperText>
                                             </FormControl>
                                         </>
                                     )
                                 }
 
-                                <LoadingButton loading={loading} variant="outlined" type="submit">Saqlash</LoadingButton>
+                                <LoadingButton loading={loading} variant="outlined" type="submit">{t('Saqlash')}</LoadingButton>
                             </Form>
                         </Drawer>
 
@@ -447,11 +447,11 @@ const GroupExamsList = () => {
                                 </FormControl>
 
                                 <FormControl>
-                                    <TextField size='small' label={t("Maksimal ball")} name='max_score' error={error.max_score?.error} defaultValue={editData?.max_score} />
+                                    <TextField size='small' label={t("Maksimal bal")} name='max_score' error={error.max_score?.error} defaultValue={editData?.max_score} />
                                     <FormHelperText error={error.max_score}>{error.max_score?.message}</FormHelperText>
                                 </FormControl>
 
-                                <LoadingButton loading={loading} variant="outlined" type="submit">Saqlash</LoadingButton>
+                                <LoadingButton loading={loading} variant="outlined" type="submit">{t('Saqlash')}</LoadingButton>
                             </Form>}
                         </Drawer>
 

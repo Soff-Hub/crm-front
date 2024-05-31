@@ -116,12 +116,12 @@ export default function RoomsPage() {
                 >
                     <MenuItem onClick={() => handleEdit(id)} sx={{ '& svg': { mr: 2 } }}>
                         <IconifyIcon icon='mdi:pencil-outline' fontSize={20} />
-                        Tahrirlash
+                        {t('Tahrirlash')}
                     </MenuItem>
 
                     <MenuItem onClick={handleDelete} sx={{ '& svg': { mr: 2 } }}>
                         <IconifyIcon icon='mdi:delete-outline' fontSize={20} />
-                        O'chirish
+                        {t("O'chirish")}
                     </MenuItem>
                 </Menu>
                 <UserSuspendDialog
@@ -174,7 +174,7 @@ export default function RoomsPage() {
     const columns: customTableProps[] = [
         {
             xs: 0.2,
-            title: t('ID'),
+            title: t('#'),
             dataIndex: 'id'
         },
         {
@@ -251,13 +251,13 @@ export default function RoomsPage() {
                     }}
                 >
                     <FormControl fullWidth>
-                        <TextField error={error.description} multiline rows={3} label='* SMS Matni' size='small' name='description' />
+                        <TextField error={error.description} multiline rows={10} label={t("SMS Matni")} size='small' name='description' />
                         <FormHelperText error={error.description}>{error.description?.message}</FormHelperText>
                     </FormControl>
 
                     <Button type='submit' variant='contained' color='success' fullWidth>
                         {' '}
-                        Saqlash
+                        {t('Saqlash')}
                     </Button>
                 </Form>
             </Drawer>
@@ -304,13 +304,13 @@ export default function RoomsPage() {
                         }}
                     >
                         <FormControl fullWidth>
-                            <TextField error={error.description} multiline rows={3} label='* SMS Matni' size='small' name='description' defaultValue={dataRowEdit.description} />
+                            <TextField error={error.description} multiline rows={10} label={t('SMS Matni')} size='small' name='description' defaultValue={dataRowEdit.description} />
                             <FormHelperText error={error.description}>{error.description?.message}</FormHelperText>
                         </FormControl>
 
                         <Button type='submit' variant='contained' color='success' fullWidth>
                             {' '}
-                            Saqlash
+                            {t('Saqlash')}
                         </Button>
                     </Form>
                 )}

@@ -196,34 +196,34 @@ const UserViewLeft = ({ userData, rerender }: { userData: StudentTypes | null, r
             </CardContent>
             <CardContent>
               <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
-                <Typography fontSize={13} variant='body2'>Telefon raqami: </Typography>
+                <Typography fontSize={13} variant='body2'>{t('phone')}: </Typography>
                 <Typography fontSize={13}>{data.phone}</Typography>
               </Box>
               <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
-                <Typography fontSize={13} variant='body2'>O'quvchi balansi: </Typography>
+                <Typography fontSize={13} variant='body2'>{t('Balans')}: </Typography>
                 <Typography fontSize={13}>{addPeriodToThousands(+data.balance) + " so'm"}</Typography>
               </Box>
             </CardContent>
             <CardContent sx={{ display: 'flex', justifyContent: 'space-between' }}>
-              <Button size='small' variant='outlined' startIcon={<IconifyIcon icon={'icon-park-twotone:add-web'} />} onClick={() => handleEditClickOpen('group')}>Guruhga qo'shish</Button>
-              <Button color='warning' size='small' startIcon={<IconifyIcon icon={'mdi:cash-plus'} />} variant='outlined' onClick={async () => (await getPaymentMethod(), handleEditClickOpen('payment'))}>To'lov</Button>
+              <Button size='small' variant='outlined' startIcon={<IconifyIcon icon={'icon-park-twotone:add-web'} />} onClick={() => handleEditClickOpen('group')}>{t("Guruhga qo'shish")}</Button>
+              <Button color='warning' size='small' startIcon={<IconifyIcon icon={'mdi:cash-plus'} />} variant='outlined' onClick={async () => (await getPaymentMethod(), handleEditClickOpen('payment'))}>{t("To'lov")}</Button>
             </CardContent>
             <Box sx={{ display: 'flex', justifyContent: 'center', pb: 3 }}>
-              <Tooltip title="SMS yuborish" placement='bottom'>
+              <Tooltip title={t('Xabar (sms)')} placement='bottom'>
                 <Button size='small' color="warning" onClick={() => (getSMSTemps(), handleEditClickOpen('sms'))}>
                   <IconifyIcon icon='material-symbols-light:sms-outline' />
                 </Button>
               </Tooltip>
-              <Tooltip title="Tahrirlash" placement='bottom'>
+              <Tooltip title={t("Tahrirlash")} placement='bottom'>
                 <Button size='small' color='success' onClick={() => handleEditClickOpen('edit')}>
                   <IconifyIcon icon='iconamoon:edit-thin' />
                 </Button>
               </Tooltip>
-              <Tooltip title="O'chirish" placement='bottom'>
+              {/* <Tooltip title={t("O'chirish")} placement='bottom'>
                 <Button size='small' color='error' onClick={() => handleEditClickOpen('delete')}>
                   <IconifyIcon icon='mdi-light:delete' />
                 </Button>
-              </Tooltip>
+              </Tooltip> */}
             </Box>
           </Card>
         </Grid>
@@ -248,15 +248,15 @@ const UserViewLeft = ({ userData, rerender }: { userData: StudentTypes | null, r
           aria-describedby='user-view-edit-description'
         >
           <DialogTitle id='user-view-edit' sx={{ textAlign: 'center', fontSize: '1.5rem !important' }}>
-            Guruhga biriktirish
+            {t('Guruhga biriktirish')}
           </DialogTitle>
           <DialogContent>
             <Form reqiuredFields={['group']} setError={setError} valueTypes='json' sx={{ marginTop: 10 }} onSubmit={handleMergeToGroup} id='edit-efwemployee-gr'>
               <FormControl fullWidth>
-                <InputLabel size='small' id='user-view-language-label'>{t('Filialni tanlang')}</InputLabel>
+                <InputLabel size='small' id='user-view-language-label'>{t('branch')}</InputLabel>
                 <Select
                   size='small'
-                  label={t('Filialni tanlang')}
+                  label={t('branch')}
                   sx={{ marginBottom: 3 }}
                   id='user-view-language'
                   labelId='user-view-language-label'
@@ -331,7 +331,7 @@ const UserViewLeft = ({ userData, rerender }: { userData: StudentTypes | null, r
           aria-describedby='user-view-edit-description'
         >
           <DialogTitle id='user-view-edit' sx={{ textAlign: 'center', fontSize: '1.5rem !important' }}>
-            To'lov qilish
+            {t("To'lov")}
           </DialogTitle>
           <DialogContent>
             <Form setError={setError} valueTypes='json' sx={{ marginTop: 10, display: 'flex', flexDirection: 'column', gap: '10px' }} onSubmit={handlePayment} id='edifsdt-employee-pay'>
@@ -372,7 +372,7 @@ const UserViewLeft = ({ userData, rerender }: { userData: StudentTypes | null, r
                 <TextField
                   error={error?.amount}
                   rows={4}
-                  label="Miqdori (so'm)"
+                  label={t("Summa")}
                   size='small'
                   name='amount'
                   defaultValue={''}
@@ -386,7 +386,7 @@ const UserViewLeft = ({ userData, rerender }: { userData: StudentTypes | null, r
                   error={error?.description}
                   rows={4}
                   multiline
-                  label="Izoh"
+                  label={t("Izoh")}
                   name='description'
                   defaultValue={''}
                 />
@@ -404,7 +404,7 @@ const UserViewLeft = ({ userData, rerender }: { userData: StudentTypes | null, r
                   {t("Saqlash")}
                 </LoadingButton>
                 <Button variant='outlined' type='button' color='secondary' onClick={handleEditClose}>
-                  {t("Bekor Qilish")}
+                  {t("Bekor qilish")}
                 </Button>
               </DialogActions>
             </Form>
@@ -420,7 +420,7 @@ const UserViewLeft = ({ userData, rerender }: { userData: StudentTypes | null, r
           aria-describedby='user-view-edit-description'
         >
           <DialogTitle id='user-view-edit' sx={{ textAlign: 'center', fontSize: '1.3rem !important' }}>
-            O'quvchi ma'lumotlarini tahrirlash
+            {t("O'quvchi ma'lumotlarini tahrirlash")}
           </DialogTitle>
           <DialogContent>
             {data &&
@@ -444,12 +444,12 @@ const UserViewLeft = ({ userData, rerender }: { userData: StudentTypes | null, r
                 </FormControl>
 
                 <FormControl sx={{ width: '100%' }}>
-                  <TextField size='small' label={t("Balansi")} name='balance' error={error.balance?.error} defaultValue={data.balance} />
+                  <TextField size='small' label={t("Balans")} name='balance' error={error.balance?.error} defaultValue={data.balance} />
                   <FormHelperText error={error.balance}>{error.balance?.message}</FormHelperText>
                 </FormControl>
 
                 <FormControl sx={{ width: '100%' }}>
-                  <TextField type='date' size='small' label={t("Tg'ilgan sana")} name='birth_date' error={error.birth_date?.error} defaultValue={data.birth_date} />
+                  <TextField type='date' size='small' label={t("birth_date")} name='birth_date' error={error.birth_date?.error} defaultValue={data.birth_date} />
                   <FormHelperText error={error.birth_date}>{error.birth_date?.message}</FormHelperText>
                 </FormControl>
 
@@ -458,7 +458,7 @@ const UserViewLeft = ({ userData, rerender }: { userData: StudentTypes | null, r
                     {t("Saqlash")}
                   </LoadingButton>
                   <Button variant='outlined' type='button' color='secondary' onClick={handleEditClose}>
-                    {t("Bekor Qilish")}
+                    {t("Bekor qilish")}
                   </Button>
                 </DialogActions>
               </Form>}
@@ -490,7 +490,7 @@ const UserViewLeft = ({ userData, rerender }: { userData: StudentTypes | null, r
           aria-describedby='user-view-edit-description'
         >
           <DialogTitle id='user-view-edit' sx={{ textAlign: 'center', fontSize: '1.5rem !important' }}>
-            Yangi eslatma qo'shish
+            {t("Yangi eslatma qo'shish")}
           </DialogTitle>
           <DialogContent>
             <Form setError={setError} valueTypes='json' sx={{ marginTop: 10 }} onSubmit={handleAddNote} id='edit-employee-pay'>
@@ -499,7 +499,7 @@ const UserViewLeft = ({ userData, rerender }: { userData: StudentTypes | null, r
                   error={error?.description}
                   rows={4}
                   multiline
-                  label="Izoh"
+                  label={t("Izoh")}
                   name='description'
                   defaultValue={''}
                 />
@@ -510,7 +510,7 @@ const UserViewLeft = ({ userData, rerender }: { userData: StudentTypes | null, r
                   {t("Saqlash")}
                 </LoadingButton>
                 <Button variant='outlined' type='button' color='secondary' onClick={handleEditClose}>
-                  {t("Bekor Qilish")}
+                  {t("Bekor qilish")}
                 </Button>
               </DialogActions>
             </Form>
@@ -526,15 +526,15 @@ const UserViewLeft = ({ userData, rerender }: { userData: StudentTypes | null, r
           aria-describedby='user-view-edit-description'
         >
           <DialogTitle id='user-view-edit' sx={{ textAlign: 'center', fontSize: '1.5rem !important' }}>
-            Xabar yuborish (sms)
+            {t('Xabar (sms)')}
           </DialogTitle>
           <DialogContent>
             <Form setError={setError} valueTypes='json' sx={{ marginTop: 10 }} onSubmit={handleSendSms} id='dsdsdsds'>
               <FormControl sx={{ maxWidth: '100%', mb: 3 }} fullWidth>
-                <InputLabel size='small' id='demo-simple-select-outlined-label'>Shablonlar</InputLabel>
+                <InputLabel size='small' id='demo-simple-select-outlined-label'>{t('Shablonlar')}</InputLabel>
                 <Select
                   size='small'
-                  label="Shablonlar"
+                  label={t("Shablonlar")}
                   defaultValue=''
                   id='demo-simple-select-outlined'
                   labelId='demo-simple-select-outlined-label'
@@ -557,7 +557,7 @@ const UserViewLeft = ({ userData, rerender }: { userData: StudentTypes | null, r
                   error={error?.message}
                   rows={4}
                   multiline
-                  label="Xabar"
+                  label={t("yozing...")}
                   name='message'
                   defaultValue={''}
                   value={sms}
@@ -567,7 +567,7 @@ const UserViewLeft = ({ userData, rerender }: { userData: StudentTypes | null, r
               </FormControl>
               <DialogActions sx={{ justifyContent: 'center' }}>
                 <Button variant='outlined' type='button' color='secondary' onClick={handleEditClose}>
-                  {t("Bekor Qilish")}
+                  {t("Bekor qilish")}
                 </Button>
                 <LoadingButton loading={loading} type='submit' variant='contained' sx={{ mr: 1 }}>
                   {t("Yuborish")}

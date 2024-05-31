@@ -64,7 +64,7 @@ const UserSmsList = () => {
     return (
         <Box>
             <Box sx={{ width: '100%', display: 'flex' }}>
-                <Button startIcon={<IconifyIcon icon='ic:baseline-add' />} onClick={() => (setOpen(true), getSMSTemps())} sx={{ marginLeft: 'auto' }} variant='contained' size='small'>Yangi Eslatma</Button>
+                <Button startIcon={<IconifyIcon icon='ic:baseline-add' />} onClick={() => (setOpen(true), getSMSTemps())} sx={{ marginLeft: 'auto' }} variant='contained' size='small'>{t("SMS")}</Button>
             </Box>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                 {

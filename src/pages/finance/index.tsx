@@ -75,6 +75,7 @@ const CardStatistics = () => {
     const [withdraw, setWithdraw] = useState<any>([])
 
     const [isHover, setIsHover] = useState<null | string>(null)
+    const [deleteCategory, setDeleteCategory] = useState<any>(null)
 
 
 
@@ -532,6 +533,20 @@ const CardStatistics = () => {
     }
 
 
+    const confirmDeleteCategory = async () => {
+        setLoading(true)
+        try {
+            await api.delete(`/common/employee-salary/destroy/${editId.id}/`)
+            setOpen(null)
+            getEmployePays()
+        } catch (err) {
+            console.log(err)
+        } finally {
+            setLoading(false)
+        }
+    }
+
+
 
     const handleRow = (id: string) => {
         push(`/finance/salaries/${id}`)
@@ -587,8 +602,8 @@ const CardStatistics = () => {
                                     <Grid item xs={12} sm={6} lg={2} key={index} onMouseEnter={() => setIsHover(_.id)} onMouseLeave={() => setIsHover(null)} sx={{ position: 'relative' }}>
                                         <Box onClick={() => push(`/finance/costs/${_.id}`)} sx={{ cursor: 'pointer' }}>
                                             <CardFinanceCategory title={_.name} stats={_.total_expense} icon={<IconifyIcon fontSize={"3rem"} icon={''} />} color={'warning'} />
-                                            {isHover === _.id && <IconifyIcon style={{ position: 'absolute', zIndex: 999, bottom: 0, right: 0 }} icon={'fluent:delete-20-regular'} />}
                                         </Box>
+                                        {isHover === _.id && <IconifyIcon onClick={() => setDeleteCategory(_.id)} style={{ position: 'absolute', zIndex: 999, bottom: '2px', right: 0 }} icon={'fluent:delete-20-regular'} />}
                                     </Grid>
                                 ))
                             }
@@ -765,6 +780,22 @@ const CardStatistics = () => {
                     <LoadingButton loading={loading} onClick={() => approveMonthly()} variant='contained'>{t("Saqlash")}</LoadingButton>
                 </DialogContent>}
             </Dialog>
+
+
+            <Dialog open={deleteCategory} onClose={() => setDeleteCategory(null)}>
+                <DialogTitle sx={{ display: 'flex', alignItems: 'center', minWidth: '300px', justifyContent: 'space-between' }}>
+                    <Typography></Typography>
+                    <IconifyIcon icon={'mdi:close'} onClick={() => setDeleteCategory(null)} />
+                </DialogTitle>
+                <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                    <Typography>Chiqimlar bo'limini o'chirmoqchimisiz?</Typography>
+                    <Box sx={{ display: 'flex', justifyContent: 'center', gap: 4, mt: 10 }}>
+                        <LoadingButton onClick={() => (setDeleteCategory(null))} variant='outlined'>{t("Bekor qilish")}</LoadingButton>
+                        <LoadingButton loading={loading} onClick={() => deleteCash()} color='error' variant='contained'>{t("O'chirish")}</LoadingButton>
+                    </Box>
+                </DialogContent>
+            </Dialog>
+
         </ApexChartWrapper>
     )
 }

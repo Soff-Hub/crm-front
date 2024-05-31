@@ -161,28 +161,28 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, reRender }
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', py: 1 }}>
                         <Box>
                             <Typography fontSize={12}>{first_name}</Typography>
-                            <Typography variant='body2' fontSize={12}>{status == 'active' ? 'Faol' : status == 'new' ? 'Sinov darsida' : 'Arxiv'}</Typography>
+                            <Typography variant='body2' fontSize={12}>{status == 'active' ? t('aktiv') : status == 'new' ? t('sinov') : t('arxiv')}</Typography>
                         </Box>
                         <Typography variant='body2' fontSize={10}>{`( ID: 134 )`}</Typography>
                     </Box>
                     <Box py={1} borderTop={'1px solid #c3cccc'}>
-                        <Typography variant='body2' fontSize={12}>Telefon</Typography>
+                        <Typography variant='body2' fontSize={12}>{t('phone')}</Typography>
                         <Typography fontSize={12}>{phone}</Typography>
                     </Box>
                     <Box py={1} borderTop={'1px solid #c3cccc'}>
-                        <Typography variant='body2' fontSize={12}>Balans</Typography>
+                        <Typography variant='body2' fontSize={12}>{t('Balans')}</Typography>
                         <Typography fontSize={12}>{`${balance} so'm`}</Typography>
                     </Box>
                     <Box py={1} borderTop={'1px solid #c3cccc'}>
-                        <Typography variant='body2' fontSize={12}>Talaba qo'shilgan sana</Typography>
+                        <Typography variant='body2' fontSize={12}>{t("Talaba qo'shilgan sana")}</Typography>
                         <Typography fontSize={12}>{formatDateTime(added_at)}</Typography>
                     </Box>
                     <Box py={1} borderTop={'1px solid #c3cccc'}>
-                        <Typography variant='body2' fontSize={12}>Aktivlashtirilgan sana</Typography>
+                        <Typography variant='body2' fontSize={12}>{t('Aktivlashtirilgan sana')}</Typography>
                         <Typography fontSize={12}>{formatDateTime(activated_at)}</Typography>
                     </Box>
                     {comment && <Box py={1} borderTop={'1px solid #c3cccc'}>
-                        <Typography variant='body2' fontSize={12}>Eslatma</Typography>
+                        <Typography variant='body2' fontSize={12}>{t('Eslatma')}</Typography>
                         <Typography fontSize={12} fontStyle={'italic'}>{comment.comment}</Typography>
                         <Typography fontSize={12} variant='body2'>{`${comment.user} ${formatDateTime(comment.created_at)}`}</Typography>
                     </Box>}
@@ -214,11 +214,11 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, reRender }
                 onClose={() => handleClose('none')}
                 TransitionComponent={Fade}
             >
-                <MenuItem onClick={() => handleClose('payment')}>To'lov</MenuItem>
-                <MenuItem onClick={() => handleClose('left')}>Guruhdan chiqarish</MenuItem>
-                <MenuItem onClick={() => handleClose('notes')}>Eslatma +</MenuItem>
-                <MenuItem onClick={() => (handleClose('sms'), getSMSTemps())}>Xabar (sms) +</MenuItem>
-                <MenuItem onClick={() => setActivate(true)}>Tahrirlash</MenuItem>
+                <MenuItem onClick={() => handleClose('payment')}>{t("To'lov")}</MenuItem>
+                <MenuItem onClick={() => handleClose('left')}>{t('Guruhdan chiqarish')}</MenuItem>
+                <MenuItem onClick={() => handleClose('notes')}>{t('Eslatma')} +</MenuItem>
+                <MenuItem onClick={() => (handleClose('sms'), getSMSTemps())}>{t('Xabar (sms)')} +</MenuItem>
+                <MenuItem onClick={() => setActivate(true)}>{t('Tahrirlash')}</MenuItem>
             </Menu>
 
             <Dialog open={openLeft} onClose={() => setOpenLeft(false)}>
@@ -360,9 +360,11 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, reRender }
 
 export default function UserViewStudentsList({ data, reRender }: any) {
 
+    const { t } = useTranslation()
+
     return (
         <Box>
-            <TextField autoComplete='off' placeholder='Qidirish...' size='small' fullWidth />
+            <TextField autoComplete='off' placeholder={t('Qidirish')} size='small' fullWidth />
             <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%', mt: '10px', gap: '5px' }}>
                 {
                     data.map((el: any, index: any) => (
