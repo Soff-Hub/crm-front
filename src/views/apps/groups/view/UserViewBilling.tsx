@@ -201,7 +201,7 @@ const UserViewBilling = () => {
                         <FormHelperText error={error.description}>{error.description?.message}</FormHelperText>
                     </FormControl>
 
-                    <LoadingButton loading={loading} variant="outlined" type="submit">Saqlash</LoadingButton>
+                    <LoadingButton loading={loading} variant="outlined" type="submit">{t('Saqlash')}</LoadingButton>
                 </Form>}
             </Drawer>
 

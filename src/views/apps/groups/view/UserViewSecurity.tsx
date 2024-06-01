@@ -8,6 +8,7 @@ import getMontName, { getMontNumber } from "src/@core/utils/gwt-month-name";
 import { AuthContext } from "src/context/AuthContext";
 import { styled } from '@mui/material/styles';
 import { t } from "i18next";
+import { useTranslation } from "react-i18next";
 
 
 interface Result {
@@ -99,6 +100,7 @@ const UserViewSecurity = ({ invoiceData }: any) => {
   const [month, setMonth] = useState<any>(null)
   const [topic, setTopic] = useState<any>('')
   const [archiveUrl, setArchiveUrl] = useState<'active,new' | 'archive'>('active,new')
+  const { t } = useTranslation()
 
 
   const [attendance, setAttendance] = useState<any>(null)
@@ -200,14 +202,14 @@ const UserViewSecurity = ({ invoiceData }: any) => {
           loading ? (
             <Box sx={{ mt: 6, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
               <CircularProgress sx={{ mb: 4 }} />
-              <Typography>Yuklanmoqda...</Typography>
+              <Typography>{t('Loading...')}</Typography>
             </Box>
           ) : (
             <Box>
               <table>
                 <thead>
                   <tr style={{ borderBottom: '1px solid #c3cccc' }}>
-                    <td style={{ padding: '8px 0', textAlign: 'start', minWidth: '150px' }}><Typography>Mavzular</Typography></td>
+                    <td style={{ padding: '8px 0', textAlign: 'start', minWidth: '150px' }}><Typography>{t('Mavzular')}</Typography></td>
                     {
                       attendance && days.map((hour: any) => <td key={hour.date} style={{ textAlign: 'center', minWidth: '45px', padding: '8px 0', cursor: 'pointer', backgroundColor: hour.exam ? '#96f3a5' : hour.lesson ? '#a7c0fb' : 'transparent' }}>
                         <div>
@@ -303,7 +305,7 @@ const UserViewSecurity = ({ invoiceData }: any) => {
                     }
                   </tr>
                   <tr style={{ borderBottom: '1px solid #c3cccc' }}>
-                    <td style={{ padding: '8px 0', textAlign: 'start', borderRight: '1px solid #c3cccc', maxWidth: '100px' }}><Typography>O'quvchilar</Typography></td>
+                    <td style={{ padding: '8px 0', textAlign: 'start', borderRight: '1px solid #c3cccc', maxWidth: '100px' }}><Typography>{t("O'quvchilar")}</Typography></td>
                     {
                       attendance && days.map((hour: any) => <th key={hour.date} style={{ textAlign: 'center', minWidth: '50px', padding: '8px 0', cursor: 'pointer' }}><Typography>{`${hour.date.split('-')[2]}`}</Typography></th>)
                     }
@@ -357,9 +359,9 @@ const UserViewSecurity = ({ invoiceData }: any) => {
                   }}
                 >
                   {
-                    archiveUrl === 'archive' ? "Arxivni yopish" : "Arxivdagi o'quvchilarni ko'rish"
+                    archiveUrl === 'archive' ? t("Arxivni yopish") : t("Arxivdagi o'quvchilarni ko'rish")
                   }
-                  
+
                 </Button>
               </Box>
             </Box>

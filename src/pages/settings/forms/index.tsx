@@ -35,35 +35,35 @@ export default function FormsPage() {
     },
     {
       xs: 1,
-      title: "Nomi",
+      title: t("Nomi"),
       dataIndex: "title",
     },
     {
       xs: 1,
-      title: "Lid bo'limi",
+      title: t("Lid bo'limi"),
       dataIndex: "source_department",
       render: (source_department: any) => source_department.department
     },
     {
       xs: 1,
-      title: "Manba",
+      title: t("Manba"),
       dataIndex: "source_department",
       render: (source_department: any) => source_department.source
     },
     {
       xs: 1,
-      title: "Tushgan lidlar soni",
+      title: t("Tushgan lidlar soni"),
       dataIndex: "user_count",
     },
     {
       xs: 2.4,
-      title: "Link",
+      title: t("Link"),
       dataIndex: "uuid",
       render: (link: string) => `${link}`
     },
     {
       xs: 0.5,
-      title: "Amallar",
+      title: t("Amallar"),
       dataIndex: "id",
       render: (id) => <IconifyIcon onClick={() => (setDeleteId(id), setOpen('delete'))} icon={'material-symbols-light:delete-outline'} />
     },
@@ -145,15 +145,15 @@ export default function FormsPage() {
   return (
     <Box>
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <Typography fontSize={'18px'}>Formalar</Typography>
+        <Typography fontSize={'18px'}>{t('Formalar')}</Typography>
         {/* <Button size='small' variant='contained' startIcon={<IconifyIcon icon={'ic:baseline-add'} />} onClick={openDialog}>Yangi</Button> */}
-        <Button size='small' variant='contained' startIcon={<IconifyIcon icon={'ic:baseline-add'} />} onClick={() => push(`/settings/forms/create`)}>Yangi</Button>
+        <Button size='small' variant='contained' startIcon={<IconifyIcon icon={'ic:baseline-add'} />} onClick={() => push(`/settings/forms/create`)}>{t('Yangi')}</Button>
       </Box>
 
       <Box sx={{ display: 'flex', gap: '10px', flexDirection: 'column', mt: '10px' }}>
         <Alert icon={false} sx={{ py: 2, mb: 0, ...bgColors.primaryLight, '& .MuiAlert-message': { p: 0 } }}>
           <Typography variant='caption' sx={{ display: 'block', color: 'primary.main' }}>
-            Linkni nusxalash uchun qatorning istalgan joyiga bosing
+            {t('Linkni nusxalash uchun qatorning istalgan joyiga bosing')}
           </Typography>
         </Alert>
       </Box>
@@ -162,7 +162,7 @@ export default function FormsPage() {
 
       <Dialog open={open === 'new'} onClose={() => setOpen(null)}>
         <DialogTitle minWidth={'300px'} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <Typography fontSize={'18px'}>Yangi forma</Typography>
+          <Typography fontSize={'18px'}>{t('Yangi forma')}</Typography>
           <span onClick={() => setOpen(null)}>
             <IconifyIcon icon={'ic:baseline-add'} style={{ transform: 'rotate(45deg)', cursor: 'pointer' }} />
           </span>
@@ -175,11 +175,11 @@ export default function FormsPage() {
             </FormControl>
 
             <FormControl fullWidth>
-              <InputLabel size='small' id='user-view-language-label'>Bo'lim</InputLabel>
+              <InputLabel size='small' id='user-view-language-label'>{t("Bo'lim")}</InputLabel>
               <Select
                 size='small'
                 error={error.departmentParent?.error}
-                label={"Bo'lim"}
+                label={t("Bo'lim")}
 
                 id='user-view-language'
                 labelId='user-view-language-label'
@@ -196,11 +196,11 @@ export default function FormsPage() {
 
             {selectedDepartment && (
               <FormControl fullWidth>
-                <InputLabel size='small' id='user-view-language-label'>Quyi bo'lim</InputLabel>
+                <InputLabel size='small' id='user-view-language-label'>{t("Quyi bo'lim")}</InputLabel>
                 <Select
                   size='small'
                   error={error.department?.error}
-                  label={"Quyi bo'lim"}
+                  label={t("Quyi bo'lim")}
                   id='user-view-language'
                   labelId='user-view-language-label'
                   name='department'
@@ -243,17 +243,17 @@ export default function FormsPage() {
               </FormControl>
             ) : ''}
 
-            <LoadingButton loading={loading} variant='contained' type='submit'>Yaratish</LoadingButton>
+            <LoadingButton loading={loading} variant='contained' type='submit'>{t('Yaratish')}</LoadingButton>
           </Form>
         </DialogContent>
       </Dialog>
 
       <Dialog open={open === 'delete'} onClose={() => setOpen(null)}>
         <DialogContent>
-          <Typography sx={{ fontSize: '20px', margin: '30px 20px' }}>Formani o'chirmoqchimisiz?</Typography>
+          <Typography sx={{ fontSize: '20px', margin: '30px 20px' }}>{t("Formani o'chirmoqchimisiz")}?</Typography>
           <Box sx={{ display: 'flex', justifyContent: 'center', gap: '12px' }}>
-            <LoadingButton variant='outlined' color='error' onClick={() => setOpen(null)}>Yo'q</LoadingButton>
-            <LoadingButton loading={loading} variant='contained' color='success' onClick={onDelete}>Xa, O'chirish</LoadingButton>
+            <LoadingButton variant='outlined' color='error' onClick={() => setOpen(null)}>{t("Bekor qilish")}</LoadingButton>
+            <LoadingButton loading={loading} variant='contained' color='success' onClick={onDelete}>{t("O'chirish")}</LoadingButton>
           </Box>
         </DialogContent>
       </Dialog>

@@ -77,26 +77,6 @@ const LanguageDropdown = ({ settings, saveSettings }: Props) => {
               handleLangItemClick('en')
             }
           }
-        },
-        {
-          text: 'Français',
-          menuItemProps: {
-            sx: { py: 2 },
-            selected: i18n.language === 'fr',
-            onClick: () => {
-              handleLangItemClick('fr')
-            }
-          }
-        },
-        {
-          text: 'Arabic',
-          menuItemProps: {
-            sx: { py: 2 },
-            selected: i18n.language === 'ar',
-            onClick: () => {
-              handleLangItemClick('ar')
-            }
-          }
         }
       ]}
     />

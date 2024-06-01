@@ -90,11 +90,11 @@ const UserViewRight = ({ tab, invoiceData }: Props) => {
         aria-label='forced scroll tabs example'
         sx={{ borderBottom: theme => `1px solid ${theme.palette.divider}` }}
       >
-        <Tab value='security' label='Davomat' icon={<Icon icon='mdi:account-clock' />} />
-        {!(user?.role.length === 1 && user?.role.includes('teacher')) && <Tab value='notes' label='Eslatmalar' icon={<Icon icon='mdi:notebook-check-outline' />} />}
-        <Tab value='exams' label='Imtixon' icon={<Icon icon='mdi:puzzle-check-outline' />} />
-        {!(user?.role.length === 1 && user?.role.includes('teacher')) && <Tab value='discount' label='Chegirmalar' icon={<Icon icon='mdi:sale' />} />}
-        {!(user?.role.length === 1 && user?.role.includes('teacher')) && <Tab value='money' label="Maosh" icon={<Icon icon='mdi:money' />} />}
+        <Tab value='security' label={t('Davomat')} icon={<Icon icon='mdi:account-clock' />} />
+        {!(user?.role.length === 1 && user?.role.includes('teacher')) && <Tab value='notes' label={t('Eslatmalar')} icon={<Icon icon='mdi:notebook-check-outline' />} />}
+        <Tab value='exams' label={t('Imtixon')} icon={<Icon icon='mdi:puzzle-check-outline' />} />
+        {!(user?.role.length === 1 && user?.role.includes('teacher')) && <Tab value='discount' label={t('Chegirmalar')} icon={<Icon icon='mdi:sale' />} />}
+        {!(user?.role.length === 1 && user?.role.includes('teacher')) && <Tab value='money' label={t("Maosh")} icon={<Icon icon='mdi:money' />} />}
       </TabList>
       <Box sx={{ mt: 2 }}>
         {isLoading ? (

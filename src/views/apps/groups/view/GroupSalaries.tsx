@@ -4,6 +4,7 @@ import { Box, Button, TextField, Typography } from '@mui/material'
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
 import api from 'src/@core/utils/api';
 
 export default function GroupSalaries({ group }: any) {
@@ -12,6 +13,7 @@ export default function GroupSalaries({ group }: any) {
     const [loading, setLoading] = useState<boolean>(false)
     const { query } = useRouter()
     const [data, setData] = useState<any>(null)
+    const { t } = useTranslation()
 
     function handleChange(text: any, set: any) {
         let sonlar = text.match(/[0-9-]+/g);
@@ -73,9 +75,6 @@ export default function GroupSalaries({ group }: any) {
         }
     }
 
-    console.log(data);
-
-
 
     useEffect(() => {
         getAmount()
@@ -90,28 +89,28 @@ export default function GroupSalaries({ group }: any) {
                     <>
                         <Box sx={{ display: 'flex', flexDirection: 'column', maxWidth: '300px', gap: '5px' }}>
                             <Typography>
-                                Har bir o'quvchi uchun o'qituvchiga to'lanadigan oylik summa
+                                {t("Har bir o'quvchi uchun o'qituvchiga to'lanadigan oylik summa")}
                             </Typography>
                             <TextField size='small' onChange={(e) => handleChange(e.target.value, setValue)} value={value} />
                         </Box>
                         <Box sx={{ display: 'flex', flexDirection: 'column', maxWidth: '300px', gap: '5px' }}>
                             <Typography>
-                                Har bir o'quvchi uchun o'qituvchidan olinadigan jarima summa
+                                {t("Har bir jarima uchun o'qituvchidan olinadigan summa")}
                             </Typography>
                             <TextField size='small' onChange={(e) => handleChange(e.target.value, setFine)} value={fine} />
                         </Box>
-                        <LoadingButton onClick={handleEdit} loading={loading} variant='contained'>Saqlash</LoadingButton></>
+                        <LoadingButton onClick={handleEdit} loading={loading} variant='contained'>{t('Saqlash')}</LoadingButton></>
                 ) : (
                     <>
                         <Box sx={{ display: 'flex', flexDirection: 'column', maxWidth: '300px', gap: '5px' }}>
                             <Typography>
-                                Har bir o'quvchi uchun o'qituvchiga to'lanadigan oylik summa
+                                {t("Har bir o'quvchi uchun o'qituvchiga to'lanadigan oylik summa")}
                             </Typography>
                             <TextField size='small' onChange={(e) => handleChange(e.target.value, setValue)} value={value} />
                         </Box>
                         <Box sx={{ display: 'flex', flexDirection: 'column', maxWidth: '300px', gap: '5px' }}>
                             <Typography>
-                                Har bir o'quvchi uchun o'qituvchidan olinadigan jarima summa
+                                {t("Har bir jarima uchun o'qituvchidan olinadigan summa")}
                             </Typography>
                             <TextField size='small' onChange={(e) => handleChange(e.target.value, setFine)} value={fine} />
                         </Box>

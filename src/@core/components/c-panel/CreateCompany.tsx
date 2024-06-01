@@ -1,4 +1,4 @@
-import { Box, FormControl, FormLabel, TextField, Typography } from '@mui/material'
+import { Box, FormControl, FormLabel, Input, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material'
 import React, { useState } from 'react'
 import Form from '../form'
 import { styled } from '@mui/material/styles';
@@ -41,7 +41,6 @@ export default function CreateCompany({ slug }: Props) {
                     padding: '0px 30px'
                 }}
             >
-                <Typography sx={{ fontSize: '20px', borderBottom: '1px solid white', marginBottom: '30px' }}>Yangi o'quv markaz yaratish uchun quyidagi ma'lumotlarni to'ldiring</Typography>
 
                 <Form
                     id='create-company'
@@ -51,45 +50,48 @@ export default function CreateCompany({ slug }: Props) {
                         width: '100%',
                         display: 'flex',
                         gap: '20px',
-                        flexDirection: isMobile ? 'column' : 'row'
+                        flexDirection: !isMobile ? 'column' : 'row',
+                        alignItems: 'center'
                     }}
                 >
 
                     <Box sx={{
                         display: 'flex',
                         gap: '20px',
-                        maxWidth: '300px',
+                        maxWidth: '600px',
                         width: '100%',
                         flexDirection: 'column'
                     }} >
+                        <Typography sx={{ fontSize: '20px', borderBottom: '1px solid white', marginBottom: '20px' }}>Yangi o'quv markaz yaratish uchun quyidagi ma'lumotlarni to'ldiring</Typography>
                         <TextField size='small' label="Nomi" name='name' />
 
                         <TextField size='small' label="Direktor to'liq ismi" name='first_name' />
 
+                        <TextField size='small' label="Masul shaxs" name='phone' defaultValue={'+998'} />
 
-                    </Box>
+                        <Box style={{ display: 'flex', gap: '8px' }}>
+                            <TextField size='small' label="Login" name='login' defaultValue={'+998'} style={{ width: '100%' }} />
 
-                    <Box sx={{
-                        display: 'flex',
-                        gap: '20px',
-                        maxWidth: '300px',
-                        width: '100%',
-                        flexDirection: 'column'
-                    }} >
-                        <TextField size='small' label="Aloqa uchun raqam" name='phone' />
+                            <TextField size='small' label="Parol" name='password' style={{ width: '100%' }} />
+                        </Box>
 
-                        <TextField size='small' label="Direktor login" name='login' />
-                    </Box>
+                        <Box style={{ display: 'flex', gap: '8px' }}>
+                            <FormControl sx={{ width: '100%' }}>
+                                <InputLabel size='small' id='demo-simple-select-outlined-label'>Holati</InputLabel>
+                                <Select
+                                    size='small'
+                                    label="Holati"
+                                    id='demo-simple-select-outlined'
+                                    labelId='demo-simple-select-outlined-label'
+                                    defaultValue={'active'}
+                                >
+                                    <MenuItem value={'active'}>{'Aktiv'}</MenuItem>
+                                    <MenuItem value={'no-active'}>{'no aktiv'}</MenuItem>
+                                </Select>
+                            </FormControl>
 
-
-                    <Box sx={{
-                        display: 'flex',
-                        gap: '20px',
-                        maxWidth: '300px',
-                        width: '100%',
-                        flexDirection: 'column'
-                    }} >
-                        <TextField size='small' label="Parol" name='password' />
+                            <Input size='small' name='password' style={{ width: '100%' }} endAdornment=".soffcrm.uz" />
+                        </Box>
 
                         <Button
                             component="label"
@@ -101,6 +103,7 @@ export default function CreateCompany({ slug }: Props) {
                             <VisuallyHiddenInput name='logo' type="file" />
                         </Button>
                     </Box>
+
 
                     <Box sx={{
                         display: 'flex',
