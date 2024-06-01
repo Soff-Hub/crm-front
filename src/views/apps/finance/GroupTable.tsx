@@ -1,5 +1,6 @@
 import { Box, Card, Paper, TextField, Typography, styled } from '@mui/material'
 import React from 'react'
+import { useTranslation } from 'react-i18next'
 import { formatCurrency } from 'src/@core/utils/format-currency'
 import { hexToRGBA } from 'src/@core/utils/hex-to-rgba'
 
@@ -46,23 +47,25 @@ const Div = styled(Box)(({ theme }) => ({
 
 export default function GroupFinanceTable({ data, updateData }: any) {
 
+    const { t } = useTranslation()
+
     return (
         <Card sx={{ display: 'flex', p: '15px', gap: '5px' }}>
-            <Box className='header' sx={{ minWidth: '150px' }}>
-                <Div sx={{ mb: '5px' }}>Nomi</Div>
+            <Box className='header' sx={{ minWidth: '170px' }}>
+                <Div sx={{ mb: '5px' }}>{t('Nomi')}</Div>
                 <Box>
-                    <Box sx={{ border: '1px solid #c3cccc', p: '5px', fontSize: 13 }} >Nomi / Guruh</Box>
-                    <Box sx={{ border: '1px solid #c3cccc', p: '5px', fontSize: 13 }} >O'quvchi soni</Box>
-                    <Box sx={{ border: '1px solid #c3cccc', p: '5px', fontSize: 13 }} >To'landi</Box>
-                    <Box sx={{ border: '1px solid #c3cccc', p: '5px', fontSize: 13 }} >Reja</Box>
-                    <Box sx={{ border: '1px solid #c3cccc', p: '5px', fontSize: 13 }} >To'lanishi kerak</Box>
+                    <Box sx={{ border: '1px solid #c3cccc', p: '5px', fontSize: 13 }} >{t('Nomi')} / {t('Guruhlar')}</Box>
+                    <Box sx={{ border: '1px solid #c3cccc', p: '5px', fontSize: 13 }} >{t("O'quvchilar soni")}</Box>
+                    <Box sx={{ border: '1px solid #c3cccc', p: '5px', fontSize: 13 }} >{t("To'landi")}</Box>
+                    <Box sx={{ border: '1px solid #c3cccc', p: '5px', fontSize: 13 }} >{t('Reja')}</Box>
+                    <Box sx={{ border: '1px solid #c3cccc', p: '5px', fontSize: 13 }} >{t("To'lanishi kerak")}</Box>
                 </Box>
             </Box>
             <Box className='header' sx={{ minWidth: '150px' }}>
-                <Div sx={{ mb: '5px' }}>Umumiy</Div>
+                <Div sx={{ mb: '5px' }}>{t('Umumiy')}</Div>
                 <Box>
-                    <Box sx={{ border: '1px solid #c3cccc', p: '5px', fontSize: 13 }}>{data?.result?.length} ta guruh</Box>
-                    <Box sx={{ border: '1px solid #c3cccc', p: '5px', fontSize: 13 }}>{data?.students_count} ta o'quvchi</Box>
+                    <Box sx={{ border: '1px solid #c3cccc', p: '5px', fontSize: 13 }}>{data?.result?.length}</Box>
+                    <Box sx={{ border: '1px solid #c3cccc', p: '5px', fontSize: 13 }}>{data?.students_count}</Box>
                     <Box sx={{ border: '1px solid #c3cccc', p: '5px', fontSize: 13 }}>{formatCurrency(data.total_payments)}</Box>
                     <Box sx={{ border: '1px solid #c3cccc', p: '5px', fontSize: 13 }}>{formatCurrency(data?.result.reduce((acc: number, curr: any) => acc + curr.planed_payment, 0))}</Box>
                     <Box sx={{ border: '1px solid #c3cccc', p: '5px', fontSize: 13 }}>{
