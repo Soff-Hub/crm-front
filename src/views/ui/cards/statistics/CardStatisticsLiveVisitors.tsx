@@ -15,19 +15,6 @@ import { Box, FormControl, InputLabel, MenuItem, Select, Typography } from '@mui
 import { useTranslation } from 'react-i18next'
 import { useState } from 'react'
 
-const series = [
-  {
-    name: 'Sales',
-    type: 'column',
-    data: [73, 58, 46, 55, 56, 37, 28, 61, 34, 71, 91, 82]
-  },
-  {
-    type: 'line',
-    name: 'Sales',
-    data: [63, 38, 31, 45, 46, 27, 18, 51, 24, 61, 81, 72]
-  }
-]
-
 const CardWidgetsWeeklyOverview = ({ data }: any) => {
   // ** Hook
   const theme = useTheme()
@@ -111,7 +98,7 @@ const CardWidgetsWeeklyOverview = ({ data }: any) => {
   return (
     <Card sx={{ p: '20px' }}>
       <Box sx={{ display: 'flex', alignItems: 'center' }}>
-        <Typography sx={{ fontSize: '22px' }}>Yillik summa</Typography>
+        <Typography sx={{ fontSize: '22px' }}>{t('Yillik aylanmalar')}</Typography>
         <FormControl className='ms-auto'>
           <InputLabel size='small' id='user-view-language-label'>{t('Yil')}</InputLabel>
           <Select
@@ -141,8 +128,8 @@ const CardWidgetsWeeklyOverview = ({ data }: any) => {
             defaultValue={'benefit'}
             onChange={(e: any) => setType(e.target.value)}
           >
-            <MenuItem value={"benefit"}>{"Tushum"}</MenuItem>
-            <MenuItem value={"expense"}>{"Chiqim"}</MenuItem>
+            <MenuItem value={"benefit"}>{t("Tushum")}</MenuItem>
+            <MenuItem value={"expense"}>{t("Chiqim")}</MenuItem>
           </Select>
         </FormControl>
       </Box>
