@@ -120,7 +120,7 @@ export default function AllSettings() {
         <Box sx={{ display: 'flex', gap: '15px', flexDirection: isMobile ? 'column' : 'row', px: 4 }}>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: '15px', width: '100%' }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-                    <Typography sx={{ minWidth: isMobile ? '90px' : '120px', fontSize: isMobile ? '13px' : '16px' }}>{t('Tashkilot nomi')}:</Typography>
+                    <Typography sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}>{t('Tashkilot nomi')}:</Typography>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                         {
                             editable === 'title' ? (
@@ -141,7 +141,7 @@ export default function AllSettings() {
                 </Box>
 
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-                    <Typography sx={{ minWidth: isMobile ? '90px' : '120px', fontSize: isMobile ? '13px' : '16px' }}>{t('Logo')}:</Typography>
+                    <Typography sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}>{t('Logo')}:</Typography>
                     <img src={companyInfo?.logo} height={35} />
                     <Button
                         component="label"
@@ -159,7 +159,7 @@ export default function AllSettings() {
                 </Box>
 
                 <Box sx={{ display: 'flex', gap: '20px' }}>
-                    <Typography sx={{ minWidth: isMobile ? '90px' : '120px', fontSize: isMobile ? '13px' : '16px' }}>{t('Filiallar')}:</Typography>
+                    <Typography sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}>{t('Filiallar')}:</Typography>
                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
                         {
                             branches.map((branch: any) => (
@@ -196,7 +196,7 @@ export default function AllSettings() {
                 </Box>
 
                 <Box sx={{ display: 'flex', gap: '20px' }}>
-                    <Typography sx={{ minWidth: isMobile ? '90px' : '120px', fontSize: isMobile ? '13px' : '16px' }}>{t('Tolov usullari')}:</Typography>
+                    <Typography sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}>{t('Tolov usullari')}:</Typography>
                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
                         {
                             paymentMethods.map((method: any) => (
@@ -234,7 +234,7 @@ export default function AllSettings() {
             </Box>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: '15px', width: '100%' }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-                    <Typography sx={{ minWidth: isMobile ? '90px' : '120px', fontSize: isMobile ? '13px' : '16px' }}>{t('Ish boshlanish vaqti')}:</Typography>
+                    <Typography sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}>{t('Ish boshlanish vaqti')}:</Typography>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                         {
                             editable === 'start-time' ? (

@@ -287,5 +287,11 @@
     "Xarajatlarni kiritish": "Entering costs",
     "Xarajatlarni o'chirish": "Deletion of expenses",
     "Tushum": "Income",
-    "Chiqim": "Cost"
+    "Chiqim": "Cost",
+    "Direktor": "Director",
+    "Login": "Login",
+    "Yangi o'quv markaz yaratish uchun quyidagi ma'lumotlarni to'ldiring": "Fill in the following information to create a new training center",
+    "Masul shaxs ismi": "Name of responsible person",
+    "Logo yuklash": "Logo upload",
+    "Masul shaxs raqami": "Responsible person number"
 }

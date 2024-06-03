@@ -1,6 +1,6 @@
 import { GetServerSidePropsContext } from 'next/types';
 import React from 'react'
-import CreateCompany from 'src/@core/components/c-panel/CreateCompany'
+import EditCompany from 'src/@core/components/c-panel/EditCompany';
 
 
 type Props = {
@@ -12,7 +12,7 @@ function Slug({ tab }: Props) {
 
     return (
         <div>
-            <CreateCompany slug={tab} />
+            <EditCompany slug={tab} />
         </div>
     )
 }

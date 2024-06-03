@@ -289,5 +289,11 @@
     "Xarajatlarni kiritish": "Ввод затрат",
     "Xarajatlarni o'chirish": "Удаление расходов",
     "Tushum": "Доход",
-    "Chiqim": "Расходы"
+    "Chiqim": "Расходы",
+    "Direktor": "Директор",
+    "Login": "Имя пользователя",
+    "Yangi o'quv markaz yaratish uchun quyidagi ma'lumotlarni to'ldiring": "Заполните следующую информацию, чтобы создать новый учебный центр",
+    "Masul shaxs ismi": "Имя ответственного лица",
+    "Logo yuklash": "Загрузка логотипа",
+    "Masul shaxs raqami": "Номер ответственного лица"
 }

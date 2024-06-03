@@ -26,6 +26,12 @@ module.exports = withTM({
 
     return config
   },
+  images: {
+    remotePatterns: [
+      { protocol: 'https', hostname: "*" },
+      { protocol: 'http', hostname: "*" }
+    ]
+  }
   // i18n: {
   //   locales: ["uz", "en", "ru"],
   //   defaultLocale: "uz",
