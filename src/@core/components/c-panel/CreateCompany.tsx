@@ -34,7 +34,6 @@ export default function CreateCompany({ slug }: Props) {
     const [error, setError] = useState<any>({})
     const { isMobile } = useResponsive()
     const { t } = useTranslation()
-    const [domain, setDomain] = useState<any>('')
 
     async function handleSubmit(values: any) {
         try {
@@ -92,7 +91,7 @@ export default function CreateCompany({ slug }: Props) {
 
                         <Box style={{ display: 'flex', gap: '8px' }}>
                             <FormControl fullWidth>
-                                <Input error={error?.domain} placeholder='example' autoComplete='off' size='small' name='domain' style={{ width: '100%' }} endAdornment=".soffcrm.uz" onInput={(e: any) => setDomain(e.target.value)} value={domain} />
+                                <Input error={error?.domain} placeholder='example' autoComplete='off' size='small' name='domain' style={{ width: '100%' }} endAdornment=".soffcrm.uz" />
                                 <FormHelperText error={error?.domain}>{error?.domain}</FormHelperText>
                             </FormControl>
                         </Box>
