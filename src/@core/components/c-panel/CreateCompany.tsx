@@ -9,6 +9,7 @@ import { useTranslation } from 'react-i18next';
 import api from 'src/@core/utils/api';
 import Router from 'next/router';
 import showResponseError from 'src/@core/utils/show-response-error';
+import LoadingButton from '@mui/lab/LoadingButton';
 
 type Props = {
     slug?: number | undefined
@@ -34,13 +35,17 @@ export default function CreateCompany({ slug }: Props) {
     const [error, setError] = useState<any>({})
     const { isMobile } = useResponsive()
     const { t } = useTranslation()
+    const [loading, setLoading] = useState<boolean>(false)
 
     async function handleSubmit(values: any) {
+        setLoading(true)
         try {
             await api.post(`/owner/create/client/`, values)
             Router.push('/c-panel')
         } catch (err: any) {
             showResponseError(err?.response?.data, setError)
+        } finally {
+            setLoading(false)
         }
     }
 
@@ -106,13 +111,14 @@ export default function CreateCompany({ slug }: Props) {
                             <VisuallyHiddenInput accept='.png, .jpg, .jpeg, .webp' name='logo' type="file" />
                         </Button>
 
-                        <Button
+                        <LoadingButton
+                            loading={loading}
                             variant="contained"
                             startIcon={<IconifyIcon icon={'fluent:save-16-regular'} />}
                             type='submit'
                         >
                             {t('Saqlash')}
-                        </Button>
+                        </LoadingButton>
                     </Box>
                 </Form>
             </Box>

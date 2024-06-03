@@ -6,19 +6,24 @@ import useResponsive from "src/@core/hooks/useResponsive"
 import api from "src/@core/utils/api"
 import showResponseError from "src/@core/utils/show-response-error"
 import Form from "../form"
+import LoadingButton from "@mui/lab/LoadingButton"
 
 export default function CreateCeo({ slug }: any) {
 
     const [error, setError] = useState<any>({})
     const { isMobile } = useResponsive()
     const { t } = useTranslation()
+    const [loading, setLoading] = useState<boolean>(false)
 
     async function handleSubmit(values: any) {
+        setLoading(true)
         try {
-            await api.post(`/owner/user/`, {...values, client_id: slug})
+            await api.post(`/owner/user/`, { ...values, client_id: slug })
             Router.push('/c-panel')
         } catch (err: any) {
             showResponseError(err?.response?.data, setError)
+        } finally {
+            setLoading(false)
         }
     }
 
@@ -67,12 +72,13 @@ export default function CreateCeo({ slug }: any) {
                             <FormHelperText error={error?.password}>{error?.password}</FormHelperText>
                         </FormControl>
 
-                        <Button
+                        <LoadingButton
+                            loading={loading}
                             variant="contained"
                             type='submit'
                         >
                             {t('Saqlash')}
-                        </Button>
+                        </LoadingButton>
                     </Box>
                 </Form>
             </Box>
