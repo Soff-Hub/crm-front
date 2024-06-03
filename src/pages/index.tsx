@@ -10,6 +10,7 @@ import Spinner from 'src/@core/components/spinner'
 // ** Hook Imports
 import { useAuth } from 'src/hooks/useAuth'
 import BlankLayout from 'src/@core/layouts/BlankLayout'
+import LandingMain from 'src/views/landing/LandingMain'
 
 /**
  *  Set Home URL based on User Roles
@@ -39,7 +40,7 @@ const Home = () => {
     return <Spinner sx={{ height: '100%' }} />
   }
 
-  return <div>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos dicta qui dignissimos iusto tempore, unde consequatur, sequi vitae debitis labore voluptates harum voluptatem libero! Natus possimus pariatur totam architecto quo.</div>
+  return <LandingMain />
 }
 
 Home.getLayout = (page: ReactNode) => <BlankLayout>{page}</BlankLayout>
