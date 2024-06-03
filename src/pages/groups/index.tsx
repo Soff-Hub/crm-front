@@ -162,21 +162,21 @@ export default function GroupsPage() {
             href={`/groups/view/security?id=${id}&month=${getMontName(null)}`}
           >
             <IconifyIcon icon='mdi:eye-outline' fontSize={20} />
-            Ko'rish
+            {t("Ko'rish")}
           </MenuItem>
           <MenuItem onClick={() => handleEdit(id)} sx={{ '& svg': { mr: 2 } }}>
             <IconifyIcon icon='mdi:pencil-outline' fontSize={20} />
-            Tahrirlash
+            {t("Tahrirlash")}
           </MenuItem>
 
           <MenuItem onClick={handleDelete} sx={{ '& svg': { mr: 2 } }}>
             <IconifyIcon icon='mdi:delete-outline' fontSize={20} />
-            O'chirish
+            {t("O'chirish")}
           </MenuItem>
 
           <MenuItem onClick={handleDelete} sx={{ '& svg': { mr: 2 } }}>
             <IconifyIcon icon='material-symbols-light:recommend-outline' fontSize={20} />
-            Guruhni yakunlash
+            {t("Guruhni yakunlash")}
           </MenuItem>
         </Menu>
         <UserSuspendDialog handleOk={() => handleDeleteTeacher(id)} open={suspendDialogOpen} setOpen={setSuspendDialogOpen} />
@@ -223,13 +223,6 @@ export default function GroupsPage() {
       title: t("O'quvchilar soni"),
       dataIndex: 'student_count'
     },
-
-    // {
-    //   xs: 1,
-    //   title: t("O'qituvchi"),
-    //   dataIndex: 'teacher_name'
-    // },
-
     {
       xs: 1,
       title: t("Ochilgan sana"),
@@ -373,11 +366,11 @@ export default function GroupsPage() {
             </FormControl>
 
             <FormControl fullWidth>
-              <InputLabel size='small' id='user-view-language-label'>Kursni tanlash</InputLabel>
+              <InputLabel size='small' id='user-view-language-label'>{t("Kurslar")}</InputLabel>
               <Select
                 size='small'
                 error={error.course?.error}
-                label={t('Kursni tanlash')}
+                label={t("Kurslar")}
                 id='user-view-language'
                 labelId='user-view-language-label'
                 name='course'
@@ -391,7 +384,7 @@ export default function GroupsPage() {
             </FormControl>
 
             <FormControl fullWidth>
-              <InputLabel size='small' id='user-view-language-label'>O'qituvchi</InputLabel>
+              <InputLabel size='small' id='user-view-language-label'>{t("O'qituvchi")}</InputLabel>
               <Select
                 size='small'
                 error={error.teacher?.error}
@@ -409,11 +402,11 @@ export default function GroupsPage() {
             </FormControl>
 
             <FormControl fullWidth>
-              <InputLabel size='small' id='user-view-language-label'>Xona</InputLabel>
+              <InputLabel size='small' id='user-view-language-label'>{t("Xonalar")}</InputLabel>
               <Select
                 size='small'
                 error={error.room?.error}
-                label={t('Xona')}
+                label={t('Xonalar')}
                 id='user-view-language'
                 labelId='user-view-language-label'
                 name='room'
@@ -437,7 +430,7 @@ export default function GroupsPage() {
             </FormControl>
 
             <FormControl fullWidth>
-              <InputLabel size='small' id='user-view-language-label'>Hafta kunlari</InputLabel>
+              <InputLabel size='small' id='user-view-language-label'>{t("Hafta kunlari")}</InputLabel>
               <Select
                 size='small'
                 label="Kunlar boyicha"
@@ -472,7 +465,7 @@ export default function GroupsPage() {
                             gap: '4px',
                             cursor: 'pointer'
                           }}>
-                          <span>{TranslateWeekName[el]}</span>
+                          <span>{t(el)}</span>
                           <input type='checkbox' onChange={() => setCustomWeekDays(customWeekdays.includes(el) ? [...customWeekdays.filter(item => item !== el)] : [...customWeekdays, el])} />
                         </label>
                       ))
@@ -482,17 +475,17 @@ export default function GroupsPage() {
             }
 
             <FormControl sx={{ width: '100%' }}>
-              <TextField size='small' type='time' label={t("Boshlanish vaqi")} name='start_at' error={error.start_at} />
+              <TextField size='small' type='time' label={t("Boshlanish vaqti")} name='start_at' error={error.start_at} />
               <FormHelperText error={error.start_at?.error}>{error.start_at?.message}</FormHelperText>
             </FormControl>
 
             <FormControl sx={{ width: '100%' }}>
-              <TextField size='small' type='time' label={t("Tugash vaqi")} name='end_at' error={error.end_at} />
+              <TextField size='small' type='time' label={t("Tugash vaqti")} name='end_at' error={error.end_at} />
               <FormHelperText error={error.end_at?.error}>{error.end_at?.message}</FormHelperText>
             </FormControl>
 
 
-            <LoadingButton loading={loading} variant='contained' type='submit' fullWidth>Saqlash</LoadingButton>
+            <LoadingButton loading={loading} variant='contained' type='submit' fullWidth>{t("Saqlash")}</LoadingButton>
           </Form>
         </Box>
       </Drawer>
@@ -530,11 +523,11 @@ export default function GroupsPage() {
             </FormControl>
 
             <FormControl fullWidth>
-              <InputLabel size='small' id='user-view-language-label'>Kursni tanlash</InputLabel>
+              <InputLabel size='small' id='user-view-language-label'>{t("Kurslar")}</InputLabel>
               <Select
                 size='small'
                 error={error.course?.error}
-                label={t('Kursni tanlash')}
+                label={t('Kurslar')}
                 id='user-view-language'
                 labelId='user-view-language-label'
                 name='course'
@@ -548,7 +541,7 @@ export default function GroupsPage() {
             </FormControl>
 
             <FormControl fullWidth>
-              <InputLabel size='small' id='user-view-language-label'>O'qituvchi</InputLabel>
+              <InputLabel size='small' id='user-view-language-label'>{t("O'qituvchi")}</InputLabel>
               <Select
                 size='small'
                 error={error.teacher?.error}
@@ -566,11 +559,11 @@ export default function GroupsPage() {
             </FormControl>
 
             <FormControl fullWidth>
-              <InputLabel size='small' id='user-view-language-label'>Xona</InputLabel>
+              <InputLabel size='small' id='user-view-language-label'>{t("Xonalar")}</InputLabel>
               <Select
                 size='small'
                 error={error.room?.error}
-                label={t('Xona')}
+                label={t('Xonalar')}
                 id='user-view-language'
                 labelId='user-view-language-label'
                 name='room'
@@ -594,7 +587,7 @@ export default function GroupsPage() {
             </FormControl>
 
             <FormControl fullWidth>
-              <InputLabel size='small' id='user-view-language-label'>Hafta kunlari</InputLabel>
+              <InputLabel size='small' id='user-view-language-label'>{t("Hafta kunlari")}</InputLabel>
               <Select
                 size='small'
                 label="Kunlar boyicha"
@@ -640,7 +633,7 @@ export default function GroupsPage() {
                           gap: '4px',
                           cursor: 'pointer'
                         }}>
-                        <span>{TranslateWeekName[el]}</span>
+                        <span>{t(el)}</span>
                         <input type='checkbox' onChange={() => (setCustomWeekDays((current: any) => current.includes(el) ? [...current.filter((item: any) => item !== el)] : [...current, el]))} defaultChecked={customWeekdays.includes(el)} />
                       </label>
                     ))
@@ -649,44 +642,18 @@ export default function GroupsPage() {
               ) : ''
             }
 
-            {/* {
-              weekdays === 0 ? (
-                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-                  {
-                    ['tuesday', 'thursday', 'saturday', 'monday'].map(el => (
-                      <label
-                        key={el}
-                        style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          flexDirection: 'row-reverse',
-                          border: '1px solid #c3cccc',
-                          padding: '0 5px',
-                          borderRadius: '7px',
-                          gap: '4px',
-                          cursor: 'pointer'
-                        }}>
-                        <span>{TranslateWeekName[el]}</span>
-                        <input type='checkbox' onChange={() => (setWeekDays(0), setCustomWeekDays(customWeekdays.includes(el) ? [...customWeekdays.filter(item => item !== el)] : [...customWeekdays, el]))} defaultChecked={groupData.day_of_week.includes(el)} />
-                      </label>
-                    ))
-                  }
-                </Box>
-              ) : ''
-            } */}
-
             <FormControl sx={{ width: '100%' }}>
-              <TextField size='small' type='time' label={t("Boshlanish vaqi")} name='start_at' error={error.start_at} defaultValue={groupData.start_at} />
+              <TextField size='small' type='time' label={t("Boshlanish vaqti")} name='start_at' error={error.start_at} defaultValue={groupData.start_at} />
               <FormHelperText error={error.start_at?.error}>{error.start_at?.message}</FormHelperText>
             </FormControl>
 
             <FormControl sx={{ width: '100%' }}>
-              <TextField size='small' type='time' label={t("Tugash vaqi")} name='end_at' error={error.end_at} defaultValue={groupData.end_at} />
+              <TextField size='small' type='time' label={t("Tugash vaqti")} name='end_at' error={error.end_at} defaultValue={groupData.end_at} />
               <FormHelperText error={error.end_at?.error}>{error.end_at?.message}</FormHelperText>
             </FormControl>
 
 
-            <LoadingButton loading={loading} variant='contained' type='submit' fullWidth>Saqlash</LoadingButton>
+            <LoadingButton loading={loading} variant='contained' type='submit' fullWidth>{t("Saqlash")}</LoadingButton>
           </Form>}
         </Box>
       </Drawer>

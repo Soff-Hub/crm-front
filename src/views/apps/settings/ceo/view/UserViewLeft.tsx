@@ -118,7 +118,7 @@ const UserViewLeft = ({ userData }: { userData?: UsersType | undefined }) => {
           })
         }
       }
-      
+
     }
     const employeeData = await updateEmployee(data?.id, formData, 'one')
     setData(employeeData)
@@ -182,49 +182,22 @@ const UserViewLeft = ({ userData }: { userData?: UsersType | undefined }) => {
                 })}
               </Box>
             </CardContent>
-            {/* 
-            <CardContent sx={{ my: 1 }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <Box sx={{ mr: 8, display: 'flex', alignItems: 'center' }}>
-                  <CustomAvatar skin='light' variant='rounded' sx={{ mr: 3 }}>
-                    <Icon icon='mdi:check' />
-                  </CustomAvatar>
-                  <div>
-                    <Typography variant='h6' sx={{ lineHeight: 1.3 }}>
-                      1.23k
-                    </Typography>
-                    <Typography variant='body2'>Vazifa Bajarildi</Typography>
-                  </div>
-                </Box>
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                  <CustomAvatar skin='light' variant='rounded' sx={{ mr: 3 }}>
-                    <Icon icon='mdi:briefcase-variant-outline' />
-                  </CustomAvatar>
-                  <div>
-                    <Typography variant='h6' sx={{ lineHeight: 1.3 }}>
-                      568
-                    </Typography>
-                    <Typography variant='body2'>Loyiha Bajarildi</Typography>
-                  </div>
-                </Box>
-              </Box>
-            </CardContent> */}
 
             <CardContent>
-              <Typography variant='h6'>Tafsilotlar</Typography>
+              <Typography variant='h6'>{t('Izoh')}</Typography>
               <Box sx={{ pt: 2, pb: 1 }}>
                 <Box sx={{ display: 'flex', mb: 2.7 }}>
-                  <Typography sx={{ mr: 2, fontWeight: 500, fontSize: '0.875rem' }}>Aloqa:</Typography>
+                  <Typography sx={{ mr: 2, fontWeight: 500, fontSize: '0.875rem' }}>{t('phone')}:</Typography>
                   <Typography variant='body2'>{data.phone}</Typography>
                 </Box>
                 <Box sx={{ display: 'flex', mb: 2.7 }}>
-                  <Typography sx={{ mr: 2, fontWeight: 500, fontSize: '0.875rem' }}>Tug'ilgan sanasi:</Typography>
+                  <Typography sx={{ mr: 2, fontWeight: 500, fontSize: '0.875rem' }}>{t('birth_date')}:</Typography>
                   <Typography variant='body2'>{data.birth_date}</Typography>
                 </Box>
               </Box>
               <Box sx={{ pt: 2, pb: 1 }}>
                 <Box sx={{ display: 'flex', mb: 2.7 }}>
-                  <Typography sx={{ mr: 2, fontWeight: 500, fontSize: '0.875rem' }}>Filiallar:</Typography>
+                  <Typography sx={{ mr: 2, fontWeight: 500, fontSize: '0.875rem' }}>{t('branch')}:</Typography>
                   <Box
                     sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', justifyContent: 'center', alignItems: 'center' }}
                   >
@@ -255,7 +228,7 @@ const UserViewLeft = ({ userData }: { userData?: UsersType | undefined }) => {
 
             <CardActions sx={{ display: 'flex', justifyContent: 'center' }}>
               <Button variant='contained' sx={{ mr: 2 }} onClick={handleEditClickOpen}>
-                Tahrirlash
+                {t('Tahrirlash')}
               </Button>
             </CardActions>
 
@@ -267,7 +240,7 @@ const UserViewLeft = ({ userData }: { userData?: UsersType | undefined }) => {
               aria-describedby='user-view-edit-description'
             >
               <DialogTitle id='user-view-edit' sx={{ textAlign: 'center', fontSize: '1.5rem !important' }}>
-                Xodim ma'lumotlarini tahrirlash
+                {t("Xodim ma'lumotlarini tahrirlash")}
               </DialogTitle>
               <DialogContent>
                 <form style={{ marginTop: 10 }} onSubmit={handleSubmit} id='edit-employee'>
@@ -276,20 +249,20 @@ const UserViewLeft = ({ userData }: { userData?: UsersType | undefined }) => {
                       <TextField
                         size='small'
                         fullWidth
-                        label='Ism Familiya'
+                        label={t('first_name')}
                         name='first_name'
                         defaultValue={data.first_name}
                       />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                      <TextField size='small' fullWidth label='Contact' name='phone' defaultValue={`${data.phone}`} />
+                      <TextField size='small' fullWidth label={t('phone')} name='phone' defaultValue={`${data.phone}`} />
                     </Grid>
                     <Grid item xs={12} sm={6}>
                       <FormControl fullWidth>
-                        <InputLabel id='user-view-language-label'>Filial</InputLabel>
+                        <InputLabel id='user-view-language-label'>{t('branch')}</InputLabel>
                         <Select
                           size='small'
-                          label='Filial'
+                          label={t('branch')}
                           multiple
                           defaultValue={
                             data.branches.find(el => el.exists)
@@ -341,7 +314,7 @@ const UserViewLeft = ({ userData }: { userData?: UsersType | undefined }) => {
                           tabIndex={-1}
                           startIcon={<IconifyIcon icon={'subway:cloud-upload'} />}
                         >
-                          Rasm qo'shish
+                          {t("Rasm qo'shish")}
                           <VisuallyHiddenInput
                             name='image'
                             type='file'
@@ -351,7 +324,7 @@ const UserViewLeft = ({ userData }: { userData?: UsersType | undefined }) => {
                       </FormControl>
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                      <TextField size='small' fullWidth label='Yangi parol' name='password' />
+                      <TextField size='small' fullWidth label={t('Yangi parol')} name='password' />
                     </Grid>
                   </Grid>
                 </form>
@@ -361,7 +334,7 @@ const UserViewLeft = ({ userData }: { userData?: UsersType | undefined }) => {
                   {t('Saqlash')}
                 </LoadingButton>
                 <Button variant='outlined' color='secondary' onClick={handleEditClose}>
-                  {t('Bekor Qilish')}
+                  {t('Bekor qilish')}
                 </Button>
               </DialogActions>
             </Dialog>

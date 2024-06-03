@@ -48,7 +48,7 @@ const CardStatistics = () => {
     const { t } = useTranslation()
 
     const [nameVal, setNameVal] = useState<string>('');
-    const [open, setOpen] = useState<'create' | 'add-salary' | 'edit-salary' | 'delete-salary' | 'approve-salary' | 'update-cash' | 'delete-cash' | 'approve-cash' | null>(null);
+    const [open, setOpen] = useState<'create' | 'add-salary' | 'update-salary' | 'remove-salary' | 'edit-salary' | 'delete-salary' | 'approve-salary' | 'update-cash' | 'delete-cash' | 'approve-cash' | null>(null);
     const [editId, setEditId] = useState<any>(null);
     const [label, setLabel] = useState<AllNumbersType>({
         last_month_benefit: '0',
@@ -75,8 +75,7 @@ const CardStatistics = () => {
     const [withdraw, setWithdraw] = useState<any>([])
 
     const [isHover, setIsHover] = useState<null | string>(null)
-
-
+    const [deleteCategory, setDeleteCategory] = useState<any>(null)
 
     const apiData: CardStatsType = {
         statsHorizontal: [
@@ -86,7 +85,7 @@ const CardStatistics = () => {
                 trend: 'negative',
                 icon: 'mdi:trending-up',
                 trendNumber: '12.6%',
-                title: 'Tushum (oxirgi oy)',
+                title: t('Tushum (oxirgi oy)'),
                 id: '#tushumlar'
             },
             {
@@ -94,7 +93,7 @@ const CardStatistics = () => {
                 color: 'error',
                 icon: 'mdi:trending-down',
                 trendNumber: '22.5%',
-                title: 'Chiqim (oxirgi oy)',
+                title: t('Chiqim (oxirgi oy)'),
                 id: '#chiqimlar'
             },
             {
@@ -103,7 +102,7 @@ const CardStatistics = () => {
                 trend: 'negative',
                 icon: 'mdi:trending-up',
                 trendNumber: '12.6%',
-                title: 'Tushum (oxirgi yil)',
+                title: t('Tushum (oxirgi yil)'),
                 id: '#tushumlar'
             },
             {
@@ -111,18 +110,11 @@ const CardStatistics = () => {
                 color: 'error',
                 icon: 'mdi:trending-down',
                 trendNumber: '22.5%',
-                title: 'Chiqim (oxirgi yil)',
+                title: t('Chiqim (oxirgi yil)'),
                 id: '#chiqimlar'
             }
         ],
-        statsVertical: [
-            {
-                stats: formatCurrency(3000000),
-                color: 'warning',
-                icon: 'tdesign:money',
-                title: 'Marketing',
-            }
-        ],
+        statsVertical: [],
         statsCharacter: []
     }
 
@@ -137,22 +129,22 @@ const CardStatistics = () => {
             title: t("first_name"),
             dataIndex: "employee_name"
         },
+        // {
+        //     xs: 0.2,
+        //     title: t("Sana"),
+        //     dataIndex: "employee_name"
+        // },
         {
             xs: 0.2,
-            title: t("Sana"),
-            dataIndex: "employee_name"
-        },
-        {
-            xs: 0.2,
-            title: t("Maoshi"),
+            title: t("Maosh"),
             dataIndex: "amount",
             render: (amount) => `${formatCurrency(amount)} so'm`
         },
         {
             xs: 0.2,
-            title: t("Holati"),
+            title: t("Status"),
             dataIndex: "status",
-            render: (status) => status === 'moderation' ? "To'lanmagan" : "To'langan"
+            render: (status) => status === 'moderation' ? t("To'lanmagan") : t("To'langan")
         },
         {
             xs: 0.1,
@@ -166,7 +158,7 @@ const CardStatistics = () => {
                         setOpen('approve-cash')
                     }} icon={'mingcute:card-pay-line'} />
                 } else {
-                    return <span style={{ color: 'red' }}>Imkonsiz</span>
+                    return <span style={{ color: 'red' }}>{t('Imkonsiz')}</span>
                 }
             }
         },
@@ -182,7 +174,7 @@ const CardStatistics = () => {
                         setOpen('update-cash')
                     }} icon={'mingcute:card-pay-line'} />
                 } else {
-                    return <span style={{ color: 'red' }}>Imkonsiz</span>
+                    return <span style={{ color: 'red' }}>{t('Imkonsiz')}</span>
                 }
             }
         },
@@ -198,7 +190,7 @@ const CardStatistics = () => {
                         setOpen('delete-cash')
                     }} icon={'fluent:delete-20-regular'} />
                 } else {
-                    return <span style={{ color: 'red' }}>Imkonsiz</span>
+                    return <span style={{ color: 'red' }}>{t('Imkonsiz')}</span>
                 }
             }
         },
@@ -224,7 +216,7 @@ const CardStatistics = () => {
         },
         {
             xs: 0.2,
-            title: t("Talabalar soni"),
+            title: t("O'quvchilar soni"),
             dataIndex: "students_count",
         },
         {
@@ -252,7 +244,7 @@ const CardStatistics = () => {
                             setStudentCount(find.students_count)
                             setOpen('approve-salary')
                         }} sx={{ display: 'flex', gap: '10px' }}>
-                            <span>Tasdiqlash</span>
+                            <span>{t('Tasdiqlash')}</span>
                             <IconifyIcon icon={'mingcute:edit-line'} />
                         </Box>
                     )
@@ -260,7 +252,7 @@ const CardStatistics = () => {
                 else {
                     return (
                         <Box sx={{ display: 'flex', gap: '10px', color: 'red' }}>
-                            Imkonsiz
+                            {t('Imkonsiz')}
                         </Box>
                     )
                 }
@@ -295,14 +287,14 @@ const CardStatistics = () => {
                 } else if (finded.status === 'approved') {
                     return (
                         <Box sx={{ display: 'flex', gap: '10px', color: 'red' }}>
-                            Imkonsiz
+                            {t('Imkonsiz')}
                         </Box>
                     )
                 }
                 else {
                     return (
                         <Box sx={{ display: 'flex', gap: '10px', color: 'red' }}>
-                            Imkonsiz
+                            {t('Imkonsiz')}
                         </Box>
                     )
                 }
@@ -310,6 +302,50 @@ const CardStatistics = () => {
         },
     ]
 
+
+    const employeeSalaryCol: customTableDataProps[] = [
+        {
+            xs: 0.03,
+            title: "#",
+            dataIndex: "index"
+        },
+        {
+            xs: 0.2,
+            title: t("first_name"),
+            dataIndex: "employee_name"
+        },
+        // {
+        //     xs: 0.2,
+        //     title: t("Sana"),
+        //     dataIndex: "employee_name"
+        // },
+        {
+            xs: 0.2,
+            title: t("Maosh"),
+            dataIndex: "amount",
+            render: (amount) => `${formatCurrency(amount)} so'm`
+        },
+        {
+            xs: 0.1,
+            title: t("Tahrirlash"),
+            dataIndex: "id",
+            render: (id) => <IconifyIcon onClick={() => {
+                const find = employeeSalary.find((el: any) => el.id === id)
+                setEditId(find)
+                setOpen('update-salary')
+            }} icon={'mingcute:edit-line'} />
+        },
+        {
+            xs: 0.1,
+            title: t("O'chirish"),
+            dataIndex: "id",
+            render: (id) => <IconifyIcon onClick={() => {
+                const find = employeeSalary.find((el: any) => el.id === id)
+                setEditId(find)
+                setOpen('remove-salary')
+            }} icon={'fluent:delete-20-regular'} />
+        },
+    ]
 
     const getAllNumbers = async () => {
         const resp = await api.get(`common/finance/dashboard/`)
@@ -383,7 +419,6 @@ const CardStatistics = () => {
         setWithdraw(resp.data)
     }
 
-
     const getEmployees = async () => {
         const resp = await api.get(`common/employees/`)
         setEmployees(resp.data);
@@ -438,7 +473,6 @@ const CardStatistics = () => {
         }
     }
 
-
     const deleteSalary = async () => {
         setLoading(true)
         try {
@@ -452,9 +486,6 @@ const CardStatistics = () => {
             setLoading(false)
         }
     }
-
-
-
 
     const updateMonthly = async () => {
         setLoading(true)
@@ -486,7 +517,6 @@ const CardStatistics = () => {
         }
     }
 
-
     const updateCash = async () => {
         setLoading(true)
         try {
@@ -495,6 +525,34 @@ const CardStatistics = () => {
             })
             setOpen(null)
             getEmployePays()
+        } catch (err) {
+            console.log(err)
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    const updateSalaryConst = async () => {
+        setLoading(true)
+        try {
+            await api.patch(`/common/employee-salary/update/${editId.id}/`, {
+                amount: salaryAmount
+            })
+            setOpen(null)
+            getEmployeSalary()
+        } catch (err) {
+            console.log(err)
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    const deleteCashConst = async () => {
+        setLoading(true)
+        try {
+            await api.delete(`/common/employee-salary/destroy/${editId.id}/`)
+            setOpen(null)
+            getEmployeSalary()
         } catch (err) {
             console.log(err)
         } finally {
@@ -532,6 +590,20 @@ const CardStatistics = () => {
     }
 
 
+    const confirmDeleteCategory = async () => {
+        setLoading(true)
+        try {
+            await api.patch(`/common/finance/expense-category/update/${deleteCategory}/`, { is_active: false })
+            setDeleteCategory(null)
+            getExpenseCategroy()
+        } catch (err) {
+            console.log(err)
+        } finally {
+            setLoading(false)
+        }
+    }
+
+
 
     const handleRow = (id: string) => {
         push(`/finance/salaries/${id}`)
@@ -552,7 +624,7 @@ const CardStatistics = () => {
             <KeenSliderWrapper>
                 <Grid container spacing={2} columnSpacing={10}>
                     <Grid item xs={12}>
-                        <Typography>Umumiy raqamlar</Typography>
+                        <Typography>{t('Umumiy raqamlar')}</Typography>
                     </Grid>
 
                     <Grid item xs={12}>
@@ -565,7 +637,7 @@ const CardStatistics = () => {
 
                     <div id='tushumlar'></div>
                     <Grid item xs={12}>
-                        <Typography sx={{ fontSize: '20px' }}>Guruh to'lovlari</Typography>
+                        <Typography sx={{ fontSize: '20px' }}>{t("Guruh to'lovlari")}</Typography>
                     </Grid>
 
                     <Grid item xs={12} md={12} mb={10}>
@@ -574,7 +646,7 @@ const CardStatistics = () => {
 
                     <Grid item xs={12}>
                         <Box sx={{ display: 'flex', gap: '10px' }}>
-                            <Typography sx={{ fontSize: '20px', flexGrow: 1 }}>Chiqimlar hisoboti</Typography>
+                            <Typography sx={{ fontSize: '20px', flexGrow: 1 }}>{t('Chiqimlar hisoboti')}</Typography>
                             <Button variant='contained' onClick={() => setOpen('create')}>+ {t("Bo'lim")}</Button>
                         </Box>
                     </Grid>
@@ -587,8 +659,8 @@ const CardStatistics = () => {
                                     <Grid item xs={12} sm={6} lg={2} key={index} onMouseEnter={() => setIsHover(_.id)} onMouseLeave={() => setIsHover(null)} sx={{ position: 'relative' }}>
                                         <Box onClick={() => push(`/finance/costs/${_.id}`)} sx={{ cursor: 'pointer' }}>
                                             <CardFinanceCategory title={_.name} stats={_.total_expense} icon={<IconifyIcon fontSize={"3rem"} icon={''} />} color={'warning'} />
-                                            {isHover === _.id && <IconifyIcon style={{ position: 'absolute', zIndex: 999, bottom: 0, right: 0 }} icon={'fluent:delete-20-regular'} />}
                                         </Box>
+                                        {isHover === _.id && <IconifyIcon onClick={() => setDeleteCategory(_.id)} style={{ position: 'absolute', zIndex: 999, bottom: '2px', right: 0 }} icon={'fluent:delete-20-regular'} />}
                                     </Grid>
                                 ))
                             }
@@ -599,16 +671,25 @@ const CardStatistics = () => {
 
                     <Grid item xs={12} md={12} >
                         <Box sx={{ display: 'flex', gap: '10px', flexGrow: 1 }}>
-                            <Typography sx={{ fontSize: '20px', flexGrow: 1 }}>Tekshirish uchun maoshlar</Typography>
+                            <Typography sx={{ fontSize: '20px', flexGrow: 1 }}>{t('Tekshirish uchun maoshlar')}</Typography>
                         </Box>
                         <DataTable maxWidth='100%' minWidth='0' columns={withdrawCol} rowClick={handleRow} data={withdraw} />
                     </Grid>
-                    <Box sx={{ margin: '20px' }}></Box>
+                    <Box sx={{ margin: '15px' }}></Box>
                     <Grid item xs={12} md={12} >
                         <Box sx={{ display: 'flex', gap: '10px', flexGrow: 1 }}>
-                            <Typography sx={{ fontSize: '20px', flexGrow: 1 }}>Oxirgi oydagi to'lovlar</Typography>
+                            <Typography sx={{ fontSize: '20px', flexGrow: 1 }}>{t("Oxirgi oydagi to'lovlar")}</Typography>
                         </Box>
                         <DataTable maxWidth='100%' minWidth='0' columns={employeePaycol} data={employeePays} />
+                    </Grid>
+
+                    <Box sx={{ margin: '15px' }}></Box>
+                    <Grid item xs={12} md={12} >
+                        <Box sx={{ display: 'flex', gap: '10px', flexGrow: 1 }}>
+                            <Typography sx={{ fontSize: '20px', flexGrow: 1 }}>{t('Doimiy maosh oluvchilar')}</Typography>
+                            <Button variant='contained' onClick={() => (setOpen('add-salary'), getEmployees())}>+ {t("Yaratish")}</Button>
+                        </Box>
+                        <DataTable maxWidth='100%' minWidth='0' columns={employeeSalaryCol} data={employeeSalary} />
                     </Grid>
                 </Grid>
             </KeenSliderWrapper>
@@ -618,7 +699,7 @@ const CardStatistics = () => {
 
             <Dialog open={open === 'create'} onClose={() => setOpen(null)}>
                 <DialogTitle sx={{ display: 'flex', alignItems: 'center', minWidth: '300px', justifyContent: 'space-between' }}>
-                    <Typography>Xarajatlar bo'limini yaratish</Typography>
+                    <Typography>{t("Xarajatlar bo'limini yaratish")}</Typography>
                     <IconifyIcon icon={'mdi:close'} onClick={() => setOpen(null)} />
                 </DialogTitle>
                 <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
@@ -630,7 +711,7 @@ const CardStatistics = () => {
 
             <Dialog open={open === 'add-salary'} onClose={() => setOpen(null)}>
                 <DialogTitle sx={{ display: 'flex', alignItems: 'center', minWidth: '300px', justifyContent: 'space-between' }}>
-                    <Typography>Xodimga oylik maosh kiritish</Typography>
+                    <Typography>{t('Xodimga oylik maosh kiritish')}</Typography>
                     <IconifyIcon icon={'mdi:close'} onClick={() => setOpen(null)} />
                 </DialogTitle>
                 <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
@@ -657,7 +738,7 @@ const CardStatistics = () => {
 
             <Dialog open={open === 'edit-salary'} onClose={() => (setOpen(null), setEditId(null))}>
                 <DialogTitle sx={{ display: 'flex', alignItems: 'center', minWidth: '300px', justifyContent: 'space-between' }}>
-                    <Typography>Xodimga oylik maosh tahrirlash</Typography>
+                    <Typography>{t('Xodimga oylik maosh tahrirlash')}</Typography>
                     <IconifyIcon icon={'mdi:close'} onClick={() => (setOpen(null), setEditId(null))} />
                 </DialogTitle>
                 {editId && <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
@@ -669,12 +750,37 @@ const CardStatistics = () => {
 
             <Dialog open={open === 'update-cash'} onClose={() => (setOpen(null), setEditId(null))}>
                 <DialogTitle sx={{ display: 'flex', alignItems: 'center', minWidth: '300px', justifyContent: 'space-between' }}>
-                    <Typography>Xodim oylik maosh tahrirlash</Typography>
+                    <Typography>{t('Xodim oylik maosh tahrirlash')}</Typography>
                     <IconifyIcon icon={'mdi:close'} onClick={() => (setOpen(null), setEditId(null))} />
                 </DialogTitle>
                 {editId && <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                     <TextField label="Summa" defaultValue={editId.amount} required autoComplete='off' size='small' fullWidth onChange={(e) => setSalaryAmount(e.target.value)} style={{ margin: '15px 0' }} />
                     <LoadingButton loading={loading} onClick={() => updateCash()} variant='contained'>{t("Saqlash")}</LoadingButton>
+                </DialogContent>}
+            </Dialog>
+
+            <Dialog open={open === 'update-salary'} onClose={() => (setOpen(null), setEditId(null))}>
+                <DialogTitle sx={{ display: 'flex', alignItems: 'center', minWidth: '300px', justifyContent: 'space-between' }}>
+                    <Typography>{t('Xodim oylik maosh tahrirlash')}</Typography>
+                    <IconifyIcon icon={'mdi:close'} onClick={() => (setOpen(null), setEditId(null))} />
+                </DialogTitle>
+                {editId && <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                    <TextField label="Summa" defaultValue={editId.amount} required autoComplete='off' size='small' fullWidth onChange={(e) => setSalaryAmount(e.target.value)} style={{ margin: '15px 0' }} />
+                    <LoadingButton loading={loading} onClick={() => updateSalaryConst()} variant='contained'>{t("Saqlash")}</LoadingButton>
+                </DialogContent>}
+            </Dialog>
+
+            <Dialog open={open === 'remove-salary'} onClose={() => setOpen(null)}>
+                <DialogTitle sx={{ display: 'flex', alignItems: 'center', minWidth: '300px', justifyContent: 'space-between' }}>
+                    <Typography></Typography>
+                    <IconifyIcon icon={'mdi:close'} onClick={() => setOpen(null)} />
+                </DialogTitle>
+                {<DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                    <Typography>{t("Xodimni maoshini olib tashlamoqchimisiz?")}</Typography>
+                    <Box sx={{ display: 'flex', justifyContent: 'center', gap: 4, mt: 10 }}>
+                        <LoadingButton onClick={() => (setOpen(null), setEditId(null))} variant='outlined'>{t("Bekor qilish")}</LoadingButton>
+                        <LoadingButton loading={loading} onClick={() => deleteCashConst()} color='error' variant='contained'>{t("O'chirish")}</LoadingButton>
+                    </Box>
                 </DialogContent>}
             </Dialog>
 
@@ -684,7 +790,7 @@ const CardStatistics = () => {
                     <IconifyIcon icon={'mdi:close'} onClick={() => setOpen(null)} />
                 </DialogTitle>
                 {<DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                    <Typography>Xodimni maoshini olib tashlamoqchimisiz?</Typography>
+                    <Typography>{t("Xodimni maoshini olib tashlamoqchimisiz?")}</Typography>
                     <Box sx={{ display: 'flex', justifyContent: 'center', gap: 4, mt: 10 }}>
                         <LoadingButton onClick={() => (setOpen(null), setEditId(null))} variant='outlined'>{t("Bekor qilish")}</LoadingButton>
                         <LoadingButton loading={loading} onClick={() => deleteCash()} color='error' variant='contained'>{t("O'chirish")}</LoadingButton>
@@ -698,13 +804,13 @@ const CardStatistics = () => {
                     <IconifyIcon icon={'mdi:close'} onClick={() => setOpen(null)} />
                 </DialogTitle>
                 {<DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                    <Typography>Xodimni maoshini olib to'lash</Typography>
+                    <Typography>{t("Xodimni maoshini olib to'lash")}</Typography>
                     <FormControl fullWidth sx={{ mt: '10px' }}>
-                        <InputLabel size='small' id='user-view-language-label'>Chiqim yozib qo'yish</InputLabel>
+                        <InputLabel size='small' id='user-view-language-label'>{t("Chiqim yozib qo'yish")}</InputLabel>
                         <Select
                             required
                             size='small'
-                            label="Chiqim yozib qo'yish"
+                            label={t("Chiqim yozib qo'yish")}
                             id='demo-simple-select-outlined'
                             labelId='demo-simple-select-outlined-label'
                             onChange={(e) => setSalaryUser(e.target.value)}
@@ -726,7 +832,7 @@ const CardStatistics = () => {
                     <IconifyIcon icon={'mdi:close'} onClick={() => (setOpen(null), setEditId(null))} />
                 </DialogTitle>
                 {editId && <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                    <Typography marginBottom={'40px'} fontSize={'20px'}>Xodim maoshini tasdiqlamoqchimiz?</Typography>
+                    <Typography marginBottom={'40px'} fontSize={'20px'}>{t('Xodim maoshini tasdiqlamoqchimiz?')}</Typography>
                     <LoadingButton loading={loading} onClick={() => approveSalary()} variant='contained'>{t("Saqlash")}</LoadingButton>
                 </DialogContent>}
             </Dialog>
@@ -737,7 +843,7 @@ const CardStatistics = () => {
                     <IconifyIcon icon={'mdi:close'} onClick={() => setOpen(null)} />
                 </DialogTitle>
                 {<DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                    <Typography>Xodimni maoshini olib tashlamoqchimisiz?</Typography>
+                    <Typography>{t('Xodimni maoshini olib tashlamoqchimisiz?')}</Typography>
                     <Box sx={{ display: 'flex', justifyContent: 'center', gap: 4, mt: 10 }}>
                         <LoadingButton onClick={() => (setOpen(null), setEditId(null))} variant='outlined'>{t("Bekor qilish")}</LoadingButton>
                         <LoadingButton loading={loading} onClick={() => deleteSalary()} color='error' variant='contained'>{t("O'chirish")}</LoadingButton>
@@ -747,7 +853,7 @@ const CardStatistics = () => {
 
             <Dialog open={edit === 'amount'} onClose={() => (setEdit(null), setEditId(null))}>
                 <DialogTitle sx={{ display: 'flex', alignItems: 'center', minWidth: '300px', justifyContent: 'space-between' }}>
-                    <Typography>Xodimga oylik maosh tahrirlash</Typography>
+                    <Typography>{t('Xodimga oylik maosh tahrirlash')}</Typography>
                     <IconifyIcon icon={'mdi:close'} onClick={() => (setEdit(null), setEditId(null))} />
                 </DialogTitle>
                 {editId && <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
@@ -761,10 +867,25 @@ const CardStatistics = () => {
                     <IconifyIcon icon={'mdi:close'} onClick={() => (setEdit(null), setEditId(null))} />
                 </DialogTitle>
                 {editId && <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                    <Typography marginBottom={'40px'} fontSize={'20px'}>Xodim maoshini tasdiqlamoqchimiz?</Typography>
+                    <Typography marginBottom={'40px'} fontSize={'20px'}>{t('Xodim maoshini tasdiqlamoqchimiz?')}</Typography>
                     <LoadingButton loading={loading} onClick={() => approveMonthly()} variant='contained'>{t("Saqlash")}</LoadingButton>
                 </DialogContent>}
             </Dialog>
+
+            <Dialog open={deleteCategory} onClose={() => setDeleteCategory(null)}>
+                <DialogTitle sx={{ display: 'flex', alignItems: 'center', minWidth: '300px', justifyContent: 'space-between' }}>
+                    <Typography></Typography>
+                    <IconifyIcon icon={'mdi:close'} onClick={() => setDeleteCategory(null)} />
+                </DialogTitle>
+                <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                    <Typography>{t("Chiqimlar bo'limini o'chirmoqchimisiz?")}</Typography>
+                    <Box sx={{ display: 'flex', justifyContent: 'center', gap: 4, mt: 10 }}>
+                        <LoadingButton onClick={() => (setDeleteCategory(null))} variant='outlined'>{t("Bekor qilish")}</LoadingButton>
+                        <LoadingButton loading={loading} onClick={() => confirmDeleteCategory()} color='error' variant='contained'>{t("O'chirish")}</LoadingButton>
+                    </Box>
+                </DialogContent>
+            </Dialog>
+
         </ApexChartWrapper>
     )
 }

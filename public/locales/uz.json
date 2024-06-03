@@ -66,5 +66,12 @@
     "password": "Parol",
     "branch": "Filial",
     "roles_list": "Rollar",
-    "gender": "Jinsi"
+    "gender": "Jinsi",
+    "monday": "Dushanba",
+    "tuesday": "Seshanba",
+    "wednesday": "Chorshanba",
+    "thursday": "Payshanba",
+    "friday": "Juma",
+    "saturday": "Shanba",
+    "sunday": "Yakshanba"
 }

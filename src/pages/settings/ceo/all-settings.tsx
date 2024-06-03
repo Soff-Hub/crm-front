@@ -10,6 +10,7 @@ import { useDispatch } from 'react-redux'
 import { setCompanyInfo } from 'src/store/apps/user'
 import { useSelector } from 'react-redux'
 import { styled } from '@mui/material/styles';
+import { useTranslation } from 'react-i18next'
 
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
@@ -39,6 +40,7 @@ export default function AllSettings() {
     const { getBranches, branches } = useBranches()
     const dispatch = useDispatch()
     const { companyInfo } = useSelector((state: any) => state.user)
+    const { t } = useTranslation()
 
 
 
@@ -118,7 +120,7 @@ export default function AllSettings() {
         <Box sx={{ display: 'flex', gap: '15px', flexDirection: isMobile ? 'column' : 'row', px: 4 }}>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: '15px', width: '100%' }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-                    <Typography sx={{ minWidth: isMobile ? '90px' : '120px', fontSize: isMobile ? '13px' : '16px' }}>Tashkilot nomi:</Typography>
+                    <Typography sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}>{t('Tashkilot nomi')}:</Typography>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                         {
                             editable === 'title' ? (
@@ -130,7 +132,7 @@ export default function AllSettings() {
                                 </>
                             ) : (
                                 <>
-                                    <TextField value={companyInfo?.training_center_name} size='small' placeholder='Tashkilot Nomi' onBlur={(e) => console.log(e.target.value)} />
+                                    <TextField value={companyInfo?.training_center_name} size='small' placeholder={t('Tashkilot nomi')} onBlur={(e) => console.log(e.target.value)} />
                                     <IconifyIcon icon={'basil:edit-outline'} style={{ cursor: 'pointer' }} onClick={() => setEditable('title')} />
                                 </>
                             )
@@ -139,7 +141,7 @@ export default function AllSettings() {
                 </Box>
 
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-                    <Typography sx={{ minWidth: isMobile ? '90px' : '120px', fontSize: isMobile ? '13px' : '16px' }}>Logo:</Typography>
+                    <Typography sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}>{t('Logo')}:</Typography>
                     <img src={companyInfo?.logo} height={35} />
                     <Button
                         component="label"
@@ -149,7 +151,7 @@ export default function AllSettings() {
                         tabIndex={-1}
                         startIcon={<IconifyIcon icon={'mynaui:upload'} />}
                     >
-                        Yangilash
+                        {t('Yangilash')}
                         <VisuallyHiddenInput type="file" onChange={(e: any) => {
                             updateSettings('logo', e.target.files[0])
                         }} />
@@ -157,7 +159,7 @@ export default function AllSettings() {
                 </Box>
 
                 <Box sx={{ display: 'flex', gap: '20px' }}>
-                    <Typography sx={{ minWidth: isMobile ? '90px' : '120px', fontSize: isMobile ? '13px' : '16px' }}>Filiallar:</Typography>
+                    <Typography sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}>{t('Filiallar')}:</Typography>
                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
                         {
                             branches.map((branch: any) => (
@@ -183,18 +185,18 @@ export default function AllSettings() {
                         {
                             createble === 'branch' && (
                                 <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                                    <TextField size='small' placeholder="Yangi filial" onChange={(e) => setName(e.target.value)} />
+                                    <TextField size='small' placeholder={t("Yangi filial")} onChange={(e) => setName(e.target.value)} />
                                     <IconifyIcon icon={loading === 'create' ? 'line-md:loading-loop' : 'ic:baseline-check'} style={{ cursor: 'pointer' }} onClick={createBranch} />
                                     <IconifyIcon icon={'ic:outline-close'} style={{ cursor: 'pointer' }} onClick={() => setCreatable(null)} />
                                 </Box>
                             )
                         }
-                        <Button size='small' startIcon={<IconifyIcon icon={'ic:outline-add'} />} variant='outlined' onClick={() => setCreatable('branch')}>Yangi</Button>
+                        <Button size='small' startIcon={<IconifyIcon icon={'ic:outline-add'} />} variant='outlined' onClick={() => setCreatable('branch')}>{t('Yangi')}</Button>
                     </Box>
                 </Box>
 
                 <Box sx={{ display: 'flex', gap: '20px' }}>
-                    <Typography sx={{ minWidth: isMobile ? '90px' : '120px', fontSize: isMobile ? '13px' : '16px' }}>Tolov usullari:</Typography>
+                    <Typography sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}>{t('Tolov usullari')}:</Typography>
                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
                         {
                             paymentMethods.map((method: any) => (
@@ -226,13 +228,13 @@ export default function AllSettings() {
                                 </Box>
                             )
                         }
-                        <Button size='small' startIcon={<IconifyIcon icon={'ic:outline-add'} />} variant='outlined' onClick={() => setCreatable('payment-type')}>Yangi</Button>
+                        <Button size='small' startIcon={<IconifyIcon icon={'ic:outline-add'} />} variant='outlined' onClick={() => setCreatable('payment-type')}>{t('Yangi')}</Button>
                     </Box>
                 </Box>
             </Box>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: '15px', width: '100%' }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-                    <Typography sx={{ minWidth: isMobile ? '90px' : '120px', fontSize: isMobile ? '13px' : '16px' }}>Ish boshlanish vaqti:</Typography>
+                    <Typography sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}>{t('Ish boshlanish vaqti')}:</Typography>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                         {
                             editable === 'start-time' ? (
@@ -252,7 +254,7 @@ export default function AllSettings() {
                                 </>
                             ) : (
                                 <>
-                                    <TextField type='text' value={`${companyInfo?.work_start_time}`} size='small' placeholder='Boshlanish vaqti' onBlur={(e) => console.log(e.target.value)} />
+                                    <TextField type='text' value={`${companyInfo?.work_start_time}`} size='small' placeholder={t('Ish boshlanish vaqti')} onBlur={(e) => console.log(e.target.value)} />
                                     <IconifyIcon icon={'basil:edit-outline'} style={{ cursor: 'pointer' }} onClick={() => setEditable('start-time')} />
                                 </>
                             )
@@ -260,7 +262,7 @@ export default function AllSettings() {
                     </Box>
                 </Box>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-                    <Typography sx={{ minWidth: isMobile ? '90px' : '160px', fontSize: isMobile ? '13px' : '16px' }}>Ish tugash vaqti:</Typography>
+                    <Typography sx={{ minWidth: isMobile ? '90px' : '160px', fontSize: isMobile ? '13px' : '16px' }}>{t('Ish tugash vaqti')}:</Typography>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                         {
                             editable === 'end-time' ? (
@@ -280,7 +282,7 @@ export default function AllSettings() {
                                 </>
                             ) : (
                                 <>
-                                    <TextField type='text' value={`${companyInfo?.work_end_time}`} size='small' placeholder='Boshlanish vaqti' onBlur={(e) => console.log(e.target.value)} />
+                                    <TextField type='text' value={`${companyInfo?.work_end_time}`} size='small' placeholder={t('Boshlanish vaqti')} onBlur={(e) => console.log(e.target.value)} />
                                     <IconifyIcon icon={'basil:edit-outline'} style={{ cursor: 'pointer' }} onClick={() => setEditable('end-time')} />
                                 </>
                             )
@@ -292,7 +294,7 @@ export default function AllSettings() {
 
             <Dialog open={deleteId?.open === 'payment-type'} onClose={() => setDeleteId(null)}>
                 <DialogContent>
-                    <Typography sx={{ fontSize: '20px', margin: '10px 10px 20px' }}>O'chirishni tasdiqlang</Typography>
+                    <Typography sx={{ fontSize: '20px', margin: '10px 10px 20px' }}>{t("O'chirishni tasdiqlang")}</Typography>
                     <Box sx={{ display: 'flex', gap: 1 }}>
                         <Button variant='outlined' color='success' onClick={() => setDeleteId(null)}>Bekor qilish</Button>
                         <LoadingButton loading={loading === 'delete'} variant='contained' color='error' onClick={async () => {
@@ -311,9 +313,9 @@ export default function AllSettings() {
 
             <Dialog open={deleteId?.open === 'branch'} onClose={() => setDeleteId(null)}>
                 <DialogContent>
-                    <Typography sx={{ fontSize: '20px', margin: '10px 10px 20px' }}>O'chirishni tasdiqlang</Typography>
+                    <Typography sx={{ fontSize: '20px', margin: '10px 10px 20px' }}>{t("O'chirishni tasdiqlang")}</Typography>
                     <Box sx={{ display: 'flex', gap: 1 }}>
-                        <Button variant='outlined' color='success' onClick={() => setDeleteId(null)}>Bekor qilish</Button>
+                        <Button variant='outlined' color='success' onClick={() => setDeleteId(null)}>{t('Bekor qilish')}</Button>
                         <LoadingButton loading={loading === 'delete'} variant='contained' color='error' onClick={async () => {
                             setLoading('delete')
                             try {

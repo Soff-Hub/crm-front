@@ -1,5 +1,5 @@
 import { Box, FormControl, FormHelperText, FormLabel, Input, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Form from '../form'
 import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
@@ -9,6 +9,8 @@ import { useTranslation } from 'react-i18next';
 import api from 'src/@core/utils/api';
 import Router from 'next/router';
 import showResponseError from 'src/@core/utils/show-response-error';
+import { CompanyType } from './CompanyList';
+import Image from 'next/image'
 
 type Props = {
     slug?: number | undefined
@@ -29,11 +31,12 @@ const VisuallyHiddenInput = styled('input')({
 
 
 
-export default function CreateCompany({ slug }: Props) {
+export default function EditCompany({ slug }: Props) {
 
     const [error, setError] = useState<any>({})
     const { isMobile } = useResponsive()
     const { t } = useTranslation()
+    const [data, setData] = useState<CompanyType | null>(null)
 
     async function handleSubmit(values: any) {
         try {
@@ -43,6 +46,19 @@ export default function CreateCompany({ slug }: Props) {
             showResponseError(err?.response?.data, setError)
         }
     }
+
+    const getData = async () => {
+        const resp = await api.get('/owner/list/client/')
+        const element = resp.data.find((el: CompanyType) => el.id === Number(slug))
+        setData(element)
+    }
+
+    console.log(data);
+
+
+    useEffect(() => {
+        getData()
+    }, [])
 
     return (
         <Box>
@@ -65,7 +81,7 @@ export default function CreateCompany({ slug }: Props) {
                     }}
                 >
 
-                    <Box sx={{
+                    {data && <Box sx={{
                         display: 'flex',
                         gap: '20px',
                         maxWidth: '600px',
@@ -75,17 +91,17 @@ export default function CreateCompany({ slug }: Props) {
                         <Typography sx={{ fontSize: '20px', borderBottom: '1px solid white', marginBottom: '20px' }}>{t("Yangi o'quv markaz yaratish uchun quyidagi ma'lumotlarni to'ldiring")}</Typography>
 
                         <FormControl fullWidth>
-                            <TextField error={error?.name} size='small' label={t("Nomi")} name='name' />
+                            <TextField error={error?.name} defaultValue={data.name} size='small' label={t("Nomi")} name='name' />
                             <FormHelperText error={error?.name}>{error?.name}</FormHelperText>
                         </FormControl>
 
                         <FormControl fullWidth>
-                            <TextField error={error?.reference_name} size='small' label={t("Masul shaxs ismi")} name='reference_name' />
+                            <TextField error={error?.reference_name} defaultValue={data.reference_name} size='small' label={t("Masul shaxs ismi")} name='reference_name' />
                             <FormHelperText error={error?.reference_name}>{error?.reference_name}</FormHelperText>
                         </FormControl>
 
                         <FormControl fullWidth>
-                            <TextField error={error?.reference_phone} size='small' label={t("Masul shaxs raqami")} name='reference_phone' defaultValue={'+998'} />
+                            <TextField error={error?.reference_phone} size='small' label={t("Masul shaxs raqami")} name='reference_phone' defaultValue={data?.reference_phone} />
                             <FormHelperText error={error?.reference_phone}>{error?.reference_phone}</FormHelperText>
                         </FormControl>
 
@@ -123,6 +139,10 @@ export default function CreateCompany({ slug }: Props) {
                             </FormControl>
                         </Box>
 
+                        <Box>
+                            <Image src={data.logo} width={200} height={200} alt='logo' style={{ width: '200px', height: '200px' }} />
+                        </Box>
+
                         <Button
                             component="label"
                             role={undefined}
@@ -130,7 +150,9 @@ export default function CreateCompany({ slug }: Props) {
                             startIcon={<IconifyIcon icon={'lets-icons:upload'} />}
                         >
                             {t('Logo yuklash')}
-                            <VisuallyHiddenInput accept='.png, .jpg, .jpeg, .webp' name='logo' type="file" />
+                            <VisuallyHiddenInput onChange={(e: any) => {
+                                setData(c => c ? ({ ...c, logo: window.URL.createObjectURL(e.target?.files?.[0]) }) : null)
+                            }} accept='.png, .jpg, .jpeg, .webp' name='logo' type="file" />
                         </Button>
 
                         <Button
@@ -140,7 +162,7 @@ export default function CreateCompany({ slug }: Props) {
                         >
                             {t('Saqlash')}
                         </Button>
-                    </Box>
+                    </Box>}
                 </Form>
             </Box>
         </Box>

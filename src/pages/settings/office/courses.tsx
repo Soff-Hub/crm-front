@@ -137,12 +137,12 @@ export default function GroupsPage() {
         >
           <MenuItem onClick={() => handleEdit(id)} sx={{ '& svg': { mr: 2 } }}>
             <IconifyIcon icon='mdi:pencil-outline' fontSize={20} />
-            Tahrirlash
+            {t('Tahrirlash')}
           </MenuItem>
           {dataRow?.some((item: any) => item?.id == id && item?.is_delete) ? (
             <MenuItem onClick={handleDelete} sx={{ '& svg': { mr: 2 } }}>
               <IconifyIcon icon='mdi:delete-outline' fontSize={20} />
-              O'chirish
+              {t("O'chirish")}
             </MenuItem>
           ) : (
             <></>
@@ -215,7 +215,7 @@ export default function GroupsPage() {
     },
     {
       xs: 1.2,
-      title: t('Kurs haqida malumot'),
+      title: t('Izoh'),
       dataIndex: 'description'
     },
     {
@@ -270,7 +270,7 @@ export default function GroupsPage() {
         sx={{ display: 'flex', justifyContent: 'space-between', margin: '10px 0' }}
         py={2}
       >
-        <Typography variant='h5'>{t('Talabalar')}</Typography>
+        <Typography variant='h5'>{t('Kurslar')}</Typography>
         <Button
           onClick={() => setOpenAddGroup(true)}
           variant='contained'
@@ -324,18 +324,18 @@ export default function GroupsPage() {
           }}
         >
           <FormControl fullWidth>
-            <TextField error={error.name} label='* Kurs nomi' size='small' name='name' />
+            <TextField error={error.name} label={t('Nomi')} size='small' name='name' />
             <FormHelperText error={error.name}>{error.name?.message}</FormHelperText>
           </FormControl>
 
           <FormControl fullWidth>
             <InputLabel size='small' id='demo-simple-select-outlined-label'>
-              * Filial tanlang
+              {t('branch')}
             </InputLabel>
             <Select
               error={error.branch}
               size='small'
-              label='* Filial tanlang'
+              label={t('branch')}
               multiple
               defaultValue={[]}
               id='demo-simple-select-outlined'
@@ -348,32 +348,32 @@ export default function GroupsPage() {
             <FormHelperText error={error.branch}>{error.branch?.message}</FormHelperText>
           </FormControl>
           <FormControl fullWidth>
-            <TextField error={error.price} label='* Kurs narxi' size='small' name='price' />
+            <TextField error={error.price} label={t('Kurs narxi')} size='small' name='price' />
             <FormHelperText error={error.price}>{error.price?.message}</FormHelperText>
           </FormControl>
 
           <FormControl fullWidth>
             <InputLabel size='small' id='demo-simple-select-outlined-label'>
-              * Dars davomiyligi
+              {t('Dars davomiyligi')}
             </InputLabel>
             <Select
               error={error.lesson_duration}
               size='small'
-              label='* Dars davomiyligi'
+              label={t('Dars davomiyligi')}
               defaultValue={''}
               id='demo-simple-select-outlined2'
               labelId='demo-simple-select-outlined-label2'
               name='lesson_duration'
             >
-              <MenuItem value={5400}>1 soat 30 daqiqa</MenuItem>
-              <MenuItem value={7200}>2 soat </MenuItem>
-              <MenuItem value={9000}>2 soat 30 daqiqa</MenuItem>
-              <MenuItem value={10800}>3 soat</MenuItem>
+              <MenuItem value={5400}>{t('1 soat 30 daqiqa')}</MenuItem>
+              <MenuItem value={7200}>{t('2 soat')}</MenuItem>
+              <MenuItem value={9000}>{t('2 soat 30 daqiqa')}</MenuItem>
+              <MenuItem value={10800}>{t('3 soat')}</MenuItem>
             </Select>
             <FormHelperText error={error.lesson_duration}>{error.lesson_duration?.message}</FormHelperText>
           </FormControl>
           <FormControl fullWidth>
-            <TextField error={error?.month_duration} type='number' label='* Kurs davomiyligi (oy)' size='small' name='month_duration' />
+            <TextField error={error?.month_duration} type='number' label={t('Kurs davomiyligi')} size='small' name='month_duration' />
             <FormHelperText error={error.month_duration}>{error.month_duration?.message}</FormHelperText>
           </FormControl>
 
@@ -382,7 +382,7 @@ export default function GroupsPage() {
               error={error?.description}
               rows={4}
               multiline
-              label="Kurs haqida to'liq  malumot"
+              label={t('Izoh')}
               name='description'
               defaultValue={''}
             />
@@ -392,7 +392,7 @@ export default function GroupsPage() {
           <FormControl fullWidth>
             <TextField
               error={error?.color}
-              label="Rangi"
+              label={t("Rangi")}
               name='color'
               type='color'
               defaultValue={'#FFFFFF'}
@@ -401,7 +401,7 @@ export default function GroupsPage() {
           </FormControl>
           <Button type='submit' variant='contained' color='success' fullWidth>
             {' '}
-            Saqlash
+            {t("Saqlash")}
           </Button>
         </Form>
       </Drawer>
@@ -450,7 +450,7 @@ export default function GroupsPage() {
             <FormControl fullWidth>
               <TextField
                 error={error.name}
-                label='* Kurs nomi'
+                label={t('Nomi')}
                 size='small'
                 name='name'
                 defaultValue={dataRowEdit?.name}
@@ -460,12 +460,12 @@ export default function GroupsPage() {
 
             <FormControl fullWidth>
               <InputLabel size='small' id='demo-simple-select-outlined-label'>
-                * Filial tanlang
+                {t('branch')}
               </InputLabel>
               <Select
                 error={error.branch}
                 size='small'
-                label='* Filial tanlang'
+                label={t('branch')}
                 multiple
                 id='demo-simple-select-outlined'
                 labelId='demo-simple-select-outlined-label'
@@ -481,7 +481,7 @@ export default function GroupsPage() {
             <FormControl fullWidth>
               <TextField
                 error={error.price}
-                label='* Kurs narxi'
+                label={t('Kurs narxi')}
                 size='small'
                 name='price'
                 defaultValue={Number(dataRowEdit?.price)}
@@ -491,28 +491,28 @@ export default function GroupsPage() {
 
             <FormControl fullWidth>
               <InputLabel size='small' id='demo-simple-select-outlined-label'>
-                * Dars davomiyligi
+                {t('Dars davomiyligi')}
               </InputLabel>
               <Select
                 error={error.lesson_duration}
                 size='small'
-                label='* Dars davomiyligi'
+                label={t('Dars davomiyligi')}
                 defaultValue={dataRowEdit?.lesson_duration_seconds}
                 id='demo-simple-select-outlined2'
                 labelId='demo-simple-select-outlined-label2'
                 name='lesson_duration'
               >
-                <MenuItem value={5400}>1 soat 30 daqiqa</MenuItem>
-                <MenuItem value={7200}>2 soat </MenuItem>
-                <MenuItem value={9000}>2 soat 30 daqiqa</MenuItem>
-                <MenuItem value={10800}>3 soat</MenuItem>
+                <MenuItem value={5400}>{t('1 soat 30 daqiqa')}</MenuItem>
+                <MenuItem value={7200}>{t('2 soat')}</MenuItem>
+                <MenuItem value={9000}>{t('2 soat 30 daqiqa')}</MenuItem>
+                <MenuItem value={10800}>{t('3 soat')}</MenuItem>
               </Select>
               <FormHelperText error={error.lesson_duration}>{error.lesson_duration?.message}</FormHelperText>
             </FormControl>
             <FormControl fullWidth>
               <TextField
                 error={error?.month_duration}
-                label='* Kurs davomiyligi (oy)'
+                label={t('Kurs davomiyligi')}
                 size='small'
                 name='month_duration'
                 defaultValue={dataRowEdit?.month_duration}
@@ -525,7 +525,7 @@ export default function GroupsPage() {
                 error={error?.description}
                 rows={4}
                 multiline
-                label="Kurs haqida to'liq  malumot"
+                label={t('Izoh')}
                 name='description'
                 defaultValue={dataRowEdit?.description}
               />
@@ -535,7 +535,7 @@ export default function GroupsPage() {
             <FormControl fullWidth>
               <TextField
                 error={error?.color}
-                label="Rangi"
+                label={t("Rangi")}
                 name='color'
                 type='color'
                 defaultValue={dataRowEdit?.color}
@@ -544,7 +544,7 @@ export default function GroupsPage() {
             </FormControl>
             <Button type='submit' variant='contained' color='success' fullWidth>
               {' '}
-              Saqlash
+              {t('Saqlash')}
             </Button>
           </Form>
         )}

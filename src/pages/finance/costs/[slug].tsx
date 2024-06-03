@@ -135,7 +135,7 @@ function Slug(props: { slug: string }) {
                         <TextField size='small' type='month' value={today} onChange={handleOnChangeRange} />
                     </Box>
                     <Typography sx={{ fontSize: '14px', color: 'error.main', ml: 3, display: 'flex', flexDirection: 'column' }} >
-                        <span>Umumiy</span>
+                        <span>{t('Umumiy')}</span>
                         <span>
                             {formatCurrency(allAmount)}
                         </span>
@@ -166,7 +166,7 @@ function Slug(props: { slug: string }) {
                                     </Box>
                                 ))
                             }
-                            <Button variant='outlined' onClick={() => (setDate(item.date), setOpen('create'))} size='small'>Yangi</Button>
+                            <Button variant='outlined' onClick={() => (setDate(item.date), setOpen('create'))} size='small'>{t('Yangi')}</Button>
                         </Column>
                     ))
                 }
@@ -176,7 +176,7 @@ function Slug(props: { slug: string }) {
 
             <Dialog open={open === 'create'} onClose={() => setOpen(null)}>
                 <DialogTitle sx={{ display: 'flex', alignItems: 'center', minWidth: '300px', justifyContent: 'space-between' }}>
-                    <Typography>Xarajatlarni kiritish</Typography>
+                    <Typography>{t('Xarajatlarni kiritish')}</Typography>
                     <IconifyIcon icon={'mdi:close'} onClick={() => setOpen(null)} />
                 </DialogTitle>
                 <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
@@ -188,7 +188,7 @@ function Slug(props: { slug: string }) {
 
             <Dialog open={open === 'delete'} onClose={() => setOpen(null)}>
                 <DialogTitle sx={{ display: 'flex', alignItems: 'center', minWidth: '300px', justifyContent: 'space-between' }}>
-                    <Typography fontSize={18}>Xarajatlarni o'chirish</Typography>
+                    <Typography fontSize={18}>{t("Xarajatlarni o'chirish")}</Typography>
                     <IconifyIcon icon={'mdi:close'} onClick={() => setOpen(null)} />
                 </DialogTitle>
                 <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>

@@ -137,10 +137,10 @@ export default function CreateForm({ }: Props) {
                         }}
                     >
                         <FormControl fullWidth>
-                            <InputLabel size='small' id='user-view-language-label'>Bo'lim</InputLabel>
+                            <InputLabel size='small' id='user-view-language-label'>{t("Bo'lim")}</InputLabel>
                             <Select
                                 size='small'
-                                label={"Bo'lim"}
+                                label={t("Bo'lim")}
 
                                 id='user-view-language'
                                 labelId='user-view-language-label'
@@ -156,10 +156,10 @@ export default function CreateForm({ }: Props) {
 
                         {selectedDepartment && (
                             <FormControl fullWidth>
-                                <InputLabel size='small' id='user-view-language-label'>Quyi bo'lim</InputLabel>
+                                <InputLabel size='small' id='user-view-language-label'>{t("Quyi bo'lim")}</InputLabel>
                                 <Select
                                     size='small'
-                                    label={"Quyi bo'lim"}
+                                    label={t("Quyi bo'lim")}
                                     id='user-view-language'
                                     labelId='user-view-language-label'
                                     name='department'
@@ -191,7 +191,7 @@ export default function CreateForm({ }: Props) {
                         </FormControl>
 
                         <FormControl>
-                            <TextField label="Forma nomi" size='small' onChange={(e) => e.target.value === "" ? setFields("Aloqa uchun kontakt qoldiring") : setFields(e.target.value)} />
+                            <TextField label={t("Nomi")} size='small' onChange={(e) => e.target.value === "" ? setFields("Aloqa uchun kontakt qoldiring") : setFields(e.target.value)} />
                         </FormControl>
 
                         {
@@ -207,9 +207,9 @@ export default function CreateForm({ }: Props) {
                     </Box>
                     <Box sx={{ display: 'flex', gap: 3 }}>
                         <Button variant='outlined' size='small' onClick={() => setOpen('input')} startIcon={<IconifyIcon icon={'ic:baseline-add'} />}>Input</Button>
-                        <Button variant='outlined' size='small' onClick={() => setOpen('single')} startIcon={<IconifyIcon icon={'ic:baseline-add'} />}>savol</Button>
-                        <Button variant='outlined' size='small' onClick={() => setOpen('description')} startIcon={<IconifyIcon icon={'ic:baseline-add'} />}>Matn</Button>
-                        <LoadingButton loading={loading} variant='contained' size='small' onClick={createForm}>Yaratish</LoadingButton>
+                        <Button variant='outlined' size='small' onClick={() => setOpen('single')} startIcon={<IconifyIcon icon={'ic:baseline-add'} />}>{t('Savol')}</Button>
+                        <Button variant='outlined' size='small' onClick={() => setOpen('description')} startIcon={<IconifyIcon icon={'ic:baseline-add'} />}>{t('Matn')}</Button>
+                        <LoadingButton loading={loading} variant='contained' size='small' onClick={createForm}>{t('Yaratish')}</LoadingButton>
                     </Box>
                 </Box>
             </Box>
@@ -244,7 +244,7 @@ export default function CreateForm({ }: Props) {
                         }
 
                         <LoadingButton variant="contained" color='success' type="submit" size='large' sx={{ mt: 5 }} fullWidth>
-                            Yuborish
+                            {t('Yuborish')}
                         </LoadingButton>
                     </Form>
                 </Box>
@@ -255,12 +255,12 @@ export default function CreateForm({ }: Props) {
             <Dialog open={open === 'input'} onClose={handleClose}>
                 <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                     <FormControl>
-                        <TextField label="Input nomi (Nima yozish uchun?)" size='small' onChange={(e) => setName(e.target.value)} />
+                        <TextField label={t("Input nomi (Nima yozish uchun?)")} size='small' onChange={(e) => setName(e.target.value)} />
                     </FormControl>
 
                     <Box sx={{ display: 'flex', justifyContent: 'center', gap: 4, mt: 4 }}>
                         <LoadingButton onClick={handleClose} variant='outlined'>{t("Bekor qilish")}</LoadingButton>
-                        <LoadingButton color='success' variant='contained' onClick={() => createComponent('varchar', name)}>{t("Qo'shish")}</LoadingButton>
+                        <LoadingButton color='success' variant='contained' onClick={() => createComponent('varchar', name)}>{t("Saqlash")}</LoadingButton>
                     </Box>
                 </DialogContent>
             </Dialog>
@@ -268,12 +268,12 @@ export default function CreateForm({ }: Props) {
             <Dialog open={open === 'description'} onClose={handleClose}>
                 <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                     <FormControl>
-                        <TextField label="Ko'proq matn yozish uchun" size='small' onChange={(e) => setName(e.target.value)} />
+                        <TextField label={t("Ko'proq matn yozish uchun")} size='small' onChange={(e) => setName(e.target.value)} />
                     </FormControl>
 
                     <Box sx={{ display: 'flex', justifyContent: 'center', gap: 4, mt: 4 }}>
                         <LoadingButton onClick={handleClose} variant='outlined'>{t("Bekor qilish")}</LoadingButton>
-                        <LoadingButton color='success' variant='contained' onClick={() => createComponent('description', name)}>{t("Qo'shish")}</LoadingButton>
+                        <LoadingButton color='success' variant='contained' onClick={() => createComponent('description', name)}>{t("Saqlash")}</LoadingButton>
                     </Box>
                 </DialogContent>
             </Dialog>
@@ -281,11 +281,11 @@ export default function CreateForm({ }: Props) {
             <Dialog open={open === 'single'} onClose={handleClose}>
                 <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: '20px', minWidth: '350px' }}>
                     <ButtonGroup size='small'>
-                        <Button onClick={() => setSelectType('single')} variant={selectType === 'single' ? 'outlined' : 'text'} size='medium'>Bitta javob</Button>
-                        <Button onClick={() => setSelectType('multiple')} variant={selectType === 'multiple' ? 'outlined' : 'text'} size='medium'>Bir nechta javob</Button>
+                        <Button onClick={() => setSelectType('single')} variant={selectType === 'single' ? 'outlined' : 'text'} size='medium'>{t('Bitta javob')}</Button>
+                        <Button onClick={() => setSelectType('multiple')} variant={selectType === 'multiple' ? 'outlined' : 'text'} size='medium'>{t('Bir nechta javob')}</Button>
                     </ButtonGroup>
                     <FormControl>
-                        <TextField label="Savol matni" multiline rows={2} size='small' onChange={(e) => setName(e.target.value)} />
+                        <TextField label={t("Savol matni")} multiline rows={2} size='small' onChange={(e) => setName(e.target.value)} />
                     </FormControl>
 
                     {
@@ -298,11 +298,11 @@ export default function CreateForm({ }: Props) {
                         />)
                     }
 
-                    <Button startIcon={<IconifyIcon icon={'ic:baseline-add'} />} onClick={() => setVariants((c: any) => ([...c, { id: new Date().getTime(), value: `Variant ${variants.length + 1}`, order: variants.length + 1 }]))} size='small'>Javob varianti qo'shish</Button>
+                    <Button startIcon={<IconifyIcon icon={'ic:baseline-add'} />} onClick={() => setVariants((c: any) => ([...c, { id: new Date().getTime(), value: `Variant ${variants.length + 1}`, order: variants.length + 1 }]))} size='small'>{t("Javob varianti qo'shish")}</Button>
 
                     <Box sx={{ display: 'flex', justifyContent: 'center', gap: 4, mt: 6 }}>
                         <LoadingButton onClick={handleClose} variant='outlined'>{t("Bekor qilish")}</LoadingButton>
-                        <LoadingButton color='success' variant='contained' onClick={() => createComponent(selectType, name)}>{t("Qo'shish")}</LoadingButton>
+                        <LoadingButton color='success' variant='contained' onClick={() => createComponent(selectType, name)}>{t("Saqlash")}</LoadingButton>
                     </Box>
                 </DialogContent>
             </Dialog>

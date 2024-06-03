@@ -88,12 +88,12 @@ export default function RoomsPage() {
 
         // Get functions
 
-        async function handleEdit(id: number) {
+        function handleEdit(id: number) {
             handleRowOptionsClose()
             try {
                 setOpenAddGroupEdit(true)
-                const resp = await api.get(`${ceoConfigs.rooms_detail}/${id}`)
-                setDataRowEdit(resp.data)
+                const resp = dataRow.find((el: any) => el.id === id)
+                setDataRowEdit(resp)
                 getUsers()
             } catch (error: any) {
                 toast.error('Xatolik yuz berdi!', { position: 'top-center' })
@@ -122,12 +122,12 @@ export default function RoomsPage() {
                 >
                     <MenuItem onClick={() => handleEdit(id)} sx={{ '& svg': { mr: 2 } }}>
                         <IconifyIcon icon='mdi:pencil-outline' fontSize={20} />
-                        Tahrirlash
+                        {t("Tahrirlash")}
                     </MenuItem>
                     {dataRow?.some((item: any) => item?.id == id && item?.is_delete) ? (
                         <MenuItem onClick={handleDelete} sx={{ '& svg': { mr: 2 } }}>
                             <IconifyIcon icon='mdi:delete-outline' fontSize={20} />
-                            O'chirish
+                            {t("O'chirish")}
                         </MenuItem>
                     ) : (
                         <></>
@@ -175,7 +175,7 @@ export default function RoomsPage() {
     // Edit functions
 
     async function handelClickEditCourses(value: any) {
-        await api.patch(`$common/weekend/update/${dataRowEdit?.id}`, value)
+        await api.patch(`$common/weekend/update/${dataRowEdit?.id}/`, value)
         setOpenAddGroupEdit(false)
         getUsers()
     }
@@ -188,7 +188,7 @@ export default function RoomsPage() {
         },
         {
             xs: 1,
-            title: t('Sanasi'),
+            title: t('Sana'),
             dataIndex: 'name',
             render: () => "2024-14-03"
         },
@@ -266,18 +266,18 @@ export default function RoomsPage() {
                     }}
                 >
                     <FormControl fullWidth>
-                        <TextField error={error.date} label='* Sanasi' size='small' name='date' type='date' defaultValue={today} />
+                        <TextField error={error.date} label={t('Sana')} size='small' name='date' type='date' defaultValue={today} />
                         <FormHelperText error={error.date}>{error.date?.message}</FormHelperText>
                     </FormControl>
 
                     <FormControl fullWidth>
-                        <TextField error={error.description} multiline rows={3} label='* Sabab' size='small' name='description' />
+                        <TextField error={error.description} multiline rows={3} label={t('Sabab')} size='small' name='description' />
                         <FormHelperText error={error.description}>{error.description?.message}</FormHelperText>
                     </FormControl>
 
                     <Button type='submit' variant='contained' color='success' fullWidth>
                         {' '}
-                        Saqlash
+                        {t('Saqlash')}
                     </Button>
                 </Form>
             </Drawer>
@@ -324,18 +324,18 @@ export default function RoomsPage() {
                         }}
                     >
                         <FormControl fullWidth>
-                            <TextField error={error.date} label='* Sanasi' size='small' name='date' type='date' defaultValue={today} />
+                            <TextField error={error.date} label={t('Sana')} size='small' name='date' type='date' defaultValue={today} />
                             <FormHelperText error={error.date}>{error.date?.message}</FormHelperText>
                         </FormControl>
 
                         <FormControl fullWidth>
-                            <TextField error={error.description} multiline rows={3} label='* Sabab' size='small' name='description' />
+                            <TextField error={error.description} multiline rows={3} label={t('Sabab')} size='small' name='description' />
                             <FormHelperText error={error.description}>{error.description?.message}</FormHelperText>
                         </FormControl>
 
                         <Button type='submit' variant='contained' color='success' fullWidth>
                             {' '}
-                            Saqlash
+                            {t('Saqlash')}
                         </Button>
                     </Form>
                 )}

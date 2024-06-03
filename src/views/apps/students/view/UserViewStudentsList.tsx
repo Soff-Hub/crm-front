@@ -6,6 +6,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Fade from '@mui/material/Fade';
 import IconifyIcon from 'src/@core/components/icon';
 import { formatDateTime } from 'src/@core/utils/date-formatter';
+import { useTranslation } from 'react-i18next';
 
 
 interface ItemTypes {
@@ -33,6 +34,8 @@ export const UserViewStudentsItem = ({ item, setOpenEdit }: ItemChildTypes) => {
         setAnchorEl(null);
         setOpenEdit(value)
     };
+
+    const { t } = useTranslation()
 
     return (
         <Box sx={{ display: 'flex', gap: 3, justifyContent: 'space-between' }}>
@@ -67,7 +70,7 @@ export const UserViewStudentsItem = ({ item, setOpenEdit }: ItemChildTypes) => {
                 onClose={handleClose}
                 TransitionComponent={Fade}
             >
-                <MenuItem onClick={() => handleClose('notes')}>Yangi eslatma</MenuItem>
+                <MenuItem onClick={() => handleClose('notes')}>{t("Yangi eslatma")}</MenuItem>
                 {/* <MenuItem onClick={() => handleClose('delete')}>O'chirish</MenuItem> */}
             </Menu>
         </Box>
