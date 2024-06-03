@@ -1,17 +1,19 @@
 import axios from "axios";
 import toast from "react-hot-toast";
 
-const baseURL = process.env.NEXT_PUBLIC_BASE_URL
+
+
 import authConfg from 'src/configs/auth'
 
-const api = axios.create({
-    baseURL
-})
+const api = axios.create()
 
 api.interceptors.request.use(
     (config: any) => {
-
         const storedToken = localStorage.getItem(authConfg.storageTokenKeyName)
+        const subdomain = location.hostname.split('.')
+        const baseURL = subdomain.length < 3 ? `https://${process.env.NEXT_PUBLIC_BASE_URL}` : `https://${subdomain[0]}.${process.env.NEXT_PUBLIC_BASE_URL}`
+
+        config.baseURL = baseURL
 
         if (storedToken) {
             config.headers['Authorization'] = `Bearer ${storedToken}`

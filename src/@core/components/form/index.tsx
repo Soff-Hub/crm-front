@@ -29,12 +29,16 @@ export default function Form({ children, sx, id, setError, onSubmit, reqiuredFie
     }
   }
 
+  const removeError = (e: any) => {
+    setError?.((c: any) => ({ ...c, [e?.target?.name]: null }))
+  }
+
   return (
     <form
       id={id}
       onSubmit={handleSubmit}
       style={sx}
-      onChange={(e: any) => e.target.addEventListener('input', setError?.({}))}
+      onChange={(e: any) => e.target.addEventListener('input', removeError)}
     >
       {children}
     </form>
