@@ -27,19 +27,23 @@ const AuthGuard = (props: AuthGuardProps) => {
         if (router.pathname.split('/').includes('forms') && router.pathname.split('/').includes('r')) {
           return
         }
-        if (router.asPath !== '/') {
-          router.replace({
-            pathname: '/login',
-            query: { returnUrl: router.asPath }
-          })
-        } else {
-          router.replace('/login')
-        }
+        // if (router.asPath !== '/') {
+        //   router.replace({
+        //     pathname: '/login',
+        //     query: { returnUrl: router.asPath }
+        //   })
+        // } else {
+        //   router.replace('/login')
+        // }
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [router.route]
   )
+
+  if (!auth.user && router.route === '/') {
+    return <>{children}</>
+  }
 
   if (auth.loading || auth.user === null) {
     return fallback

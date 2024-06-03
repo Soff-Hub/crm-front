@@ -41,8 +41,12 @@ const AclGuard = (props: AclGuardProps) => {
     return <>{children}</>
   }
 
+  
   // User is logged in, build ability for the user based on his role
   if (auth.user && auth.user.role && !ability) {
+    if (auth.user && router.route === '/') {
+      router.replace('/dashboard')
+    }
     setAbility(buildAbilityFor(auth.user.role, aclAbilities.subject))
   }
 

@@ -131,7 +131,7 @@ const AuthProvider = ({ children }: Props) => {
 
         const redirectURL = returnUrl && returnUrl !== '/' ? returnUrl : '/'
 
-        router.replace(redirectURL as string)
+        router.replace('/dashboard')
       })
 
       .catch(err => {
