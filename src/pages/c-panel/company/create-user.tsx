@@ -1,14 +1,14 @@
 import { Box, FormControl, FormHelperText, FormLabel, Input, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material'
 import React, { useState } from 'react'
-import Form from '../form'
 import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
-import IconifyIcon from '../icon';
 import useResponsive from 'src/@core/hooks/useResponsive';
 import { useTranslation } from 'react-i18next';
 import api from 'src/@core/utils/api';
 import Router from 'next/router';
 import showResponseError from 'src/@core/utils/show-response-error';
+import Form from 'src/@core/components/form';
+import IconifyIcon from 'src/@core/components/icon';
 
 type Props = {
     slug?: number | undefined
@@ -29,16 +29,15 @@ const VisuallyHiddenInput = styled('input')({
 
 
 
-export default function CreateCompany({ slug }: Props) {
+export default function CreateCompany() {
 
     const [error, setError] = useState<any>({})
     const { isMobile } = useResponsive()
     const { t } = useTranslation()
-    const [domain, setDomain] = useState<any>('')
 
     async function handleSubmit(values: any) {
         try {
-            await api.post(`/owner/create/client/`, values)
+            await api.post(`/owner/create/user/`, values)
             Router.push('/c-panel')
         } catch (err: any) {
             showResponseError(err?.response?.data, setError)
@@ -73,43 +72,25 @@ export default function CreateCompany({ slug }: Props) {
                         width: '100%',
                         flexDirection: 'column'
                     }} >
-                        <Typography sx={{ fontSize: '20px', borderBottom: '1px solid white', marginBottom: '20px' }}>{t("Yangi o'quv markaz yaratish uchun quyidagi ma'lumotlarni to'ldiring")}</Typography>
+                        <Typography sx={{ fontSize: '20px', borderBottom: '1px solid white', marginBottom: '20px' }}>{t("Yangi foydalanuvchi yaratish uchun quyidagi ma'lumotlarni to'ldiring")}</Typography>
 
                         <FormControl fullWidth>
-                            <TextField error={error?.name} size='small' label={t("Nomi")} name='name' />
-                            <FormHelperText error={error?.name}>{error?.name}</FormHelperText>
+                            <TextField error={error?.first_name} size='small' label={t("first_name")} name='first_name' />
+                            <FormHelperText error={error?.first_name}>{error?.first_name}</FormHelperText>
                         </FormControl>
 
                         <FormControl fullWidth>
-                            <TextField error={error?.reference_name} size='small' label={t("Masul shaxs ismi")} name='reference_name' />
-                            <FormHelperText error={error?.reference_name}>{error?.reference_name}</FormHelperText>
+                            <TextField error={error?.phone} size='small' label={t("phone")} name='phone' defaultValue={'+998'} />
+                            <FormHelperText error={error?.phone}>{error?.phone}</FormHelperText>
                         </FormControl>
 
                         <FormControl fullWidth>
-                            <TextField error={error?.reference_phone} size='small' label={t("Masul shaxs raqami")} name='reference_phone' defaultValue={'+998'} />
-                            <FormHelperText error={error?.reference_phone}>{error?.reference_phone}</FormHelperText>
+                            <TextField size='small' label={t("password")} name='password' style={{ width: '100%' }} />
+                            <FormHelperText error={error?.password}>{error?.password}</FormHelperText>
                         </FormControl>
-
-                        <Box style={{ display: 'flex', gap: '8px' }}>
-                            <FormControl fullWidth>
-                                <Input error={error?.domain} placeholder='example' autoComplete='off' size='small' name='domain' style={{ width: '100%' }} endAdornment=".soffcrm.uz" onInput={(e: any) => setDomain(e.target.value)} value={domain} />
-                                <FormHelperText error={error?.domain}>{error?.domain}</FormHelperText>
-                            </FormControl>
-                        </Box>
-
-                        <Button
-                            component="label"
-                            role={undefined}
-                            variant="outlined"
-                            startIcon={<IconifyIcon icon={'lets-icons:upload'} />}
-                        >
-                            {t('Logo yuklash')}
-                            <VisuallyHiddenInput accept='.png, .jpg, .jpeg, .webp' name='logo' type="file" />
-                        </Button>
 
                         <Button
                             variant="contained"
-                            startIcon={<IconifyIcon icon={'fluent:save-16-regular'} />}
                             type='submit'
                         >
                             {t('Saqlash')}
