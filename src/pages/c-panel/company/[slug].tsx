@@ -1,5 +1,6 @@
 import { GetServerSidePropsContext } from 'next/types';
 import React from 'react'
+import CreateCeo from 'src/@core/components/c-panel/CreateCeo';
 import EditCompany from 'src/@core/components/c-panel/EditCompany';
 
 
@@ -12,7 +13,8 @@ function Slug({ tab }: Props) {
 
     return (
         <div>
-            <EditCompany slug={tab} />
+            {/* <EditCompany slug={tab} /> */}
+            <CreateCeo slug={tab}/>
         </div>
     )
 }
