@@ -42,6 +42,7 @@ const Lids = () => {
     try {
       const resp = await api.get(`leads/department/list/`)
       dispatch(setDepartmentsState(resp.data))
+
     } catch {
       toast.error("Network Error", { position: 'bottom-center' })
     }
@@ -201,6 +202,12 @@ const Lids = () => {
         flexDirection={isMobile ? 'column' : 'row'}
       >
         {
+          leadData.map((lead: any) => (
+            <LidsKanban id={lead.id} setOpenLid={setOpenLid} reRender={getLeads} setOpenItem={setOpenItem} key={lead.id} items={lead.children} title={lead.name} status='success' />
+          ))
+        }
+        {!isMobile && <Button onClick={() => setOpen('add-department')} sx={{ minWidth: '300px' }} size='small' variant='contained' startIcon={<IconifyIcon icon={'material-symbols:add'} />}>{t("Bo'lim yaratish")}</Button>}
+        {/* {
           leadData.length > 0 ? (
             <>
               {
@@ -216,7 +223,7 @@ const Lids = () => {
               <Typography>{t("Loading...")}</Typography>
             </Box>
           )
-        }
+        } */}
 
       </Box>
 
