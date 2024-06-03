@@ -16,6 +16,7 @@ export interface CompanyType {
     schema_name: string
     is_active: boolean
     domains: { id: number, domain: string }[]
+    is_create: boolean
 }
 
 export default function CompanyList() {
@@ -79,6 +80,16 @@ export default function CompanyList() {
         }
     }
 
+    const rowClick = (id: any) => {
+        const find = data.find(el => el.id === Number(id))
+        if (find?.is_create) {
+            push(`/c-panel/company/${id}`)
+        }
+    }
+
+    console.log(data);
+    
+
     useEffect(() => {
         getData()
     }, [])
@@ -91,7 +102,7 @@ export default function CompanyList() {
                 <Button onClick={() => Router.push('/c-panel/company/create')} sx={{ marginLeft: 'auto' }} variant='contained'>{t('Yaratish')}</Button>
             </Box>
             <Box>
-                <DataTable columns={column} data={data} rowClick={(id: number) => push(`/c-panel/company/${id}`)} />
+                <DataTable columns={column} data={data} rowClick={(id: number) => rowClick(id)} />
             </Box>
         </Box>
     )
