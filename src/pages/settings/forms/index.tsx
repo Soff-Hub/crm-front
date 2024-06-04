@@ -74,7 +74,7 @@ export default function FormsPage() {
   const handleClick = (id: string) => {
     const value = data.find(el => el.id === id)
     const textArea = document.createElement("textarea");
-    textArea.value = `https://${window.location.hostname}/api/v1/forms/r/${value.uuid}`;
+    textArea.value = `https://${window.location.hostname}/forms/r/${value.uuid}`;
     document.body.appendChild(textArea);
     textArea.focus();
     textArea.select();
