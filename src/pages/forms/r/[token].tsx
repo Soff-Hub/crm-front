@@ -196,7 +196,7 @@ function RequestForm({ uuid }: InferGetStaticPropsType<typeof getServerSideProps
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                height: "100%",
+                height: "100vh",
                 backgroundImage: `url('/images/request-form-bg.svg')`,
                 backgroundRepeat: 'repeat-y',
                 overflowY: 'scroll',
@@ -213,8 +213,8 @@ function RequestForm({ uuid }: InferGetStaticPropsType<typeof getServerSideProps
                     marginBottom: '100px'
                 }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', flexDirection: 'column', marginBottom: '20px' }}>
-                    <img src={formData?.logo} width={40} />
-                    <h3>{formData?.training_center_name}</h3>
+                    <img src={formData?.company?.logo} width={40} />
+                    <h3>{formData?.company?.training_center_name}</h3>
                 </Box>
                 <Typography align="center" mb={isMobile ? 1 : 2} sx={{ fontSize: isMobile ? '20px' : '24px' }}>
                     {isSend ? "Ma'lumot jo'natganingiz uchun raxmat!" : formData.title}
