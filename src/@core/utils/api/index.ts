@@ -11,7 +11,7 @@ api.interceptors.request.use(
     (config: any) => {
         const storedToken = localStorage.getItem(authConfg.storageTokenKeyName)
         const subdomain = location.hostname.split('.')
-        const baseURL = 'https://crmapi.soffstudy.uz/api/v1'
+        const baseURL = subdomain.length < 3 ? `https://${process.env.NEXT_PUBLIC_BASE_URL}` : `https://${subdomain[0]}.${process.env.NEXT_PUBLIC_BASE_URL}`
 
         config.baseURL = baseURL
 
