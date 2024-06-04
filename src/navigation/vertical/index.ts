@@ -88,14 +88,14 @@ const Navigation = (t: any): VerticalNavItemsType => {
               title: 'Dam olish kunlari',
               path: '/settings/office/free-days'
             },
-            {
-              title: 'Arxiv',
-              path: '/settings/office/archive'
-            },
-            {
-              title: 'Tark etgan talabalar',
-              path: '/settings/office/lefted-students'
-            }
+            // {
+            //   title: 'Arxiv',
+            //   path: '/settings/office/archive'
+            // },
+            // {
+            //   title: 'Tark etgan talabalar',
+            //   path: '/settings/office/lefted-students'
+            // }
           ]
         },
         {
@@ -109,10 +109,10 @@ const Navigation = (t: any): VerticalNavItemsType => {
               title: 'Xodimlar',
               path: '/settings/ceo/users'
             },
-            {
-              title: 'Billing',
-              path: '/settings/ceo/billing'
-            },
+            // {
+            //   title: 'Billing',
+            //   path: '/settings/ceo/billing'
+            // },
           ]
         },
         {

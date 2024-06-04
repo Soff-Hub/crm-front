@@ -95,6 +95,7 @@ const LoginPage = () => {
     const { phone, password } = data
     await auth.login({ phone, password }, (resp: any) => {
       if (resp?.response) {
+        setLoading(false)
         Object.keys(resp?.response?.data).map((el: any) => {
           return setError(el, {
             type: 'manual',
@@ -105,7 +106,6 @@ const LoginPage = () => {
         toast.error("Network Error!", { position: 'top-center' })
       }
     })
-    setLoading(false)
   }
 
 
@@ -251,7 +251,7 @@ const LoginPage = () => {
             >
             </Box>
             <LoadingButton loading={loading} fullWidth size='large' type='submit' variant='contained' sx={{ mb: 7 }}>
-              Login
+              Kirish
             </LoadingButton>
           </form>
         </LoginIllustrationWrapper>

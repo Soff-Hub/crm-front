@@ -251,7 +251,7 @@ const Lids = () => {
       <Dialog onClose={() => setOpenItem(null)} open={openItem !== null}>
         <DialogTitle sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <Typography variant='h6' component='span'>
-            {t("Yangi Item biriktirish")}
+            {t("Yangi bo'lim biriktirish")}
           </Typography>
           <IconButton
             aria-label='close'

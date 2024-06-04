@@ -136,14 +136,14 @@ const UserDropdown = (props: Props) => {
           {user?.username}
         </Typography>
         <Divider sx={{ mt: '0 !important' }} />
-        <Divider />
+        {/* <Divider />
         <MenuItem sx={{ p: 0 }} onClick={() => handleDropdownClose('/pages/account-settings/account')}>
           <Box sx={styles}>
             <Icon icon='mdi:cog-outline' />
             Settings
           </Box>
         </MenuItem>
-        <Divider />
+        <Divider /> */}
         <MenuItem
           onClick={handleLogout}
           sx={{ py: 2, '& svg': { mr: 2, fontSize: '1.375rem', color: 'text.primary' } }}
