@@ -30,7 +30,7 @@ const FooterIllustrationsV2 = (props: FooterIllustrationsProp) => {
   // ** Vars
   const hidden = useMediaQuery(theme.breakpoints.down('md'))
 
-  const src = (image as string) || `/images/pages/auth-v2-login-mask-${theme.palette.mode}.png`
+  const src = (image as string) || `/images/request-form-bg.svg`
 
   if (!hidden) {
     return <>{image && typeof image !== 'string' ? image : <MaskImg alt='mask' src={src} />}</>

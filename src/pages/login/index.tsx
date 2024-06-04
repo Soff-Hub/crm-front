@@ -103,6 +103,7 @@ const LoginPage = () => {
           })
         })
       } else {
+        setLoading(false)
         toast.error("Network Error!", { position: 'top-center' })
       }
     })
@@ -199,7 +200,7 @@ const LoginPage = () => {
                 render={({ field: { value, onChange, onBlur } }) => (
                   <TextField
                     label='Telefon raqam'
-                    value={value}
+                    value={value.split('').slice(0, 13).join('')}
                     onBlur={onBlur}
                     onChange={onChange}
                     error={Boolean(errors.phone)}
