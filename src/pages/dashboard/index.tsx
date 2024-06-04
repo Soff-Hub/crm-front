@@ -78,7 +78,6 @@ const AppCalendar = () => {
     setEvents(resp.data.room_list)
   }
 
-
   const statsData: {
     icon: string
     title: string
