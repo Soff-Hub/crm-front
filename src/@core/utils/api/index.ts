@@ -11,7 +11,7 @@ api.interceptors.request.use(
     (config: any) => {
         const storedToken = localStorage.getItem(authConfg.storageTokenKeyName)
         const subdomain = location.hostname.split('.')
-        const baseURL = subdomain.length < 3 ? `https://${process.env.NEXT_PUBLIC_BASE_URL}` : `https://${subdomain[0]}.${process.env.NEXT_PUBLIC_BASE_URL}`
+        const baseURL = process.env.NODE_ENV === 'development' ? process.env.NEXT_PUBLIC_TEST_BASE_URL : subdomain.length < 3 ? `https://${process.env.NEXT_PUBLIC_BASE_URL}` : `https://${subdomain[0]}.${process.env.NEXT_PUBLIC_BASE_URL}`
 
         config.baseURL = baseURL
 
