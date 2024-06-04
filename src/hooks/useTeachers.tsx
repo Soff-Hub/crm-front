@@ -50,7 +50,6 @@ export default function useTeachers() {
     const createTeacher = async (data: any) => {
         setLoading(true)
         try {
-            data.append('roles', '3')
             const resp = await api.post(ceoConfigs.employee_create, data)
             setLoading(false)
 

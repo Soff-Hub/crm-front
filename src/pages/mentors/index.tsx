@@ -84,13 +84,14 @@ export default function GroupsPage() {
 
   const handleEdit = async (id: any) => {
     setOpenEdit(true)
+    await getBranches()
     await getTeacherById(id)
   }
 
   const handleEditSubmit = async (values: any) => {
     setLoading(true)
-    console.log(values);
-    values.append('roles', `${teacherData?.roles.filter(el => el.exists).map(el => el.id).join(',')}`)
+    // console.log(values);
+    // values.append('roles', `${teacherData?.roles.filter(el => el.exists).map(el => el.id).join(',')}`)
     await updateTeacher(teacherData?.id, values).then(() => {
       getTeachers()
       setLoading(false)
@@ -235,7 +236,7 @@ export default function GroupsPage() {
       >
         <Typography variant='h5'>{t("Mentorlar")}</Typography>
         <Button
-          onClick={() => setOpenAddGroup(true)}
+          onClick={() => (setOpenAddGroup(true), getBranches())}
           variant='contained'
           size='small'
           startIcon={<IconifyIcon icon='ic:baseline-plus' />}
@@ -296,6 +297,23 @@ export default function GroupsPage() {
                 <Radio checked={gender === "female"} onChange={() => setGender('female')} />
                 <span>{t("Ayol")}</span>
               </FormLabel>
+            </FormControl>
+
+            <FormControl fullWidth>
+              <InputLabel size='small' id='user-view-language-label'>{t('branch')}</InputLabel>
+              <Select
+                size='small'
+                label={t('branch')}
+                multiple
+                id='user-view-language'
+                labelId='user-view-language-label'
+                name='branches'
+                defaultValue={[]}
+              >
+                {
+                  branches.map((branch, index) => <MenuItem key={index} value={branch.id}>{branch.name}</MenuItem>)
+                }
+              </Select>
             </FormControl>
 
             <FormControl fullWidth sx={{ my: 2 }}>

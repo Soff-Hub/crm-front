@@ -134,8 +134,10 @@ export default function GroupsPage() {
             getEmployees()
         } catch (err: any) {
             setLoading(false)
-            showResponseError(err.response.data, setError)
-            toast.error(err.response.data, {
+            if (err?.response?.data) {
+                showResponseError(err.response.data, setError)
+            }
+            toast.error(JSON.stringify(err?.response?.data), {
                 position: 'top-center'
             })
         }
