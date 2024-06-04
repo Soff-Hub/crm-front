@@ -3,6 +3,7 @@ import { Box, Button, ButtonGroup, Checkbox, Dialog, DialogContent, DialogTitle,
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useSelector } from 'react-redux'
 import Form from 'src/@core/components/form'
 import IconifyIcon from 'src/@core/components/icon'
 import useResponsive from 'src/@core/hooks/useResponsive'
@@ -69,6 +70,7 @@ export default function CreateForm({ }: Props) {
     const [department, setDepartment] = useState<any>(null)
     const [loading, setLoading] = useState(false)
     const [selectType, setSelectType] = useState<'single' | 'multiple'>('single')
+    const { companyInfo } = useSelector((state: any) => state.user)
 
 
     const handleClose = () => {
@@ -223,8 +225,9 @@ export default function CreateForm({ }: Props) {
                         borderRadius: '0',
                     }}>
 
-                    <Box sx={{ display: 'flex' }}>
-                        <img src='/images/soff-logo.png' width={160} style={{ margin: '10px auto' }} />
+                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', flexDirection: 'column', marginBottom: '20px' }}>
+                        <img src={companyInfo.logo} width={40} />
+                        <h3>{companyInfo?.training_center_name}</h3>
                     </Box>
 
                     <Typography align="center" mb={isMobile ? 1 : 2} sx={{ fontSize: isMobile ? '20px' : '24px' }}>
