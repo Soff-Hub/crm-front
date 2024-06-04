@@ -200,7 +200,7 @@ const LoginPage = () => {
                 render={({ field: { value, onChange, onBlur } }) => (
                   <TextField
                     label='Telefon raqam'
-                    value={value.split('').slice(0, 13).join('')}
+                    value={value}
                     onBlur={onBlur}
                     onChange={onChange}
                     error={Boolean(errors.phone)}
