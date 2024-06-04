@@ -110,7 +110,7 @@ const Customizer = () => {
           }}
         >
           <Typography variant='h6' sx={{ fontWeight: 600, textTransform: 'uppercase' }}>
-            Mavzu sozlamalari
+            Sayt sozlamalari
           </Typography>
           <Typography sx={{ color: 'text.secondary' }}>O'zingizga mos ko'rinishni tanlang</Typography>
           <IconButton
@@ -300,7 +300,7 @@ const Customizer = () => {
 
             {/* Menu Layout */}
             <Box sx={{ mb: layout === 'horizontal' && appBar === 'hidden' ? {} : 4 }}>
-              <Typography>Menu ko'rinishi</Typography>
+              <Typography>Menyu joylashuvi</Typography>
               <RadioGroup
                 row
                 value={layout}
