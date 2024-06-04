@@ -212,8 +212,9 @@ function RequestForm({ uuid }: InferGetStaticPropsType<typeof getServerSideProps
                     borderRadius: '0',
                     marginBottom: '100px'
                 }}>
-                <Box sx={{ display: 'flex' }}>
-                    <img src='/images/soff-logo.png' width={160} style={{ margin: '10px auto' }} />
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', flexDirection: 'column', marginBottom: '20px' }}>
+                    <img src={formData?.logo} width={40} />
+                    <h3>{formData?.training_center_name}</h3>
                 </Box>
                 <Typography align="center" mb={isMobile ? 1 : 2} sx={{ fontSize: isMobile ? '20px' : '24px' }}>
                     {isSend ? "Ma'lumot jo'natganingiz uchun raxmat!" : formData.title}
