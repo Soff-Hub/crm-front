@@ -262,7 +262,7 @@ export default function AllSettings() {
                     </Box>
                 </Box>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-                    <Typography sx={{ minWidth: isMobile ? '90px' : '160px', fontSize: isMobile ? '13px' : '16px' }}>{t('Ish tugash vaqti')}:</Typography>
+                    <Typography sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}>{t('Ish tugash vaqti')}:</Typography>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                         {
                             editable === 'end-time' ? (
