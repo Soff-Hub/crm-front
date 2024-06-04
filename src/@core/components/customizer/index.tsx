@@ -21,6 +21,7 @@ import { Settings } from 'src/@core/context/settingsContext'
 
 // ** Hook Import
 import { useSettings } from 'src/@core/hooks/useSettings'
+import { useTranslation } from 'react-i18next'
 
 const Toggler = styled(Box)<BoxProps>(({ theme }) => ({
   right: 0,
@@ -74,6 +75,7 @@ const Customizer = () => {
 
   // ** Hook
   const { settings, saveSettings } = useSettings()
+  const { t } = useTranslation()
 
   // ** Vars
   const {
@@ -110,9 +112,9 @@ const Customizer = () => {
           }}
         >
           <Typography variant='h6' sx={{ fontWeight: 600, textTransform: 'uppercase' }}>
-            Sayt sozlamalari
+            {t('Sayt sozlamalari')}
           </Typography>
-          <Typography sx={{ color: 'text.secondary' }}>O'zingizga mos ko'rinishni tanlang</Typography>
+          <Typography sx={{ color: 'text.secondary' }}>{t("O'zingizga mos ko'rinishni tanlang")}</Typography>
           <IconButton
             onClick={() => setOpen(false)}
             sx={{
@@ -130,38 +132,38 @@ const Customizer = () => {
           <CustomizerSpacing className='customizer-body'>
             {/* Skin */}
             <Box sx={{ mb: 4 }}>
-              <Typography>Asosiy ko'rinish</Typography>
+              <Typography>{t("Asosiy ko'rinish")}</Typography>
               <RadioGroup
                 row
                 value={skin}
                 onChange={e => handleChange('skin', e.target.value as Settings['skin'])}
                 sx={{ '& .MuiFormControlLabel-label': { fontSize: '.875rem', color: 'text.secondary' } }}
               >
-                <FormControlLabel value='default' label='Soyali' control={<Radio />} />
-                <FormControlLabel value='bordered' label='Chiziqli' control={<Radio />} />
+                <FormControlLabel value='default' label={t('Soyali')} control={<Radio />} />
+                <FormControlLabel value='bordered' label={t('Chiziqli')} control={<Radio />} />
               </RadioGroup>
             </Box>
 
             {/* Mode */}
             <Box sx={{ mb: 4 }}>
-              <Typography>Rejim</Typography>
+              <Typography>{t('Rejim')}</Typography>
               <RadioGroup
                 row
                 value={mode}
                 onChange={e => handleChange('mode', e.target.value as any)}
                 sx={{ '& .MuiFormControlLabel-label': { fontSize: '.875rem', color: 'text.secondary' } }}
               >
-                <FormControlLabel value='light' label="Yorqin" control={<Radio />} />
-                <FormControlLabel value='dark' label="Tungi" control={<Radio />} />
+                <FormControlLabel value='light' label={t('Yorqin')} control={<Radio />} />
+                <FormControlLabel value='dark' label={t('Tungi')} control={<Radio />} />
                 {layout === 'horizontal' ? null : (
-                  <FormControlLabel value='semi-dark' label='Semi Dark' control={<Radio />} />
+                  <FormControlLabel value='semi-dark' label={t('Aralash')} control={<Radio />} />
                 )}
               </RadioGroup>
             </Box>
 
             {/* Color Picker */}
             <div>
-              <Typography sx={{ mb: 2.5 }}>Asosiy rang</Typography>
+              <Typography sx={{ mb: 2.5 }}>{t('Asosiy rang')}</Typography>
               <Box sx={{ display: 'flex' }}>
                 <ColorBox
                   onClick={() => handleChange('themeColor', 'primary')}
@@ -229,15 +231,15 @@ const Customizer = () => {
 
             {/* Content Width */}
             <Box sx={{ mb: 4 }}>
-              <Typography>Sahifa o'lchami</Typography>
+              <Typography>{t("Sahifa o'lchami")}</Typography>
               <RadioGroup
                 row
                 value={contentWidth}
                 onChange={e => handleChange('contentWidth', e.target.value as Settings['contentWidth'])}
                 sx={{ '& .MuiFormControlLabel-label': { fontSize: '.875rem', color: 'text.secondary' } }}
               >
-                <FormControlLabel value='full' label="To'liq" control={<Radio />} />
-                <FormControlLabel value='boxed' label='Chegaralangan' control={<Radio />} />
+                <FormControlLabel value='full' label={t("To'liq")} control={<Radio />} />
+                <FormControlLabel value='boxed' label={t('Chegaralangan')} control={<Radio />} />
               </RadioGroup>
             </Box>
 
@@ -285,7 +287,7 @@ const Customizer = () => {
 
             {/* RTL */}
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <Typography>O'ngdan Chapga</Typography>
+              <Typography>{t("O'ngdan Chapga")}</Typography>
               <Switch
                 name='direction'
                 checked={direction === 'rtl'}
@@ -300,7 +302,7 @@ const Customizer = () => {
 
             {/* Menu Layout */}
             <Box sx={{ mb: layout === 'horizontal' && appBar === 'hidden' ? {} : 4 }}>
-              <Typography>Menyu joylashuvi</Typography>
+              <Typography>{t('Menyu joylashuvi')}</Typography>
               <RadioGroup
                 row
                 value={layout}
@@ -313,8 +315,8 @@ const Customizer = () => {
                 }}
                 sx={{ '& .MuiFormControlLabel-label': { fontSize: '.875rem', color: 'text.secondary' } }}
               >
-                <FormControlLabel value='vertical' label='Vertikal' control={<Radio />} />
-                <FormControlLabel value='horizontal' label='Gorizontal' control={<Radio />} />
+                <FormControlLabel value='vertical' label={t('Vertikal')} control={<Radio />} />
+                <FormControlLabel value='horizontal' label={t('Gorizontal')} control={<Radio />} />
               </RadioGroup>
             </Box>
 
@@ -351,7 +353,7 @@ const Customizer = () => {
             {/* Menu Hidden */}
             {layout === 'horizontal' && appBar === 'hidden' ? null : (
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <Typography>Menu ni yashirish</Typography>
+                <Typography>{t('Menu ni yashirish')}</Typography>
                 <Switch
                   name='navHidden'
                   checked={navHidden}
