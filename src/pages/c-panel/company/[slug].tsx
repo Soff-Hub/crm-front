@@ -13,8 +13,8 @@ function Slug({ tab }: Props) {
 
     return (
         <div>
-            {/* <EditCompany slug={tab} /> */}
-            <CreateCeo slug={tab}/>
+            <EditCompany slug={tab} />
+            {/* <CreateCeo slug={tab}/> */}
         </div>
     )
 }

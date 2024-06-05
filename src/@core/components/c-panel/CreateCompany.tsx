@@ -44,6 +44,8 @@ export default function CreateCompany({ slug }: Props) {
             Router.push('/c-panel')
         } catch (err: any) {
             showResponseError(err?.response?.data, setError)
+            console.log(err?.response?.data);
+            
         } finally {
             setLoading(false)
         }
@@ -80,24 +82,24 @@ export default function CreateCompany({ slug }: Props) {
                         <Typography sx={{ fontSize: '20px', borderBottom: '1px solid white', marginBottom: '20px' }}>{t("Yangi o'quv markaz yaratish uchun quyidagi ma'lumotlarni to'ldiring")}</Typography>
 
                         <FormControl fullWidth>
-                            <TextField error={error?.name} size='small' label={t("Nomi")} name='name' />
-                            <FormHelperText error={error?.name}>{error?.name}</FormHelperText>
+                            <TextField error={error?.name?.error} size='small' label={t("Nomi")} name='name' />
+                            <FormHelperText error={error?.name?.error}>{error?.name?.message}</FormHelperText>
                         </FormControl>
 
                         <FormControl fullWidth>
-                            <TextField error={error?.reference_name} size='small' label={t("Masul shaxs ismi")} name='reference_name' />
-                            <FormHelperText error={error?.reference_name}>{error?.reference_name}</FormHelperText>
+                            <TextField error={error?.reference_name?.error} size='small' label={t("Masul shaxs ismi")} name='reference_name' />
+                            <FormHelperText error={error?.reference_name?.error}>{error?.reference_name?.message}</FormHelperText>
                         </FormControl>
 
                         <FormControl fullWidth>
-                            <TextField error={error?.reference_phone} size='small' label={t("Masul shaxs raqami")} name='reference_phone' defaultValue={'+998'} />
-                            <FormHelperText error={error?.reference_phone}>{error?.reference_phone}</FormHelperText>
+                            <TextField error={error?.reference_phone?.error} size='small' label={t("Masul shaxs raqami")} name='reference_phone' defaultValue={'+998'} />
+                            <FormHelperText error={error?.reference_phone?.error}>{error?.reference_phone?.message}</FormHelperText>
                         </FormControl>
 
                         <Box style={{ display: 'flex', gap: '8px' }}>
                             <FormControl fullWidth>
-                                <Input error={error?.domain} placeholder='example' autoComplete='off' size='small' name='domain' style={{ width: '100%' }} endAdornment=".soffcrm.uz" />
-                                <FormHelperText error={error?.domain}>{error?.domain}</FormHelperText>
+                                <Input error={error?.domain?.error} placeholder='example' autoComplete='off' size='small' name='domain' style={{ width: '100%' }} endAdornment=".soffcrm.uz" />
+                                <FormHelperText error={error?.domain?.error}>{error?.domain?.message}</FormHelperText>
                             </FormControl>
                         </Box>
 
@@ -110,6 +112,23 @@ export default function CreateCompany({ slug }: Props) {
                             {t('Logo yuklash')}
                             <VisuallyHiddenInput accept='.png, .jpg, .jpeg, .webp' name='logo' type="file" />
                         </Button>
+
+                        <Typography sx={{ fontSize: '20px', marginTop: '15px' }}>{t("Yangi foydalanuvchi yaratish uchun quyidagi ma'lumotlarni to'ldiring")}</Typography>
+
+                        <FormControl fullWidth>
+                            <TextField error={error?.first_name?.error} size='small' label={t("first_name")} name='first_name' />
+                            <FormHelperText error={error?.first_name?.error}>{error?.first_name?.message}</FormHelperText>
+                        </FormControl>
+
+                        <FormControl fullWidth>
+                            <TextField error={error?.phone?.error} size='small' label={t("phone")} name='phone' defaultValue={'+998'} />
+                            <FormHelperText error={error?.phone?.error}>{error?.phone?.message}</FormHelperText>
+                        </FormControl>
+
+                        <FormControl fullWidth>
+                            <TextField size='small' label={t("password")} name='password' style={{ width: '100%' }} />
+                            <FormHelperText error={error?.password?.error}>{error?.password?.message}</FormHelperText>
+                        </FormControl>
 
                         <LoadingButton
                             loading={loading}

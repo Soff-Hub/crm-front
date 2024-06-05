@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { Box, Button, TextField } from '@mui/material'
+import { Box, Button, Switch, TextField } from '@mui/material'
 import DataTable, { customTableDataProps } from '../table'
 import Router, { useRouter } from 'next/router'
 import useDebounce from 'src/hooks/useDebounce'
 import { useTranslation } from 'react-i18next'
 import api from 'src/@core/utils/api'
+import Status from '../status'
 
 
 export interface CompanyType {
@@ -22,6 +23,27 @@ export interface CompanyType {
 export default function CompanyList() {
 
     const { t } = useTranslation()
+    const [data, setData] = useState<CompanyType[]>([])
+
+    async function getData() {
+        try {
+            const resp = await api.get(`/owner/list/client/`)
+            setData(resp.data);
+        } catch (err: any) {
+            console.log(err);
+        }
+    }
+
+    const suspendCompany = async (item: any, id: any) => {
+        console.log(id,);
+        try {
+            await api.patch(`/owner/client/${item.id}/`, { is_active: id })
+            getData()
+        } catch (err: any) {
+            console.log(err?.response?.data);
+
+        }
+    }
 
     const column: customTableDataProps[] = [
         {
@@ -35,60 +57,54 @@ export default function CompanyList() {
             dataIndex: 'name',
         },
         {
-            xs: 0.07,
-            title: t("Status"),
-            dataIndex: 'is_active',
-        },
-        {
             xs: 0.2,
             title: t("Masul shaxs ismi"),
             dataIndex: 'reference_name'
         },
         {
             xs: 0.2,
-            title: t("phone"),
-            dataIndex: 'reference_phone',
-            render: (ceo: any) => ceo
+            title: t("Masul shaxs raqami"),
+            dataIndex: 'reference_phone'
         },
-        // {
-        //     xs: 0.2,
-        //     title: t("Login"),
-        //     dataIndex: 'ceo',
-        //     render: (ceo: any) => ceo.login
-        // },
-        // {
-        //     xs: 0.2,
-        //     title: t("password"),
-        //     dataIndex: 'ceo',
-        //     render: (ceo: any) => ceo.password
-        // },
+        {
+            xs: 0.2,
+            title: t("Login"),
+            dataIndex: 'ceo',
+            render: (ceo: any) => ceo?.phone
+        },
+        {
+            xs: 0.2,
+            title: t("password"),
+            dataIndex: 'ceo',
+            render: (ceo: any) => ceo?.password
+        },
+        {
+            xs: 0.07,
+            title: t("Status"),
+            dataIndex: 'id',
+            render: (status: any) => {
+                const find = data.find(el => el.id === status)
+                return <Box>
+                    {find?.is_active === true ? <Status color='success' /> : <Status color='error' />}
+                    <Switch checked={Boolean(find?.is_active)} onChange={(e, i) => suspendCompany(find, i)} />
+                </Box>
+            }
+        },
     ]
-
-    const [data, setData] = useState<CompanyType[]>([])
-
 
     const { push } = useRouter()
     const [search, setSearch] = useState<string>('')
     const seachValue = useDebounce(search, 1000)
 
-    async function getData() {
-        try {
-            const resp = await api.get(`/owner/list/client/`)
-            setData(resp.data);
-        } catch (err: any) {
-            console.log(err);
-        }
-    }
+
 
     const rowClick = (id: any) => {
         const find = data.find(el => el.id === Number(id))
-        if (find?.is_create) {
-            push(`/c-panel/company/${id}`)
-        }
+        // if (find?.is_create) {
+        //     push(`/c-panel/company/${id}`)
+        // }
+        push(`/c-panel/company/${id}`)
     }
-
-    console.log(data);
-    
 
     useEffect(() => {
         getData()
