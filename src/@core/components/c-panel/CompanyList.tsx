@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Box, Button, Switch, TextField } from '@mui/material'
+import { Box, Button, CircularProgress, Switch, TextField } from '@mui/material'
 import DataTable, { customTableDataProps } from '../table'
 import Router, { useRouter } from 'next/router'
 import useDebounce from 'src/hooks/useDebounce'
@@ -24,6 +24,7 @@ export default function CompanyList() {
 
     const { t } = useTranslation()
     const [data, setData] = useState<CompanyType[]>([])
+    const [loading, setLoading] = useState<any>(null)
 
     async function getData() {
         try {
@@ -35,14 +36,15 @@ export default function CompanyList() {
     }
 
     const suspendCompany = async (item: any, id: any) => {
-        console.log(id,);
+        setLoading(item.id)
         try {
             await api.patch(`/owner/client/${item.id}/`, { is_active: id })
-            getData()
+            await getData()
         } catch (err: any) {
             console.log(err?.response?.data);
 
         }
+        setLoading(null)
     }
 
     const column: customTableDataProps[] = [
@@ -84,9 +86,13 @@ export default function CompanyList() {
             dataIndex: 'id',
             render: (status: any) => {
                 const find = data.find(el => el.id === status)
-                return <Box>
-                    {find?.is_active === true ? <Status color='success' /> : <Status color='error' />}
-                    <Switch checked={Boolean(find?.is_active)} onChange={(e, i) => suspendCompany(find, i)} />
+                return <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                    {loading === find?.id ? <>
+                        <CircularProgress disableShrink size={'20px'} sx={{ margin: '10px 0', marginLeft: '15px' }} />
+                    </> : <>
+                        {find?.is_active === true ? <Status color='success' /> : <Status color='error' />}
+                        <Switch checked={Boolean(find?.is_active)} onChange={(e, i) => suspendCompany(find, i)} />
+                    </>}
                 </Box>
             }
         },
