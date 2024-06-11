@@ -4,22 +4,27 @@ import { Box } from '@mui/material'
 import Link from 'next/link'
 import { useTranslation } from 'react-i18next'
 import LanguageDropdown from 'src/@core/landing/LanguageDropdown'
+import IconifyIcon from 'src/@core/components/icon'
+import useResponsive from 'src/@core/hooks/useResponsive'
+import toast from 'react-hot-toast'
 
 export default function LandingHeader() {
 
     const { i18n } = useTranslation()
     const [stickyHeader, setStickyHeader] = useState<boolean>(false)
+    const { isMobile } = useResponsive()
 
 
     let headerStyles: CSSProperties = {
         padding: '10px 0',
         backdropFilter: 'blur(30px)',
+        WebkitBackdropFilter: 'blur(30px)',
         position: 'fixed',
         width: '100%',
-        borderBottom: '1px solid',
+        borderBottom: !stickyHeader ? '1px solid' : '1px solid white',
         zIndex: 10000,
-        backgroundColor: stickyHeader ? '#666CFF' : 'transparent',
-        transition: 'all 0.3s ease'
+        backgroundColor: stickyHeader ? '#FFFFFF' : 'transparent',
+        transition: 'all 0.3s ease',
     }
 
 
@@ -40,6 +45,7 @@ export default function LandingHeader() {
     };
 
 
+
     return (
         <div style={headerStyles} id='header-sticky'>
             <div className="container">
@@ -47,21 +53,23 @@ export default function LandingHeader() {
                     color: 'white',
                     display: 'flex',
                     alignItems: 'center',
-                    justifyContent: 'space-between'
+                    justifyContent: 'unset'
                 }}>
                     <Link href={'/'}>
                         <Image
                             alt='logo'
                             src={'https://soffstudy.uz/assets/imgs/page/logo/Soff%20Study%20white%20logo.png'}
-                            width={170}
+                            width={isMobile ? 100 : 170}
+                            style={{ height: 'auto' }}
                             height={40}
                         />
                     </Link>
-                    <div>
-                        {/* {
-                            i18n.language === 'uz' ? <span>RU</span> : <span>UZ</span>
-                        } */}
-                        <LanguageDropdown />
+                    {!isMobile && <div style={{ marginLeft: 'auto', marginRight: '20px', display: 'flex', alignItems: 'center' }}>
+                        <IconifyIcon icon="ic:twotone-phone" style={{ color: stickyHeader ? 'black' : 'white', fontSize: isMobile ? '14px' : '22px' }} />
+                        <a href='tel:+998931231177' style={{ color: stickyHeader ? 'black' : 'white', fontSize: isMobile ? '12px' : '16px', textDecoration: 'none' }}>+998 71 311 32 32</a>
+                    </div>}
+                    <div style={{ marginLeft: isMobile ? 'auto' : 0 }}>
+                        <LanguageDropdown sticky={stickyHeader} />
                     </div>
                 </Box>
             </div>

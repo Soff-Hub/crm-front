@@ -8,7 +8,7 @@ import { setCookie, getCookie } from 'cookies-next';
 
 
 
-export default function LanguageDropdown({ sticky }: any) {
+export default function LanguageDropdownMobile() {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
 
@@ -47,7 +47,7 @@ export default function LanguageDropdown({ sticky }: any) {
                 color='inherit'
             >
                 <IconifyIcon icon={`circle-flags:${i18n.language}`} />
-                <span style={{ marginLeft: '4px',color: sticky ? 'black' : 'white' }}>{i18n.language.toUpperCase()}</span>
+                <span style={{ marginLeft: '4px' }}>{i18n.language.toUpperCase()}</span>
             </Button>
             <Menu
                 id="demo-positioned-menu"

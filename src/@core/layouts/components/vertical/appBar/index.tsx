@@ -57,7 +57,7 @@ const LayoutAppBar = (props: Props) => {
     return {
       px: `${theme.spacing(6)} !important`,
       boxShadow: skin === 'bordered' ? 0 : 3,
-      ...(appBarBlur && { backdropFilter: 'blur(8px)' }),
+      ...(appBarBlur && { backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)', }),
       backgroundColor: hexToRGBA(theme.palette.background.paper, appBarBlur ? 0.9 : 1),
       ...(skin === 'bordered' && { border: `1px solid ${theme.palette.divider}`, borderTopWidth: 0 })
     }

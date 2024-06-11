@@ -107,6 +107,7 @@ const HorizontalLayout = (props: LayoutProps) => {
             ...(appBar === 'fixed'
               ? appBarBlur && {
                   backdropFilter: 'blur(8px)',
+                  WebkitBackdropFilter: 'blur(8px)',
                   backgroundColor: theme => hexToRGBA(theme.palette.background.paper, 0.9)
                 }
               : {}),

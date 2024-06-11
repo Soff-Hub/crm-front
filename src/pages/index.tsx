@@ -31,10 +31,7 @@ const Home = () => {
     router.replace(homeRoute)
   }
 
-  useEffect(() => {
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
 
   if (auth.user) {
     return <Spinner sx={{ height: '100%' }} />

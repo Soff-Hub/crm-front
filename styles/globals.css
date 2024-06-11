@@ -136,3 +136,500 @@ code[class*='language-'] {
     transform: rotate(0);
   }
 }
+
+
+.section_reviews_page {
+  height: 510px;
+
+  .slider-container_section {
+    button {
+      opacity: 0;
+      position: absolute;
+      right: 50px;
+      top: -30px;
+    }
+
+    .slick-next::before {
+      display: none;
+    }
+
+  }
+
+  .container {
+    .card_reviews_card {
+      padding-top: 65px;
+
+      h3 {
+        font-size: 32px;
+        font-weight: 700;
+        line-height: 42px;
+        letter-spacing: 0em;
+        text-align: left;
+        flex-shrink: 0;
+
+      }
+
+      .border_div {
+        width: 100%;
+        height: 2px;
+        background-color: #292929;
+        margin-top: 8px;
+      }
+
+
+    }
+
+  }
+
+  .card_slider {
+    width: 100%;
+
+    .card_carseol {
+      display: flex;
+      flex-direction: column;
+      gap: 19px;
+      width: 854px;
+      background-color: #F5F4F4;
+      border-radius: 35px;
+      margin-top: 62px;
+      filter: none;
+
+      .card_text {
+        margin-left: 20px;
+
+        h4 {
+          font-size: 18px;
+          font-weight: 700;
+          line-height: 27px;
+          letter-spacing: 0em;
+          text-align: left;
+
+        }
+
+        p {
+          font-size: 14px;
+          font-weight: 400;
+          line-height: 21px;
+          letter-spacing: 0em;
+          text-align: left;
+        }
+
+        .images {
+          border-radius: 50%;
+          object-fit: contain;
+        }
+
+
+      }
+
+      .card_text_lorem {
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 21px;
+        letter-spacing: 0em;
+        text-align: left;
+
+      }
+    }
+
+    .slick-slide:not(.slick-center) .card_carseol {
+      filter: blur(4px);
+    }
+
+  }
+
+}
+
+@media(min-width:1024px) and (max-width: 1440px) {
+  .section_reviews_page {
+    max-width: 1440px;
+
+    .card_slider {
+
+      .card_carseol {
+        width: 722px;
+      }
+    }
+
+    .container {
+      h3 {
+        max-width: 500px;
+      }
+    }
+  }
+}
+
+
+@media(min-width:900px) and (max-width: 1024px) {
+  .section_reviews_page {
+    max-width: 1024px;
+
+    .card_slider {
+
+      .card_carseol {
+        max-width: 722px;
+      }
+    }
+
+    .container {
+      .card_reviews_card {
+        max-width: 850px;
+
+        .border_div {
+          max-width: 750px;
+        }
+      }
+
+      h3 {
+        max-width: 500px;
+      }
+    }
+  }
+}
+
+
+@media (min-width:768px) and (max-width: 900px) {
+  .section_reviews_page {
+    margin-top: -20px;
+
+    .container {
+      max-width: 728px;
+    }
+
+    .card_slider {
+      .slider-container_section {
+
+        .card_carseol {
+          max-width: 507px;
+
+        }
+
+      }
+    }
+
+    .container {
+      .card_reviews_card {
+
+        h3 {
+          max-width: 500px;
+          font-size: 24px;
+          line-height: 31.2px;
+        }
+      }
+    }
+  }
+}
+
+@media (min-width:550px) and (max-width: 768px) {
+  .section_reviews_page {
+    margin-top: -120px;
+
+    .container {
+      max-width: 728px;
+    }
+
+    .card_slider {
+
+
+      .card_carseol {
+        max-width: 507px;
+
+        .card_text {
+          .text_bodyh4 {
+            .elh4l {
+              font-size: 14px;
+            }
+
+            p {
+              font-size: 10px;
+            }
+          }
+        }
+      }
+    }
+
+    .container {
+      .card_reviews_card {
+
+        h3 {
+          max-width: 500px;
+          font-size: 24px;
+          line-height: 31.2px;
+        }
+      }
+
+
+
+    }
+  }
+}
+
+@media (min-width:415px) and (max-width: 550px) {
+  .section_reviews_page {
+    margin-top: -120px;
+    margin-bottom: -80px;
+
+    .container {
+      max-width: 375px;
+      padding: 0;
+
+      .card_reviews_card {
+        .border_div {
+          max-width: 300px;
+        }
+
+        h3 {
+          max-width: 400px;
+          font-size: 18px;
+          line-height: 23px;
+          transform: translateY(3px);
+        }
+      }
+
+
+
+    }
+
+
+
+    .card_slider {
+
+
+      .card_carseol {
+        width: 300px;
+        border-radius: 20px;
+
+        padding: 15px 15px;
+
+        .card_text {
+          margin-left: 20px;
+          margin-bottom: -10px;
+
+          h4 {
+            font-size: 12px;
+            line-height: 18px;
+          }
+
+          p {
+            font-size: 10px;
+            line-height: 15px;
+
+          }
+
+          .images {
+            min-height: 60px;
+            min-width: 60px;
+            max-height: 60px;
+            max-width: 60px;
+
+          }
+
+
+
+        }
+
+        .card_text_lorem {
+          font-size: 10px;
+          line-height: 15px;
+          margin-left: 20px;
+
+        }
+      }
+
+    }
+
+
+  }
+}
+
+@media (min-width:376px) and (max-width: 415px) {
+  .section_reviews_page {
+    width: 100%;
+    margin: 0;
+    margin-bottom: -80px;
+    margin-top: -120px;
+    width: 100%;
+
+    .container {
+
+
+      max-width: 375px;
+      margin: 0 auto;
+      padding: 0;
+
+      .card_reviews_card {
+        width: 100%;
+
+        .border_div {
+          max-width: 300px;
+        }
+
+        h3 {
+          max-width: 400px;
+          font-size: 18px;
+          line-height: 23px;
+          transform: translateY(3px);
+        }
+      }
+
+
+
+    }
+
+
+
+
+    .card_slider {
+
+
+
+      .slick-list {
+        height: 350px !important;
+      }
+
+
+
+      .card_carseol {
+        width: 300px;
+        border-radius: 20px;
+
+        padding: 15px 15px;
+
+        .card_text {
+          margin-left: 20px;
+          margin-bottom: -10px;
+
+          h4 {
+            font-size: 12px;
+            line-height: 15px;
+          }
+
+          p {
+            font-size: 8px;
+            line-height: 12px;
+
+          }
+
+          .images {
+            min-height: 60px;
+            min-width: 60px;
+            max-height: 60px;
+            max-width: 60px;
+
+          }
+
+
+        }
+
+        .card_text_lorem {
+          font-size: 10px;
+          line-height: 15px;
+
+
+        }
+      }
+
+    }
+
+
+  }
+}
+
+
+@media (max-width: 376px) {
+  .section_reviews_page {
+    width: 100%;
+    margin: 0;
+    margin-bottom: -120px;
+    margin-top: -120px;
+    width: 100%;
+
+    .container {
+
+      max-width: 375px;
+      margin: 0 auto;
+
+      .card_reviews_card {
+        width: 100%;
+
+        .border_div {
+          max-width: 300px;
+        }
+
+        h3 {
+          max-width: 300px;
+          font-size: 18px;
+          line-height: 23px;
+          transform: translateY(3px);
+        }
+      }
+
+
+
+    }
+
+
+
+
+    .card_slider {
+
+      .slick-list {
+        height: 350px !important;
+      }
+
+      .card_carseol {
+        width: 300px;
+        border-radius: 20px;
+
+        padding: 15px 15px;
+        height: 200px;
+
+        .card_text {
+          margin-left: 20px;
+          margin-bottom: -10px;
+
+          h4 {
+            font-size: 12px;
+            line-height: 15px;
+          }
+
+          p {
+            font-size: 8px;
+            line-height: 12px;
+
+          }
+
+          .images {
+            min-height: 60px;
+            min-width: 60px;
+            max-height: 60px;
+            max-width: 60px;
+
+          }
+
+
+
+
+        }
+
+        .card_text_lorem {
+          font-size: 10px;
+          line-height: 15px;
+          display: -webkit-box;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+          -webkit-line-clamp: 6;
+          margin-left: 20px;
+
+        }
+      }
+
+    }
+
+
+  }
+}
+
+/* .container-clone .slick-track {
+  overflow: visible !important;
+} */
