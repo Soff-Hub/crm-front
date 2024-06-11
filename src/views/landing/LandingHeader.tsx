@@ -66,7 +66,7 @@ export default function LandingHeader() {
                     </Link>
                     {!isMobile && <div style={{ marginLeft: 'auto', marginRight: '20px', display: 'flex', alignItems: 'center' }}>
                         <IconifyIcon icon="ic:twotone-phone" style={{ color: stickyHeader ? 'black' : 'white', fontSize: isMobile ? '14px' : '22px' }} />
-                        <a href='tel:+998931231177' style={{ color: stickyHeader ? 'black' : 'white', fontSize: isMobile ? '12px' : '16px', textDecoration: 'none' }}>+998 71 311 32 32</a>
+                        <a href='tel:+998910086789' style={{ color: stickyHeader ? 'black' : 'white', fontSize: isMobile ? '12px' : '16px', textDecoration: 'none' }}>+998 91 008 67 89</a>
                     </div>}
                     <div style={{ marginLeft: isMobile ? 'auto' : 0 }}>
                         <LanguageDropdown sticky={stickyHeader} />

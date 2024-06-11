@@ -1,9 +1,11 @@
 import React, { CSSProperties } from 'react'
+import { useTranslation } from 'react-i18next'
 import useResponsive from 'src/@core/hooks/useResponsive'
 
 export default function LandingVideo() {
 
     const { isMobile, isTablet } = useResponsive()
+    const { t } = useTranslation()
 
     const iframeStyles: CSSProperties = {
         maxWidth: '1000px',
@@ -19,9 +21,9 @@ export default function LandingVideo() {
             <div className="container">
                 <div className="lading-video-inner" style={{ padding: '90px 0 40px' }}>
                     <div className="landing-video-inner" style={{ maxWidth: '700px', textAlign: 'center', margin: '0 auto' }}>
-                        <h2>Soff CRM va LMS</h2>
+                        <h2>{t('Biz haqimizda')}</h2>
                         <p>
-                            Biz 2020-yildan boshlab o`z faoliyatimizni olib boryapmiz. Ushbu davrda O`zbekistondagi Top-o`quv markazlarni avtomatlashtirish orqali ularning rivojlanishiga o`z hissamizni qo`shishga ulgurdik
+                            {t("Soff CRM tizimining maqsadi o'quv markazlarining ish faoliyatini tizimlashtirish orqali ish jarayonlarini tizim orqali boshqarish orqali har tamonlama rivojlanishiga hissa qo'shishdir.")}
                         </p>
                     </div>
                     {isMobile ? <div>

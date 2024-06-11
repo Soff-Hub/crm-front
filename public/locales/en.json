@@ -293,5 +293,20 @@
     "Yangi o'quv markaz yaratish uchun quyidagi ma'lumotlarni to'ldiring": "Fill in the following information to create a new training center",
     "Masul shaxs ismi": "Name of responsible person",
     "Logo yuklash": "Logo upload",
-    "Masul shaxs raqami": "Responsible person number"
+    "Masul shaxs raqami": "Responsible person number",
+    "SOFF CRM - ta'lim markazlari uchun tizimli boshqaruv platformasi": "SOFF CRM - Is a systematic management platform for educational centers",
+    "Qo'ng'iroq": "To call",
+    "Tekin variantini sinab ko'rmoqchimisiz? Biz bilan bog'laning": "Want to try the free version? Contact us",
+    "~ SOFF CRM HAQIDA BATAFSIL": "~ LEARN ABOUT SOFF CRM",
+    "Biz haqimizda": "About us",
+    "Soff CRM tizimining maqsadi o'quv markazlarining ish faoliyatini tizimlashtirish orqali ish jarayonlarini tizim orqali boshqarish orqali har tamonlama rivojlanishiga hissa qo'shishdir.": "The purpose of the Soff CRM system is to contribute to the development of every organization by systematizing the work of training centers by managing work processes through the system.",
+    "Soff CRM platformasi orqali siz o'z o'quv markazingizda quyidagi yo'nalishlarni tizimlashtirishga erishasiz": "Through the Soff CRM platform, you will be able to systematize the following areas in your training center",
+    "marketing_desc": "In the development of marketing, the soff CRM platform offers the following conveniences, by creating various types of forms through the platform, directing people coming from the target enabled through social networks (instagram, telegram, facebook, etc.) to the platform",
+    "moliya_desc": "You will be able to view information such as student's due dates, amounts, employee salaries, monthly branch statistics, additional payment baskets",
+    "MARKETING": "MARKETING",
+    "MOLIYA": "FINANCE",
+    "xizmat_korsatish_desc": "The service department is fully organized through the platform, the list of potential students, the list of active and indebted students, SMS sending to them",
+    "XIZMAT KO`RSATISH": "SERVICE PROVISION",
+    "Bizga ishonch bildirgan mijozlar": "Customers who trust us",
+    "Mijozlar fikrlari": "Customer reviews"
 }

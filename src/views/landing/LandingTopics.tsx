@@ -4,6 +4,7 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import useResponsive from 'src/@core/hooks/useResponsive';
+import { useTranslation } from 'react-i18next';
 
 
 
@@ -15,17 +16,18 @@ export interface LandingTopicsType {
 
 export default function LandingTopics() {
     const { isMobile, isTablet, isDesktop } = useResponsive()
+    const { t } = useTranslation()
 
     const data: LandingTopicsType[] = [
         {
             img: 'https://cdn.mrkhub.com/instapage-landings-frontend/60/images/_pages/template/features/feature-landing.svg',
-            title: 'MARKETING',
-            description: 'Platforma yordamida marketing bo`limini avtomatlashtirishingiz va samaradorligini oshirishingiz, konversiyani o`lchashingiz mumkin'
+            title: t('MARKETING'),
+            description: t('marketing_desc')
         },
         {
             img: 'https://cdn.mrkhub.com/instapage-landings-frontend/60/images/_pages/template/features/feature-visual.svg',
-            title: 'MOLIYA',
-            description: 'Moliya bo`limida barcha to`lovlar, xarajatlar va oylik ish haqi hamda qarzdorliklarning hisob-kitobi avtomatik amalga oshiriladi'
+            title: t('MOLIYA'),
+            description: t('moliya_desc')
         },
         {
             img: 'https://cdn.mrkhub.com/instapage-landings-frontend/60/images/_pages/template/features/feature-customizable.svg',
@@ -34,8 +36,8 @@ export default function LandingTopics() {
         },
         {
             img: 'https://cdn.mrkhub.com/instapage-landings-frontend/60/images/_pages/template/features/feature-ai.svg',
-            title: 'XIZMAT KO`RSATISH',
-            description: 'Siz doimiy mijozlaringiz bilan kunlik aloqani yaxshilash, sms-xabarlar yuborish va ko`plab xizmatlar ko`rsatishingiz mumkin.'
+            title: t('XIZMAT KO`RSATISH'),
+            description: t('xizmat_korsatish_desc')
         }
     ]
 
@@ -53,7 +55,7 @@ export default function LandingTopics() {
         padding: '40px',
         border: '2px solid #050d1a',
         maxWidth: '360px',
-        minHeight: '350px'
+        minHeight: '430px',
     }
 
     let sliderRef: any = useRef(null);
@@ -92,13 +94,13 @@ export default function LandingTopics() {
                     <h2 style={{
                         marginBottom: '34px',
                         color: '#050d1a',
-                        maxWidth: '800px',
-                        fontSize: isMobile ? '20px' : '44px',
+                        maxWidth: '1100px',
+                        fontSize: isMobile ? '18px' : '30px',
                         fontWeight: '700',
                     }}>
-                        All the features you need to build lead-generating landing pages
+                        {t("Soff CRM platformasi orqali siz o'z o'quv markazingizda quyidagi yo'nalishlarni tizimlashtirishga erishasiz")}
                     </h2>
-                    <div style={{ display: 'flex', gap: '4px' }}>
+                    {!isMobile && <div style={{ display: 'flex', gap: '4px' }}>
                         <div style={{
                             width: '44px',
                             height: '44px',
@@ -125,11 +127,29 @@ export default function LandingTopics() {
                         >
                             <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMyIgaGVpZ2h0PSIzMyIgZmlsbD0ibm9uZSI+PHBhdGggc3Ryb2tlPSIjMkMyQzJDIiBzdHJva2UtbGluZWNhcD0ic3F1YXJlIiBzdHJva2Utd2lkdGg9IjIiIGQ9Ik0yNS43IDE2LjQ5SDYuNU0xOC40MzQgOC40NTZsOC4wNjYgOC4wMzItOC4wNjYgOC4wMzQiLz48L3N2Zz4=" alt="" />
                         </div>
-                    </div>
+                    </div>}
                 </div>
             </div>
             <div className="slider-container" style={{}}>
-                <Slider ref={sliderRef}
+                {isMobile ? (
+                    <div className="" style={{ display: 'flex', flexDirection: 'column', gap: '15px', alignItems: 'center' }}>
+                        {
+                            [...data, ...data].map((el, i) => (
+                                <div
+                                    data-aos={i % 2 === 0 ? "flip-left" : "flip-right"}
+                                    key={i}
+                                    style={{ height: '100%' }}
+                                >
+                                    <div style={{ ...itemStyles, minWidth: '300px', minHeight: '0' }} >
+                                        <Image src={el.img} alt={el.title} width={48} height={48} style={{ marginBottom: '24px' }} />
+                                        <h4 style={{ fontWeight: 700, color: '#050d1a', textTransform: 'capitalize' }}>{el.title}</h4>
+                                        <p>{el.description}</p>
+                                    </div>
+                                </div>
+                            ))
+                        }
+                    </div>
+                ) : <Slider ref={sliderRef}
                     {...settings}
                     responsive={[
                         {
@@ -190,18 +210,7 @@ export default function LandingTopics() {
                     ]}
                 >
                     {
-                        isMobile ? [...data, ...data].map((el, i) => (
-                            <div
-                                key={i}
-                                style={{ height: '100%' }}
-                            >
-                                <div style={itemStyles} >
-                                    <Image src={el.img} alt={el.title} width={48} height={48} style={{ marginBottom: '24px' }} />
-                                    <h4 style={{ fontWeight: 700, color: '#050d1a', textTransform: 'capitalize' }}>{el.title}</h4>
-                                    <p>{el.description}</p>
-                                </div>
-                            </div>
-                        )) : [...data, ...data].map((el, i) => (
+                        [...data, ...data].map((el, i) => (
                             <div
                                 data-aos={i % 2 === 0 ? "flip-left" : "flip-right"}
                                 key={i}
@@ -216,8 +225,8 @@ export default function LandingTopics() {
                         ))
                     }
 
-                </Slider>
+                </Slider>}
             </div>
-        </div>
+        </div >
     )
 }

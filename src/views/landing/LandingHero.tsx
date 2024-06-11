@@ -3,6 +3,7 @@ import React, { CSSProperties } from 'react'
 import IconifyIcon from 'src/@core/components/icon'
 import { motion } from "framer-motion";
 import useResponsive from 'src/@core/hooks/useResponsive';
+import { useTranslation } from 'react-i18next';
 
 const HeroStyles: CSSProperties = {
     display: 'flex',
@@ -52,6 +53,7 @@ const InputStyles: CSSProperties = {
 
 export default function LandingHero() {
     const { isMobile } = useResponsive()
+    const { t } = useTranslation()
 
 
     return (
@@ -63,16 +65,16 @@ export default function LandingHero() {
                 <div className="hero-inner" style={{ ...HeroStyles, flexDirection: isMobile ? 'column' : 'row' }}>
                     <div className="hero-content" style={ContentStyles}>
                         <h1 style={{ color: 'white', marginBottom: '40px' }}>
-                            SOFF CRM - ta'lim markazlarni tizimlashtirish platformasi
+                            {t("SOFF CRM - ta'lim markazlari uchun tizimli boshqaruv platformasi")}
                         </h1>
                         <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.8 }} style={{ display: 'inline-block' }} >
-                            <a href="tel:+998931231177">
-                                <Button variant='outlined' color='success' size='large' endIcon={<IconifyIcon icon={'nimbus:telephone'} />}>Qo'ng'iroq</Button>
+                            <a href="tel:+998910086789">
+                                <Button variant='outlined' color='success' size='large' endIcon={<IconifyIcon icon={'nimbus:telephone'} />}>{t("Qo'ng'iroq")}</Button>
                             </a>
                         </motion.div>
                     </div>
                     {isMobile ? <div style={{ ...formStyles, marginTop: isMobile ? '40px' : 0 }}>
-                        <h3 style={{ color: 'white' }}>Demo olish uchun ariza yuboring</h3>
+                        <h3 style={{ color: 'white' }}>{t("Tekin variantini sinab ko'rmoqchimisiz? Biz bilan bog'laning")}</h3>
                         <form style={{
                             display: 'flex',
                             flexDirection: 'column',
@@ -81,24 +83,24 @@ export default function LandingHero() {
                             <input style={InputStyles} type="text" placeholder='Ismingiz' />
                             <input style={InputStyles} type="text" placeholder='Telefon raqamingiz' />
                             <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.95 }} style={{}} >
-                                <Button variant='outlined' color='success' fullWidth>Yuborish</Button>
+                                <Button variant='outlined' color='success' fullWidth>{t("Yuborish")}</Button>
                             </motion.div>
                         </form>
                     </div> : <div style={{ ...formStyles, marginTop: isMobile ? '40px' : 0 }} data-aos="zoom-out">
-                        <h3 style={{ color: 'white' }}>Demo olish uchun ariza yuboring</h3>
+                        <h3 style={{ color: 'white' }}>{t("Tekin variantini sinab ko'rmoqchimisiz? Biz bilan bog'laning")}</h3>
                         <form style={{
                             display: 'flex',
                             flexDirection: 'column',
                             gap: '20px'
                         }}>
-                            <input style={InputStyles} type="text" placeholder='Ismingiz' />
-                            <input style={InputStyles} type="text" placeholder='Telefon raqamingiz' />
+                            <input style={InputStyles} type="text" placeholder={t('Ism')} />
+                            <input style={InputStyles} type="text" placeholder={t('phone')} />
                             <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.95 }} style={{}} >
-                                <Button variant='outlined' color='success' fullWidth>Yuborish</Button>
+                                <Button variant='outlined' color='success' fullWidth>{t("Yuborish")}</Button>
                             </motion.div>
                         </form>
                     </div>}
-                    {/* <div className="play-circle">
+                    <div className="play-circle">
                         {
                             isMobile ? <div id="circle">
                                 <svg version="1.1" x="0px" y="0px" width="300px" height="300px" viewBox="0 0 300 300" enable-background="new 0 0 300 300" xmlSpace="preserve">
@@ -109,7 +111,7 @@ export default function LandingHero() {
                                     <g>
                                         <use xlinkHref="#circlePath" fill="none" />
                                         <text fill="#000">
-                                            <textPath fontSize="17px" letterSpacing="3px" xlinkHref="#circlePath">TO'LIQ  VIDEO KO'RISH</textPath>
+                                            <textPath fontSize="16px" letterSpacing="3px" xlinkHref="#circlePath">{t("~ SOFF CRM HAQIDA BATAFSIL")}</textPath>
                                         </text>
                                     </g>
                                 </svg>
@@ -124,7 +126,7 @@ export default function LandingHero() {
                                     <g>
                                         <use xlinkHref="#circlePath" fill="none" />
                                         <text fill="#000">
-                                            <textPath fontSize="17px" letterSpacing="3px" xlinkHref="#circlePath">TO'LIQ  VIDEO KO'RISH</textPath>
+                                            <textPath fontSize="16px" letterSpacing="3px" xlinkHref="#circlePath">{t("~ SOFF CRM HAQIDA BATAFSIL")}</textPath>
                                         </text>
                                     </g>
                                 </svg>
@@ -132,7 +134,7 @@ export default function LandingHero() {
                                 </div>
                             </div>
                         }
-                    </div> */}
+                    </div>
                 </div>
             </div>
         </section>

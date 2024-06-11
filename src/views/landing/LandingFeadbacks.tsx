@@ -4,10 +4,12 @@ import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
 import Image from 'next/image';
 import { useTranslation } from 'react-i18next';
+import useResponsive from 'src/@core/hooks/useResponsive';
 
 
 const LandingFeadbacks = () => {
     const { t, i18n } = useTranslation()
+    const { isMobile } = useResponsive()
 
     const [data, setData] = useState([1, 2, 3, 4, 5])
 
@@ -23,7 +25,7 @@ const LandingFeadbacks = () => {
     };
 
     return (
-        <div className='section_reviews_page'>
+        <div className='section_reviews_page' style={{ marginBottom: isMobile ? '-20px' : '0', marginTop: isMobile ? '-20px' : '0' }}>
             <div className="container">
                 <div className="card_reviews_card flex justify-between items-center gap-2">
                     <h3>{t("Mijozlar fikrlari")} </h3>

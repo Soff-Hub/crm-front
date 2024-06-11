@@ -73,5 +73,8 @@
     "thursday": "Payshanba",
     "friday": "Juma",
     "saturday": "Shanba",
-    "sunday": "Yakshanba"
+    "sunday": "Yakshanba",
+    "marketing_desc": "Marketingni rivojlantirishda soff CRM platformasi quyidagi qulayliklarni taklif etadi, bular  platforma orqali har hil turdagi  formalar yaratish orqali ijtimoiy tarmoq(instagram, telegram, facebook va h.q) orqali yoqilgan targetdan kelayotgan odamlarni platformaga yo'naltirish",
+    "moliya_desc": "O'quvchining qarzdorlik sanalari, summalari, xodimlarning oyliklari, filiallar bo'yicha oylik statistikalar, qo'shimcha harajar savatlari kabi ma'lumotlarni ko'rish imkoniyatiga ega bo'lasiz",
+    "xizmat_korsatish_desc":"Xizmat ko'rsatish bo'limi platforma orqali to'laqonli tizimlashadi, ehtimoliy o'quvchilarning ro'yhati, aktiv va  qarzdor o'quvchilar ro'yhati ularga sms jo'natishlar"
 }

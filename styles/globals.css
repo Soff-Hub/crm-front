@@ -54,10 +54,10 @@ code[class*='language-'] {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  background-image: url('../public/images/logos/google.png');
+  background-image: url('https://papik.pro/grafic/uploads/posts/2023-04/1682744685_papik-pro-p-smail-plei-png-15.png');
   background-repeat: no-repeat;
   background-position: center;
-  background-size: 40px;
+  background-size: 70px;
 }
 
 #circle svg {
@@ -615,12 +615,11 @@ code[class*='language-'] {
         .card_text_lorem {
           font-size: 10px;
           line-height: 15px;
-          display: -webkit-box;
+          /* display: -webkit-box;
           -webkit-box-orient: vertical;
           overflow: hidden;
           -webkit-line-clamp: 6;
-          margin-left: 20px;
-
+          margin-left: 20px; */
         }
       }
 

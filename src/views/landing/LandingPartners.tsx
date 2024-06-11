@@ -1,10 +1,12 @@
 import Image from 'next/image'
 import React from 'react'
+import { useTranslation } from 'react-i18next'
 import useResponsive from 'src/@core/hooks/useResponsive'
 
 export default function LandingPartners() {
     const url = 'https://uic.group/media/Partners/Asakabank.svg'
     const { isMobile } = useResponsive()
+    const { t } = useTranslation()
 
     const effect: string[] = [
         'fade-down',
@@ -45,14 +47,14 @@ export default function LandingPartners() {
                     fontSize: isMobile ? '22px' : '44px',
                     fontWeight: '700',
                 }}>
-                    Bizga ishonch bildirgan mijozlar
+                    {t('Bizga ishonch bildirgan mijozlar')}
                 </h2>
                 <div
                     style={{
                         gap: '20px',
                         display: 'flex',
                         flexWrap: 'wrap',
-                        justifyContent: 'space-between'
+                        justifyContent: isMobile ? 'space-evenly' : 'space-between'
                     }}
                 >
                     {
@@ -66,10 +68,11 @@ export default function LandingPartners() {
                                     cursor: 'pointer',
                                     borderRadius: '10px',
                                     padding: '10px 0',
-                                    minWidth: isMobile ? '160px' : '220px',
+                                    minWidth: isMobile ? '140px' : '220px',
+                                    objectFit: 'cover'
                                 }}
                             >
-                                <Image src={el} alt='brands' width={170} height={115} style={{ height: 'auto' }} />
+                                <Image src={el} alt='brands' width={isMobile ? 120 : 170} height={115} style={{ height: 'auto' }} />
                             </div> : <div
                                 data-aos={'zoom-out'}
                                 data-aos-offset="0"

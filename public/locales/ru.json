@@ -295,5 +295,20 @@
     "Yangi o'quv markaz yaratish uchun quyidagi ma'lumotlarni to'ldiring": "Заполните следующую информацию, чтобы создать новый учебный центр",
     "Masul shaxs ismi": "Имя ответственного лица",
     "Logo yuklash": "Загрузка логотипа",
-    "Masul shaxs raqami": "Номер ответственного лица"
+    "Masul shaxs raqami": "Номер ответственного лица",
+    "SOFF CRM - ta'lim markazlari uchun tizimli boshqaruv platformasi": "SOFF CRM — платформа системного управления образовательными центрами",
+    "Qo'ng'iroq": "Позвонить",
+    "Tekin variantini sinab ko'rmoqchimisiz? Biz bilan bog'laning": "Хотите попробовать бесплатную версию? Связаться с нами",
+    "~ SOFF CRM HAQIDA BATAFSIL": "~ УЗНАЙТЕ О SOFF CRM",
+    "Biz haqimizda": "О нас",
+    "Soff CRM tizimining maqsadi o'quv markazlarining ish faoliyatini tizimlashtirish orqali ish jarayonlarini tizim orqali boshqarish orqali har tamonlama rivojlanishiga hissa qo'shishdir.": "Цель системы Soff CRM – способствовать развитию каждой организации путем систематизации работы учебных центров путем управления рабочими процессами через систему.",
+    "Soff CRM platformasi orqali siz o'z o'quv markazingizda quyidagi yo'nalishlarni tizimlashtirishga erishasiz": "С помощью платформы Soff CRM вы сможете систематизировать следующие направления в своем учебном центре:",
+    "marketing_desc": "В развитии маркетинга платформа soff CRM предлагает следующие удобства, создавая различные типы форм через платформу, направляя людей, приходящих от цели через социальные сети (Instagram, Telegram, Facebook и т. д.), на платформу.",
+    "moliya_desc": "Вы сможете просматривать такую ​​информацию, как сроки оплаты студента, суммы, заработная плата сотрудников, ежемесячная статистика филиалов, дополнительные корзины платежей.",
+    "MARKETING": "МАРКЕТИНГ",
+    "MOLIYA": "ФИНАНСЫ",
+    "xizmat_korsatish_desc": "Отдел обслуживания полностью организован через платформу, список потенциальных студентов, список активных и задолженностей студентов, отправку им SMS",
+    "XIZMAT KO`RSATISH": "ПРЕДОСТАВЛЕНИЕ УСЛУГ",
+    "Bizga ishonch bildirgan mijozlar": "Клиенты, которые нам доверяют",
+    "Mijozlar fikrlari": "Отзывы клиентов"
 }
