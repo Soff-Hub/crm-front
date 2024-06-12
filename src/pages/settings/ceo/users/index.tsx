@@ -233,12 +233,12 @@ export default function GroupsPage() {
             dataIndex: 'roles_list',
             render: (roles_list: any) => roles_list.join(', ')
         },
-        {
-            xs: 0.6,
-            title: t("Maosh"),
-            dataIndex: 'phone',
-            render: () => 0
-        },
+        // {
+        //     xs: 0.6,
+        //     title: t("Maosh"),
+        //     dataIndex: 'phone',
+        //     render: () => 0
+        // },
         {
             xs: 0.5,
             dataIndex: 'id',
