@@ -14,6 +14,10 @@ import { useAuth } from 'src/hooks/useAuth'
  *  Set Home URL based on User Roles
  */
 export const getHomeRoute = (role: string[]) => {
+
+  if (role.includes('teacher')) {
+    return '/teacher-profile'
+  }
   return '/dashboard'
 }
 

@@ -54,7 +54,10 @@ const UserLayout = ({ children, contentHeightFixed }: Props) => {
       contentHeightFixed={contentHeightFixed}
       verticalLayoutProps={{
         navMenu: {
-          navItems: router.pathname.split('/')?.[1] === 'c-panel' ? CPanelNavigation(t) : user?.role.length === 1 && user?.role.includes('teacher') ? TeacherNavigation(t) : VerticalNavItems(t)
+          navItems: router.pathname.split('/')?.[1] === 'c-panel' ?
+            CPanelNavigation(t) : user?.role.length === 1 && user?.role.includes('teacher') ?
+              TeacherNavigation(t) : user?.role.includes('teacher') ?
+                VerticalNavItems(t) : VerticalNavItems(t)
         },
         appBar: {
           content: props => (

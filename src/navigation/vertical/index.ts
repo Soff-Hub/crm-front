@@ -19,6 +19,23 @@ export const TeacherNavigation = (t: any): any => {
   ]
 }
 
+
+export const StudentNavigation = (t: any): any => {
+
+  return [
+    {
+      title: t("Guruhlar"),
+      icon: 'mdi:home-outline',
+      path: '/student-groups',
+    },
+    {
+      title: t("Profil"),
+      icon: 'mdi:receipt-text-edit-outline',
+      path: '/student-profile'
+    }
+  ]
+}
+
 export const CPanelNavigation = (t: any): any => {
 
   return [
