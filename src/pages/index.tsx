@@ -14,6 +14,9 @@ import { useAuth } from 'src/hooks/useAuth'
  *  Set Home URL based on User Roles
  */
 export const getHomeRoute = (role: string[]) => {
+  if (window.location.hostname.split('.').includes('c-panel')) {
+    return '/c-panel'
+  }
   return '/dashboard'
 }
 
