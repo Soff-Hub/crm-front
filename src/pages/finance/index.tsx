@@ -120,12 +120,12 @@ const CardStatistics = () => {
 
     const employeePaycol: customTableDataProps[] = [
         {
-            xs: 0.03,
+            xs: 0.1,
             title: "#",
             dataIndex: "index"
         },
         {
-            xs: 0.2,
+            xs: 0.4,
             title: t("first_name"),
             dataIndex: "employee_name"
         },
@@ -147,7 +147,7 @@ const CardStatistics = () => {
             render: (status) => status === 'moderation' ? t("To'lanmagan") : t("To'langan")
         },
         {
-            xs: 0.1,
+            xs: 0.2,
             title: t("To'lash"),
             dataIndex: "id",
             render: (id) => {
@@ -163,8 +163,8 @@ const CardStatistics = () => {
             }
         },
         {
-            xs: 0.1,
-            title: t("Tahrir"),
+            xs: 0.2,
+            title: t("Tahrirlash"),
             dataIndex: "id",
             render: (id) => {
                 const find = employeePays.find((el: any) => el.id === id)
@@ -179,7 +179,7 @@ const CardStatistics = () => {
             }
         },
         {
-            xs: 0.1,
+            xs: 0.2,
             title: t("O'chirish"),
             dataIndex: "id",
             render: (id) => {
@@ -198,7 +198,7 @@ const CardStatistics = () => {
 
     const withdrawCol: customTableDataProps[] = [
         {
-            xs: 0.03,
+            xs: 0.1,
             title: "#",
             dataIndex: "index"
         },
@@ -259,7 +259,7 @@ const CardStatistics = () => {
             }
         },
         {
-            xs: 0.1,
+            xs: 0.2,
             title: t("Amallar"),
             dataIndex: "id",
             render: (id) => {
@@ -305,20 +305,15 @@ const CardStatistics = () => {
 
     const employeeSalaryCol: customTableDataProps[] = [
         {
-            xs: 0.03,
+            xs: 0.1,
             title: "#",
             dataIndex: "index"
         },
         {
-            xs: 0.2,
+            xs: 0.8,
             title: t("first_name"),
             dataIndex: "employee_name"
         },
-        // {
-        //     xs: 0.2,
-        //     title: t("Sana"),
-        //     dataIndex: "employee_name"
-        // },
         {
             xs: 0.2,
             title: t("Maosh"),
@@ -326,7 +321,7 @@ const CardStatistics = () => {
             render: (amount) => `${formatCurrency(amount)} so'm`
         },
         {
-            xs: 0.1,
+            xs: 0.2,
             title: t("Tahrirlash"),
             dataIndex: "id",
             render: (id) => <IconifyIcon onClick={() => {
@@ -336,7 +331,7 @@ const CardStatistics = () => {
             }} icon={'mingcute:edit-line'} />
         },
         {
-            xs: 0.1,
+            xs: 0.2,
             title: t("O'chirish"),
             dataIndex: "id",
             render: (id) => <IconifyIcon onClick={() => {
