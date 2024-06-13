@@ -15,8 +15,8 @@ import { useAuth } from 'src/hooks/useAuth'
  */
 export const getHomeRoute = (role: string[]) => {
 
-  if (role.includes('teacher')) {
-    return '/teacher-profile'
+  if (role.includes('student')) {
+    return '/student-profile'
   }
   return '/dashboard'
 }

@@ -10,7 +10,7 @@ import useMediaQuery from '@mui/material/useMediaQuery'
 import Layout from 'src/@core/layouts/Layout'
 
 // ** Navigation Imports
-import VerticalNavItems, { CPanelNavigation, TeacherNavigation } from 'src/navigation/vertical'
+import VerticalNavItems, { CPanelNavigation, StudentNavigation, TeacherNavigation } from 'src/navigation/vertical'
 import HorizontalNavItems from 'src/navigation/horizontal'
 
 // ** Component Import
@@ -46,6 +46,7 @@ const UserLayout = ({ children, contentHeightFixed }: Props) => {
     settings.layout = 'vertical'
   }
 
+
   return (
     <Layout
       hidden={hidden}
@@ -56,8 +57,9 @@ const UserLayout = ({ children, contentHeightFixed }: Props) => {
         navMenu: {
           navItems: router.pathname.split('/')?.[1] === 'c-panel' ?
             CPanelNavigation(t) : user?.role.length === 1 && user?.role.includes('teacher') ?
-              TeacherNavigation(t) : user?.role.includes('teacher') ?
-                VerticalNavItems(t) : VerticalNavItems(t)
+              TeacherNavigation(t) : user?.role.includes('student') ? StudentNavigation(t) :
+                user?.role.includes('teacher') ?
+                  VerticalNavItems(t) : VerticalNavItems(t)
         },
         appBar: {
           content: props => (
@@ -73,7 +75,9 @@ const UserLayout = ({ children, contentHeightFixed }: Props) => {
       {...(settings.layout === 'horizontal' && {
         horizontalLayoutProps: {
           navMenu: {
-            navItems: router.pathname.split('/')?.[1] === 'c-panel' ? CPanelNavigation(t) : user?.role.length === 1 && user?.role.includes('teacher') ? TeacherNavigation(t) : HorizontalNavItems(t)
+            navItems: router.pathname.split('/')?.[1] === 'c-panel' ?
+              CPanelNavigation(t) : user?.role.length === 1 && user?.role.includes('teacher') ?
+                TeacherNavigation(t) : user?.role.includes('student') ? StudentNavigation(t) : HorizontalNavItems(t)
 
             // Uncomment the below line when using server-side menu in horizontal layout and comment the above line
             // navItems: horizontalMenuItems
