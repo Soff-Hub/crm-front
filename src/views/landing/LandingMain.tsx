@@ -6,6 +6,7 @@ import LandingTopics from './LandingTopics'
 import LandingFeadbacks from './LandingFeadbacks'
 import LandingPartners from './LandingPartners'
 import LandingFooter from './LandingFooter'
+import LandingDocs from './LandingDocs'
 
 type Props = {}
 
@@ -15,6 +16,7 @@ export default function LandingMain({ }: Props) {
             <LandingHeader />
             <LandingHero />
             <LandingVideo />
+            <LandingDocs/>
             <LandingTopics />
             <LandingPartners />
             <LandingFeadbacks />
