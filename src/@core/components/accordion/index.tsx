@@ -250,7 +250,7 @@ export default function AccordionCustom({ onView, item, reRender }: AccordionPro
                         <FormControl fullWidth>
                             <TextField label={t("Bo'lim nomi")} size='small' defaultValue={item.name} name='name' />
                         </FormControl>
-{/* 
+                        {/* 
                         <FormControl fullWidth>
                             <TextField label={t("Bo'lim tartibi")} size='small' name='order' />
                         </FormControl> */}
@@ -292,7 +292,19 @@ export default function AccordionCustom({ onView, item, reRender }: AccordionPro
                         </FormControl>
 
                         <FormControl fullWidth>
-                            <TextField label={t("SMS matni")} multiline rows={4} size='small' name='message' value={sms} onChange={(e) => setSMS(e.target.value)} />
+                            {sms ? <TextField
+                                label={t("SMS matni")}
+                                multiline rows={4}
+                                size='small'
+                                name='message'
+                                defaultValue={sms}
+                                onChange={(e) => setSMS(null)}
+                            /> : <TextField
+                                label={t("SMS matni")}
+                                multiline rows={4}
+                                size='small'
+                                name='message'
+                            />}
                         </FormControl>
 
                         <LoadingButton loading={loading} type='submit' variant='outlined'>{t("Saqlash")}</LoadingButton>

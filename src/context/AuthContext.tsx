@@ -72,7 +72,8 @@ const AuthProvider = ({ children }: Props) => {
               username: response.data.phone,
               password: 'null',
               avatar: response.data.image,
-              role: response.data.roles.filter((el: any) => el.exists).map((el: any) => el.name?.toLowerCase())
+              role: response.data.roles.filter((el: any) => el.exists).map((el: any) => el.name?.toLowerCase()),
+              balance: response.data?.balance || 0
             })
           })
           .catch(() => {
@@ -121,7 +122,8 @@ const AuthProvider = ({ children }: Props) => {
           username: response.data.phone,
           password: 'null',
           avatar: response.data.image,
-          role: response.data.roles.filter((el: any) => el.exists).map((el: any) => el.name?.toLowerCase())
+          role: response.data.roles.filter((el: any) => el.exists).map((el: any) => el.name?.toLowerCase()),
+          balance: response.data?.balance || 0
         })
 
         !params.rememberMe ? window.localStorage.setItem('userData', JSON.stringify({ ...response.data, role: 'admin', tokens: null })) : null

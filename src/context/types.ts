@@ -18,7 +18,8 @@ export type UserDataType = {
   fullName: string
   username: string
   password: string
-  avatar: string
+  avatar: string,
+  balance?: number
 }
 
 export type AuthValuesType = {

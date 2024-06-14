@@ -28,11 +28,11 @@ export const StudentNavigation = (t: any): any => {
       icon: 'et:profile-male',
       path: '/student-profile'
     },
-    {
-      title: t("Guruhlar"),
-      icon: 'uil:layer-group',
-      path: '/student-profile/groups',
-    }
+    // {
+    //   title: t("Guruhlar"),
+    //   icon: 'uil:layer-group',
+    //   path: '/student-profile/groups',
+    // }
   ]
 }
 
