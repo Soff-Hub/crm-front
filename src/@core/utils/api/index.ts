@@ -13,7 +13,7 @@ api.interceptors.request.use(
         const subdomain = location.hostname.split('.')
         const baseURL = process.env.NODE_ENV === 'development' ? process.env.NEXT_PUBLIC_TEST_BASE_URL : subdomain.length < 3 ? `https://${process.env.NEXT_PUBLIC_BASE_URL}` : `https://${subdomain[0]}.${process.env.NEXT_PUBLIC_BASE_URL}`
 
-        config.baseURL = 'http://192.168.1.48:8000/api/v1'
+        config.baseURL = baseURL
 
         if (storedToken) {
             config.headers['Authorization'] = `Bearer ${storedToken}`
