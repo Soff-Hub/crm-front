@@ -547,7 +547,19 @@ const KanbanItem = (props: KanbarItemProps) => {
 
 
                         <FormControl fullWidth>
-                            <TextField label={t("SMS matni")} multiline rows={4} size='small' name='message' value={sms} onChange={(e) => setSMS(e.target.value)} />
+                            {sms ? <TextField
+                                label={t("SMS matni")}
+                                multiline rows={4}
+                                size='small'
+                                name='message'
+                                defaultValue={sms}
+                                onChange={(e) => setSMS(null)}
+                            /> : <TextField
+                                label={t("SMS matni")}
+                                multiline rows={4}
+                                size='small'
+                                name='message'
+                            />}
                         </FormControl>
 
                         <LoadingButton loading={loading} type='submit' variant='outlined'>{t("Saqlash")}</LoadingButton>

@@ -113,18 +113,24 @@ const UserSmsList = () => {
                         </FormControl>
 
                         <FormControl fullWidth>
-                            <TextField
-                                error={error?.message}
-                                rows={4}
-                                multiline
-                                label="Xabar"
+                            {sms ? <TextField
+                                label={t("SMS matni")}
+                                multiline rows={4}
+                                size='small'
                                 name='message'
-                                defaultValue={''}
-                                value={sms}
-                                onChange={(e) => setSMS(e.target.value)}
-                            />
+                                defaultValue={sms}
+                                onChange={(e) => setSMS(null)}
+                            /> : <TextField
+                                label={t("SMS matni")}
+                                error={error?.message}
+                                multiline rows={4}
+                                size='small'
+                                name='message'
+                            />}
                             <FormHelperText error={error.message}>{error.message?.message}</FormHelperText>
                         </FormControl>
+
+
                         <DialogActions sx={{ justifyContent: 'center' }}>
                             <Button variant='outlined' type='button' color='secondary' onClick={() => setOpen(false)}>
                                 {t("Bekor Qilish")}

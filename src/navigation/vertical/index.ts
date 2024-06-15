@@ -19,6 +19,23 @@ export const TeacherNavigation = (t: any): any => {
   ]
 }
 
+
+export const StudentNavigation = (t: any): any => {
+
+  return [
+    {
+      title: t("Profil"),
+      icon: 'et:profile-male',
+      path: '/student-profile'
+    },
+    // {
+    //   title: t("Guruhlar"),
+    //   icon: 'uil:layer-group',
+    //   path: '/student-profile/groups',
+    // }
+  ]
+}
+
 export const CPanelNavigation = (t: any): any => {
 
   return [

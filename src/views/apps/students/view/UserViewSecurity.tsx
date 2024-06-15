@@ -58,8 +58,10 @@ const UserViewSecurity = ({ groupData }: any) => {
 
   async function getReceipt(id: any) {
     setLoading(true)
+    const subdomain = location.hostname.split('.')
     try {
-      await downloadImage(`receipt-${new Date().getTime()}.pdf`, `https://crmapi.soffstudy.uz/api/v1/common/generate-check/${id}/`)
+      await downloadImage(`receipt-${new Date().getTime()}.pdf`, `${process.env.NODE_ENV === 'development' ? process.env.NEXT_PUBLIC_TEST_BASE_URL : subdomain.length < 3 ? `https://${process.env.NEXT_PUBLIC_BASE_URL}` : `https://${subdomain[0]}.${process.env.NEXT_PUBLIC_BASE_URL}`}/api/v1/common/generate-check/${id}/`)
+      // await downloadImage(`receipt-${new Date().getTime()}.pdf`, `http://192.168.1.48:8000/api/v1/common/generate-check/${id}/`)
       setLoading(false)
     } catch (err) {
       console.log(err)

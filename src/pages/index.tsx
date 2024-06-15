@@ -17,6 +17,11 @@ export const getHomeRoute = (role: string[]) => {
   if (window.location.hostname.split('.').includes('c-panel')) {
     return '/c-panel'
   }
+
+  if (role.includes('student')) {
+    return '/student-profile'
+  }
+  
   return '/dashboard'
 }
 
