@@ -86,8 +86,10 @@ const AuthProvider = ({ children }: Props) => {
             }
           })
 
-        const resp = await api.get('common/settings/list/')
-        dispatch(setCompanyInfo(resp.data[0]))
+        if (!window.location.hostname.split('.').includes('c-panel')) {
+          const resp = await api.get('common/settings/list/')
+          dispatch(setCompanyInfo(resp.data[0]))
+        }
       } else {
         setLoading(false)
         window.localStorage.clear()
@@ -111,8 +113,11 @@ const AuthProvider = ({ children }: Props) => {
           : null
         const returnUrl = router.query.returnUrl
 
-        const resp = await api.get('common/settings/list/')
-        dispatch(setCompanyInfo(resp.data[0]))
+        if (!window.location.hostname.split('.').includes('c-panel')) {
+          const resp = await api.get('common/settings/list/')
+          dispatch(setCompanyInfo(resp.data[0]))
+        }
+
 
         setUser({
           id: 1,

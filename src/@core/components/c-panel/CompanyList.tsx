@@ -70,15 +70,15 @@ export default function CompanyList() {
         },
         {
             xs: 0.2,
-            title: t("Login"),
-            dataIndex: 'ceo',
-            render: (ceo: any) => ceo?.phone
+            title: t("Domain"),
+            dataIndex: 'domain',
+            render: (domain) => `${domain}.soffcrm.uz`
         },
         {
             xs: 0.2,
-            title: t("password"),
-            dataIndex: 'ceo',
-            render: (ceo: any) => ceo?.password
+            title: t("O'quvchilar soni"),
+            dataIndex: 'students_count',
+            render: (domain) => `${domain}`
         },
         {
             xs: 0.07,

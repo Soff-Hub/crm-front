@@ -96,7 +96,7 @@ const Navigation = (t: any): HorizontalNavItemsType => {
   ]
 
 
-  return user?.role.includes('casher') ? items : items.filter(el => el.path !== '/finance')
+  return (user?.role.includes('casher') || user?.role.includes('ceo') )? items : items.filter(el => el.path !== '/finance')
 }
 
 export default Navigation
