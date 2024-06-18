@@ -76,6 +76,23 @@ export default function CompanyList() {
         },
         {
             xs: 0.2,
+            title: t("SMS soni"),
+            dataIndex: 'sms_limit'
+        },
+        {
+            xs: 0.2,
+            title: t("Keyingi to'ov sanasi"),
+            dataIndex: 'expiration_date',
+            render: (expiration_date) => `${expiration_date?.split('-').reverse().join('/')}`
+        },
+        {
+            xs: 0.2,
+            title: t("Keyingi to'lovgacha"),
+            dataIndex: 'allowed_days',
+            render: (allowed_days) => `${allowed_days} kun`
+        },
+        {
+            xs: 0.2,
             title: t("O'quvchilar soni"),
             dataIndex: 'students_count',
             render: (domain) => `${domain}`

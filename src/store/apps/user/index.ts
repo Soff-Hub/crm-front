@@ -61,10 +61,18 @@ export const appUsersSlice = createSlice({
     allData: [],
     companyInfo: {
       id: 1,
-      training_center_name: "StudyCRM",
-      logo: 'null',
+      training_center_name: "SOFF CRM",
+      logo: 'https://soffstudy.uz/assets/imgs/template/soff study logo.png',
       work_start_time: "00:00",
-      work_end_time: "00:00"
+      work_end_time: "00:00",
+      auto_sms: {
+        id: 1,
+        on_absent: true,
+        birthday_text: "Text",
+        on_birthday: true,
+        absent_text: "Text"
+      },
+      sms_limit: "0/0",
     },
     departmentsState: []
   },

@@ -208,9 +208,11 @@ const StudentGroupDetail = ({ slug, month, start_date, month_duration }: any) =>
                                     }}
                                 >
                                     <span>{day.date}</span>
-                                    <span><Item defaultValue={
-                                        data.find((el: any) => el.date === day.date)?.is_available
-                                    } /></span>
+                                    <span>
+                                        <Item defaultValue={
+                                            data.find((el: any) => el.date === day.date)?.is_available
+                                        } />
+                                    </span>
                                 </Box>
                             ))
                         }

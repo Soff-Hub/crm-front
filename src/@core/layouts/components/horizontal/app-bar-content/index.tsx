@@ -53,14 +53,14 @@ const AppBarContent = (props: Props) => {
           </Typography>
         </StyledLink>
       )}
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+      {!window.location.hostname.split('.').includes('c-panel') && <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
         <Clock />
         <Typography variant='body2'>|</Typography>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
           <IconifyIcon style={{ fontSize: '18px', color: '#40c0e7' }} icon={'la:user-clock'} />
           <Typography variant='body2'>{t(`Ish vaqti`)} {companyInfo?.work_start_time} - {companyInfo?.work_end_time}</Typography>
         </Box>
-      </Box>
+      </Box>}
       {userAppBarContent ? userAppBarContent(props) : null}
     </Box>
   )

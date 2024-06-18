@@ -70,7 +70,7 @@ const AppBarContent = (props: Props) => {
 
   return (
     <Box sx={{ display: 'flex', alignItems: 'center' }}>
-      <BranchDropdown />
+      {!window.location.hostname.split('.').includes('c-panel') && <BranchDropdown />}
       <LanguageDropdown settings={settings} saveSettings={saveSettings} />
       <ModeToggler settings={settings} saveSettings={saveSettings} />
       {/* <NotificationDropdown settings={settings} notifications={notifications} /> */}

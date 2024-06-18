@@ -102,7 +102,7 @@ const AuthProvider = ({ children }: Props) => {
   }, [])
 
   useEffect(() => {
-    router.push({ pathname, query }, asPath, { locale: i18n.language })
+    router.push({ pathname, query }, asPath)
   }, [i18n.language])
 
   const handleLogin = (params: LoginParams, errorCallback?: ErrCallbackType) => {

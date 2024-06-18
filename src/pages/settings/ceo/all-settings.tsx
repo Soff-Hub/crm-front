@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Box, Button, Dialog, DialogContent, TextField, Typography } from '@mui/material'
+import { Box, Button, CircularProgress, Dialog, DialogContent, Switch, TextField, Typography } from '@mui/material'
 import IconifyIcon from 'src/@core/components/icon'
 import useResponsive from 'src/@core/hooks/useResponsive'
 import usePayment from 'src/hooks/usePayment'
@@ -11,6 +11,7 @@ import { setCompanyInfo } from 'src/store/apps/user'
 import { useSelector } from 'react-redux'
 import { styled } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next'
+import showResponseError from 'src/@core/utils/show-response-error'
 
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
@@ -32,8 +33,8 @@ export default function AllSettings() {
     const [id, setId] = useState<null | { key: 'branch' | 'payment-type', id: any }>(null)
     const [deleteId, setDeleteId] = useState<null | { open: null | 'payment-type' | 'branch', id: any }>(null)
     const [name, setName] = useState<string>('')
-    const [loading, setLoading] = useState<null | 'create' | 'delete'>(null)
-
+    const [loading, setLoading] = useState<null | 'create' | 'delete' | any>(null)
+    const [error, setError] = useState<any>({})
 
 
     const { getPaymentMethod, paymentMethods, createPaymentMethod, updatePaymentMethod } = usePayment()
@@ -101,12 +102,46 @@ export default function AllSettings() {
         try {
             const formData: any = new FormData()
             formData.append(key, value)
-            const resp = await api.patch('common/settings/update/', formData)
-            dispatch(setCompanyInfo(resp.data))
+            if (key === 'on_birthday' || key === 'birthday_text' || key === 'on_absent' || key === 'absent_text') {
+
+                if (key === 'on_birthday') {
+                    formData.append('birthday_text', 'Text')
+                    formData.append('on_absent', companyInfo?.auto_sms?.on_absent)
+                    formData.append('absent_text', companyInfo?.auto_sms?.absent_text)
+                }
+
+                else if (key === 'birthday_text') {
+                    formData.append('on_birthday', true)
+                    formData.append('on_absent', companyInfo?.auto_sms?.on_absent)
+                    formData.append('absent_text', companyInfo?.auto_sms?.absent_text)
+                }
+
+                else if (key === 'on_absent') {
+                    formData.append('absent_text', 'Assalomu Alaykum, siz kecha dars qoldirdingiz iltimos sababini bildirishni unurtmang')
+                    formData.append('on_birthday', companyInfo?.auto_sms?.on_birthday)
+                    formData.append('birthday_text', companyInfo?.auto_sms?.birthday_text)
+                }
+                else {
+                    formData.append('on_absent', true)
+                    formData.append('on_birthday', companyInfo?.auto_sms?.on_birthday)
+                    formData.append('birthday_text', companyInfo?.auto_sms?.birthday_text)
+                }
+
+                await api.put('common/auto-sms/update/', formData)
+            } else {
+                await api.patch(key === 'on_birthday' ? 'common/auto-sms/update/' : 'common/settings/update/', formData)
+            }
+            const getresp = await api.get('common/settings/list/')
+            dispatch(setCompanyInfo(getresp.data[0]))
             setEditable(null)
             setId(null)
-        } catch (err) {
+        } catch (err: any) {
             console.log(err)
+            if (err?.response?.data) {
+                showResponseError(err?.response?.data, setError)
+            }
+        } finally {
+            setLoading(null)
         }
     }
 
@@ -289,6 +324,103 @@ export default function AllSettings() {
                         }
                     </Box>
                 </Box>
+
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+                    <Typography sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}>{t("Tug'ilgan kunda sms bilan tabriklash")}:</Typography>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        {
+                            loading === 'on_birthday' ? <CircularProgress disableShrink size={'20px'} sx={{ margin: '10px 0', marginLeft: '15px' }} /> : (
+                                <Switch
+                                    checked={Boolean(companyInfo?.auto_sms.on_birthday)}
+                                    onChange={async (e, i) => {
+                                        setLoading('on_birthday')
+                                        await updateSettings('on_birthday', i)
+                                    }}
+                                />
+                            )
+                        }
+                    </Box>
+                </Box>
+
+                <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: '20px', flexDirection: 'column' }}>
+                    <Typography sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}>{t('SMS Matni')}:</Typography>
+                    <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: '10px', width: '100%' }}>
+                        {
+                            loading === 'birthday_text' ? (
+                                <>
+                                    <TextField
+                                        multiline
+                                        rows={4}
+                                        size='small'
+                                        focused
+                                        defaultValue={companyInfo?.auto_sms?.birthday_text}
+                                        onBlur={(e) => {
+                                            updateSettings('birthday_text', e.target.value)
+                                        }}
+                                        fullWidth
+                                    />
+                                    <IconifyIcon icon={'ic:baseline-check'} style={{ cursor: 'pointer' }} onClick={() => {
+                                        updateSettings('birthday_text', name)
+                                    }} />
+                                </>
+                            ) : (
+                                <>
+                                    <TextField fullWidth multiline rows={4} type='text' value={`${companyInfo?.auto_sms?.birthday_text}`} size='small' placeholder={t('SMS Matni')} onBlur={(e) => console.log(e.target.value)} />
+                                    <IconifyIcon icon={'basil:edit-outline'} style={{ cursor: 'pointer' }} onClick={() => setLoading('birthday_text')} />
+                                </>
+                            )
+                        }
+                    </Box>
+                </Box>
+
+
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+                    <Typography sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}>{t("Darsga kelmaganlarga sms yuborish")}:</Typography>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        {
+                            loading === 'on_absent' ? <CircularProgress disableShrink size={'20px'} sx={{ margin: '10px 0', marginLeft: '15px' }} /> : (
+                                <Switch
+                                    checked={Boolean(companyInfo?.auto_sms.on_absent)}
+                                    onChange={async (e, i) => {
+                                        setLoading('on_absent')
+                                        await updateSettings('on_absent', i)
+                                    }}
+                                />
+                            )
+                        }
+                    </Box>
+                </Box>
+
+                <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: '20px', flexDirection: 'column' }}>
+                    <Typography sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}>{t(`SMS matnini kiriting (kelmagan o'quvchiga ertasi kuni yuboriladi)`)}</Typography>
+                    <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: '10px', width: '100%' }}>
+                        {
+                            loading === 'absent_text' ? (
+                                <>
+                                    <TextField
+                                        multiline
+                                        rows={4}
+                                        size='small'
+                                        focused
+                                        defaultValue={companyInfo?.auto_sms?.absent_text}
+                                        onBlur={(e) => {
+                                            updateSettings('absent_text', e.target.value)
+                                        }}
+                                        fullWidth
+                                    />
+                                    <IconifyIcon icon={'ic:baseline-check'} style={{ cursor: 'pointer' }} onClick={() => {
+                                        updateSettings('absent_text', name)
+                                    }} />
+                                </>
+                            ) : (
+                                <>
+                                    <TextField fullWidth multiline rows={4} type='text' value={`${companyInfo?.auto_sms?.absent_text}`} size='small' placeholder={t('Boshlanish vaqti')} onBlur={(e) => console.log(e.target.value)} />
+                                    <IconifyIcon icon={'basil:edit-outline'} style={{ cursor: 'pointer' }} onClick={() => setLoading('absent_text')} />
+                                </>
+                            )
+                        }
+                    </Box>
+                </Box>
             </Box>
 
 
@@ -302,9 +434,8 @@ export default function AllSettings() {
                             try {
                                 await updatePaymentMethod(deleteId?.id, { is_active: false })
                                 setDeleteId(null)
-                                setLoading(null)
                             } catch {
-                                setLoading(null)
+
                             }
                         }}>Ok</LoadingButton>
                     </Box>
@@ -321,10 +452,8 @@ export default function AllSettings() {
                             try {
                                 await api.delete(`common/branch/delete/${deleteId?.id}`)
                                 setDeleteId(null)
-                                setLoading(null)
                                 getBranches()
                             } catch {
-                                setLoading(null)
                             }
                         }}>Ok</LoadingButton>
                     </Box>

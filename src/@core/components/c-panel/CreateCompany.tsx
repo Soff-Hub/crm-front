@@ -10,6 +10,7 @@ import api from 'src/@core/utils/api';
 import Router from 'next/router';
 import showResponseError from 'src/@core/utils/show-response-error';
 import LoadingButton from '@mui/lab/LoadingButton';
+import { today } from '../card-statistics/kanban-item';
 
 type Props = {
     slug?: number | undefined
@@ -36,6 +37,7 @@ export default function CreateCompany({ slug }: Props) {
     const { isMobile } = useResponsive()
     const { t } = useTranslation()
     const [loading, setLoading] = useState<boolean>(false)
+    const [selectVal, setSelectVal] = useState<any>(null)
 
     async function handleSubmit(values: any) {
         setLoading(true)
@@ -45,7 +47,7 @@ export default function CreateCompany({ slug }: Props) {
         } catch (err: any) {
             showResponseError(err?.response?.data, setError)
             console.log(err?.response?.data);
-            
+
         } finally {
             setLoading(false)
         }
@@ -102,6 +104,34 @@ export default function CreateCompany({ slug }: Props) {
                                 <FormHelperText error={error?.domain?.error}>{error?.domain?.message}</FormHelperText>
                             </FormControl>
                         </Box>
+
+                        <FormControl className='ms-auto' fullWidth>
+                            <InputLabel size='small' id='user-view-language-label'>{t("Darslarga to'lov tartibi")}</InputLabel>
+                            <Select
+                                required
+                                size='small'
+                                label={t("Darslarga to'lov tartibi")}
+                                id='user-view-language'
+                                labelId='user-view-language-label'
+                                sx={{ mb: 1 }}
+                                onChange={(e) => setSelectVal(e.target.value)}
+                                defaultValue={'by_coming_date'}
+                                name='payment_service'
+                            >
+                                <MenuItem value={'by_coming_date'}>O'quvchi kelgan sanadan boshlab xar oy</MenuItem>
+                                <MenuItem value={'number_of_lesson'}>Har nechtadur darsda</MenuItem>
+                            </Select>
+                        </FormControl>
+
+                        {selectVal === "number_of_lesson" && <FormControl fullWidth>
+                            <TextField required name='number_of_lesson' error={error?.number_of_lesson?.error} type='number' size='small' label={t("To'lov yechiladigan darslar soni")} />
+                            <FormHelperText error={error?.number_of_lesson?.error}>{error?.number_of_lesson?.message}</FormHelperText>
+                        </FormControl>}
+
+                        <FormControl fullWidth>
+                            <TextField error={error?.expiration_date?.error} type='date' size='small' label={t("Tizim to'xtash sanasi")} name='expiration_date' defaultValue={today}/>
+                            <FormHelperText error={error?.expiration_date?.error}>{error?.expiration_date?.message}</FormHelperText>
+                        </FormControl>
 
                         <Button
                             component="label"

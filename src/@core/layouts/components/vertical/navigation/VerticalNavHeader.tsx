@@ -143,7 +143,7 @@ const VerticalNavHeader = (props: Props) => {
             </HeaderTitle>
           </StyledLink>
           {
-            isMobile && <Box sx={{ display: 'flex', alignItems: 'center', gap: '5px', pl: '8px' }}>
+            isMobile && !window.location.hostname.split('.').includes('c-panel') && <Box sx={{ display: 'flex', alignItems: 'center', gap: '5px', pl: '8px' }}>
               <IconifyIcon style={{ fontSize: '16px', color: '#40c0e7' }} icon={'la:user-clock'} />
               <Typography fontSize={'13px'} variant='body2'>{t(`Ish vaqti`)} {companyInfo?.work_start_time} - {companyInfo?.work_end_time}</Typography>
             </Box>
