@@ -26,7 +26,7 @@ export default function DataTable({ columns, data, minWidth, maxWidth, rowClick,
   }
 
   return (
-    <div style={{ maxWidth: '100%', overflowX: 'scroll', padding: '0 5px' }}>
+    <div style={{ maxWidth: '100%', overflowX: 'auto', padding: '0 5px' }}>
       <Box
         minWidth={minWidth || '1200px'}
         my={2}

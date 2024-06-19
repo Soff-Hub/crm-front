@@ -197,7 +197,7 @@ const UserViewSecurity = ({ invoiceData }: any) => {
         }
       </ul>
 
-      <Box sx={{ display: 'flex', width: '100%', paddingBottom: 3, maxWidth: '100%', overflowX: 'scroll' }}>
+      <Box sx={{ display: 'flex', width: '100%', paddingBottom: 3, maxWidth: '100%', overflowX: 'auto' }}>
         {
           loading ? (
             <Box sx={{ mt: 6, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>

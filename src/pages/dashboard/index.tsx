@@ -201,9 +201,9 @@ const AppCalendar = () => {
             </TabContext>
           </Box>
           <Box sx={{
-            padding: '0 15px',
+            padding: '0 15px 15px',
             maxWidth: '100%',
-            overflowX: 'scroll'
+            overflowX: 'auto'
           }}>
             <table border={0}>
               <tbody>
