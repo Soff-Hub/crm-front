@@ -38,10 +38,6 @@ import { useSelector } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 import getMonthName from 'src/@core/utils/gwt-month-name'
 
-
-
-
-
 const AppCalendar = () => {
   const currenWeek: string = `${new Date()}`.split(' ')[0].toLocaleLowerCase()
 
@@ -60,7 +56,6 @@ const AppCalendar = () => {
   const endTime = companyInfo?.work_end_time
 
   const { t } = useTranslation()
-
 
   // ** Vars
   const { skin } = settings
@@ -128,10 +123,6 @@ const AppCalendar = () => {
         link: '/mentors'
       },
     ]
-
-
-
-
 
   useEffect(() => {
     getStats()

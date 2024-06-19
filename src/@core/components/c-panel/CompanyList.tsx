@@ -7,7 +7,6 @@ import { useTranslation } from 'react-i18next'
 import api from 'src/@core/utils/api'
 import Status from '../status'
 
-
 export interface CompanyType {
     id: number
     name: string
@@ -21,7 +20,6 @@ export interface CompanyType {
 }
 
 export default function CompanyList() {
-
     const { t } = useTranslation()
     const [data, setData] = useState<CompanyType[]>([])
     const [loading, setLoading] = useState<any>(null)
