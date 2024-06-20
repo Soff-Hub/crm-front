@@ -13,6 +13,7 @@ import { useAppDispatch, useAppSelector } from 'src/store'
 import { createDepartment, createDepartmentItem, createDepartmentStudent, fetchDepartmentList, fetchSources, setAddSource, setLoading, setOpen, setOpenItem, setOpenLid, updateLeadParams } from 'src/store/apps/leads'
 import { CreatesDepartmentState } from 'src/types/apps/leadsTypes'
 import LidsKanban from 'src/views/apps/lids/LidsKanban'
+import SubLoader from 'src/views/apps/loaders/SubLoader'
 import TeacherProfile from 'src/views/teacher-profile'
 
 const Lids = () => {
@@ -110,7 +111,7 @@ const Lids = () => {
         }
         {!isMobile && <Button onClick={() => dispatch(setOpen('add-department'))} sx={{ minWidth: '300px' }} size='small' variant='contained' startIcon={<IconifyIcon icon={'material-symbols:add'} />}>{t("Bo'lim yaratish")}</Button>}
 
-      </Box> : <Box sx={{ display: 'flex', width: '100%', minHeight: '400px', justifyContent: 'center', alignItems: 'center' }}><CircularProgress /></Box>}
+      </Box> : <SubLoader />}
 
       <Dialog onClose={handleClose} open={open === "add-department"}>
         <DialogTitle sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
