@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 // ** MUI Imports
 import { styled } from '@mui/material/styles'
@@ -43,13 +43,14 @@ import showResponseError from 'src/@core/utils/show-response-error'
 import api from 'src/@core/utils/api'
 import toast from 'react-hot-toast'
 import { useDispatch } from 'react-redux'
-import { addOpenedUser } from 'src/store/apps/user'
+import { addOpenedUser, setDepartmentsState } from 'src/store/apps/user'
 import Status from '../../status'
 import useSMS from 'src/hooks/useSMS'
 import { useRouter } from 'next/router'
 import useBranches from 'src/hooks/useBranch'
 import useGroups from 'src/hooks/useGroups'
 import { formatDateTime } from 'src/@core/utils/date-formatter'
+import { RootState } from 'src/store'
 
 // ** Styled Avatar component
 const Avatar = styled(CustomAvatar)<AvatarProps>(({ theme }) => ({
@@ -77,6 +78,7 @@ const KanbanItem = (props: KanbarItemProps) => {
     const [leadDetail, setLeadDetail] = useState([])
 
     const { total, departmentsState } = useSelector((state: any) => state.user)
+    const { queryParams } = useSelector((state: RootState) => state.leads)
     const [sms, setSMS] = useState<any>("")
     const { smsTemps, getSMSTemps } = useSMS()
     const { query } = useRouter()
@@ -250,6 +252,15 @@ const KanbanItem = (props: KanbarItemProps) => {
         }
     }
 
+    const getLeadData = async () => {
+        const resp = await api.get(`leads/department/list/`, { params: { ...queryParams, is_active: true } })
+        dispatch(setDepartmentsState(resp.data))
+    }
+
+    useEffect(() => {
+        getLeadData()
+    }, [])
+
 
     return (
         <Card sx={{ cursor: 'pointer' }}>
@@ -345,7 +356,7 @@ const KanbanItem = (props: KanbarItemProps) => {
                 PaperProps={{ style: { minWidth: '8rem' } }}
             >
                 {
-                    query?.is_active !== 'false' ? (
+                    queryParams.is_active ? (
                         <Box>
                             <MenuItem onClick={() => setOpen('note')} sx={{ '& svg': { mr: 2 } }}>
                                 <IconifyIcon icon='ph:flag-light' fontSize={20} />

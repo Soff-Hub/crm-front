@@ -16,12 +16,13 @@ import { useRouter } from 'next/router'
 import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux'
+import { RootState, useAppDispatch } from 'src/store'
+import { fetchDepartmentList } from 'src/store/apps/leads'
 
 interface AccordionProps {
     title?: string
     onView: () => void
     item: any
-    reRender: any
 }
 
 const Menu = styled(MuiMenu)<MenuProps>(({ theme }) => ({
@@ -31,7 +32,7 @@ const Menu = styled(MuiMenu)<MenuProps>(({ theme }) => ({
 }))
 
 
-export default function AccordionCustom({ onView, item, reRender }: AccordionProps) {
+export default function AccordionCustom({ onView, item }: AccordionProps) {
     const [open, setOpen] = useState<boolean>(false)
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
     const [loading, setLoading] = useState<boolean>(false)
@@ -42,12 +43,13 @@ export default function AccordionCustom({ onView, item, reRender }: AccordionPro
     const [name, setName] = useState<any>(item.name)
     const { t } = useTranslation()
     const { departmentsState } = useSelector((state: any) => state.user)
+    const { queryParams } = useSelector((state: RootState) => state.leads)
 
 
     const [sms, setSMS] = useState<any>("")
     const { smsTemps, getSMSTemps } = useSMS()
     const { query } = useRouter()
-    const dispatch = useDispatch()
+    const dispatch = useAppDispatch()
 
     const handleClick = (event: any) => {
         setAnchorEl(event.currentTarget)
@@ -63,7 +65,7 @@ export default function AccordionCustom({ onView, item, reRender }: AccordionPro
         if (isLoad) setOpen(!open)
         setLoading(true)
         try {
-            const resp = await api.get(`leads/department-user-list/${item.id}/?is_active=${query?.is_active === undefined ? true : query.is_active}&search=${query?.search || ''}`)
+            const resp = await api.get(`leads/department-user-list/${item.id}/`, { params: queryParams })
             setLeadData(resp.data)
             setCount(resp.data.length)
             setLoading(false)
@@ -138,7 +140,7 @@ export default function AccordionCustom({ onView, item, reRender }: AccordionPro
             toast.success('Muvaffaqiyatli o\'chirildi', {
                 position: 'top-center'
             })
-            reRender()
+            await dispatch(fetchDepartmentList(queryParams))
         } catch {
             setLoading(false)
         }
@@ -215,7 +217,7 @@ export default function AccordionCustom({ onView, item, reRender }: AccordionPro
                 PaperProps={{ style: { minWidth: '8rem' } }}
             >
                 {
-                    query?.is_active !== 'false' ? (
+                    !queryParams.is_active ? (
                         <Box>
                             <MenuItem onClick={() => (getSMSTemps(), setOpenDialog('sms'))} sx={{ '& svg': { mr: 2 } }}>
                                 <IconifyIcon icon='mdi:sms' fontSize={20} />
