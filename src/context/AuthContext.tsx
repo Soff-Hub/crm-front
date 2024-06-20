@@ -13,10 +13,9 @@ import authConfig from 'src/configs/auth'
 // ** Types
 import { AuthValuesType, RegisterParams, LoginParams, ErrCallbackType, UserDataType } from './types'
 import api from 'src/@core/utils/api'
-import { useDispatch } from 'react-redux'
 import { setCompanyInfo } from 'src/store/apps/user'
 import { useTranslation } from 'react-i18next'
-import { useSettings } from 'src/@core/hooks/useSettings'
+import { useAppDispatch } from 'src/store'
 
 // ** Defaults
 const defaultProvider: AuthValuesType = {
@@ -44,7 +43,7 @@ const AuthProvider = ({ children }: Props) => {
   const { locales, locale: activeLocale, pathname, query, asPath } = router;
 
   // ** Hooks
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
 
   useEffect(() => {
 

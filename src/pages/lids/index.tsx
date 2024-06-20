@@ -1,18 +1,18 @@
 // ** MUI Imports
 import LoadingButton from '@mui/lab/LoadingButton'
-import { Box, Button, CircularProgress, Dialog, DialogContent, DialogTitle, FormControl, FormHelperText, IconButton, InputLabel, MenuItem, Select, Switch, TextField } from '@mui/material'
+import { Box, Button, Dialog, DialogContent, DialogTitle, FormControl, FormHelperText, IconButton, InputLabel, MenuItem, Select, Switch, TextField } from '@mui/material'
 import Typography from '@mui/material/Typography'
 import { useRouter } from 'next/router'
 import { useContext, useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import { useTranslation } from 'react-i18next'
-import { useDispatch } from 'react-redux'
 import Form from 'src/@core/components/form'
 import IconifyIcon from 'src/@core/components/icon'
 import useResponsive from 'src/@core/hooks/useResponsive'
 import api from 'src/@core/utils/api'
 import showResponseError from 'src/@core/utils/show-response-error'
 import { AuthContext } from 'src/context/AuthContext'
+import { useAppDispatch } from 'src/store'
 import { addUserData, setDepartmentsState } from 'src/store/apps/user'
 import LidsKanban from 'src/views/apps/lids/LidsKanban'
 import TeacherProfile from 'src/views/teacher-profile'
@@ -32,7 +32,7 @@ const Lids = () => {
   // const [createble, setCreatable] = useState<boolean>(false)
   const [error, setError] = useState<any>({})
   const { t } = useTranslation()
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const { push, pathname, query } = useRouter()
 
   const handleClose = () => setOpen(null)

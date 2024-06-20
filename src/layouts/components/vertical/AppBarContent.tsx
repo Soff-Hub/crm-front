@@ -19,9 +19,9 @@ import BranchDropdown from 'src/@core/layouts/components/shared-components/Branc
 import Clock from 'src/@core/components/clock'
 import { Typography } from '@mui/material'
 import IconifyIcon from 'src/@core/components/icon'
-import { useSelector } from 'react-redux'
 import useResponsive from 'src/@core/hooks/useResponsive'
 import { useTranslation } from 'react-i18next'
+import { useAppSelector } from 'src/store'
 
 interface Props {
   hidden: boolean
@@ -79,7 +79,7 @@ interface Props {
 const AppBarContent = (props: Props) => {
   // ** Props
   const { hidden, settings, saveSettings, toggleNavVisibility } = props
-  const { companyInfo } = useSelector((state: any) => state.user)
+  const { companyInfo } = useAppSelector((state) => state.user)
   const { isMobile } = useResponsive()
   const { t } = useTranslation()
 

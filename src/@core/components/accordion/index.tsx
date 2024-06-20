@@ -1,5 +1,5 @@
 // ** MUI Imports
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { styled } from '@mui/material/styles'
 import MuiMenu, { MenuProps } from '@mui/material/Menu'
 
@@ -14,8 +14,7 @@ import showResponseError from 'src/@core/utils/show-response-error'
 import useSMS from 'src/hooks/useSMS'
 import { useRouter } from 'next/router'
 import { useTranslation } from 'react-i18next'
-import { useSelector } from 'react-redux'
-import { useDispatch } from 'react-redux'
+import { useAppDispatch, useAppSelector } from 'src/store'
 
 interface AccordionProps {
     title?: string
@@ -41,13 +40,13 @@ export default function AccordionCustom({ onView, item, reRender }: AccordionPro
     const [count, setCount] = useState<any>(item.student_count)
     const [name, setName] = useState<any>(item.name)
     const { t } = useTranslation()
-    const { departmentsState } = useSelector((state: any) => state.user)
+    const { departmentsState } = useAppSelector((state) => state.user)
 
 
     const [sms, setSMS] = useState<any>("")
     const { smsTemps, getSMSTemps } = useSMS()
     const { query } = useRouter()
-    const dispatch = useDispatch()
+    const dispatch = useAppDispatch()
 
     const handleClick = (event: any) => {
         setAnchorEl(event.currentTarget)
