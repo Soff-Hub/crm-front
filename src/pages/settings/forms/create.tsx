@@ -1,9 +1,9 @@
 import LoadingButton from '@mui/lab/LoadingButton'
-import { Box, Button, ButtonGroup, Checkbox, Dialog, DialogContent, DialogTitle, FormControl, Input, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material'
+import { Box, Button, ButtonGroup, Checkbox, Dialog, DialogContent, FormControl, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material'
 import { useRouter } from 'next/router'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useSelector } from 'react-redux'
+import { useAppSelector } from 'react-redux'
 import Form from 'src/@core/components/form'
 import IconifyIcon from 'src/@core/components/icon'
 import useResponsive from 'src/@core/hooks/useResponsive'
@@ -70,7 +70,7 @@ export default function CreateForm({ }: Props) {
     const [department, setDepartment] = useState<any>(null)
     const [loading, setLoading] = useState(false)
     const [selectType, setSelectType] = useState<'single' | 'multiple'>('single')
-    const { companyInfo } = useSelector((state: any) => state.user)
+    const { companyInfo } = useAppSelector((state: any) => state.user)
 
 
     const handleClose = () => {

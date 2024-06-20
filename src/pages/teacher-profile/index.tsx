@@ -4,12 +4,10 @@ import { Theme } from '@mui/material/styles'
 import useMediaQuery from '@mui/material/useMediaQuery'
 
 // ** React Imports
-import { SyntheticEvent } from 'react'
 
 // ** MUI Imports
 import Tab from '@mui/material/Tab'
 import TabList from '@mui/lab/TabList'
-import TabPanel from '@mui/lab/TabPanel'
 import TabContext from '@mui/lab/TabContext'
 
 // ** Hooks
@@ -18,12 +16,10 @@ import { useSettings } from 'src/@core/hooks/useSettings'
 // ** FullCalendar & App Components Imports
 import CalendarWrapper from 'src/@core/styles/libs/fullcalendar'
 
-import CardStatsVertical from 'src/@core/components/card-statistics/card-stats-vertical'
 import IconifyIcon from 'src/@core/components/icon'
-import { ThemeColor } from 'src/@core/layouts/types'
 
 // ** Actions
-import { Button, Checkbox, CircularProgress, Dialog, DialogContent, DialogTitle, FormControl, Typography } from '@mui/material'
+import { Button, Checkbox, Dialog, DialogContent, DialogTitle, FormControl, Typography } from '@mui/material'
 import { useContext, useEffect, useState } from 'react'
 import { AuthContext } from 'src/context/AuthContext'
 import MyGroups from 'src/views/my-groups'
@@ -31,10 +27,9 @@ import api from 'src/@core/utils/api'
 import { useRouter } from 'next/router'
 import useResponsive from 'src/@core/hooks/useResponsive'
 import generateTimeSlots from 'src/@core/utils/generate-time-slots'
-import { lessonData } from 'src/@core/utils/db'
 import { TranslateWeekName } from '../groups'
 import { hourFormatter } from 'src/@core/utils/hourFormatter'
-import { useSelector } from 'react-redux'
+import { useAppSelector } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 import getMonthName from 'src/@core/utils/gwt-month-name'
 
@@ -43,18 +38,18 @@ import getMonthName from 'src/@core/utils/gwt-month-name'
 
 
 const AppCalendar = () => {
-    const currenWeek: string = `${new Date()}`.split(' ')[0].toLocaleLowerCase()
+    const currentWeek: string = `${new Date()}`.split(' ')[0].toLocaleLowerCase()
 
     // ** Hooks
     const { settings } = useSettings()
     const { user } = useContext(AuthContext)
     const { push, pathname, query } = useRouter()
     const { isMobile, isTablet } = useResponsive()
-    const [tabValue, setTabValue] = useState<string>(currenWeek === 'mon' || currenWeek === 'wed' || currenWeek === 'fri' ? '2' : '1')
+    const [tabValue, setTabValue] = useState<string>(currentWeek === 'mon' || currentWeek === 'wed' || currentWeek === 'fri' ? '2' : '1')
     const [open, setOpen] = useState<null | 'week'>(null)
-    const [weeks, setWeeks] = useState<any>(query?.weeks ? (typeof query.weeks === 'string' ? query.weeks.split(',') : query.weeks) : currenWeek === 'mon' || currenWeek === 'wed' || currenWeek === 'fri' ? ['monday', 'wednesday', 'friday'] : ['tuesday', 'thursday', 'saturday']);
+    const [weeks, setWeeks] = useState<any>(query?.weeks ? (typeof query.weeks === 'string' ? query.weeks.split(',') : query.weeks) : currentWeek === 'mon' || currentWeek === 'wed' || currentWeek === 'fri' ? ['monday', 'wednesday', 'friday'] : ['tuesday', 'thursday', 'saturday']);
 
-    const { companyInfo } = useSelector((state: any) => state.user)
+    const { companyInfo } = useAppSelector((state: any) => state.user)
     const startTime = companyInfo?.work_start_time
     const endTime = companyInfo?.work_end_time
 

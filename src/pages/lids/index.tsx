@@ -5,12 +5,11 @@ import Typography from '@mui/material/Typography'
 import { useRouter } from 'next/router'
 import { FormEvent, useContext, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useSelector } from 'react-redux'
 import Form from 'src/@core/components/form'
 import IconifyIcon from 'src/@core/components/icon'
 import useResponsive from 'src/@core/hooks/useResponsive'
 import { AuthContext } from 'src/context/AuthContext'
-import { RootState, useAppDispatch } from 'src/store'
+import { useAppDispatch, useAppSelector } from 'src/store'
 import { createDepartment, createDepartmentItem, createDepartmentStudent, fetchDepartmentList, fetchSources, setAddSource, setLoading, setOpen, setOpenItem, setOpenLid, updateLeadParams } from 'src/store/apps/leads'
 import { CreatesDepartmentState } from 'src/types/apps/leadsTypes'
 import LidsKanban from 'src/views/apps/lids/LidsKanban'
@@ -20,7 +19,7 @@ const Lids = () => {
 
   // ** Hooks
   const { isMobile } = useResponsive()
-  const { leadData, loading, open, openItem, openLid, addSource, sourceData, queryParams, bigLoader } = useSelector((state: RootState) => state.leads)
+  const { leadData, loading, open, openItem, openLid, addSource, sourceData, queryParams, bigLoader } = useAppSelector((state) => state.leads)
   const { user } = useContext(AuthContext)
   const { t } = useTranslation()
   const dispatch = useAppDispatch()

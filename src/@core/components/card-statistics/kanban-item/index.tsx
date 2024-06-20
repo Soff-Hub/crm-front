@@ -3,9 +3,8 @@ import React, { useEffect, useState } from 'react'
 // ** MUI Imports
 import { styled } from '@mui/material/styles'
 import MuiMenu, { MenuProps } from '@mui/material/Menu'
-import MuiMenuItem, { MenuItemProps } from '@mui/material/MenuItem'
 
-import { Box, Button, Checkbox, Dialog, DialogContent, DialogTitle, FormControl, FormHelperText, FormLabel, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material'
+import { Box, Checkbox, Dialog, DialogContent, DialogTitle, FormControl, FormHelperText, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material'
 
 const Menu = styled(MuiMenu)<MenuProps>(({ theme }) => ({
     '& .MuiMenu-paper': {
@@ -35,22 +34,20 @@ import IconifyIcon from 'src/@core/components/icon'
 
 // ** Types Imports
 import { KanbarItemProps } from 'src/@core/components/card-statistics/types'
-import { useSelector } from 'react-redux'
 import Form from '../../form'
 import { useTranslation } from 'react-i18next'
 import LoadingButton from '@mui/lab/LoadingButton'
 import showResponseError from 'src/@core/utils/show-response-error'
 import api from 'src/@core/utils/api'
 import toast from 'react-hot-toast'
-import { useDispatch } from 'react-redux'
-import { addOpenedUser, setDepartmentsState } from 'src/store/apps/user'
+import { addOpenedUser } from 'src/store/apps/user'
 import Status from '../../status'
 import useSMS from 'src/hooks/useSMS'
 import { useRouter } from 'next/router'
 import useBranches from 'src/hooks/useBranch'
 import useGroups from 'src/hooks/useGroups'
 import { formatDateTime } from 'src/@core/utils/date-formatter'
-import { RootState } from 'src/store'
+import { useAppDispatch, useAppSelector } from 'src/store'
 
 // ** Styled Avatar component
 const Avatar = styled(CustomAvatar)<AvatarProps>(({ theme }) => ({
@@ -77,8 +74,8 @@ const KanbanItem = (props: KanbarItemProps) => {
     const [activeTab, setActiveTab] = useState<string>('tab-2')
     const [leadDetail, setLeadDetail] = useState([])
 
-    const { total, departmentsState } = useSelector((state: any) => state.user)
-    const { queryParams } = useSelector((state: RootState) => state.leads)
+    const { total } = useAppSelector((state) => state.user)
+    const { queryParams } = useAppSelector((state) => state.leads)
     const [sms, setSMS] = useState<any>("")
     const { smsTemps, getSMSTemps } = useSMS()
     const { query } = useRouter()
@@ -88,15 +85,16 @@ const KanbanItem = (props: KanbarItemProps) => {
     const [selectBranch, setSelectBranch] = useState<any>(null)
     const [selectDepartment, setSelectDepartment] = useState<any>([])
     const [selectDepartmentItem, setSelectDepartmentItem] = useState<any>(null)
+    const [departmentsState, setDepartmentsState] = useState<{ id: number, children: [] }[]>([])
 
-    const dispatch = useDispatch()
+    const dispatch = useAppDispatch()
 
 
     const handleClick = (event: any) => {
         setAnchorEl(event.currentTarget)
     }
 
-    const { data: leadData } = useSelector((state: any) => state.user)
+    const { data: leadData } = useAppSelector((state: any) => state.user)
 
     const handleSubmit = async (values: any) => {
         setLoading(true)
@@ -254,7 +252,7 @@ const KanbanItem = (props: KanbarItemProps) => {
 
     const getLeadData = async () => {
         const resp = await api.get(`leads/department/list/`, { params: { ...queryParams, is_active: true } })
-        dispatch(setDepartmentsState(resp.data))
+        setDepartmentsState(resp.data)
     }
 
     useEffect(() => {
@@ -650,7 +648,7 @@ const KanbanItem = (props: KanbarItemProps) => {
                                 name='department'
                             >
                                 {
-                                    departmentsState.find((item: any) => item.id === selectBranch).children.map((el: any) => (
+                                    departmentsState?.length && departmentsState?.find((item: any) => item.id === selectBranch)?.children.map((el: any) => (
                                         <MenuItem value={el.id} sx={{ wordBreak: 'break-word' }}>
                                             {el.name}
                                         </MenuItem>

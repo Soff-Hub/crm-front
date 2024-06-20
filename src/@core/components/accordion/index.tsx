@@ -1,5 +1,5 @@
 // ** MUI Imports
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { styled } from '@mui/material/styles'
 import MuiMenu, { MenuProps } from '@mui/material/Menu'
 
@@ -14,9 +14,8 @@ import showResponseError from 'src/@core/utils/show-response-error'
 import useSMS from 'src/hooks/useSMS'
 import { useRouter } from 'next/router'
 import { useTranslation } from 'react-i18next'
-import { useSelector } from 'react-redux'
-import { useDispatch } from 'react-redux'
-import { RootState, useAppDispatch } from 'src/store'
+import { useAppDispatch, useAppSelector } from 'src/store'
+import { RootState } from 'src/store'
 import { fetchDepartmentList } from 'src/store/apps/leads'
 
 interface AccordionProps {
@@ -42,8 +41,8 @@ export default function AccordionCustom({ onView, item }: AccordionProps) {
     const [count, setCount] = useState<any>(item.student_count)
     const [name, setName] = useState<any>(item.name)
     const { t } = useTranslation()
-    const { departmentsState } = useSelector((state: any) => state.user)
-    const { queryParams } = useSelector((state: RootState) => state.leads)
+    const { departmentsState } = useAppSelector((state) => state.user)
+    const { queryParams } = useAppSelector((state) => state.leads)
 
 
     const [sms, setSMS] = useState<any>("")

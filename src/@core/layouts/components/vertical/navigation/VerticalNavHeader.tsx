@@ -14,12 +14,10 @@ import { LayoutProps } from 'src/@core/layouts/types'
 import Icon from 'src/@core/components/icon'
 
 // ** Configs
-import themeConfig from 'src/configs/themeConfig'
-import { useSelector } from 'react-redux'
-import Clock from 'src/@core/components/clock'
 import IconifyIcon from 'src/@core/components/icon'
 import useResponsive from 'src/@core/hooks/useResponsive'
 import { useTranslation } from 'react-i18next'
+import { useAppSelector } from 'src/store'
 
 interface Props {
   navHover: boolean
@@ -75,7 +73,7 @@ const VerticalNavHeader = (props: Props) => {
   const theme = useTheme()
   const { mode, direction, navCollapsed } = settings
   const menuCollapsedStyles = navCollapsed && !navHover ? { opacity: 0 } : { opacity: 1 }
-  const { companyInfo } = useSelector((state: any) => state.user)
+  const { companyInfo } = useAppSelector((state) => state.user)
   const { isMobile } = useResponsive()
   const { t } = useTranslation()
 

@@ -10,11 +10,11 @@ import { styled, useTheme } from '@mui/material/styles'
 import { LayoutProps } from 'src/@core/layouts/types'
 
 // ** Theme Config Import
-import themeConfig from 'src/configs/themeConfig'
-import { useSelector } from 'react-redux'
+
 import Clock from 'src/@core/components/clock'
 import IconifyIcon from 'src/@core/components/icon'
 import { useTranslation } from 'react-i18next'
+import { useAppSelector } from 'src/store'
 
 interface Props {
   hidden: LayoutProps['hidden']
@@ -34,7 +34,7 @@ const StyledLink = styled(Link)(({ theme }) => ({
 const AppBarContent = (props: Props) => {
   // ** Props
   const { appBarContent: userAppBarContent, appBarBranding: userAppBarBranding } = props
-  const { companyInfo } = useSelector((state: any) => state.user)
+  const { companyInfo } = useAppSelector((state: any) => state.user)
 
   const { t } = useTranslation()
 

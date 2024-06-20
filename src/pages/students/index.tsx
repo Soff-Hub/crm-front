@@ -10,31 +10,30 @@ import {
   Radio,
   TextField,
   Typography
-} from '@mui/material'
-import React, { MouseEvent, ReactNode, useEffect, useState } from 'react'
-import IconifyIcon from 'src/@core/components/icon'
-import DataTable from 'src/@core/components/table'
-import MuiDrawer, { DrawerProps } from '@mui/material/Drawer'
-import { styled } from '@mui/material/styles'
-import MenuItem from '@mui/material/MenuItem'
-import FormControl from '@mui/material/FormControl'
-import Select from '@mui/material/Select'
-import Link from 'next/link'
-import UserSuspendDialog from 'src/views/apps/mentors/view/UserSuspendDialog'
-import { useTranslation } from 'react-i18next'
-import Form from 'src/@core/components/form'
-import useTeachers from 'src/hooks/useTeachers'
-import showResponseError from 'src/@core/utils/show-response-error'
-import LoadingButton from '@mui/lab/LoadingButton'
-import toast from 'react-hot-toast'
-import useStudent from 'src/hooks/useStudents'
-import useGroups from 'src/hooks/useGroups'
-import useDebounce from 'src/hooks/useDebounce'
-import { useRouter } from 'next/router'
-import Status from 'src/@core/components/status'
-import useCourses from 'src/hooks/useCourses'
-import useResponsive from 'src/@core/hooks/useResponsive'
-import { today } from 'src/@core/components/card-statistics/kanban-item'
+} from '@mui/material';
+import { MouseEvent, ReactNode, useEffect, useState } from 'react';
+import IconifyIcon from 'src/@core/components/icon';
+import DataTable from 'src/@core/components/table';
+import MuiDrawer, { DrawerProps } from '@mui/material/Drawer';
+import { styled } from '@mui/material/styles';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+import Link from 'next/link';
+import UserSuspendDialog from 'src/views/apps/mentors/view/UserSuspendDialog';
+import { useTranslation } from 'react-i18next';
+import Form from 'src/@core/components/form';
+import useTeachers from 'src/hooks/useTeachers';
+import showResponseError from 'src/@core/utils/show-response-error';
+import LoadingButton from '@mui/lab/LoadingButton';
+import toast from 'react-hot-toast';
+import useStudent from 'src/hooks/useStudents';
+import useGroups from 'src/hooks/useGroups';
+import useDebounce from 'src/hooks/useDebounce';
+import { useRouter } from 'next/router';
+import useCourses from 'src/hooks/useCourses';
+import useResponsive from 'src/@core/hooks/useResponsive';
+import { today } from 'src/@core/components/card-statistics/kanban-item';
 
 export interface customTableProps {
   xs: number
@@ -65,7 +64,6 @@ export default function GroupsPage() {
   const [gender, setGender] = useState<'male' | 'female'>('male')
   const [search, setSearch] = useState<string>('')
 
-
   const { t } = useTranslation()
   const router = useRouter()
   const { loading, setLoading } = useTeachers()
@@ -94,6 +92,7 @@ export default function GroupsPage() {
       console.log(error);
     }
   }
+
 
   const handleDeleteTeacher = async (id: string | number) => {
     try {

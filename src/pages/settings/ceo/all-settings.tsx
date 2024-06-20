@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Box, Button, CircularProgress, Dialog, DialogContent, Switch, TextField, Typography } from '@mui/material'
 import IconifyIcon from 'src/@core/components/icon'
 import useResponsive from 'src/@core/hooks/useResponsive'
@@ -6,12 +6,12 @@ import usePayment from 'src/hooks/usePayment'
 import useBranches from 'src/hooks/useBranch'
 import LoadingButton from '@mui/lab/LoadingButton'
 import api from 'src/@core/utils/api'
-import { useDispatch } from 'react-redux'
 import { setCompanyInfo } from 'src/store/apps/user'
-import { useSelector } from 'react-redux'
-import { styled } from '@mui/material/styles';
+import { useAppSelector } from 'react-redux'
+import { styled } from '@mui/material/styles'
 import { useTranslation } from 'react-i18next'
 import showResponseError from 'src/@core/utils/show-response-error'
+import { useAppDispatch } from 'src/store'
 
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
@@ -39,8 +39,8 @@ export default function AllSettings() {
 
     const { getPaymentMethod, paymentMethods, createPaymentMethod, updatePaymentMethod } = usePayment()
     const { getBranches, branches } = useBranches()
-    const dispatch = useDispatch()
-    const { companyInfo } = useSelector((state: any) => state.user)
+    const dispatch = useAppDispatch()
+    const { companyInfo } = useAppSelector((state: any) => state.user)
     const { t } = useTranslation()
 
 

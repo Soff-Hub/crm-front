@@ -9,14 +9,12 @@ import LoadingButton from '@mui/lab/LoadingButton'
 type Props = {}
 
 export default function CompanyCardActions({ }: Props) {
-
     const { t } = useTranslation()
     const [open, setOpen] = useState<null | 'sms' | 'payment' | 'pack'>(null)
     const [message, setMessage] = useState<any>(null)
     const [loading, setLoading] = useState<boolean>(false)
 
     const { query } = useRouter()
-
 
     const sendSms = async () => {
         setLoading(true)
@@ -32,7 +30,6 @@ export default function CompanyCardActions({ }: Props) {
     return (
         <div>
             <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-
                 <Button
                     variant='outlined'
                     size='small'
@@ -41,7 +38,6 @@ export default function CompanyCardActions({ }: Props) {
                 >
                     {t('SMS yuborish')}
                 </Button>
-
                 <Button
                     variant='outlined'
                     size='small'
@@ -49,7 +45,6 @@ export default function CompanyCardActions({ }: Props) {
                 >
                     {t("SMS paket")}
                 </Button>
-
                 <Button
                     variant='outlined'
                     size='small'
@@ -58,7 +53,6 @@ export default function CompanyCardActions({ }: Props) {
                 >
                     {t("To'lov")}
                 </Button>
-
             </Box>
 
             {/* SMS yuborish */}
