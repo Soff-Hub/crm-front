@@ -8,53 +8,52 @@ import toast from 'react-hot-toast';
 import useResponsive from 'src/@core/hooks/useResponsive';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
+import { RootState, useAppDispatch } from 'src/store';
+import { editDepartment, fetchDepartmentList, setLoading, setOpenActionModal, setOpenItem, setOpenLid } from 'src/store/apps/leads';
 
 interface Props {
     title: string
     status: "pending" | "new" | "success",
     items: any[],
-    setOpenItem: any,
     id: any,
-    setOpenLid: any
-    reRender: any
 }
 
 
 
-export default function HomeKanban({ title, items, setOpenItem, id, setOpenLid, reRender }: Props) {
-    const [open, setOpen] = React.useState<'delete' | 'edit' | null>(null)
-    const [loading, setLoading] = React.useState<any>(false)
-    const [name, setName] = React.useState<any>(title)
-    const [nameVal, setNameVal] = React.useState<any>(title)
+export default function HomeKanban({ title, items, id }: Props) {
+
+    //** Hooks
+    const { loading, openActionModal: open } = useSelector((state: RootState) => state.leads)
+    const dispatch = useAppDispatch()
     const { isMobile } = useResponsive()
     const { query } = useRouter()
     const { t } = useTranslation()
 
+
+    // ** States
+    const [name, setName] = React.useState<any>(title)
+    const [nameVal, setNameVal] = React.useState<any>(title)
+
+
+    //** Main Funcitons
     const editSubmit = async () => {
-        setLoading(true)
-        try {
-            await api.patch(`leads/department-update/${id}`, { name: nameVal })
-            setName(nameVal)
-            setLoading(false)
-            setOpen(null)
-            return reRender()
-        } catch {
-            setLoading(false)
-        }
+        await dispatch(editDepartment({ name: nameVal, id }))
+        setName(nameVal)
+        setOpen(null)
+        await dispatch(fetchDepartmentList())
     }
 
     const deleteDepartmentItem = async () => {
-        setLoading(true)
-        try {
-            await api.patch(`leads/department-update/${id}`, { is_active: false })
-            setName(nameVal)
-            setLoading(false)
-            setOpen(null)
-            toast.success("Muvaffaqiyatli o'chirildi")
-            return reRender()
-        } catch {
-            setLoading(false)
-        }
+        await dispatch(editDepartment({ is_active: false, id }))
+        setName(nameVal)
+        setOpen(null)
+        toast.success("Muvaffaqiyatli o'chirildi")
+        await dispatch(fetchDepartmentList())
+    }
+
+    const setOpen = (value: 'delete' | 'edit' | null) => {
+        dispatch(setOpenActionModal(value))
     }
 
     return (
@@ -63,8 +62,8 @@ export default function HomeKanban({ title, items, setOpenItem, id, setOpenLid, 
                 <Typography fontSize={22}>{name}</Typography>
                 {query?.is_active !== 'false' ? (
                     <>
-                        <IconifyIcon icon={'system-uicons:user-add'} color='orange' onClick={() => setOpenLid(id)} style={{ cursor: 'pointer', marginLeft: 'auto' }} />
-                        <IconifyIcon icon={'iconoir:grid-add'} color='orange' onClick={() => setOpenItem(id)} style={{ cursor: 'pointer', margin: '0 10px' }} />
+                        <IconifyIcon icon={'system-uicons:user-add'} color='orange' onClick={() => dispatch(setOpenLid(id))} style={{ cursor: 'pointer', marginLeft: 'auto' }} />
+                        <IconifyIcon icon={'iconoir:grid-add'} color='orange' onClick={() => dispatch(setOpenItem(id))} style={{ cursor: 'pointer', margin: '0 10px' }} />
                         <IconifyIcon icon={'mingcute:edit-line'} color='orange' onClick={() => setOpen('edit')} style={{ cursor: 'pointer', fontSize: '20px', marginRight: '5px' }} />
                         <IconifyIcon icon={'mingcute:delete-line'} color='red' onClick={() => setOpen('delete')} style={{ cursor: 'pointer', fontSize: '20px' }} />
                     </>
@@ -74,7 +73,7 @@ export default function HomeKanban({ title, items, setOpenItem, id, setOpenLid, 
             <Box sx={{ display: 'flex', gap: 5, alignItems: 'flex-start', width: '100%', flexDirection: 'column', pt: 0 }}>
                 {
                     items.map(lead => (
-                        <AccordionCustom reRender={reRender} item={lead} key={lead.id} onView={() => console.log("aa")} />
+                        <AccordionCustom item={lead} key={lead.id} onView={() => console.log("aa")} />
                     ))
                 }
             </Box>

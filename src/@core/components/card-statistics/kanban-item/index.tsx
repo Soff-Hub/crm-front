@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 // ** MUI Imports
 import { styled } from '@mui/material/styles'
@@ -34,7 +34,6 @@ import IconifyIcon from 'src/@core/components/icon'
 
 // ** Types Imports
 import { KanbarItemProps } from 'src/@core/components/card-statistics/types'
-import { useAppSelector } from 'react-redux'
 import Form from '../../form'
 import { useTranslation } from 'react-i18next'
 import LoadingButton from '@mui/lab/LoadingButton'
@@ -48,7 +47,7 @@ import { useRouter } from 'next/router'
 import useBranches from 'src/hooks/useBranch'
 import useGroups from 'src/hooks/useGroups'
 import { formatDateTime } from 'src/@core/utils/date-formatter'
-import { useAppDispatch } from 'src/store'
+import { useAppDispatch, useAppSelector } from 'src/store'
 
 // ** Styled Avatar component
 const Avatar = styled(CustomAvatar)<AvatarProps>(({ theme }) => ({
@@ -75,7 +74,8 @@ const KanbanItem = (props: KanbarItemProps) => {
     const [activeTab, setActiveTab] = useState<string>('tab-2')
     const [leadDetail, setLeadDetail] = useState([])
 
-    const { total, departmentsState } = useAppSelector((state: any) => state.user)
+    const { total } = useAppSelector((state) => state.user)
+    const { queryParams } = useAppSelector((state) => state.leads)
     const [sms, setSMS] = useState<any>("")
     const { smsTemps, getSMSTemps } = useSMS()
     const { query } = useRouter()
@@ -85,6 +85,7 @@ const KanbanItem = (props: KanbarItemProps) => {
     const [selectBranch, setSelectBranch] = useState<any>(null)
     const [selectDepartment, setSelectDepartment] = useState<any>([])
     const [selectDepartmentItem, setSelectDepartmentItem] = useState<any>(null)
+    const [departmentsState, setDepartmentsState] = useState<{ id: number, children: [] }[]>([])
 
     const dispatch = useAppDispatch()
 
@@ -249,6 +250,15 @@ const KanbanItem = (props: KanbarItemProps) => {
         }
     }
 
+    const getLeadData = async () => {
+        const resp = await api.get(`leads/department/list/`, { params: { ...queryParams, is_active: true } })
+        setDepartmentsState(resp.data)
+    }
+
+    useEffect(() => {
+        getLeadData()
+    }, [])
+
 
     return (
         <Card sx={{ cursor: 'pointer' }}>
@@ -344,7 +354,7 @@ const KanbanItem = (props: KanbarItemProps) => {
                 PaperProps={{ style: { minWidth: '8rem' } }}
             >
                 {
-                    query?.is_active !== 'false' ? (
+                    queryParams.is_active ? (
                         <Box>
                             <MenuItem onClick={() => setOpen('note')} sx={{ '& svg': { mr: 2 } }}>
                                 <IconifyIcon icon='ph:flag-light' fontSize={20} />
@@ -638,7 +648,7 @@ const KanbanItem = (props: KanbarItemProps) => {
                                 name='department'
                             >
                                 {
-                                    departmentsState.find((item: any) => item.id === selectBranch).children.map((el: any) => (
+                                    departmentsState?.length && departmentsState?.find((item: any) => item.id === selectBranch)?.children.map((el: any) => (
                                         <MenuItem value={el.id} sx={{ wordBreak: 'break-word' }}>
                                             {el.name}
                                         </MenuItem>

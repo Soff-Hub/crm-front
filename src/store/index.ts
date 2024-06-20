@@ -10,6 +10,8 @@ import invoice from 'src/store/apps/invoice'
 import calendar from 'src/store/apps/calendar'
 import permissions from 'src/store/apps/permissions'
 import dashboard from 'src/store/apps/dashboard'
+import leads from 'src/store/apps/leads'
+
 
 export const store = configureStore({
   reducer: {
@@ -19,7 +21,8 @@ export const store = configureStore({
     invoice,
     calendar,
     permissions,
-    dashboard
+    dashboard,
+    leads
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
@@ -27,8 +30,8 @@ export const store = configureStore({
     })
 })
 
+export type AppDispatch = typeof store.dispatch;
 export type RootState = ReturnType<typeof store.getState>
-export type AppDispatch = typeof store.dispatch
 
 export const useAppDispatch = () => useDispatch<AppDispatch>()
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector
