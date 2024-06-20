@@ -668,14 +668,14 @@ const CardStatistics = () => {
                         <Box sx={{ display: 'flex', gap: '10px', flexGrow: 1 }}>
                             <Typography sx={{ fontSize: '20px', flexGrow: 1 }}>{t('Tekshirish uchun maoshlar')}</Typography>
                         </Box>
-                        <DataTable maxWidth='100%' minWidth='0' columns={withdrawCol} rowClick={handleRow} data={withdraw} />
+                        <DataTable maxWidth='100%' minWidth='800px' columns={withdrawCol} rowClick={handleRow} data={withdraw} />
                     </Grid>
                     <Box sx={{ margin: '15px' }}></Box>
                     <Grid item xs={12} md={12} >
                         <Box sx={{ display: 'flex', gap: '10px', flexGrow: 1 }}>
                             <Typography sx={{ fontSize: '20px', flexGrow: 1 }}>{t("Oxirgi oydagi to'lovlar")}</Typography>
                         </Box>
-                        <DataTable maxWidth='100%' minWidth='0' columns={employeePaycol} data={employeePays} />
+                        <DataTable maxWidth='100%' minWidth='800px' columns={employeePaycol} data={employeePays} />
                     </Grid>
 
                     <Box sx={{ margin: '15px' }}></Box>
@@ -684,7 +684,7 @@ const CardStatistics = () => {
                             <Typography sx={{ fontSize: '20px', flexGrow: 1 }}>{t('Doimiy maosh oluvchilar')}</Typography>
                             <Button variant='contained' onClick={() => (setOpen('add-salary'), getEmployees())}>+ {t("Yaratish")}</Button>
                         </Box>
-                        <DataTable maxWidth='100%' minWidth='0' columns={employeeSalaryCol} data={employeeSalary} />
+                        <DataTable maxWidth='100%' minWidth='800px' columns={employeeSalaryCol} data={employeeSalary} />
                     </Grid>
                 </Grid>
             </KeenSliderWrapper>

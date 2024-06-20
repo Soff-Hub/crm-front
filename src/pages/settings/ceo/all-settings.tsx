@@ -102,6 +102,7 @@ export default function AllSettings() {
         try {
             const formData: any = new FormData()
             formData.append(key, value)
+
             if (key === 'on_birthday' || key === 'birthday_text' || key === 'on_absent' || key === 'absent_text') {
 
                 if (key === 'on_birthday') {
@@ -131,6 +132,7 @@ export default function AllSettings() {
             } else {
                 await api.patch(key === 'on_birthday' ? 'common/auto-sms/update/' : 'common/settings/update/', formData)
             }
+            
             const getresp = await api.get('common/settings/list/')
             dispatch(setCompanyInfo(getresp.data[0]))
             setEditable(null)
@@ -331,7 +333,7 @@ export default function AllSettings() {
                         {
                             loading === 'on_birthday' ? <CircularProgress disableShrink size={'20px'} sx={{ margin: '10px 0', marginLeft: '15px' }} /> : (
                                 <Switch
-                                    checked={Boolean(companyInfo?.auto_sms.on_birthday)}
+                                    checked={Boolean(companyInfo?.auto_sms?.on_birthday)}
                                     onChange={async (e, i) => {
                                         setLoading('on_birthday')
                                         await updateSettings('on_birthday', i)
@@ -380,7 +382,7 @@ export default function AllSettings() {
                         {
                             loading === 'on_absent' ? <CircularProgress disableShrink size={'20px'} sx={{ margin: '10px 0', marginLeft: '15px' }} /> : (
                                 <Switch
-                                    checked={Boolean(companyInfo?.auto_sms.on_absent)}
+                                    checked={Boolean(companyInfo?.auto_sms?.on_absent)}
                                     onChange={async (e, i) => {
                                         setLoading('on_absent')
                                         await updateSettings('on_absent', i)
