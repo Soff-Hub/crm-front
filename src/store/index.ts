@@ -11,7 +11,7 @@ import calendar from 'src/store/apps/calendar'
 import permissions from 'src/store/apps/permissions'
 import dashboard from 'src/store/apps/dashboard'
 import leads from 'src/store/apps/leads'
-
+import groups from 'src/store/apps/groups'
 
 export const store = configureStore({
   reducer: {
@@ -22,7 +22,8 @@ export const store = configureStore({
     calendar,
     permissions,
     dashboard,
-    leads
+    leads,
+    groups
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
@@ -30,7 +31,7 @@ export const store = configureStore({
     })
 })
 
-export type AppDispatch = typeof store.dispatch;
+export type AppDispatch = typeof store.dispatch
 export type RootState = ReturnType<typeof store.getState>
 
 export const useAppDispatch = () => useDispatch<AppDispatch>()

@@ -98,7 +98,6 @@ export default function GroupsPage() {
       setOpenEdit(false)
       setTeachersData(undefined)
     }).catch(() => setLoading(false))
-
   }
 
   const RowOptions = ({ id }: { id: number | string }) => {
