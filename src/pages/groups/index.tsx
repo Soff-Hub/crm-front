@@ -8,37 +8,36 @@ import {
   FormHelperText,
   IconButton,
   InputLabel,
-  Menu,
   Pagination,
   TextField,
-  Typography
-} from '@mui/material'
-import React, { MouseEvent, ReactNode, useMemo, useState } from 'react'
-import IconifyIcon from 'src/@core/components/icon'
-import DataTable from 'src/@core/components/table'
-import MuiDrawer, { DrawerProps } from '@mui/material/Drawer'
-import { styled } from '@mui/material/styles'
-import MenuItem from '@mui/material/MenuItem'
-import FormControl from '@mui/material/FormControl'
-import Select from '@mui/material/Select'
-import Link from 'next/link'
-import UserSuspendDialog from 'src/views/apps/groups/view/UserSuspendDialog'
-import { useTranslation } from 'react-i18next'
-import Form from 'src/@core/components/form'
-import useTeachers from 'src/hooks/useTeachers'
-import showResponseError from 'src/@core/utils/show-response-error'
-import LoadingButton from '@mui/lab/LoadingButton'
-import toast from 'react-hot-toast'
-import { GroupsFilter } from 'src/views/apps/groups/GroupsFilter'
-import useResponsive from 'src/@core/hooks/useResponsive'
-import useGroups from 'src/hooks/useGroups'
-import { useRouter } from 'next/router'
-import useCourses from 'src/hooks/useCourses'
-import useRooms from 'src/hooks/useRooms'
-import api from 'src/@core/utils/api'
-import getMontName from 'src/@core/utils/gwt-month-name'
-import getLessonDays from 'src/@core/utils/getLessonDays'
-import { today } from 'src/@core/components/card-statistics/kanban-item'
+  Typography,
+} from '@mui/material';
+import { ReactNode, useEffect, useState } from 'react';
+import IconifyIcon from 'src/@core/components/icon';
+import DataTable from 'src/@core/components/table';
+import MuiDrawer, { DrawerProps } from '@mui/material/Drawer';
+import { styled } from '@mui/material/styles';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+import { useTranslation } from 'react-i18next';
+import Form from 'src/@core/components/form';
+import useTeachers from 'src/hooks/useTeachers';
+import showResponseError from 'src/@core/utils/show-response-error';
+import LoadingButton from '@mui/lab/LoadingButton';
+import { GroupsFilter } from 'src/views/apps/groups/GroupsFilter';
+import useResponsive from 'src/@core/hooks/useResponsive';
+import useGroups from 'src/hooks/useGroups';
+import { useRouter } from 'next/router';
+import useCourses from 'src/hooks/useCourses';
+import useRooms from 'src/hooks/useRooms';
+import api from 'src/@core/utils/api';
+import getMontName from 'src/@core/utils/gwt-month-name';
+import getLessonDays from 'src/@core/utils/getLessonDays';
+import { today } from 'src/@core/components/card-statistics/kanban-item';
+import RowOptions from 'src/views/apps/groups/RowOptions';
+import { useAppDispatch, useAppSelector } from 'src/store';
+import { fetchGroups, handleOpenEdit } from 'src/store/apps/groups';
 
 export interface customTableProps {
   xs: number
@@ -73,116 +72,22 @@ export const TranslateWeekName: any = {
 
 
 export default function GroupsPage() {
+  const { isOpenEdit, groups, isLoading, groupCount } = useAppSelector(state => state.groups)
+  const dispatch = useAppDispatch()
+
   const [openAddGroup, setOpenAddGroup] = useState<boolean>(false)
   const [open, setOpen] = useState<boolean>(false)
-  const [openEdit, setOpenEdit] = useState<boolean>(false)
   const { t } = useTranslation()
   const { isMobile } = useResponsive()
   const [weekdays, setWeekDays] = useState<any>(null)
   const [customWeekdays, setCustomWeekDays] = useState<string[]>([])
 
-  const { getTeachers, teachers, loading, deleteTeacher, setLoading } = useTeachers()
-  const { getGroups, groups, createGroup, getGroupById, setGroupData, groupCount, groupData, updateGroup } = useGroups()
+  const { getTeachers, teachers, loading, setLoading } = useTeachers()
+  const { getGroups, createGroup, setGroupData, groupData, updateGroup } = useGroups()
   const { courses, getCourses } = useCourses()
   const { rooms, getRooms } = useRooms()
   const router = useRouter()
   const { push } = router
-
-  const handleDeleteTeacher = async (id: string | number) => {
-    try {
-      await api.delete(`common/group/delete/${id}`)
-      toast.success("Guruhlar ro'yxatidan o'chirildi", { position: 'top-center' })
-      getGroups()
-    } catch (error: any) {
-      console.log(error);
-    }
-  }
-
-  const handleOpen = () => {
-    getCourses()
-    getTeachers()
-    getRooms()
-    setOpenAddGroup(true)
-  }
-
-  const handleEdit = async (id: any) => {
-    getCourses()
-    getTeachers()
-    getRooms()
-    setOpenEdit(true)
-    await getGroupById(id)
-  }
-
-
-  const RowOptions = ({ id }: { id: number | string }) => {
-    // ** State
-    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
-    const [suspendDialogOpen, setSuspendDialogOpen] = useState<boolean>(false)
-
-    const rowOptionsOpen = Boolean(anchorEl)
-
-    const handleRowOptionsClick = (event: MouseEvent<HTMLElement>) => {
-      setAnchorEl(event.currentTarget)
-    }
-    const handleRowOptionsClose = () => {
-      setAnchorEl(null)
-    }
-
-    const handleDelete = () => {
-      handleRowOptionsClose()
-      setSuspendDialogOpen(true)
-    }
-
-
-
-    return (
-      <>
-        <IconButton size='small' onClick={handleRowOptionsClick}>
-          <IconifyIcon icon='mdi:dots-vertical' />
-        </IconButton>
-        <Menu
-          keepMounted
-          anchorEl={anchorEl}
-          open={rowOptionsOpen}
-          onClose={handleRowOptionsClose}
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'right'
-          }}
-          transformOrigin={{
-            vertical: 'top',
-            horizontal: 'right'
-          }}
-          PaperProps={{ style: { minWidth: '8rem' } }}
-        >
-          <MenuItem
-            component={Link}
-            sx={{ '& svg': { mr: 2 } }}
-            onClick={handleRowOptionsClose}
-            href={`/groups/view/security?id=${id}&month=${getMontName(null)}`}
-          >
-            <IconifyIcon icon='mdi:eye-outline' fontSize={20} />
-            {t("Ko'rish")}
-          </MenuItem>
-          <MenuItem onClick={() => handleEdit(id)} sx={{ '& svg': { mr: 2 } }}>
-            <IconifyIcon icon='mdi:pencil-outline' fontSize={20} />
-            {t("Tahrirlash")}
-          </MenuItem>
-
-          <MenuItem onClick={handleDelete} sx={{ '& svg': { mr: 2 } }}>
-            <IconifyIcon icon='mdi:delete-outline' fontSize={20} />
-            {t("O'chirish")}
-          </MenuItem>
-
-          <MenuItem onClick={handleDelete} sx={{ '& svg': { mr: 2 } }}>
-            <IconifyIcon icon='material-symbols-light:recommend-outline' fontSize={20} />
-            {t("Guruhni yakunlash")}
-          </MenuItem>
-        </Menu>
-        <UserSuspendDialog handleOk={() => handleDeleteTeacher(id)} open={suspendDialogOpen} setOpen={setSuspendDialogOpen} />
-      </>
-    )
-  }
   const [error, setError] = useState<any>({})
 
   const columns: customTableProps[] = [
@@ -248,16 +153,20 @@ export default function GroupsPage() {
     }
     try {
       await createGroup(obj)
-      await getGroups()
+      await dispatch(fetchGroups({ query: router.query, status: router.query.status }))
       setLoading(false)
       setOpenAddGroup(false)
     } catch (error: any) {
       setLoading(false)
       showResponseError(error.response.data, setError)
     }
+  }
 
-    // const form: any = document.getElementById('create-teacher-form')
-    // form.reset()
+  const handleOpen = () => {
+    getCourses()
+    getTeachers()
+    getRooms()
+    setOpenAddGroup(true)
   }
 
   const handleEditSubmit = async (values: any) => {
@@ -279,7 +188,7 @@ export default function GroupsPage() {
         group: groupData?.id,
         ...days
       })
-      setOpenEdit(false)
+      dispatch(handleOpenEdit(false))
       getGroups()
       setLoading(false)
       setGroupData(null)
@@ -301,9 +210,8 @@ export default function GroupsPage() {
     push(`/groups/view/security?id=${id}&month=${getMontName(null)}`)
   }
 
-  useMemo(() => {
-    getGroups()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    dispatch(fetchGroups({ query: router.query, status: router.query.status }))
   }, [router.query])
 
 
@@ -330,8 +238,8 @@ export default function GroupsPage() {
         </Button>
       )}
       {!isMobile && <GroupsFilter isMobile={isMobile} />}
-      <DataTable columns={columns} data={groups} rowClick={rowClick} color />
-      <Pagination defaultPage={router?.query?.page ? Number(router?.query?.page) : 1} count={groupCount} variant="outlined" shape="rounded" onChange={(e: any, page) => handlePagination(e.target.value + page)} />
+      <DataTable columns={columns} loading={isLoading} data={groups || []} rowClick={rowClick} color />
+      {groups !== null && groups?.length > 0 && <Pagination defaultPage={router?.query?.page ? Number(router?.query?.page) : 1} count={groupCount} variant="outlined" shape="rounded" onChange={(e: any, page) => handlePagination(e.target.value + page)} />}
 
       <Drawer open={openAddGroup} hideBackdrop anchor='right' variant='persistent'>
         <Box
@@ -490,7 +398,7 @@ export default function GroupsPage() {
         </Box>
       </Drawer>
 
-      <Drawer open={openEdit} hideBackdrop anchor='right' variant='persistent'>
+      <Drawer open={isOpenEdit} hideBackdrop anchor='right' variant='persistent'>
         <Box
           className='customizer-header'
           sx={{
@@ -503,7 +411,7 @@ export default function GroupsPage() {
             {t("Guruh malumotlarini tahrirlash")}
           </Typography>
           <IconButton
-            onClick={() => (setOpenEdit(false), setGroupData(null))}
+            onClick={() => (dispatch(handleOpenEdit(false)), setGroupData(null))}
             sx={{
               right: 20,
               top: '50%',
