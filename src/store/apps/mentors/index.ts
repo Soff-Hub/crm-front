@@ -1,65 +1,69 @@
-// ** Redux Imports
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-
-// ** Axios Imports
 import api from 'src/@core/utils/api'
-import { CreatesDepartmentState, LeadsQueryParamsTypes } from 'src/types/apps/leadsTypes'
-import { IMentorsState } from 'src/types/apps/mentorsTypes'
+import { LeadsQueryParamsTypes } from 'src/types/apps/leadsTypes'
+import { IMentorsState, UpdateTeacherDto } from 'src/types/apps/mentorsTypes'
 
 // ** Fetch All Departments
-export const fetchDepartmentList = createAsyncThunk(
-  'appChat/fetchDepartmentList',
+export const fetchTeachersList = createAsyncThunk(
+  'mentors/fetchTeachersList',
   async (params?: LeadsQueryParamsTypes | undefined) => {
-    const resp = await api.get(`leads/department/list/?`, { params })
-    console.log(resp.data)
-    console.log(params)
+    return (await api.get(`auth/teachers/`, { params })).data
+  }
+)
 
-    if (params && params?.search !== '') {
-      console.log(...resp.data.map((el: any) => el?.children.filter((item: any) => item?.student_count > 0)))
+export const fetchTeacherdetail = createAsyncThunk(
+  'mentors/fetchTeacherdetail',
+  async (id: number) => {
+    return (await api.get(`auth/teachers/${id}`)).data
+  }
+)
 
-      return resp.data
-    } else {
-      return resp.data
+export const createTeacher = createAsyncThunk(
+  'mentors/createTeacher',
+  async (values: any, { rejectWithValue }) => {
+    try {
+      const response = await api.post(`auth/create/teacher/`, values);
+      return response.data;
+    } catch (err: any) {
+      if (err.response) {
+        return rejectWithValue(err.response.data);
+      }
+      return rejectWithValue(err.message);
     }
   }
-)
+);
 
-// ** Fetch All Sources
-export const fetchSources = createAsyncThunk('appChat/fetchSources', async () => {
-  return (await api.get(`leads/source/`)).data.results
-})
-
-// ** Create Departments
-export const createDepartment = createAsyncThunk('appChat/createDepartment', async (values: CreatesDepartmentState) => {
-  return (await api.post(`leads/department/create/`, values)).data
-})
-
-// ** Create Departments
-export const editDepartment = createAsyncThunk(
-  'appChat/editDepartment',
-  async (values: { name?: string; id: any; is_active?: boolean }) => {
-    return (await api.patch(`leads/department-update/${values.id}`, values)).data
+export const updateTeacher = createAsyncThunk(
+  'mentors/createTeacher',
+  async ({ data, id }: any, { rejectWithValue }) => {
+    try {
+      const response = await api.patch(`auth/update/employee/${id}`, data);
+      return response.data;
+    } catch (err: any) {
+      if (err.response) {
+        return rejectWithValue(err.response.data);
+      }
+      return rejectWithValue(err.message);
+    }
   }
-)
+);
 
-// ** Create Department Item
-export const createDepartmentItem = createAsyncThunk(
-  'appChat/createDepartmentItem',
-  async (values: CreatesDepartmentState) => {
-    return (await api.post(`leads/department/create/`, values)).data
+export const deleteTeacher = createAsyncThunk(
+  'mentors/deleteTeacher',
+  async (id: number | any) => {
+    return (await api.delete(`auth/delete/employee/${id}`)).data
   }
-)
+);
 
-// ** Create Department User
-export const createDepartmentStudent = createAsyncThunk(
-  'appChat/createDepartmentStudent',
-  async (values: CreatesDepartmentState) => {
-    return (await api.post(`leads/department-user-create/`, values)).data
-  }
-)
+
+
 
 const initialState: IMentorsState = {
-  openEdit: false
+  openEdit: null,
+  teachers: [],
+  teachersCount: 0,
+  teacherData: null,
+  isLoading: false
 }
 
 export const mentorsSlice = createSlice({
@@ -68,11 +72,33 @@ export const mentorsSlice = createSlice({
   reducers: {
     setOpenEdit: (state, action) => {
       state.openEdit = action.payload
+    },
+    setTeacherData: (state, action) => {
+      state.teacherData = action.payload
     }
   },
-  extraReducers: builder => {}
+  extraReducers: builder => {
+    builder
+      .addCase(fetchTeachersList.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(fetchTeachersList.fulfilled, (state, action) => {
+        state.teachers = action.payload.results
+        state.teachersCount = Math.ceil(action.payload.count / 10)
+        state.isLoading = false
+      })
+      .addCase(fetchTeachersList.rejected, (state) => {
+        state.isLoading = false
+      })
+      .addCase(createTeacher.fulfilled, (state) => {
+        state.openEdit = null
+      })
+      .addCase(fetchTeacherdetail.fulfilled, (state, action) => {
+        state.teacherData = action.payload
+      })
+  }
 })
 
-export const { setOpenEdit } = mentorsSlice.actions
+export const { setOpenEdit, setTeacherData } = mentorsSlice.actions
 
 export default mentorsSlice.reducer
