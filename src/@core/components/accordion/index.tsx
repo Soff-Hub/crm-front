@@ -162,6 +162,9 @@ export default function AccordionCustom({ onView, item }: AccordionProps) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [open])
 
+    console.log(queryParams);
+
+
     useEffect(() => {
         if (open) {
             handleGetLeads(false)
@@ -216,7 +219,7 @@ export default function AccordionCustom({ onView, item }: AccordionProps) {
                 PaperProps={{ style: { minWidth: '8rem' } }}
             >
                 {
-                    !queryParams.is_active ? (
+                    queryParams.is_active ? (
                         <Box>
                             <MenuItem onClick={() => (getSMSTemps(), setOpenDialog('sms'))} sx={{ '& svg': { mr: 2 } }}>
                                 <IconifyIcon icon='mdi:sms' fontSize={20} />
