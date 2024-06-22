@@ -12,17 +12,19 @@ import DialogActions from '@mui/material/DialogActions'
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
 import { useTranslation } from 'react-i18next'
+import LoadingButton from '@mui/lab/LoadingButton'
 
 type Props = {
   open: boolean
   setOpen: (val: boolean) => void
   handleOk?: () => any,
-  okText?: string | undefined
+  okText?: string | undefined,
+  loading?: boolean
 }
 
 const UserSuspendDialog = (props: Props) => {
   // ** Props
-  const { open, setOpen, handleOk, okText } = props
+  const { open, setOpen, handleOk, okText, loading } = props
   const { t } = useTranslation()
 
   // ** States
@@ -74,14 +76,15 @@ const UserSuspendDialog = (props: Props) => {
           </Box>
         </DialogContent>
         <DialogActions sx={{ justifyContent: 'center' }}>
-          <Button
+          <LoadingButton
+            loading={loading}
             variant='contained'
             style={{ marginTop: '30px' }}
             color='error'
             onClick={() => handleConfirmation('yes')}
           >
             {okText ? okText : t("O'chirish")}
-          </Button>
+          </LoadingButton>
           <Button
             variant='outlined'
             style={{ marginTop: '30px' }}
