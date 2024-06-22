@@ -162,8 +162,6 @@ export default function AccordionCustom({ onView, item }: AccordionProps) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [open])
 
-    console.log(queryParams);
-
 
     useEffect(() => {
         if (open) {
