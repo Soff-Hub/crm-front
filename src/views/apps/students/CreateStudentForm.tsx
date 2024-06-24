@@ -1,0 +1,206 @@
+import React, { useEffect, useState } from 'react'
+
+// ** Components
+import { Box, Button, FormControl, FormControlLabel, FormHelperText, FormLabel, InputLabel, MenuItem, OutlinedInput, Radio, RadioGroup, Select, TextField } from '@mui/material';
+import IconifyIcon from 'src/@core/components/icon';
+import LoadingButton from '@mui/lab/LoadingButton';
+
+// ** Assets
+import { useTranslation } from 'react-i18next';
+import { today } from 'src/@core/components/card-statistics/kanban-item';
+
+// ** Packs
+import * as Yup from "yup";
+import { useFormik } from 'formik';
+import { CreateStudentDto } from 'src/types/apps/studentsTypes';
+import { createStudent, fetchStudentsList, setOpenEdit } from 'src/store/apps/students';
+import { useAppDispatch } from 'src/store';
+import useGroups from 'src/hooks/useGroups';
+import useResponsive from 'src/@core/hooks/useResponsive';
+
+
+export default function CreateStudentForm() {
+
+    // ** Hooks
+    const { t } = useTranslation()
+    const error: any = {}
+    const dispatch = useAppDispatch()
+    const { groups, getGroups } = useGroups()
+    const { isMobile } = useResponsive()
+
+    // ** States
+    const [isGroup, setIsGroup] = useState<boolean>(false)
+    const [isPassword, setIsPassword] = useState<boolean>(false)
+    const [loading, setLoading] = useState<boolean>(false)
+
+
+    const validationSchema = Yup.object({
+        first_name: Yup.string().required("Ismingizni kiriting"),
+        phone: Yup.string().required("Telefon raqam kiriting"),
+        birth_date: Yup.string(),
+        gender: Yup.string().required("Jinsini tanlang"),
+        password: Yup.string(),
+    });
+
+    const initialValues: CreateStudentDto = {
+        first_name: "",
+        phone: "",
+        birth_date: today,
+        gender: 'male',
+        start_at: today
+    }
+
+    const formik = useFormik({
+        initialValues,
+        validationSchema,
+        onSubmit: async (valuess: CreateStudentDto) => {
+            setLoading(true)
+            const newVlaues = { ...valuess, phone: `+998${valuess.phone}`, group: [values.group] }
+
+            const resp = await dispatch(createStudent(newVlaues))
+
+            if (resp.meta.requestStatus === 'rejected') {
+                formik.setErrors(resp.payload)
+            } else {
+                await dispatch(fetchStudentsList())
+                dispatch(setOpenEdit(null))
+                formik.resetForm()
+                setIsGroup(false)
+            }
+            setLoading(false)
+        }
+    });
+
+    const { values, errors, touched, handleBlur, handleChange } = formik
+
+
+    useEffect(() => {
+
+        return () => {
+            formik.resetForm()
+        }
+    }, [])
+
+    return (
+        <form onSubmit={formik.handleSubmit} style={{ display: 'flex', flexDirection: 'column', width: '100%', alignItems: 'baseline', padding: '20px 10px', gap: '10px', minWidth: isMobile ? '330px' : '400px' }}>
+            <FormControl sx={{ width: '100%' }}>
+                <TextField
+                    size='small'
+                    label={t("first_name")}
+                    name='first_name'
+                    error={!!errors.first_name && touched.first_name}
+                    value={values.first_name}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                />
+                {errors.first_name && touched.first_name && <FormHelperText error={true}>{errors.first_name}</FormHelperText>}
+            </FormControl>
+
+            <FormControl sx={{ width: '100%' }}>
+                <InputLabel error={!!errors.phone && touched.phone} htmlFor="outlined-adornment-password">{t('phone')}</InputLabel>
+                <OutlinedInput
+                    id='outlined-adornment-password'
+                    size='small'
+                    label={t("phone")}
+                    name='phone'
+                    error={!!errors.phone && touched.phone}
+                    value={values.phone}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    startAdornment="+998"
+                    type='number'
+                />
+                {errors.phone && touched.phone && <FormHelperText error={true}>{errors.phone}</FormHelperText>}
+            </FormControl>
+
+            <FormControl sx={{ width: '100%' }}>
+                <TextField
+                    size='small'
+                    label={t("birth_date")}
+                    name='birth_date'
+                    type='date'
+                    error={!!errors.birth_date && touched.birth_date}
+                    value={values.birth_date}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                />
+                <FormHelperText error={true}>{errors.birth_date}</FormHelperText>
+            </FormControl>
+
+            <FormControl sx={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 1 }}>
+                <FormLabel>{t('Jinsni tanlang')}</FormLabel>
+                <RadioGroup
+                    aria-labelledby="demo-controlled-radio-buttons-group"
+                    name="gender"
+                    value={values.gender}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                >
+                    <Box sx={{ display: "flex", gap: '20px' }}>
+                        <FormControlLabel value="male" control={<Radio />} label={t("Erkak")} />
+                        <FormControlLabel value="female" control={<Radio />} label={t("Ayol")} />
+                    </Box>
+                </RadioGroup>
+            </FormControl>
+
+            {
+                isGroup ? (
+                    <FormControl fullWidth>
+                        <InputLabel size='small' id='user-view-language-label'>{t('Guruhlar')}</InputLabel>
+                        <Select
+                            size='small'
+                            error={!!errors.group && touched.group}
+                            label={t('Guruhlar')}
+                            id='user-view-language'
+                            labelId='user-view-language-label'
+                            name='group'
+                            onChange={handleChange}
+                            value={values.group || ''}
+                            sx={{ mb: 3 }}
+                        >
+                            {
+                                groups.map(group => <MenuItem key={group.id} value={Number(group.id)}>{group.name}</MenuItem>)
+                            }
+                        </Select>
+                        {errors.group && <FormHelperText error={!!errors.group}>{errors.group}</FormHelperText>}
+
+                        <TextField
+                            size='small'
+                            label={t("Qo'shilish sanasi")}
+                            name='start_at'
+                            type='date'
+                            error={!!errors.start_at && touched.start_at}
+                            value={values.start_at}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                        />
+                        <FormHelperText error={true}>{errors.start_at}</FormHelperText>
+                    </FormControl>
+                ) : ''
+            }
+
+            {
+                isPassword ? (
+                    <FormControl sx={{ width: '100%' }}>
+                        <TextField
+                            size='small'
+                            label={t("password")}
+                            name='password'
+                            error={!!errors.password && touched.password}
+                            value={values.password}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                        />
+                        <FormHelperText error={true}>{errors.password}</FormHelperText>
+                    </FormControl>
+                ) : ''
+            }
+
+            <LoadingButton loading={loading} variant='contained' type='submit' fullWidth>{t('Saqlash')}</LoadingButton>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+                {!isGroup && <Button onClick={async () => (setIsGroup(true), await getGroups())} type='button' variant='outlined' size='small' startIcon={<IconifyIcon icon={'material-symbols:add'} />}>{t("Guruhga qo'shish")}</Button>}
+                {!isPassword && <Button onClick={() => setIsPassword(true)} type='button' variant='outlined' size='small' color='warning' startIcon={<IconifyIcon icon={'lucide:key-round'} />}>{t("Parol qo'shish")}</Button>}
+            </Box>
+        </form>
+    )
+}

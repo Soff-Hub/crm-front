@@ -7,11 +7,10 @@ import useBranches from 'src/hooks/useBranch'
 import LoadingButton from '@mui/lab/LoadingButton'
 import api from 'src/@core/utils/api'
 import { setCompanyInfo } from 'src/store/apps/user'
-import { useAppSelector } from 'react-redux'
 import { styled } from '@mui/material/styles'
 import { useTranslation } from 'react-i18next'
 import showResponseError from 'src/@core/utils/show-response-error'
-import { useAppDispatch } from 'src/store'
+import { useAppDispatch, useAppSelector } from 'src/store'
 
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',

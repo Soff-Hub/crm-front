@@ -17,6 +17,8 @@ import { useTranslation } from 'react-i18next'
 import { useAppDispatch, useAppSelector } from 'src/store'
 import { RootState } from 'src/store'
 import { fetchDepartmentList } from 'src/store/apps/leads'
+import DepartmentSendSmsForm from 'src/views/apps/lids/departmentItem/DepartmentSendSmsForm'
+import EditDepartmentItemForm from 'src/views/apps/lids/departmentItem/EditDepartmentItemForm'
 
 interface AccordionProps {
     title?: string
@@ -39,15 +41,12 @@ export default function AccordionCustom({ onView, item }: AccordionProps) {
     const [openDialog, setOpenDialog] = useState<'sms' | 'edit' | 'delete' | 'recover' | null>(null)
     const [error, setError] = useState<any>({})
     const [count, setCount] = useState<any>(item.student_count)
-    const [name, setName] = useState<any>(item.name)
     const { t } = useTranslation()
     const { departmentsState } = useAppSelector((state) => state.user)
     const { queryParams } = useAppSelector((state) => state.leads)
 
 
-    const [sms, setSMS] = useState<any>("")
     const { smsTemps, getSMSTemps } = useSMS()
-    const { query } = useRouter()
     const dispatch = useAppDispatch()
 
     const handleClick = (event: any) => {
@@ -97,38 +96,6 @@ export default function AccordionCustom({ onView, item }: AccordionProps) {
         }
     }
 
-    const editDepartmentItem = async (values: any) => {
-        setLoading(true)
-        try {
-            await api.patch(`leads/department-update/${item.id}`, values)
-            setName(values.name)
-            setLoading(false)
-            setOpenDialog(null)
-        } catch {
-            setLoading(false)
-        }
-    }
-
-
-    const smsDepartmentItem = async (values: any) => {
-        setLoading(true)
-        try {
-            await api.post(`common/send-message-user/`, {
-                users: leadData.map(el => Number(el.id)),
-                message: values.message,
-                for_lead: true
-            })
-            toast.success(`${t("SMS muvaffaqiyatli jo'natildi!")}`, {
-                position: 'top-center'
-            })
-            setAnchorEl(null)
-            setLoading(false)
-            setOpenDialog(null)
-        } catch {
-            setLoading(false)
-        }
-    }
-
 
     const deleteDepartmentItem = async () => {
         setLoading(true)
@@ -159,7 +126,6 @@ export default function AccordionCustom({ onView, item }: AccordionProps) {
 
     useEffect(() => {
         if (open) onView();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [open])
 
 
@@ -168,13 +134,12 @@ export default function AccordionCustom({ onView, item }: AccordionProps) {
             handleGetLeads(false)
         }
         setCount(item.student_count)
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [item.student_count])
 
     return (
         <Card sx={{ width: '100%', boxShadow: 'rgba(148, 163, 184, 0.7) 0px 3px 12px' }}>
             <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', padding: '10px' }}>
-                <Typography fontSize={16}>{name}</Typography>
+                <Typography fontSize={16}>{item.name}</Typography>
                 <Typography fontSize={16} fontWeight={'700'} sx={{ marginLeft: 'auto', marginRight: 2 }}>{count}</Typography>
                 <IconifyIcon
                     style={{ cursor: 'pointer', transform: open ? 'rotateZ(180deg)' : '' }}
@@ -219,11 +184,11 @@ export default function AccordionCustom({ onView, item }: AccordionProps) {
                 {
                     queryParams.is_active ? (
                         <Box>
-                            <MenuItem onClick={() => (getSMSTemps(), setOpenDialog('sms'))} sx={{ '& svg': { mr: 2 } }}>
+                            <MenuItem onClick={() => (getSMSTemps(), setOpenDialog('sms'), setAnchorEl(null))} sx={{ '& svg': { mr: 2 } }}>
                                 <IconifyIcon icon='mdi:sms' fontSize={20} />
                                 {t("SMS yuborish")}
                             </MenuItem>
-                            <MenuItem onClick={() => setOpenDialog('edit')} sx={{ '& svg': { mr: 2 } }}>
+                            <MenuItem onClick={() => (setOpenDialog('edit'), setAnchorEl(null))} sx={{ '& svg': { mr: 2 } }}>
                                 <IconifyIcon icon='mdi:edit' fontSize={20} />
                                 {t("Tahrirlash")}
                             </MenuItem>
@@ -248,17 +213,13 @@ export default function AccordionCustom({ onView, item }: AccordionProps) {
                     <IconifyIcon onClick={() => setOpenDialog(null)} icon={'material-symbols:close'} />
                 </DialogTitle>
                 <DialogContent sx={{ minWidth: '300px' }}>
-                    <Form setError={setError} valueTypes='json' onSubmit={editDepartmentItem} id='dmowei' sx={{ paddingTop: '5px', display: 'flex', flexDirection: 'column', gap: '15px' }}>
-                        <FormControl fullWidth>
-                            <TextField label={t("Bo'lim nomi")} size='small' defaultValue={item.name} name='name' />
-                        </FormControl>
-                        {/* 
-                        <FormControl fullWidth>
-                            <TextField label={t("Bo'lim tartibi")} size='small' name='order' />
-                        </FormControl> */}
-
-                        <LoadingButton loading={loading} type='submit' variant='outlined'>{t("Saqlash")}</LoadingButton>
-                    </Form>
+                    <EditDepartmentItemForm
+                        id={item.id}
+                        setLoading={setLoading}
+                        setOpenDialog={setOpenDialog}
+                        loading={loading}
+                        defaultName={item.name}
+                    />
                 </DialogContent>
             </Dialog>
 
@@ -270,47 +231,13 @@ export default function AccordionCustom({ onView, item }: AccordionProps) {
                 </DialogTitle>
 
                 <DialogContent sx={{ minWidth: '300px' }}>
-                    <Form setError={setError} valueTypes='json' onSubmit={smsDepartmentItem} id='dmowei' sx={{ paddingTop: '5px', display: 'flex', flexDirection: 'column', gap: '15px' }}>
-                        <FormControl>
-                            <InputLabel size='small' id='demo-simple-select-outlined-label'>{t("Shablonlar")}</InputLabel>
-                            <Select
-                                size='small'
-                                label="Shablonlar"
-                                defaultValue=''
-                                id='demo-simple-select-outlined'
-                                labelId='demo-simple-select-outlined-label'
-                                onChange={(e) => setSMS(e.target.value)}
-                            >
-                                {
-                                    smsTemps.map((el: any) => (
-                                        <MenuItem value={el.description} sx={{ wordBreak: 'break-word' }}>
-                                            <span style={{ maxWidth: '250px', wordBreak: 'break-word', fontSize: '10px' }}>
-                                                {el.description}
-                                            </span>
-                                        </MenuItem>
-                                    ))
-                                }
-                            </Select>
-                        </FormControl>
-
-                        <FormControl fullWidth>
-                            {sms ? <TextField
-                                label={t("SMS matni")}
-                                multiline rows={4}
-                                size='small'
-                                name='message'
-                                defaultValue={sms}
-                                onChange={(e) => setSMS(null)}
-                            /> : <TextField
-                                label={t("SMS matni")}
-                                multiline rows={4}
-                                size='small'
-                                name='message'
-                            />}
-                        </FormControl>
-
-                        <LoadingButton loading={loading} type='submit' variant='outlined'>{t("Saqlash")}</LoadingButton>
-                    </Form>
+                    <DepartmentSendSmsForm
+                        smsTemps={smsTemps}
+                        setLoading={setLoading}
+                        loading={loading}
+                        users={leadData.map(el => Number(el.id))}
+                        setOpenDialog={setOpenDialog}
+                    />
                 </DialogContent>
             </Dialog>
 

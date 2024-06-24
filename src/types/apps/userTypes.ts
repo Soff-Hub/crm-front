@@ -26,3 +26,5 @@ export type ProjectListDataType = {
   progressValue: number
   progressColor: ThemeColor
 }
+
+export type genderTypes = "male" | "female"
