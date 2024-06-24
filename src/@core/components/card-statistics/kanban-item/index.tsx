@@ -6,22 +6,6 @@ import MuiMenu, { MenuProps } from '@mui/material/Menu'
 
 import { Box, Checkbox, Dialog, DialogContent, DialogTitle, FormControl, FormHelperText, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material'
 
-const Menu = styled(MuiMenu)<MenuProps>(({ theme }) => ({
-    '& .MuiMenu-paper': {
-        border: `1px solid${theme.palette.divider}`
-    }
-}))
-
-// Styled MenuItem component
-// const MenuItem = styled(MuiMenuItem)<MenuItemProps>(({ theme }) => ({
-//     '&:focus': {
-//         backgroundColor: theme.palette.primary.main,
-//         '& .MuiListItemIcon-root, & .MuiListItemText-primary': {
-//             color: theme.palette.common.white
-//         }
-//     }
-// }))
-
 import Card from '@mui/material/Card'
 import { AvatarProps } from '@mui/material/Avatar'
 import CardContent from '@mui/material/CardContent'
@@ -43,11 +27,16 @@ import toast from 'react-hot-toast'
 import { addOpenedUser } from 'src/store/apps/user'
 import Status from '../../status'
 import useSMS from 'src/hooks/useSMS'
-import { useRouter } from 'next/router'
 import useBranches from 'src/hooks/useBranch'
 import useGroups from 'src/hooks/useGroups'
 import { formatDateTime } from 'src/@core/utils/date-formatter'
 import { useAppDispatch, useAppSelector } from 'src/store'
+import KanbanItemMenu from './KanbanItemMenu'
+import EditAnonimDialogDialog from 'src/views/apps/lids/anonimUser/EditAnonimUserDialog'
+import AddToGroupForm from 'src/views/apps/lids/anonimUser/AddToGroupForm'
+import MergeToDepartment from 'src/views/apps/lids/anonimUser/MergeForm'
+import SendSmsAnonimUserForm from 'src/views/apps/lids/anonimUser/SendSmsAnonimUserForm'
+import AddNoteAnonimUser from 'src/views/apps/lids/anonimUser/AddNoteAnonimUser'
 
 // ** Styled Avatar component
 const Avatar = styled(CustomAvatar)<AvatarProps>(({ theme }) => ({
@@ -76,9 +65,7 @@ const KanbanItem = (props: KanbarItemProps) => {
 
     const { total } = useAppSelector((state) => state.user)
     const { queryParams } = useAppSelector((state) => state.leads)
-    const [sms, setSMS] = useState<any>("")
     const { smsTemps, getSMSTemps } = useSMS()
-    const { query } = useRouter()
     const { branches, getBranches } = useBranches()
     const { getGroups, groups } = useGroups()
 
@@ -94,20 +81,6 @@ const KanbanItem = (props: KanbarItemProps) => {
         setAnchorEl(event.currentTarget)
     }
 
-    const { data: leadData } = useAppSelector((state: any) => state.user)
-
-    const handleSubmit = async (values: any) => {
-        setLoading(true)
-        try {
-            await handleEditLead(id, { first_name: title, phone, ...values })
-            setLoading(false)
-            setDepartment(null)
-            setOpen(null)
-        } catch (err: any) {
-            setLoading(false)
-            showResponseError(err.response.data, setError)
-        }
-    }
 
     const changeBranch = async (values: any) => {
         setLoading(true)
@@ -122,24 +95,6 @@ const KanbanItem = (props: KanbarItemProps) => {
         }
     }
 
-    const smsDepartmentItem = async (values: any) => {
-        setLoading(true)
-        try {
-            await api.post(`common/send-message-user/`, {
-                users: [id],
-                message: values.message,
-                for_lead: true
-            })
-            toast.success(`${t("SMS muvaffaqiyatli jo'natildi!")}`, {
-                position: 'top-center'
-            })
-            setOpen(null)
-            setAnchorEl(null)
-            setLoading(false)
-        } catch {
-            setLoading(false)
-        }
-    }
 
     const getDepartmentItem = async (endpoint: 'lead-user-description' | 'anonim-user' | 'sms-history') => {
         setLoading(true)
@@ -188,12 +143,6 @@ const KanbanItem = (props: KanbarItemProps) => {
         }
     }
 
-    const rowOptionsOpen = Boolean(anchorEl)
-
-    const handleRowOptionsClose = () => {
-        setAnchorEl(null)
-    }
-
     const clickStudent = async () => {
         if (id === total) {
             dispatch(addOpenedUser(null))
@@ -231,24 +180,6 @@ const KanbanItem = (props: KanbarItemProps) => {
         }
     }
 
-    const addToGroup = async (values: any) => {
-        setLoading(true)
-        try {
-            const resp = await api.post(`leads/lead-to-student/`, {
-                lead: id,
-                ...values
-            })
-            toast.success(`${resp.data?.msg}`)
-            setLoading(false)
-            setDepartment(null)
-            reRender(false)
-            setOpen(null)
-        } catch (err: any) {
-            setLoading(false)
-            toast.error(JSON.stringify(err.response.data), { position: 'bottom-center' })
-            showResponseError(err.response.data, setError)
-        }
-    }
 
     const getLeadData = async () => {
         const resp = await api.get(`leads/department/list/`, { params: { ...queryParams, is_active: true } })
@@ -257,6 +188,13 @@ const KanbanItem = (props: KanbarItemProps) => {
 
     useEffect(() => {
         getLeadData()
+        if (activeTab === 'tab-1') {
+            getDepartmentItem('anonim-user')
+        } else if (activeTab === 'tab-2') {
+            getDepartmentItem('lead-user-description')
+        } else {
+            getDepartmentItem('sms-history')
+        }
     }, [])
 
 
@@ -338,61 +276,17 @@ const KanbanItem = (props: KanbarItemProps) => {
                 }
             </CardContent>
 
-            <Menu
-                keepMounted
+            <KanbanItemMenu
                 anchorEl={anchorEl}
-                open={rowOptionsOpen}
-                onClose={handleRowOptionsClose}
-                anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'right'
-                }}
-                transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right'
-                }}
-                PaperProps={{ style: { minWidth: '8rem' } }}
-            >
-                {
-                    queryParams.is_active ? (
-                        <Box>
-                            <MenuItem onClick={() => setOpen('note')} sx={{ '& svg': { mr: 2 } }}>
-                                <IconifyIcon icon='ph:flag-light' fontSize={20} />
-                                {t("Yangi eslatma")}
-                            </MenuItem>
-                            <MenuItem onClick={() => (getSMSTemps(), setOpen('sms'))} sx={{ '& svg': { mr: 2 } }}>
-                                <IconifyIcon icon='mdi:sms' fontSize={20} />
-                                {t("SMS yuborish")}
-                            </MenuItem>
-                            <MenuItem onClick={() => (getBranches(), setOpen('branch'))} sx={{ '& svg': { mr: 2 } }}>
-                                <IconifyIcon icon='system-uicons:branch' fontSize={20} />
-                                {t("Boshqa Filialga")}
-                            </MenuItem>
-                            <MenuItem onClick={() => setOpen('merge-to')} sx={{ '& svg': { mr: 2 } }}>
-                                <IconifyIcon icon='subway:round-arrow-2' fontSize={17} />
-                                {t("Boshqa bo'limga")}
-                            </MenuItem>
-                            <MenuItem onClick={() => (getGroups(), setOpen('add-group'))} sx={{ '& svg': { mr: 2 } }}>
-                                <IconifyIcon icon='material-symbols:group-add' fontSize={17} />
-                                {t("Guruhga qo'shish")}
-                            </MenuItem>
-                            <MenuItem onClick={() => setOpen('edit')} sx={{ '& svg': { mr: 2 } }}>
-                                <IconifyIcon icon='mdi:edit' fontSize={20} />
-                                {t("Tahrirlash")}
-                            </MenuItem>
-                            <MenuItem onClick={() => setOpen('delete')} sx={{ '& svg': { mr: 2 } }}>
-                                <IconifyIcon icon='mdi:delete' fontSize={20} />
-                                {t("O'chirish")}
-                            </MenuItem>
-                        </Box>
-                    ) : (
-                        <MenuItem onClick={() => setOpen('recover')} sx={{ '& svg': { mr: 2 } }}>
-                            <IconifyIcon icon='mdi:reload' fontSize={20} />
-                            {t("Tiklash")}
-                        </MenuItem>
-                    )
-                }
-            </Menu>
+                setAnchorEl={setAnchorEl}
+                getSMSTemps={getSMSTemps}
+                getGroups={getGroups}
+                getBranches={getBranches}
+                setOpen={setOpen}
+            />
+
+            <EditAnonimDialogDialog open={open} setOpen={setOpen} item={props} reRender={() => reRender(false)} />
+
 
             <Dialog open={open === 'add-group'} onClose={() => setOpen(null)}>
                 <DialogTitle sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -400,45 +294,7 @@ const KanbanItem = (props: KanbarItemProps) => {
                     <IconifyIcon icon={'material-symbols:close'} onClick={() => setOpen(null)} />
                 </DialogTitle>
                 <DialogContent>
-                    <Form id='xsddnerernererera' sx={{ minWidth: '280px', maxWidth: '350px', width: '100%', display: 'flex', flexDirection: 'column', gap: '15px', marginTop: '5px' }} setError={setError} onSubmit={addToGroup} valueTypes='json'>
-                        <FormControl fullWidth>
-                            <InputLabel size='small'>{t("Guruh")}</InputLabel>
-                            <Select size='small' label={t("Guruh")} error={error?.group?.error} name='group' defaultValue={''} >
-                                {
-                                    groups.map((el: any) => <MenuItem key={el.id} value={el.id}>{el.name}</MenuItem>)
-                                }
-                            </Select>
-                            <FormHelperText error={error?.group?.error}>{error?.group?.message}</FormHelperText>
-                        </FormControl>
-
-                        <FormControl fullWidth>
-                            <TextField size='small' type='date' name='added_at' label={t("Qo'shilish sanasi")} defaultValue={today} />
-                            <FormHelperText error={error?.added_at?.error}>{error?.added_at?.message}</FormHelperText>
-                        </FormControl>
-
-                        <LoadingButton variant='contained' type={'submit'} loading={loading}>{t("Saqlash")}</LoadingButton>
-                    </Form>
-                </DialogContent>
-            </Dialog>
-
-            <Dialog open={open === 'edit'} onClose={() => setOpen(null)}>
-                <DialogTitle sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <Typography>{t("Lidni tahrirlash")}</Typography>
-                    <IconifyIcon icon={'material-symbols:close'} onClick={() => setOpen(null)} />
-                </DialogTitle>
-                <DialogContent>
-                    <Form id='ddsddsdsdsd' sx={{ minWidth: '280px', maxWidth: '350px', width: '100%', display: 'flex', flexDirection: 'column', gap: '20px', marginTop: '5px' }} setError={setError} onSubmit={handleSubmit} valueTypes='json'>
-                        <FormControl fullWidth>
-                            <TextField label={t('first_name')} defaultValue={title} error={error?.first_name?.error} name='first_name' />
-                            <FormHelperText error={error?.first_name?.error}>{error?.first_name?.message}</FormHelperText>
-                        </FormControl>
-                        <FormControl fullWidth>
-                            <TextField label={t('phone')} defaultValue={phone} error={error?.phone?.error} name='phone' />
-                            <FormHelperText error={error?.phone?.error}>{error?.phone?.message}</FormHelperText>
-                        </FormControl>
-
-                        <LoadingButton variant='contained' type={'submit'} loading={loading}>{t("Saqlash")}</LoadingButton>
-                    </Form>
+                    <AddToGroupForm item={props} reRender={() => reRender(false)} groups={groups} loading={loading} setLoading={setLoading} />
                 </DialogContent>
             </Dialog>
 
@@ -449,29 +305,7 @@ const KanbanItem = (props: KanbarItemProps) => {
                     <IconifyIcon icon={'material-symbols:close'} onClick={() => setOpen(null)} />
                 </DialogTitle>
                 <DialogContent>
-                    <Form id='ddsdwqdwqd' sx={{ minWidth: '280px', maxWidth: '350px', width: '100%', display: 'flex', flexDirection: 'column', gap: '15px', marginTop: '5px' }} setError={setError} onSubmit={handleSubmit} valueTypes='json'>
-                        <FormControl fullWidth>
-                            <InputLabel>{t("Bo'lim")}</InputLabel>
-                            <Select label={t("Bo'lim")} error={error?.department?.error} name='department' defaultValue={''} onChange={(e) => setDepartment(e.target.value)} >
-                                {
-                                    leadData.map((el: any) => <MenuItem key={el.id} value={el.id}>{el.name}</MenuItem>)
-                                }
-                            </Select>
-                            <FormHelperText error={error?.department?.error}>{error?.department?.message}</FormHelperText>
-                        </FormControl>
-
-                        {department && <FormControl fullWidth>
-                            <InputLabel>{t("Bo'lim")}</InputLabel>
-                            <Select label={t("Bo'lim")} error={error?.department?.error} name='department' defaultValue={''}>
-                                {
-                                    leadData.find((item: any) => item.id === department).children.map((el: any) => <MenuItem key={el.id} value={el.id}>{el.name}</MenuItem>)
-                                }
-                            </Select>
-                            <FormHelperText error={error?.department?.error}>{error?.department?.message}</FormHelperText>
-                        </FormControl>}
-
-                        <LoadingButton variant='contained' type={'submit'} loading={loading}>{t("Saqlash")}</LoadingButton>
-                    </Form>
+                    <MergeToDepartment item={props} reRender={() => reRender(false)} />
                 </DialogContent>
             </Dialog>
 
@@ -531,48 +365,7 @@ const KanbanItem = (props: KanbarItemProps) => {
                 </DialogTitle>
 
                 <DialogContent sx={{ minWidth: '300px' }}>
-                    <Form setError={setError} valueTypes='json' onSubmit={smsDepartmentItem} id='dxdasmowei' sx={{ paddingTop: '5px', display: 'flex', flexDirection: 'column', gap: '15px' }}>
-                        <FormControl>
-                            <InputLabel size='small' id='demo-simple-select-outlined-label'>{t("Shablonlar")}</InputLabel>
-                            <Select
-                                size='small'
-                                label={t("Shablonlar")}
-                                defaultValue=''
-                                id='demo-simple-select-outlined'
-                                labelId='demo-simple-select-outlined-label'
-                                onChange={(e) => setSMS(e.target.value)}
-                            >
-                                {
-                                    smsTemps.map((el: any) => (
-                                        <MenuItem value={el.description} sx={{ wordBreak: 'break-word' }}>
-                                            <span style={{ maxWidth: '250px', wordBreak: 'break-word', fontSize: '10px' }}>
-                                                {el.description}
-                                            </span>
-                                        </MenuItem>
-                                    ))
-                                }
-                            </Select>
-                        </FormControl>
-
-
-                        <FormControl fullWidth>
-                            {sms ? <TextField
-                                label={t("SMS matni")}
-                                multiline rows={4}
-                                size='small'
-                                name='message'
-                                defaultValue={sms}
-                                onChange={(e) => setSMS(null)}
-                            /> : <TextField
-                                label={t("SMS matni")}
-                                multiline rows={4}
-                                size='small'
-                                name='message'
-                            />}
-                        </FormControl>
-
-                        <LoadingButton loading={loading} type='submit' variant='outlined'>{t("Saqlash")}</LoadingButton>
-                    </Form>
+                    <SendSmsAnonimUserForm smsTemps={smsTemps} user={props.id} closeModal={() => setOpen(null)} />
                 </DialogContent>
             </Dialog>
 
@@ -583,13 +376,7 @@ const KanbanItem = (props: KanbarItemProps) => {
                     <IconifyIcon onClick={() => setOpen(null)} icon={'material-symbols:close'} />
                 </DialogTitle>
                 <DialogContent sx={{ minWidth: '300px' }}>
-                    <Form setError={setError} valueTypes='json' onSubmit={noteDepartmentItem} id='rwerwf' sx={{ paddingTop: '5px', display: 'flex', flexDirection: 'column', gap: '15px' }}>
-                        <FormControl fullWidth>
-                            <TextField label={t("Eslatma")} multiline rows={4} size='small' name='body' />
-                        </FormControl>
-
-                        <LoadingButton loading={loading} type='submit' variant='outlined'>{t("Saqlash")}</LoadingButton>
-                    </Form>
+                    <AddNoteAnonimUser user={props.id} closeModal={async () => (setOpen(null), await getDepartmentItem('lead-user-description'))} />
                 </DialogContent>
             </Dialog>
 

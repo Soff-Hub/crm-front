@@ -13,6 +13,7 @@ import dashboard from 'src/store/apps/dashboard'
 import leads from 'src/store/apps/leads'
 import groups from 'src/store/apps/groups'
 import mentors from 'src/store/apps/mentors'
+import students from 'src/store/apps/students'
 
 export const store = configureStore({
   reducer: {
@@ -25,7 +26,8 @@ export const store = configureStore({
     dashboard,
     leads,
     groups,
-    mentors
+    mentors,
+    students
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({

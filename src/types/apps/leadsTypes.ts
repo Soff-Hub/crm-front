@@ -47,4 +47,5 @@ export interface CreateDepartmentUser {
 
 export interface CreatesDepartmentState {
     name: string
+    order?: number
 }
