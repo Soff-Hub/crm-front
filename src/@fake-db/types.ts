@@ -202,7 +202,6 @@ export interface CouseType {
   start_at: any
 }
 
-
 export interface GroupTypeFromList {
   id: number
   name: string
@@ -230,9 +229,10 @@ export interface GroupType {
   teacher: TeacherType
   monthly_amount: string
   teacher_data: {
-    id: any,
+    id: any
     first_name: string
   }
+  room_id?: number
   room_data: {
     id: string | number
     name: string
@@ -248,5 +248,6 @@ export interface GroupType {
   start_at: any
   end_at: any
   student_count: number
-  day_of_week: string[]
+  week_days?: string[]
+  day_of_week?: string[]
 }

@@ -9,13 +9,8 @@ import { CreateDepartmentUser, CreatesDepartmentState, ILeadsState, LeadsQueryPa
 // ** Fetch All Departments
 export const fetchDepartmentList = createAsyncThunk('appChat/fetchDepartmentList', async (params?: LeadsQueryParamsTypes | undefined) => {
     const resp = await api.get(`leads/department/list/?`, { params })
-    console.log(resp.data);
-    console.log(params);
-
 
     if (params && params?.search !== "") {
-        console.log(...resp.data.map((el: any) => el?.children.filter((item: any) => item?.student_count > 0)));
-        
         return resp.data
     } else {
         return resp.data
@@ -42,20 +37,31 @@ export const createDepartmentItem = createAsyncThunk('appChat/createDepartmentIt
     return (await api.post(`leads/department/create/`, values)).data
 })
 
-// ** Create Department User
-export const createDepartmentStudent = createAsyncThunk('appChat/createDepartmentStudent', async (values: CreatesDepartmentState) => {
-    return (await api.post(`leads/department-user-create/`, values)).data
+
+export const createDepartmentStudent = createAsyncThunk('appChat/createDepartmentStudent', async (data: any, { rejectWithValue }) => {
+    try {
+        const response = await api.post(`leads/department-user-create/`, data);
+        return response.data;
+    } catch (err: any) {
+        if (err.response) {
+            return rejectWithValue(err.response.data);
+        }
+        return rejectWithValue(err.message);
+    }
 })
 
-// ** Create Department User
-// export const getDepartmentStudent = createAsyncThunk('appChat/getDepartmentStudent', async (values: { parent: number, params: LeadsQueryParamsTypes }) => {
-//     return (await api.get(`leads/department-user-list/${values.parent}/`, { params: values?.params })).data
-// })
 
-// ** Create Department User
-// export const editDepartmentStudent = createAsyncThunk('appChat/editDepartmentStudent', async (values: CreateDepartmentUser) => {
-//     return (await api.patch(`leads/department-user-list/${values.id}/`, values)).data
-// })
+export const updateDepartmentStudent = createAsyncThunk('appChat/updateDepartmentStudent', async (data: any, { rejectWithValue }) => {
+    try {
+        const response = await api.patch(`leads/department-user-list/${data.id}/`, data);
+        return response.data;
+    } catch (err: any) {
+        if (err.response) {
+            return rejectWithValue(err.response.data);
+        }
+        return rejectWithValue(err.message);
+    }
+})
 
 
 const initialState: ILeadsState = {
@@ -152,11 +158,22 @@ export const appLeadsSlice = createSlice({
                 state.loading = false
             })
 
+            .addCase(updateDepartmentStudent.pending, state => {
+                state.loading = true
+            })
+            .addCase(updateDepartmentStudent.fulfilled, state => {
+                state.loading = false
+            })
+            .addCase(updateDepartmentStudent.rejected, state => {
+                state.loading = false
+            })
+
             .addCase(editDepartment.pending, (state) => {
                 state.loading = true
             })
             .addCase(editDepartment.fulfilled, (state) => {
                 state.loading = false
+                state.openActionModal = null
             })
             .addCase(editDepartment.rejected, (state) => {
                 state.loading = false

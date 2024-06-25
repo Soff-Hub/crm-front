@@ -3,35 +3,36 @@ import Grid from '@mui/material/Grid'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 import useStudent from 'src/hooks/useStudents'
+import { useAppDispatch, useAppSelector } from 'src/store'
+import { fetchStudentDetail } from 'src/store/apps/students'
 
 // ** Demo Components Imports
 import UserViewLeft from 'src/views/apps/students/view/UserViewLeft'
 import UserViewRight from 'src/views/apps/students/view/UserViewRight'
 
-const UserView = ({ tab }: any) => {
+const UserView = ({ tab, student }: any) => {
   const router = useRouter()
   const url = tab
 
+  console.log('students', student);
+
 
   // hooks
-  const { getStudentById, studentData } = useStudent()
+  const { getStudentById } = useStudent()
+  const { studentData } = useAppSelector(state => state.students)
+  const dispatch = useAppDispatch()
 
   useEffect(() => {
-    getStudentById(router.query.student)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    dispatch(fetchStudentDetail(student))
   }, [])
-
-  function rerender() {
-    getStudentById(router.query.student)
-  }
 
   return (
     <Grid container spacing={6}>
       <Grid item xs={12} md={5} lg={4}>
-        <UserViewLeft userData={studentData} rerender={rerender} />
+        <UserViewLeft userData={studentData} />
       </Grid>
       <Grid item xs={12} md={7} lg={8}>
-        <UserViewRight groupData={studentData} rerender={rerender} tab={url} invoiceData={[]} />
+        <UserViewRight groupData={studentData} tab={url} invoiceData={[]} />
       </Grid>
     </Grid>
   )

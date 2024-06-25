@@ -14,6 +14,8 @@ import LoadingButton from '@mui/lab/LoadingButton'
 import { useTranslation } from 'react-i18next'
 import showResponseError from 'src/@core/utils/show-response-error'
 import { useRouter } from 'next/router'
+import { useAppDispatch, useAppSelector } from 'src/store'
+import { fetchStudentDetail } from 'src/store/apps/students'
 
 
 interface ItemTypes {
@@ -23,16 +25,17 @@ interface ItemTypes {
     message: string
     current_user: string | null
   }[]
-  rerender: any
 }
 
 
 
-const UserViewOverview = ({ data, rerender }: ItemTypes) => {
+const UserViewOverview = ({ data }: ItemTypes) => {
   const [open, setOpen] = useState<boolean>(false)
   const [loading, setLoading] = useState<boolean>(false)
   const { t } = useTranslation()
   const { query } = useRouter()
+  const dispatch = useAppDispatch()
+  const { studentData } = useAppSelector(state => state.students)
 
   const setError = (val: any) => {
     console.log(val);
@@ -43,7 +46,7 @@ const UserViewOverview = ({ data, rerender }: ItemTypes) => {
     setLoading(true)
     try {
       await api.post('auth/student/description/', { user: query.student, ...value })
-      rerender()
+      await dispatch(fetchStudentDetail(studentData?.id || 1))
       setLoading(false)
       setOpen(false)
     } catch (err: any) {

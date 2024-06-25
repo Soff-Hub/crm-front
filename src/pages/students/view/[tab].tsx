@@ -1,8 +1,8 @@
 import { GetServerSidePropsContext, InferGetStaticPropsType } from 'next/types'
 import UserViewPage from 'src/views/apps/students/view/UserViewPage'
 
-const UserView = ({ tab }: InferGetStaticPropsType<typeof getServerSideProps>) => {
-  return <UserViewPage tab={tab} />
+const UserView = ({ tab, student }: InferGetStaticPropsType<typeof getServerSideProps>) => {
+  return <UserViewPage tab={tab} student={student} />
 }
 
 
@@ -11,7 +11,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   return {
     props: {
-      students: query?.student || null,
+      student: Number(query?.student) || null,
       tab: params?.tab
     },
   };

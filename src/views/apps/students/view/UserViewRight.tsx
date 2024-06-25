@@ -95,7 +95,7 @@ const UserViewRight = ({ tab, invoiceData, groupData, rerender }: any) => {
               <UserViewSecurity groupData={groupData?.groups || []} />
             </TabPanel>
             <TabPanel sx={{ p: 0 }} value='comments'>
-              <UserViewOverview data={groupData?.comments || []} rerender={rerender} />
+              <UserViewOverview data={groupData?.comments || []} />
             </TabPanel>
             <TabPanel sx={{ p: 0 }} value='sms'>
               <UserSmsList />

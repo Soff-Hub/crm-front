@@ -11,52 +11,40 @@ export const fetchTeachersList = createAsyncThunk(
   }
 )
 
-export const fetchTeacherdetail = createAsyncThunk(
-  'mentors/fetchTeacherdetail',
-  async (id: number) => {
-    return (await api.get(`auth/teachers/${id}`)).data
-  }
-)
+export const fetchTeacherdetail = createAsyncThunk('mentors/fetchTeacherdetail', async (id: number) => {
+  return (await api.get(`auth/teachers/${id}`)).data
+})
 
-export const createTeacher = createAsyncThunk(
-  'mentors/createTeacher',
-  async (values: any, { rejectWithValue }) => {
-    try {
-      const response = await api.post(`auth/create/teacher/`, values);
-      return response.data;
-    } catch (err: any) {
-      if (err.response) {
-        return rejectWithValue(err.response.data);
-      }
-      return rejectWithValue(err.message);
+export const createTeacher = createAsyncThunk('mentors/createTeacher', async (values: any, { rejectWithValue }) => {
+  try {
+    const response = await api.post(`auth/create/teacher/`, values)
+    return response.data
+  } catch (err: any) {
+    if (err.response) {
+      return rejectWithValue(err.response.data)
     }
+    return rejectWithValue(err.message)
   }
-);
+})
 
 export const updateTeacher = createAsyncThunk(
   'mentors/createTeacher',
   async ({ data, id }: any, { rejectWithValue }) => {
     try {
-      const response = await api.patch(`auth/update/employee/${id}`, data);
-      return response.data;
+      const response = await api.patch(`auth/teachers/${id}/`, data)
+      return response.data
     } catch (err: any) {
       if (err.response) {
-        return rejectWithValue(err.response.data);
+        return rejectWithValue(err.response.data)
       }
-      return rejectWithValue(err.message);
+      return rejectWithValue(err.message)
     }
   }
-);
+)
 
-export const deleteTeacher = createAsyncThunk(
-  'mentors/deleteTeacher',
-  async (id: number | any) => {
-    return (await api.delete(`auth/delete/employee/${id}`)).data
-  }
-);
-
-
-
+export const deleteTeacher = createAsyncThunk('mentors/deleteTeacher', async (id: number | any) => {
+  return (await api.delete(`auth/delete/employee/${id}`)).data
+})
 
 const initialState: IMentorsState = {
   openEdit: null,
@@ -79,7 +67,7 @@ export const mentorsSlice = createSlice({
   },
   extraReducers: builder => {
     builder
-      .addCase(fetchTeachersList.pending, (state) => {
+      .addCase(fetchTeachersList.pending, state => {
         state.isLoading = true
       })
       .addCase(fetchTeachersList.fulfilled, (state, action) => {
@@ -87,10 +75,10 @@ export const mentorsSlice = createSlice({
         state.teachersCount = Math.ceil(action.payload.count / 10)
         state.isLoading = false
       })
-      .addCase(fetchTeachersList.rejected, (state) => {
+      .addCase(fetchTeachersList.rejected, state => {
         state.isLoading = false
       })
-      .addCase(createTeacher.fulfilled, (state) => {
+      .addCase(createTeacher.fulfilled, state => {
         state.openEdit = null
       })
       .addCase(fetchTeacherdetail.fulfilled, (state, action) => {

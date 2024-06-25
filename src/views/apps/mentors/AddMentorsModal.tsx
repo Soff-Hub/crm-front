@@ -1,7 +1,7 @@
 import {
     AvatarProps,
     Box,
-    Button,
+    Checkbox,
     FormControlLabel,
     FormHelperText,
     FormLabel,
@@ -21,7 +21,7 @@ import { useAppDispatch } from 'src/store';
 import { createTeacher, fetchTeachersList } from 'src/store/apps/mentors';
 import { CreateTeacherDto } from 'src/types/apps/mentorsTypes';
 import { useRef, useState } from 'react';
-import CustomAvatar from 'src/@core/components/mui/avatar'
+import CustomAvatar from 'src/@core/components/mui/avatar';
 
 export const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
@@ -57,8 +57,18 @@ export default function AddMentorsModal() {
         phone: Yup.string().required("Telefon raqam kiriting"),
         birth_date: Yup.string(),
         gender: Yup.string().required("Jinsini tanlang"),
+        is_fixed_salary: Yup.string().required("Jinsini tanlang"),
         // image: Yup.string(),
         password: Yup.string(),
+        // amount: Yup.string().when("percentage", {
+        //     is: (kpiPercentage: string) => !kpiPercentage || kpiPercentage.trim() === "",
+        //     then: Yup.string().required("To'ldiring(Foiz kiritilmasa)."),
+        // }),
+        // percentage: Yup.string().when("amount", {
+        //     is: (fixedSalary: string) => !fixedSalary || fixedSalary.trim() === "",
+        //     then: Yup.string().required("To'ldiring(O'zgarmas oylik kiritilmasa)"),
+        // }),
+
     });
 
     const initialValues: CreateTeacherDto = {
@@ -67,7 +77,10 @@ export default function AddMentorsModal() {
         birth_date: "",
         gender: 'male',
         image: null,
-        password: ""
+        is_fixed_salary: false,
+        password: "",
+        percentage: null,
+        amount: null
     }
 
     const formik = useFormik({
@@ -158,7 +171,43 @@ export default function AddMentorsModal() {
                         {(!!formik.errors.birth_date && formik.touched.birth_date) && formik.errors.birth_date}
                     </FormHelperText>
                 </FormControl>
-
+                <FormControlLabel
+                    name="is_fixed_salary"
+                    checked={formik.values.is_fixed_salary}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    control={<Checkbox />}
+                    label="O'zgarmas oylik sifatida"
+                />
+                <Box sx={{ display: "flex", gap: "20px" }}>
+                    <FormControl sx={{ width: '100%' }}>
+                        <TextField
+                            type='number'
+                            label={"Foiz ulushi"}
+                            name='percentage'
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            value={formik.values.percentage}
+                            error={!!formik.errors.percentage && formik.touched.percentage}
+                            defaultValue={today} />
+                        <FormHelperText error>
+                            {(!!formik.errors.percentage && formik.touched.percentage) && formik.errors.percentage}
+                        </FormHelperText>
+                    </FormControl>
+                    <FormControl sx={{ width: '100%' }}>
+                        <TextField
+                            type='number'
+                            label={"Oylik ish haqi"}
+                            name='amount'
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            value={formik.values.amount}
+                            error={!!formik.errors.amount && formik.touched.amount} />
+                        <FormHelperText error>
+                            {(!!formik.errors.amount && formik.touched.amount) && formik.errors.amount}
+                        </FormHelperText>
+                    </FormControl>
+                </Box>
                 <FormControl sx={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 1 }}>
                     <FormLabel>{t('Jinsni tanlang')}</FormLabel>
                     <RadioGroup

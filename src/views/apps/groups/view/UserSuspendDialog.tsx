@@ -11,16 +11,18 @@ import DialogActions from '@mui/material/DialogActions'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
+import LoadingButton from '@mui/lab/LoadingButton'
 
 type Props = {
   open: boolean
   setOpen: (val: boolean) => void
   handleOk?: () => any
+  isDeleting: boolean
 }
 
 const UserSuspendDialog = (props: Props) => {
   // ** Props
-  const { open, setOpen, handleOk } = props
+  const { open, setOpen, handleOk, isDeleting } = props
 
   // ** States
   const [userInput, setUserInput] = useState<string>('yes')
@@ -71,14 +73,14 @@ const UserSuspendDialog = (props: Props) => {
           </Box>
         </DialogContent>
         <DialogActions sx={{ justifyContent: 'center' }}>
-          <Button
+          <LoadingButton
+            loading={isDeleting}
             variant='contained'
             style={{ marginTop: '30px' }}
             color='success'
-            onClick={() => handleConfirmation('yes')}
-          >
+            onClick={() => handleConfirmation('yes')}>
             Ha, o'chirish
-          </Button>
+          </LoadingButton>
           <Button
             variant='outlined'
             style={{ marginTop: '30px' }}

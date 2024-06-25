@@ -1,23 +1,20 @@
 import {
   Box,
   Button,
-  IconButton,
   Pagination,
   Typography,
 } from '@mui/material';
 import { ReactNode, useEffect } from 'react';
 import IconifyIcon from 'src/@core/components/icon';
 import DataTable from 'src/@core/components/table';
-import MuiDrawer, { DrawerProps } from '@mui/material/Drawer';
-import { styled } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
 import { useRouter } from 'next/router';
 import RowOptions from 'src/views/apps/mentors/RowOptions';
-import AddMentorsModal, { TeacherAvatar } from 'src/views/apps/mentors/AddMentorsModal';
+import  { TeacherAvatar } from 'src/views/apps/mentors/AddMentorsModal';
 import { useAppDispatch, useAppSelector } from 'src/store';
-import { fetchTeachersList, setOpenEdit, setTeacherData } from 'src/store/apps/mentors';
-import EditTeacherModal from 'src/views/apps/mentors/EditTeacherModal';
-import SubLoader from 'src/views/apps/loaders/SubLoader';
+import { fetchTeachersList, setOpenEdit } from 'src/store/apps/mentors';
+import TeacherEditDialog from 'src/views/apps/mentors/TeacherEditDialog';
+import TeacherCreateDialog from 'src/views/apps/mentors/TeacherCreateDialog';
 
 export interface customTableProps {
   xs: number
@@ -25,21 +22,6 @@ export interface customTableProps {
   dataIndex?: string | ReactNode
   render?: (source: string) => any | undefined
 }
-
-const Drawer = styled(MuiDrawer)<DrawerProps>(({ theme }) => ({
-  width: 400,
-  zIndex: theme.zIndex.modal,
-  '& .MuiFormControlLabel-root': {
-    marginRight: '0.6875rem'
-  },
-  '& .MuiDrawer-paper': {
-    border: 0,
-    width: 400,
-    zIndex: theme.zIndex.modal,
-    boxShadow: theme.shadows[9]
-  }
-}))
-
 
 export default function GroupsPage() {
 
@@ -49,12 +31,8 @@ export default function GroupsPage() {
   const dispatch = useAppDispatch()
 
   // Stored Data
-  const { teachers, teachersCount, openEdit, teacherData, isLoading } = useAppSelector(state => state.mentors)
+  const { teachers, teachersCount, isLoading } = useAppSelector(state => state.mentors)
 
-  // ** Main functions
-  const onClose = () => {
-    dispatch(setOpenEdit(null))
-  }
 
   const columns: customTableProps[] = [
     {
@@ -127,63 +105,8 @@ export default function GroupsPage() {
       <DataTable loading={isLoading} columns={columns} data={teachers} rowClick={rowClick} />
       {teachersCount > 1 && <Pagination defaultPage={1} count={teachersCount} variant="outlined" shape="rounded" />}
 
-      <Drawer open={openEdit === 'create'} hideBackdrop anchor='right' variant='persistent' onClose={onClose}>
-        <Box
-          className='customizer-header'
-          sx={{
-            position: 'relative',
-            p: theme => theme.spacing(3.5, 5),
-            borderBottom: theme => `1px solid ${theme.palette.divider}`
-          }}
-        >
-          <Typography variant='h6' sx={{ fontWeight: 600 }}>
-            {t("O'qituvchi qo'shish")}
-          </Typography>
-          <IconButton
-            onClick={onClose}
-            sx={{
-              right: 20,
-              top: '50%',
-              position: 'absolute',
-              color: 'text.secondary',
-              transform: 'translateY(-50%)'
-            }}
-          >
-            <IconifyIcon icon='mdi:close' fontSize={20} />
-          </IconButton>
-        </Box>
-        <AddMentorsModal />
-      </Drawer>
-
-      <Drawer open={openEdit === 'edit'} hideBackdrop anchor='right' variant='persistent' onClose={onClose}>
-        <Box
-          className='customizer-header'
-          sx={{
-            position: 'relative',
-            p: theme => theme.spacing(3.5, 5),
-            borderBottom: theme => `1px solid ${theme.palette.divider}`
-          }}
-        >
-          <Typography variant='h6' sx={{ fontWeight: 600 }}>
-            {t("O'qituvchi malumotlarini tahrirlash")}
-          </Typography>
-          <IconButton
-            onClick={() => (onClose(), dispatch(setTeacherData(undefined)))}
-            sx={{
-              right: 20,
-              top: '50%',
-              position: 'absolute',
-              color: 'text.secondary',
-              transform: 'translateY(-50%)'
-            }}
-          >
-            <IconifyIcon icon='mdi:close' fontSize={20} />
-          </IconButton>
-        </Box>
-        <Box width={'100%'}>
-          {teacherData ? <EditTeacherModal initialValues={teacherData} /> : <Box marginTop={40}><SubLoader /></Box>}
-        </Box>
-      </Drawer>
+      <TeacherCreateDialog />
+      <TeacherEditDialog />
     </div>
   )
 }
