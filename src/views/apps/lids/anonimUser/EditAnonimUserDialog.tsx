@@ -28,7 +28,7 @@ export default function EditAnonimDialogDialog({ open, setOpen, item, reRender }
             <Dialog onClose={closeCreateLid} open={open === 'edit'}>
                 <DialogTitle sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                     <Typography variant='h6' component='span'>
-                        {t("Yangi Lid")}
+                        {t("Lidni tahrirlash")}
                     </Typography>
                     <IconButton
                         aria-label='close'
