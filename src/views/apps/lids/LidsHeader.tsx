@@ -35,7 +35,6 @@ export default function LidsHeader({ }: Props) {
                 <TextField
                     defaultValue={''}
                     autoComplete='off'
-                    autoFocus
                     size='small'
                     sx={{ maxWidth: '300px', width: '100%' }} color='primary' placeholder={`${t("Qidirish")}...`} onChange={(e) => {
                         setSearch(e.target.value)
