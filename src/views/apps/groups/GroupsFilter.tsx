@@ -1,28 +1,12 @@
-// ** React Imports
-import React, { useState, forwardRef, useEffect } from 'react'
-
 // ** MUI Imports
-import { Box, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material'
+import { Box, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material';
 
 
 // ** Third Party Imports
 import 'react-datepicker/dist/react-datepicker.css'; // Import CSS file for react-datepicker
-import DatePicker from 'react-datepicker';
-import format from 'date-fns/format';
-import addDays from 'date-fns/addDays';
-import useTeachers from 'src/hooks/useTeachers';
-import { useRouter } from 'next/router';
-import useCourses from 'src/hooks/useCourses';
 import { useTranslation } from 'react-i18next';
-
-// ** Types
-type DateType = Date
-
-interface PickerProps {
-    label?: string;
-    end: Date | number;
-    start: Date | number;
-}
+import { useAppDispatch, useAppSelector } from 'src/store';
+import { fetchGroups, updateParams } from 'src/store/apps/groups';
 
 type GroupsFilterProps = {
     isMobile: boolean
@@ -30,42 +14,31 @@ type GroupsFilterProps = {
 
 
 export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
-    const [startDate, setStartDate] = useState<DateType>(new Date());
-    const [endDate, setEndDate] = useState<DateType>(addDays(new Date(), 15));
-    const [startDateRange, setStartDateRange] = useState<DateType>(new Date());
-    const [endDateRange, setEndDateRange] = useState<DateType>(addDays(new Date(), 45));
+    const { teachers, queryParams, courses } = useAppSelector(state => state.groups)
+    const dispatch = useAppDispatch()
 
-    const { getTeachers, teachers } = useTeachers()
-    const { getCourses, courses } = useCourses()
-    const router = useRouter()
     const { t } = useTranslation()
 
-    const handleOnChangeRange = (dates: any) => {
-        const [start, end] = dates;
-        setStartDateRange(start);
-        setEndDateRange(end);
-    };
-
-    const CustomInput = forwardRef((props: PickerProps, ref) => {
-        const startDate = format(props?.start || new Date(), 'MM/dd/yyyy')
-        const endDate = props.end !== null ? format(props.end, 'MM/dd/yyyy') : '';
-
-        const value = `${startDate}${endDate !== '' ? '-' + endDate : ''}`;
-
-        return <TextField size='small' fullWidth inputRef={ref} label={props.label || ''} {...props} value={value} />;
-    });
-
-    const handleOnChange = (dates: any) => {
-        const [start, end] = dates;
-        setStartDate(start);
-        setEndDate(end);
-    };
-
-    useEffect(() => {
-        getTeachers()
-        getCourses()
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    const handleChangeStatus = (e: SelectChangeEvent<string>) => {
+        dispatch(updateParams({ status: e.target.value }));
+        const queryString = new URLSearchParams({ ...queryParams, status: e.target.value }).toString()
+        dispatch(fetchGroups(queryString))
+    }
+    const handleChangeTeacher = (e: SelectChangeEvent<string>) => {
+        dispatch(updateParams({ teacher: e.target.value }));
+        const queryString = new URLSearchParams({ ...queryParams, teacher: e.target.value }).toString()
+        dispatch(fetchGroups(queryString))
+    }
+    const handleChangeCourse = (e: SelectChangeEvent<string>) => {
+        dispatch(updateParams({ course: e.target.value }));
+        const queryString = new URLSearchParams({ ...queryParams, course: e.target.value }).toString()
+        dispatch(fetchGroups(queryString))
+    }
+    const handleChangeDateOfWeek = (e: SelectChangeEvent<string>) => {
+        dispatch(updateParams({ day_of_week: e.target.value }));
+        const queryString = new URLSearchParams({ ...queryParams, day_of_week: e.target.value }).toString()
+        dispatch(fetchGroups(queryString))
+    }
 
     if (isMobile) {
         return (
@@ -76,15 +49,12 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
                         <Select
                             size='small'
                             label={t("Holat")}
-                            defaultValue={router.query.status === undefined ? 'active' : router.query.status}
                             id='demo-simple-select-outlined'
                             labelId='demo-simple-select-outlined-label'
-                            onChange={(e: any) => router.replace({
-                                pathname: router.pathname,
-                                query: e.target.value === '' ? { ...router.query, status: 'all' } : { ...router.query, status: e.target.value }
-                            })}
+                            value={queryParams.status || ""}
+                            onChange={handleChangeStatus}
                         >
-                            <MenuItem value='all'>
+                            <MenuItem value=''>
                                 <b>Barchasi</b>
                             </MenuItem>
                             <MenuItem value={'active'}>{'Aktiv'}</MenuItem>
@@ -100,12 +70,14 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
                             defaultValue=''
                             id='demo-simple-select-outlined'
                             labelId='demo-simple-select-outlined-label'
+                            value={queryParams.teacher || ""}
+                            onChange={handleChangeTeacher}
                         >
                             <MenuItem value=''>
                                 <b>Barchasi</b>
                             </MenuItem>
                             {
-                                teachers.map(teacher => (
+                                teachers?.map(teacher => (
                                     <MenuItem key={teacher.id} value={teacher.id}>{teacher.first_name}</MenuItem>
                                 ))
                             }
@@ -116,19 +88,16 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
                         <Select
                             size='small'
                             label={t("Kurslar bo'yicha")}
-                            defaultValue=''
                             id='demo-simple-select-outlined'
                             labelId='demo-simple-select-outlined-label'
-                            onChange={(e: any) => router.replace({
-                                pathname: router.pathname,
-                                query: { ...router.query, course: e.target.value }
-                            })}
+                            value={queryParams.course || ""}
+                            onChange={handleChangeCourse}
                         >
                             <MenuItem value=''>
                                 <b>Barchasi</b>
                             </MenuItem>
                             {
-                                courses.map(course => (
+                                courses?.map(course => (
                                     <MenuItem key={course.id} value={course.id}>{course.name}</MenuItem>
                                 ))
                             }
@@ -139,10 +108,10 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
                         <Select
                             size='small'
                             label={t("Kunlar boyicha")}
-                            defaultValue=''
                             id='demo-simple-select-outlined'
                             labelId='demo-simple-select-outlined-label'
-                            onChange={(e) => router.push({ pathname: router.pathname, query: { day_of_week: e.target.value } })}
+                            value={queryParams.day_of_week || ""}
+                            onChange={handleChangeDateOfWeek}
                         >
                             <MenuItem value=''>
                                 <b>Barchasi</b>
@@ -152,131 +121,88 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
                             <MenuItem value={'monday,tuesday,wednesday,thursday,friday,saturday,sunday'}>Har kuni</MenuItem>
                         </Select>
                     </FormControl>
-                    <DatePicker
-                        selectsRange
-                        endDate={endDate}
-                        selected={startDate}
-                        startDate={startDate}
-                        id='date-range-picker'
-                        onChange={handleOnChange}
-                        shouldCloseOnSelect={false}
-                        popperPlacement={"top"}
-                        customInput={
-                            <CustomInput label={t("Sana bo'yicha")} start={startDate as Date | number} end={endDate as Date | number} />
-                        }
-                    />
                 </Box >
             </form>
         )
-    }
-
-
-
-    return (
-        <Box display={'flex'} gap={2} flexWrap={'nowrap'} >
-            <FormControl sx={{ maxWidth: 220, width: '100%' }}>
-                <InputLabel size='small' id='demo-simple-select-outlined-label'>{t("Holat")}</InputLabel>
-                <Select
-                    size='small'
-                    label={t("Holat")}
-                    defaultValue={router.query.status === undefined ? 'active' : router.query.status}
-                    id='demo-simple-select-outlined'
-                    labelId='demo-simple-select-outlined-label'
-                    onChange={(e: any) => router.replace({
-                        pathname: router.pathname,
-                        query: e.target.value === '' ? { ...router.query, status: 'all' } : { ...router.query, status: e.target.value }
-                    })}
-                >
-                    <MenuItem value='all'>
-                        <b>Barchasi</b>
-                    </MenuItem>
-                    <MenuItem value={'active'}>{'Aktiv'}</MenuItem>
-                    <MenuItem value={'archived'}>{'Arxivlangan'}</MenuItem>
-                    <MenuItem value={'new'}>{'Yangi'}</MenuItem>
-                </Select>
-            </FormControl>
-            <FormControl sx={{ maxWidth: 180, width: '100%' }}>
-                <InputLabel size='small' id='demo-simple-select-outlined-label'>{t("O'qituvchi")}</InputLabel>
-                <Select
-                    size='small'
-                    label={t("O'qituvchi")}
-                    defaultValue={router.query.teacher}
-                    id='demo-simple-select-outlined'
-                    labelId='demo-simple-select-outlined-label'
-                    onChange={(e: any) => router.replace({
-                        pathname: router.pathname,
-                        query: { ...router.query, teacher: e.target.value }
-                    })}
-                >
-                    <MenuItem value=''>
-                        <b>Barchasi</b>
-                    </MenuItem>
-                    {
-                        teachers.map(teacher => (
-                            <MenuItem key={teacher.id} value={teacher.id}>{teacher.first_name}</MenuItem>
-                        ))
-                    }
-                </Select>
-            </FormControl>
-            <FormControl sx={{ maxWidth: 180, width: '100%' }}>
-                <InputLabel size='small' id='demo-simple-select-outlined-label'>{t("Kurslar bo'yicha")}</InputLabel>
-                <Select
-                    size='small'
-                    label={t("Kurslar bo'yicha")}
-                    defaultValue={router.query.course}
-                    id='demo-simple-select-outlined'
-                    labelId='demo-simple-select-outlined-label'
-                    onChange={(e: any) => router.replace({
-                        pathname: router.pathname,
-                        query: { ...router.query, course: e.target.value }
-                    })}
-                >
-                    <MenuItem value=''>
-                        <b>Barchasi</b>
-                    </MenuItem>
-                    {
-                        courses.map(course => (
-                            <MenuItem key={course.id} value={course.id}>{course.name}</MenuItem>
-                        ))
-                    }
-                </Select>
-            </FormControl>
-            <FormControl sx={{ maxWidth: 180, width: '100%' }}>
-                <InputLabel size='small' id='demo-simple-select-outlined-label'>{t("Kunlar bo'yicha")}</InputLabel>
-                <Select
-                    size='small'
-                    label={t("Kunlar boyicha")}
-                    defaultValue=''
-                    id='demo-simple-select-outlined'
-                    labelId='demo-simple-select-outlined-label'
-                    onChange={(e) => router.push({ pathname: router.pathname, query: { day_of_week: e.target.value } })}
-                >
-                    <MenuItem value=''>
-                        <b>Barchasi</b>
-                    </MenuItem>
-                    <MenuItem value={'tuesday,thursday,saturday'}>Juft kunlari</MenuItem>
-                    <MenuItem value={'monday,wednesday,friday'}>Toq kunlari</MenuItem>
-                    <MenuItem value={'monday,tuesday,wednesday,thursday,friday,saturday,sunday'}>Har kuni</MenuItem>
-                </Select>
-            </FormControl>
-            <DatePicker
-                selectsRange
-                monthsShown={2}
-                endDate={endDateRange}
-                selected={startDateRange}
-                startDate={startDateRange}
-                shouldCloseOnSelect={false}
-                id='date-range-picker-months'
-                onChange={handleOnChangeRange}
-                popperPlacement={'bottom-start'}
-                customInput={
-                    <CustomInput
-                        label={t("Sana bo'yicha")}
-                        end={endDateRange as Date | number}
-                        start={startDateRange as Date | number}
-                    />
-                }
-            />
-        </Box >
-    )
+    } else
+        return (
+            <Box display={'flex'} gap={2} flexWrap={'nowrap'} >
+                <FormControl sx={{ maxWidth: 220, width: '100%' }}>
+                    <InputLabel size='small' id='demo-simple-select-outlined-label'>{t("Holat")}</InputLabel>
+                    <Select
+                        size='small'
+                        label={t("Holat")}
+                        id='demo-simple-select-outlined'
+                        labelId='demo-simple-select-outlined-label'
+                        value={queryParams.status || ""}
+                        onChange={handleChangeStatus}
+                    >
+                        <MenuItem value=''>
+                            <b>Barchasi</b>
+                        </MenuItem>
+                        <MenuItem value={'active'}>{'Aktiv'}</MenuItem>
+                        <MenuItem value={'archived'}>{'Arxivlangan'}</MenuItem>
+                        <MenuItem value={'new'}>{'Yangi'}</MenuItem>
+                    </Select>
+                </FormControl>
+                <FormControl sx={{ maxWidth: 180, width: '100%' }}>
+                    <InputLabel size='small' id='demo-simple-select-outlined-label'>{t("O'qituvchi")}</InputLabel>
+                    <Select
+                        size='small'
+                        label={t("O'qituvchi")}
+                        id='demo-simple-select-outlined'
+                        labelId='demo-simple-select-outlined-label'
+                        value={queryParams.teacher || ""}
+                        onChange={handleChangeTeacher}
+                    >
+                        <MenuItem value=''>
+                            <b>Barchasi</b>
+                        </MenuItem>
+                        {
+                            teachers?.map(teacher => (
+                                <MenuItem key={teacher.id} value={teacher.id}>{teacher.first_name}</MenuItem>
+                            ))
+                        }
+                    </Select>
+                </FormControl>
+                <FormControl sx={{ maxWidth: 180, width: '100%' }}>
+                    <InputLabel size='small' id='demo-simple-select-outlined-label'>{t("Kurslar bo'yicha")}</InputLabel>
+                    <Select
+                        size='small'
+                        label={t("Kurslar bo'yicha")}
+                        id='demo-simple-select-outlined'
+                        labelId='demo-simple-select-outlined-label'
+                        value={queryParams.course || ""}
+                        onChange={handleChangeCourse}
+                    >
+                        <MenuItem value=''>
+                            <b>Barchasi</b>
+                        </MenuItem>
+                        {
+                            courses?.map(course => (
+                                <MenuItem key={course.id} value={course.id}>{course.name}</MenuItem>
+                            ))
+                        }
+                    </Select>
+                </FormControl>
+                <FormControl sx={{ maxWidth: 180, width: '100%' }}>
+                    <InputLabel size='small' id='demo-simple-select-outlined-label'>{t("Kunlar bo'yicha")}</InputLabel>
+                    <Select
+                        size='small'
+                        label={t("Kunlar boyicha")}
+                        id='demo-simple-select-outlined'
+                        labelId='demo-simple-select-outlined-label'
+                        value={queryParams.day_of_week || ""}
+                        onChange={handleChangeDateOfWeek}
+                    >
+                        <MenuItem value=''>
+                            <b>Barchasi</b>
+                        </MenuItem>
+                        <MenuItem value={'tuesday,thursday,saturday'}>Juft kunlari</MenuItem>
+                        <MenuItem value={'monday,wednesday,friday'}>Toq kunlari</MenuItem>
+                        <MenuItem value={'monday,tuesday,wednesday,thursday,friday,saturday,sunday'}>Har kuni</MenuItem>
+                    </Select>
+                </FormControl>
+            </Box >
+        )
 }

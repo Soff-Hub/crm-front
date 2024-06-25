@@ -6,27 +6,18 @@ import Link from 'next/link';
 import UserSuspendDialog from 'src/views/apps/groups/view/UserSuspendDialog';
 import getMontName from 'src/@core/utils/gwt-month-name';
 import { useTranslation } from 'react-i18next';
-import useTeachers from 'src/hooks/useTeachers';
-import useGroups from 'src/hooks/useGroups';
-import useCourses from 'src/hooks/useCourses';
-import useRooms from 'src/hooks/useRooms';
 import { useAppDispatch, useAppSelector } from 'src/store';
-import { deleteGroups, fetchGroups, handleOpenEdit } from 'src/store/apps/groups';
-import { useRouter } from 'next/router';
+import { deleteGroups, fetchGroups, getDashboardLessons, getGroupsDetails, handleOpenEdit } from 'src/store/apps/groups';
+import { GroupType } from 'src/@fake-db/types';
 
 const RowOptions = ({ id }: { id: number | string }) => {
-    const { } = useAppSelector(state => state.groups)
+    const { queryParams, groups } = useAppSelector(state => state.groups)
     const dispatch = useAppDispatch()
-    const router = useRouter()
+    const [isDeleting, setDeleting] = useState(false)
 
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
     const [suspendDialogOpen, setSuspendDialogOpen] = useState<boolean>(false)
     const rowOptionsOpen = Boolean(anchorEl)
-
-    const { getTeachers, } = useTeachers()
-    const { getGroups, getGroupById } = useGroups()
-    const { getCourses } = useCourses()
-    const { getRooms } = useRooms()
 
     const { t } = useTranslation()
 
@@ -34,28 +25,33 @@ const RowOptions = ({ id }: { id: number | string }) => {
         setAnchorEl(event.currentTarget)
     }
 
-    const handleRowOptionsClose = () => {
-        setAnchorEl(null)
-    }
-
     const handleDelete = () => {
-        handleRowOptionsClose()
+        setAnchorEl(null)
         setSuspendDialogOpen(true)
     }
 
     const handleEdit = async (id: any) => {
-        getCourses()
-        getTeachers()
-        getRooms()
+        setAnchorEl(null)
         dispatch(handleOpenEdit(true))
-        await getGroupById(id)
+        const filtered = groups?.find(item => item.id == id)
+        const queryString = new URLSearchParams({
+            day_of_week: filtered?.week_days?.toString(),
+            teacher: String(filtered?.teacher),
+            room: String(filtered?.room_id)
+        }).toString()
+        await Promise.all([
+            await dispatch(getDashboardLessons(queryString)),
+            await dispatch(getGroupsDetails(id))
+        ])
     }
 
 
     const handleDeleteTeacher = async (id: string | number) => {
+        setDeleting(true)
         await dispatch(deleteGroups(id))
-        await dispatch(fetchGroups({ query: router.query, status: router.query.status }))
-        // await getGroups()
+        const queryString = new URLSearchParams(queryParams).toString()
+        await dispatch(fetchGroups(queryString))
+        setDeleting(false)
     }
 
     return (
@@ -67,7 +63,7 @@ const RowOptions = ({ id }: { id: number | string }) => {
                 keepMounted
                 anchorEl={anchorEl}
                 open={rowOptionsOpen}
-                onClose={handleRowOptionsClose}
+                onClose={() => setAnchorEl(null)}
                 anchorOrigin={{
                     vertical: 'bottom',
                     horizontal: 'right'
@@ -81,7 +77,7 @@ const RowOptions = ({ id }: { id: number | string }) => {
                 <MenuItem
                     component={Link}
                     sx={{ '& svg': { mr: 2 } }}
-                    onClick={handleRowOptionsClose}
+                    onClick={() => setAnchorEl(null)}
                     href={`/groups/view/security?id=${id}&month=${getMontName(null)}`}
                 >
                     <IconifyIcon icon='mdi:eye-outline' fontSize={20} />
@@ -102,7 +98,7 @@ const RowOptions = ({ id }: { id: number | string }) => {
                     {t("Guruhni yakunlash")}
                 </MenuItem>
             </Menu>
-            <UserSuspendDialog handleOk={() => handleDeleteTeacher(id)} open={suspendDialogOpen} setOpen={setSuspendDialogOpen} />
+            <UserSuspendDialog isDeleting={isDeleting} handleOk={() => handleDeleteTeacher(id)} open={suspendDialogOpen} setOpen={setSuspendDialogOpen} />
         </>
     )
 }
