@@ -41,12 +41,14 @@ import api from 'src/@core/utils/api'
 import useSMS from 'src/hooks/useSMS'
 import { useRouter } from 'next/router'
 import { today } from 'src/@core/components/card-statistics/kanban-item'
+import { useAppDispatch } from 'src/store'
+import { fetchStudentDetail } from 'src/store/apps/students'
 
 
 type ModalTypes = 'group' | 'payment' | 'sms' | 'delete' | 'edit' | 'notes'
 
 
-const UserViewLeft = ({ userData, rerender }: { userData: StudentTypes | null, rerender: any }) => {
+const UserViewLeft = ({ userData }: { userData: any }) => {
   // ** States
   const [openEdit, setOpenEdit] = useState<ModalTypes | null>(null)
   const [data, setData] = useState<StudentTypes | null>(null)
@@ -64,6 +66,7 @@ const UserViewLeft = ({ userData, rerender }: { userData: StudentTypes | null, r
   const [sms, setSMS] = useState<any>("")
   const { smsTemps, getSMSTemps } = useSMS()
   const { query } = useRouter()
+  const dispatch = useAppDispatch()
 
   // Handle Edit dialog
   const handleEditClickOpen = (value: ModalTypes) => {
@@ -91,7 +94,7 @@ const UserViewLeft = ({ userData, rerender }: { userData: StudentTypes | null, r
       setLoading(false)
       setOpenEdit(null)
 
-      return await rerender()
+      await dispatch(fetchStudentDetail(userData.id))
     } catch (err: any) {
       showResponseError(err.response.data, setError)
       setLoading(false)
@@ -105,9 +108,11 @@ const UserViewLeft = ({ userData, rerender }: { userData: StudentTypes | null, r
       setLoading(false)
       setOpenEdit(null)
 
-      return await rerender()
+      await dispatch(fetchStudentDetail(userData.id))
     } catch (err: any) {
-      showResponseError(err.response.data, setError)
+      console.log(err);
+
+      showResponseError(err?.response?.data, setError)
       setLoading(false)
     }
   }
@@ -119,8 +124,7 @@ const UserViewLeft = ({ userData, rerender }: { userData: StudentTypes | null, r
       await updateStudent(userData?.id, value)
       setLoading(false)
       setOpenEdit(null)
-
-      return await rerender()
+      await dispatch(fetchStudentDetail(userData.id))
     } catch (err) {
       console.log(err);
       setLoading(false)
@@ -139,7 +143,7 @@ const UserViewLeft = ({ userData, rerender }: { userData: StudentTypes | null, r
       setLoading(false)
       setOpenEdit(null)
 
-      return await rerender()
+      await dispatch(fetchStudentDetail(userData.id))
     } catch (err: any) {
       showResponseError(err.response.data, setError)
       setLoading(false)
@@ -158,7 +162,7 @@ const UserViewLeft = ({ userData, rerender }: { userData: StudentTypes | null, r
       setLoading(false)
       setOpenEdit(null)
 
-      return await rerender()
+      await dispatch(fetchStudentDetail(userData.id))
     } catch (err: any) {
       showResponseError(err.response.data, setError)
       setLoading(false)
