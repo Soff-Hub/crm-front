@@ -29,9 +29,9 @@ import useResponsive from 'src/@core/hooks/useResponsive'
 import generateTimeSlots from 'src/@core/utils/generate-time-slots'
 import { TranslateWeekName } from '../groups'
 import { hourFormatter } from 'src/@core/utils/hourFormatter'
-import { useAppSelector } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 import getMonthName from 'src/@core/utils/gwt-month-name'
+import { useAppSelector } from 'src/store'
 
 
 

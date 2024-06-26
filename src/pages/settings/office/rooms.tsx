@@ -30,12 +30,20 @@ export default function RoomsPage() {
 
   const handlePagination = async (page: number) => {
     await dispatch(fetchRoomList({ page }))
-    updatePage(page)
+    dispatch(updatePage(page))
   }
 
 
   useEffect(() => {
     dispatch(fetchRoomList({ page: active_page }))
+  }, [])
+
+  useEffect(() => {
+
+    return () => {
+      dispatch(updatePage(1))
+    }
+
   }, [])
 
   const columns: customTableProps[] = [
@@ -81,7 +89,7 @@ export default function RoomsPage() {
         </Button>
       </Box>
       <DataTable loading={is_pending} columns={columns} data={rooms} />
-      {room_count > 1 && <Pagination defaultPage={1} count={room_count} variant="outlined" shape="rounded" onChange={(e: any, page) => handlePagination(page)} />}
+      {room_count > 1 && !is_pending && <Pagination page={active_page} count={room_count} variant="outlined" shape="rounded" onChange={(e: any, page) => handlePagination(page)} />}
 
       <CreateRoomDialog />
 

@@ -3,11 +3,11 @@ import { Box, Button, ButtonGroup, Checkbox, Dialog, DialogContent, FormControl,
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useAppSelector } from 'react-redux'
 import Form from 'src/@core/components/form'
 import IconifyIcon from 'src/@core/components/icon'
 import useResponsive from 'src/@core/hooks/useResponsive'
 import api from 'src/@core/utils/api'
+import { useAppSelector } from 'src/store'
 
 type Props = {}
 

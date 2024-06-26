@@ -47,7 +47,7 @@ export const editCourse = createAsyncThunk('settings/editCourse', async (data: a
 
 
 export const fetchRoomList = createAsyncThunk('settings/fetchRoomList', async (params?: any) => {
-    return (await api.get('common/rooms/', { params })).data
+    return (await api.get('common/weekend/list/', { params })).data
 })
 
 export const createRoom = createAsyncThunk('settings/createRoom', async (data: any, { rejectWithValue }) => {
@@ -74,6 +74,10 @@ export const editRoom = createAsyncThunk('settings/editRoom', async (data: any, 
     }
 })
 
+export const fetchWekends = createAsyncThunk('settings/fetchWekends', async () => {
+    return (await api.get('common/rooms/')).data
+})
+
 
 
 const initialState: SettingsState = {
@@ -85,8 +89,9 @@ const initialState: SettingsState = {
     openEditCourse: null,
     rooms: [],
     openEditRoom: null,
-    room_count: 0, 
-    active_page: 1
+    room_count: 0,
+    active_page: 1,
+    wekends: []
 }
 
 export const settingsSlice = createSlice({
@@ -138,6 +143,13 @@ export const settingsSlice = createSlice({
                 state.is_pending = false
                 state.rooms = action.payload?.results.sort((a: RoomType, b: RoomType) => a.id - b.id)
                 state.room_count = Math.ceil(action.payload.count / 10)
+            })
+            .addCase(fetchWekends.pending, (state) => {
+                state.is_pending = true
+            })
+            .addCase(fetchWekends.fulfilled, (state, action) => {
+                state.is_pending = false
+                state.wekends = action.payload
             })
     }
 })
