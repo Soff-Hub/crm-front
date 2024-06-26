@@ -30,6 +30,13 @@ export interface CourseItemType {
     }[],
 }
 
+
+export interface WekendItemType {
+    id: number
+    date: string
+    description: string
+}
+
 export interface SettingsState {
     is_pending: boolean
     sms_list: SmsItemType[]
@@ -38,5 +45,8 @@ export interface SettingsState {
     openEditCourse: null | CourseItemType
     course_list: CourseItemType[]
     rooms: RoomType[]
-    openEditRoom: null | RoomType
+    openEditRoom: null | RoomType,
+    room_count: number
+    active_page: number
+    wekends: WekendItemType[]
 }

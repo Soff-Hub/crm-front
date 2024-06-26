@@ -12,7 +12,7 @@ import themeConfig from 'src/configs/themeConfig'
 
 // ** Hook
 import { useSettings } from 'src/@core/hooks/useSettings'
-import { useAppSelector } from 'react-redux'
+
 
 const StyledLink = styled(Link)(({ theme }) => ({
   display: 'flex',
@@ -26,8 +26,6 @@ const BlankLayoutAppBar = () => {
   const theme = useTheme()
   const { settings } = useSettings()
   const { skin } = settings
-  const state = useAppSelector(state => state)
-  console.log(state);
 
 
   return (

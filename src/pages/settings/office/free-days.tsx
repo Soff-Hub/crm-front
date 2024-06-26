@@ -23,6 +23,8 @@ import ceoConfigs from 'src/configs/ceo'
 import Form from 'src/@core/components/form'
 import toast from 'react-hot-toast'
 import { today } from 'src/@core/components/card-statistics/kanban-item'
+import { useAppDispatch } from 'src/store'
+import { fetchWekends } from 'src/store/apps/settings'
 
 export interface customTableProps {
     xs: number
@@ -52,6 +54,7 @@ export default function RoomsPage() {
     const [dataRowEdit, setDataRowEdit] = useState<any>(null)
     const [error, setError] = useState<any>({})
     const { t } = useTranslation()
+    const dispatch = useAppDispatch()
 
     const RowOptions = ({ id }: any) => {
         // ** State
@@ -155,7 +158,7 @@ export default function RoomsPage() {
     }
 
     useEffect(() => {
-        getUsers()
+        dispatch(fetchWekends())
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
@@ -182,7 +185,7 @@ export default function RoomsPage() {
 
     const columns: customTableProps[] = [
         {
-            xs: 0.8,
+            xs: 0.2,
             title: t('ID'),
             dataIndex: 'id'
         },
@@ -223,7 +226,7 @@ export default function RoomsPage() {
                     {t("Yangi qo'shish")}
                 </Button>
             </Box>
-            <DataTable columns={columns} data={dataRow} minWidth='700px' maxWidth='700px' />
+            <DataTable columns={columns} data={dataRow} />
 
             <Drawer open={openAddGroup} hideBackdrop anchor='right' variant='persistent'>
                 <Box
