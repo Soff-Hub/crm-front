@@ -125,7 +125,7 @@ export default function CreateCourseForm({ }: Props) {
                     onBlur={handleBlur}
                     value={values.price}
                 />
-                {errors.branch && touched.branch && <FormHelperText error>{errors.branch}</FormHelperText>}
+                {errors.price && touched.price && <FormHelperText error>{errors.price}</FormHelperText>}
             </FormControl>
 
             <FormControl fullWidth>

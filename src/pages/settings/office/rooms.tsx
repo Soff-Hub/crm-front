@@ -1,29 +1,18 @@
 import {
   Box,
   Button,
-  FormControl,
-  FormHelperText,
-  IconButton,
-  InputLabel,
-  Menu,
-  Select,
-  TextField,
+  Pagination,
   Typography
 } from '@mui/material'
-import React, { MouseEvent, ReactNode, useEffect, useState } from 'react'
+import React, { ReactNode, useEffect } from 'react'
 import IconifyIcon from 'src/@core/components/icon'
 import DataTable from 'src/@core/components/table'
-import MenuItem from '@mui/material/MenuItem'
-import UserSuspendDialog from 'src/views/apps/mentors/view/UserSuspendDialog'
 import { useTranslation } from 'react-i18next'
-import api from 'src/@core/utils/api'
-import ceoConfigs from 'src/configs/ceo'
-import useBranches from 'src/hooks/useBranch'
-import Form from 'src/@core/components/form'
-import toast from 'react-hot-toast'
-import { CustomeDrawer } from './courses'
 import { useAppDispatch, useAppSelector } from 'src/store'
-import { fetchRoomList } from 'src/store/apps/settings'
+import { fetchRoomList, setOpenCreateSms, updatePage } from 'src/store/apps/settings'
+import CreateRoomDialog from 'src/views/apps/settings/rooms/CreateRoomDialog'
+import EditRoomDialog from 'src/views/apps/settings/rooms/EditRoomDialog'
+import RoomListRowOptions from 'src/views/apps/settings/rooms/RoomsRowOptions'
 
 export interface customTableProps {
   xs: number
@@ -34,143 +23,20 @@ export interface customTableProps {
 
 
 export default function RoomsPage() {
-  const [openAddGroup, setOpenAddGroup] = useState<boolean>(false)
-  const [openAddGroupEdit, setOpenAddGroupEdit] = useState<boolean>(false)
-  const [dataRow, setData] = useState([])
-  const [dataRowEdit, setDataRowEdit] = useState<any>(null)
-  const [error, setError] = useState<any>({})
   const { t } = useTranslation()
-  const { getBranches, branches } = useBranches()
-  const { rooms, is_pending } = useAppSelector(state => state.settings)
+  const { rooms, is_pending, active_page, room_count } = useAppSelector(state => state.settings)
   const dispatch = useAppDispatch()
 
-  const RowOptions = ({ id }: any) => {
-    // ** State
-    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
-    const [suspendDialogOpen, setSuspendDialogOpen] = useState<boolean>(false)
 
-    const rowOptionsOpen = Boolean(anchorEl)
-
-    const handleRowOptionsClick = (event: MouseEvent<HTMLElement>) => {
-      setAnchorEl(event.currentTarget)
-      setDataRowEdit(null)
-    }
-    const handleRowOptionsClose = () => {
-      setAnchorEl(null)
-    }
-
-    // Delete functions
-
-    async function handleDelete() {
-      handleRowOptionsClose()
-      setSuspendDialogOpen(true)
-    }
-
-    async function handleDeletePosts(id: number) {
-      handleRowOptionsClose()
-      try {
-        await api.delete(`${ceoConfigs.rooms_delete}/${id}`)
-        toast.success("Muvaffaqiyatli! o'chirildi", { position: 'top-center' })
-        getUsers()
-      } catch (error: any) {
-        toast.error('Xatolik yuz berdi!', { position: 'top-center' })
-      }
-    }
-
-    // Get functions
-
-    async function handleEdit(id: number) {
-      handleRowOptionsClose()
-      try {
-        setOpenAddGroupEdit(true)
-        const resp = await api.get(`${ceoConfigs.rooms_detail}/${id}`)
-        setDataRowEdit(resp.data)
-        getUsers()
-      } catch (error: any) {
-        toast.error('Xatolik yuz berdi!', { position: 'top-center' })
-      }
-    }
-
-    return (
-      <>
-        <IconButton size='small' onClick={handleRowOptionsClick}>
-          <IconifyIcon icon='mdi:dots-vertical' />
-        </IconButton>
-        <Menu
-          keepMounted
-          anchorEl={anchorEl}
-          open={rowOptionsOpen}
-          onClose={handleRowOptionsClose}
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'right'
-          }}
-          transformOrigin={{
-            vertical: 'top',
-            horizontal: 'right'
-          }}
-          PaperProps={{ style: { minWidth: '8rem' } }}
-        >
-          <MenuItem onClick={() => handleEdit(id)} sx={{ '& svg': { mr: 2 } }}>
-            <IconifyIcon icon='mdi:pencil-outline' fontSize={20} />
-            {t("Tahrirlash")}
-          </MenuItem>
-          {dataRow?.some((item: any) => item?.id == id && item?.is_delete) ? (
-            <MenuItem onClick={handleDelete} sx={{ '& svg': { mr: 2 } }}>
-              <IconifyIcon icon='mdi:delete-outline' fontSize={20} />
-              {t("O'chirish")}
-            </MenuItem>
-          ) : (
-            <></>
-          )}
-        </Menu>
-        <UserSuspendDialog
-          handleOk={() => handleDeletePosts(id)}
-          open={suspendDialogOpen}
-          setOpen={setSuspendDialogOpen}
-        />
-      </>
-    )
+  const handlePagination = async (page: number) => {
+    await dispatch(fetchRoomList({ page }))
+    updatePage(page)
   }
 
-
-  // Getdata functions
-
-  async function getUsers() {
-    try {
-      const resp = await api.get(ceoConfigs.rooms)
-      setData(resp.data.results)
-    } catch (err) {
-      toast.error('Xatolik yuz berdi!', { position: 'top-center' })
-    }
-  }
 
   useEffect(() => {
-    dispatch(fetchRoomList())
-    getBranches()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    dispatch(fetchRoomList({ page: active_page }))
   }, [])
-
-  // Post functions
-
-  async function handelCliclPosts(value: any) {
-    try {
-      await api.post(ceoConfigs.rooms_posts, value)
-      setOpenAddGroup(false)
-      toast.success("Muvaffaqiyatli! qo'shildi", { position: 'top-center' })
-      getUsers()
-    } catch (error: any) {
-      toast.error('Xatolik yuz berdi!', { position: 'top-center' })
-    }
-  }
-
-  // Edit functions
-
-  async function handelClickEditCourses(value: any) {
-    await api.patch(`${ceoConfigs.rooms_update}/${dataRowEdit?.id}`, value)
-    setOpenAddGroupEdit(false)
-    getUsers()
-  }
 
   const columns: customTableProps[] = [
     {
@@ -193,7 +59,7 @@ export default function RoomsPage() {
       xs: 0.38,
       title: t('Harakatlar'),
       dataIndex: 'id',
-      render: id => <RowOptions id={id} />
+      render: id => <RoomListRowOptions id={+id} />
     }
   ]
 
@@ -206,7 +72,7 @@ export default function RoomsPage() {
       >
         <Typography variant='h5'>{t('Xonalar')}</Typography>
         <Button
-          onClick={() => setOpenAddGroup(true)}
+          onClick={() => dispatch(setOpenCreateSms(true))}
           variant='contained'
           size='small'
           startIcon={<IconifyIcon icon='ic:baseline-plus' />}
@@ -214,156 +80,12 @@ export default function RoomsPage() {
           {t("Yangi xona qo'shish")}
         </Button>
       </Box>
-      <DataTable loading={is_pending} columns={columns} data={rooms} minWidth='700px' maxWidth='700px' />
+      <DataTable loading={is_pending} columns={columns} data={rooms} />
+      {room_count > 1 && <Pagination defaultPage={1} count={room_count} variant="outlined" shape="rounded" onChange={(e: any, page) => handlePagination(page)} />}
 
-      <CustomeDrawer open={openAddGroup} hideBackdrop anchor='right' variant='persistent'>
-        <Box
-          className='customizer-header'
-          sx={{
-            position: 'relative',
-            p: theme => theme.spacing(3.5, 5),
-            borderBottom: theme => `1px solid ${theme.palette.divider}`
-          }}
-        >
-          <Typography variant='h6' sx={{ fontWeight: 600 }}>
-            {t("Yangi xona qo'shish")}
-          </Typography>
-          <IconButton
-            onClick={() => setOpenAddGroup(false)}
-            sx={{
-              right: 20,
-              top: '50%',
-              position: 'absolute',
-              color: 'text.secondary',
-              transform: 'translateY(-50%)'
-            }}
-          >
-            <IconifyIcon icon='mdi:close' fontSize={20} />
-          </IconButton>
-        </Box>
+      <CreateRoomDialog />
 
-        <Form
-          setError={setError}
-          reqiuredFields={['name', 'branch']}
-          valueTypes='form-data'
-          onSubmit={handelCliclPosts}
-          id='posts-courses-id'
-          sx={{
-            padding: '10px 20px',
-            width: '100%',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '15px',
-            marginTop: '15px'
-          }}
-        >
-          <FormControl fullWidth>
-            <TextField error={error.name} label={t('Nomi')} size='small' name='name' />
-            <FormHelperText error={error.name}>{error.name?.message}</FormHelperText>
-          </FormControl>
-          <FormControl fullWidth>
-            <InputLabel size='small' id='demo-simple-select-outlined-label'>
-              {t('branch')}
-            </InputLabel>
-            <Select
-              error={error.branch}
-              size='small'
-              label={t('branch')}
-              id='demo-simple-select-outlined'
-              labelId='demo-simple-select-outlined-label'
-              name='branch'
-              defaultValue={''}
-            >
-              {branches?.length > 0 && branches?.map((item: any) => <MenuItem key={item.id} value={item.id}>{item?.name}</MenuItem>)}
-            </Select>
-
-            <FormHelperText error={error.branch}>{error.branch?.message}</FormHelperText>
-          </FormControl>
-
-          <Button type='submit' variant='contained' color='success' fullWidth>
-            {' '}
-            {t('Saqlash')}
-          </Button>
-        </Form>
-      </CustomeDrawer>
-
-      <CustomeDrawer open={openAddGroupEdit} hideBackdrop anchor='right' variant='persistent'>
-        <Box
-          className='customizer-header'
-          sx={{
-            position: 'relative',
-            p: theme => theme.spacing(3.5, 5),
-            borderBottom: theme => `1px solid ${theme.palette.divider}`
-          }}
-        >
-          <Typography variant='h6' sx={{ fontWeight: 600 }}>
-            {t('Tahrirlash')}
-          </Typography>
-          <IconButton
-            onClick={() => setOpenAddGroupEdit(false)}
-            sx={{
-              right: 20,
-              top: '50%',
-              position: 'absolute',
-              color: 'text.secondary',
-              transform: 'translateY(-50%)'
-            }}
-          >
-            <IconifyIcon icon='mdi:close' fontSize={20} />
-          </IconButton>
-        </Box>
-        {dataRowEdit !== null && (
-          <Form
-            setError={setError}
-            reqiuredFields={['name', 'branch']}
-            valueTypes='form-data'
-            onSubmit={handelClickEditCourses}
-            id='posts-courses-id-edit'
-            sx={{
-              padding: '10px 20px',
-              width: '100%',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '15px',
-              marginTop: '15px'
-            }}
-          >
-            <FormControl fullWidth>
-              <TextField
-                error={error.name}
-                label={t('Nomi')}
-                size='small'
-                name='name'
-                defaultValue={dataRowEdit?.name}
-              />
-              <FormHelperText error={error.name}>{error.name?.message}</FormHelperText>
-            </FormControl>
-            <FormControl fullWidth>
-              <InputLabel size='small' id='demo-simple-select-outlined-label'>
-                {t('branch')}
-              </InputLabel>
-              <Select
-                error={error.branch}
-                size='small'
-                label={t('branch')}
-                id='demo-simple-select-outlined'
-                labelId='demo-simple-select-outlined-label'
-                name='branch'
-                defaultValue={dataRowEdit?.branch?.id}
-              >
-                {branches?.length > 0 &&
-                  branches?.map((item: any) => <MenuItem key={item.id} value={item.id}>{item?.name}</MenuItem>)}
-              </Select>
-
-              <FormHelperText error={error.branch}>{error.branch?.message}</FormHelperText>
-            </FormControl>
-            <Button type='submit' variant='contained' color='success' fullWidth>
-              {' '}
-              {t('Saqlash')}
-            </Button>
-          </Form>
-        )}
-      </CustomeDrawer>
+      <EditRoomDialog />
     </div>
   )
 }

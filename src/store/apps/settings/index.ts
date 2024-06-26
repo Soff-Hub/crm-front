@@ -46,10 +46,33 @@ export const editCourse = createAsyncThunk('settings/editCourse', async (data: a
 })
 
 
-export const fetchRoomList = createAsyncThunk('settings/fetchRoomList', async () => {
-    return (await api.get('common/rooms/')).data
+export const fetchRoomList = createAsyncThunk('settings/fetchRoomList', async (params?: any) => {
+    return (await api.get('common/rooms/', { params })).data
 })
 
+export const createRoom = createAsyncThunk('settings/createRoom', async (data: any, { rejectWithValue }) => {
+    try {
+        const response = await api.post(`common/room/create`, data);
+        return response.data;
+    } catch (err: any) {
+        if (err.response) {
+            return rejectWithValue(err.response.data);
+        }
+        return rejectWithValue(err.message);
+    }
+})
+
+export const editRoom = createAsyncThunk('settings/editRoom', async (data: any, { rejectWithValue }) => {
+    try {
+        const response = await api.patch(`common/room/update/${data.id}`, data);
+        return response.data;
+    } catch (err: any) {
+        if (err.response) {
+            return rejectWithValue(err.response.data);
+        }
+        return rejectWithValue(err.message);
+    }
+})
 
 
 
@@ -61,7 +84,9 @@ const initialState: SettingsState = {
     course_list: [],
     openEditCourse: null,
     rooms: [],
-    openEditRoom: null
+    openEditRoom: null,
+    room_count: 0, 
+    active_page: 1
 }
 
 export const settingsSlice = createSlice({
@@ -79,7 +104,10 @@ export const settingsSlice = createSlice({
         },
         setOpenEditRoom: (state, action) => {
             state.openEditRoom = action.payload
-        }
+        },
+        updatePage: (state, action) => {
+            state.active_page = action.payload
+        },
     },
     extraReducers: builder => {
         builder
@@ -109,6 +137,7 @@ export const settingsSlice = createSlice({
             .addCase(fetchRoomList.fulfilled, (state, action) => {
                 state.is_pending = false
                 state.rooms = action.payload?.results.sort((a: RoomType, b: RoomType) => a.id - b.id)
+                state.room_count = Math.ceil(action.payload.count / 10)
             })
     }
 })
@@ -116,7 +145,9 @@ export const settingsSlice = createSlice({
 export const {
     setOpenCreateSms,
     setOpenEditSms,
-    setOpenEditCourse
+    setOpenEditCourse,
+    setOpenEditRoom,
+    updatePage
 } = settingsSlice.actions
 
 export default settingsSlice.reducer
