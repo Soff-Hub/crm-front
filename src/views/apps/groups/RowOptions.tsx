@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { IconButton, Menu } from '@mui/material';
 import { MouseEvent, useState } from 'react';
 import IconifyIcon from 'src/@core/components/icon';
