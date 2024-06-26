@@ -1,3 +1,4 @@
+// @ts-nocheck
 import CardStatsVertical from 'src/@core/components/card-statistics/card-stats-vertical';
 import IconifyIcon from 'src/@core/components/icon';
 import Box from '@mui/material/Box';

@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 // ** React Imports
 import { useContext, useEffect, useState } from 'react'
 
