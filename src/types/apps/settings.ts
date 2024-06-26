@@ -3,6 +3,15 @@ export interface SmsItemType {
     description: string
 }
 
+export interface RoomType {
+    id: number
+    name: string
+    branch: {
+        id: number
+        name: string
+    },
+    is_delete: boolean
+}
 
 export interface CourseItemType {
     id: number,
@@ -18,7 +27,7 @@ export interface CourseItemType {
     branch: {
         name: string,
         id: number
-    }[]
+    }[],
 }
 
 export interface SettingsState {
@@ -28,4 +37,6 @@ export interface SettingsState {
     openEditSms: null | SmsItemType
     openEditCourse: null | CourseItemType
     course_list: CourseItemType[]
+    rooms: RoomType[]
+    openEditRoom: null | RoomType
 }

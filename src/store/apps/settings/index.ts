@@ -1,7 +1,7 @@
 // ** Redux Imports
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import api from 'src/@core/utils/api'
-import { SettingsState, SmsItemType } from 'src/types/apps/settings'
+import { RoomType, SettingsState, SmsItemType } from 'src/types/apps/settings'
 
 
 export const fetchSmsList = createAsyncThunk('settings/fetchSmsList', async () => {
@@ -46,6 +46,11 @@ export const editCourse = createAsyncThunk('settings/editCourse', async (data: a
 })
 
 
+export const fetchRoomList = createAsyncThunk('settings/fetchRoomList', async () => {
+    return (await api.get('common/rooms/')).data
+})
+
+
 
 
 const initialState: SettingsState = {
@@ -54,7 +59,9 @@ const initialState: SettingsState = {
     openCreateSms: false,
     openEditSms: null,
     course_list: [],
-    openEditCourse: null
+    openEditCourse: null,
+    rooms: [],
+    openEditRoom: null
 }
 
 export const settingsSlice = createSlice({
@@ -69,6 +76,9 @@ export const settingsSlice = createSlice({
         },
         setOpenEditCourse: (state, action) => {
             state.openEditCourse = action.payload
+        },
+        setOpenEditRoom: (state, action) => {
+            state.openEditRoom = action.payload
         }
     },
     extraReducers: builder => {
@@ -92,6 +102,13 @@ export const settingsSlice = createSlice({
             .addCase(fetchCoursesList.fulfilled, (state, action) => {
                 state.is_pending = false
                 state.course_list = action.payload?.results
+            })
+            .addCase(fetchRoomList.pending, (state) => {
+                state.is_pending = true
+            })
+            .addCase(fetchRoomList.fulfilled, (state, action) => {
+                state.is_pending = false
+                state.rooms = action.payload?.results.sort((a: RoomType, b: RoomType) => a.id - b.id)
             })
     }
 })

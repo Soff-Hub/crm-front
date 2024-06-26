@@ -13,8 +13,6 @@ import {
 import React, { MouseEvent, ReactNode, useEffect, useState } from 'react'
 import IconifyIcon from 'src/@core/components/icon'
 import DataTable from 'src/@core/components/table'
-import MuiDrawer, { DrawerProps } from '@mui/material/Drawer'
-import { styled } from '@mui/material/styles'
 import MenuItem from '@mui/material/MenuItem'
 import UserSuspendDialog from 'src/views/apps/mentors/view/UserSuspendDialog'
 import { useTranslation } from 'react-i18next'
@@ -23,6 +21,9 @@ import ceoConfigs from 'src/configs/ceo'
 import useBranches from 'src/hooks/useBranch'
 import Form from 'src/@core/components/form'
 import toast from 'react-hot-toast'
+import { CustomeDrawer } from './courses'
+import { useAppDispatch, useAppSelector } from 'src/store'
+import { fetchRoomList } from 'src/store/apps/settings'
 
 export interface customTableProps {
   xs: number
@@ -31,19 +32,6 @@ export interface customTableProps {
   render?: (source: string) => any | undefined
 }
 
-const Drawer = styled(MuiDrawer)<DrawerProps>(({ theme }) => ({
-  width: 400,
-  zIndex: theme.zIndex.modal,
-  '& .MuiFormControlLabel-root': {
-    marginRight: '0.6875rem'
-  },
-  '& .MuiDrawer-paper': {
-    border: 0,
-    width: 400,
-    zIndex: theme.zIndex.modal,
-    boxShadow: theme.shadows[9]
-  }
-}))
 
 export default function RoomsPage() {
   const [openAddGroup, setOpenAddGroup] = useState<boolean>(false)
@@ -53,6 +41,8 @@ export default function RoomsPage() {
   const [error, setError] = useState<any>({})
   const { t } = useTranslation()
   const { getBranches, branches } = useBranches()
+  const { rooms, is_pending } = useAppSelector(state => state.settings)
+  const dispatch = useAppDispatch()
 
   const RowOptions = ({ id }: any) => {
     // ** State
@@ -156,7 +146,7 @@ export default function RoomsPage() {
   }
 
   useEffect(() => {
-    getUsers()
+    dispatch(fetchRoomList())
     getBranches()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -224,9 +214,9 @@ export default function RoomsPage() {
           {t("Yangi xona qo'shish")}
         </Button>
       </Box>
-      <DataTable columns={columns} data={dataRow} minWidth='700px' maxWidth='700px' />
+      <DataTable loading={is_pending} columns={columns} data={rooms} minWidth='700px' maxWidth='700px' />
 
-      <Drawer open={openAddGroup} hideBackdrop anchor='right' variant='persistent'>
+      <CustomeDrawer open={openAddGroup} hideBackdrop anchor='right' variant='persistent'>
         <Box
           className='customizer-header'
           sx={{
@@ -295,9 +285,9 @@ export default function RoomsPage() {
             {t('Saqlash')}
           </Button>
         </Form>
-      </Drawer>
+      </CustomeDrawer>
 
-      <Drawer open={openAddGroupEdit} hideBackdrop anchor='right' variant='persistent'>
+      <CustomeDrawer open={openAddGroupEdit} hideBackdrop anchor='right' variant='persistent'>
         <Box
           className='customizer-header'
           sx={{
@@ -373,7 +363,7 @@ export default function RoomsPage() {
             </Button>
           </Form>
         )}
-      </Drawer>
+      </CustomeDrawer>
     </div>
   )
 }
