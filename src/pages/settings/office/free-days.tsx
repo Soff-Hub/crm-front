@@ -1,32 +1,22 @@
 import {
     Box,
     Button,
-    FormControl,
-    FormHelperText,
     IconButton,
-    InputLabel,
     Menu,
-    Select,
-    TextField,
     Typography
 } from '@mui/material'
 import React, { MouseEvent, ReactNode, useEffect, useState } from 'react'
 import IconifyIcon from 'src/@core/components/icon'
 import DataTable from 'src/@core/components/table'
-import MuiDrawer, { DrawerProps } from '@mui/material/Drawer'
-import { styled } from '@mui/material/styles'
 import MenuItem from '@mui/material/MenuItem'
 import UserSuspendDialog from 'src/views/apps/mentors/view/UserSuspendDialog'
 import { useTranslation } from 'react-i18next'
 import api from 'src/@core/utils/api'
-import ceoConfigs from 'src/configs/ceo'
-import Form from 'src/@core/components/form'
 import toast from 'react-hot-toast'
-import { today } from 'src/@core/components/card-statistics/kanban-item'
 import { useAppDispatch, useAppSelector } from 'src/store'
 import { fetchWekends, setOpenCreateSms, setWekendData } from 'src/store/apps/settings'
-import CreateWekendDialog from 'src/views/apps/settings/wekends/CreateWekenddialog'
 import EditWekendDialog from 'src/views/apps/settings/wekends/EditWekendDialog'
+import CreateWekendDialog from 'src/views/apps/settings/wekends/CreateWekendDialog'
 
 export interface customTableProps {
     xs: number
@@ -35,26 +25,9 @@ export interface customTableProps {
     render?: (source: string) => any | undefined
 }
 
-const Drawer = styled(MuiDrawer)<DrawerProps>(({ theme }) => ({
-    width: 400,
-    zIndex: theme.zIndex.modal,
-    '& .MuiFormControlLabel-root': {
-        marginRight: '0.6875rem'
-    },
-    '& .MuiDrawer-paper': {
-        border: 0,
-        width: 400,
-        zIndex: theme.zIndex.modal,
-        boxShadow: theme.shadows[9]
-    }
-}))
 
 export default function RoomsPage() {
-    const [openAddGroup, setOpenAddGroup] = useState<boolean>(false)
-    const [openAddGroupEdit, setOpenAddGroupEdit] = useState<boolean>(false)
     const [dataRow, setData] = useState([])
-    const [dataRowEdit, setDataRowEdit] = useState<any>(null)
-    const [error, setError] = useState<any>({})
     const { t } = useTranslation()
     const dispatch = useAppDispatch()
     const { wekends, is_pending } = useAppSelector(state => state.settings)
@@ -63,13 +36,11 @@ export default function RoomsPage() {
         // ** State
         const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
         const [suspendDialogOpen, setSuspendDialogOpen] = useState<boolean>(false)
-        const [loading, setLoading] = useState<boolean>(false)
 
         const rowOptionsOpen = Boolean(anchorEl)
 
         const handleRowOptionsClick = (event: MouseEvent<HTMLElement>) => {
             setAnchorEl(event.currentTarget)
-            setDataRowEdit(null)
         }
         const handleRowOptionsClose = () => {
             setAnchorEl(null)
@@ -160,27 +131,6 @@ export default function RoomsPage() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
-    // Post functions
-
-    async function handelCliclPosts(value: any) {
-        try {
-            await api.post('common/weekend/create/', value)
-            setOpenAddGroup(false)
-            toast.success("Muvaffaqiyatli! qo'shildi", { position: 'top-center' })
-            getUsers()
-        } catch (error: any) {
-            toast.error('Xatolik yuz berdi!', { position: 'top-center' })
-        }
-    }
-
-    // Edit functions
-
-    async function handelClickEditCourses(value: any) {
-        await api.patch(`$common/weekend/update/${dataRowEdit?.id}/`, value)
-        setOpenAddGroupEdit(false)
-        getUsers()
-    }
-
     const columns: customTableProps[] = [
         {
             xs: 0.2,
@@ -228,123 +178,7 @@ export default function RoomsPage() {
 
             <CreateWekendDialog />
 
-            {/* <Drawer open={openAddGroup} hideBackdrop anchor='right' variant='persistent'>
-                <Box
-                    className='customizer-header'
-                    sx={{
-                        position: 'relative',
-                        p: theme => theme.spacing(3.5, 5),
-                        borderBottom: theme => `1px solid ${theme.palette.divider}`
-                    }}
-                >
-                    <Typography variant='h6' sx={{ fontWeight: 600 }}>
-                        {t("Dam olish kuni qo'shish")}
-                    </Typography>
-                    <IconButton
-                        onClick={() => setOpenAddGroup(false)}
-                        sx={{
-                            right: 20,
-                            top: '50%',
-                            position: 'absolute',
-                            color: 'text.secondary',
-                            transform: 'translateY(-50%)'
-                        }}
-                    >
-                        <IconifyIcon icon='mdi:close' fontSize={20} />
-                    </IconButton>
-                </Box>
-
-                <Form
-                    setError={setError}
-                    valueTypes='json'
-                    onSubmit={handelCliclPosts}
-                    id='posts-sASSasAs-id'
-                    sx={{
-                        padding: '10px 20px',
-                        width: '100%',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: '15px',
-                        marginTop: '15px'
-                    }}
-                >
-                    <FormControl fullWidth>
-                        <TextField error={error.date} label={t('Sana')} size='small' name='date' type='date' defaultValue={today} />
-                        <FormHelperText error={error.date}>{error.date?.message}</FormHelperText>
-                    </FormControl>
-
-                    <FormControl fullWidth>
-                        <TextField error={error.description} multiline rows={3} label={t('Sabab')} size='small' name='description' />
-                        <FormHelperText error={error.description}>{error.description?.message}</FormHelperText>
-                    </FormControl>
-
-                    <Button type='submit' variant='contained' color='success' fullWidth>
-                        {' '}
-                        {t('Saqlash')}
-                    </Button>
-                </Form>
-            </Drawer> */}
-
             <EditWekendDialog />
-
-            {/* <Drawer open={openAddGroupEdit} hideBackdrop anchor='right' variant='persistent'>
-                <Box
-                    className='customizer-header'
-                    sx={{
-                        position: 'relative',
-                        p: theme => theme.spacing(3.5, 5),
-                        borderBottom: theme => `1px solid ${theme.palette.divider}`
-                    }}
-                >
-                    <Typography variant='h6' sx={{ fontWeight: 600 }}>
-                        {t("Kunni o'zgartirish")}
-                    </Typography>
-                    <IconButton
-                        onClick={() => setOpenAddGroupEdit(false)}
-                        sx={{
-                            right: 20,
-                            top: '50%',
-                            position: 'absolute',
-                            color: 'text.secondary',
-                            transform: 'translateY(-50%)'
-                        }}
-                    >
-                        <IconifyIcon icon='mdi:close' fontSize={20} />
-                    </IconButton>
-                </Box>
-                {dataRowEdit !== null && (
-                    <Form
-                        setError={setError}
-                        reqiuredFields={['name', 'branch']}
-                        valueTypes='form-data'
-                        onSubmit={handelClickEditCourses}
-                        id='posts-courses-id-edit'
-                        sx={{
-                            padding: '10px 20px',
-                            width: '100%',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            gap: '15px',
-                            marginTop: '15px'
-                        }}
-                    >
-                        <FormControl fullWidth>
-                            <TextField error={error.date} label={t('Sana')} size='small' name='date' type='date' defaultValue={today} />
-                            <FormHelperText error={error.date}>{error.date?.message}</FormHelperText>
-                        </FormControl>
-
-                        <FormControl fullWidth>
-                            <TextField error={error.description} multiline rows={3} label={t('Sabab')} size='small' name='description' />
-                            <FormHelperText error={error.description}>{error.description?.message}</FormHelperText>
-                        </FormControl>
-
-                        <Button type='submit' variant='contained' color='success' fullWidth>
-                            {' '}
-                            {t('Saqlash')}
-                        </Button>
-                    </Form>
-                )}
-            </Drawer> */}
         </div>
     )
 }

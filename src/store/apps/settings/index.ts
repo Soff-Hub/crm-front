@@ -102,6 +102,33 @@ export const updateWekend = createAsyncThunk('settings/updateWekend', async (dat
     }
 })
 
+export const fetchEmployees = createAsyncThunk('settings/fetchEmployees', async () => {
+    return (await api.get('auth/employees/')).data
+})
+
+export const createEmployee = createAsyncThunk('settings/createEmployee', async (data: any, { rejectWithValue }) => {
+    try {
+        const response = await api.post(`auth/create/employee/`, data);
+        return response.data;
+    } catch (err: any) {
+        if (err.response) {
+            return rejectWithValue(err.response.data);
+        }
+        return rejectWithValue(err.message);
+    }
+})
+
+export const editEmployee = createAsyncThunk('settings/editEmployee', async (data: any, { rejectWithValue }) => {
+    try {
+        const response = await api.patch(`auth/update/employee/${data.id}`, data);
+        return response.data;
+    } catch (err: any) {
+        if (err.response) {
+            return rejectWithValue(err.response.data);
+        }
+        return rejectWithValue(err.message);
+    }
+})
 
 
 const initialState: SettingsState = {
@@ -116,7 +143,9 @@ const initialState: SettingsState = {
     room_count: 0,
     active_page: 1,
     wekends: [],
-    wekendData: null
+    wekendData: null,
+    employees: [],
+    employeeData: null
 }
 
 export const settingsSlice = createSlice({
@@ -141,6 +170,9 @@ export const settingsSlice = createSlice({
         setWekendData: (state, action) => {
             state.wekendData = action.payload
         },
+        setEmployeeData: (state, action) => {
+            state.employeeData = action.payload
+        }
     },
     extraReducers: builder => {
         builder
@@ -179,6 +211,13 @@ export const settingsSlice = createSlice({
                 state.is_pending = false
                 state.wekends = action.payload
             })
+            .addCase(fetchEmployees.pending, (state) => {
+                state.is_pending = true
+            })
+            .addCase(fetchEmployees.fulfilled, (state, action) => {
+                state.is_pending = false
+                state.employees = action.payload?.results
+            })
     }
 })
 
@@ -188,7 +227,8 @@ export const {
     setOpenEditCourse,
     setOpenEditRoom,
     updatePage,
-    setWekendData
+    setWekendData,
+    setEmployeeData
 } = settingsSlice.actions
 
 export default settingsSlice.reducer
