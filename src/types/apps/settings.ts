@@ -1,3 +1,5 @@
+import { genderTypes } from "./userTypes"
+
 export interface SmsItemType {
     id: number
     description: string
@@ -37,6 +39,16 @@ export interface WekendItemType {
     description: string
 }
 
+export interface EmployeeItemType {
+    id: number
+    first_name: string
+    phone: string
+    gender: genderTypes
+    roles_list: string[]
+    birth_date: string | null
+    employee_salary: number
+}
+
 export interface SettingsState {
     is_pending: boolean
     sms_list: SmsItemType[]
@@ -49,4 +61,7 @@ export interface SettingsState {
     room_count: number
     active_page: number
     wekends: WekendItemType[]
+    wekendData: WekendItemType | null
+    employees: EmployeeItemType[]
+    employeeData: any
 }

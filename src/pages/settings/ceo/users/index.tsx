@@ -315,6 +315,24 @@ export default function GroupsPage() {
                         <TextField size='small' fullWidth label={t('password')} required name='password' />
 
                         <FormControl fullWidth>
+                            <Button
+                                component='label'
+                                role={undefined}
+                                variant='contained'
+                                tabIndex={-1}
+                                startIcon={<IconifyIcon icon={'subway:cloud-upload'} />}
+                            >
+                                {t("Rasm qo'shish")}
+                                <VisuallyHiddenInput
+
+                                    // name='image'
+                                    type='file'
+                                    accept='.png, .jpg, .jpeg, .webp, .HEIC, .heic'
+                                />
+                            </Button>
+                        </FormControl>
+
+                        <FormControl fullWidth>
                             <InputLabel size='small' id='user-view-language-label'>{t('branch')}</InputLabel>
                             <Select
                                 size='small'
@@ -443,7 +461,7 @@ export default function GroupsPage() {
                                         {t("Rasm qo'shish")}
                                         <VisuallyHiddenInput
 
-                                            // name='image'
+                                            name='image'
                                             type='file'
                                             accept='.png, .jpg, .jpeg, .webp, .HEIC, .heic'
                                         />
