@@ -23,8 +23,10 @@ import ceoConfigs from 'src/configs/ceo'
 import Form from 'src/@core/components/form'
 import toast from 'react-hot-toast'
 import { today } from 'src/@core/components/card-statistics/kanban-item'
-import { useAppDispatch } from 'src/store'
-import { fetchWekends } from 'src/store/apps/settings'
+import { useAppDispatch, useAppSelector } from 'src/store'
+import { fetchWekends, setOpenCreateSms, setWekendData } from 'src/store/apps/settings'
+import CreateWekendDialog from 'src/views/apps/settings/wekends/CreateWekenddialog'
+import EditWekendDialog from 'src/views/apps/settings/wekends/EditWekendDialog'
 
 export interface customTableProps {
     xs: number
@@ -55,11 +57,13 @@ export default function RoomsPage() {
     const [error, setError] = useState<any>({})
     const { t } = useTranslation()
     const dispatch = useAppDispatch()
+    const { wekends, is_pending } = useAppSelector(state => state.settings)
 
     const RowOptions = ({ id }: any) => {
         // ** State
         const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
         const [suspendDialogOpen, setSuspendDialogOpen] = useState<boolean>(false)
+        const [loading, setLoading] = useState<boolean>(false)
 
         const rowOptionsOpen = Boolean(anchorEl)
 
@@ -81,7 +85,7 @@ export default function RoomsPage() {
         async function handleDeletePosts(id: number) {
             handleRowOptionsClose()
             try {
-                await api.delete(`${ceoConfigs.rooms_delete}/${id}`)
+                await api.delete(`common/weekend/delete/${id}/`)
                 toast.success("Muvaffaqiyatli! o'chirildi", { position: 'top-center' })
                 getUsers()
             } catch (error: any) {
@@ -93,14 +97,8 @@ export default function RoomsPage() {
 
         function handleEdit(id: number) {
             handleRowOptionsClose()
-            try {
-                setOpenAddGroupEdit(true)
-                const resp = dataRow.find((el: any) => el.id === id)
-                setDataRowEdit(resp)
-                getUsers()
-            } catch (error: any) {
-                toast.error('Xatolik yuz berdi!', { position: 'top-center' })
-            }
+            const find = wekends.find(el => el.id === id)
+            dispatch(setWekendData(find))
         }
 
         return (
@@ -218,7 +216,7 @@ export default function RoomsPage() {
             >
                 <Typography variant='h5'>{t('Dam olish kunlari')}</Typography>
                 <Button
-                    onClick={() => setOpenAddGroup(true)}
+                    onClick={() => dispatch(setOpenCreateSms(true))}
                     variant='contained'
                     size='small'
                     startIcon={<IconifyIcon icon='ic:baseline-plus' />}
@@ -226,9 +224,11 @@ export default function RoomsPage() {
                     {t("Yangi qo'shish")}
                 </Button>
             </Box>
-            <DataTable columns={columns} data={dataRow} />
+            <DataTable loading={is_pending} columns={columns} data={wekends} />
 
-            <Drawer open={openAddGroup} hideBackdrop anchor='right' variant='persistent'>
+            <CreateWekendDialog />
+
+            {/* <Drawer open={openAddGroup} hideBackdrop anchor='right' variant='persistent'>
                 <Box
                     className='customizer-header'
                     sx={{
@@ -283,9 +283,11 @@ export default function RoomsPage() {
                         {t('Saqlash')}
                     </Button>
                 </Form>
-            </Drawer>
+            </Drawer> */}
 
-            <Drawer open={openAddGroupEdit} hideBackdrop anchor='right' variant='persistent'>
+            <EditWekendDialog />
+
+            {/* <Drawer open={openAddGroupEdit} hideBackdrop anchor='right' variant='persistent'>
                 <Box
                     className='customizer-header'
                     sx={{
@@ -342,7 +344,7 @@ export default function RoomsPage() {
                         </Button>
                     </Form>
                 )}
-            </Drawer>
+            </Drawer> */}
         </div>
     )
 }

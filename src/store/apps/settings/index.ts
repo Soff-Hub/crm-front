@@ -47,7 +47,7 @@ export const editCourse = createAsyncThunk('settings/editCourse', async (data: a
 
 
 export const fetchRoomList = createAsyncThunk('settings/fetchRoomList', async (params?: any) => {
-    return (await api.get('common/weekend/list/', { params })).data
+    return (await api.get('common/rooms/', { params })).data
 })
 
 export const createRoom = createAsyncThunk('settings/createRoom', async (data: any, { rejectWithValue }) => {
@@ -75,7 +75,31 @@ export const editRoom = createAsyncThunk('settings/editRoom', async (data: any, 
 })
 
 export const fetchWekends = createAsyncThunk('settings/fetchWekends', async () => {
-    return (await api.get('common/rooms/')).data
+    return (await api.get('common/weekend/list/')).data
+})
+
+export const createWekend = createAsyncThunk('settings/createWekend', async (data: any, { rejectWithValue }) => {
+    try {
+        const response = await api.post(`common/weekend/create/`, data);
+        return response.data;
+    } catch (err: any) {
+        if (err.response) {
+            return rejectWithValue(err.response.data);
+        }
+        return rejectWithValue(err.message);
+    }
+})
+
+export const updateWekend = createAsyncThunk('settings/updateWekend', async (data: any, { rejectWithValue }) => {
+    try {
+        const response = await api.patch(`common/weekend/update/${data.id}/`, data);
+        return response.data;
+    } catch (err: any) {
+        if (err.response) {
+            return rejectWithValue(err.response.data);
+        }
+        return rejectWithValue(err.message);
+    }
 })
 
 
@@ -91,7 +115,8 @@ const initialState: SettingsState = {
     openEditRoom: null,
     room_count: 0,
     active_page: 1,
-    wekends: []
+    wekends: [],
+    wekendData: null
 }
 
 export const settingsSlice = createSlice({
@@ -112,6 +137,9 @@ export const settingsSlice = createSlice({
         },
         updatePage: (state, action) => {
             state.active_page = action.payload
+        },
+        setWekendData: (state, action) => {
+            state.wekendData = action.payload
         },
     },
     extraReducers: builder => {
@@ -159,7 +187,8 @@ export const {
     setOpenEditSms,
     setOpenEditCourse,
     setOpenEditRoom,
-    updatePage
+    updatePage,
+    setWekendData
 } = settingsSlice.actions
 
 export default settingsSlice.reducer

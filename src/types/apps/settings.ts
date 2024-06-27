@@ -49,4 +49,5 @@ export interface SettingsState {
     room_count: number
     active_page: number
     wekends: WekendItemType[]
+    wekendData: WekendItemType | null
 }
