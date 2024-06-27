@@ -18,7 +18,7 @@ import * as Yup from "yup";
 import { useFormik } from 'formik';
 import { useAppDispatch, useAppSelector } from 'src/store';
 import { fetchTeachersList, updateTeacher } from 'src/store/apps/mentors';
-import { CreateTeacherDto, UpdateTeacherDto } from 'src/types/apps/mentorsTypes';
+import { UpdateTeacherDto } from 'src/types/apps/mentorsTypes';
 import { useEffect, useRef, useState } from 'react';
 import { TeacherAvatar } from './AddMentorsModal';
 
@@ -49,7 +49,7 @@ export default function EditTeacherModal() {
     const [loading, setLoading] = useState<boolean>(false)
     const [image, setImage] = useState<any>(null)
 
-    const initialValues: CreateTeacherDto = {
+    const initialValues: UpdateTeacherDto = {
         first_name: "",
         phone: "",
         birth_date: "",
@@ -97,7 +97,8 @@ export default function EditTeacherModal() {
 
             for (const [key, value] of Object.entries(values)) {
                 if (!['image'].includes(key)) {
-                    newValues.append(key, value)
+                    if (key == "password" && value == "") {
+                    } else newValues.append(key, value)
                 }
             }
 
@@ -158,18 +159,24 @@ export default function EditTeacherModal() {
                 </TeacherAvatar>
 
                 <FormControl sx={{ width: '100%' }}>
-                    <TextField label={t("first_name")} name='first_name' onChange={formik.handleChange} onBlur={formik.handleBlur} value={formik.values.first_name} error={!!formik.errors.first_name} />
-                    <FormHelperText error={!!formik.errors.first_name}>{formik.errors.first_name}</FormHelperText>
+                    <TextField label={t("first_name")} name='first_name' onChange={formik.handleChange} onBlur={formik.handleBlur} value={formik.values.first_name} error={!!formik.errors.first_name && formik.touched.first_name} />
+                    <FormHelperText error>
+                        {(!!formik.errors.first_name && formik.touched.first_name) && formik.errors.first_name}
+                    </FormHelperText>
                 </FormControl>
 
                 <FormControl sx={{ width: '100%' }}>
-                    <TextField label={t("phone")} name='phone' onChange={formik.handleChange} onBlur={formik.handleBlur} value={formik.values.phone} error={!!formik.errors.phone} defaultValue={"+998"} />
-                    <FormHelperText error={!!formik.errors.phone}>{formik.errors.phone}</FormHelperText>
+                    <TextField label={t("phone")} name='phone' onChange={formik.handleChange} onBlur={formik.handleBlur} value={formik.values.phone} error={!!formik.errors.phone && formik.touched.phone} defaultValue={"+998"} />
+                    <FormHelperText error>
+                        {(!!formik.errors.phone && formik.touched.phone) && formik.errors.phone}
+                    </FormHelperText>
                 </FormControl>
 
                 <FormControl sx={{ width: '100%' }}>
-                    <TextField type='date' label={t("birth_date")} name='birth_date' onChange={formik.handleChange} onBlur={formik.handleBlur} value={formik.values.birth_date} error={!!formik.errors.birth_date} />
-                    <FormHelperText error={!!formik.errors.birth_date}>{formik.errors.birth_date}</FormHelperText>
+                    <TextField type='date' label={t("birth_date")} name='birth_date' onChange={formik.handleChange} onBlur={formik.handleBlur} value={formik.values.birth_date} error={!!formik.errors.birth_date && formik.touched.birth_date} />
+                    <FormHelperText error>
+                        {(!!formik.errors.birth_date && formik.touched.birth_date) && formik.errors.birth_date}
+                    </FormHelperText>
                 </FormControl>
 
                 <FormControl sx={{ width: '100%' }}>
