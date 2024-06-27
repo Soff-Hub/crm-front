@@ -46,15 +46,15 @@ export interface TeacherDetailType {
 }
 
 export interface UpdateTeacherDto {
-  id: number
+  id?: number
   first_name: string
   birth_date: string
   activated_at: string
   password: string
-  branches: number[]
+  branches?: number[]
   gender: 'male' | 'female'
   phone: string
-  roles: number[]
+  roles?: number[]
   image: string | null
   amount: string | null
   percentage: string | null

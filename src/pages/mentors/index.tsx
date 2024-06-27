@@ -61,6 +61,16 @@ export default function GroupsPage() {
     },
     {
       xs: 1.7,
+      title: "Doimiy oylik",
+      dataIndex: 'amount'
+    },
+    {
+      xs: 1.7,
+      title: "KPI asosida(%)",
+      dataIndex: 'percentage'
+    },
+    {
+      xs: 1.7,
       title: t("birth_date"),
       dataIndex: 'birth_date'
     },
