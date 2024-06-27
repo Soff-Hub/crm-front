@@ -17,6 +17,7 @@ export interface IDashboardState {
   isLessonLoading: boolean
   events: ILessonResponse[]
   weeks: string[]
+  workTime: string[]
   weekDays: string[]
   statsData: StatsDataType[]
 }

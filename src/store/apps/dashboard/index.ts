@@ -60,7 +60,7 @@ export const fetchLessons = createAsyncThunk('dashboard/fetchLessons', async (qu
   }).toString()
 
   const response = await api.get(`common/dashboard/?` + queryString)
-  return response.data.room_list
+  return response.data
 })
 
 const initialState: IDashboardState = {
@@ -69,6 +69,7 @@ const initialState: IDashboardState = {
   isLessonLoading: false,
   isStatsLoading: false,
   events: [],
+  workTime: [],
   statsData: statsData,
   tabValue: currentWeek === 'mon' || currentWeek === 'wed' || currentWeek === 'fri' ? '2' : '1',
   weekDays: ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'],
@@ -115,7 +116,8 @@ export const dashboardSlice = createSlice({
       state.isLessonLoading = true
     })
     builder.addCase(fetchLessons.fulfilled, (state, action) => {
-      state.events = action.payload
+      state.events = action.payload.room_list
+      state.workTime = action.payload.work_time
       state.isLessonLoading = false
     })
     builder.addCase(fetchLessons.rejected, state => {
