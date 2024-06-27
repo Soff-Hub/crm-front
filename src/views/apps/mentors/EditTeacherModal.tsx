@@ -1,5 +1,6 @@
 import {
     Box,
+    Checkbox,
     FormControlLabel,
     FormHelperText,
     FormLabel,
@@ -15,10 +16,10 @@ import { today } from 'src/@core/components/card-statistics/kanban-item';
 import { useTranslation } from 'react-i18next';
 import * as Yup from "yup";
 import { useFormik } from 'formik';
-import { useAppDispatch } from 'src/store';
+import { useAppDispatch, useAppSelector } from 'src/store';
 import { fetchTeachersList, updateTeacher } from 'src/store/apps/mentors';
-import { UpdateTeacherDto } from 'src/types/apps/mentorsTypes';
-import { useRef, useState } from 'react';
+import { CreateTeacherDto, UpdateTeacherDto } from 'src/types/apps/mentorsTypes';
+import { useEffect, useRef, useState } from 'react';
 import { TeacherAvatar } from './AddMentorsModal';
 
 export const VisuallyHiddenInput = styled('input')({
@@ -37,8 +38,8 @@ interface EditTeacherModalProps {
     initialValues: UpdateTeacherDto
 }
 
-export default function EditTeacherModal({ initialValues }: EditTeacherModalProps) {
-
+export default function EditTeacherModal() {
+    const { teacherData } = useAppSelector(state => state.mentors)
     // ** Hooks 
     const { t } = useTranslation()
     const dispatch = useAppDispatch()
@@ -48,16 +49,44 @@ export default function EditTeacherModal({ initialValues }: EditTeacherModalProp
     const [loading, setLoading] = useState<boolean>(false)
     const [image, setImage] = useState<any>(null)
 
-    const validationSchema = Yup.object({
-        first_name: Yup.string().required("Ismingizni kiriting"),
-        phone: Yup.string().required("Telefon raqam kiriting"),
-        birth_date: Yup.string(),
-        gender: Yup.string().required("Jinsini tanlang"),
-        // image: Yup.string(),
-        password: Yup.string(),
-    });
+    const initialValues: CreateTeacherDto = {
+        first_name: "",
+        phone: "",
+        birth_date: "",
+        activated_at: "",
+        gender: 'male',
+        image: null,
+        is_fixed_salary: false,
+        password: "",
+        percentage: "",
+        amount: ""
+    }
 
-    
+    const validationSchema = () => {
+        return Yup.object().shape(
+            {
+                first_name: Yup.string().required("Ismingizni kiriting"),
+                phone: Yup.string().required("Telefon raqam kiriting"),
+                birth_date: Yup.string().nullable(),
+                activated_at: Yup.string().required("Ishga olingan sanani kiriting"),
+                gender: Yup.string().required("Jinsini tanlang"),
+                is_fixed_salary: Yup.string().required("Jinsini tanlang"),
+                // image: Yup.string(),
+                password: Yup.string(),
+                amount: Yup.string().when("percentage", {
+                    is: (kpiPercentage: string) => !kpiPercentage || kpiPercentage.trim() === "",
+                    then: Yup.string().required("To'ldiring(Foiz kiritilmasa)."),
+                }),
+                percentage: Yup.string().when("amount", {
+                    is: (fixedSalary: string) => !fixedSalary || fixedSalary.trim() === "",
+                    then: Yup.string().required("To'ldiring(O'zgarmas oylik kiritilmasa)"),
+                }),
+
+            },
+            ["amount", "percentage"]
+        );
+    };
+
 
     const formik = useFormik({
         initialValues,
@@ -69,7 +98,7 @@ export default function EditTeacherModal({ initialValues }: EditTeacherModalProp
             for (const [key, value] of Object.entries(values)) {
                 if (!['image'].includes(key)) {
                     newValues.append(key, value)
-                }   
+                }
             }
 
             if (image) {
@@ -79,7 +108,7 @@ export default function EditTeacherModal({ initialValues }: EditTeacherModalProp
 
             const resp = await dispatch(updateTeacher({
                 data: newValues,
-                id: initialValues.id
+                id: teacherData?.id
             }))
 
             if (resp.meta.requestStatus === 'rejected') {
@@ -92,6 +121,21 @@ export default function EditTeacherModal({ initialValues }: EditTeacherModalProp
             setLoading(false)
         }
     });
+
+    useEffect(() => {
+        if (teacherData) {
+            for (const [key, value] of Object.entries(teacherData)) {
+                formik.setFieldValue(key, value);
+            }
+        }
+    }, [teacherData]);
+
+    const handleCheckboxChange = (event: React.SyntheticEvent, checked: boolean) => {
+        formik.setFieldValue("is_fixed_salary", checked)
+        formik.setFieldValue("amount", "")
+        formik.setFieldValue("percentage", "")
+
+    }
 
     return (
         <Box width={'100%'}>
@@ -124,9 +168,63 @@ export default function EditTeacherModal({ initialValues }: EditTeacherModalProp
                 </FormControl>
 
                 <FormControl sx={{ width: '100%' }}>
-                    <TextField type='date' label={t("birth_date")} name='birth_date' onChange={formik.handleChange} onBlur={formik.handleBlur} value={formik.values.birth_date} error={!!formik.errors.birth_date} defaultValue={today} />
+                    <TextField type='date' label={t("birth_date")} name='birth_date' onChange={formik.handleChange} onBlur={formik.handleBlur} value={formik.values.birth_date} error={!!formik.errors.birth_date} />
                     <FormHelperText error={!!formik.errors.birth_date}>{formik.errors.birth_date}</FormHelperText>
                 </FormControl>
+
+                <FormControl sx={{ width: '100%' }}>
+                    <TextField
+                        type='date'
+                        label={"Ishga olingan sana"}
+                        name='activated_at'
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.activated_at}
+                        error={!!formik.errors.activated_at && formik.touched.activated_at}
+                    />
+                    <FormHelperText error>
+                        {(!!formik.errors.activated_at && formik.touched.activated_at) && formik.errors.activated_at}
+                    </FormHelperText>
+                </FormControl>
+                <FormControlLabel
+                    name="is_fixed_salary"
+                    checked={formik.values.is_fixed_salary}
+                    onChange={handleCheckboxChange}
+                    onBlur={formik.handleBlur}
+                    control={<Checkbox />}
+                    label="O'zgarmas oylik sifatida"
+                />
+                <Box sx={{ display: "flex", gap: "20px" }}>
+                    <FormControl sx={{ width: '100%' }}>
+                        <TextField
+                            type='number'
+                            label={"Foiz ulushi"}
+                            name='percentage'
+                            disabled={formik.values.is_fixed_salary}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            value={formik.values.percentage}
+                            error={!!formik.errors.percentage && formik.touched.percentage}
+                            defaultValue={today} />
+                        <FormHelperText error>
+                            {(!!formik.errors.percentage && formik.touched.percentage) && formik.errors.percentage}
+                        </FormHelperText>
+                    </FormControl>
+                    <FormControl sx={{ width: '100%' }}>
+                        <TextField
+                            type='number'
+                            label={"Oylik ish haqi"}
+                            name='amount'
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            disabled={!formik.values.is_fixed_salary}
+                            value={formik.values.amount}
+                            error={!!formik.errors.amount && formik.touched.amount} />
+                        <FormHelperText error>
+                            {(!!formik.errors.amount && formik.touched.amount) && formik.errors.amount}
+                        </FormHelperText>
+                    </FormControl>
+                </Box>
 
                 <FormControl sx={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 1 }}>
                     <FormLabel>{t('Jinsni tanlang')}</FormLabel>

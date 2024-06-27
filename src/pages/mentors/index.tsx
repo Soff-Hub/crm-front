@@ -10,7 +10,7 @@ import DataTable from 'src/@core/components/table';
 import { useTranslation } from 'react-i18next';
 import { useRouter } from 'next/router';
 import RowOptions from 'src/views/apps/mentors/RowOptions';
-import  { TeacherAvatar } from 'src/views/apps/mentors/AddMentorsModal';
+import { TeacherAvatar } from 'src/views/apps/mentors/AddMentorsModal';
 import { useAppDispatch, useAppSelector } from 'src/store';
 import { fetchTeachersList, setOpenEdit } from 'src/store/apps/mentors';
 import TeacherEditDialog from 'src/views/apps/mentors/TeacherEditDialog';
@@ -103,7 +103,7 @@ export default function GroupsPage() {
         </Button>
       </Box>
       <DataTable loading={isLoading} columns={columns} data={teachers} rowClick={rowClick} />
-      {teachersCount > 1 && <Pagination defaultPage={1} count={teachersCount} variant="outlined" shape="rounded" />}
+      {teachersCount > 1 && !isLoading && <Pagination defaultPage={1} count={teachersCount} variant="outlined" shape="rounded" />}
 
       <TeacherCreateDialog />
       <TeacherEditDialog />

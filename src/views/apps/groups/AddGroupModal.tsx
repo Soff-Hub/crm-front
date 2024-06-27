@@ -30,7 +30,6 @@ export default function AddGroupModal() {
         name: Yup.string().required("Guruh nomini kiriting"),
         course: Yup.string().required("Kursni tanlang"),
         teacher: Yup.string().required("O'qituvchini tanlang"),
-        monthly_amount: Yup.string().required("Summani kiriting"),
         room: Yup.string().required("Xonani tanlang"),
         start_date: Yup.string().required("Boshlanish sanasini tanlang"),
         start_at: Yup.string().required("Boshlanish vaqtini tanlang"),
@@ -253,19 +252,6 @@ export default function AddGroupModal() {
                                     }
                                 </Select>
                                 <FormHelperText error={!!formik.errors.teacher && !!formik.touched.teacher}>{!!formik.errors.teacher && !!formik.touched.teacher && formik.errors.teacher}</FormHelperText>
-                            </FormControl>
-
-                            <FormControl sx={{ width: '100%' }}>
-                                <TextField
-                                    size='small'
-                                    label={t("Oylik to'lovi")}
-                                    name='monthly_amount'
-                                    onChange={formik.handleChange}
-                                    onBlur={formik.handleBlur}
-                                    value={formik.values.monthly_amount}
-                                    error={!!formik.errors.monthly_amount && !!formik.touched.monthly_amount}
-                                />
-                                <FormHelperText error={!!formik.errors.monthly_amount && !!formik.touched.monthly_amount}>{!!formik.errors.monthly_amount && !!formik.touched.monthly_amount && formik.errors.monthly_amount}</FormHelperText>
                             </FormControl>
 
                             <FormControl sx={{ width: '100%' }}>

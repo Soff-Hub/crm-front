@@ -43,8 +43,8 @@ const RowOptions = ({ id }: { id: number | string }) => {
 
     const handleEdit = async (id: any) => {
         dispatch(setOpenEdit('edit'))
-        await dispatch(fetchTeacherdetail(id))
         handleRowOptionsClose()
+        await dispatch(fetchTeacherdetail(id))
     }
 
 
