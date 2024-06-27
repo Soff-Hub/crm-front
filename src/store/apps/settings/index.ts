@@ -1,7 +1,7 @@
 // ** Redux Imports
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import api from 'src/@core/utils/api'
-import { SettingsState, SmsItemType } from 'src/types/apps/settings'
+import { RoomType, SettingsState, SmsItemType } from 'src/types/apps/settings'
 
 
 export const fetchSmsList = createAsyncThunk('settings/fetchSmsList', async () => {
@@ -46,6 +46,38 @@ export const editCourse = createAsyncThunk('settings/editCourse', async (data: a
 })
 
 
+export const fetchRoomList = createAsyncThunk('settings/fetchRoomList', async (params?: any) => {
+    return (await api.get('common/weekend/list/', { params })).data
+})
+
+export const createRoom = createAsyncThunk('settings/createRoom', async (data: any, { rejectWithValue }) => {
+    try {
+        const response = await api.post(`common/room/create`, data);
+        return response.data;
+    } catch (err: any) {
+        if (err.response) {
+            return rejectWithValue(err.response.data);
+        }
+        return rejectWithValue(err.message);
+    }
+})
+
+export const editRoom = createAsyncThunk('settings/editRoom', async (data: any, { rejectWithValue }) => {
+    try {
+        const response = await api.patch(`common/room/update/${data.id}`, data);
+        return response.data;
+    } catch (err: any) {
+        if (err.response) {
+            return rejectWithValue(err.response.data);
+        }
+        return rejectWithValue(err.message);
+    }
+})
+
+export const fetchWekends = createAsyncThunk('settings/fetchWekends', async () => {
+    return (await api.get('common/rooms/')).data
+})
+
 
 
 const initialState: SettingsState = {
@@ -54,7 +86,12 @@ const initialState: SettingsState = {
     openCreateSms: false,
     openEditSms: null,
     course_list: [],
-    openEditCourse: null
+    openEditCourse: null,
+    rooms: [],
+    openEditRoom: null,
+    room_count: 0,
+    active_page: 1,
+    wekends: []
 }
 
 export const settingsSlice = createSlice({
@@ -69,7 +106,13 @@ export const settingsSlice = createSlice({
         },
         setOpenEditCourse: (state, action) => {
             state.openEditCourse = action.payload
-        }
+        },
+        setOpenEditRoom: (state, action) => {
+            state.openEditRoom = action.payload
+        },
+        updatePage: (state, action) => {
+            state.active_page = action.payload
+        },
     },
     extraReducers: builder => {
         builder
@@ -93,13 +136,30 @@ export const settingsSlice = createSlice({
                 state.is_pending = false
                 state.course_list = action.payload?.results
             })
+            .addCase(fetchRoomList.pending, (state) => {
+                state.is_pending = true
+            })
+            .addCase(fetchRoomList.fulfilled, (state, action) => {
+                state.is_pending = false
+                state.rooms = action.payload?.results.sort((a: RoomType, b: RoomType) => a.id - b.id)
+                state.room_count = Math.ceil(action.payload.count / 10)
+            })
+            .addCase(fetchWekends.pending, (state) => {
+                state.is_pending = true
+            })
+            .addCase(fetchWekends.fulfilled, (state, action) => {
+                state.is_pending = false
+                state.wekends = action.payload
+            })
     }
 })
 
 export const {
     setOpenCreateSms,
     setOpenEditSms,
-    setOpenEditCourse
+    setOpenEditCourse,
+    setOpenEditRoom,
+    updatePage
 } = settingsSlice.actions
 
 export default settingsSlice.reducer

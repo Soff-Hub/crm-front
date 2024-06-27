@@ -4,23 +4,22 @@ import IconifyIcon from 'src/@core/components/icon'
 import UserSuspendDialog from '../../mentors/view/UserSuspendDialog'
 import { useAppDispatch, useAppSelector } from 'src/store'
 import { useTranslation } from 'react-i18next'
-import { fetchCoursesList, setOpenEditCourse } from 'src/store/apps/settings'
 import api from 'src/@core/utils/api'
 import ceoConfigs from 'src/configs/ceo'
 import toast from 'react-hot-toast'
+import { fetchRoomList, setOpenEditRoom } from 'src/store/apps/settings'
 
 type Props = {
     id: number
 }
 
-export default function CourseListRowOptions({ id }: Props) {
+export default function RoomListRowOptions({ id }: Props) {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
     const [suspendDialogOpen, setSuspendDialogOpen] = useState<boolean>(false)
-    const [loading, setLoading] = useState<boolean>(false)
     const dispatch = useAppDispatch()
-
-    const { course_list } = useAppSelector(state => state.settings)
+    const { rooms, active_page } = useAppSelector(state => state.settings)
     const { t } = useTranslation()
+    const [loading, setLoading] = useState<boolean>(false)
 
     const rowOptionsOpen = Boolean(anchorEl)
 
@@ -43,10 +42,9 @@ export default function CourseListRowOptions({ id }: Props) {
         handleRowOptionsClose()
         setLoading(true)
         try {
-            await api.delete(`${ceoConfigs.courses_delete}/${id}`)
-            setSuspendDialogOpen(false)
+            await api.delete(`${ceoConfigs.rooms_delete}/${id}`)
             toast.success("Muvaffaqiyatli! o'chirildi", { position: 'top-center' })
-            dispatch(fetchCoursesList())
+            dispatch(fetchRoomList({ page: active_page }))
         } catch (error: any) {
             toast.error('Xatolik yuz berdi!', { position: 'top-center' })
         }
@@ -58,16 +56,8 @@ export default function CourseListRowOptions({ id }: Props) {
 
     async function handleEdit(id: number) {
         handleRowOptionsClose()
-        const find = course_list.find(el => el.id === id)
-        dispatch(setOpenEditCourse(find))
-        // try {
-        //     setOpenAddGroupEdit(true)
-        //     const resp = await api.get(`${ceoConfigs.courses_detail}/${id}`)
-        //     setDataRowEdit(resp.data)
-        //     getUsers()
-        // } catch (error: any) {
-        //     toast.error('Xatolik yuz berdi!', { position: 'top-center' })
-        // }
+        const find = rooms.find(el => el.id === id)
+        dispatch(setOpenEditRoom(find))
     }
 
     return (
@@ -92,9 +82,9 @@ export default function CourseListRowOptions({ id }: Props) {
             >
                 <MenuItem onClick={() => handleEdit(id)} sx={{ '& svg': { mr: 2 } }}>
                     <IconifyIcon icon='mdi:pencil-outline' fontSize={20} />
-                    {t('Tahrirlash')}
+                    {t("Tahrirlash")}
                 </MenuItem>
-                {course_list?.some((item: any) => item?.id == id && item?.is_delete) ? (
+                {rooms?.some((item: any) => item?.id == id && item?.is_delete) ? (
                     <MenuItem onClick={handleDelete} sx={{ '& svg': { mr: 2 } }}>
                         <IconifyIcon icon='mdi:delete-outline' fontSize={20} />
                         {t("O'chirish")}
@@ -104,8 +94,8 @@ export default function CourseListRowOptions({ id }: Props) {
                 )}
             </Menu>
             <UserSuspendDialog
-                handleOk={() => handleDeletePosts(id)}
                 loading={loading}
+                handleOk={() => handleDeletePosts(id)}
                 open={suspendDialogOpen}
                 setOpen={setSuspendDialogOpen}
             />

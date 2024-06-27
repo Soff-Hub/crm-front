@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 // ** MUI Imports
 import { Box, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material';
 
