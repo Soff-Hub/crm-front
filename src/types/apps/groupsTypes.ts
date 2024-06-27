@@ -64,7 +64,6 @@ export interface GroupFormInitialValue {
   name: string
   course: string
   teacher: string
-  monthly_amount: string
   room: string
   start_date: string
   start_at: string

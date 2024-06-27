@@ -43,7 +43,7 @@ export const updateTeacher = createAsyncThunk(
 )
 
 export const deleteTeacher = createAsyncThunk('mentors/deleteTeacher', async (id: number | any) => {
-  return (await api.delete(`auth/delete/employee/${id}`)).data
+  return (await api.delete(`auth/delete/employee/${id}/`)).data
 })
 
 const initialState: IMentorsState = {

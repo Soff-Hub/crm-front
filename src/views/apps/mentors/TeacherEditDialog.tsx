@@ -1,4 +1,3 @@
-import React from 'react'
 import { Box, Drawer, IconButton, Typography } from '@mui/material'
 import IconifyIcon from 'src/@core/components/icon'
 import { useTranslation } from 'react-i18next'
@@ -46,7 +45,7 @@ export default function TeacherEditDialog() {
                     </IconButton>
                 </Box>
                 <Box width={'100%'}>
-                    {teacherData ? <EditTeacherModal initialValues={teacherData} /> : <SubLoader />}
+                    {teacherData ? <EditTeacherModal /> : <SubLoader />}
                 </Box>
             </Drawer>
         </>

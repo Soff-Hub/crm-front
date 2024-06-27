@@ -92,7 +92,6 @@ const initialState: IGroupsState = {
     name: '',
     course: '',
     teacher: '',
-    monthly_amount: '',
     room: '',
     start_date: '',
     start_at: '',

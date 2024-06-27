@@ -5,6 +5,7 @@ export interface TacherItemType {
   gender: 'male' | 'female'
   roles_list?: string[]
   birth_date: null | string
+  activated_at: null | string
 }
 
 export interface IMentorsState {
@@ -48,10 +49,14 @@ export interface UpdateTeacherDto {
   id: number
   first_name: string
   birth_date: string
+  activated_at: string
   password: string
   branches: number[]
   gender: 'male' | 'female'
   phone: string
   roles: number[]
   image: string | null
+  amount: string | null
+  percentage: string | null
+  is_fixed_salary: boolean
 }

@@ -52,35 +52,42 @@ export default function AddMentorsModal() {
     // ** States
     const [loading, setLoading] = useState<boolean>(false)
 
-    const validationSchema = Yup.object({
-        first_name: Yup.string().required("Ismingizni kiriting"),
-        phone: Yup.string().required("Telefon raqam kiriting"),
-        birth_date: Yup.string(),
-        gender: Yup.string().required("Jinsini tanlang"),
-        is_fixed_salary: Yup.string().required("Jinsini tanlang"),
-        // image: Yup.string(),
-        password: Yup.string(),
-        // amount: Yup.string().when("percentage", {
-        //     is: (kpiPercentage: string) => !kpiPercentage || kpiPercentage.trim() === "",
-        //     then: Yup.string().required("To'ldiring(Foiz kiritilmasa)."),
-        // }),
-        // percentage: Yup.string().when("amount", {
-        //     is: (fixedSalary: string) => !fixedSalary || fixedSalary.trim() === "",
-        //     then: Yup.string().required("To'ldiring(O'zgarmas oylik kiritilmasa)"),
-        // }),
+    const validationSchema = () => {
+        return Yup.object().shape(
+            {
+                first_name: Yup.string().required("Ismingizni kiriting"),
+                phone: Yup.string().required("Telefon raqam kiriting"),
+                birth_date: Yup.string(),
+                activated_at: Yup.string().required("Ishga olingan sanani kiriting"),
+                gender: Yup.string().required("Jinsini tanlang"),
+                is_fixed_salary: Yup.string().required("Jinsini tanlang"),
+                // image: Yup.string(),
+                password: Yup.string(),
+                amount: Yup.string().when("percentage", {
+                    is: (kpiPercentage: string) => !kpiPercentage || kpiPercentage.trim() === "",
+                    then: Yup.string().required("To'ldiring(Foiz kiritilmasa)."),
+                }),
+                percentage: Yup.string().when("amount", {
+                    is: (fixedSalary: string) => !fixedSalary || fixedSalary.trim() === "",
+                    then: Yup.string().required("To'ldiring(O'zgarmas oylik kiritilmasa)"),
+                }),
 
-    });
+            },
+            ["amount", "percentage"]
+        );
+    };
 
     const initialValues: CreateTeacherDto = {
         first_name: "",
         phone: "",
         birth_date: "",
+        activated_at: "",
         gender: 'male',
         image: null,
         is_fixed_salary: false,
         password: "",
-        percentage: null,
-        amount: null
+        percentage: "",
+        amount: ""
     }
 
     const formik = useFormik({
@@ -110,6 +117,13 @@ export default function AddMentorsModal() {
             setLoading(false)
         }
     });
+
+    const handleCheckboxChange = (event: React.SyntheticEvent, checked: boolean) => {
+        formik.setFieldValue("is_fixed_salary", checked)
+        formik.setFieldValue("amount", "")
+        formik.setFieldValue("percentage", "")
+
+    }
 
     return (
         <Box width={'100%'}>
@@ -171,10 +185,26 @@ export default function AddMentorsModal() {
                         {(!!formik.errors.birth_date && formik.touched.birth_date) && formik.errors.birth_date}
                     </FormHelperText>
                 </FormControl>
+
+                <FormControl sx={{ width: '100%' }}>
+                    <TextField
+                        type='date'
+                        label={"Ishga olingan sana"}
+                        name='activated_at'
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.activated_at}
+                        error={!!formik.errors.activated_at && formik.touched.activated_at}
+                        defaultValue={today}
+                    />
+                    <FormHelperText error>
+                        {(!!formik.errors.activated_at && formik.touched.activated_at) && formik.errors.activated_at}
+                    </FormHelperText>
+                </FormControl>
                 <FormControlLabel
                     name="is_fixed_salary"
                     checked={formik.values.is_fixed_salary}
-                    onChange={formik.handleChange}
+                    onChange={handleCheckboxChange}
                     onBlur={formik.handleBlur}
                     control={<Checkbox />}
                     label="O'zgarmas oylik sifatida"
@@ -185,6 +215,7 @@ export default function AddMentorsModal() {
                             type='number'
                             label={"Foiz ulushi"}
                             name='percentage'
+                            disabled={formik.values.is_fixed_salary}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
                             value={formik.values.percentage}
@@ -201,6 +232,7 @@ export default function AddMentorsModal() {
                             name='amount'
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
+                            disabled={!formik.values.is_fixed_salary}
                             value={formik.values.amount}
                             error={!!formik.errors.amount && formik.touched.amount} />
                         <FormHelperText error>
