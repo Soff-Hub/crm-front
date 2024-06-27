@@ -23,10 +23,10 @@ import { useTranslation } from 'react-i18next';
 import * as Yup from "yup";
 import { useFormik } from 'formik';
 import { useAppDispatch } from 'src/store';
-import { createTeacher, fetchTeachersList } from 'src/store/apps/mentors';
-import { CreateTeacherDto } from 'src/types/apps/mentorsTypes';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import CustomAvatar from 'src/@core/components/mui/avatar';
+import { createEmployee, fetchEmployees, setOpenCreateSms } from 'src/store/apps/settings';
+import useBranches from 'src/hooks/useBranch';
 import useRoles from 'src/hooks/useRoles';
 
 export const VisuallyHiddenInput = styled('input')({
@@ -47,39 +47,60 @@ export const TeacherAvatar = styled(CustomAvatar)<AvatarProps>(({ theme }) => ({
     marginRight: theme.spacing(4)
 }))
 
-export default function CreateEmployeeModal() {
+export default function CreateEmployeeForm() {
     const [image, setImage] = useState<any>(null)
-    const { roles } = useRoles()
 
     // ** Hooks 
     const { t } = useTranslation()
     const dispatch = useAppDispatch()
     const profilePhoto: any = useRef(null)
+    const { getBranches, branches } = useBranches()
+    const { roles } = useRoles()
 
     // ** States
     const [loading, setLoading] = useState<boolean>(false)
 
-    const validationSchema = Yup.object({
-        first_name: Yup.string().required("Ismingizni kiriting"),
-        phone: Yup.string().required("Telefon raqam kiriting"),
-        birth_date: Yup.string(),
-        gender: Yup.string().required("Jinsini tanlang"),
-        is_fixed_salary: Yup.string().required("Jinsini tanlang"),
-        password: Yup.string(),
-        branches: Yup.string().required("Majburiy")
-    });
+    const validationSchema = () => {
+        return Yup.object().shape(
+            {
+                first_name: Yup.string().required("Ismingizni kiriting"),
+                phone: Yup.string().required("Telefon raqam kiriting"),
+                birth_date: Yup.string(),
+                activated_at: Yup.string().required("Ishga olingan sanani kiriting"),
+                gender: Yup.string().required("Jinsini tanlang"),
+                is_fixed_salary: Yup.string().required("Jinsini tanlang"),
+                // image: Yup.string(),
+                password: Yup.string(),
+                amount: Yup.string().when("percentage", {
+                    is: (kpiPercentage: string) => !kpiPercentage || kpiPercentage.trim() === "",
+                    then: Yup.string().required("To'ldiring(Foiz kiritilmasa)."),
+                }),
+                percentage: Yup.string().when("amount", {
+                    is: (fixedSalary: string) => !fixedSalary || fixedSalary.trim() === "",
+                    then: Yup.string().required("To'ldiring(O'zgarmas oylik kiritilmasa)"),
+                }),
+                branches: Yup.array(Yup.number()).required("Kamida bitta filial tanlang"),
+                roles: Yup.array(Yup.number()).required("Kamida bitta rol tanlang"),
 
-    const initialValues: any = {
+            },
+            ["amount", "percentage"]
+        );
+    };
+
+
+    const initialValues = {
         first_name: "",
         phone: "",
-        birth_date: "",
+        birth_date: today,
+        activated_at: today,
         gender: 'male',
-        image: null,
+        // image: null,
         is_fixed_salary: false,
         password: "",
-        percentage: null,
-        amount: null,
-        branches: ''
+        percentage: "",
+        amount: "",
+        branches: [],
+        roles: []
     }
 
     const formik = useFormik({
@@ -90,25 +111,46 @@ export default function CreateEmployeeModal() {
             const newValues = new FormData()
 
             for (const [key, value] of Object.entries(values)) {
-                newValues.append(key, value)
+                if (['branches', 'roles'].includes(key)) {
+                    newValues.append(key, value.join(','))
+                } else {
+                    newValues.append(key, value)
+                }
             }
 
             if (image) {
                 newValues.append('image', image)
             }
 
-            const resp = await dispatch(createTeacher(newValues))
+            const resp = await dispatch(createEmployee(newValues))
 
             if (resp.meta.requestStatus === 'rejected') {
                 formik.setErrors(resp.payload)
             } else {
-                await dispatch(fetchTeachersList())
+                await dispatch(fetchEmployees())
                 formik.resetForm()
+                dispatch(setOpenCreateSms(false))
                 setImage(null)
             }
             setLoading(false)
         }
     });
+
+    const handleCheckboxChange = (event: React.SyntheticEvent, checked: boolean) => {
+        formik.setFieldValue("is_fixed_salary", checked)
+        formik.setFieldValue("amount", "")
+        formik.setFieldValue("percentage", "")
+
+    }
+
+    useEffect(() => {
+
+        getBranches()
+
+        return () => {
+            formik.resetForm()
+        }
+    }, [])
 
     return (
         <Box width={'100%'}>
@@ -155,42 +197,97 @@ export default function CreateEmployeeModal() {
                     </FormHelperText>
                 </FormControl>
 
+                <FormControl sx={{ width: '100%' }}>
+                    <TextField
+                        type='date'
+                        label={t("birth_date")}
+                        name='birth_date'
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.birth_date}
+                        error={!!formik.errors.birth_date && formik.touched.birth_date}
+                        defaultValue={today}
+                    />
+                    <FormHelperText error>
+                        {(!!formik.errors.birth_date && formik.touched.birth_date) && formik.errors.birth_date}
+                    </FormHelperText>
+                </FormControl>
+
+                <FormControl sx={{ width: '100%' }}>
+                    <TextField
+                        type='date'
+                        label={"Ishga olingan sana"}
+                        name='activated_at'
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.activated_at}
+                        error={!!formik.errors.activated_at && formik.touched.activated_at}
+                        defaultValue={today}
+                    />
+                    <FormHelperText error>
+                        {(!!formik.errors.activated_at && formik.touched.activated_at) && formik.errors.activated_at}
+                    </FormHelperText>
+                </FormControl>
+
+
                 <FormControl fullWidth>
-                    <InputLabel error={!!formik.errors.branches && formik.touched.branches} size='small' id='demo-simple-select-outlined-label'>
-                        {t('branch')}
-                    </InputLabel>
+                    <InputLabel id='user-view-language-label'>{t('branch')}</InputLabel>
                     <Select
-                        size='small'
                         label={t('branch')}
-                        id='demo-simple-select-outlined'
-                        labelId='demo-simple-select-outlined-label'
+                        multiple
+                        id='user-view-language'
+                        labelId='user-view-language-label'
                         name='branches'
-                        error={!!formik.errors.branches && formik.touched.branches}
+                        defaultValue={[]}
+                        error={!!formik.errors.branches}
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                         value={formik.values.branches}
                     >
-                        {branches.length > 0 && branches.map((item: any) => <MenuItem key={item.id} value={item.id}>{item?.name}</MenuItem>)}
+                        {
+                            branches.map((branch, index) => <MenuItem key={index} value={branch.id}>{branch.name}</MenuItem>)
+                        }
                     </Select>
-
-                    {formik.errors.branches && formik.touched.branches && <FormHelperText error>{`${formik.errors.branches}`}</FormHelperText>}
+                    {!!formik.errors.branches && <FormHelperText error>{formik.errors.branches}</FormHelperText>}
                 </FormControl>
+
+                <FormControl fullWidth>
+                    <InputLabel id='user-view-language-label'>{t('roles_list')}</InputLabel>
+                    <Select
+                        label={t('roles_list')}
+                        multiple
+                        id='user-view-language'
+                        labelId='user-view-language-label'
+                        name='roles'
+                        defaultValue={[]}
+                        error={!!formik.errors.roles}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.roles}
+                    >
+                        {
+                            roles.map((branch, index) => <MenuItem key={index} value={branch.id}>{branch.name}</MenuItem>)
+                        }
+                    </Select>
+                    {!!formik.errors.roles && <FormHelperText error>{formik.errors.roles}</FormHelperText>}
+                </FormControl>
+
 
                 <FormControlLabel
                     name="is_fixed_salary"
                     checked={formik.values.is_fixed_salary}
-                    onChange={formik.handleChange}
+                    onChange={handleCheckboxChange}
                     onBlur={formik.handleBlur}
                     control={<Checkbox />}
                     label="O'zgarmas oylik sifatida"
                 />
-
                 <Box sx={{ display: "flex", gap: "20px" }}>
                     <FormControl sx={{ width: '100%' }}>
                         <TextField
                             type='number'
                             label={"Foiz ulushi"}
                             name='percentage'
+                            disabled={formik.values.is_fixed_salary}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
                             value={formik.values.percentage}
@@ -207,6 +304,7 @@ export default function CreateEmployeeModal() {
                             name='amount'
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
+                            disabled={!formik.values.is_fixed_salary}
                             value={formik.values.amount}
                             error={!!formik.errors.amount && formik.touched.amount} />
                         <FormHelperText error>

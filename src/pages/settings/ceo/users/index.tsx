@@ -1,37 +1,24 @@
 import {
     Box,
     Button,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogTitle,
-    FormHelperText,
     IconButton,
-    InputLabel,
     Menu,
-    TextField,
     Typography
 } from '@mui/material'
 import React, { MouseEvent, ReactNode, useEffect, useState } from 'react'
 import IconifyIcon from 'src/@core/components/icon'
 import DataTable from 'src/@core/components/table'
-import MuiDrawer, { DrawerProps } from '@mui/material/Drawer'
-import Grid from '@mui/material/Grid'
-import { styled } from '@mui/material/styles'
 import MenuItem from '@mui/material/MenuItem'
-import FormControl from '@mui/material/FormControl'
-import Select from '@mui/material/Select'
 import Link from 'next/link'
 import UserSuspendDialog from 'src/views/apps/mentors/view/UserSuspendDialog'
 import { useTranslation } from 'react-i18next'
 import useEmployee from 'src/hooks/useEmployee'
-import toast from 'react-hot-toast'
 import LoadingButton from '@mui/lab/LoadingButton'
-import Form from 'src/@core/components/form'
-import useBranches from 'src/hooks/useBranch'
-import useRoles from 'src/hooks/useRoles'
-import showResponseError from 'src/@core/utils/show-response-error'
 import { useRouter } from 'next/router'
+import EmployeeCreateDialog from 'src/views/apps/settings/employees/TeacherCreateDialog'
+import { useAppDispatch, useAppSelector } from 'src/store'
+import { fetchEmployees, setEmployeeData, setOpenCreateSms } from 'src/store/apps/settings'
+import EditEmployeeModal from 'src/views/apps/settings/employees/TeacherEditDialog'
 
 export interface customTableProps {
     xs: number
@@ -40,113 +27,21 @@ export interface customTableProps {
     render?: (source: string) => any | undefined
 }
 
-interface UsersTypeDetail {
-    id: 1
-    first_name: string
-    birth_date: string
-    password: string
-    branches: {
-        id: number
-        name: string
-        exists: boolean
-    }[]
-    gender: 'male' | 'female'
-    phone: string
-    roles: {
-        id: number
-        name: string
-        exists: boolean
-    }[]
-    image: string | null
-    avatar: '/images/avatars/4.png'
-}
-
-const Drawer = styled(MuiDrawer)<DrawerProps>(({ theme }) => ({
-    width: 400,
-    zIndex: theme.zIndex.modal,
-    '& .MuiFormControlLabel-root': {
-        marginRight: '0.6875rem'
-    },
-    '& .MuiDrawer-paper': {
-        border: 0,
-        width: 400,
-        zIndex: theme.zIndex.modal,
-        boxShadow: theme.shadows[9]
-    }
-}))
-
-const VisuallyHiddenInput = styled('input')({
-    clip: 'rect(0 0 0 0)',
-    clipPath: 'inset(50%)',
-    height: 1,
-    overflow: 'hidden',
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    whiteSpace: 'nowrap',
-    width: 1
-})
-
-
 
 export default function GroupsPage() {
-    const [openAddGroup, setOpenAddGroup] = useState<boolean>(false)
-    const [openEdit, setOpenEdit] = useState<boolean>(false)
-    const [userData, setData] = useState<UsersTypeDetail | null>(null)
-    const [loading, setLoading] = useState<boolean>(false)
-    const [error, setError] = useState<any>({})
-
     // Hooks
     const { t } = useTranslation()
-    const { updateEmployee, getEmployeeById, createEmployee } = useEmployee()
-    const { roles } = useRoles()
+    const { getEmployeeById } = useEmployee()
     const { push } = useRouter()
+    const { employees, is_pending } = useAppSelector(state => state.settings)
+    const dispatch = useAppDispatch()
 
-    // Handle Edit dialog
-    const handleEditClose = () => setOpenEdit(false)
-
-    const handleSubmit = async (values: any) => {
-        setLoading(true)
-        try {
-            const employeeData = await updateEmployee(userData?.id, values, 'one')
-            setData(employeeData)
-            toast.success('Muvaffaqiyatli yangilandi', {
-                position: 'top-center'
-            })
-            setLoading(false)
-            handleEditClose()
-        } catch (err: any) {
-            setLoading(false)
-            showResponseError(err.response.data, setError)
-            // toast.error(JSON.stringify(err.response.data), {
-            //     position: 'top-center'
-            // })
-        }
-    }
-
-
-    const handleSubmitCreate = async (values: any) => {
-        setLoading(true)
-        try {
-            await createEmployee(values)
-            setLoading(false)
-            setOpenAddGroup(false)
-            getEmployees()
-        } catch (err: any) {
-            setLoading(false)
-            if (err?.response?.data) {
-                showResponseError(err.response.data, setError)
-            }
-            toast.error(JSON.stringify(err?.response?.data), {
-                position: 'top-center'
-            })
-        }
-    }
 
     const RowOptions = ({ id }: { id: number | string }) => {
         // ** State
         const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
         const [suspendDialogOpen, setSuspendDialogOpen] = useState<boolean>(false)
+        const [smallLoading, setSmallLoading] = useState<boolean>(false)
 
         const rowOptionsOpen = Boolean(anchorEl)
 
@@ -162,10 +57,15 @@ export default function GroupsPage() {
             setSuspendDialogOpen(true)
         }
 
+        const handleDeleteSubmit = async () => {
+
+        }
+
         const getUserById = async () => {
+            setSmallLoading(true)
             const resp = await getEmployeeById(id)
-            setData(resp)
-            setOpenEdit(true)
+            dispatch(setEmployeeData(resp))
+            setSmallLoading(false)
         }
 
         return (
@@ -197,7 +97,12 @@ export default function GroupsPage() {
                         <IconifyIcon icon='mdi:eye-outline' fontSize={20} />
                         {t("Ko'rish")}
                     </MenuItem>
-                    <MenuItem onClick={getUserById} sx={{ '& svg': { mr: 2 } }}>
+                    <MenuItem
+                        component={LoadingButton}
+                        loading={smallLoading}
+                        onClick={getUserById}
+                        sx={{ '& svg': { mr: 2 } }}
+                    >
                         <IconifyIcon icon='mdi:pencil-outline' fontSize={20} />
                         {t('Tahrirlash')}
                     </MenuItem>
@@ -206,7 +111,7 @@ export default function GroupsPage() {
                         {t("O'chirish")}
                     </MenuItem>
                 </Menu>
-                <UserSuspendDialog open={suspendDialogOpen} setOpen={setSuspendDialogOpen} />
+                <UserSuspendDialog loading={smallLoading} open={suspendDialogOpen} setOpen={setSuspendDialogOpen} handleOk={handleDeleteSubmit} />
             </>
         )
     }
@@ -215,7 +120,7 @@ export default function GroupsPage() {
         {
             xs: 0.1,
             title: t("#"),
-            dataIndex: 'id'
+            dataIndex: 'index'
         },
         {
             xs: 0.5,
@@ -247,20 +152,13 @@ export default function GroupsPage() {
         }
     ]
 
-    // hooks
-    const { employees, getEmployees } = useEmployee()
-    const { branches, getBranches } = useBranches()
-
     const rowClick = (id: any) => {
         push(`users/view/security?id=${id}`)
     }
 
 
     useEffect(() => {
-        if (employees.length < 1) {
-            getEmployees()
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        dispatch(fetchEmployees())
     }, [])
 
     return (
@@ -272,7 +170,7 @@ export default function GroupsPage() {
             >
                 <Typography variant='h5'>{t("Xodimlar")}</Typography>
                 <Button
-                    onClick={() => (getBranches(), setOpenAddGroup(true))}
+                    onClick={() => dispatch(setOpenCreateSms(true))}
                     variant='contained'
                     size='small'
                     startIcon={<IconifyIcon icon='ic:baseline-plus' />}
@@ -280,209 +178,11 @@ export default function GroupsPage() {
                     {t("Yangi qo'shish")}
                 </Button>
             </Box>
-            <DataTable columns={columns} data={employees} rowClick={rowClick} />
+            <DataTable loading={is_pending} columns={columns} data={employees} rowClick={rowClick} />
 
-            <Drawer open={openAddGroup} hideBackdrop anchor='right' variant='persistent'>
-                <Box
-                    className='customizer-header'
-                    sx={{
-                        position: 'relative',
-                        p: theme => theme.spacing(3.5, 5),
-                        borderBottom: theme => `1px solid ${theme.palette.divider}`
-                    }}
-                >
-                    <Typography variant='h6' sx={{ fontWeight: 600 }}>
-                        {t("Yangi qo'shish")}
-                    </Typography>
-                    <IconButton
-                        onClick={() => setOpenAddGroup(false)}
-                        sx={{
-                            right: 20,
-                            top: '50%',
-                            position: 'absolute',
-                            color: 'text.secondary',
-                            transform: 'translateY(-50%)'
-                        }}
-                    >
-                        <IconifyIcon icon='mdi:close' fontSize={20} />
-                    </IconButton>
-                </Box>
-                <Box sx={{ px: 2, py: 4 }}>
-                    <Form id='dspkdjsoifh' setError={setError} onSubmit={handleSubmitCreate} sx={{ display: 'flex', flexDirection: 'column', gap: '20px' }} valueTypes='json'>
-                        <TextField size='small' fullWidth label={t('first_name')} required name='first_name' error={error?.phone} />
-                        <TextField size='small' fullWidth label={t('phone')} required name='phone' defaultValue={"+998"} />
+            <EmployeeCreateDialog />
 
-                        <TextField size='small' fullWidth label={t('password')} required name='password' />
-
-                        <FormControl fullWidth>
-                            <Button
-                                component='label'
-                                role={undefined}
-                                variant='contained'
-                                tabIndex={-1}
-                                startIcon={<IconifyIcon icon={'subway:cloud-upload'} />}
-                            >
-                                {t("Rasm qo'shish")}
-                                <VisuallyHiddenInput
-
-                                    // name='image'
-                                    type='file'
-                                    accept='.png, .jpg, .jpeg, .webp, .HEIC, .heic'
-                                />
-                            </Button>
-                        </FormControl>
-
-                        <FormControl fullWidth>
-                            <InputLabel size='small' id='user-view-language-label'>{t('branch')}</InputLabel>
-                            <Select
-                                size='small'
-                                label={t('branch')}
-                                multiple
-                                id='user-view-language'
-                                labelId='user-view-language-label'
-                                name='branches'
-                                defaultValue={[]}
-                            >
-                                {
-                                    branches.map((branch, index) => <MenuItem key={index} value={branch.id}>{branch.name}</MenuItem>)
-                                }
-                            </Select>
-                        </FormControl>
-
-                        <FormControl fullWidth>
-                            <InputLabel size='small' id='user-view-language-label'>Rol</InputLabel>
-                            <Select
-                                size='small'
-                                label='Rol'
-                                multiple
-                                id='user-view-language'
-                                labelId='user-view-language-label'
-                                name='roles'
-                                defaultValue={[]}
-                            >
-                                {
-                                    roles.map((branch, index) => <MenuItem key={index} value={branch.id}>{branch.name}</MenuItem>)
-                                }
-                            </Select>
-                        </FormControl>
-                        <LoadingButton variant='contained' loading={loading} type='submit'>{t('Saqlash')}</LoadingButton>
-                    </Form>
-                </Box>
-            </Drawer>
-
-            <Dialog
-                open={openEdit}
-                onClose={handleEditClose}
-                aria-labelledby='user-view-edit'
-                sx={{ '& .MuiPaper-root': { width: '100%', maxWidth: 650, p: [2, 10] } }}
-                aria-describedby='user-view-edit-description'
-            >
-                <DialogTitle id='user-view-edit' sx={{ textAlign: 'center', fontSize: '1.5rem !important' }}>
-                    {t("Xodim ma'lumotlarini tahrirlash")}
-                </DialogTitle>
-                <DialogContent>
-                    {userData && <Form setError={setError} valueTypes='form-data' sx={{ marginTop: 10 }} onSubmit={handleSubmit} id='edit-emfdployee'>
-                        <Grid container spacing={6}>
-                            <Grid item xs={12} sm={6}>
-                                <TextField
-                                    size='small'
-                                    fullWidth
-                                    label={t('first_name')}
-                                    name='first_name'
-                                    defaultValue={userData.first_name}
-
-                                />
-                            </Grid>
-                            <Grid item xs={12} sm={6}>
-                                <TextField size='small' error={error?.phone?.error} fullWidth label={t('phone')} name='phone' defaultValue={`${userData.phone}`} />
-                                <FormHelperText error>{error?.phone?.message}</FormHelperText>
-                            </Grid>
-                            <Grid item xs={12} sm={6}>
-                                <FormControl fullWidth>
-                                    <InputLabel id='user-view-language-label'>{t('branch')}</InputLabel>
-                                    <Select
-                                        size='small'
-                                        label={t('branch')}
-                                        error={error?.branches?.error}
-                                        multiple
-                                        defaultValue={
-                                            userData.branches.find(el => el.exists)
-                                                ? [...userData.branches.filter(el => el.exists).map(el => el.id)]
-                                                : []
-                                        }
-                                        id='user-view-language'
-                                        labelId='user-view-language-label'
-                                        name='branches'
-                                    >
-                                        {userData.branches.map(branch => (
-                                            <MenuItem key={branch?.id} value={branch.id}>
-                                                {branch.name}
-                                            </MenuItem>
-                                        ))}
-                                    </Select>
-                                    <FormHelperText error>{error?.branches?.message}</FormHelperText>
-                                </FormControl>
-                            </Grid>
-                            <Grid item xs={12} sm={6}>
-                                <FormControl fullWidth>
-                                    <InputLabel id='user-view-country-label'>Rol</InputLabel>
-                                    <Select
-                                        size='small'
-                                        label='Rol'
-                                        multiple
-                                        defaultValue={
-                                            userData.roles.find(el => el.exists)
-                                                ? [...userData.roles.filter(el => el.exists).map(el => el.id)]
-                                                : []
-                                        }
-                                        id='user-view-language'
-                                        labelId='user-view-language-label'
-                                        name='roles'
-                                        error={error?.roles?.error}
-                                    >
-                                        {userData.roles.map(branch => (
-                                            <MenuItem key={branch?.id} value={branch.id}>
-                                                {branch.name}
-                                            </MenuItem>
-                                        ))}
-                                    </Select>
-                                    <FormHelperText error>{error?.roles?.message}</FormHelperText>
-                                </FormControl>
-                            </Grid>
-                            <Grid item xs={12} sm={6}>
-                                <FormControl fullWidth>
-                                    <Button
-                                        component='label'
-                                        role={undefined}
-                                        variant='contained'
-                                        tabIndex={-1}
-                                        startIcon={<IconifyIcon icon={'subway:cloud-upload'} />}
-                                    >
-                                        {t("Rasm qo'shish")}
-                                        <VisuallyHiddenInput
-
-                                            name='image'
-                                            type='file'
-                                            accept='.png, .jpg, .jpeg, .webp, .HEIC, .heic'
-                                        />
-                                    </Button>
-                                </FormControl>
-                            </Grid>
-                            <Grid item xs={12} sm={6}>
-                                <TextField size='small' fullWidth label={t('Yangi parol')} name='password' />
-                            </Grid>
-                        </Grid>
-                        <DialogActions sx={{ justifyContent: 'center' }}>
-                            <LoadingButton type='submit' loading={loading} variant='contained' sx={{ mr: 1 }}>
-                                {t('Saqlash')}
-                            </LoadingButton>
-                            <Button variant='outlined' type='button' color='secondary' onClick={handleEditClose}>
-                                {t('Bekor qilish')}
-                            </Button>
-                        </DialogActions>
-                    </Form>}
-                </DialogContent>
-            </Dialog>
+            <EditEmployeeModal />
         </div>
     )
 }

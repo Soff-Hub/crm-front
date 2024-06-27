@@ -2,9 +2,10 @@ import React from 'react'
 import { Box, IconButton, Typography, styled } from '@mui/material'
 import MuiDrawer, { DrawerProps } from '@mui/material/Drawer';
 import IconifyIcon from 'src/@core/components/icon'
-import CreateEmployeeModal from './CreateEmployeeform'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch, useAppSelector } from 'src/store'
+import { setOpenEdit } from 'src/store/apps/mentors'
+import CreateEmployeeForm from './AddMentorsModal';
 import { setOpenCreateSms } from 'src/store/apps/settings';
 
 const Drawer = styled(MuiDrawer)<DrawerProps>(({ theme }) => ({
@@ -22,7 +23,7 @@ const Drawer = styled(MuiDrawer)<DrawerProps>(({ theme }) => ({
 }))
 
 
-export default function TeacherCreateDialog() {
+export default function EmployeeCreateDialog() {
 
     const { t } = useTranslation()
     const { openCreateSms } = useAppSelector(state => state.settings)
@@ -59,7 +60,7 @@ export default function TeacherCreateDialog() {
                         <IconifyIcon icon='mdi:close' fontSize={20} />
                     </IconButton>
                 </Box>
-                <CreateEmployeeModal />
+                {openCreateSms && <CreateEmployeeForm />}
             </Drawer>
         </>
     )

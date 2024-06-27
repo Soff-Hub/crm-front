@@ -177,10 +177,6 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, reRender }
                         <Typography variant='body2' fontSize={12}>{t("Talaba qo'shilgan sana")}</Typography>
                         <Typography fontSize={12}>{formatDateTime(added_at)}</Typography>
                     </Box>
-                    <Box py={1} borderTop={'1px solid #c3cccc'}>
-                        <Typography variant='body2' fontSize={12}>{t('Aktivlashtirilgan sana')}</Typography>
-                        <Typography fontSize={12}>{formatDateTime(activated_at)}</Typography>
-                    </Box>
                     {comment && <Box py={1} borderTop={'1px solid #c3cccc'}>
                         <Typography variant='body2' fontSize={12}>{t('Eslatma')}</Typography>
                         <Typography fontSize={12} fontStyle={'italic'}>{comment.comment}</Typography>
