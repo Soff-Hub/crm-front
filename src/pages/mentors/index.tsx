@@ -43,10 +43,13 @@ export default function GroupsPage() {
     {
       xs: 0.4,
       title: t('Image'),
-      dataIndex: 'index',
-      render: () => <TeacherAvatar skin='light' color={'info'} variant='rounded' sx={{ width: 33, height: 33 }}>
-        <IconifyIcon icon={'et:profile-male'} />
-      </TeacherAvatar>
+      dataIndex: 'image',
+      render: (actions) => (console.log(actions), <TeacherAvatar skin='light' color={'info'} variant='rounded' sx={{ width: 33, height: 33 }}
+      >{
+          actions ? <img style={{ width: "100%", height: "100%", objectFit: "cover" }} src={actions} alt="user" /> :
+            <IconifyIcon icon={'et:profile-male'} />
+        }
+      </TeacherAvatar>)
 
     },
     {
