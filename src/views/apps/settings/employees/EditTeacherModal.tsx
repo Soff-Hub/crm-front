@@ -26,7 +26,7 @@ import { fetchTeachersList, updateTeacher } from 'src/store/apps/mentors';
 import { CreateTeacherDto, UpdateTeacherDto } from 'src/types/apps/mentorsTypes';
 import { useEffect, useRef, useState } from 'react';
 import { TeacherAvatar } from './AddMentorsModal';
-import { editEmployee, fetchEmployees } from 'src/store/apps/settings';
+import { editEmployee, fetchEmployees, setEmployeeData } from 'src/store/apps/settings';
 
 export const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
@@ -123,6 +123,7 @@ export default function EditEmployeeForm() {
                 formik.setErrors(resp.payload)
             } else {
                 await dispatch(fetchEmployees())
+                dispatch(setEmployeeData(null))
                 formik.resetForm()
                 setImage(null)
             }
@@ -134,8 +135,8 @@ export default function EditEmployeeForm() {
 
     const handleCheckboxChange = (event: React.SyntheticEvent, checked: boolean) => {
         formik.setFieldValue("is_fixed_salary", checked)
-        formik.setFieldValue("amount", "")
-        formik.setFieldValue("percentage", "")
+        formik.setFieldValue("amount", 0)
+        formik.setFieldValue("percentage", 0)
     }
 
     return (
