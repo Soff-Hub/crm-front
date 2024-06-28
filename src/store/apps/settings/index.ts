@@ -120,7 +120,7 @@ export const createEmployee = createAsyncThunk('settings/createEmployee', async 
 
 export const editEmployee = createAsyncThunk('settings/editEmployee', async (data: any, { rejectWithValue }) => {
     try {
-        const response = await api.patch(`auth/update/employee/${data.id}`, data);
+        const response = await api.patch(`auth/update/employee/${data.id}`, data.data);
         return response.data;
     } catch (err: any) {
         if (err.response) {

@@ -19,6 +19,7 @@ import EmployeeCreateDialog from 'src/views/apps/settings/employees/TeacherCreat
 import { useAppDispatch, useAppSelector } from 'src/store'
 import { fetchEmployees, setEmployeeData, setOpenCreateSms } from 'src/store/apps/settings'
 import EditEmployeeModal from 'src/views/apps/settings/employees/TeacherEditDialog'
+import api from 'src/@core/utils/api'
 
 export interface customTableProps {
     xs: number
@@ -58,12 +59,17 @@ export default function GroupsPage() {
         }
 
         const handleDeleteSubmit = async () => {
-
+            setSmallLoading(true)
+            await api.delete(`auth/delete/employee/${id}`)
+            dispatch(fetchEmployees())
+            setSmallLoading(false)
         }
 
         const getUserById = async () => {
             setSmallLoading(true)
             const resp = await getEmployeeById(id)
+            console.log(resp);
+            
             dispatch(setEmployeeData(resp))
             setSmallLoading(false)
         }

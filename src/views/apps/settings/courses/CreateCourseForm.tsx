@@ -147,10 +147,10 @@ export default function CreateCourseForm({ }: Props) {
                     onBlur={handleBlur}
                     value={values.lesson_duration}
                 >
-                    <MenuItem value={5400}>{t('1 soat 30 daqiqa')}</MenuItem>
-                    <MenuItem value={7200}>{t('2 soat')}</MenuItem>
-                    <MenuItem value={9000}>{t('2 soat 30 daqiqa')}</MenuItem>
-                    <MenuItem value={10800}>{t('3 soat')}</MenuItem>
+                    <MenuItem value={'01:30:00'}>{t('1 soat 30 daqiqa')}</MenuItem>
+                    <MenuItem value={'02:00:00'}>{t('2 soat')}</MenuItem>
+                    <MenuItem value={'02:30:00'}>{t('2 soat 30 daqiqa')}</MenuItem>
+                    <MenuItem value={'03:00:00'}>{t('3 soat')}</MenuItem>
                 </Select>
                 {errors.lesson_duration && touched.lesson_duration && <FormHelperText error>{errors.branch}</FormHelperText>}
             </FormControl>

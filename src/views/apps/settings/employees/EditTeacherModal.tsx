@@ -26,7 +26,7 @@ import { fetchTeachersList, updateTeacher } from 'src/store/apps/mentors';
 import { CreateTeacherDto, UpdateTeacherDto } from 'src/types/apps/mentorsTypes';
 import { useEffect, useRef, useState } from 'react';
 import { TeacherAvatar } from './AddMentorsModal';
-import { editEmployee } from 'src/store/apps/settings';
+import { editEmployee, fetchEmployees } from 'src/store/apps/settings';
 
 export const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
@@ -114,7 +114,6 @@ export default function EditEmployeeForm() {
                 newValues.append('image', image)
             }
 
-
             const resp = await dispatch(editEmployee({
                 data: newValues,
                 id: employeeData?.id
@@ -123,7 +122,7 @@ export default function EditEmployeeForm() {
             if (resp.meta.requestStatus === 'rejected') {
                 formik.setErrors(resp.payload)
             } else {
-                await dispatch(fetchTeachersList())
+                await dispatch(fetchEmployees())
                 formik.resetForm()
                 setImage(null)
             }

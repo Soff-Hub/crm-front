@@ -98,15 +98,12 @@ export default function GroupsPage() {
     {
       xs: 1.3,
       title: t('Dars davomiyligi'),
-      dataIndex: 'lesson_duration_seconds',
+      dataIndex: 'lesson_duration',
       render: date =>
-        Number(date) === 5400
-          ? '1 soat 30 daqiqa'
-          : Number(date) === 7200
-            ? '2 soat '
-            : Number(date) === 9000
-              ? '2 soat 30 daqiqa'
-              : '3 soat'
+        date === '01:30:00' ? '1 soat 30 daqiqa'
+          : date === '02:00:00' ? '2 soat' :
+            date === '02:30:00' ? '2 soat 30 daqiqa'
+              : date === '03:00:00' ? '3 soat' : ''
     },
     {
       xs: 1,
@@ -137,7 +134,7 @@ export default function GroupsPage() {
 
       <CreateCourseDialog />
 
-      <EditCourseDialog/>
+      <EditCourseDialog />
     </div>
   )
 }

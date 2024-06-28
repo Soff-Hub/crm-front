@@ -125,7 +125,7 @@ export default function EditCourseForm({ }: Props) {
                 <InputLabel
                     size='small'
                     id='demo-simple-select-outlined-label'
-                    error={!!errors.lesson_duration_seconds && touched.lesson_duration_seconds}
+                    error={!!errors.lesson_duration && touched.lesson_duration}
                 >
                     {t('Dars davomiyligi')}
                 </InputLabel>
@@ -134,18 +134,18 @@ export default function EditCourseForm({ }: Props) {
                     label={t('Dars davomiyligi')}
                     id='demo-simple-select-outlined2'
                     labelId='demo-simple-select-outlined-label2'
-                    name='lesson_duration_seconds'
-                    error={!!errors.lesson_duration_seconds && touched.lesson_duration_seconds}
+                    name='lesson_duration'
+                    error={!!errors.lesson_duration && touched.lesson_duration}
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    value={values.lesson_duration_seconds}
+                    value={values.lesson_duration}
                 >
-                    <MenuItem value={5400}>{t('1 soat 30 daqiqa')}</MenuItem>
-                    <MenuItem value={7200}>{t('2 soat')}</MenuItem>
-                    <MenuItem value={9000}>{t('2 soat 30 daqiqa')}</MenuItem>
-                    <MenuItem value={10800}>{t('3 soat')}</MenuItem>
+                    <MenuItem value={'01:30:00'}>{t('1 soat 30 daqiqa')}</MenuItem>
+                    <MenuItem value={'02:00:00'}>{t('2 soat')}</MenuItem>
+                    <MenuItem value={'02:30:00'}>{t('2 soat 30 daqiqa')}</MenuItem>
+                    <MenuItem value={'03:00:00'}>{t('3 soat')}</MenuItem>
                 </Select>
-                {errors.lesson_duration_seconds && touched.lesson_duration_seconds && <FormHelperText error>{errors.branch}</FormHelperText>}
+                {errors.lesson_duration && touched.lesson_duration && <FormHelperText error>{errors.branch}</FormHelperText>}
             </FormControl>
             <FormControl fullWidth>
                 <TextField

@@ -97,8 +97,8 @@ export default function CreateEmployeeForm() {
         // image: null,
         is_fixed_salary: false,
         password: "",
-        percentage: "",
-        amount: "",
+        percentage: 0,
+        amount: 0,
         branches: [],
         roles: []
     }
@@ -138,8 +138,8 @@ export default function CreateEmployeeForm() {
 
     const handleCheckboxChange = (event: React.SyntheticEvent, checked: boolean) => {
         formik.setFieldValue("is_fixed_salary", checked)
-        formik.setFieldValue("amount", "")
-        formik.setFieldValue("percentage", "")
+        formik.setFieldValue("amount", 0)
+        formik.setFieldValue("percentage", 0)
 
     }
 
