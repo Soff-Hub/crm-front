@@ -28,6 +28,7 @@ import GroupExamsList from './GroupExamsList'
 import { useTranslation } from 'react-i18next'
 import GroupSalaries from './GroupSalaries'
 import { AuthContext } from 'src/context/AuthContext'
+import SubLoader from '../../loaders/SubLoader'
 
 interface Props {
   tab: string
@@ -94,14 +95,11 @@ const UserViewRight = ({ tab, invoiceData }: Props) => {
         {!(user?.role.length === 1 && user?.role.includes('teacher')) && <Tab value='notes' label={t('Eslatmalar')} icon={<Icon icon='mdi:notebook-check-outline' />} />}
         <Tab value='exams' label={t('Imtixon')} icon={<Icon icon='mdi:puzzle-check-outline' />} />
         {!(user?.role.length === 1 && user?.role.includes('teacher')) && <Tab value='discount' label={t('Chegirmalar')} icon={<Icon icon='mdi:sale' />} />}
-        {!(user?.role.length === 1 && user?.role.includes('teacher')) && <Tab value='money' label={t("Maosh")} icon={<Icon icon='mdi:money' />} />}
+        {/* {!(user?.role.length === 1 && user?.role.includes('teacher')) && <Tab value='money' label={t("Maosh")} icon={<Icon icon='mdi:money' />} />} */}
       </TabList>
       <Box sx={{ mt: 2 }}>
         {isLoading ? (
-          <Box sx={{ mt: 6, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-            <CircularProgress sx={{ mb: 4 }} />
-            <Typography>{t("Loading...")}</Typography>
-          </Box>
+          <SubLoader />
         ) : (
           <>
             <TabPanel sx={{ p: 0 }} value='security'>
@@ -117,7 +115,7 @@ const UserViewRight = ({ tab, invoiceData }: Props) => {
               <UserViewBilling />
             </TabPanel>
             <TabPanel sx={{ p: 0 }} value='money'>
-              <GroupSalaries group={invoiceData} />
+              {/* <GroupSalaries group={invoiceData} /> */}
             </TabPanel>
           </>
         )}
