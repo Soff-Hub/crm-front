@@ -6,6 +6,7 @@ export interface TacherItemType {
   roles_list?: string[]
   birth_date: null | string
   activated_at: null | string
+  image?: null | string
 }
 
 export interface IMentorsState {

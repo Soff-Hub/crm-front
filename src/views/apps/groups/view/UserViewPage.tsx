@@ -2,23 +2,23 @@
 import Grid from '@mui/material/Grid'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
-import useGroups from 'src/hooks/useGroups'
+import { useAppDispatch, useAppSelector } from 'src/store'
+import { getGroupById } from 'src/store/apps/groupDetails'
 
 // ** Demo Components Imports
 import UserViewLeft from 'src/views/apps/groups/view/UserViewLeft'
 import UserViewRight from 'src/views/apps/groups/view/UserViewRight'
 
-const UserView = ({ tab }: any) => {
+const UserView = () => {
   const router = useRouter()
   const url = `${router.query.tab}`
 
-
   // hooks
-  const { getGroupById, groupData } = useGroups()
+  const { groupData } = useAppSelector(state => state.groupDetails)
+  const dispatch = useAppDispatch()
 
   useEffect(() => {
-    getGroupById(router.query.id)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    dispatch(getGroupById(router.query.id))
   }, [])
 
   return (

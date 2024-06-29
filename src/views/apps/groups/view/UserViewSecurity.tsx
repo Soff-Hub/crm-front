@@ -1,14 +1,15 @@
-import { Box, Button, CircularProgress, TextField, Typography } from "@mui/material"
-import { useRouter } from "next/router"
-import IconifyIcon from "src/@core/components/icon"
+import { Box, Button, CircularProgress, TextField, Typography } from "@mui/material";
+import { useRouter } from "next/router";
+import IconifyIcon from "src/@core/components/icon";
 import Tooltip, { TooltipProps, tooltipClasses } from '@mui/material/Tooltip';
 import { useContext, useEffect, useState } from "react";
 import api from "src/@core/utils/api";
 import getMontName, { getMontNumber } from "src/@core/utils/gwt-month-name";
 import { AuthContext } from "src/context/AuthContext";
 import { styled } from '@mui/material/styles';
-import { t } from "i18next";
 import { useTranslation } from "react-i18next";
+import EmptyContent from "src/@core/components/empty-content";
+import SubLoader from "../../loaders/SubLoader";
 
 
 interface Result {
@@ -127,9 +128,6 @@ const UserViewSecurity = ({ invoiceData }: any) => {
     return results;
   };
 
-
-
-
   async function getAttendance(date: any, group: any) {
     setLoading(true)
     try {
@@ -152,10 +150,8 @@ const UserViewSecurity = ({ invoiceData }: any) => {
   }
 
   const handleClick = (value: any) => {
-
     getAttendance(`${value.year}-${getMontNumber(value.date)}`, invoiceData.id)
     getDates(`${value.year}-${getMontNumber(value.date)}`, invoiceData.id)
-
     push({
       pathname,
       query: { ...query, month: value.date, year: value.year, id: invoiceData.id }
@@ -170,8 +166,6 @@ const UserViewSecurity = ({ invoiceData }: any) => {
   //     console.log(err)
   //   }
   // }
-
-
 
   useEffect(() => {
     if (query?.month) {
@@ -200,10 +194,7 @@ const UserViewSecurity = ({ invoiceData }: any) => {
       <Box sx={{ display: 'flex', width: '100%', paddingBottom: 3, maxWidth: '100%', overflowX: 'auto' }}>
         {
           loading ? (
-            <Box sx={{ mt: 6, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-              <CircularProgress sx={{ mb: 4 }} />
-              <Typography>{t('Loading...')}</Typography>
-            </Box>
+            <SubLoader />
           ) : (
             <Box>
               <table>
@@ -311,9 +302,9 @@ const UserViewSecurity = ({ invoiceData }: any) => {
                     }
                   </tr>
                 </thead>
-                <tbody>
-                  {
-                    attendance && attendance.students.map((student: any) => (
+                {attendance?.students.length > 0 ?
+                  <tbody>
+                    {attendance && attendance.students.map((student: any) => (
                       <tr key={student.id} style={{}}>
                         <td style={{ padding: '8px 0', textAlign: 'start', fontSize: '14px', borderRight: '1px solid #c3cccc' }}>{student.first_name}</td>
                         {
@@ -341,9 +332,13 @@ const UserViewSecurity = ({ invoiceData }: any) => {
                           )
                         }
                       </tr>
-                    ))
-                  }
-                </tbody>
+                    ))}
+                  </tbody> : <tr>
+                    <td colSpan={14}>
+                      <EmptyContent />
+                    </td>
+                  </tr>
+                }
               </table>
               <Box sx={{ width: '100%', display: 'flex', pt: '10px' }}>
                 <Button

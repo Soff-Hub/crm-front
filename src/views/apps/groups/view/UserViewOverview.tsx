@@ -14,6 +14,7 @@ import api from 'src/@core/utils/api'
 import showResponseError from 'src/@core/utils/show-response-error'
 import { useRouter } from 'next/router'
 import IconifyIcon from 'src/@core/components/icon'
+import EmptyContent from 'src/@core/components/empty-content'
 
 
 // interface ItemTypes {
@@ -72,14 +73,14 @@ const UserViewOverview = () => {
       </Box>
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
         {
-          data ? data.map((el: any) => (
+          data && data?.length > 0 ? data?.map((el: any) => (
             <Card key={el.id} sx={{ maxWidth: '450px' }}>
               <CardContent>
                 <StudentsNotesList setOpenEdit={() => setOpen(true)} comment={el} />
               </CardContent>
             </Card>
 
-          )) : ''
+          )) : <EmptyContent />
         }
 
         <Dialog

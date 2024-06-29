@@ -36,8 +36,8 @@ export default function StudentRowOptions({ id }: Props) {
 
     const handleEdit = async () => {
         dispatch(setOpenEdit('edit'))
-        await dispatch(fetchStudentDetail(id))
         setAnchorEl(null)
+        await dispatch(fetchStudentDetail(id))
     }
 
     async function submitDelete() {
