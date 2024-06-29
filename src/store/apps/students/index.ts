@@ -54,6 +54,12 @@ export const deleteStudent = createAsyncThunk(
     }
 );
 
+export const fetchStudentPayment = createAsyncThunk(
+    'students/fetchStudentPayment',
+    async (id: any) => {
+        return (await api.get(`common/student-payment/list/${id}/`)).data
+    }
+)
 
 
 
@@ -63,7 +69,8 @@ const initialState: IStudentState = {
     studentsCount: 0,
     studentData: null,
     isLoading: false,
-    queryParams: { status: 'active' }
+    queryParams: { status: 'active' },
+    payments: []
 }
 
 export const studentsSlice = createSlice({
@@ -102,6 +109,13 @@ export const studentsSlice = createSlice({
             })
             .addCase(fetchStudentDetail.fulfilled, (state, action) => {
                 state.studentData = action.payload
+            })
+            .addCase(fetchStudentPayment.pending, (state) => {
+                state.isLoading = true
+            })
+            .addCase(fetchStudentPayment.fulfilled, (state, action) => {
+                state.payments = action.payload
+                state.isLoading = false
             })
     }
 })

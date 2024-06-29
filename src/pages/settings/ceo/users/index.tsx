@@ -14,7 +14,6 @@ import UserSuspendDialog from 'src/views/apps/mentors/view/UserSuspendDialog'
 import { useTranslation } from 'react-i18next'
 import useEmployee from 'src/hooks/useEmployee'
 import LoadingButton from '@mui/lab/LoadingButton'
-import { useRouter } from 'next/router'
 import EmployeeCreateDialog from 'src/views/apps/settings/employees/TeacherCreateDialog'
 import { useAppDispatch, useAppSelector } from 'src/store'
 import { fetchEmployees, setEmployeeData, setOpenCreateSms } from 'src/store/apps/settings'
@@ -33,7 +32,6 @@ export default function GroupsPage() {
     // Hooks
     const { t } = useTranslation()
     const { getEmployeeById } = useEmployee()
-    const { push } = useRouter()
     const { employees, is_pending } = useAppSelector(state => state.settings)
     const dispatch = useAppDispatch()
 
@@ -69,7 +67,7 @@ export default function GroupsPage() {
             setSmallLoading(true)
             const resp = await getEmployeeById(id)
             console.log(resp);
-            
+
             dispatch(setEmployeeData(resp))
             setSmallLoading(false)
         }
@@ -129,14 +127,24 @@ export default function GroupsPage() {
             dataIndex: 'index'
         },
         {
-            xs: 0.5,
+            xs: 1,
             title: t("first_name"),
             dataIndex: 'first_name'
         },
         {
-            xs: 0.6,
+            xs: 1,
             title: t("Telefon raqam"),
             dataIndex: 'phone'
+        },
+        {
+            xs: 1,
+            title: "Doimiy oylik",
+            dataIndex: 'amount'
+        },
+        {
+            xs: 1,
+            title: "KPI asosida(%)",
+            dataIndex: 'percentage'
         },
         {
             xs: 0.6,
@@ -144,12 +152,6 @@ export default function GroupsPage() {
             dataIndex: 'roles_list',
             render: (roles_list: any) => roles_list.join(', ')
         },
-        // {
-        //     xs: 0.6,
-        //     title: t("Maosh"),
-        //     dataIndex: 'phone',
-        //     render: () => 0
-        // },
         {
             xs: 0.5,
             dataIndex: 'id',
@@ -157,11 +159,6 @@ export default function GroupsPage() {
             render: actions => <RowOptions id={actions} />
         }
     ]
-
-    const rowClick = (id: any) => {
-        push(`users/view/security?id=${id}`)
-    }
-
 
     useEffect(() => {
         dispatch(fetchEmployees())
@@ -184,7 +181,7 @@ export default function GroupsPage() {
                     {t("Yangi qo'shish")}
                 </Button>
             </Box>
-            <DataTable loading={is_pending} columns={columns} data={employees} rowClick={rowClick} />
+            <DataTable loading={is_pending} columns={columns} data={employees} />
 
             <EmployeeCreateDialog />
 

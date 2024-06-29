@@ -100,7 +100,9 @@ export default function AllSettings() {
     const updateSettings = async (key: any, value: any) => {
         try {
             const formData: any = new FormData()
-            formData.append(key, value)
+            if (key === 'logo') {
+                formData.append(key, value)
+            }
 
             if (key === 'on_birthday' || key === 'birthday_text' || key === 'on_absent' || key === 'absent_text') {
 

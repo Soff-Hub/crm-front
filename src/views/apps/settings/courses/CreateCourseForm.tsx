@@ -26,7 +26,7 @@ export default function CreateCourseForm({ }: Props) {
         name: Yup.string().required("Nom kiriting"),
         branch: Yup.string().required("Filial tanlang"),
         price: Yup.number().required("Kurs narxini kiriting"),
-        lesson_duration: Yup.number().required("Dars davomiyligi"),
+        lesson_duration: Yup.string().required("Dars davomiyligi"),
         month_duration: Yup.number().required("Nechi oy davom etadi?").max(12, "12 oydan ko'p bo'lmasligi kerak"),
         description: Yup.string(),
         color: Yup.string()

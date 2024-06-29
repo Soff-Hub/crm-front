@@ -239,11 +239,6 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, reRender }
                             <FormHelperText error={error?.added_at?.error}>{error?.added_at?.message}</FormHelperText>
                         </FormControl>
 
-                        <FormControl>
-                            <TextField defaultValue={activated_at || today} name='activated_at' type='date' error={error?.activated_at?.error} label={"Aktivlashtirilgan sana"} size='small' />
-                            <FormHelperText error={error?.activated_at?.error}>{error?.activated_at?.message}</FormHelperText>
-                        </FormControl>
-
                         <FormControl sx={{ maxWidth: '100%', marginBottom: 3 }} fullWidth>
                             <InputLabel size='small' id='demo-simple-select-outlined-label'>Status (holati)</InputLabel>
                             <Select
@@ -344,7 +339,7 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, reRender }
                             <FormHelperText error={error.message}>{error.message?.message}</FormHelperText>
                         </FormControl>
 
-                        
+
                         <DialogActions sx={{ justifyContent: 'center' }}>
                             <Button variant='outlined' type='button' color='secondary' onClick={() => setModalRef(null)}>
                                 {t("Bekor Qilish")}

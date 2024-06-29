@@ -9,6 +9,7 @@ export interface customTableDataProps {
   title: string
   dataIndex?: string | ReactNode
   render?: (source: string) => any | undefined
+  renderId?: (id: any, source: any) => any | undefined
 }
 
 interface DataTableProps {
@@ -78,8 +79,8 @@ export default function DataTable({ columns, loading = false, data, minWidth, ma
             >
               {columns.map((el: any, i) => (
                 <Box key={i} sx={{ textAlign: 'start', flex: el.xs, pb: '5px' }} pt={'5px !important'} pl={'0 !important'}>
-                  <Box sx={{ fontSize: 14 }}>
-                    {el.render ? el.render(item[`${el.dataIndex}`]) : el.renderId ? el.renderId(item[`${el.id}`], item[`${el.dataIndex}`]) : el.dataIndex === 'index' ? `${query.page && Number(query.page) > 1 ? ((Number(query?.page) - 1) * 10 + index + 1) : 1 + index}.` : item[`${el.dataIndex}`]}
+                  <Box sx={{ fontSize: 12, fontWeight: 500 }}>
+                    {el.render ? el.render(item[`${el.dataIndex}`]) : el.renderId ? el.renderId(item.id, item[`${el.dataIndex}`]) : el.dataIndex === 'index' ? `${query.page && Number(query.page) > 1 ? ((Number(query?.page) - 1) * 10 + index + 1) : 1 + index}.` : item[`${el.dataIndex}`]}
                   </Box>
                 </Box>
               ))}
