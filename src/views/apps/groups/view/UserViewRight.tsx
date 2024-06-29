@@ -10,9 +10,7 @@ import TabList from '@mui/lab/TabList'
 import TabPanel from '@mui/lab/TabPanel'
 import TabContext from '@mui/lab/TabContext'
 import { styled } from '@mui/material/styles'
-import Typography from '@mui/material/Typography'
 import MuiTab, { TabProps } from '@mui/material/Tab'
-import CircularProgress from '@mui/material/CircularProgress'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
@@ -26,7 +24,6 @@ import UserViewSecurity from 'src/views/apps/groups/view/UserViewSecurity'
 // ** Types
 import GroupExamsList from './GroupExamsList'
 import { useTranslation } from 'react-i18next'
-import GroupSalaries from './GroupSalaries'
 import { AuthContext } from 'src/context/AuthContext'
 import SubLoader from '../../loaders/SubLoader'
 

@@ -128,9 +128,6 @@ const UserViewSecurity = ({ invoiceData }: any) => {
     return results;
   };
 
-
-
-
   async function getAttendance(date: any, group: any) {
     setLoading(true)
     try {
@@ -153,10 +150,8 @@ const UserViewSecurity = ({ invoiceData }: any) => {
   }
 
   const handleClick = (value: any) => {
-
     getAttendance(`${value.year}-${getMontNumber(value.date)}`, invoiceData.id)
     getDates(`${value.year}-${getMontNumber(value.date)}`, invoiceData.id)
-
     push({
       pathname,
       query: { ...query, month: value.date, year: value.year, id: invoiceData.id }
@@ -171,8 +166,6 @@ const UserViewSecurity = ({ invoiceData }: any) => {
   //     console.log(err)
   //   }
   // }
-
-
 
   useEffect(() => {
     if (query?.month) {

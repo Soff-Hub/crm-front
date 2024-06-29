@@ -148,7 +148,7 @@ const UserViewLeft = ({ userData, reRender }: { userData?: any, reRender: any })
         users: students.map((el: any) => Number(el.student.id)),
         message: values.message
       })
-      toast.success('SMS muvaffaqiyatli jo\'natildi!', {
+      toast.success(`SMS muvaffaqiyatli jo'natildi!`, {
         position: 'top-center'
       })
       handleEditClose()
