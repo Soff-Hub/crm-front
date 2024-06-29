@@ -14,9 +14,6 @@ const UserView = ({ tab, student }: any) => {
   const router = useRouter()
   const url = tab
 
-  console.log('students', student);
-
-
   // hooks
   const { getStudentById } = useStudent()
   const { studentData } = useAppSelector(state => state.students)

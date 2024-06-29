@@ -16,6 +16,8 @@ import getMontName from "src/@core/utils/gwt-month-name"
 import showResponseError from "src/@core/utils/show-response-error"
 import usePayment from "src/hooks/usePayment"
 import { customTableProps } from "src/pages/groups"
+import { useAppDispatch, useAppSelector } from "src/store"
+import { fetchStudentPayment } from "src/store/apps/students"
 
 // Rasm yuklab olish misoli
 export async function downloadImage(filename: string, url: string) {
@@ -50,6 +52,9 @@ const UserViewSecurity = ({ groupData }: any) => {
   const [error, setError] = useState<any>({})
   const [loading, setLoading] = useState<any>(null)
 
+  const dispatch = useAppDispatch()
+  const { payments, isLoading } = useAppSelector(state => state.students)
+
   const { paymentMethods, getPaymentMethod, updatePayment, deletePayment } = usePayment()
 
   const handleEdit = (id: any) => {
@@ -77,8 +82,8 @@ const UserViewSecurity = ({ groupData }: any) => {
     {
       xs: 0.8,
       title: t("Sana"),
-      dataIndex: 'created_at',
-      render: (date: string) => formatDateTime(date)
+      dataIndex: 'payment_date',
+      // render: (date: string) => formatDateTime(date)
     },
     {
       xs: 0.7,
@@ -110,16 +115,6 @@ const UserViewSecurity = ({ groupData }: any) => {
     }
   ]
 
-  async function getPayments() {
-    try {
-      const resp = await api.get(`common/student-payment/list/${query.student}/`)
-      setData(resp.data)
-    } catch (err) {
-      console.log(err)
-    }
-  }
-
-
 
   const onUpdatePayment = async (value: {}) => {
     setLoading(true)
@@ -133,7 +128,7 @@ const UserViewSecurity = ({ groupData }: any) => {
       setLoading(false)
       setEdit(null)
 
-      return await getPayments()
+      return await dispatch(fetchStudentPayment(query?.student))
     } catch (err: any) {
       showResponseError(err.response.data, setError)
       setLoading(false)
@@ -145,11 +140,11 @@ const UserViewSecurity = ({ groupData }: any) => {
     await deletePayment(deleteId)
     setLoading(false)
     setDelete(false)
-    getPayments()
+   await  dispatch(fetchStudentPayment(query?.student))
   }
 
   useEffect(() => {
-    getPayments()
+    dispatch(fetchStudentPayment(query?.student))
     getPaymentMethod()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -183,7 +178,7 @@ const UserViewSecurity = ({ groupData }: any) => {
       }
 
       <Typography sx={{ my: 3, fontSize: '20px' }}>To'lov tarixi</Typography>
-      <DataTable maxWidth="100%" minWidth="450px" data={data} columns={columns} />
+      <DataTable loading={isLoading} maxWidth="100%" minWidth="450px" data={payments} columns={columns} />
 
 
       <Dialog

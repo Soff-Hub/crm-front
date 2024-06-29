@@ -42,7 +42,7 @@ import useSMS from 'src/hooks/useSMS'
 import { useRouter } from 'next/router'
 import { today } from 'src/@core/components/card-statistics/kanban-item'
 import { useAppDispatch } from 'src/store'
-import { fetchStudentDetail } from 'src/store/apps/students'
+import { fetchStudentDetail, fetchStudentPayment } from 'src/store/apps/students'
 
 
 type ModalTypes = 'group' | 'payment' | 'sms' | 'delete' | 'edit' | 'notes'
@@ -95,6 +95,7 @@ const UserViewLeft = ({ userData }: { userData: any }) => {
       setOpenEdit(null)
 
       await dispatch(fetchStudentDetail(userData.id))
+      await dispatch(fetchStudentPayment(userData.id))
     } catch (err: any) {
       showResponseError(err.response.data, setError)
       setLoading(false)
@@ -163,6 +164,7 @@ const UserViewLeft = ({ userData }: { userData: any }) => {
       setOpenEdit(null)
 
       await dispatch(fetchStudentDetail(userData.id))
+      await dispatch(fetchStudentPayment(userData.id))
     } catch (err: any) {
       showResponseError(err.response.data, setError)
       setLoading(false)

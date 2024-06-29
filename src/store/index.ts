@@ -16,6 +16,7 @@ import mentors from 'src/store/apps/mentors'
 import students from 'src/store/apps/students'
 import settings from 'src/store/apps/settings'
 import groupDetails from 'src/store/apps/groupDetails'
+import finance from './apps/finance'
 
 export const store = configureStore({
   reducer: {
@@ -31,7 +32,8 @@ export const store = configureStore({
     mentors,
     students,
     settings,
-    groupDetails
+    groupDetails,
+    finance
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({

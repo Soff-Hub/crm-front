@@ -9,25 +9,22 @@ import { ApexOptions } from 'apexcharts'
 import ReactApexcharts from 'src/@core/components/react-apexcharts'
 
 // ** Util Import
-import { hexToRGBA } from 'src/@core/utils/hex-to-rgba'
 import { formatCurrency } from 'src/@core/utils/format-currency'
-import { Box, FormControl, InputLabel, MenuItem, Select, Typography } from '@mui/material'
+import { Box, Typography } from '@mui/material'
 import { useTranslation } from 'react-i18next'
-import { useState } from 'react'
+import SubLoader from 'src/views/apps/loaders/SubLoader'
 
 const CardWidgetsWeeklyOverview = ({ data }: any) => {
   // ** Hook
   const theme = useTheme()
   const { t } = useTranslation()
 
-  const [type, setType] = useState<'expense' | 'benefit'>('benefit')
-
   const options: ApexOptions = {
     chart: {
       offsetY: 3,
       offsetX: 0,
       parentHeightOffset: 0,
-      toolbar: { show: true, tools: { zoom: false, zoomin: false, zoomout: false } }
+      toolbar: { show: true, tools: { zoom: false, zoomin: false, zoomout: false, pan: false, reset: false } },
     },
     plotOptions: {
       bar: {
@@ -47,20 +44,18 @@ const CardWidgetsWeeklyOverview = ({ data }: any) => {
       }
     },
     markers: {
-      size: 3.5,
+      size: 5,
       strokeWidth: 2,
       fillOpacity: 1,
-      strokeOpacity: 1,
-      colors: [theme.palette.background.paper],
-      strokeColors: hexToRGBA(theme.palette.error.main, 1)
+      strokeOpacity: 1
     },
     stroke: {
-      width: [0, 2],
-      colors: [theme.palette.customColors.trackBg, theme.palette.error.main]
+      width: [2, 2],
+      curve: 'smooth'
     },
     legend: { show: false },
     dataLabels: { enabled: false },
-    colors: [hexToRGBA(theme.palette.customColors.trackBg, 1)],
+    colors: ['#EE6D7A', '#72E128'],  
     grid: {
       strokeDashArray: 7,
       borderColor: theme.palette.divider
@@ -82,24 +77,24 @@ const CardWidgetsWeeklyOverview = ({ data }: any) => {
     },
     yaxis: {
       min: 0,
-      // max: 90,
       show: true,
       tickAmount: 5,
       labels: {
-        formatter: value => `${formatCurrency(value)}`,
+        formatter: (value) => `${formatCurrency(value)} so'm`,
         style: {
-          fontSize: '0.75rem',
-          colors: theme.palette.text.disabled
-        }
+          fontSize: '0.75rem'
+        },
+
       }
     }
   }
+
 
   return (
     <Card sx={{ p: '20px' }}>
       <Box sx={{ display: 'flex', alignItems: 'center' }}>
         <Typography sx={{ fontSize: '22px' }}>{t('Yillik aylanmalar')}</Typography>
-        <FormControl className='ms-auto'>
+        {/* <FormControl className='ms-auto'>
           <InputLabel size='small' id='user-view-language-label'>{t('Yil')}</InputLabel>
           <Select
             size='small'
@@ -115,26 +110,10 @@ const CardWidgetsWeeklyOverview = ({ data }: any) => {
               ))
             }
           </Select>
-        </FormControl>
-        <FormControl className='ms-2'>
-          <InputLabel size='small' id='user-view-language-label'>{t('Tur')}</InputLabel>
-          <Select
-            size='small'
-            label={t('Tur')}
-            id='user-view-language'
-            labelId='user-view-language-label'
-            name='department'
-            sx={{ mb: 1 }}
-            defaultValue={'benefit'}
-            onChange={(e: any) => setType(e.target.value)}
-          >
-            <MenuItem value={"benefit"}>{t("Tushum")}</MenuItem>
-            <MenuItem value={"expense"}>{t("Chiqim")}</MenuItem>
-          </Select>
-        </FormControl>
+        </FormControl> */}
       </Box>
       <Box>
-        <ReactApexcharts type='line' height={208} series={data?.[type] || []} options={options} />
+        {data ? <ReactApexcharts type='line' height={208} series={data} options={options} /> : <SubLoader />}
       </Box>
     </Card>
   )
