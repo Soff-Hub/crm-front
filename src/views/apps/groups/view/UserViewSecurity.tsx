@@ -1,15 +1,17 @@
-import { Box, Button, CircularProgress, TextField, Typography } from "@mui/material";
+import { Box, Button, TextField, Typography } from "@mui/material";
 import { useRouter } from "next/router";
 import IconifyIcon from "src/@core/components/icon";
 import Tooltip, { TooltipProps, tooltipClasses } from '@mui/material/Tooltip';
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import api from "src/@core/utils/api";
 import getMontName, { getMontNumber } from "src/@core/utils/gwt-month-name";
-import { AuthContext } from "src/context/AuthContext";
 import { styled } from '@mui/material/styles';
 import { useTranslation } from "react-i18next";
 import EmptyContent from "src/@core/components/empty-content";
 import SubLoader from "../../loaders/SubLoader";
+import { useAppDispatch, useAppSelector } from "src/store";
+import { getAttendance, getDays, setGettingAttendance, updateParams } from "src/store/apps/groupDetails";
+import { toast } from "react-hot-toast";
 
 
 interface Result {
@@ -36,7 +38,6 @@ const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
 const Item = ({ defaultValue, groupId, userId, date, opened_id, setOpenedId }: { defaultValue: true | false | null | 0, groupId?: any, userId?: any, date?: any, opened_id: any, setOpenedId: any }) => {
   const [value, setValue] = useState<true | false | null | 0>(defaultValue)
   const [open, setOpen] = useState<boolean>(false)
-
 
   const handleClick = async (status: any) => {
     setOpenedId(null)
@@ -91,28 +92,25 @@ const Item = ({ defaultValue, groupId, userId, date, opened_id, setOpenedId }: {
   }
 }
 
-const UserViewSecurity = ({ invoiceData }: any) => {
+const UserViewSecurity = () => {
+  const { queryParams, attendance, isGettingAttendance, days, groupData } = useAppSelector(state => state.groupDetails)
+  const dispatch = useAppDispatch()
+
+  const start_date: any = groupData?.start_date ? Number(groupData?.start_date.split('-')[1]) : ''
+
   const { pathname, query, push } = useRouter()
-  const start_date: any = invoiceData?.start_date ? Number(invoiceData?.start_date.split('-')[1]) : ''
-  const [loading, setLoading] = useState<boolean>(false)
-  const { user } = useContext(AuthContext)
+
   const [opened_id, setOpenedId] = useState<any>(null)
   const [openTooltip, setOpenTooltip] = useState<null | string>(null)
-  const [month, setMonth] = useState<any>(null)
   const [topic, setTopic] = useState<any>('')
-  const [archiveUrl, setArchiveUrl] = useState<'active,new' | 'archive'>('active,new')
   const { t } = useTranslation()
-
-
-  const [attendance, setAttendance] = useState<any>(null)
-  const [days, setDays] = useState<any>([])
 
   const months: string[] = ['yan', 'fev', 'mar', 'apr', 'may', 'iyun', 'iyul', 'avg', 'sen', 'okt', 'noy', 'dek']
 
   const generateDates = (startMonth: any, numMonths: number): Result[] => {
     const results: Result[] = [];
     let currentMonthIndex = months.findIndex(month => month === startMonth);
-    let currentYear = Number(invoiceData?.start_date.split('-')[0])
+    let currentYear = Number(groupData?.start_date?.split('-')[0])
 
     for (let i = 0; i < numMonths; i++) {
       const month = months[currentMonthIndex];
@@ -128,242 +126,219 @@ const UserViewSecurity = ({ invoiceData }: any) => {
     return results;
   };
 
-  async function getAttendance(date: any, group: any) {
-    setLoading(true)
-    try {
-      const resp = await api.get(`common/attendance-list/${date}-01/group/${group}/?status=${archiveUrl}`)
-      setAttendance(resp.data)
-      setLoading(false)
-    } catch (err) {
-      console.log(err);
-      setLoading(false)
-    }
-  }
 
-  const getDates = async (date: any, group: any) => {
-    try {
-      const resp = await api.get(`common/day-of-week/${group}/date/${date}-01/`)
-      setDays(resp.data);
-    } catch (err) {
-      console.log(err)
-    }
-  }
-
-  const handleClick = (value: any) => {
-    getAttendance(`${value.year}-${getMontNumber(value.date)}`, invoiceData.id)
-    getDates(`${value.year}-${getMontNumber(value.date)}`, invoiceData.id)
+  const handleClick = async (value: any) => {
+    const queryString = new URLSearchParams(queryParams).toString()
+    await dispatch(getAttendance({ date: `${value.year}-${getMontNumber(value.date)}`, group: groupData?.id, queryString: queryString }))
+    await dispatch(getDays({ date: `${value.year}-${getMontNumber(value.date)}`, group: groupData?.id }))
     push({
       pathname,
-      query: { ...query, month: value.date, year: value.year, id: invoiceData.id }
+      query: { ...query, month: value.date, year: value.year, id: groupData?.id }
     })
   }
 
-  // const getTopics = async () => {
-  //   try {
-  //     const resp = await api.get(`common/topic/list/date/${query?.year || new Date().getFullYear()}-${getMontNumber(query.month)}-01/group/${query.id}/`)
-  //     console.log(resp.data);
-  //   } catch (err) {
-  //     console.log(err)
-  //   }
-  // }
+  const handleTopicSubmit = async (hour: any) => {
+    try {
+      const response = await api.post('common/topic/create/', { topic, group: groupData?.id, date: hour.date })
+      if (response.status == 201) {
+        setOpenTooltip(null)
+        if (query.month && groupData?.id) {
+          await dispatch(getDays({ date: `${query?.year || new Date().getFullYear()}-${getMontNumber(query.month)}`, group: groupData?.id }))
+        }
+      } else {
+        toast.error('Saqlab bolmadi', {
+          duration: 2000
+        })
+      }
+    } catch (err) {
+      console.log(err);
+      toast.error('Saqlab bolmadi', {
+        duration: 2000
+      })
+    }
+  }
 
   useEffect(() => {
-    if (query?.month) {
-      setMonth(query?.month)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [query?.month])
-
-  useEffect(() => {
-    if (month) {
-      getAttendance(`${query?.year || new Date().getFullYear()}-${getMontNumber(month)}`, invoiceData.id)
-      getDates(`${query?.year || new Date().getFullYear()}-${getMontNumber(month)}`, invoiceData.id)
-    }
-    // getTopics()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [month, archiveUrl])
+    (async function () {
+      const queryString = new URLSearchParams(queryParams).toString()
+      dispatch(setGettingAttendance(true))
+      if (query.month && groupData?.id) {
+        await dispatch(getAttendance({ date: `${query?.year || new Date().getFullYear()}-${getMontNumber(query.month)}`, group: groupData?.id, queryString: queryString }))
+        await dispatch(getDays({ date: `${query?.year || new Date().getFullYear()}-${getMontNumber(query.month)}`, group: groupData?.id }))
+      }
+      dispatch(setGettingAttendance(false))
+    })()
+  }, [query.month, queryParams.status])
 
   return (
-    <Box className='demo-space-y'>
-      <ul style={{ display: 'flex', listStyle: 'none', margin: 0, padding: 0, gap: '15px', marginBottom: 12 }}>
-        {
-          generateDates(getMontName(start_date), invoiceData.month_duration).map(item => <li key={item.date} onClick={() => handleClick(item)} style={{ borderBottom: month === item.date ? '2px solid #c3cccc' : '2px solid transparent', cursor: 'pointer' }}>{item.date}</li>)
-        }
-      </ul>
-
-      <Box sx={{ display: 'flex', width: '100%', paddingBottom: 3, maxWidth: '100%', overflowX: 'auto' }}>
-        {
-          loading ? (
-            <SubLoader />
-          ) : (
-            <Box>
-              <table>
-                <thead>
-                  <tr style={{ borderBottom: '1px solid #c3cccc' }}>
-                    <td style={{ padding: '8px 0', textAlign: 'start', minWidth: '150px' }}><Typography>{t('Mavzular')}</Typography></td>
-                    {
-                      attendance && days.map((hour: any) => <td key={hour.date} style={{ textAlign: 'center', minWidth: '45px', padding: '8px 0', cursor: 'pointer', backgroundColor: hour.exam ? '#96f3a5' : hour.lesson ? '#a7c0fb' : 'transparent' }}>
-                        <div>
-                          {
-                            hour.exam ? (
-                              <HtmlTooltip
-                                PopperProps={{
-                                  disablePortal: true,
-                                }}
-                                onClose={() => setOpenTooltip(null)}
-                                open={openTooltip === hour.date}
-                                disableFocusListener
-                                disableHoverListener
-                                disableTouchListener
-                                arrow
-                                title={
-                                  <div>
-                                    <p style={{ margin: '0', marginBottom: '4px' }}>{hour.exam.title}</p>
-                                    <p style={{ margin: '0', marginBottom: '4px' }}>Ball: {hour.exam.min_score} / {hour.exam.max_score}</p>
-                                  </div>
-                                }
-                              >
-                                <span onClick={() => setOpenTooltip((c) => c === hour.date ? null : hour.date)} >
-                                  {hour.exam?.title}
-                                </span>
-                              </HtmlTooltip>
-                            ) : hour.lesson ? (
-                              <HtmlTooltip
-                                PopperProps={{
-                                  disablePortal: true,
-                                }}
-                                onClose={() => setOpenTooltip(null)}
-                                open={openTooltip === hour.date}
-                                disableFocusListener
-                                disableHoverListener
-                                disableTouchListener
-                                arrow
-                                title={
-                                  <div>
-                                    <p style={{ margin: '0', marginBottom: '4px' }}>{hour.lesson.topic}</p>
-                                  </div>
-                                }
-                              >
-                                <span onClick={() => setOpenTooltip((c) => c === hour.date ? null : hour.date)} >
-                                  mavzu
-                                </span>
-                              </HtmlTooltip>
-                            ) : (
-                              <HtmlTooltip
-                                PopperProps={{
-                                  disablePortal: true,
-                                }}
-                                onClose={() => setOpenTooltip(null)}
-                                open={openTooltip === hour.date}
-                                disableFocusListener
-                                disableHoverListener
-                                disableTouchListener
-                                arrow
-                                title={
-                                  <form
-                                    style={{
-                                      display: 'flex',
-                                      alignItems: 'stretch',
-                                      width: '100%',
-                                      padding: '5px',
-                                      flexDirection: 'column',
-                                      gap: '3px'
-                                    }}
-                                    onSubmit={async (e) => {
-                                      e.preventDefault()
-                                      try {
-                                        await api.post('common/topic/create/', { topic, group: invoiceData.id, date: hour.date })
-                                        getDates(`${query?.year || new Date().getFullYear()}-${getMontNumber(month)}`, invoiceData.id)
-                                        setOpenTooltip(null)
-                                      } catch (err) {
-                                        console.log(err)
-                                      }
-                                    }}
-                                  >
-                                    <TextField autoComplete="off" onChange={(e) => setTopic(e.target.value)} size="small" placeholder="Mavzu.." />
-                                    <Button type="submit">{t("Saqlash")}</Button>
-                                  </form>
-                                }
-                              >
-                                <span onClick={() => setOpenTooltip((c) => c === hour.date ? null : hour.date)} >
-                                  <IconifyIcon icon={'iconamoon:file-add-light'} />
-                                </span>
-                              </HtmlTooltip>
-                            )
-                          }
-                        </div>
-                      </td>)
-                    }
-                  </tr>
-                  <tr style={{ borderBottom: '1px solid #c3cccc' }}>
-                    <td style={{ padding: '8px 0', textAlign: 'start', borderRight: '1px solid #c3cccc', maxWidth: '100px' }}><Typography>{t("O'quvchilar")}</Typography></td>
-                    {
-                      attendance && days.map((hour: any) => <th key={hour.date} style={{ textAlign: 'center', minWidth: '50px', padding: '8px 0', cursor: 'pointer' }}><Typography>{`${hour.date.split('-')[2]}`}</Typography></th>)
-                    }
-                  </tr>
-                </thead>
-                {attendance?.students.length > 0 ?
-                  <tbody>
-                    {attendance && attendance.students.map((student: any) => (
-                      <tr key={student.id} style={{}}>
-                        <td style={{ padding: '8px 0', textAlign: 'start', fontSize: '14px', borderRight: '1px solid #c3cccc' }}>{student.first_name}</td>
+    isGettingAttendance ? <SubLoader /> :
+      <Box className='demo-space-y'>
+        <ul style={{ display: 'flex', listStyle: 'none', margin: 0, padding: 0, gap: '15px', marginBottom: 12 }}>
+          {
+            generateDates(getMontName(start_date), groupData?.month_duration).map(item => <li key={item.date} onClick={() => handleClick(item)} style={{ borderBottom: query?.month === item.date ? '2px solid #c3cccc' : '2px solid transparent', cursor: 'pointer' }}>{item.date}</li>)
+          }
+        </ul>
+        <Box sx={{ display: 'flex', width: '100%', paddingBottom: 3, maxWidth: '100%', overflowX: 'auto' }}>
+          <Box>
+            <table>
+              <thead>
+                <tr style={{ borderBottom: '1px solid #c3cccc' }}>
+                  <td style={{ padding: '8px 0', textAlign: 'start', minWidth: '150px' }}><Typography>{t('Mavzular')}</Typography></td>
+                  {
+                    attendance && days?.map((hour: any) => <td key={hour.date} style={{ textAlign: 'center', minWidth: '45px', padding: '8px 0', cursor: 'pointer', backgroundColor: hour.exam ? '#96f3a5' : hour.lesson ? '#a7c0fb' : 'transparent' }}>
+                      <div>
                         {
-                          days.map((hour: any) => (
-                            student.attendance.some((el: any) => el.date === hour.date) && student.attendance.find((el: any) => el.date === hour.date) ? (
-                              <td key={student.attendance.find((el: any) => el.date === hour.date).date} style={{ padding: '8px 0', textAlign: 'center', cursor: 'pointer' }}>
-                                {
-                                  student.attendance.find((el: any) => el.date === hour.date).is_available === true ? (
-                                    <Item opened_id={opened_id} setOpenedId={setOpenedId} defaultValue={true} groupId={invoiceData.id} userId={student.id} date={hour.date} />
-                                  ) :
-                                    student.attendance.find((el: any) => el.date === hour.date).is_available === false ? (
-                                      <Item opened_id={opened_id} setOpenedId={setOpenedId} defaultValue={false} groupId={invoiceData.id} userId={student.id} date={hour.date} />
-                                    ) :
-                                      student.attendance.find((el: any) => el.date === hour.date).is_available === null ? (
-                                        <Item opened_id={opened_id} setOpenedId={setOpenedId} defaultValue={null} groupId={invoiceData.id} userId={student.id} date={hour.date} />
-                                      ) : <></>
-                                }
-                              </td>
-                            ) : <td key={hour.date} style={{ padding: '8px 0', textAlign: 'center', cursor: 'not-allowed' }}>
-                              <span>
-                                <Item opened_id={opened_id} setOpenedId={setOpenedId} defaultValue={0} />
+                          hour.exam ? (
+                            <HtmlTooltip
+                              PopperProps={{
+                                disablePortal: true,
+                              }}
+                              onClose={() => setOpenTooltip(null)}
+                              open={openTooltip === hour.date}
+                              disableFocusListener
+                              disableHoverListener
+                              disableTouchListener
+                              arrow
+                              title={
+                                <div>
+                                  <p style={{ margin: '0', marginBottom: '4px' }}>{hour.exam.title}</p>
+                                  <p style={{ margin: '0', marginBottom: '4px' }}>Ball: {hour.exam.min_score} / {hour.exam.max_score}</p>
+                                </div>
+                              }
+                            >
+                              <span onClick={() => setOpenTooltip((c) => c === hour.date ? null : hour.date)} >
+                                {hour.exam?.title}
                               </span>
-                            </td>
-                          )
+                            </HtmlTooltip>
+                          ) : hour.lesson ? (
+                            <HtmlTooltip
+                              PopperProps={{
+                                disablePortal: true,
+                              }}
+                              onClose={() => setOpenTooltip(null)}
+                              open={openTooltip === hour.date}
+                              disableFocusListener
+                              disableHoverListener
+                              disableTouchListener
+                              arrow
+                              title={
+                                <div>
+                                  <p style={{ margin: '0', marginBottom: '4px' }}>{hour.lesson.topic}</p>
+                                </div>
+                              }
+                            >
+                              <Box sx={{ padding: "5px", width: "60px", overflow: "hidden", textOverflow: "ellipsis", textWrap: "nowrap" }} onClick={() => setOpenTooltip((c) => c === hour.date ? null : hour.date)} >
+                                {hour.lesson.topic}
+                              </Box>
+                            </HtmlTooltip>
+                          ) : (
+                            <HtmlTooltip
+                              PopperProps={{
+                                disablePortal: true,
+                              }}
+                              onClose={() => setOpenTooltip(null)}
+                              open={openTooltip === hour.date}
+                              disableFocusListener
+                              disableHoverListener
+                              disableTouchListener
+                              arrow
+                              title={
+                                <form
+                                  style={{
+                                    display: 'flex',
+                                    alignItems: 'stretch',
+                                    width: '100%',
+                                    padding: '5px',
+                                    flexDirection: 'column',
+                                    gap: '3px'
+                                  }}
+                                  onSubmit={async (e) => {
+                                    e.preventDefault()
+                                    handleTopicSubmit(hour)
+                                  }}
+                                >
+                                  <TextField autoComplete="off" onChange={(e) => setTopic(e.target.value)} size="small" placeholder="Mavzu.." />
+                                  <Button type="submit">{t("Saqlash")}</Button>
+                                </form>
+                              }
+                            >
+                              <span onClick={() => setOpenTooltip((c) => c === hour.date ? null : hour.date)} >
+                                <IconifyIcon icon={'iconamoon:file-add-light'} />
+                              </span>
+                            </HtmlTooltip>
                           )
                         }
-                      </tr>
-                    ))}
-                  </tbody> : <tr>
-                    <td colSpan={14}>
-                      <EmptyContent />
-                    </td>
-                  </tr>
-                }
-              </table>
-              <Box sx={{ width: '100%', display: 'flex', pt: '10px' }}>
-                <Button
-                  startIcon={<IconifyIcon style={{ fontSize: '12px' }} icon={`icon-park-outline:to-${archiveUrl === 'archive' ? 'top' : 'bottom'}`} />}
-                  sx={{ fontSize: '10px', marginLeft: 'auto' }}
-                  size='small'
-                  color={archiveUrl === 'archive' ? 'primary' : 'error'}
-                  variant='text'
-                  onClick={() => {
-                    if (archiveUrl === 'archive') {
-                      setArchiveUrl('active,new')
-                    } else setArchiveUrl('archive')
-                  }}
-                >
-                  {
-                    archiveUrl === 'archive' ? t("Arxivni yopish") : t("Arxivdagi o'quvchilarni ko'rish")
+                      </div>
+                    </td>)
                   }
+                </tr>
+                <tr style={{ borderBottom: '1px solid #c3cccc' }}>
+                  <td style={{ padding: '8px 0', textAlign: 'start', borderRight: '1px solid #c3cccc', maxWidth: '100px', minWidth: "60px" }}><Typography>{t("O'quvchilar")}</Typography></td>
+                  {
+                    attendance && days?.map((hour: any) => <th key={hour.date} style={{ textAlign: 'center', minWidth: '50px', padding: '8px 0', cursor: 'pointer' }}><Typography>{`${hour.date.split('-')[2]}`}</Typography></th>)
+                  }
+                </tr>
+              </thead>
+              {attendance?.students.length > 0 ?
+                <tbody>
+                  {attendance && attendance.students.map((student: any) => (
+                    <tr key={student.id} style={{}}>
+                      <td style={{ padding: '8px 0', textAlign: 'start', fontSize: '14px', borderRight: '1px solid #c3cccc' }}>{student.first_name}</td>
+                      {
+                        days?.map((hour: any) => (
+                          student.attendance.some((el: any) => el.date === hour.date) && student.attendance.find((el: any) => el.date === hour.date) ? (
+                            <td key={student.attendance.find((el: any) => el.date === hour.date).date} style={{ padding: '8px 0', textAlign: 'center', cursor: 'pointer' }}>
+                              {
+                                student.attendance.find((el: any) => el.date === hour.date).is_available === true ? (
+                                  <Item opened_id={opened_id} setOpenedId={setOpenedId} defaultValue={true} groupId={groupData?.id} userId={student.id} date={hour.date} />
+                                ) :
+                                  student.attendance.find((el: any) => el.date === hour.date).is_available === false ? (
+                                    <Item opened_id={opened_id} setOpenedId={setOpenedId} defaultValue={false} groupId={groupData?.id} userId={student.id} date={hour.date} />
+                                  ) :
+                                    student.attendance.find((el: any) => el.date === hour.date).is_available === null ? (
+                                      <Item opened_id={opened_id} setOpenedId={setOpenedId} defaultValue={null} groupId={groupData?.id} userId={student.id} date={hour.date} />
+                                    ) : <></>
+                              }
+                            </td>
+                          ) : <td key={hour.date} style={{ padding: '8px 0', textAlign: 'center', cursor: 'not-allowed' }}>
+                            <span>
+                              <Item opened_id={opened_id} setOpenedId={setOpenedId} defaultValue={0} />
+                            </span>
+                          </td>
+                        )
+                        )
+                      }
+                    </tr>
+                  ))}
+                </tbody> : <tr>
+                  <td colSpan={14}>
+                    <EmptyContent />
+                  </td>
+                </tr>
+              }
+            </table>
+            {!isGettingAttendance && <Box sx={{ width: '100%', display: 'flex', pt: '10px' }}>
+              <Button
+                startIcon={<IconifyIcon style={{ fontSize: '12px' }} icon={`icon-park-outline:to-${queryParams.status === 'archive' ? 'top' : 'bottom'}`} />}
+                sx={{ fontSize: '10px', marginLeft: 'auto' }}
+                size='small'
+                color={queryParams.status === 'archive' ? 'primary' : 'error'}
+                variant='text'
+                onClick={() => {
+                  if (queryParams?.status === 'archive') {
+                    dispatch(updateParams({ status: 'active,new' }))
+                  } else dispatch(updateParams({ status: 'archive' }))
+                }}
+              >
+                {
+                  queryParams.status === 'archive' ? t("Arxivni yopish") : t("Arxivdagi o'quvchilarni ko'rish")
+                }
 
-                </Button>
-              </Box>
-            </Box>
-          )
-        }
-      </Box>
-    </Box >
+              </Button>
+            </Box>}
+          </Box>
+        </Box>
+      </Box >
   )
 }
 
