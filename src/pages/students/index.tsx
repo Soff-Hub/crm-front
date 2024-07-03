@@ -1,4 +1,5 @@
 import {
+  Chip,
   Pagination,
   Typography
 } from '@mui/material';
@@ -6,14 +7,13 @@ import { ReactNode, useEffect } from 'react';
 import DataTable from 'src/@core/components/table';
 import { useTranslation } from 'react-i18next';
 import { useRouter } from 'next/router';
-import useCourses from 'src/hooks/useCourses';
 import StudentsPageHeader from 'src/views/apps/students/StudentsPageHeader';
 import StudentsFilter from 'src/views/apps/students/StudentsFilter';
 import CreateStudentModal from 'src/views/apps/students/CreateStudentModal';
 import EditStudentModal from 'src/views/apps/students/EditStudentModal';
 import StudentRowOptions from 'src/views/apps/students/StudentRowOptions';
 import { useAppDispatch, useAppSelector } from 'src/store';
-import { clearStudentParams, fetchStudentsList } from 'src/store/apps/students';
+import { clearStudentParams, fetchStudentsList, updateStudentParams } from 'src/store/apps/students';
 
 export interface customTableProps {
   xs: number
@@ -87,6 +87,12 @@ export default function GroupsPage() {
       render: (balance: string) => `${+balance} so'm`
     },
     {
+      xs: 0.7,
+      title: t("Status"),
+      dataIndex: 'status',
+      render: (status: string) => <Chip label={t(status)} size="small" variant='outlined' color={status === 'active' ? 'success' : status === 'archive' ? 'error' : 'warning'} />
+    },
+    {
       xs: 0.8,
       dataIndex: 'id',
       title: t("Harakatlar"),
@@ -95,10 +101,8 @@ export default function GroupsPage() {
   ]
 
   const handlePagination = (page: any) => {
-    router.push({
-      pathname: router.pathname,
-      query: { ...router.query, page }
-    })
+    dispatch(fetchStudentsList({ ...queryParams, page }))
+    dispatch(updateStudentParams({ page }))
   }
 
   const rowClick = (id: any) => {
@@ -123,7 +127,7 @@ export default function GroupsPage() {
       <StudentsFilter />
 
       <DataTable loading={isLoading} columns={columns} data={students} rowClick={rowClick} />
-      {studentsCount > 9 && <Pagination defaultPage={1} count={Math.ceil(studentsCount / 10)} variant="outlined" shape="rounded" onChange={(e: any, page) => handlePagination(page)} />}
+      {studentsCount > 10 && !isLoading && <Pagination defaultPage={queryParams?.page || 1} count={Math.ceil(studentsCount / 10)} variant="outlined" shape="rounded" onChange={(e: any, page) => handlePagination(page)} />}
 
       <CreateStudentModal />
       <EditStudentModal />

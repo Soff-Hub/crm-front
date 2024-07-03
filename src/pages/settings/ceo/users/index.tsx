@@ -9,7 +9,6 @@ import React, { MouseEvent, ReactNode, useEffect, useState } from 'react'
 import IconifyIcon from 'src/@core/components/icon'
 import DataTable from 'src/@core/components/table'
 import MenuItem from '@mui/material/MenuItem'
-import Link from 'next/link'
 import UserSuspendDialog from 'src/views/apps/mentors/view/UserSuspendDialog'
 import { useTranslation } from 'react-i18next'
 import useEmployee from 'src/hooks/useEmployee'
@@ -66,8 +65,6 @@ export default function GroupsPage() {
         const getUserById = async () => {
             setSmallLoading(true)
             const resp = await getEmployeeById(id)
-            console.log(resp);
-
             dispatch(setEmployeeData(resp))
             setSmallLoading(false)
         }
@@ -92,15 +89,6 @@ export default function GroupsPage() {
                     }}
                     PaperProps={{ style: { minWidth: '8rem' } }}
                 >
-                    <MenuItem
-                        component={Link}
-                        sx={{ '& svg': { mr: 2 } }}
-                        onClick={handleRowOptionsClose}
-                        href={`users/view/security?id=${id}`}
-                    >
-                        <IconifyIcon icon='mdi:eye-outline' fontSize={20} />
-                        {t("Ko'rish")}
-                    </MenuItem>
                     <MenuItem
                         component={LoadingButton}
                         loading={smallLoading}

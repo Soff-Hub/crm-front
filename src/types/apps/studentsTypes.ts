@@ -98,4 +98,5 @@ export interface StudentsQueryParamsTypes {
     search?: string
     course?: number | null
     status?: string
+    page?: number
 }

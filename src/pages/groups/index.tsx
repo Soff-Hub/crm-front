@@ -3,6 +3,7 @@
 import {
   Box,
   Button,
+  Chip,
   Dialog,
   DialogActions,
   DialogContent,
@@ -105,8 +106,7 @@ export default function GroupsPage() {
     {
       xs: 1,
       title: t("Dars vaqti"),
-      dataIndex: 'start_at',
-      render: (time) => time.split(':').splice(0, 2).join(':')
+      dataIndex: 'start_end_at',
     },
     {
       xs: 1,
@@ -114,14 +114,27 @@ export default function GroupsPage() {
       dataIndex: 'student_count'
     },
     {
-      xs: 1,
-      title: t("Ochilgan sana"),
-      dataIndex: 'start_date'
+      xs: 0.8,
+      title: t("Ochilgan"),
+      dataIndex: 'start_date',
+      render: (date: string) => date.split('-').reverse().join('/')
+    },
+    {
+      xs: 0.8,
+      title: t("Yakunlanadi"),
+      dataIndex: 'end_date',
+      render: (date: string) => date.split('-').reverse().join('/')
+    },
+    {
+      xs: 0.7,
+      title: t("Status"),
+      dataIndex: 'status',
+      render: (status: string) => <Chip label={t(status)} size="small" variant='outlined' color={status === 'active' ? 'success' : status === 'archive' ? 'error' : 'warning'} />
     },
     {
       xs: 0.4,
       dataIndex: 'id',
-      title: t("Harakatlar"),
+      title: t(""),
       render: actions => <RowOptions id={actions} />
     }
   ]
@@ -140,7 +153,7 @@ export default function GroupsPage() {
   }
 
   const pageLoad = async () => {
-    const queryString = new URLSearchParams(queryParams).toString()
+    const queryString = new URLSearchParams({ ...queryParams }).toString()
     await Promise.all([
       dispatch(fetchGroups(queryString)),
       dispatch(getMetaData())
@@ -158,7 +171,14 @@ export default function GroupsPage() {
         sx={{ display: 'flex', justifyContent: 'space-between', margin: '10px 0' }}
         py={2}
       >
-        <Typography variant='h5'>{t("Guruhlar")}</Typography>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+          <Typography variant='h5'>{t("Guruhlar")}</Typography>
+          <Typography
+            style={{ display: 'flex', alignItems: 'center', gap: '5px', padding: '0 10px', border: '1px solid #c3cccc', borderRadius: '10px' }}
+          >
+            {groupCount} ta
+          </Typography>
+        </Box>
         <Button
           onClick={handleOpenModal}
           variant='contained'
@@ -175,7 +195,7 @@ export default function GroupsPage() {
       )}
       {!isMobile && <GroupsFilter isMobile={isMobile} />}
       <DataTable columns={columns} loading={isLoading} data={groups || []} rowClick={rowClick} color />
-      {groupCount > 1 && isLoading && <Pagination defaultPage={queryParams.page ? Number(queryParams.page) : 1} count={groupCount} variant="outlined" shape="rounded" onChange={(e: any, page) => handlePagination(e.target.value + page)} />}
+      {Math.ceil(groupCount / 10) > 1 && isLoading && <Pagination defaultPage={queryParams.page ? Number(queryParams.page) : 1} count={groupCount} variant="outlined" shape="rounded" onChange={(e: any, page) => handlePagination(e.target.value + page)} />}
 
       <AddGroupModal />
       <EditGroupModal />

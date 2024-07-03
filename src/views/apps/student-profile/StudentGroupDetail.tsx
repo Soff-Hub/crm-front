@@ -3,7 +3,7 @@ import { useRouter } from "next/router"
 import IconifyIcon from "src/@core/components/icon"
 import getMontName, { getMontNumber } from "src/@core/utils/gwt-month-name";
 import { useTranslation } from "react-i18next";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import api from "src/@core/utils/api";
 import DataTable from "src/@core/components/table";
 import { formatCurrency } from "src/@core/utils/format-currency";
@@ -106,12 +106,34 @@ const StudentGroupDetail = ({ slug, month, start_date, month_duration }: any) =>
         setDays(resp.data);
     }
 
-    async function getReceipt(id: any) {
-        setLoading(id)
+    const handlePrint = useCallback(async (id: number | string) => {
         const subdomain = location.hostname.split('.')
         try {
-            await downloadImage(`receipt-${new Date().getTime()}.pdf`, `${process.env.NODE_ENV === 'development' ? process.env.NEXT_PUBLIC_TEST_BASE_URL : subdomain.length < 3 ? `https://${process.env.NEXT_PUBLIC_BASE_URL}` : `https://${subdomain[0]}.${process.env.NEXT_PUBLIC_BASE_URL}`}/api/v1/common/generate-check/${id}/`)
-            // await downloadImage(`receipt-${new Date().getTime()}.pdf`, `http://192.168.1.48:8000/api/v1/common/generate-check/${id}/`)
+            const response = await fetch(
+                `${process.env.NODE_ENV === 'development' ? process.env.NEXT_PUBLIC_TEST_BASE_URL : subdomain.length < 3 ? `https://${process.env.NEXT_PUBLIC_BASE_URL}` : `https://${subdomain[0]}.${process.env.NEXT_PUBLIC_BASE_URL}`}/common/generate-check/${id}/`,
+                {
+                    method: "GET",
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+                    },
+                }
+            );
+            const data = await response.blob();
+            const blobUrl = URL.createObjectURL(data);
+            const printFrame: any = document.getElementById("printFrame");
+            printFrame.src = blobUrl;
+            printFrame.onload = function () {
+                printFrame.contentWindow.print();
+            };
+        } catch (error) {
+            console.error("Print error:", error);
+        }
+    }, []);
+
+    async function getReceipt(id: any) {
+        setLoading(id)
+        try {
+            await handlePrint(id)
             setLoading(false)
         } catch (err) {
             console.log(err)

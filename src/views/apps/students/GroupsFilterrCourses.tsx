@@ -91,7 +91,7 @@ export const GroupsFilterrCourses = ({ isMobile }: GroupsFilterProps) => {
                         </Select>
                     </FormControl>
                     <FormControl sx={{ width: '100%' }}>
-                        <InputLabel size='small' id='demo-simple-select-outlined-label'>Kurslar bo'yicha</InputLabel>
+                        <InputLabel size='small' id='demo-simple-select-outlined-label'>Kurslar</InputLabel>
                         <Select
                             size='small'
                             label="Bo'lim"
@@ -108,10 +108,10 @@ export const GroupsFilterrCourses = ({ isMobile }: GroupsFilterProps) => {
                         </Select>
                     </FormControl>
                     <FormControl sx={{ width: '100%' }}>
-                        <InputLabel size='small' id='demo-simple-select-outlined-label'>Kunlar bo'yicha</InputLabel>
+                        <InputLabel size='small' id='demo-simple-select-outlined-label'>Kunlar</InputLabel>
                         <Select
                             size='small'
-                            label="Kunlar boyicha"
+                            label="Kunlar"
                             defaultValue=''
                             id='demo-simple-select-outlined'
                             labelId='demo-simple-select-outlined-label'
@@ -134,7 +134,7 @@ export const GroupsFilterrCourses = ({ isMobile }: GroupsFilterProps) => {
                         shouldCloseOnSelect={false}
                         popperPlacement={"top"}
                         customInput={
-                            <CustomInput label="Sana bo'yicha" start={startDate as Date | number} end={endDate as Date | number} />
+                            <CustomInput label="Sana" start={startDate as Date | number} end={endDate as Date | number} />
                         }
                     />
                 </Box >
@@ -181,10 +181,10 @@ export const GroupsFilterrCourses = ({ isMobile }: GroupsFilterProps) => {
                 </Select>
             </FormControl>
             <FormControl sx={{ maxWidth: 180, width: '100%' }}>
-                <InputLabel size='small' id='demo-simple-select-outlined-label'>Kurslar bo'yicha</InputLabel>
+                <InputLabel size='small' id='demo-simple-select-outlined-label'>Kurslar</InputLabel>
                 <Select
                     size='small'
-                    label="Kurslar bo'yicha"
+                    label="Kurslar"
                     defaultValue=''
                     id='demo-simple-select-outlined'
                     labelId='demo-simple-select-outlined-label'
@@ -198,10 +198,10 @@ export const GroupsFilterrCourses = ({ isMobile }: GroupsFilterProps) => {
                 </Select>
             </FormControl>
             <FormControl sx={{ maxWidth: 180, width: '100%' }}>
-                <InputLabel size='small' id='demo-simple-select-outlined-label'>Kunlar bo'yicha</InputLabel>
+                <InputLabel size='small' id='demo-simple-select-outlined-label'>Kunlar</InputLabel>
                 <Select
                     size='small'
-                    label="Kunlar boyicha"
+                    label="Kunlar"
                     defaultValue=''
                     id='demo-simple-select-outlined'
                     labelId='demo-simple-select-outlined-label'
@@ -226,7 +226,7 @@ export const GroupsFilterrCourses = ({ isMobile }: GroupsFilterProps) => {
                 popperPlacement={'bottom-start'}
                 customInput={
                     <CustomInput
-                        label="Sana bo'yicha"
+                        label="Sana"
                         end={endDateRange as Date | number}
                         start={startDateRange as Date | number}
                     />

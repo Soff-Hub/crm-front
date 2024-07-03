@@ -1,11 +1,13 @@
 import React, { useEffect } from 'react'
 import * as Yup from "yup";
 import { useFormik } from 'formik';
-import { FormControl, FormHelperText, TextField } from '@mui/material';
+import { FormControl, FormHelperText, InputLabel, TextField } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from 'src/store';
-import { fetchDepartmentList, updateDepartmentStudent } from 'src/store/apps/leads';
+import { updateDepartmentStudent } from 'src/store/apps/leads';
+import { reversePhone } from 'src/@core/components/phone-input/format-phone-number';
+import PhoneInput from 'src/@core/components/phone-input';
 
 
 type Props = {
@@ -21,9 +23,7 @@ export default function EditAnonimUserForm({ item, reRender }: Props) {
 
     const validationSchema = Yup.object({
         first_name: Yup.string().required("Ism kiriting"),
-        phone: Yup.string()
-            .matches(/^\+998\d{9}$/, "Telefon raqam noto'g'ri formatda. +998 XX XXX XX XX")
-            .required("Telefon raqam kiriting"),
+        phone: Yup.string().required("Telefon raqam kiriting"),
     });
 
     const initialValues: {
@@ -38,7 +38,7 @@ export default function EditAnonimUserForm({ item, reRender }: Props) {
         initialValues,
         validationSchema,
         onSubmit: async (values) => {
-            const resp = await dispatch(updateDepartmentStudent({ id: item.id, ...values }))
+            const resp = await dispatch(updateDepartmentStudent({ id: item.id, ...values, phone: reversePhone(values.phone) }))
 
             if (resp.meta.requestStatus === 'rejected') {
                 formik.setErrors(resp.payload)
@@ -77,13 +77,11 @@ export default function EditAnonimUserForm({ item, reRender }: Props) {
             </FormControl>
 
             <FormControl fullWidth>
-                <TextField
+                <InputLabel error={!!errors.phone && touched.phone} htmlFor="login-input">{t('phone')}</InputLabel>
+                <PhoneInput
                     fullWidth
-                    autoComplete='off'
-                    size='small'
                     label={t('phone')}
-                    name='phone'
-                    defaultValue="+998"
+                    id='login-input'
                     error={!!errors.phone && touched.phone}
                     onChange={handleChange}
                     onBlur={handleBlur}

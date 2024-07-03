@@ -9,25 +9,22 @@ import { getGroupById } from 'src/store/apps/groupDetails'
 import UserViewLeft from 'src/views/apps/groups/view/UserViewLeft'
 import UserViewRight from 'src/views/apps/groups/view/UserViewRight'
 
-const UserView = () => {
-  const router = useRouter()
-  const url = `${router.query.tab}`
-
+const UserView = ({ tab, id }: any) => {
   // hooks
   const { groupData } = useAppSelector(state => state.groupDetails)
   const dispatch = useAppDispatch()
 
   useEffect(() => {
-    dispatch(getGroupById(router.query.id))
+    dispatch(getGroupById(id))
   }, [])
 
   return (
     <Grid container spacing={6}>
       <Grid item xs={12} md={5} lg={4}>
-        <UserViewLeft userData={groupData} reRender={() => getGroupById(router.query.id)} />
+        <UserViewLeft userData={groupData} reRender={() => getGroupById(id)} />
       </Grid>
       <Grid item xs={12} md={7} lg={8}>
-        <UserViewRight tab={url} invoiceData={groupData} />
+        <UserViewRight tab={tab} invoiceData={groupData} />
       </Grid>
     </Grid>
   )

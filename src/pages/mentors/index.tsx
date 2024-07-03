@@ -42,7 +42,7 @@ export default function GroupsPage() {
     },
     {
       xs: 0.4,
-      title: t('Image'),
+      title: t('Rasmi'),
       dataIndex: 'image',
       render: (actions) => (console.log(actions), <TeacherAvatar skin='light' color={'info'} variant='rounded' sx={{ width: 33, height: 33 }}
       >{

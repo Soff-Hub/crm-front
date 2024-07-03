@@ -1,10 +1,13 @@
 
+import LoadingButton from '@mui/lab/LoadingButton'
 import { Box, Button, IconButton, Typography } from '@mui/material'
 import { useRouter } from 'next/router'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
+import toast from 'react-hot-toast'
 import { useTranslation } from 'react-i18next'
 import IconifyIcon from 'src/@core/components/icon'
 import DataTable, { customTableDataProps } from 'src/@core/components/table'
+import api from 'src/@core/utils/api'
 import { formatCurrency } from 'src/@core/utils/format-currency'
 import { useAppDispatch, useAppSelector } from 'src/store'
 import { fetchModerationSalaries, updateSalaryBonus, updateSalaryFine } from 'src/store/apps/finance'
@@ -13,9 +16,10 @@ type Props = {}
 
 export default function SalaryConfirm({ }: Props) {
     const { t } = useTranslation()
-    const { back } = useRouter()
+    const { back, push } = useRouter()
     const dispatch = useAppDispatch()
     const { moderation_salaries, isPending } = useAppSelector(state => state.finance)
+    const [loading, setLoading] = useState<'frozen' | 'approved' | null>(null)
 
     const withdrawCol: customTableDataProps[] = [
         {
@@ -86,12 +90,27 @@ export default function SalaryConfirm({ }: Props) {
         {
             xs: 0.18,
             title: t("Yakuniy ish haqqi"),
-            dataIndex: 'index',
-            render: () => "5 400 000 so'm"
+            dataIndex: 'final_salary',
+            render: (final_salary) => `${formatCurrency(final_salary)} so'm`
         },
     ]
 
-    // console.log(moderation_salaries);
+    const confirmSalary = async (status: 'frozen' | 'approved') => {
+        setLoading(status)
+        const update_data = moderation_salaries.map(el => ({ ...el, status }))
+        try {
+            await api.patch(`common/finance/employee-salaries/update/`, { update_data })
+            toast.success("Muvaffaqiyatli saqlandi")
+            if (status === 'frozen') {
+                await dispatch(fetchModerationSalaries())
+            } else {
+                push('/finance')
+            }
+        } catch (err) {
+            console.log(err);
+        }
+        setLoading(null)
+    }
 
     useEffect(() => {
         dispatch(fetchModerationSalaries())
@@ -107,7 +126,25 @@ export default function SalaryConfirm({ }: Props) {
                     <Typography sx={{ fontSize: '20px', flexGrow: 1 }}>{t('Oylik hisoblash')}</Typography>
                 </Box>
                 <DataTable loading={isPending} maxWidth='100%' minWidth='800px' columns={withdrawCol} data={moderation_salaries} />
-                <Button sx={{ marginTop: '15px' }} size='small' variant='contained'>{t("Saqlash")}</Button>
+                {moderation_salaries.length > 0 && !isPending && <LoadingButton
+                    loading={loading === 'frozen'}
+                    sx={{ marginTop: '15px', marginRight: '20px' }}
+                    size='small'
+                    variant='contained'
+                    color='secondary'
+                    onClick={() => confirmSalary('frozen')}
+                >
+                    {t("Vaqtincha saqlash")}
+                </LoadingButton>}
+                {moderation_salaries.length > 0 && !isPending && <LoadingButton
+                    loading={loading === 'approved'}
+                    sx={{ marginTop: '15px' }}
+                    size='small'
+                    variant='contained'
+                    onClick={() => confirmSalary('approved')}
+                >
+                    {t("Saqlash")}
+                </LoadingButton>}
             </Box>
         </div>
     )

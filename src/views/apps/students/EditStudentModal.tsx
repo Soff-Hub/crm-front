@@ -56,7 +56,7 @@ export default function EditStudentModal() {
                 }}
             >
                 <Typography variant='h6' sx={{ fontWeight: 600 }}>
-                    {t("O'quvchi qo'shish")}
+                    {t("O'quvchi malumotlarini tahrirlash")}
                 </Typography>
                 <IconButton
                     onClick={onClose}

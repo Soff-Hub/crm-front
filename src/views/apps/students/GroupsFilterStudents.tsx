@@ -94,7 +94,7 @@ export const GroupsFilterStudents = ({ isMobile }: GroupsFilterProps) => {
           </FormControl>
           <FormControl sx={{ width: '100%' }}>
             <InputLabel size='small' id='demo-simple-select-outlined-label'>
-              Kurslar bo'yicha
+              Kurslar
             </InputLabel>
             <Select
               size='small'
@@ -113,11 +113,11 @@ export const GroupsFilterStudents = ({ isMobile }: GroupsFilterProps) => {
           </FormControl>
           <FormControl sx={{ width: '100%' }}>
             <InputLabel size='small' id='demo-simple-select-outlined-label'>
-              Teglar bo'yicha
+              Teglar
             </InputLabel>
             <Select
               size='small'
-              label='Kunlar boyicha'
+              label='Kunlar'
               defaultValue=''
               id='demo-simple-select-outlined'
               labelId='demo-simple-select-outlined-label'
@@ -140,7 +140,7 @@ export const GroupsFilterStudents = ({ isMobile }: GroupsFilterProps) => {
             shouldCloseOnSelect={false}
             popperPlacement={'top'}
             customInput={
-              <CustomInput label="Sana bo'yicha" start={startDate as Date | number} end={endDate as Date | number} />
+              <CustomInput label="Sana" start={startDate as Date | number} end={endDate as Date | number} />
             }
           />
         </Box>
@@ -218,11 +218,11 @@ export const GroupsFilterStudents = ({ isMobile }: GroupsFilterProps) => {
       </FormControl>
       <FormControl sx={{ maxWidth: 180, width: '100%' }}>
         <InputLabel size='small' id='demo-simple-select-outlined-label'>
-          Teglar bo'yicha
+          Teglar
         </InputLabel>
         <Select
           size='small'
-          label="Teglar bo'yicha"
+          label="Teglar"
           defaultValue=''
           id='demo-simple-select-outlined'
           labelId='demo-simple-select-outlined-label'
@@ -253,7 +253,7 @@ export const GroupsFilterStudents = ({ isMobile }: GroupsFilterProps) => {
         popperPlacement={'bottom-start'}
         customInput={
           <CustomInput
-            label="Sana bo'yicha"
+            label="Sana"
             end={endDateRange as Date | number}
             start={startDateRange as Date | number}
           />

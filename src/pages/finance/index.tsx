@@ -23,6 +23,10 @@ import api from 'src/@core/utils/api'
 import LoadingButton from '@mui/lab/LoadingButton'
 import Link from 'next/link'
 import FinanceCategories from 'src/views/apps/finance/FinanceCategories'
+import { formatCurrency } from 'src/@core/utils/format-currency'
+import EmptyContent from 'src/@core/components/empty-content'
+import { getMonthFullName } from 'src/@core/utils/gwt-month-name'
+import Router from 'next/router'
 
 interface AllNumbersType {
     last_month_benefit: string,
@@ -53,6 +57,7 @@ const CardStatistics = () => {
     const [groupPays, setGropPays] = useState<any>(null);
 
     const [deleteCategory, setDeleteCategory] = useState<any>(null)
+    const [salaries, setSalaries] = useState<any>([])
 
     const apiData: CardStatsType = {
         statsHorizontal: [
@@ -104,38 +109,38 @@ const CardStatistics = () => {
         {
             xs: 0.1,
             title: t("Yil"),
-            dataIndex: "index",
-            render: () => "2024"
+            dataIndex: "date",
+            render: (date) => `${date.split('-')[0]}`
         },
         {
             xs: 0.1,
             title: t("Oy"),
-            dataIndex: "index",
-            render: () => "Dekabr"
+            dataIndex: "month",
+            render: (date) => getMonthFullName(+date.split('-')[2])
         },
         {
             xs: 0.16,
             title: t("Jami xodimlar"),
-            dataIndex: "index",
-            render: () => "20 ta"
+            dataIndex: "employee_count",
+            render: (employee_count) => `${employee_count} ta`
         },
         {
             xs: 0.2,
             title: t("Jami oyliklar"),
-            dataIndex: 'index',
-            render: () => "45 000 000 so'm"
+            dataIndex: 'salaries',
+            render: (salaries) => `${formatCurrency(salaries)} so'm`
         },
         {
             xs: 0.2,
             title: t("O'zgarmas oyliklar"),
-            dataIndex: 'index',
-            render: () => "24 000 000 so'm"
+            dataIndex: 'fixed_salaries',
+            render: (fixed_salaries) => `${formatCurrency(fixed_salaries)} so'm`
         },
         {
             xs: 0.2,
             title: t("Jami KPI bo'yicha"),
-            dataIndex: 'index',
-            render: () => "21 000 000 so'm"
+            dataIndex: 'kpi_salaries',
+            render: (kpi_salaries) => `${formatCurrency(kpi_salaries)} so'm`
         },
         // {
         //     xs: 0.15,
@@ -146,14 +151,13 @@ const CardStatistics = () => {
         {
             xs: 0.2,
             title: t("Kassir"),
-            dataIndex: 'index',
-            render: () => "Doniyor Eshmamatov"
+            dataIndex: 'casher',
         },
         {
             xs: 0.2,
-            title: t("Sana"),
-            dataIndex: 'index',
-            render: () => "12.12.2024"
+            title: t("Tasdiqlangan sana"),
+            dataIndex: 'date',
+            render: (date) => date.split('-').reverse().join('/')
         },
     ]
 
@@ -197,6 +201,11 @@ const CardStatistics = () => {
         setGropPays(resp.data)
     }
 
+    const getSalaries = async () => {
+        const resp = await api.get(`common/finance/monthly-report/`)
+        setSalaries(resp.data)
+    }
+
     const confirmDeleteCategory = async () => {
         setLoading(true)
         try {
@@ -210,10 +219,16 @@ const CardStatistics = () => {
         }
     }
 
+    const clickSalaryDetail = (id: number) => {
+        const date = salaries.find((el: any) => el.id === id)?.date
+        Router.push(`/finance/salary-detail/${date}`)
+    }
+
     useEffect(() => {
         getAllNumbers()
         getExpenseCategroy()
-        // getGroupPays(`${new Date().getFullYear()}-${Number(new Date().getMonth()) + 1 < 10 ? "0" + (1 + new Date().getMonth()) : new Date().getMonth() + 1}`)
+        getSalaries()
+        getGroupPays(`${new Date().getFullYear()}-${Number(new Date().getMonth()) + 1 < 10 ? "0" + (1 + new Date().getMonth()) : new Date().getMonth() + 1}`)
     }, [])
 
 
@@ -239,7 +254,7 @@ const CardStatistics = () => {
                     </Grid>
 
                     <Grid item xs={12} md={12} mb={10}>
-                        {groupPays && <GroupFinanceTable data={groupPays} updateData={getGroupPays} />}
+                        {groupPays ? <GroupFinanceTable data={groupPays} updateData={getGroupPays} /> : <EmptyContent />}
                     </Grid>
 
                     <Grid item xs={12}>
@@ -251,7 +266,7 @@ const CardStatistics = () => {
                     <div id='chiqimlar'></div>
 
                     <Grid item xs={12} md={12} >
-                        <FinanceCategories deleteCategory={deleteCategory} categryData={categryData} confirmDeleteCategory={confirmDeleteCategory} loading={loading} setDeleteCategory={setDeleteCategory} />
+                        {categryData?.length ? <FinanceCategories deleteCategory={deleteCategory} categryData={categryData} confirmDeleteCategory={confirmDeleteCategory} loading={loading} setDeleteCategory={setDeleteCategory} /> : <EmptyContent />}
                     </Grid>
 
                     <div id='chiqimlar'></div>
@@ -263,7 +278,7 @@ const CardStatistics = () => {
                                 <Button variant='contained'>{t("Oylik ishlash")}</Button>
                             </Link>
                         </Box>
-                        <DataTable maxWidth='100%' minWidth='800px' columns={withdrawCol} data={[1]} />
+                        <DataTable maxWidth='100%' minWidth='800px' columns={withdrawCol} data={salaries} rowClick={clickSalaryDetail} />
                     </Grid>
                 </Grid>
             </KeenSliderWrapper>

@@ -142,53 +142,34 @@ const UserViewLeft = ({ userData }: { userData?: UsersType | undefined }) => {
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <Card>
-            <CardContent sx={{ pt: 15, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
+            <CardContent sx={{ pt: 5, display: 'flex', gap: 5 }}>
               {data?.image ? (
                 <CustomAvatar
                   src={data.image}
                   variant='rounded'
                   alt={data.first_name}
-                  sx={{ width: 120, height: 120, fontWeight: 600, mb: 4, fontSize: '3rem' }}
+                  sx={{ width: 120, height: 120, fontWeight: 600, fontSize: '3rem' }}
                 />
               ) : (
                 <CustomAvatar
                   skin='light'
                   variant='rounded'
                   color={'primary'}
-                  sx={{ width: 120, height: 120, fontWeight: 600, mb: 4, fontSize: '3rem' }}
+                  sx={{ width: 120, height: 120, fontWeight: 600, fontSize: '3rem' }}
                 >
                   {getInitials(data.first_name)}
                 </CustomAvatar>
               )}
-              <Typography variant='h6'>
-                {data.first_name}
-              </Typography>
-            </CardContent>
-
-            <CardContent sx={{ my: 1 }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <Box sx={{ mr: 8, display: 'flex', alignItems: 'center' }}>
-                  <CustomAvatar skin='light' variant='rounded' sx={{ mr: 3 }}>
-                    <IconifyIcon icon='la:users' />
-                  </CustomAvatar>
-                  <div>
-                    <Typography variant='body2'>{t("Faol Guruhlari")}</Typography>
-                    <Typography variant='h6' sx={{ lineHeight: 1.3 }}>
-                      {data?._groups?.length || 0} ta
-                    </Typography>
-                  </div>
-                </Box>
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                  <CustomAvatar skin='light' variant='rounded' sx={{ mr: 3 }}>
-                    <IconifyIcon icon='mdi:briefcase-variant-outline' />
-                  </CustomAvatar>
-                  <div>
-                    <Typography variant='body2'>{t("Rollari")}</Typography>
-                    <Typography variant='h6' sx={{ lineHeight: 1.3 }}>
-                      {data.roles.filter(el => el.exists).length} ta
-                    </Typography>
-                  </div>
-                </Box>
+              <Box>
+                <Typography variant='h6'>
+                  {data.first_name}
+                </Typography>
+                <div style={{ display: 'flex', alignItems: 'center', marginTop: '10px', gap: 10 }}>
+                  <Typography variant='body2'>{t("Faol Guruhlari")}:  </Typography>
+                  <Typography variant='body1' sx={{ lineHeight: 1.3 }}>
+                    {data?._groups?.length || 0} ta
+                  </Typography>
+                </div>
               </Box>
             </CardContent>
 
@@ -215,7 +196,7 @@ const UserViewLeft = ({ userData }: { userData?: UsersType | undefined }) => {
                   })
                 }
               </Box>
-              <Box sx={{ pt: 2, pb: 1 }}>
+              <Box sx={{ pt: 2 }}>
                 <Box sx={{ display: 'flex', mb: 2.7 }}>
                   <Typography sx={{ mr: 2, fontWeight: 500, fontSize: '0.875rem' }}>{t("phone")}:</Typography>
                   <Typography variant='body2'>{data.phone}</Typography>
@@ -225,7 +206,7 @@ const UserViewLeft = ({ userData }: { userData?: UsersType | undefined }) => {
                   <Typography variant='body2'>{data.birth_date?.split('-').reverse().join(',')}</Typography>
                 </Box>
               </Box>
-              <Box sx={{ pt: 2, pb: 1 }}>
+              <Box sx={{ pb: 1 }}>
                 <Box sx={{ display: 'flex', mb: 2.7 }}>
                   <Typography sx={{ mr: 2, fontWeight: 500, fontSize: '0.875rem' }}>{t("Biriktirilgan Filiallar")}:</Typography>
                   <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', alignItems: 'center' }}>
@@ -253,109 +234,6 @@ const UserViewLeft = ({ userData }: { userData?: UsersType | undefined }) => {
               </Box>
 
             </CardContent>
-
-            <CardActions sx={{ display: 'flex', justifyContent: 'center' }}>
-              <Button variant='contained' sx={{ mr: 2 }} onClick={handleEditClickOpen}>
-                {t("Tahrirlash")}
-              </Button>
-            </CardActions>
-
-            <Dialog
-              open={openEdit}
-              onClose={handleEditClose}
-              aria-labelledby='user-view-edit'
-              sx={{ '& .MuiPaper-root': { width: '100%', maxWidth: 650, p: [2, 10] } }}
-              aria-describedby='user-view-edit-description'
-            >
-              <DialogTitle id='user-view-edit' sx={{ textAlign: 'center', fontSize: '1.5rem !important' }}>
-                {t("O'qituvchi ma'lumotlarini tahrirlash")}
-              </DialogTitle>
-              <DialogContent>
-                <Form reqiuredFields={['phone', 'branches', 'roles', 'first_name']} setError={setError} valueTypes='form-data' sx={{ marginTop: 10 }} onSubmit={handleSubmit} id='edit-employee'>
-                  <Grid container spacing={6}>
-                    <Grid item xs={12} sm={6}>
-                      <FormControl fullWidth>
-                        <TextField size='small' label={t('first_name')} name='first_name' error={error.first_name?.error} defaultValue={data.first_name} />
-                        <FormHelperText error={error.first_name?.error}>{error.first_name?.message}</FormHelperText>
-                      </FormControl>
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <FormControl fullWidth>
-                        <TextField size='small' label={t("phone")} name='phone' error={error.phone?.error} defaultValue={data.phone} />
-                        <FormHelperText error={error.phone?.error}>{error.phone?.message}</FormHelperText>
-                      </FormControl>
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <FormControl fullWidth>
-                        <InputLabel id='user-view-language-label' size='small'>{t('branch')}</InputLabel>
-                        <Select
-                          error={error.branches?.error}
-                          size='small'
-                          label={t('branch')}
-                          multiple
-                          defaultValue={data.branches.find(el => el.exists) ? [...data.branches.filter(el => el.exists).map(el => el.id)] : []}
-                          id='user-view-language'
-                          labelId='user-view-language-label'
-                          name='branches'
-                        >
-                          {
-                            data.branches.map(branch => <MenuItem key={branch.id} value={branch.id}>{branch.name}</MenuItem>)
-                          }
-
-                        </Select>
-                        <FormHelperText error={error.branches?.error}>{error.branches?.message}</FormHelperText>
-                      </FormControl>
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <FormControl fullWidth>
-                        <InputLabel id='user-view-country-label' size='small'>{t("Roli")}</InputLabel>
-                        <Select
-                          error={error.roles?.error}
-                          size='small'
-                          label='Roli'
-                          multiple
-                          defaultValue={data.roles.find(el => el.exists) ? [...data.roles.filter(el => el.exists).map(el => el.id)] : []}
-                          id='user-view-language'
-                          labelId='user-view-language-label'
-                          name={t('roles')}
-                        >
-                          {
-                            data.roles.map(branch => <MenuItem key={branch.id} value={branch.id}>{branch.name}</MenuItem>)
-                          }
-
-                        </Select>
-                        <FormHelperText error={error.roles?.error}>{error.roles?.message}</FormHelperText>
-                      </FormControl>
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <FormControl fullWidth>
-                        <Button
-                          component="label"
-                          role={undefined}
-                          variant="contained"
-                          tabIndex={-1}
-                          startIcon={<IconifyIcon icon={'subway:cloud-upload'} />}
-                        >
-                          {t("Rasm qo'shish")}
-                          <VisuallyHiddenInput onChange={(e: any) => setFile(e.target.files[0])} type="file" accept='.png, .jpg, .jpeg, .webp, .HEIC, .heic' />
-                        </Button>
-                      </FormControl>
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <TextField size='small' fullWidth label={`${t("password")} ${t("qo'shish")}`} name='password' />
-                    </Grid>
-                  </Grid>
-                  <DialogActions sx={{ justifyContent: 'center' }}>
-                    <LoadingButton loading={loading} type='submit' variant='contained' sx={{ mr: 1 }}>
-                      {t("Saqlash")}
-                    </LoadingButton>
-                    <Button variant='outlined' type='button' color='secondary' onClick={handleEditClose}>
-                      {t("Bekor Qilish")}
-                    </Button>
-                  </DialogActions>
-                </Form>
-              </DialogContent>
-            </Dialog>
           </Card>
         </Grid>
       </Grid>

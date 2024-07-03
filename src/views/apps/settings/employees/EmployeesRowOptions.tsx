@@ -1,10 +1,9 @@
 import { IconButton, Menu, MenuItem } from '@mui/material'
-import Link from 'next/link'
 import React, { MouseEvent, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import IconifyIcon from 'src/@core/components/icon'
 import useEmployee from 'src/hooks/useEmployee'
-import { useAppDispatch, useAppSelector } from 'src/store'
+import { useAppDispatch } from 'src/store'
 import { setEmployeeData } from 'src/store/apps/settings'
 import UserSuspendDialog from 'src/views/apps/mentors/view/UserSuspendDialog'
 
@@ -18,7 +17,6 @@ export default function EmployeesRowOptions({ id }: Props) {
     const { t } = useTranslation()
     const { getEmployeeById } = useEmployee()
 
-    const { employees } = useAppSelector(state => state.settings)
     const dispatch = useAppDispatch()
 
     const rowOptionsOpen = Boolean(anchorEl)
@@ -38,10 +36,7 @@ export default function EmployeesRowOptions({ id }: Props) {
     const getUserById = async () => {
 
         const resp = await getEmployeeById(id)
-        console.log(resp);
         dispatch(setEmployeeData(resp))
-        // setData(resp)
-        // setOpenEdit(true)
     }
 
     return (
@@ -64,15 +59,6 @@ export default function EmployeesRowOptions({ id }: Props) {
                 }}
                 PaperProps={{ style: { minWidth: '8rem' } }}
             >
-                <MenuItem
-                    component={Link}
-                    sx={{ '& svg': { mr: 2 } }}
-                    onClick={handleRowOptionsClose}
-                    href={`users/view/security?id=${id}`}
-                >
-                    <IconifyIcon icon='mdi:eye-outline' fontSize={20} />
-                    {t("Ko'rish")}
-                </MenuItem>
                 <MenuItem onClick={getUserById} sx={{ '& svg': { mr: 2 } }}>
                     <IconifyIcon icon='mdi:pencil-outline' fontSize={20} />
                     {t('Tahrirlash')}

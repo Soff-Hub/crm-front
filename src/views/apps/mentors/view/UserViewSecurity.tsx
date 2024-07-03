@@ -2,23 +2,28 @@ import { Box, Card, CardContent, Typography } from "@mui/material"
 import Link from "next/link"
 import { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
+import EmptyContent from "src/@core/components/empty-content"
 import useResponsive from "src/@core/hooks/useResponsive"
 import api from "src/@core/utils/api"
 import getLessonDays from "src/@core/utils/getLessonDays"
 import getMontName from "src/@core/utils/gwt-month-name"
+import SubLoader from "../../loaders/SubLoader"
 
 const UserViewSecurity = ({ data }: any) => {
   const [newData, setNewData] = useState<any>([])
   const { isMobile } = useResponsive()
   const { t } = useTranslation()
+  const [loading, setLoading] = useState<boolean>(false)
 
   const getGroups = async () => {
+    setLoading(true)
     try {
       const resp = await api.get(`common/groups/`, { params: { teacher: data.id } })
       setNewData(resp.data.results)
     } catch (err) {
       console.log(err)
     }
+    setLoading(false)
   }
 
   useEffect(() => {
@@ -28,7 +33,7 @@ const UserViewSecurity = ({ data }: any) => {
   return (
     <Box className='demo-space-y' sx={{ display: 'flex', flexDirection: 'column' }}>
       {
-        newData.map((_: any, index: number) => (
+        loading ? <SubLoader /> : newData?.length ? newData.map((_: any, index: number) => (
           <Link href={`/groups/view/security/?id=${_.id}&month=${getMontName(null)}`} key={index} style={{ textDecoration: 'none' }}>
             <Box sx={{ display: 'flex', gap: '20px', cursor: 'pointer' }}>
               <Card sx={{ width: isMobile ? '100%' : '50%' }}>
@@ -47,7 +52,7 @@ const UserViewSecurity = ({ data }: any) => {
               </Card>
             </Box>
           </Link>
-        ))
+        )) : <EmptyContent />
       }
     </Box>
   )

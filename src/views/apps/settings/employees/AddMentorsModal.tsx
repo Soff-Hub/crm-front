@@ -28,6 +28,8 @@ import CustomAvatar from 'src/@core/components/mui/avatar';
 import { createEmployee, fetchEmployees, setOpenCreateSms } from 'src/store/apps/settings';
 import useBranches from 'src/hooks/useBranch';
 import useRoles from 'src/hooks/useRoles';
+import PhoneInput from 'src/@core/components/phone-input';
+import { reversePhone } from 'src/@core/components/phone-input/format-phone-number';
 
 export const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
@@ -114,7 +116,7 @@ export default function CreateEmployeeForm() {
                 if (['branches', 'roles'].includes(key)) {
                     newValues.append(key, value.join(','))
                 } else {
-                    newValues.append(key, value)
+                    newValues.append(key, key === 'phone' ? reversePhone(value) : value)
                 }
             }
 
@@ -183,14 +185,13 @@ export default function CreateEmployeeForm() {
                 </FormControl>
 
                 <FormControl sx={{ width: '100%' }}>
-                    <TextField
+                    <InputLabel error={!!formik.errors.phone && formik.touched.phone}>{t("phone")}</InputLabel>
+                    <PhoneInput
                         label={t("phone")}
-                        name='phone'
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                         value={formik.values.phone}
                         error={!!formik.errors.phone && formik.touched.phone}
-                        defaultValue={"+998"}
                     />
                     <FormHelperText error>
                         {(!!formik.errors.phone && formik.touched.phone) && formik.errors.phone}

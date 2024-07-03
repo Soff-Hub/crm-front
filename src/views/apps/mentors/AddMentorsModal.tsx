@@ -6,6 +6,7 @@ import {
     FormControlLabel,
     FormHelperText,
     FormLabel,
+    InputLabel,
     Radio,
     RadioGroup,
     styled,
@@ -21,8 +22,10 @@ import { useFormik } from 'formik';
 import { useAppDispatch } from 'src/store';
 import { createTeacher, fetchTeachersList } from 'src/store/apps/mentors';
 import { CreateTeacherDto } from 'src/types/apps/mentorsTypes';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import CustomAvatar from 'src/@core/components/mui/avatar';
+import PhoneInput from 'src/@core/components/phone-input';
+import { reversePhone } from 'src/@core/components/phone-input/format-phone-number';
 
 export const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
@@ -81,14 +84,14 @@ export default function AddMentorsModal() {
     const initialValues: CreateTeacherDto = {
         first_name: "",
         phone: "",
-        birth_date: "",
-        activated_at: "",
+        birth_date: today,
+        activated_at: today,
         gender: 'male',
         image: null,
         is_fixed_salary: false,
         password: "",
-        percentage: "",
-        amount: ""
+        percentage: 0,
+        amount: 0
     }
 
     const formik = useFormik({
@@ -99,7 +102,11 @@ export default function AddMentorsModal() {
             const newValues = new FormData()
 
             for (const [key, value] of Object.entries(values)) {
-                newValues.append(key, value)
+                if (key === 'phone') {
+                    newValues.append(key, reversePhone(value))
+                } else {
+                    newValues.append(key, value)
+                }
             }
 
             if (image) {
@@ -121,10 +128,16 @@ export default function AddMentorsModal() {
 
     const handleCheckboxChange = (event: React.SyntheticEvent, checked: boolean) => {
         formik.setFieldValue("is_fixed_salary", checked)
-        formik.setFieldValue("amount", "")
-        formik.setFieldValue("percentage", "")
-
+        formik.setFieldValue("amount", 0)
+        formik.setFieldValue("percentage", 0)
     }
+
+    useEffect(() => {
+
+        return () => {
+            formik.resetForm()
+        }
+    }, [])
 
     return (
         <Box width={'100%'}>
@@ -157,14 +170,13 @@ export default function AddMentorsModal() {
                 </FormControl>
 
                 <FormControl sx={{ width: '100%' }}>
-                    <TextField
+                    <InputLabel error={!!formik.errors.phone && formik.touched.phone} htmlFor="login-input">{t('phone')}</InputLabel>
+                    <PhoneInput
                         label={t("phone")}
-                        name='phone'
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                         value={formik.values.phone}
                         error={!!formik.errors.phone && formik.touched.phone}
-                        defaultValue={"+998"}
                     />
                     <FormHelperText error>
                         {(!!formik.errors.phone && formik.touched.phone) && formik.errors.phone}
@@ -180,7 +192,6 @@ export default function AddMentorsModal() {
                         onBlur={formik.handleBlur}
                         value={formik.values.birth_date}
                         error={!!formik.errors.birth_date && formik.touched.birth_date}
-                        defaultValue={today}
                     />
                     <FormHelperText error>
                         {(!!formik.errors.birth_date && formik.touched.birth_date) && formik.errors.birth_date}
@@ -196,7 +207,6 @@ export default function AddMentorsModal() {
                         onBlur={formik.handleBlur}
                         value={formik.values.activated_at}
                         error={!!formik.errors.activated_at && formik.touched.activated_at}
-                        defaultValue={today}
                     />
                     <FormHelperText error>
                         {(!!formik.errors.activated_at && formik.touched.activated_at) && formik.errors.activated_at}

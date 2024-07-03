@@ -1,9 +1,9 @@
 import { GetServerSidePropsContext, InferGetStaticPropsType } from 'next/types'
 import UserViewPage from 'src/views/apps/groups/view/UserViewPage'
 
-const UserView = ({ tab }: InferGetStaticPropsType<typeof getServerSideProps>) => {
+const UserView = ({ tab, month, id }: InferGetStaticPropsType<typeof getServerSideProps>) => {
 
-  return <UserViewPage tab={tab} />
+  return <UserViewPage tab={tab} month={month} id={id} />
 }
 
 

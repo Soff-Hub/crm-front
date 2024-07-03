@@ -83,11 +83,11 @@ export const LidsFilter = ({ isMobile }: LidsFilterProps) => {
           </FormControl>
           <FormControl sx={{ width: '100%' }}>
             <InputLabel size='small' id='demo-simple-select-outlined-label'>
-              {t("Kurslar bo'yicha")}
+              {t("Kurslar")}
             </InputLabel>
             <Select
               size='small'
-              label={t("Kurslar bo'yicha")}
+              label={t("Kurslar")}
               defaultValue=''
               id='demo-simple-select-outlined'
               labelId='demo-simple-select-outlined-label'
@@ -150,7 +150,7 @@ export const LidsFilter = ({ isMobile }: LidsFilterProps) => {
               popperPlacement={'top'}
               customInput={
                 <CustomInput
-                  label={t("Sana bo'yicha")}
+                  label={t("Sana")}
                   start={startDate as Date | number}
                   end={endDate as Date | number}
                 />
@@ -169,7 +169,7 @@ export const LidsFilter = ({ isMobile }: LidsFilterProps) => {
               popperPlacement={'bottom-start'}
               customInput={
                 <CustomInput
-                  label="Sana bo'yicha"
+                  label="Sana"
                   end={endDateRange as Date | number}
                   start={startDateRange as Date | number}
                 />
@@ -210,11 +210,11 @@ export const LidsFilter = ({ isMobile }: LidsFilterProps) => {
       </FormControl>
       <FormControl sx={{ maxWidth: 170, width: '100%' }}>
         <InputLabel size='small' id='demo-simple-select-outlined-label'>
-          {t("Kurslar bo'yicha")}
+          {t("Kurslar")}
         </InputLabel>
         <Select
           size='small'
-          label={t("Kurslar bo'yicha")}
+          label={t("Kurslar")}
           defaultValue=''
           id='demo-simple-select-outlined'
           labelId='demo-simple-select-outlined-label'
@@ -277,7 +277,7 @@ export const LidsFilter = ({ isMobile }: LidsFilterProps) => {
         popperPlacement={'bottom-start'}
         customInput={
           <CustomInput
-            label={t("Sana bo'yicha")}
+            label={t("Sana")}
             end={endDateRange as Date | number}
             start={startDateRange as Date | number}
           />

@@ -1,6 +1,6 @@
 export default function getMonthName(monthNum: any) {
     const month: number = monthNum ? monthNum : new Date().getMonth() + 1
-    
+
     switch (month) {
         case 1:
             return 'yan';
@@ -45,4 +45,37 @@ export function getMontNumber(month: any) {
     if (month === 'okt') return 10
     if (month === 'noy') return 11
     if (month === 'dek') return 12
+}
+
+export function getMonthFullName(monthNum: any) {
+    const month: number = monthNum ? monthNum : new Date().getMonth() + 1
+
+    switch (month) {
+        case 1:
+            return 'Yanvar';
+        case 2:
+            return 'Fevral';
+        case 3:
+            return 'Mart';
+        case 4:
+            return 'Aprel';
+        case 5:
+            return 'May';
+        case 6:
+            return 'Iyun';
+        case 7:
+            return 'Iyul';
+        case 8:
+            return 'Avg';
+        case 9:
+            return 'Sentabr';
+        case 10:
+            return 'Oktabr';
+        case 11:
+            return 'Noyabr';
+        case 12:
+            return 'Dekabr';
+        default:
+            return 'bu oy yoq';
+    }
 }

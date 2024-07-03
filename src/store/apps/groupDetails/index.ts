@@ -3,7 +3,7 @@ import api from 'src/@core/utils/api'
 import ceoConfigs from 'src/configs/ceo'
 import { IGroupDetailsState } from 'src/types/apps/groupDetailsTypes'
 
-export const getGroupById = createAsyncThunk('groupDetailss/fetchDetails', async (id: string) => {
+export const getGroupById = createAsyncThunk('groupDetailss/fetchDetails', async (id: any) => {
   const resp = await api.get(ceoConfigs.groups_detail + id)
   return resp.data
 })

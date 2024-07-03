@@ -169,7 +169,10 @@ function RequestForm({ uuid }: InferGetStaticPropsType<typeof getServerSideProps
         } catch (err: any) {
             if (err?.response) {
                 setLoading(false)
-                toast.error(`${err?.response?.data?.application_answer?.[0]}`)
+                // toast.error(`${err?.response?.data?.application_answer?.[0]}`)
+                if (err?.response?.data) {
+                    showResponseError(err?.response?.data, setError)
+                }
             }
         }
     };
@@ -223,11 +226,11 @@ function RequestForm({ uuid }: InferGetStaticPropsType<typeof getServerSideProps
                     <Box
                         sx={{
                             display: 'flex',
-                            minHeight: '160px',
+                            minHeight: '180px',
                             objectFit: 'cover',
                             backgroundPosition: 'center',
                             backgroundImage: `url('/images/checked.png')`,
-                            backgroundSize: '70%',
+                            backgroundSize: '60%',
                             backgroundRepeat: 'no-repeat'
                         }}></Box>
                 ) : (
@@ -256,6 +259,7 @@ function RequestForm({ uuid }: InferGetStaticPropsType<typeof getServerSideProps
                                 name='phone'
                                 required
                             />
+                            {error?.phone?.error && <FormHelperText error>{error?.phone?.message}</FormHelperText>}
                         </FormControl>
 
                         {
