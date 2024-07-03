@@ -2,7 +2,7 @@ import { useState } from "react"
 import api from "src/@core/utils/api";
 import ceoConfigs from "src/configs/ceo"
 
-interface BranchTypes {
+export interface BranchTypes {
     id: string,
     name: string
 }

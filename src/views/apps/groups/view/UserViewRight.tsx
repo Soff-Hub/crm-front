@@ -11,28 +11,18 @@ import TabPanel from '@mui/lab/TabPanel'
 import TabContext from '@mui/lab/TabContext'
 import { styled } from '@mui/material/styles'
 import MuiTab, { TabProps } from '@mui/material/Tab'
-
-// ** Icon Imports
 import Icon from 'src/@core/components/icon'
-
-// ** Demo Components Imports
 import UserViewBilling from 'src/views/apps/groups/view/UserViewBilling'
 import UserViewOverview from 'src/views/apps/groups/view/UserViewOverview'
 import UserViewSecurity from 'src/views/apps/groups/view/UserViewSecurity'
-
-
-// ** Types
 import GroupExamsList from './GroupExamsList'
 import { useTranslation } from 'react-i18next'
 import { AuthContext } from 'src/context/AuthContext'
-import SubLoader from '../../loaders/SubLoader'
 
 interface Props {
   tab: string
-  invoiceData: any
 }
 
-// ** Styled Tab component
 const Tab = styled(MuiTab)<TabProps>(({ theme }) => ({
   minHeight: 48,
   flexDirection: 'row',
@@ -42,18 +32,13 @@ const Tab = styled(MuiTab)<TabProps>(({ theme }) => ({
   }
 }))
 
-const UserViewRight = ({ tab, invoiceData }: Props) => {
-  // ** State
+const UserViewRight = ({ tab }: Props) => {
   const [activeTab, setActiveTab] = useState<string>(tab)
-  const [isLoading, setIsLoading] = useState<boolean>(true)
   const { t } = useTranslation()
   const { user } = useContext(AuthContext)
-
-  // ** Hooks
   const router = useRouter()
 
   const handleChange = (event: SyntheticEvent, value: string) => {
-    setIsLoading(true)
     setActiveTab(value)
     const path = router.route.replace('[tab]', value.toLowerCase())
 
@@ -62,22 +47,14 @@ const UserViewRight = ({ tab, invoiceData }: Props) => {
         pathname: path,
         query: { id: router.query.id, month: router.query.month }
       })
-      .then(() => setIsLoading(false))
   }
 
   useEffect(() => {
     if (tab && tab !== activeTab) {
       setActiveTab(tab)
     }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tab])
 
-  useEffect(() => {
-    if (invoiceData) {
-      setIsLoading(false)
-    }
-  }, [invoiceData])
 
   return (
     <TabContext value={activeTab}>
@@ -95,27 +72,18 @@ const UserViewRight = ({ tab, invoiceData }: Props) => {
         {/* {!(user?.role.length === 1 && user?.role.includes('teacher')) && <Tab value='money' label={t("Maosh")} icon={<Icon icon='mdi:money' />} />} */}
       </TabList>
       <Box sx={{ mt: 2 }}>
-        {isLoading ? (
-          <SubLoader />
-        ) : (
-          <>
-            <TabPanel sx={{ p: 0 }} value='security'>
-              <UserViewSecurity invoiceData={invoiceData} />
-            </TabPanel>
-            <TabPanel sx={{ p: 0 }} value='exams'>
-              <GroupExamsList />
-            </TabPanel>
-            <TabPanel sx={{ p: 0 }} value='notes'>
-              <UserViewOverview />
-            </TabPanel>
-            <TabPanel sx={{ p: 0 }} value='discount'>
-              <UserViewBilling />
-            </TabPanel>
-            <TabPanel sx={{ p: 0 }} value='money'>
-              {/* <GroupSalaries group={invoiceData} /> */}
-            </TabPanel>
-          </>
-        )}
+        <TabPanel sx={{ p: 0 }} value='security'>
+          <UserViewSecurity />
+        </TabPanel>
+        <TabPanel sx={{ p: 0 }} value='exams'>
+          <GroupExamsList />
+        </TabPanel>
+        <TabPanel sx={{ p: 0 }} value='notes'>
+          <UserViewOverview />
+        </TabPanel>
+        <TabPanel sx={{ p: 0 }} value='discount'>
+          <UserViewBilling />
+        </TabPanel>
       </Box>
     </TabContext>
   )

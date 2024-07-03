@@ -1,16 +1,13 @@
-import CalendarWrapper from "src/@core/styles/libs/fullcalendar"
-import Box from '@mui/material/Box'
-import useMediaQuery from '@mui/material/useMediaQuery'
-import { useAppDispatch, useAppSelector } from "src/store"
-import { useRouter } from "next/router"
-import { useTranslation } from "react-i18next"
-import { useSettings } from "src/@core/hooks/useSettings"
-import { Theme } from '@mui/material/styles'
-import useResponsive from "src/@core/hooks/useResponsive"
-import CalendarTabs from './CalendarTabs'
-import LessonsTable from './LessonsTable'
-import WeekDaysDialog from './WeekDaysDialog'
-import { fetchLessons, updateWeeks } from 'src/store/apps/dashboard'
+import CalendarWrapper from "src/@core/styles/libs/fullcalendar";
+import Box from '@mui/material/Box';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useAppDispatch } from "src/store";
+import { useSettings } from "src/@core/hooks/useSettings";
+import { Theme } from '@mui/material/styles';
+import CalendarTabs from './CalendarTabs';
+import LessonsTable from './LessonsTable';
+import WeekDaysDialog from './WeekDaysDialog';
+import { fetchLessons, updateWeeks } from 'src/store/apps/dashboard';
 
 export default function Calendar() {
     const dispatch = useAppDispatch()
