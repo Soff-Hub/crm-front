@@ -42,8 +42,16 @@ export const updateTeacher = createAsyncThunk(
   }
 )
 
-export const deleteTeacher = createAsyncThunk('mentors/deleteTeacher', async (id: number | any) => {
-  return (await api.delete(`auth/delete/employee/${id}/`)).data
+export const deleteTeacher = createAsyncThunk('mentors/deleteTeacher', async (id: number | any, { rejectWithValue }) => {
+  try {
+    const resp = await api.delete(`auth/delete/employee/${id}/`)
+    return resp.data
+  } catch (err: any) {
+    if (err.response) {
+      return rejectWithValue(err.response.data)
+    }
+    return rejectWithValue(err.message)
+  }
 })
 
 const initialState: IMentorsState = {

@@ -1,4 +1,4 @@
-import { Box, Card, CardContent, Typography } from "@mui/material"
+import { Box, Card, CardContent, Chip, Typography } from "@mui/material"
 import Link from "next/link"
 import { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
@@ -37,6 +37,9 @@ const UserViewSecurity = ({ data }: any) => {
           <Link href={`/groups/view/security/?id=${_.id}&month=${getMontName(null)}`} key={index} style={{ textDecoration: 'none' }}>
             <Box sx={{ display: 'flex', gap: '20px', cursor: 'pointer' }}>
               <Card sx={{ width: isMobile ? '100%' : '50%' }}>
+                <CardContent sx={{ display: 'flex', justifyContent: 'space-between', margin: '0', py: '6px' }}>
+                  <Chip label={t(_.status)} size="small" variant='outlined' color={_.status === 'active' ? 'success' : _.status === 'archived' ? 'error' : 'warning'} />
+                </CardContent>
                 <CardContent sx={{ display: 'flex', justifyContent: 'space-between' }}>
                   <Box sx={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
                     <Typography sx={{ fontSize: '12px' }}>{_.name}</Typography>

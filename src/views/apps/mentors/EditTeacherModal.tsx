@@ -24,7 +24,7 @@ import { UpdateTeacherDto } from 'src/types/apps/mentorsTypes';
 import { useEffect, useRef, useState } from 'react';
 import { TeacherAvatar } from './AddMentorsModal';
 import PhoneInput from 'src/@core/components/phone-input';
-import { reversePhone } from 'src/@core/components/phone-input/format-phone-number';
+import { formatPhoneNumber, reversePhone } from 'src/@core/components/phone-input/format-phone-number';
 
 export const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
@@ -48,10 +48,11 @@ export default function EditTeacherModal() {
     // ** States
     const [loading, setLoading] = useState<boolean>(false)
     const [image, setImage] = useState<any>(null)
+    
 
     const initialValues: UpdateTeacherDto = {
         first_name: teacherData?.first_name,
-        phone: teacherData?.phone,
+        phone: formatPhoneNumber(teacherData?.phone),
         birth_date: teacherData?.birth_date,
         activated_at: teacherData?.activated_at,
         gender: teacherData?.gender,

@@ -44,12 +44,12 @@ export default function GroupsPage() {
       xs: 0.4,
       title: t('Rasmi'),
       dataIndex: 'image',
-      render: (actions) => (console.log(actions), <TeacherAvatar skin='light' color={'info'} variant='rounded' sx={{ width: 33, height: 33 }}
+      render: (actions) => <TeacherAvatar skin='light' color={'info'} variant='rounded' sx={{ width: 33, height: 33 }}
       >{
           actions ? <img style={{ width: "100%", height: "100%", objectFit: "cover" }} src={actions} alt="user" /> :
             <IconifyIcon icon={'et:profile-male'} />
         }
-      </TeacherAvatar>)
+      </TeacherAvatar>
 
     },
     {
@@ -88,7 +88,6 @@ export default function GroupsPage() {
   const rowClick = (id: any) => {
     push(`/mentors/view/security?id=${id}`)
   }
-
 
   useEffect(() => {
     dispatch(fetchTeachersList())

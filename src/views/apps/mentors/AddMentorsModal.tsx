@@ -87,7 +87,7 @@ export default function AddMentorsModal() {
         birth_date: today,
         activated_at: today,
         gender: 'male',
-        image: null,
+        // image: null,
         is_fixed_salary: false,
         password: "",
         percentage: 0,

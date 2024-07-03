@@ -115,7 +115,7 @@ export default function GroupsPage() {
       xs: 0.7,
       title: t("Status"),
       dataIndex: 'status',
-      render: (status: string) => <Chip label={t(status)} size="small" variant='outlined' color={status === 'active' ? 'success' : status === 'archive' ? 'error' : 'warning'} />
+      render: (status: string) => <Chip label={t(status)} size="small" variant='outlined' color={status === 'active' ? 'success' : status === 'archived' ? 'error' : 'warning'} />
     },
     {
       xs: 0.4,

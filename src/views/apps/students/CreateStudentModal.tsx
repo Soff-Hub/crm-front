@@ -54,6 +54,7 @@ export default function CreateStudentModal() {
                     }}
                 >
                     <Typography variant='h6' sx={{ fontWeight: 600 }}>
+                        
                         {t("O'quvchi qo'shish")}
                     </Typography>
                     <IconButton

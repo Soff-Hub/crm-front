@@ -35,9 +35,13 @@ const RowOptions = ({ id }: { id: number | string }) => {
 
     const handleDeleteTeacher = async (id: string | number) => {
         setLoaading(true)
-        await dispatch(deleteTeacher(id))
-        await dispatch(fetchTeachersList())
-        toast.success(`${t("O'qituvchilar ro'yxatidan o'chirildi")}`, { position: 'top-center' })
+        const resp = await dispatch(deleteTeacher(id))
+        if (resp.meta.requestStatus === 'rejected') {
+            toast.error(`${resp.payload?.msg}`, { position: 'top-center' })
+        } else {
+            await dispatch(fetchTeachersList())
+            toast.success(`${t("O'qituvchilar ro'yxatidan o'chirildi")}`, { position: 'top-center' })
+        }
         setLoaading(false)
     }
 

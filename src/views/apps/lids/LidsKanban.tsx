@@ -58,6 +58,9 @@ export default function HomeKanban({ title, items, id }: Props) {
 
             <Box sx={{ display: 'flex', gap: 5, alignItems: 'flex-start', width: '100%', flexDirection: 'column', pt: 0 }}>
                 {
+                    items.length < 1 && <Typography variant='body2' sx={{ fontStyle: 'italic', textAlign: 'center', width: '100%', fontSize: '19px' }}>{t("Bo'sh")}</Typography>
+                }
+                {
                     items.map(lead => (
                         <AccordionCustom item={lead} key={lead.id} onView={() => null} />
                     ))

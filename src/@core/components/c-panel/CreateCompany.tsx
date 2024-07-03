@@ -118,7 +118,7 @@ export default function CreateCompany({ slug }: Props) {
                                 defaultValue={'by_coming_date'}
                                 name='payment_service'
                             >
-                                <MenuItem value={'by_coming_date'}>O'quvchi kelgan sanadan boshlab xar oy</MenuItem>
+                                <MenuItem value={'by_coming_date'}>Har oy boshida</MenuItem>
                                 <MenuItem value={'number_of_lesson'}>Har nechtadur darsda</MenuItem>
                             </Select>
                         </FormControl>
