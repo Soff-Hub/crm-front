@@ -10,9 +10,8 @@ import UserViewRight from 'src/views/apps/groups/view/UserViewRight'
 const UserView = () => {
   const router = useRouter()
   const url = `${router.query.tab}`
-  const { groupData, queryParams } = useAppSelector(state => state.groupDetails)
+  const { queryParams } = useAppSelector(state => state.groupDetails)
   const dispatch = useAppDispatch()
-  console.log(groupData);
 
   useEffect(() => {
     (async function () {

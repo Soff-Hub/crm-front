@@ -3,7 +3,7 @@ import UserViewPage from 'src/views/apps/groups/view/UserViewPage'
 
 const UserView = ({ tab, month, id }: InferGetStaticPropsType<typeof getServerSideProps>) => {
 
-  return <UserViewPage tab={tab} month={month} id={id} />
+  return <UserViewPage />
 }
 
 
