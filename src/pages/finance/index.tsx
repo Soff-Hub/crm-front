@@ -228,8 +228,8 @@ const CardStatistics = () => {
         getAllNumbers()
         getExpenseCategroy()
         getSalaries()
-        getGroupPays(`${new Date().getFullYear()}-${Number(new Date().getMonth()) + 1 < 10 ? "0" + (1 + new Date().getMonth()) : new Date().getMonth() + 1}`)
-    }, [])
+        // getGroupPays(`${new Date().getFullYear()}-${Number(new Date().getMonth()) + 1 < 10 ? "0" + (1 + new Date().getMonth()) : new Date().getMonth() + 1}`)
+    }, []) 
 
 
     return (

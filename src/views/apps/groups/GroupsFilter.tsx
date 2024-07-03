@@ -21,7 +21,6 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
     const { teachers, queryParams, courses } = useAppSelector(state => state.groups)
     const dispatch = useAppDispatch()
     const [search, setSearch] = useState<string>('')
-    console.log(search);
 
     const { t } = useTranslation()
 

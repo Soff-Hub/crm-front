@@ -27,7 +27,6 @@ export interface customTableProps {
 
 
 export default function RoomsPage() {
-    const [dataRow, setData] = useState([])
     const { t } = useTranslation()
     const dispatch = useAppDispatch()
     const { wekends, is_pending } = useAppSelector(state => state.settings)
@@ -36,6 +35,7 @@ export default function RoomsPage() {
         // ** State
         const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
         const [suspendDialogOpen, setSuspendDialogOpen] = useState<boolean>(false)
+        const [loading, setLoading] = useState<boolean>(false)
 
         const rowOptionsOpen = Boolean(anchorEl)
 
@@ -56,12 +56,15 @@ export default function RoomsPage() {
         async function handleDeletePosts(id: number) {
             handleRowOptionsClose()
             try {
+                setLoading(true)
                 await api.delete(`common/weekend/delete/${id}/`)
                 toast.success("Muvaffaqiyatli! o'chirildi", { position: 'top-center' })
-                getUsers()
+                dispatch(fetchWekends())
             } catch (error: any) {
                 toast.error('Xatolik yuz berdi!', { position: 'top-center' })
             }
+
+            setLoading(false)
         }
 
         // Get functions
@@ -96,34 +99,19 @@ export default function RoomsPage() {
                         <IconifyIcon icon='mdi:pencil-outline' fontSize={20} />
                         {t("Tahrirlash")}
                     </MenuItem>
-                    {dataRow?.some((item: any) => item?.id == id && item?.is_delete) ? (
-                        <MenuItem onClick={handleDelete} sx={{ '& svg': { mr: 2 } }}>
-                            <IconifyIcon icon='mdi:delete-outline' fontSize={20} />
-                            {t("O'chirish")}
-                        </MenuItem>
-                    ) : (
-                        <></>
-                    )}
+                    <MenuItem onClick={handleDelete} sx={{ '& svg': { mr: 2 } }}>
+                        <IconifyIcon icon='mdi:delete-outline' fontSize={20} />
+                        {t("O'chirish")}
+                    </MenuItem>
                 </Menu>
                 <UserSuspendDialog
+                    loading={loading}
                     handleOk={() => handleDeletePosts(id)}
                     open={suspendDialogOpen}
                     setOpen={setSuspendDialogOpen}
                 />
             </>
         )
-    }
-
-
-    // Getdata functions
-
-    async function getUsers() {
-        try {
-            const resp = await api.get('common/weekend/list/')
-            setData(resp.data)
-        } catch (err) {
-            toast.error('Xatolik yuz berdi!', { position: 'top-center' })
-        }
     }
 
     useEffect(() => {

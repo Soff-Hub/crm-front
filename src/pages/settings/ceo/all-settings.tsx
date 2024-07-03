@@ -100,9 +100,7 @@ export default function AllSettings() {
     const updateSettings = async (key: any, value: any) => {
         try {
             const formData: any = new FormData()
-            if (key === 'logo') {
-                formData.append(key, value)
-            }
+            formData.append(key, value)
 
             if (key === 'on_birthday' || key === 'birthday_text' || key === 'on_absent' || key === 'absent_text') {
 
@@ -130,10 +128,12 @@ export default function AllSettings() {
                 }
 
                 await api.put('common/auto-sms/update/', formData)
+                setName('')
             } else {
                 await api.patch(key === 'on_birthday' ? 'common/auto-sms/update/' : 'common/settings/update/', formData)
             }
-            
+
+
             const getresp = await api.get('common/settings/list/')
             dispatch(setCompanyInfo(getresp.data[0]))
             setEditable(null)
@@ -360,6 +360,7 @@ export default function AllSettings() {
                                         onBlur={(e) => {
                                             updateSettings('birthday_text', e.target.value)
                                         }}
+                                        onChange={(e) => setName(e.target.value)}
                                         fullWidth
                                     />
                                     <IconifyIcon icon={'ic:baseline-check'} style={{ cursor: 'pointer' }} onClick={() => {
@@ -409,6 +410,7 @@ export default function AllSettings() {
                                         onBlur={(e) => {
                                             updateSettings('absent_text', e.target.value)
                                         }}
+                                        onChange={(e) => setName(e.target.value)}
                                         fullWidth
                                     />
                                     <IconifyIcon icon={'ic:baseline-check'} style={{ cursor: 'pointer' }} onClick={() => {

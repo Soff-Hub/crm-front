@@ -43,9 +43,9 @@ export default function EditCourseForm({ }: Props) {
                 formik.setErrors(resp.payload)
                 setLoading(false)
             } else {
-                setLoading(false)
                 await dispatch(fetchCoursesList())
                 formik.resetForm()
+                setLoading(false)
                 return setOpenAddGroup()
             }
         }

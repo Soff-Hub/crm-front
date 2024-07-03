@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next'
 import api from 'src/@core/utils/api'
 import toast from 'react-hot-toast'
 import { useAppDispatch, useAppSelector } from 'src/store'
-import { setOpenEditSms } from 'src/store/apps/settings'
+import { fetchSmsList, setOpenEditSms } from 'src/store/apps/settings'
 
 
 type Props = {
@@ -20,6 +20,7 @@ type Props = {
 export default function SmsTableRowOptions({ id }: Props) {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
     const [suspendDialogOpen, setSuspendDialogOpen] = useState<boolean>(false)
+    const [loading, setLoading] = useState<boolean>(false)
     const { t } = useTranslation()
 
     const { openEditSms, sms_list } = useAppSelector(state => state.settings)
@@ -41,12 +42,15 @@ export default function SmsTableRowOptions({ id }: Props) {
 
     async function handleDeletePosts(id: number) {
         handleRowOptionsClose()
+        setLoading(true)
         try {
             await api.delete(`common/sms-form/delete/${id}`)
             toast.success("Muvaffaqiyatli! o'chirildi", { position: 'top-center' })
+            dispatch(fetchSmsList())
         } catch (error: any) {
             toast.error('Xatolik yuz berdi!', { position: 'top-center' })
         }
+        setLoading(false)
     }
 
     // Get functions
@@ -89,6 +93,7 @@ export default function SmsTableRowOptions({ id }: Props) {
                 </MenuItem>
             </Menu>
             <UserSuspendDialog
+                loading={loading}
                 handleOk={() => handleDeletePosts(id)}
                 open={suspendDialogOpen}
                 setOpen={setSuspendDialogOpen}
