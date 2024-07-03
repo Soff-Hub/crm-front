@@ -98,7 +98,7 @@ export const studentsSlice = createSlice({
             })
             .addCase(fetchStudentsList.fulfilled, (state, action) => {
                 state.students = action.payload.results
-                state.studentsCount = Math.ceil(action.payload.count / 10)
+                state.studentsCount = Math.ceil(action.payload.count)
                 state.isLoading = false
             })
             .addCase(fetchStudentsList.rejected, (state) => {

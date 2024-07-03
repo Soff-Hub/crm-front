@@ -1,12 +1,14 @@
 // @ts-nocheck
 
 // ** MUI Imports
-import { Box, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material';
+import { Box, FormControl, InputLabel, MenuItem, OutlinedInput, Select, SelectChangeEvent, TextField } from '@mui/material';
+import { useState } from 'react';
 
 
 // ** Third Party Imports
 import 'react-datepicker/dist/react-datepicker.css'; // Import CSS file for react-datepicker
 import { useTranslation } from 'react-i18next';
+import IconifyIcon from 'src/@core/components/icon';
 import { useAppDispatch, useAppSelector } from 'src/store';
 import { fetchGroups, updateParams } from 'src/store/apps/groups';
 
@@ -18,6 +20,8 @@ type GroupsFilterProps = {
 export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
     const { teachers, queryParams, courses } = useAppSelector(state => state.groups)
     const dispatch = useAppDispatch()
+    const [search, setSearch] = useState<string>('')
+    console.log(search);
 
     const { t } = useTranslation()
 
@@ -42,10 +46,20 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
         dispatch(fetchGroups(queryString))
     }
 
+    const handleSearch = () => {
+        dispatch(updateParams({ search }));
+        const queryString = new URLSearchParams({ ...queryParams, search }).toString()
+        dispatch(fetchGroups(queryString))
+    }
+
     if (isMobile) {
         return (
             <form id='mobile-filter-form'>
                 <Box display={'flex'} gap={2} flexDirection={'column'} paddingTop={isMobile ? 3 : 0} rowGap={isMobile ? 4 : 0}>
+                    <FormControl sx={{ width: '100%', maxWidth: 260 }}>
+                        <InputLabel size='small' id='search-input'>{t("Qidirish")}</InputLabel>
+                        <OutlinedInput onChange={e => setSearch(e.target.value)} endAdornment={<IconifyIcon onClick={handleSearch} style={{ cursor: 'pointer' }} icon={'mingcute:search-line'} />} label='Qidirish' id='search-input' placeholder='Qidirish...' size='small' />
+                    </FormControl>
                     <FormControl sx={{ width: '100%' }}>
                         <InputLabel size='small' id='demo-simple-select-outlined-label'>{t("Holat")}</InputLabel>
                         <Select
@@ -86,10 +100,10 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
                         </Select>
                     </FormControl>
                     <FormControl sx={{ width: '100%' }}>
-                        <InputLabel size='small' id='demo-simple-select-outlined-label'>{t("Kurslar bo'yicha")}</InputLabel>
+                        <InputLabel size='small' id='demo-simple-select-outlined-label'>{t("Kurslar")}</InputLabel>
                         <Select
                             size='small'
-                            label={t("Kurslar bo'yicha")}
+                            label={t("Kurslar")}
                             id='demo-simple-select-outlined'
                             labelId='demo-simple-select-outlined-label'
                             value={queryParams.course || ""}
@@ -106,10 +120,10 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
                         </Select>
                     </FormControl>
                     <FormControl sx={{ width: '100%' }}>
-                        <InputLabel size='small' id='demo-simple-select-outlined-label'>{t("Kunlar bo'yicha")}</InputLabel>
+                        <InputLabel size='small' id='demo-simple-select-outlined-label'>{t("Kunlar")}</InputLabel>
                         <Select
                             size='small'
-                            label={t("Kunlar boyicha")}
+                            label={t("Kunlar")}
                             id='demo-simple-select-outlined'
                             labelId='demo-simple-select-outlined-label'
                             value={queryParams.day_of_week || ""}
@@ -129,6 +143,10 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
     } else
         return (
             <Box display={'flex'} gap={2} flexWrap={'nowrap'} >
+                <FormControl sx={{ width: '100%', maxWidth: 260 }}>
+                    <InputLabel size='small' id='search-input'>{t("Qidirish")}</InputLabel>
+                    <OutlinedInput onChange={e => setSearch(e.target.value)} endAdornment={<IconifyIcon onClick={handleSearch} style={{ cursor: 'pointer' }} icon={'mingcute:search-line'} />} label='Qidirish' id='search-input' placeholder='Qidirish...' size='small' />
+                </FormControl>
                 <FormControl sx={{ maxWidth: 220, width: '100%' }}>
                     <InputLabel size='small' id='demo-simple-select-outlined-label'>{t("Holat")}</InputLabel>
                     <Select
@@ -168,10 +186,10 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
                     </Select>
                 </FormControl>
                 <FormControl sx={{ maxWidth: 180, width: '100%' }}>
-                    <InputLabel size='small' id='demo-simple-select-outlined-label'>{t("Kurslar bo'yicha")}</InputLabel>
+                    <InputLabel size='small' id='demo-simple-select-outlined-label'>{t("Kurslar")}</InputLabel>
                     <Select
                         size='small'
-                        label={t("Kurslar bo'yicha")}
+                        label={t("Kurslar")}
                         id='demo-simple-select-outlined'
                         labelId='demo-simple-select-outlined-label'
                         value={queryParams.course || ""}
@@ -188,10 +206,10 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
                     </Select>
                 </FormControl>
                 <FormControl sx={{ maxWidth: 180, width: '100%' }}>
-                    <InputLabel size='small' id='demo-simple-select-outlined-label'>{t("Kunlar bo'yicha")}</InputLabel>
+                    <InputLabel size='small' id='demo-simple-select-outlined-label'>{t("Kunlar")}</InputLabel>
                     <Select
                         size='small'
-                        label={t("Kunlar boyicha")}
+                        label={t("Kunlar")}
                         id='demo-simple-select-outlined'
                         labelId='demo-simple-select-outlined-label'
                         value={queryParams.day_of_week || ""}

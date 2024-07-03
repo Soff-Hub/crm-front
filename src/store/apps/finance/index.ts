@@ -4,8 +4,8 @@ import api from 'src/@core/utils/api'
 import { IFinanceState } from 'src/types/apps/finance'
 
 
-export const fetchModerationSalaries = createAsyncThunk('finance/fetchModerationSalaries', async () => {
-    return (await api.get('/common/finance/employee-salaries/')).data
+export const fetchModerationSalaries = createAsyncThunk('finance/fetchModerationSalaries', async (params?: string) => {
+    return (await api.get('/common/finance/employee-salaries/?' + params)).data
 })
 
 export const createSms = createAsyncThunk('finance/createSms', async (data: { description: string }) => {
@@ -18,12 +18,10 @@ export const editSms = createAsyncThunk('finance/editSms', async (data: { descri
 })
 
 const calcBonus = (array: any[], bonus: number) => {
-    return array
     return array.map(el => ({ ...el, salary: bonus + Number(el.salary) }))
 }
 
 const calcFine = (array: any[], fine: number) => {
-    return array
     return array.map(el => ({ ...el, salary: fine + Number(el.salary) }))
 }
 
@@ -38,18 +36,18 @@ export const financeSlice = createSlice({
     initialState,
     reducers: {
         updateSalaryBonus: (state, action) => {
-            const data = state.moderation_salaries.map(el => el.id === action.payload.id ?
-                ({ ...el, bonus_amount: +action.payload.bonus_amount })
+            const data = state.moderation_salaries.map(el => Number(el.id) === Number(action.payload.id) ?
+                ({ ...el, bonus_amount: +action.payload.bonus_amount, final_salary: Number(el.salary) + Number(action.payload.bonus_amount) - Number(el.fine_amount) })
                 : el)
 
-            state.moderation_salaries = calcBonus(data, action.payload.bonus_amount)
+            state.moderation_salaries = data
         },
         updateSalaryFine: (state, action) => {
-            const data = state.moderation_salaries.map(el => el.id === action.payload.id ?
-                ({ ...el, fine_amount: +action.payload.fine_amount })
+            const data = state.moderation_salaries.map(el => Number(el.id) === Number(action.payload.id) ?
+                ({ ...el, fine_amount: +action.payload.fine_amount, final_salary: Number(el.salary) - Number(action.payload.fine_amount) + Number(el.bonus_amount) })
                 : el)
 
-            state.moderation_salaries = calcFine(data, action.payload.fine_amount)
+            state.moderation_salaries = data
         }
     },
     extraReducers: builder => {
@@ -59,7 +57,7 @@ export const financeSlice = createSlice({
             })
             .addCase(fetchModerationSalaries.fulfilled, (state, action) => {
                 state.isPending = false
-                state.moderation_salaries = action.payload
+                state.moderation_salaries = action.payload.map((el: any) => ({ ...el, final_salary: Number(el.salary) + Number(el.bonus_amount) - Number(el.fine_amount) }))
             })
     }
 })

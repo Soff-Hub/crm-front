@@ -35,6 +35,9 @@ import FooterIllustrationsV2 from 'src/views/pages/auth/FooterIllustrationsV2'
 import LoadingButton from '@mui/lab/LoadingButton'
 import useResponsive from 'src/@core/hooks/useResponsive'
 import toast from 'react-hot-toast'
+import PhoneInput from 'src/@core/components/phone-input'
+import { useTranslation } from 'react-i18next'
+import { reversePhone } from 'src/@core/components/phone-input/format-phone-number'
 
 // ** Styled Components
 const LoginIllustrationWrapper = styled(Box)<BoxProps>(({ theme }) => ({
@@ -60,7 +63,7 @@ const schema = yup.object().shape({
 })
 
 const defaultValues = {
-  phone: '+998',
+  phone: '',
   password: ''
 }
 
@@ -76,6 +79,7 @@ const LoginPage = () => {
   // ** Hooks
   const auth = useAuth()
   const { isMobile } = useResponsive()
+  const { t } = useTranslation()
 
   const {
     control,
@@ -91,7 +95,7 @@ const LoginPage = () => {
   const onSubmit = async (data: FormData) => {
     setLoading(true)
     const { phone, password } = data
-    await auth.login({ phone, password }, (resp: any) => {
+    await auth.login({ phone: reversePhone(phone), password }, (resp: any) => {
       if (resp?.response) {
         setLoading(false)
         Object.keys(resp?.response?.data).map((el: any) => {
@@ -118,18 +122,21 @@ const LoginPage = () => {
           </Box>
           <form noValidate autoComplete='off' onSubmit={handleSubmit(onSubmit)}>
             <FormControl fullWidth sx={{ mb: 4 }}>
+              <InputLabel error={Boolean(errors.phone)} htmlFor="login-input">{t('phone')}</InputLabel>
               <Controller
                 name='phone'
                 control={control}
                 rules={{ required: true }}
                 render={({ field: { value, onChange, onBlur } }) => (
-                  <TextField
+                  <PhoneInput
+                    id='login-input'
+                    size='medium'
                     label='Telefon raqam'
                     value={value}
                     onBlur={onBlur}
                     onChange={onChange}
                     error={Boolean(errors.phone)}
-                    placeholder='+998 90 000 00 00'
+                  // placeholder='+998 90 000 00 00'
                   />
                 )}
               />

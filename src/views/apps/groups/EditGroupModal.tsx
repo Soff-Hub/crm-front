@@ -216,7 +216,7 @@ export default function EditGroupModal() {
                                     <InputLabel size='small' id='user-view-language-label'>{t("Hafta kunlari")}</InputLabel>
                                     <Select
                                         size='small'
-                                        label="Kunlar boyicha"
+                                        label="Hafta kunlari"
                                         id='demo-simple-select-outlined'
                                         name='day_of_week'
                                         labelId='demo-simple-select-outlined-label'
@@ -240,7 +240,7 @@ export default function EditGroupModal() {
                                     ) && formik.values.day_of_week == null) || formik.values.day_of_week == "0" ? (
                                         <Box sx={{ display: 'flex', width: "100%", flexWrap: 'wrap', gap: '8px' }}>
                                             {
-                                                ['tuesday', 'thursday', 'saturday', 'monday', 'wednesday', 'friday', 'sunday'].map(el => (
+                                                ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'].map(el => (
                                                     <label
                                                         key={el}
                                                         style={{

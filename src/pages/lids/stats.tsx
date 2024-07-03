@@ -1,11 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Button, ButtonGroup, Typography } from '@mui/material';
+import { Box, Button, ButtonGroup, DialogContent, DialogTitle, FormControl, FormHelperText, TextField, Typography } from '@mui/material';
 import CardStatsVertical from 'src/@core/components/card-statistics/card-stats-vertical';
 import api from 'src/@core/utils/api';
-import { DateRangePicker } from 'rsuite';
+import { DateRangePicker, IconButton } from 'rsuite';
 import 'rsuite/DateRangePicker/styles/index.css';
 import { useRouter } from 'next/router';
 import format from 'date-fns/format';
+import IconifyIcon from 'src/@core/components/icon';
+import { CustomeDrawer } from '../settings/office/courses';
+import * as Yup from "yup";
+import { useFormik } from 'formik';
+import { useTranslation } from 'react-i18next';
+import LoadingButton from '@mui/lab/LoadingButton';
 
 
 const Stats = () => {
@@ -14,6 +20,9 @@ const Stats = () => {
     const [filter, setFilter] = useState<'a' | 1>('a')
     const { push } = useRouter()
     const [date, setDate] = useState<any>('')
+    const { t } = useTranslation()
+    const [loading, setLoading] = useState<boolean>(false)
+    const [open, setOpen] = useState<boolean>(false)
 
     const getSources = async () => {
         const start_date = date?.[0] ? format(date?.[0], 'yyyy-MM-dd') : ''
@@ -35,6 +44,31 @@ const Stats = () => {
         setDate(e)
     }
 
+    const validationSchema = Yup.object({
+        name: Yup.string().required("Nom kiriting"),
+    });
+
+    const initialValues = { name: '' }
+
+    const formik = useFormik({
+        initialValues,
+        validationSchema,
+        onSubmit: async (valuess) => {
+            setLoading(true)
+            try {
+                await api.post(`leads/source/`, valuess)
+                await getSources()
+                setOpen(false)
+            } catch (err: any) {
+                if (err?.response?.data) {
+                    formik.setErrors(err?.response?.data)
+                }
+            }
+            setLoading(false)
+        }
+    });
+
+
     useEffect(() => {
         getSources()
     }, [date])
@@ -42,12 +76,13 @@ const Stats = () => {
 
     return (
         <div>
-            <Box sx={{ alignItems: 'center', paddingBottom: '20px', flexWrap: 'nowrap' }}>
-                <DateRangePicker format="yyyy-MM-dd" onChange={handleChangeDate} translate={'yes'} size="sm" style={{ flex: 1, marginRight: 20 }} />
+            <Box sx={{ alignItems: 'center', paddingBottom: '20px', flexWrap: 'nowrap', width: '100%', display: 'flex' }}>
+                <DateRangePicker format="yyyy-MM-dd" onChange={handleChangeDate} translate={'yes'} size="sm" style={{ marginRight: 20 }} />
                 <ButtonGroup size="small">
                     <Button variant={filter === 'a' ? 'contained' : 'outlined'} onClick={() => handleFilter('a')}>A {">"} Z</Button>
                     <Button variant={filter === 1 ? 'contained' : 'outlined'} onClick={() => handleFilter(1)}>1 {">"} 0</Button>
                 </ButtonGroup>
+                <Button onClick={() => setOpen(true)} variant='contained' sx={{ marginLeft: 'auto' }} size='small' startIcon={<IconifyIcon icon={'carbon:add'} />}>Yangi Manba</Button>
             </Box>
             <Box sx={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
                 {
@@ -58,6 +93,39 @@ const Stats = () => {
                     ))
                 }
             </Box>
+
+
+            <CustomeDrawer open={open} variant='temporary' anchor='right'>
+                <DialogTitle sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <Typography variant='h6' component='span'>
+                        {t("Yangi manba yaratish")}
+                    </Typography>
+                    <IconButton
+                        aria-label='close'
+                        onClick={() => setOpen(false)}
+                    >
+                        <IconifyIcon icon='mdi:close' />
+                    </IconButton>
+                </DialogTitle>
+                <DialogContent sx={{ minWidth: '320px' }}>
+                    <form style={{ paddingTop: '10px' }} onSubmit={formik.handleSubmit}>
+                        <FormControl sx={{ width: '100%', marginBottom: '10px' }}>
+                            <TextField
+                                fullWidth
+                                size='small'
+                                label={t("Manba nomi")}
+                                name='name'
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                                value={formik.values.name}
+                                error={!!formik.errors.name && formik.touched.name}
+                            />
+                            {formik.errors.name && formik.touched.name && <FormHelperText error={true}>{formik.errors.name}</FormHelperText>}
+                        </FormControl>
+                        <LoadingButton type='submit' loading={loading} fullWidth variant='contained'>{t('Saqlash')}</LoadingButton>
+                    </form>
+                </DialogContent>
+            </CustomeDrawer>
         </div>
     );
 }

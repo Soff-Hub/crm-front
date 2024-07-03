@@ -27,6 +27,8 @@ import { CreateTeacherDto, UpdateTeacherDto } from 'src/types/apps/mentorsTypes'
 import { useEffect, useRef, useState } from 'react';
 import { TeacherAvatar } from './AddMentorsModal';
 import { editEmployee, fetchEmployees, setEmployeeData } from 'src/store/apps/settings';
+import PhoneInput from 'src/@core/components/phone-input';
+import { reversePhone } from 'src/@core/components/phone-input/format-phone-number';
 
 export const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
@@ -106,7 +108,7 @@ export default function EditEmployeeForm() {
 
             for (const [key, value] of Object.entries(values)) {
                 if (!['image'].includes(key)) {
-                    newValues.append(key, value)
+                    newValues.append(key, key === 'phone' ? reversePhone(value) : value)
                 }
             }
 
@@ -139,6 +141,13 @@ export default function EditEmployeeForm() {
         formik.setFieldValue("percentage", 0)
     }
 
+    useEffect(() => {
+        return () => {
+            formik.resetForm
+            dispatch(setEmployeeData(null))
+        }
+    }, [])
+
     return (
         <Box width={'100%'}>
             <form onSubmit={formik.handleSubmit} style={{ display: 'flex', flexDirection: 'column', width: '100%', alignItems: 'baseline', padding: '20px 10px', gap: '10px' }}>
@@ -165,9 +174,19 @@ export default function EditEmployeeForm() {
                 </FormControl>
 
                 <FormControl sx={{ width: '100%' }}>
-                    <TextField label={t("phone")} name='phone' onChange={formik.handleChange} onBlur={formik.handleBlur} value={formik.values.phone} error={!!formik.errors.phone} defaultValue={"+998"} />
-                    <FormHelperText error={!!formik.errors.phone}>{formik.errors.phone}</FormHelperText>
+                    <InputLabel error={!!formik.errors.phone && formik.touched.phone}>{t("phone")}</InputLabel>
+                    <PhoneInput
+                        label={t("phone")}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.phone}
+                        error={!!formik.errors.phone && formik.touched.phone}
+                    />
+                    <FormHelperText error>
+                        {(!!formik.errors.phone && formik.touched.phone) && formik.errors.phone}
+                    </FormHelperText>
                 </FormControl>
+
 
                 <FormControl sx={{ width: '100%' }}>
                     <TextField type='date' label={t("birth_date")} name='birth_date' onChange={formik.handleChange} onBlur={formik.handleBlur} value={formik.values.birth_date} error={!!formik.errors.birth_date} />

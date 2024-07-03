@@ -42,8 +42,8 @@ const RowOptions = ({ id }: { id: number | string }) => {
             room: String(filtered?.room_id)
         }).toString()
         await Promise.all([
-            await dispatch(getDashboardLessons(queryString)),
-            await dispatch(getGroupsDetails(id))
+            dispatch(getDashboardLessons(queryString)),
+            dispatch(getGroupsDetails(id))
         ])
     }
 

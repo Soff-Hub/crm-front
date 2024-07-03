@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { toast } from 'react-hot-toast'
+import { today } from 'src/@core/components/card-statistics/kanban-item'
 import api from 'src/@core/utils/api'
 import ceoConfigs from 'src/configs/ceo'
 import { IGroupsState } from 'src/types/apps/groupsTypes'
@@ -93,7 +94,7 @@ const initialState: IGroupsState = {
     course: '',
     teacher: '',
     room: '',
-    start_date: '',
+    start_date: today,
     start_at: '',
     day_of_week:
       currentDay === 'mon' || currentDay === 'wed' || currentDay === 'fri'
@@ -161,7 +162,7 @@ export const groupsSlice = createSlice({
     })
     builder.addCase(fetchGroups.fulfilled, (state, action) => {
       state.groups = action.payload.results
-      state.groupCount = Math.ceil(action.payload.count / 10)
+      state.groupCount = action.payload.count
       state.isLoading = false
     })
     builder.addCase(fetchGroups.rejected, state => {

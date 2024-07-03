@@ -169,7 +169,7 @@ export default function AddGroupModal() {
                                 <InputLabel size='small' id='user-view-language-label'>{t("Hafta kunlari")}</InputLabel>
                                 <Select
                                     size='small'
-                                    label="Kunlar boyicha"
+                                    label="Hafta kunlari"
                                     id='demo-simple-select-outlined'
                                     name='day_of_week'
                                     labelId='demo-simple-select-outlined-label'
@@ -190,7 +190,7 @@ export default function AddGroupModal() {
                                     (
                                         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
                                             {
-                                                ['tuesday', 'thursday', 'saturday', 'monday', 'wednesday', 'friday', 'sunday'].map(el => (
+                                                ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'].map(el => (
                                                     <label
                                                         key={el}
                                                         style={{

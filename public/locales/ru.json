@@ -152,7 +152,7 @@
     "Tugash vaqti": "Время окончания",
     "Guruhni yakunlash": "Пополнение группы",
     "Kurs narxi": "Стоимость курса",
-    "Guruh o'chirib tashlash": "Удалить группу",
+    "Guruh o'chirib tashlamoqchimisiz?": "Вы хотите удалить группу?",
     "Guruhni tahrirlash": "Изменить группу",
     "Barcha o'quvchilarga SMS yuboring": "Отправьте СМС всем студентам",
     "Guruhga o'quvchi qo'shish": "Добавить ученика в группу",
@@ -313,5 +313,8 @@
     "Menyu joylashuvi": "Расположение меню",
     "Vertikal": "Вертикальный",
     "Gorizontal": "Горизонтальный",
-    "Menu ni yashirish": "Скрыть меню"
+    "Menu ni yashirish": "Скрыть меню",
+    "active": "актив",
+    "archive": "архив",
+    "test": "тест"
 }

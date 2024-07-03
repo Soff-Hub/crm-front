@@ -2,9 +2,10 @@ import LoadingButton from "@mui/lab/LoadingButton"
 import { Box, Button, Card, CardContent, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormHelperText, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material"
 import Link from "next/link"
 import { useRouter } from "next/router"
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { today } from "src/@core/components/card-statistics/kanban-item"
+import EmptyContent from "src/@core/components/empty-content"
 import Form from "src/@core/components/form"
 import IconifyIcon from "src/@core/components/icon"
 import DataTable from "src/@core/components/table"
@@ -28,14 +29,15 @@ export async function downloadImage(filename: string, url: string) {
   })
     .then(response => response.blob())
     .then(blob => {
-      const url = URL.createObjectURL(blob);
+      const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = filename
+      a.download = 'fileName';
+      a.style.position = 'fixed';
+      a.target = '_blank';
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
-      URL.revokeObjectURL(url);
     })
     .catch(console.error);
 }
@@ -61,16 +63,38 @@ const UserViewSecurity = ({ groupData }: any) => {
     setEdit(data.find((el: any) => el.id === id))
   }
 
-  async function getReceipt(id: any) {
-    setLoading(true)
+  const handlePrint = useCallback(async (id: number | string) => {
     const subdomain = location.hostname.split('.')
     try {
-      await downloadImage(`receipt-${new Date().getTime()}.pdf`, `${process.env.NODE_ENV === 'development' ? process.env.NEXT_PUBLIC_TEST_BASE_URL : subdomain.length < 3 ? `https://${process.env.NEXT_PUBLIC_BASE_URL}` : `https://${subdomain[0]}.${process.env.NEXT_PUBLIC_BASE_URL}`}/api/v1/common/generate-check/${id}/`)
-      // await downloadImage(`receipt-${new Date().getTime()}.pdf`, `http://192.168.1.48:8000/api/v1/common/generate-check/${id}/`)
-      setLoading(false)
+      const response = await fetch(
+        `${process.env.NODE_ENV === 'development' ? process.env.NEXT_PUBLIC_TEST_BASE_URL : subdomain.length < 3 ? `https://${process.env.NEXT_PUBLIC_BASE_URL}` : `https://${subdomain[0]}.${process.env.NEXT_PUBLIC_BASE_URL}`}/common/generate-check/${id}/`,
+        {
+          method: "GET",
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+          },
+        }
+      );
+      const data = await response.blob();
+      const blobUrl = URL.createObjectURL(data);
+      const printFrame: any = document.getElementById("printFrame");
+      printFrame.src = blobUrl;
+      printFrame.onload = function () {
+        printFrame.contentWindow.print();
+      };
+    } catch (error) {
+      console.error("Print error:", error);
+    }
+  }, []);
+
+  async function getReceipt(id: any) {
+    setLoading(id)
+    try {
+      await handlePrint(id)
     } catch (err) {
       console.log(err)
     }
+    setLoading(null)
   }
 
   const columns: customTableProps[] = [
@@ -83,7 +107,6 @@ const UserViewSecurity = ({ groupData }: any) => {
       xs: 0.8,
       title: t("Sana"),
       dataIndex: 'payment_date',
-      // render: (date: string) => formatDateTime(date)
     },
     {
       xs: 0.7,
@@ -109,7 +132,7 @@ const UserViewSecurity = ({ groupData }: any) => {
         <Box sx={{ display: 'flex', gap: '10px' }}>
           <IconifyIcon onClick={() => handleEdit(id)} icon='mdi:pencil-outline' fontSize={20} />
           <IconifyIcon onClick={() => setDelete(id)} icon='mdi:delete-outline' fontSize={20} />
-          {loading ? <IconifyIcon icon={'la:spinner'} fontSize={20} /> : <IconifyIcon onClick={() => getReceipt(id)} icon={`ph:receipt-light`} fontSize={20} />}
+          {loading === id ? <IconifyIcon icon={'la:spinner'} fontSize={20} /> : <IconifyIcon onClick={() => getReceipt(id)} icon={`ph:receipt-light`} fontSize={20} />}
         </Box>
       )
     }
@@ -140,7 +163,7 @@ const UserViewSecurity = ({ groupData }: any) => {
     await deletePayment(deleteId)
     setLoading(false)
     setDelete(false)
-   await  dispatch(fetchStudentPayment(query?.student))
+    await dispatch(fetchStudentPayment(query?.student))
   }
 
   useEffect(() => {
@@ -174,12 +197,13 @@ const UserViewSecurity = ({ groupData }: any) => {
                   </Box></Link>
               ))
             }
-          </Box> : ''
+          </Box> : <EmptyContent />
       }
 
       <Typography sx={{ my: 3, fontSize: '20px' }}>To'lov tarixi</Typography>
       <DataTable loading={isLoading} maxWidth="100%" minWidth="450px" data={payments} columns={columns} />
 
+      <iframe src="" id="printFrame" style={{ height: 0 }}></iframe>
 
       <Dialog
         open={edit}

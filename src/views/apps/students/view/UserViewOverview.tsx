@@ -16,6 +16,7 @@ import showResponseError from 'src/@core/utils/show-response-error'
 import { useRouter } from 'next/router'
 import { useAppDispatch, useAppSelector } from 'src/store'
 import { fetchStudentDetail } from 'src/store/apps/students'
+import EmptyContent from 'src/@core/components/empty-content'
 
 
 interface ItemTypes {
@@ -62,13 +63,13 @@ const UserViewOverview = ({ data }: ItemTypes) => {
       </Box>
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
         {
-          data ? data.map(el => (
+          data && data.length ? data.map(el => (
             <Card sx={{ maxWidth: '450px' }} key={el.id}>
               <CardContent>
                 <UserViewStudentsItem setOpenEdit={setOpen} key={el.id} item={el} />
               </CardContent>
             </Card>
-          )) : ''
+          )) : <EmptyContent />
         }
       </Box>
 

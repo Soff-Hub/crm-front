@@ -7,6 +7,8 @@ import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from 'src/store';
 import { createDepartmentStudent, fetchDepartmentList, setAddSource } from 'src/store/apps/leads';
 import IconifyIcon from 'src/@core/components/icon';
+import PhoneInput from 'src/@core/components/phone-input';
+import { reversePhone } from 'src/@core/components/phone-input/format-phone-number';
 
 
 type Props = {}
@@ -15,27 +17,25 @@ export default function CreateAnonimUserForm({ }: Props) {
 
     const { t } = useTranslation()
     const dispatch = useAppDispatch()
-    const { loading, leadData, openLid, addSource, sourceData } = useAppSelector((state) => state.leads)
+    const { loading, leadData, openLid, sourceData } = useAppSelector((state) => state.leads)
 
     const validationSchema = Yup.object({
         department: Yup.string().required("Bo'lim tanlang"),
-        source_name: Yup.string().required("Manbani kiritiing"),
+        source: Yup.string().required("Manbani kiritiing"),
         first_name: Yup.string().required("Ism kiriting"),
-        phone: Yup.string()
-            .matches(/^\+998\d{9}$/, "Telefon raqam noto'g'ri formatda. +998 XX XXX XX XX")
-            .required("Telefon raqam kiriting"),
+        phone: Yup.string().required("Telefon raqam"),
         body: Yup.string()
     });
 
     const initialValues: {
         department: string
-        source_name: string | number
+        source: string | number
         first_name: string
         phone: string
         body?: string
     } = {
         department: '',
-        source_name: '',
+        source: '',
         first_name: '',
         phone: '',
     }
@@ -44,7 +44,7 @@ export default function CreateAnonimUserForm({ }: Props) {
         initialValues,
         validationSchema,
         onSubmit: async (values) => {
-            const resp = await dispatch(createDepartmentStudent(values))
+            const resp = await dispatch(createDepartmentStudent({ ...values, phone: reversePhone(values.phone) }))
 
             if (resp.meta.requestStatus === 'rejected') {
                 formik.setErrors(resp.payload)
@@ -88,47 +88,28 @@ export default function CreateAnonimUserForm({ }: Props) {
                 {!!errors.department && touched.department && <FormHelperText error={true}>{formik.errors.department}</FormHelperText>}
             </FormControl>
 
-            {!addSource ? (
-                <FormControl fullWidth>
-                    <InputLabel size='small' id='fsdgsdgsgsdfsd-label'>{t('Manba')}</InputLabel>
-                    <Select
-                        size='small'
-                        label={t('Manba')}
-                        labelId='fsdgsdgsgsdfsd-label'
-                        name='source_name'
-                        sx={{ mb: 1 }}
-                        onChange={(e: any) => {
-                            handleChange(e)
-                            dispatch(setAddSource(e?.target?.value === 0))
-                        }}
-                        error={!!errors.source_name && touched.source_name}
-                        onBlur={handleBlur}
-                        value={values.source_name}
-                    >
-                        {
-                            sourceData.map((lead: any) => <MenuItem key={lead.id} value={lead.name}>{lead.name}</MenuItem>)
-                        }
-                        <MenuItem value={0} sx={{ fontWeight: '600' }}><IconifyIcon icon={'ic:baseline-add'} /> {t("Yangi qo'shish")}</MenuItem>
-                    </Select>
-                    {!!errors.source_name && touched.source_name && <FormHelperText error>{formik.errors.source_name}</FormHelperText>}
-                </FormControl>
-            ) : ''}
-
-            {addSource ? (
-                <FormControl fullWidth>
-                    <TextField
-                        fullWidth
-                        size='small'
-                        label={t('Manba')}
-                        name='source_name'
-                        error={!!errors.source_name && touched.source_name}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        value={values.source_name}
-                    />
-                    {!!errors.source_name && touched.source_name && <FormHelperText error>{formik.errors.source_name}</FormHelperText>}
-                </FormControl>
-            ) : ''}
+            <FormControl fullWidth>
+                <InputLabel size='small' id='fsdgsdgsgsdfsd-label'>{t('Manba')}</InputLabel>
+                <Select
+                    size='small'
+                    label={t('Manba')}
+                    labelId='fsdgsdgsgsdfsd-label'
+                    name='source'
+                    sx={{ mb: 1 }}
+                    onChange={(e: any) => {
+                        handleChange(e)
+                        dispatch(setAddSource(e?.target?.value === 0))
+                    }}
+                    error={!!errors.source && touched.source}
+                    onBlur={handleBlur}
+                    value={values.source}
+                >
+                    {
+                        sourceData.map((lead: any) => <MenuItem key={lead.id} value={lead.id}>{lead.name}</MenuItem>)
+                    }
+                </Select>
+                {!!errors.source && touched.source && <FormHelperText error>{formik.errors.source}</FormHelperText>}
+            </FormControl>
 
             <FormControl fullWidth>
                 <TextField
@@ -145,13 +126,11 @@ export default function CreateAnonimUserForm({ }: Props) {
             </FormControl>
 
             <FormControl fullWidth>
-                <TextField
+                <InputLabel error={!!errors.phone && touched.phone} htmlFor="login-input">{t('phone')}</InputLabel>
+                <PhoneInput
                     fullWidth
-                    autoComplete='off'
-                    size='small'
+                    id='login-input'
                     label={t('phone')}
-                    name='phone'
-                    defaultValue="+998"
                     error={!!errors.phone && touched.phone}
                     onChange={handleChange}
                     onBlur={handleBlur}

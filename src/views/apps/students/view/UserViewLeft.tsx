@@ -86,7 +86,7 @@ const UserViewLeft = ({ userData }: { userData: any }) => {
     const data = {
       ...value,
       student: userData?.id,
-      group: [+value.group]
+      groups: [+value.group]
     }
 
     try {

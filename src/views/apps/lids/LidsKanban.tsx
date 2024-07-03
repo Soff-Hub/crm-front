@@ -59,7 +59,7 @@ export default function HomeKanban({ title, items, id }: Props) {
             <Box sx={{ display: 'flex', gap: 5, alignItems: 'flex-start', width: '100%', flexDirection: 'column', pt: 0 }}>
                 {
                     items.map(lead => (
-                        <AccordionCustom item={lead} key={lead.id} onView={() => console.log("aa")} />
+                        <AccordionCustom item={lead} key={lead.id} onView={() => null} />
                     ))
                 }
             </Box>

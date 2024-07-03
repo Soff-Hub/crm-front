@@ -17,6 +17,8 @@ import { createStudent, fetchStudentsList, setOpenEdit } from 'src/store/apps/st
 import { useAppDispatch } from 'src/store';
 import useGroups from 'src/hooks/useGroups';
 import useResponsive from 'src/@core/hooks/useResponsive';
+import PhoneInput from 'src/@core/components/phone-input';
+import { reversePhone } from 'src/@core/components/phone-input/format-phone-number';
 
 
 export default function CreateStudentForm() {
@@ -55,7 +57,7 @@ export default function CreateStudentForm() {
         validationSchema,
         onSubmit: async (valuess: CreateStudentDto) => {
             setLoading(true)
-            const newVlaues = { ...valuess, phone: `+998${valuess.phone}`, group: [values.group] }
+            const newVlaues = { ...valuess, phone: reversePhone(values.phone), group: values?.group ? [values.group] : [] }
 
             const resp = await dispatch(createStudent(newVlaues))
 
@@ -98,17 +100,14 @@ export default function CreateStudentForm() {
 
             <FormControl sx={{ width: '100%' }}>
                 <InputLabel error={!!errors.phone && touched.phone} htmlFor="outlined-adornment-password">{t('phone')}</InputLabel>
-                <OutlinedInput
+                <PhoneInput
                     id='outlined-adornment-password'
-                    size='small'
                     label={t("phone")}
                     name='phone'
                     error={!!errors.phone && touched.phone}
                     value={values.phone}
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    startAdornment="+998"
-                    type='number'
                 />
                 {errors.phone && touched.phone && <FormHelperText error={true}>{errors.phone}</FormHelperText>}
             </FormControl>

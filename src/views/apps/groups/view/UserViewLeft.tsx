@@ -163,7 +163,7 @@ const UserViewLeft = ({ userData, reRender }: { userData?: any, reRender: any })
     const data = {
       ...values,
       student: selectedStudents,
-      group: [userData?.id]
+      groups: [userData?.id]
     }
 
     try {
@@ -237,30 +237,16 @@ const UserViewLeft = ({ userData, reRender }: { userData?: any, reRender: any })
             <CardContent sx={{ my: 1, display: 'flex', gap: '50px' }}>
               <Box sx={{ display: 'flex' }}>
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                  <CustomAvatar skin='light' variant='rounded' color='warning'>
-                    <IconifyIcon icon='solar:medal-ribbon-star-broken' />
-                  </CustomAvatar>
-                  <div>
-                    <Typography>{data.name}</Typography>
-                    <Typography variant='body2'>{data.course_data.name}</Typography>
-                  </div>
-                </Box>
-              </Box>
-              <Box sx={{ display: 'flex' }}>
-                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                  <CustomAvatar skin='light' variant='rounded'>
-                    <IconifyIcon icon='la:users' />
-                  </CustomAvatar>
-                  <div>
-                    <Typography>{t("O'quvchilar soni")}</Typography>
-                    <Typography variant='body2'>{data.student_count}</Typography>
+                  <div style={{ display: 'flex', gap: '20px' }}>
+                    <Typography>{data.name}:</Typography>
+                    <Typography style={{ fontWeight: 700 }}>{data.student_count} ta o'quvchi</Typography>
                   </div>
                 </Box>
               </Box>
             </CardContent>
 
             <CardContent>
-              <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', alignItems: 'center' }}>
+              <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', alignItems: 'center', mb: '8px' }}>
                 <Typography>{t("Kurs")}:</Typography>
                 {
                   !(user?.role.length === 1 && user?.role.includes('teacher')) ? (
@@ -303,16 +289,16 @@ const UserViewLeft = ({ userData, reRender }: { userData?: any, reRender: any })
               </Box>
               <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', alignItems: 'center' }}>
                 <Typography>{t("Dars vaqti")}:</Typography>
-                <Typography>{data.room_data.name} -{data.start_at}</Typography>
-              </Box>
-              <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', alignItems: 'center' }}>
-                <Typography>{getLessonDays(data.day_of_week)}</Typography>
+                <Typography>{data.start_at.split(':').slice(0, 2).join(':')} /</Typography>
+                <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', alignItems: 'center' }}>
+                  <Typography>{getLessonDays(data.day_of_week)} / {data.room_data.name}</Typography>
+                </Box>
               </Box>
               <Box sx={{ pt: 2, pb: 1 }}>
                 {
                   !(user?.role.length === 1 && user?.role.includes('teacher')) ? (
-                    <Box sx={{ display: 'flex', mb: 2.7 }}>
-                      <Typography sx={{ mr: 2, fontWeight: 500, fontSize: '0.875rem' }}>{t("O'qituvchi")}:</Typography>
+                    <Box sx={{ display: 'flex', mb: '8px' }}>
+                      <Typography sx={{ mr: 2 }}>{t("O'qituvchi")}:</Typography>
                       <Link href={`/mentors/view/security/?id=${data.teacher_data.id}`}>
                         <Typography variant='body2'>
                           {data.teacher_data.first_name}
@@ -321,12 +307,12 @@ const UserViewLeft = ({ userData, reRender }: { userData?: any, reRender: any })
                     </Box>
                   ) : ''
                 }
-                <Box sx={{ display: 'flex', mb: 2.7 }}>
-                  <Typography sx={{ mr: 2, fontWeight: 500, fontSize: '0.875rem' }}>{t("Ochilgan sana")}:</Typography>
+                <Box sx={{ display: 'flex', mb: '8px' }}>
+                  <Typography sx={{ mr: 2 }}>{t("Ochilgan sana")}:</Typography>
                   <Typography variant='body2'>{data.start_date?.split('-').reverse().join(',')}</Typography>
                 </Box>
               </Box>
-              <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', alignItems: 'center' }}>
+              <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', alignItems: 'center', mb: '8px' }}>
                 <Typography>{t("branch")}:</Typography>
                 <CustomChip
                   skin='light'
@@ -368,16 +354,6 @@ const UserViewLeft = ({ userData, reRender }: { userData?: any, reRender: any })
                   <Tooltip title="O'chirish" placement='top'>
                     <Button variant='outlined' color='error' onClick={() => handleEditClickOpen('delete')}>
                       <IconifyIcon icon='mdi-light:delete' />
-                    </Button>
-                  </Tooltip>
-                  <Tooltip title={t('Tahrirlash')} placement='top'>
-                    <Button variant='outlined' color='success' onClick={() => {
-                      getTeachers()
-                      getCourses()
-                      getRooms()
-                      handleEditClickOpen('edit')
-                    }}>
-                      <IconifyIcon icon='circum:edit' />
                     </Button>
                   </Tooltip>
                   <Tooltip title="SMS yuborish" placement='top'>
@@ -609,7 +585,7 @@ const UserViewLeft = ({ userData, reRender }: { userData?: any, reRender: any })
           aria-describedby='user-view-edit-description'
         >
           <DialogTitle id='user-view-edit' sx={{ textAlign: 'center', fontSize: '1.5rem !important' }}>
-            {t("Guruh o'chirib tashlash")}
+            {t("Guruh o'chirib tashlamoqchimisiz?")}
           </DialogTitle>
           <DialogActions sx={{ justifyContent: 'center' }}>
             <Button variant='outlined' color='error' onClick={handleEditClose}>

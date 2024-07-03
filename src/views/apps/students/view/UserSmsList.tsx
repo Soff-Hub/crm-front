@@ -15,6 +15,7 @@ import { useTranslation } from 'react-i18next'
 import showResponseError from 'src/@core/utils/show-response-error'
 import { useRouter } from 'next/router'
 import useSMS from 'src/hooks/useSMS'
+import EmptyContent from 'src/@core/components/empty-content'
 
 
 
@@ -47,7 +48,7 @@ const UserSmsList = () => {
     const handleAddNote = async (value: any) => {
         setLoading(true)
         try {
-            await api.post('auth/student/description/', { user: query.student, ...value })
+            await api.post('common/send-message-user/', { users: [Number(query.student)], ...value })
             getSmsList()
             setLoading(false)
             setOpen(false)
@@ -68,13 +69,13 @@ const UserSmsList = () => {
             </Box>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                 {
-                    data ? data.map((el: any) => (
+                    data && data.length ? data.map((el: any) => (
                         <Card sx={{ maxWidth: '450px' }} key={el.id}>
                             <CardContent>
-                                <UserViewStudentsItem setOpenEdit={setOpen} key={el.id} item={el} />
+                                <UserViewStudentsItem setOpenEdit={setOpen} key={el.id} item={{ ...el, created_at: el.updated_at }} />
                             </CardContent>
                         </Card>
-                    )) : ''
+                    )) : <EmptyContent />
                 }
             </Box>
 

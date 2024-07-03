@@ -5,6 +5,7 @@ import {
     FormControlLabel,
     FormHelperText,
     FormLabel,
+    InputLabel,
     Radio,
     RadioGroup,
     styled,
@@ -22,6 +23,8 @@ import { fetchTeachersList, updateTeacher } from 'src/store/apps/mentors';
 import { UpdateTeacherDto } from 'src/types/apps/mentorsTypes';
 import { useEffect, useRef, useState } from 'react';
 import { TeacherAvatar } from './AddMentorsModal';
+import PhoneInput from 'src/@core/components/phone-input';
+import { reversePhone } from 'src/@core/components/phone-input/format-phone-number';
 
 export const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
@@ -35,10 +38,6 @@ export const VisuallyHiddenInput = styled('input')({
     width: 1,
 });
 
-interface EditTeacherModalProps {
-    initialValues: UpdateTeacherDto
-}
-
 export default function EditTeacherModal() {
     const { teacherData } = useAppSelector(state => state.mentors)
     // ** Hooks 
@@ -51,16 +50,16 @@ export default function EditTeacherModal() {
     const [image, setImage] = useState<any>(null)
 
     const initialValues: UpdateTeacherDto = {
-        first_name: "",
-        phone: "",
-        birth_date: "",
-        activated_at: "",
-        gender: 'male',
-        image: null,
-        is_fixed_salary: false,
+        first_name: teacherData?.first_name,
+        phone: teacherData?.phone,
+        birth_date: teacherData?.birth_date,
+        activated_at: teacherData?.activated_at,
+        gender: teacherData?.gender,
+        image: teacherData?.image,
+        is_fixed_salary: teacherData?.is_fixed_salary,
         password: "",
-        percentage: "",
-        amount: ""
+        percentage: teacherData?.percentage,
+        amount: teacherData?.amount
     }
 
     const validationSchema = () => {
@@ -99,6 +98,8 @@ export default function EditTeacherModal() {
             for (const [key, value] of Object.entries(values)) {
                 if (!['image'].includes(key)) {
                     if (key == "password" && value == "") {
+                    } else if (key === 'phone') {
+                        newValues.append(key, reversePhone(value))
                     } else newValues.append(key, value)
                 }
             }
@@ -134,10 +135,16 @@ export default function EditTeacherModal() {
 
     const handleCheckboxChange = (event: React.SyntheticEvent, checked: boolean) => {
         formik.setFieldValue("is_fixed_salary", checked)
-        formik.setFieldValue("amount", "")
-        formik.setFieldValue("percentage", "")
-
+        formik.setFieldValue("amount", 0)
+        formik.setFieldValue("percentage", 0)
     }
+
+    useEffect(() => {
+
+        return () => {
+            formik.resetForm()
+        }
+    }, [])
 
     return (
         <Box width={'100%'}>
@@ -167,7 +174,14 @@ export default function EditTeacherModal() {
                 </FormControl>
 
                 <FormControl sx={{ width: '100%' }}>
-                    <TextField label={t("phone")} name='phone' onChange={formik.handleChange} onBlur={formik.handleBlur} value={formik.values.phone} error={!!formik.errors.phone && formik.touched.phone} defaultValue={"+998"} />
+                    <InputLabel error={!!formik.errors.phone && formik.touched.phone} htmlFor="login-input">{t('phone')}</InputLabel>
+                    <PhoneInput
+                        label={t("phone")}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.phone}
+                        error={!!formik.errors.phone && formik.touched.phone}
+                    />
                     <FormHelperText error>
                         {(!!formik.errors.phone && formik.touched.phone) && formik.errors.phone}
                     </FormHelperText>

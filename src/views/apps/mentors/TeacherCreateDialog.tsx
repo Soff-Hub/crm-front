@@ -59,7 +59,7 @@ export default function TeacherCreateDialog() {
                         <IconifyIcon icon='mdi:close' fontSize={20} />
                     </IconButton>
                 </Box>
-                <AddMentorsModal />
+                {openEdit && <AddMentorsModal />}
             </Drawer>
         </>
     )

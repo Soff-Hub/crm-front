@@ -73,5 +73,8 @@
     "thursday": "Payshanba",
     "friday": "Juma",
     "saturday": "Shanba",
-    "sunday": "Yakshanba"
+    "sunday": "Yakshanba",
+    "active": "aktiv",
+    "archive": "arxiv",
+    "test": "sinov"
 }

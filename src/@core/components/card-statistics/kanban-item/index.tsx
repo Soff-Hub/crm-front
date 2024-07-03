@@ -101,7 +101,6 @@ const KanbanItem = (props: KanbarItemProps) => {
         try {
             const resp = await api.get(`leads/${endpoint}/${id}/`)
             setLeadDetail(resp.data)
-            console.log(resp.data);
 
             setLoading(false)
         } catch {
@@ -238,8 +237,8 @@ const KanbanItem = (props: KanbarItemProps) => {
                                         {
                                             leadDetail.length > 0 ? leadDetail.map((el: any) => (
                                                 <Box sx={{ border: '1px solid #c3cccc', padding: '5px', borderRadius: '8px', display: 'flex', flexDirection: 'column', gap: el?.variants?.length ? '0px' : '6px' }}>
-                                                    <Typography fontSize={12}>Savol: {el.application_form}</Typography>
-                                                    <Typography fontSize={12}>{el.admin} {el.answer}</Typography>
+                                                    <Typography fontSize={12}>{t('Savol')}: {el.application_form}</Typography>
+                                                    <Typography fontSize={12}>Javob:{el.admin} {el.answer}</Typography>
                                                     {
                                                         el?.variants?.map((item: any) => <Typography style={{ display: 'flex', alignItems: 'center' }} fontSize={10}><Checkbox size='small' checked={item?.is_checked} /> {item.value}</Typography>)
                                                     }

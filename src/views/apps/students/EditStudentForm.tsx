@@ -18,6 +18,8 @@ import { useAppDispatch, useAppSelector } from 'src/store';
 import useGroups from 'src/hooks/useGroups';
 import useResponsive from 'src/@core/hooks/useResponsive';
 import SubLoader from '../loaders/SubLoader';
+import PhoneInput from 'src/@core/components/phone-input';
+import { reversePhone } from 'src/@core/components/phone-input/format-phone-number';
 
 
 export default function EditStudentForm() {
@@ -57,7 +59,7 @@ export default function EditStudentForm() {
         validationSchema,
         onSubmit: async (valuess: UpdateStudentDto) => {
             setLoading(true)
-            const newVlaues = { ...valuess, phone: `+998${valuess.phone}` }
+            const newVlaues = { ...valuess, phone: reversePhone(valuess.phone) }
 
             const resp = await dispatch(updateStudent(newVlaues))
 
@@ -100,17 +102,14 @@ export default function EditStudentForm() {
 
             <FormControl sx={{ width: '100%' }}>
                 <InputLabel error={!!errors.phone && touched.phone} htmlFor="outlined-adornment-password">{t('phone')}</InputLabel>
-                <OutlinedInput
+                <PhoneInput
                     id='outlined-adornment-password'
-                    size='small'
                     label={t("phone")}
                     name='phone'
                     error={!!errors.phone && touched.phone}
                     value={values.phone}
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    startAdornment="+998"
-                    type='number'
                 />
                 {errors.phone && touched.phone && <FormHelperText error={true}>{errors.phone}</FormHelperText>}
             </FormControl>
