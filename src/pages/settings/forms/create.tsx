@@ -243,7 +243,7 @@ export default function CreateForm({ }: Props) {
                             <TextField label={t("phone")} size='small' variant='filled' defaultValue={"+998"} />
                         </FormControl>
                         {
-                            components.map((el: any, i: number) => <CreatedComponent variants={el.question_variants} key={i} type={el.input_type} label={el.name} />)
+                            components.map((el: any, i: number) => <CreatedComponent variants={el.question_variants} key={i} type={el.input_type} label={el.title} />)
                         }
 
                         <LoadingButton variant="contained" color='success' type="submit" size='large' sx={{ mt: 5 }} fullWidth>
@@ -283,9 +283,9 @@ export default function CreateForm({ }: Props) {
 
             <Dialog open={open === 'single'} onClose={handleClose}>
                 <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: '20px', minWidth: '350px' }}>
-                    <ButtonGroup size='small'>
-                        <Button onClick={() => setSelectType('single')} variant={selectType === 'single' ? 'outlined' : 'text'} size='medium'>{t('Bitta javob')}</Button>
-                        <Button onClick={() => setSelectType('multiple')} variant={selectType === 'multiple' ? 'outlined' : 'text'} size='medium'>{t('Bir nechta javob')}</Button>
+                    <ButtonGroup size='small' fullWidth>
+                        <Button onClick={() => setSelectType('single')} variant={selectType === 'single' ? 'contained' : 'outlined'} size='small'>{t('Bitta javob')}</Button>
+                        <Button onClick={() => setSelectType('multiple')} variant={selectType === 'multiple' ? 'contained' : 'outlined'} size='small'>{t('Bir nechta javob')}</Button>
                     </ButtonGroup>
                     <FormControl>
                         <TextField label={t("Savol matni")} multiline rows={2} size='small' onChange={(e) => setName(e.target.value)} />

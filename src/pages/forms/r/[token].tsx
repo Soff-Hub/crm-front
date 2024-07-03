@@ -203,7 +203,7 @@ function RequestForm({ uuid }: InferGetStaticPropsType<typeof getServerSideProps
                 backgroundImage: `url('/images/request-form-bg.svg')`,
                 backgroundRepeat: 'repeat-y',
                 overflowY: 'scroll',
-                paddingTop: '50px',
+                paddingTop: '200px',
             }}
         >
             <Box

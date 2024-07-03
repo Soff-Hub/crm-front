@@ -1,4 +1,4 @@
-import { Box, Button, Typography } from '@mui/material';
+import { Box, Button, Chip, Typography } from '@mui/material';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import IconifyIcon from 'src/@core/components/icon';
@@ -7,7 +7,7 @@ import { useAppDispatch, useAppSelector } from 'src/store';
 import { setOpenEdit } from 'src/store/apps/students';
 
 const StudentsPageHeader = () => {
-    const { studentsCount } = useAppSelector(state => state.students)
+    const { studentsCount, isLoading } = useAppSelector(state => state.students)
 
     const { t } = useTranslation()
     const dispatch = useAppDispatch()
@@ -21,11 +21,7 @@ const StudentsPageHeader = () => {
             >
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
                     <Typography variant='h5'>{t("O'quvchilar")}</Typography>
-                    <Typography
-                        style={{ display: 'flex', alignItems: 'center', gap: '5px', padding: '0 10px', border: '1px solid #c3cccc', borderRadius: '10px' }}
-                    >
-                        {studentsCount} ta
-                    </Typography>
+                    {!isLoading && <Chip label={`${studentsCount} ta`} variant='outlined' color="primary" size="medium" />}
                 </Box>
                 <Button
                     onClick={() => dispatch(setOpenEdit('create'))}

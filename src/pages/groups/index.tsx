@@ -42,20 +42,6 @@ export interface customTableProps {
   render?: (source: string) => any | undefined
 }
 
-const Drawer = styled(MuiDrawer)<DrawerProps>(({ theme }) => ({
-  width: 400,
-  zIndex: theme.zIndex.modal,
-  '& .MuiFormControlLabel-root': {
-    marginRight: '0.6875rem'
-  },
-  '& .MuiDrawer-paper': {
-    border: 0,
-    width: 400,
-    zIndex: theme.zIndex.modal,
-    boxShadow: theme.shadows[9]
-  }
-}))
-
 export const TranslateWeekName: any = {
   monday: "Dushanba",
   tuesday: "Seshanba",
@@ -173,11 +159,7 @@ export default function GroupsPage() {
       >
         <Box sx={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
           <Typography variant='h5'>{t("Guruhlar")}</Typography>
-          <Typography
-            style={{ display: 'flex', alignItems: 'center', gap: '5px', padding: '0 10px', border: '1px solid #c3cccc', borderRadius: '10px' }}
-          >
-            {groupCount} ta
-          </Typography>
+          {!isLoading && <Chip label={`${groupCount} ta`} variant='outlined' color="primary" />}
         </Box>
         <Button
           onClick={handleOpenModal}
