@@ -15,6 +15,7 @@ import showResponseError from 'src/@core/utils/show-response-error'
 import { useRouter } from 'next/router'
 import IconifyIcon from 'src/@core/components/icon'
 import EmptyContent from 'src/@core/components/empty-content'
+import SubLoader from '../../../loaders/SubLoader'
 
 
 // interface ItemTypes {
@@ -40,9 +41,11 @@ const UserViewOverview = () => {
   const { query } = useRouter()
 
   const getNotes = async () => {
+    setLoading(true)
     try {
       const resp = await api.get('common/group-description/list/' + query.id)
       setData(resp.data.results)
+      setLoading(false)
     } catch (err: any) {
       setLoading(false)
     }
@@ -62,8 +65,9 @@ const UserViewOverview = () => {
   }
 
   useEffect(() => {
-    getNotes()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    (async function () {
+      await getNotes()
+    })()
   }, [])
 
   return (
@@ -72,11 +76,11 @@ const UserViewOverview = () => {
         <Button startIcon={<IconifyIcon icon='ic:baseline-add' />} onClick={() => setOpen(true)} sx={{ marginLeft: 'auto' }} variant='contained' size='small'>{t('Yangi eslatma')}</Button>
       </Box>
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-        {
+        {loading ? <SubLoader /> :
           data && data?.length > 0 ? data?.map((el: any) => (
             <Card key={el.id} sx={{ maxWidth: '450px' }}>
               <CardContent>
-                <StudentsNotesList setOpenEdit={() => setOpen(true)} comment={el} />
+                <StudentsNotesList setOpenEdit={setOpen} comment={el} />
               </CardContent>
             </Card>
 

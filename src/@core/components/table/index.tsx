@@ -53,7 +53,7 @@ export default function DataTable({ columns, loading = false, data, minWidth, ma
         ))}
       </Box>
       {loading ? <SubLoader /> :
-        data.length > 0 ? data.map((item, index) => {
+        data?.length > 0 ? data?.map((item, index) => {
           return (
             <Box
               minWidth={minWidth || '1200px'}

@@ -62,20 +62,39 @@ export const deleteGroup = createAsyncThunk('delete/group', async (id: string, {
     return rejectWithValue(err.message)
   }
 })
+
 export const getSMSTemp = createAsyncThunk('getSMSTemp', async () => {
   const resp = await api.get('common/sms-form/list/')
   return resp.data
 })
 
+export const getExams = createAsyncThunk('getExams', async (id: string | string[] | undefined) => {
+  const resp = await api.get('common/exam/' + id)
+  return resp.data
+})
+export const getResults = createAsyncThunk(
+  'getResults',
+  async ({ groupId, examId }: { groupId: string | string[] | undefined; examId: string }) => {
+    const resp = await api.get(`common/exam/student/result/${examId}/group/${groupId}/`)
+    return resp.data
+  }
+)
+
 const initialState: IGroupDetailsState = {
-  groupData: null,
   courses: null,
+  exams: null,
+  open: null,
+  groupData: null,
   smsTemps: null,
   teachers: null,
+  isOpenDelete: false,
   students: null,
   attendance: null,
   days: null,
   rooms: null,
+  results: null,
+  resultId: null,
+  editData: null,
   openEdit: null,
   queryParams: {
     status: 'active,new'
@@ -85,7 +104,9 @@ const initialState: IGroupDetailsState = {
   },
   isGettingGroupDetails: false,
   isGettingStudents: false,
-  isGettingAttendance: false
+  isGettingExams: false,
+  isGettingAttendance: false,
+  isGettingExamsResults: false
 }
 
 export const groupDetailsSlice = createSlice({
@@ -94,6 +115,18 @@ export const groupDetailsSlice = createSlice({
   reducers: {
     handleEditClickOpen: (state, action) => {
       state.openEdit = action.payload
+    },
+    setOpen: (state, action) => {
+      state.open = action.payload
+    },
+    setEditData: (state, action) => {
+      state.editData = action.payload
+    },
+    handleOpenDeleteNote: (state, action) => {
+      state.isOpenDelete = action.payload
+    },
+    setResultId: (state, action) => {
+      state.resultId = action.payload
     },
     updateParams: (state, action) => {
       state.queryParams = { ...state.queryParams, ...action.payload }
@@ -144,9 +177,36 @@ export const groupDetailsSlice = createSlice({
     builder.addCase(getDays.fulfilled, (state, action) => {
       state.days = action.payload
     })
+    builder.addCase(getExams.pending, state => {
+      state.isGettingExams = true
+    })
+    builder.addCase(getExams.fulfilled, (state, action) => {
+      state.exams = action.payload
+      state.isGettingExams = false
+    })
+    builder.addCase(getResults.pending, state => {
+      state.isGettingExamsResults = true
+    })
+    builder.addCase(getResults.fulfilled, (state, action) => {
+      state.results = action.payload
+      state.isGettingExamsResults = false
+    })
+    builder.addCase(getSMSTemp.fulfilled, (state, action) => {
+      state.smsTemps = action.payload
+    })
   }
 })
 
-export const { handleEditClickOpen, updateParams, resetStore, studentsUpdateParams, setGettingAttendance } =
-  groupDetailsSlice.actions
+export const {
+  handleEditClickOpen,
+  handleOpenDeleteNote,
+  updateParams,
+  resetStore,
+  studentsUpdateParams,
+  setGettingAttendance,
+  setOpen,
+  setEditData,
+  setResultId
+} = groupDetailsSlice.actions
+
 export default groupDetailsSlice.reducer

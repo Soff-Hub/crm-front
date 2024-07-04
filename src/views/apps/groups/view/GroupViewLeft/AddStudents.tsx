@@ -48,7 +48,7 @@ export default function AddStudents() {
             const data = {
                 ...values,
                 student: selectedStudents,
-                group: [groupData?.id]
+                groups: [groupData?.id]
             }
             const response = await dispatch(addStudentToGroup(data))
             if (response.meta.requestStatus === 'rejected') {
@@ -64,8 +64,8 @@ export default function AddStudents() {
                 }
                 dispatch(setGettingAttendance(false))
                 formik.resetForm()
+                setSelectedStudents(null)
             }
-            setSelectedStudents(null)
             setLoading(false)
         }
     })
