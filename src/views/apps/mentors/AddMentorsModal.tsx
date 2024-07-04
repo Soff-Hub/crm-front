@@ -173,6 +173,7 @@ export default function AddMentorsModal() {
                     <InputLabel error={!!formik.errors.phone && formik.touched.phone} htmlFor="login-input">{t('phone')}</InputLabel>
                     <PhoneInput
                         label={t("phone")}
+                        size='medium'
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                         value={formik.values.phone}

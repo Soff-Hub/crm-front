@@ -48,7 +48,7 @@ export default function EditTeacherModal() {
     // ** States
     const [loading, setLoading] = useState<boolean>(false)
     const [image, setImage] = useState<any>(null)
-    
+
 
     const initialValues: UpdateTeacherDto = {
         first_name: teacherData?.first_name,
@@ -182,6 +182,7 @@ export default function EditTeacherModal() {
                         onBlur={formik.handleBlur}
                         value={formik.values.phone}
                         error={!!formik.errors.phone && formik.touched.phone}
+                        size='medium'
                     />
                     <FormHelperText error>
                         {(!!formik.errors.phone && formik.touched.phone) && formik.errors.phone}
