@@ -1,30 +1,109 @@
 import LoadingButton from "@mui/lab/LoadingButton";
 import {
     Box,
+    Checkbox,
     Drawer,
     FormControl,
     FormHelperText,
     IconButton,
+    InputLabel,
+    MenuItem,
+    Select,
     TextField,
     Typography,
 } from "@mui/material";
-import Form from "src/@core/components/form";
+import { useFormik } from "formik";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import IconifyIcon from "src/@core/components/icon";
-import { useAppSelector } from "src/store";
+import useResponsive from "src/@core/hooks/useResponsive";
+import api from "src/@core/utils/api";
+import { useAppDispatch, useAppSelector } from "src/store";
+import { getExams, setOpen } from "src/store/apps/groupDetails";
+import { ExamType } from "./GroupExamsList";
+import * as Yup from "yup";
+
 
 export default function EditExam() {
-    const { resultId, isGettingExams, open, results } = useAppSelector(state => state.groupDetails)
-    const handleEditSubmit = async (values: any) => {
-        setLoading(true)
+    const { open, editData, exams } = useAppSelector(state => state.groupDetails)
+    const { query } = useRouter()
+    const dispatch = useAppDispatch()
+    const [exams2, setExams2] = useState<ExamType[]>([])
+    const [loading, setLoading] = useState(false)
+    const [reExam, setReExam] = useState(false)
+    const [parent, setParent] = useState<any>(null)
+
+    const { isMobile } = useResponsive()
+    const { t } = useTranslation()
+
+
+    const handleClose = () => {
+        setLoading(false)
+        dispatch(setOpen(null))
+        setParent(null)
+        formik.resetForm()
+        setReExam(false)
+    }
+
+    const getExams2 = async () => {
         try {
-            await api.patch('common/exam/update/' + editData.id, { ...values, group: Number(query.id) })
-            await getExams()
-            handleClose()
-        } catch (err: any) {
-            showResponseError(err.response.data, setError)
-            setLoading(false)
+            const resp = await api.get(`common/exam/parent/${query?.id}`)
+            setExams2(resp.data);
+        } catch (err) {
+            console.log(err)
         }
     }
+
+    const [initialValues, setInitialValues] = useState<any>({
+        title: editData?.title,
+        date: editData?.date,
+        max_score: editData?.max_score,
+        min_score: editData?.min_score
+    })
+
+    const formik = useFormik({
+        initialValues,
+        validationSchema: () => Yup.object({
+            title: Yup.string().required("Maydonni to'ldiring"),
+            date: Yup.string().required("Sanani tanlang"),
+            max_score: Yup.string().required("Maydonni to'ldiring"),
+            min_score: Yup.string().required("Maydonni to'ldiring")
+        }),
+        onSubmit: async (values) => {
+            setLoading(true)
+            try {
+                const response = await api.post('common/exam/create/', { ...values, group: Number(query.id) })
+                if (response.status == 201) {
+                    await dispatch(getExams(query?.id))
+                    formik.resetForm()
+                    setParent(null)
+                    setReExam(false)
+                }
+            } catch (e: any) {
+                formik.setErrors(e?.response.data)
+            }
+            setLoading(false)
+            dispatch(setOpen(null))
+        }
+    })
+
+    const setParentItem = (item: any) => {
+        formik.setFieldValue('parent', item?.id || null)
+        setParent(item)
+    }
+
+    console.log(formik.initialValues, editData);
+
+    useEffect(() => {
+        setInitialValues(editData)
+        if (editData?.parent) {
+            setReExam(true)
+            setParent(editData?.parent)
+            getExams2()
+        }
+    }, [editData])
+
     return (
         <Drawer open={open === 'edit'} anchor='right' variant='persistent'>
             <Box
@@ -35,9 +114,10 @@ export default function EditExam() {
                     borderBottom: theme => `1px solid ${theme.palette.divider}`,
                     width: isMobile ? '320px' : '400px'
                 }}
+                onClick={handleClose}
             >
                 <Typography variant='h6' sx={{ fontWeight: 600 }}>
-                    {t("Imtixonni tahrirlash")}
+                    {t("Imtixon qo'shish")}
                 </Typography>
                 <IconButton
                     sx={{
@@ -47,35 +127,86 @@ export default function EditExam() {
                         color: 'text.secondary',
                         transform: 'translateY(-50%)'
                     }}
-                    onClick={handleClose}
                 >
                     <IconifyIcon icon='mdi:close' fontSize={20} />
                 </IconButton>
             </Box>
-            {editData && <Form setError={setError} valueTypes="json" onSubmit={handleEditSubmit} id="update-exam" sx={{ padding: '15px', display: 'flex', flexDirection: 'column', gap: 12 }}>
+            {formik.initialValues?.title && <form onSubmit={formik.handleSubmit} style={{ padding: '15px', display: 'flex', flexDirection: 'column', gap: 12 }}>
+                <label style={{ display: 'flex', alignItems: 'center' }}>
+                    <Checkbox checked={reExam} onChange={async () => (!reExam && setParentItem(null), setReExam(!reExam), await getExams2())} />
+                    <Typography>{t("Qayta topshirish")}</Typography>
+                </label>
+                {reExam &&
+                    <FormControl fullWidth>
+                        <InputLabel size='small' id='demo-simple-select-outlined-label'>{t('Qaysi imtixon uchun?')}</InputLabel>
+                        <Select
+                            size='small'
+                            label={t("Qaysi imtixon uchun?")}
+                            value={parent?.id || editData?.parent}
+                            id='demo-simple-select-outlined'
+                            labelId='demo-simple-select-outlined-label'
+                            name="parent"
+                            onChange={(e: any) => setParentItem(exams2?.find(el => el.id === e.target.value))}
+                        >
+                            {
+                                exams2.map(exam => <MenuItem key={exam.id} value={exam.id}>{exam.title}</MenuItem>)
+                            }
+                        </Select>
+                    </FormControl>}
                 <FormControl>
-                    <TextField size='small' label={t("Imtixon nomi")} name='title' error={error.title?.error} defaultValue={editData?.title} />
-                    <FormHelperText error={error.title}>{error.title?.message}</FormHelperText>
+                    <TextField
+                        size='small'
+                        label={t("Imtixon nomi")}
+                        name='title'
+                        error={!!formik.errors.title && !!formik.touched.title}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values?.title}
+                    />
+                    <FormHelperText error>{!!formik.errors.title && !!formik.touched.title}</FormHelperText>
                 </FormControl>
 
                 <FormControl>
-                    <TextField size='small' type="date" label={t("Imtixon sanasi")} name='date' error={error.date?.error} defaultValue={editData?.date} />
-                    <FormHelperText error={error.date}>{error.date?.message}</FormHelperText>
+                    <TextField
+                        size='small'
+                        type="date"
+                        label={t("Imtixon sanasi")}
+                        name='date'
+                        value={formik.values?.date}
+                        error={!!formik.errors.date && !!formik.touched.date}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                    />
+                    <FormHelperText error>{!!formik.errors.date && !!formik.touched.date}</FormHelperText>
                 </FormControl>
 
                 <FormControl>
-                    <TextField size='small' label={t("O'tish ball")} name='min_score' error={error.min_score?.error} defaultValue={editData?.min_score} />
-                    <FormHelperText error={error.min_score}>{error.min_score?.message}</FormHelperText>
+                    <TextField
+                        size='small'
+                        label={t("O'tish ball")}
+                        name='min_score'
+                        value={formik.values?.min_score}
+                        error={!!formik.errors.min_score && !!formik.touched.min_score}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                    />
+                    <FormHelperText error>{!!formik.errors.min_score && !!formik.touched.min_score}</FormHelperText>
                 </FormControl>
 
                 <FormControl>
-                    <TextField size='small' label={t("Maksimal bal")} name='max_score' error={error.max_score?.error} defaultValue={editData?.max_score} />
-                    <FormHelperText error={error.max_score}>{error.max_score?.message}</FormHelperText>
+                    <TextField
+                        size='small'
+                        label={t("Maksimal bal")}
+                        name='max_score'
+                        value={formik.values?.max_score}
+                        error={!!formik.errors.max_score && !!formik.touched.max_score}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                    />
+                    <FormHelperText error>{!!formik.errors.max_score && !!formik.touched.max_score}</FormHelperText>
                 </FormControl>
-
                 <LoadingButton loading={loading} variant="outlined" type="submit">{t('Saqlash')}</LoadingButton>
-            </Form>}
+            </form>}
         </Drawer>
-
     )
 }
