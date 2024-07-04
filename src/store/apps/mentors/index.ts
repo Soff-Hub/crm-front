@@ -1,15 +1,11 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import api from 'src/@core/utils/api'
-import { LeadsQueryParamsTypes } from 'src/types/apps/leadsTypes'
-import { IMentorsState, UpdateTeacherDto } from 'src/types/apps/mentorsTypes'
+import { IMentorsState } from 'src/types/apps/mentorsTypes'
 
 // ** Fetch All Departments
-export const fetchTeachersList = createAsyncThunk(
-  'mentors/fetchTeachersList',
-  async (params?: LeadsQueryParamsTypes | undefined) => {
-    return (await api.get(`auth/teachers/`, { params })).data
-  }
-)
+export const fetchTeachersList = createAsyncThunk('mentors/fetchTeachersList', async (queryString?: string) => {
+  return (await api.get(`auth/teachers/?` + queryString)).data
+})
 
 export const fetchTeacherdetail = createAsyncThunk('mentors/fetchTeacherdetail', async (id: number) => {
   return (await api.get(`auth/teachers/${id}`)).data
@@ -42,17 +38,20 @@ export const updateTeacher = createAsyncThunk(
   }
 )
 
-export const deleteTeacher = createAsyncThunk('mentors/deleteTeacher', async (id: number | any, { rejectWithValue }) => {
-  try {
-    const resp = await api.delete(`auth/delete/employee/${id}/`)
-    return resp.data
-  } catch (err: any) {
-    if (err.response) {
-      return rejectWithValue(err.response.data)
+export const deleteTeacher = createAsyncThunk(
+  'mentors/deleteTeacher',
+  async (id: number | any, { rejectWithValue }) => {
+    try {
+      const resp = await api.delete(`auth/delete/employee/${id}/`)
+      return resp.data
+    } catch (err: any) {
+      if (err.response) {
+        return rejectWithValue(err.response.data)
+      }
+      return rejectWithValue(err.message)
     }
-    return rejectWithValue(err.message)
   }
-})
+)
 
 const initialState: IMentorsState = {
   openEdit: null,

@@ -80,7 +80,7 @@ const UserViewOverview = () => {
           data && data?.length > 0 ? data?.map((el: any) => (
             <Card key={el.id} sx={{ maxWidth: '450px' }}>
               <CardContent>
-                <StudentsNotesList setOpenEdit={setOpen} comment={el} />
+                <StudentsNotesList getNotes={getNotes} setOpenEdit={setOpen} comment={el} />
               </CardContent>
             </Card>
 

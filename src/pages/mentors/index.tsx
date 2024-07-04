@@ -4,7 +4,7 @@ import {
   Pagination,
   Typography,
 } from '@mui/material';
-import { ReactNode, useEffect } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import IconifyIcon from 'src/@core/components/icon';
 import DataTable from 'src/@core/components/table';
 import { useTranslation } from 'react-i18next';
@@ -32,7 +32,7 @@ export default function GroupsPage() {
 
   // Stored Data
   const { teachers, teachersCount, isLoading } = useAppSelector(state => state.mentors)
-
+  const [page, setPage] = useState(1)
 
   const columns: customTableProps[] = [
     {
@@ -90,12 +90,18 @@ export default function GroupsPage() {
   }
 
   useEffect(() => {
-    dispatch(fetchTeachersList())
+    dispatch(fetchTeachersList(""))
 
     return () => {
       dispatch(setOpenEdit(null))
     }
   }, [])
+
+  const handlePagination = async (page: number) => {
+    setPage(page)
+    await dispatch(fetchTeachersList(new URLSearchParams({ page: String(page) }).toString()))
+  }
+
 
   return (
     <div>
@@ -115,7 +121,14 @@ export default function GroupsPage() {
         </Button>
       </Box>
       <DataTable loading={isLoading} columns={columns} data={teachers} rowClick={rowClick} />
-      {teachersCount > 1 && !isLoading && <Pagination defaultPage={1} count={teachersCount} variant="outlined" shape="rounded" />}
+      {teachersCount > 1 && !isLoading && <Pagination
+        defaultPage={page}
+        // page={page}
+        count={teachersCount}
+        variant="outlined"
+        shape="rounded"
+        onChange={(e: any, page) => handlePagination(e.target.value + page)}
+      />}
 
       <TeacherCreateDialog />
       <TeacherEditDialog />
