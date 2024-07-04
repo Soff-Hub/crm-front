@@ -23,6 +23,7 @@ import { useAppDispatch, useAppSelector } from "src/store";
 import { getExams, setOpen } from "src/store/apps/groupDetails";
 import { ExamType } from "./GroupExamsList";
 import * as Yup from "yup";
+import { today } from "src/@core/components/card-statistics/kanban-item";
 
 
 export default function AddExam() {
@@ -58,9 +59,10 @@ export default function AddExam() {
     const formik = useFormik({
         initialValues: {
             title: "",
-            date: "",
+            date: today,
             max_score: "",
-            min_score: ""
+            min_score: "",
+            parent: null
         },
         validationSchema: () => Yup.object({
             title: Yup.string().required("Maydonni to'ldiring"),
@@ -88,7 +90,7 @@ export default function AddExam() {
 
     const setParentItem = (item: any) => {
         console.log(item);
-        formik.setValues(item)
+        formik.setFieldValue('parent', item?.id || null)
         setParent(item)
     }
 

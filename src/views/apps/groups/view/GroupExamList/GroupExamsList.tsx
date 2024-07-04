@@ -9,6 +9,7 @@ import { useAppDispatch, useAppSelector } from "src/store";
 import { getExams, getResults, setEditData, setOpen, setResultId } from "src/store/apps/groupDetails";
 import AddExam from "./AddExam";
 import ExamResults from "./ExamResults";
+import EditExam from "./EditExam";
 
 export interface ExamType {
     id: number
@@ -88,6 +89,7 @@ const GroupExamsList = () => {
                     </div>
                     <DataTable rowClick={(id: any) => (dispatch(getResults({ groupId: query?.id, examId: id })), dispatch(setResultId(id)))} maxWidth="100%" minWidth="450px" loading={isGettingExams} data={exams} columns={columns} />
                     <AddExam />
+                    <EditExam/>
                 </Box>
             }
         </>
