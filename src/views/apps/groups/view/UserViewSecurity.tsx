@@ -129,21 +129,25 @@ const UserViewSecurity = () => {
 
   const handleClick = async (value: any) => {
     const queryString = new URLSearchParams(queryParams).toString()
-    await dispatch(getAttendance({ date: `${value.year}-${getMontNumber(value.date)}`, group: groupData?.id, queryString: queryString }))
-    await dispatch(getDays({ date: `${value.year}-${getMontNumber(value.date)}`, group: groupData?.id }))
+    await dispatch(getAttendance({ date: `${value.year}-${getMontNumber(value.date)}`, group: query?.id, queryString: queryString }))
+    await dispatch(getDays({ date: `${value.year}-${getMontNumber(value.date)}`, group: query?.id }))
     push({
       pathname,
-      query: { ...query, month: value.date, year: value.year, id: groupData?.id }
+      query: { ...query, month: value.date, year: value.year, id: query?.id }
     })
   }
 
   const handleTopicSubmit = async (hour: any) => {
     try {
-      const response = await api.post('common/topic/create/', { topic, group: groupData?.id, date: hour.date })
+      const response = await api.post('common/topic/create/', { topic, group: query?.id, date: hour.date })
       if (response.status == 201) {
         setOpenTooltip(null)
-        if (query.month && groupData?.id) {
-          await dispatch(getDays({ date: `${query?.year || new Date().getFullYear()}-${getMontNumber(query.month)}`, group: groupData?.id }))
+        if (query.month) {
+          await dispatch(getDays({ date: `${query?.year || new Date().getFullYear()}-${getMontNumber(query?.month)}`, group: query?.id }))
+        } else {
+          toast.error(`Saqlangan ma'lumotni bolmadi`, {
+            duration: 2000
+          })
         }
       } else {
         toast.error('Saqlab bolmadi', {
@@ -162,9 +166,9 @@ const UserViewSecurity = () => {
     (async function () {
       const queryString = new URLSearchParams(queryParams).toString()
       dispatch(setGettingAttendance(true))
-      if (query.month && groupData?.id) {
-        await dispatch(getAttendance({ date: `${query?.year || new Date().getFullYear()}-${getMontNumber(query.month)}`, group: groupData?.id, queryString: queryString }))
-        await dispatch(getDays({ date: `${query?.year || new Date().getFullYear()}-${getMontNumber(query.month)}`, group: groupData?.id }))
+      if (query?.month && query?.id) {
+        await dispatch(getAttendance({ date: `${query?.year || new Date().getFullYear()}-${getMontNumber(query?.month)}`, group: query?.id, queryString: queryString }))
+        await dispatch(getDays({ date: `${query?.year || new Date().getFullYear()}-${getMontNumber(query?.month)}`, group: query?.id }))
       }
       dispatch(setGettingAttendance(false))
     })()
@@ -185,7 +189,7 @@ const UserViewSecurity = () => {
                 <tr style={{ borderBottom: '1px solid #c3cccc' }}>
                   <td style={{ padding: '8px 0', textAlign: 'start', minWidth: '150px' }}><Typography>{t('Mavzular')}</Typography></td>
                   {
-                    attendance && days?.map((hour: any) => <td key={hour.date} style={{ textAlign: 'center', minWidth: '45px', padding: '8px 0', cursor: 'pointer', backgroundColor: hour.exam ? '#96f3a5' : hour.lesson ? '#a7c0fb' : 'transparent' }}>
+                    attendance && days?.map((hour: any) => <td key={hour.date} style={{ textAlign: 'center', width: '60px', padding: '8px 0', cursor: 'pointer', backgroundColor: hour.exam ? '#96f3a5' : hour.lesson ? '#a7c0fb' : 'transparent' }}>
                       <div>
                         {
                           hour.exam ? (
@@ -275,7 +279,7 @@ const UserViewSecurity = () => {
                 <tr style={{ borderBottom: '1px solid #c3cccc' }}>
                   <td style={{ padding: '8px 0', textAlign: 'start', borderRight: '1px solid #c3cccc', maxWidth: '100px', minWidth: "60px" }}><Typography>{t("O'quvchilar")}</Typography></td>
                   {
-                    attendance && days?.map((hour: any) => <th key={hour.date} style={{ textAlign: 'center', minWidth: '50px', padding: '8px 0', cursor: 'pointer' }}><Typography>{`${hour.date.split('-')[2]}`}</Typography></th>)
+                    attendance && days?.map((hour: any) => <th key={hour.date} style={{ textAlign: 'center', width: '60px', padding: '8px 0', cursor: 'pointer' }}><Typography>{`${hour.date.split('-')[2]}`}</Typography></th>)
                   }
                 </tr>
               </thead>
@@ -290,13 +294,13 @@ const UserViewSecurity = () => {
                             <td key={student.attendance.find((el: any) => el.date === hour.date).date} style={{ padding: '8px 0', textAlign: 'center', cursor: 'pointer' }}>
                               {
                                 student.attendance.find((el: any) => el.date === hour.date).is_available === true ? (
-                                  <Item opened_id={opened_id} setOpenedId={setOpenedId} defaultValue={true} groupId={groupData?.id} userId={student.id} date={hour.date} />
+                                  <Item opened_id={opened_id} setOpenedId={setOpenedId} defaultValue={true} groupId={query?.id} userId={student.id} date={hour.date} />
                                 ) :
                                   student.attendance.find((el: any) => el.date === hour.date).is_available === false ? (
-                                    <Item opened_id={opened_id} setOpenedId={setOpenedId} defaultValue={false} groupId={groupData?.id} userId={student.id} date={hour.date} />
+                                    <Item opened_id={opened_id} setOpenedId={setOpenedId} defaultValue={false} groupId={query?.id} userId={student.id} date={hour.date} />
                                   ) :
                                     student.attendance.find((el: any) => el.date === hour.date).is_available === null ? (
-                                      <Item opened_id={opened_id} setOpenedId={setOpenedId} defaultValue={null} groupId={groupData?.id} userId={student.id} date={hour.date} />
+                                      <Item opened_id={opened_id} setOpenedId={setOpenedId} defaultValue={null} groupId={query?.id} userId={student.id} date={hour.date} />
                                     ) : <></>
                               }
                             </td>

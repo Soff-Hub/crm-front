@@ -8,14 +8,22 @@ type ActionTypes = 'delete' | 'send-sms' | 'add-student' | 'notes' | 'edit'
 export interface IGroupDetailsState {
   groupData: null | any
   days: null | any
+  exams: null | any
+  open: 'add' | 'edit' | 'delete' | 'result' | null
   openEdit: null | ActionTypes
   isGettingGroupDetails: boolean
+  isGettingExams: boolean
   isGettingAttendance: boolean
   isGettingStudents: boolean
+  isGettingExamsResults: boolean
+  isOpenDelete: boolean
   rooms: BranchTypes[] | null
   teachers: TeacherType[] | null
   students: StudentDetailType[] | null
   attendance: any
+  results: any
+  editData: any
+  resultId: any
   courses: BranchTypes[] | null
   queryParams: {
     status: 'active,new' | 'archive'

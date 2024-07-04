@@ -1,11 +1,14 @@
-import React from 'react'
-import { Box, Typography } from '@mui/material'
-import Status from 'src/@core/components/status'
+import React from 'react';
+import { Box, Typography } from '@mui/material';
+import Status from 'src/@core/components/status';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Fade from '@mui/material/Fade';
 import IconifyIcon from 'src/@core/components/icon';
 import { formatDateTime } from 'src/@core/utils/date-formatter';
+import { handleOpenDeleteNote } from 'src/store/apps/groupDetails';
+import { useAppDispatch } from 'src/store';
+import Delete from './Delete';
 
 
 interface ItemTypes {
@@ -23,13 +26,15 @@ interface ItemChildTypes {
 
 export const UserViewStudentsItem = ({ item, setOpenEdit }: ItemChildTypes) => {
     const { created_at, body, admin } = item
-
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
+    const dispatch = useAppDispatch()
+
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
     };
-    const handleClose = (value: string) => {
+
+    const handleClose = (value: string | boolean) => {
         setAnchorEl(null);
         setOpenEdit?.(value)
     };
@@ -65,11 +70,10 @@ export const UserViewStudentsItem = ({ item, setOpenEdit }: ItemChildTypes) => {
                 }}
                 anchorEl={anchorEl}
                 open={open}
-                onClose={handleClose}
+                onClose={() => handleClose(false)}
                 TransitionComponent={Fade}
             >
-                <MenuItem onClick={() => handleClose('notes')}>Yangi eslatma</MenuItem>
-                <MenuItem onClick={() => handleClose('delete')}>O'chirish</MenuItem>
+                <MenuItem onClick={() => dispatch(handleOpenDeleteNote(true))}>O'chirish</MenuItem>
             </Menu>
         </Box>
     )
@@ -80,6 +84,7 @@ export default function StudentsNotesList({ comment, setOpenEdit }: any) {
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%', gap: '5px' }}>
             <UserViewStudentsItem setOpenEdit={setOpenEdit} item={comment} />
+            <Delete />
         </Box>
     )
 }
