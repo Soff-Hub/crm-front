@@ -102,8 +102,8 @@ export const updateWekend = createAsyncThunk('settings/updateWekend', async (dat
     }
 })
 
-export const fetchEmployees = createAsyncThunk('settings/fetchEmployees', async () => {
-    return (await api.get('auth/employees/')).data
+export const fetchEmployees = createAsyncThunk('settings/fetchEmployees', async (params: { search: string, page: number, role: number | string }) => {
+    return (await api.get('auth/employees/', { params })).data
 })
 
 export const createEmployee = createAsyncThunk('settings/createEmployee', async (data: any, { rejectWithValue }) => {
@@ -145,7 +145,14 @@ const initialState: SettingsState = {
     wekends: [],
     wekendData: null,
     employees: [],
-    employeeData: null
+    employeeData: null,
+    employees_count: 0,
+    queryParams: {
+        search: '',
+        page: 1,
+        role: ''
+    },
+    roles: []
 }
 
 export const settingsSlice = createSlice({
@@ -172,7 +179,10 @@ export const settingsSlice = createSlice({
         },
         setEmployeeData: (state, action) => {
             state.employeeData = action.payload
-        }
+        },
+        updateQueryParams: (state, action) => {
+            state.queryParams = { ...state.queryParams, ...action.payload }
+        },
     },
     extraReducers: builder => {
         builder
@@ -217,6 +227,8 @@ export const settingsSlice = createSlice({
             .addCase(fetchEmployees.fulfilled, (state, action) => {
                 state.is_pending = false
                 state.employees = action.payload?.results
+                state.employees_count = action.payload.count
+                state.roles = action.payload.roles
             })
     }
 })
@@ -228,7 +240,8 @@ export const {
     setOpenEditRoom,
     updatePage,
     setWekendData,
-    setEmployeeData
+    setEmployeeData,
+    updateQueryParams
 } = settingsSlice.actions
 
 export default settingsSlice.reducer

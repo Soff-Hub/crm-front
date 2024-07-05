@@ -117,7 +117,7 @@ const LoginPage = () => {
       <Box sx={{ flex: 1, display: 'flex', position: 'relative', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
         <LoginIllustrationWrapper sx={{ maxWidth: isMobile ? '300px' : '450px' }}>
           <Box sx={{ mb: 6 }}>
-            <TypographyStyled variant='h5'>{`Xush kelibsiz ${themeConfig.templateName}! ga 👋🏻`}</TypographyStyled>
+            <TypographyStyled variant='h5'>{`${themeConfig.templateName}! ga Xush kelibsiz 👋🏻`}</TypographyStyled>
             <Typography variant='body2'>Iltimos tizimga kirish uchun shaxsiy malumotlaringizni kiriting</Typography>
           </Box>
           <form noValidate autoComplete='off' onSubmit={handleSubmit(onSubmit)}>

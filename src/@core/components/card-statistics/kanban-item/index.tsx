@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react'
 import { styled } from '@mui/material/styles'
 import MuiMenu, { MenuProps } from '@mui/material/Menu'
 
-import { Box, Checkbox, Dialog, DialogContent, DialogTitle, FormControl, FormHelperText, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material'
+import { Box, Checkbox, CircularProgress, Dialog, DialogContent, DialogTitle, FormControl, FormHelperText, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material'
 
 import Card from '@mui/material/Card'
 import { AvatarProps } from '@mui/material/Avatar'
@@ -29,7 +29,6 @@ import Status from '../../status'
 import useSMS from 'src/hooks/useSMS'
 import useBranches from 'src/hooks/useBranch'
 import useGroups from 'src/hooks/useGroups'
-import { formatDateTime } from 'src/@core/utils/date-formatter'
 import { useAppDispatch, useAppSelector } from 'src/store'
 import KanbanItemMenu from './KanbanItemMenu'
 import EditAnonimDialogDialog from 'src/views/apps/lids/anonimUser/EditAnonimUserDialog'
@@ -60,6 +59,7 @@ const KanbanItem = (props: KanbarItemProps) => {
     const [open, setOpen] = useState<'edit' | 'merge-to' | 'sms' | 'delete' | 'note' | 'branch' | 'recover' | 'add-group' | null>(null)
     const [department, setDepartment] = useState<any>(null)
     const [loading, setLoading] = useState<boolean>(false)
+    const [loadingDetail, setLoadingDetail] = useState<boolean>(false)
     const [activeTab, setActiveTab] = useState<string>('tab-2')
     const [leadDetail, setLeadDetail] = useState([])
 
@@ -98,6 +98,7 @@ const KanbanItem = (props: KanbarItemProps) => {
 
     const getDepartmentItem = async (endpoint: 'lead-user-description' | 'anonim-user' | 'sms-history') => {
         setLoading(true)
+        setLoadingDetail(true)
         try {
             const resp = await api.get(`leads/${endpoint}/${id}/`)
             setLeadDetail(resp.data)
@@ -106,6 +107,7 @@ const KanbanItem = (props: KanbarItemProps) => {
         } catch {
             setLoading(false)
         }
+        setLoadingDetail(false)
     }
 
 
@@ -116,7 +118,7 @@ const KanbanItem = (props: KanbarItemProps) => {
                 anonim_user: id,
                 body: values.body
             })
-            getDepartmentItem('lead-user-description')
+            await getDepartmentItem('lead-user-description')
             toast.success(`${t("Eslatma yaratildi")}`, {
                 position: 'top-center'
             })
@@ -157,7 +159,8 @@ const KanbanItem = (props: KanbarItemProps) => {
         }
     }
 
-    const togglerTab = (value: any) => {
+    function togglerTab(value: any) {
+        setLoadingDetail(true)
         if (value === 'tab-1') {
             getDepartmentItem('anonim-user')
         } else if (value === 'tab-2') {
@@ -232,7 +235,7 @@ const KanbanItem = (props: KanbarItemProps) => {
                                 <Typography onClick={() => togglerTab('tab-3')} sx={{ fontSize: '12px', borderBottom: activeTab === 'tab-3' ? '2px solid #0d6efd' : '2px solid #c3cccc', px: 1 }} variant={activeTab === 'tab-3' ? 'body1' : 'body2'}>{t("SMS tarix")}</Typography>
                             </Box>
                             {
-                                activeTab === 'tab-1' ? (
+                                loadingDetail ? <CircularProgress disableShrink sx={{ mt: 1, mb: 2, mx: 'auto' }} size={25} /> : activeTab === 'tab-1' ? (
                                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                                         {
                                             leadDetail.length > 0 ? leadDetail.map((el: any) => (
@@ -243,7 +246,7 @@ const KanbanItem = (props: KanbarItemProps) => {
                                                         el?.variants?.map((item: any) => <Typography style={{ display: 'flex', alignItems: 'center' }} fontSize={10}><Checkbox size='small' checked={item?.is_checked} /> {item.value}</Typography>)
                                                     }
                                                 </Box>
-                                            )) : <Typography variant='body2' fontSize={'12px'} fontStyle={'italic'} textAlign={'center'}>{t("Bo'sh")}</Typography>
+                                            )) : <Typography variant='body2' fontSize={'12px'} fontStyle={'italic'} textAlign={'center'} my={5}>{t("Bo'sh")}</Typography>
                                         }
                                     </Box>
                                 ) : activeTab === 'tab-2' ? (
@@ -252,9 +255,9 @@ const KanbanItem = (props: KanbarItemProps) => {
                                             leadDetail.length > 0 ? leadDetail.map((el: any) => (
                                                 <Box sx={{ border: '1px solid #c3cccc', padding: '5px', borderRadius: '8px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
                                                     <Typography fontSize={12} fontStyle={'italic'}>{el.body}</Typography>
-                                                    <Typography fontSize={12}>{el.admin} {el.created_at}</Typography>
+                                                    <Typography fontSize={12}>{el.admin} {el.created_at.split(' ')[0].split('-').reverse().join('/')} {el.created_at.split(' ')[1].split('-').join(':')}</Typography>
                                                 </Box>
-                                            )) : <Typography variant='body2' fontSize={'12px'} fontStyle={'italic'} textAlign={'center'}>{t("Bo'sh")}</Typography>
+                                            )) : <Typography variant='body2' fontSize={'12px'} fontStyle={'italic'} textAlign={'center'} my={5}>{t("Bo'sh")}</Typography>
                                         }
                                     </Box>
                                 ) : (
@@ -263,9 +266,9 @@ const KanbanItem = (props: KanbarItemProps) => {
                                             leadDetail.length > 0 ? leadDetail.map((el: any) => (
                                                 <Box sx={{ border: '1px solid #c3cccc', padding: '5px', borderRadius: '8px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
                                                     <Typography fontSize={12} fontStyle={'italic'}>{el.message}</Typography>
-                                                    <Typography fontSize={12}>{el.user} {formatDateTime(el.created_at)}</Typography>
+                                                    <Typography fontSize={12}>{el.admin} {el.created_at.split(' ')[0].split('-').reverse().join('/')} {el.created_at.split(' ')[1].split('-').join(':')}</Typography>
                                                 </Box>
-                                            )) : <Typography variant='body2' fontSize={'12px'} fontStyle={'italic'} textAlign={'center'}>{t("Bo'sh")}</Typography>
+                                            )) : <Typography variant='body2' fontSize={'12px'} fontStyle={'italic'} textAlign={'center'} my={5}>{t("Bo'sh")}</Typography>
                                         }
                                     </Box>
                                 )
@@ -364,7 +367,7 @@ const KanbanItem = (props: KanbarItemProps) => {
                 </DialogTitle>
 
                 <DialogContent sx={{ minWidth: '300px' }}>
-                    <SendSmsAnonimUserForm smsTemps={smsTemps} user={props.id} closeModal={() => setOpen(null)} />
+                    <SendSmsAnonimUserForm smsTemps={smsTemps} user={props.id} closeModal={() => setOpen(null)} reRender={() => getDepartmentItem('sms-history')} />
                 </DialogContent>
             </Dialog>
 

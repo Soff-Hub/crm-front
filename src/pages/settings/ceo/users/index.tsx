@@ -1,8 +1,10 @@
 import {
     Box,
     Button,
+    CircularProgress,
     IconButton,
     Menu,
+    Pagination,
     Typography
 } from '@mui/material'
 import React, { MouseEvent, ReactNode, useEffect, useState } from 'react'
@@ -15,9 +17,10 @@ import useEmployee from 'src/hooks/useEmployee'
 import LoadingButton from '@mui/lab/LoadingButton'
 import EmployeeCreateDialog from 'src/views/apps/settings/employees/TeacherCreateDialog'
 import { useAppDispatch, useAppSelector } from 'src/store'
-import { fetchEmployees, setEmployeeData, setOpenCreateSms } from 'src/store/apps/settings'
+import { fetchEmployees, setEmployeeData, setOpenCreateSms, updateQueryParams } from 'src/store/apps/settings'
 import EditEmployeeModal from 'src/views/apps/settings/employees/TeacherEditDialog'
 import api from 'src/@core/utils/api'
+import ButtonGroup from '@mui/material/ButtonGroup';
 
 export interface customTableProps {
     xs: number
@@ -31,7 +34,7 @@ export default function GroupsPage() {
     // Hooks
     const { t } = useTranslation()
     const { getEmployeeById } = useEmployee()
-    const { employees, is_pending } = useAppSelector(state => state.settings)
+    const { employees, is_pending, employees_count, queryParams, roles } = useAppSelector(state => state.settings)
     const dispatch = useAppDispatch()
 
 
@@ -57,8 +60,8 @@ export default function GroupsPage() {
 
         const handleDeleteSubmit = async () => {
             setSmallLoading(true)
-            await api.delete(`auth/delete/employee/${id}`)
-            dispatch(fetchEmployees())
+            await api.delete(`auth/delete/employee/${id}/`)
+            dispatch(fetchEmployees(queryParams))
             setSmallLoading(false)
         }
 
@@ -90,13 +93,17 @@ export default function GroupsPage() {
                     PaperProps={{ style: { minWidth: '8rem' } }}
                 >
                     <MenuItem
-                        component={LoadingButton}
-                        loading={smallLoading}
                         onClick={getUserById}
                         sx={{ '& svg': { mr: 2 } }}
                     >
-                        <IconifyIcon icon='mdi:pencil-outline' fontSize={20} />
-                        {t('Tahrirlash')}
+                        {
+                            smallLoading ?
+                                <CircularProgress sx={{ mx: 'auto' }} size={28} /> :
+                                <>
+                                    <IconifyIcon icon='mdi:pencil-outline' fontSize={20} />
+                                    {t('Tahrirlash')}
+                                </>
+                        }
                     </MenuItem>
                     <MenuItem onClick={handleDelete} sx={{ '& svg': { mr: 2 } }}>
                         <IconifyIcon icon='mdi:delete-outline' fontSize={20} />
@@ -148,8 +155,37 @@ export default function GroupsPage() {
         }
     ]
 
+    const handleFilter = async (value: number | string) => {
+        dispatch(updateQueryParams({ role: value }))
+        await dispatch(fetchEmployees({ ...queryParams, role: value }))
+    }
+
+    const buttons = [
+        <Button
+            key={''}
+            onClick={() => handleFilter('')}
+            variant={queryParams.role === '' ? 'contained' : 'outlined'}
+        >
+            {t("Barchasi")} - {roles.reduce((accumulator, role) => accumulator + role.count, 0)}
+        </Button>,
+        ...roles.map(el => (
+            <Button
+                key={el.id}
+                onClick={() => handleFilter(el.id)}
+                variant={queryParams.role === el.id ? 'contained' : 'outlined'}
+            >
+                {t(el.name)} - {el.count}
+            </Button>
+        ))
+    ]
+
+    const handlePagination = (page: string) => {
+        dispatch(updateQueryParams({ page }))
+        dispatch(fetchEmployees({ ...queryParams, page: +page }))
+    }
+
     useEffect(() => {
-        dispatch(fetchEmployees())
+        dispatch(fetchEmployees(queryParams))
     }, [])
 
     return (
@@ -169,7 +205,22 @@ export default function GroupsPage() {
                     {t("Yangi qo'shish")}
                 </Button>
             </Box>
+
+            <Box
+                sx={{
+                    display: 'flex',
+                    '& > *': {
+                        m: 1,
+                    },
+                }}
+            >
+                <ButtonGroup size="small" aria-label="Small button group">
+                    {buttons}
+                </ButtonGroup>
+            </Box>
+
             <DataTable loading={is_pending} columns={columns} data={employees} />
+            {Math.ceil(employees_count / 10) > 1 && !is_pending && <Pagination defaultPage={queryParams.page ? Number(queryParams.page) : 1} count={Math.ceil(employees_count / 10)} variant="outlined" shape="rounded" onChange={(e: any, page) => handlePagination(e.target.value + page)} />}
 
             <EmployeeCreateDialog />
 

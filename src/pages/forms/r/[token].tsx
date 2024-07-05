@@ -180,8 +180,8 @@ function RequestForm({ uuid }: InferGetStaticPropsType<typeof getServerSideProps
     const getFormData = async () => {
         try {
             const resp = await api.get(`leads/forms/get/${uuid}/`)
-            setComponents(resp.data?.responce?.[0]?.questions)
-            setFormData(resp.data?.responce?.[0])
+            setComponents(resp.data?.response?.[0]?.questions)
+            setFormData(resp.data?.response?.[0])
         } catch (err: any) {
             console.log(err)
         }
