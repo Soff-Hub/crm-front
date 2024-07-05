@@ -95,15 +95,16 @@ export default function ExamResults() {
             title: t("Amallar"),
             dataIndex: 'result',
             render: (result: any) => (
-                <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-                    {
-                        result.score > 0 ? (
-                            <IconifyIcon icon='mdi:edit' fontSize={20} onClick={() => (setResultEdit(result.id), setOpen('result'))} />
-                        ) : (
-                            <IconifyIcon icon='fluent:add-32-regular' fontSize={20} onClick={() => (setResultEdit(result.id), setOpen('result'))} />
-                        )
-                    }
-                </div>
+                // <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+                //     {
+                //         result.score > 0 ? (
+                //             <IconifyIcon icon='mdi:edit' fontSize={20} onClick={() => (setResultEdit(result.id), setOpen('result'))} />
+                //         ) : (
+                //             <IconifyIcon icon='fluent:add-32-regular' fontSize={20} onClick={() => (setResultEdit(result.id), setOpen('result'))} />
+                //         )
+                //     }
+                // </div>
+                <></>
             ),
         },
     ]
@@ -137,7 +138,7 @@ export default function ExamResults() {
                         <IconifyIcon icon='mdi:close' fontSize={20} />
                     </IconButton>
                 </Box>
-                <Form setError={setError} valueTypes="json" onSubmit={sendResult} id="wtedtwetert" sx={{ padding: '15px', display: 'flex', flexDirection: 'column', gap: 12 }}>
+                {/* <Form setError={setError} valueTypes="json" onSubmit={sendResult} id="wtedtwetert" sx={{ padding: '15px', display: 'flex', flexDirection: 'column', gap: 12 }}>
 
                     <FormControl>
                         <TextField size='small' label={t("Natija")} type="number" name='score' error={error.score?.error} />
@@ -150,7 +151,7 @@ export default function ExamResults() {
                     </FormControl>
 
                     <LoadingButton loading={loading} variant="outlined" type="submit">Saqlash</LoadingButton>
-                </Form>
+                </Form> */}
             </Drawer>
         </Box>
     )
