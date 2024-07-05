@@ -1,21 +1,36 @@
 import LoadingButton from "@mui/lab/LoadingButton";
-import { Typography } from "@mui/material";
-import { useAppSelector } from "src/store";
+import { Dialog, DialogActions, DialogContent, Typography } from "@mui/material";
+import { useRouter } from "next/router";
+import { useState } from "react";
+import { toast } from "react-hot-toast";
+import api from "src/@core/utils/api";
+import { useAppDispatch, useAppSelector } from "src/store";
+import { getExams, setEditData, setOpen } from "src/store/apps/groupDetails";
 
 export default function DeleteExam() {
-    const { resultId, isGettingExams, open, results } = useAppSelector(state => state.groupDetails)
+    const { open, editData } = useAppSelector(state => state.groupDetails)
+    const [loading, setLoading] = useState(false)
+    const dispatch = useAppDispatch()
+    const { query } = useRouter()
+
+    const handleClose = () => {
+        dispatch(setOpen(null))
+        dispatch(setEditData(null))
+    }
 
     const handleDelete = async () => {
         setLoading(true)
         try {
-            await api.delete('common/exam/destroy/' + editData)
-            await getExams()
-            handleClose()
+            const response = await api.delete('common/exam/destroy/' + editData)
+            if (response.status == 204) {
+                handleClose()
+                toast.success("Ma'lumot o'chirildi")
+                await dispatch(getExams(query?.id))
+            } else toast.error("Ma'lumotni o'chirib bo'lmadi")
         } catch (err: any) {
-            setLoading(false)
-        }
+            toast.error("Ma'lumotni o'chirib bo'lmadi")
+        } finally { setLoading(false) }
     }
-
 
     return (
         <Dialog open={open === 'delete'}>

@@ -42,9 +42,9 @@ export default function AddExam() {
     const handleClose = () => {
         setLoading(false)
         dispatch(setOpen(null))
+        setReExam(false)
         setParent(null)
         formik.resetForm()
-        setReExam(false)
     }
 
     const getExams2 = async () => {
@@ -76,21 +76,20 @@ export default function AddExam() {
                 const response = await api.post('common/exam/create/', { ...values, group: Number(query.id) })
                 if (response.status == 201) {
                     await dispatch(getExams(query?.id))
-                    formik.resetForm()
                     setParent(null)
+                    formik.resetForm()
                     setReExam(false)
+                    dispatch(setOpen(null))
                 }
             } catch (e: any) {
                 formik.setErrors(e?.response.data)
             }
             setLoading(false)
-            dispatch(setOpen(null))
         }
     })
 
     const setParentItem = (item: any) => {
-        console.log(item);
-        formik.setFieldValue('parent', item?.id || null)
+        formik.setFieldValue("parent", item?.id)
         setParent(item)
     }
 
@@ -123,7 +122,7 @@ export default function AddExam() {
             </Box>
             <form onSubmit={formik.handleSubmit} style={{ padding: '15px', display: 'flex', flexDirection: 'column', gap: 12 }}>
                 <label style={{ display: 'flex', alignItems: 'center' }}>
-                    <Checkbox checked={reExam} onChange={async () => (!reExam && setParentItem(null), setReExam(!reExam), await getExams2())} />
+                    <Checkbox checked={reExam} onChange={async () => (!reExam && setParentItem(null), formik.resetForm(), setReExam(!reExam), await getExams2())} />
                     <Typography>{t("Qayta topshirish")}</Typography>
                 </label>
                 {reExam &&
@@ -132,16 +131,18 @@ export default function AddExam() {
                         <Select
                             size='small'
                             label={t("Qaysi imtixon uchun?")}
-                            value={parent?.id || ""}
+                            value={formik.values.parent || ""}
                             id='demo-simple-select-outlined'
                             labelId='demo-simple-select-outlined-label'
                             name="parent"
+                            error={!!formik.errors.parent && formik.touched.parent}
                             onChange={(e: any) => setParentItem(exams2?.find(el => el.id === e.target.value))}
                         >
                             {
                                 exams2.map(exam => <MenuItem value={exam.id}>{exam.title}</MenuItem>)
                             }
                         </Select>
+                        <FormHelperText error>{!!formik.errors.parent && formik.touched.parent && formik.errors.parent}</FormHelperText>
                     </FormControl>}
                 <FormControl>
                     <TextField

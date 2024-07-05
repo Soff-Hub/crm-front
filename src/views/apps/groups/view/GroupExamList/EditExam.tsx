@@ -55,15 +55,14 @@ export default function EditExam() {
         }
     }
 
-    const [initialValues, setInitialValues] = useState<any>({
-        title: editData?.title,
-        date: editData?.date,
-        max_score: editData?.max_score,
-        min_score: editData?.min_score
-    })
-
     const formik = useFormik({
-        initialValues,
+        initialValues: {
+            title: "",
+            date: "",
+            max_score: "",
+            min_score: "",
+            parent: null
+        },
         validationSchema: () => Yup.object({
             title: Yup.string().required("Maydonni to'ldiring"),
             date: Yup.string().required("Sanani tanlang"),
@@ -73,8 +72,8 @@ export default function EditExam() {
         onSubmit: async (values) => {
             setLoading(true)
             try {
-                const response = await api.post('common/exam/create/', { ...values, group: Number(query.id) })
-                if (response.status == 201) {
+                const response = await api.patch('common/exam/update/' + editData.id, { ...values, group: Number(query.id) })
+                if (response.status == 200) {
                     await dispatch(getExams(query?.id))
                     formik.resetForm()
                     setParent(null)
@@ -93,10 +92,8 @@ export default function EditExam() {
         setParent(item)
     }
 
-    console.log(formik.initialValues, editData);
-
     useEffect(() => {
-        setInitialValues(editData)
+        formik.setValues(editData)
         if (editData?.parent) {
             setReExam(true)
             setParent(editData?.parent)
@@ -117,7 +114,7 @@ export default function EditExam() {
                 onClick={handleClose}
             >
                 <Typography variant='h6' sx={{ fontWeight: 600 }}>
-                    {t("Imtixon qo'shish")}
+                    {t("Imtixon yangilash")}
                 </Typography>
                 <IconButton
                     sx={{
@@ -131,7 +128,7 @@ export default function EditExam() {
                     <IconifyIcon icon='mdi:close' fontSize={20} />
                 </IconButton>
             </Box>
-            {formik.initialValues?.title && <form onSubmit={formik.handleSubmit} style={{ padding: '15px', display: 'flex', flexDirection: 'column', gap: 12 }}>
+            {<form onSubmit={formik.handleSubmit} style={{ padding: '15px', display: 'flex', flexDirection: 'column', gap: 12 }}>
                 <label style={{ display: 'flex', alignItems: 'center' }}>
                     <Checkbox checked={reExam} onChange={async () => (!reExam && setParentItem(null), setReExam(!reExam), await getExams2())} />
                     <Typography>{t("Qayta topshirish")}</Typography>
