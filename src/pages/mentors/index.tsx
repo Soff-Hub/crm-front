@@ -122,8 +122,7 @@ export default function GroupsPage() {
       </Box>
       <DataTable loading={isLoading} columns={columns} data={teachers} rowClick={rowClick} />
       {teachersCount > 1 && !isLoading && <Pagination
-        defaultPage={page}
-        // page={page}
+        defaultPage={Number(page)}
         count={teachersCount}
         variant="outlined"
         shape="rounded"
