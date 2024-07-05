@@ -18,7 +18,7 @@ import showResponseError from "src/@core/utils/show-response-error"
 import usePayment from "src/hooks/usePayment"
 import { customTableProps } from "src/pages/groups"
 import { useAppDispatch, useAppSelector } from "src/store"
-import { fetchStudentPayment } from "src/store/apps/students"
+import { fetchStudentDetail, fetchStudentPayment } from "src/store/apps/students"
 
 // Rasm yuklab olish misoli
 export async function downloadImage(filename: string, url: string) {
@@ -60,7 +60,7 @@ const UserViewSecurity = ({ groupData }: any) => {
   const { paymentMethods, getPaymentMethod, updatePayment, deletePayment } = usePayment()
 
   const handleEdit = (id: any) => {
-    setEdit(data.find((el: any) => el.id === id))
+    setEdit(payments.find((el: any) => el.id === id))
   }
 
   const handlePrint = useCallback(async (id: number | string) => {
@@ -151,7 +151,8 @@ const UserViewSecurity = ({ groupData }: any) => {
       setLoading(false)
       setEdit(null)
 
-      return await dispatch(fetchStudentPayment(query?.student))
+      await dispatch(fetchStudentPayment(query?.student))
+      await dispatch(fetchStudentDetail(Number(query?.student)))
     } catch (err: any) {
       showResponseError(err.response.data, setError)
       setLoading(false)
@@ -164,6 +165,7 @@ const UserViewSecurity = ({ groupData }: any) => {
     setLoading(false)
     setDelete(false)
     await dispatch(fetchStudentPayment(query?.student))
+    await dispatch(fetchStudentDetail(Number(query?.student)))
   }
 
   useEffect(() => {

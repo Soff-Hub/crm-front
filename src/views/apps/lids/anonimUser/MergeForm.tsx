@@ -5,7 +5,7 @@ import { FormControl, FormHelperText, InputLabel, MenuItem, Select } from '@mui/
 import LoadingButton from '@mui/lab/LoadingButton';
 import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from 'src/store';
-import { updateDepartmentStudent } from 'src/store/apps/leads';
+import { fetchDepartmentList, updateDepartmentStudent } from 'src/store/apps/leads';
 
 
 type Props = {
@@ -39,7 +39,8 @@ export default function MergeToDepartment({ item, reRender }: Props) {
             if (resp.meta.requestStatus === 'rejected') {
                 formik.setErrors(resp.payload)
             } else {
-                await reRender()
+                // await reRender()
+                await dispatch(fetchDepartmentList())
                 formik.resetForm()
             }
         }

@@ -12,12 +12,14 @@ type Props = {
     smsTemps: any[]
     user: any
     closeModal: any
+    reRender: any
 }
 
 export default function SendSmsAnonimUserForm({
     smsTemps,
     user,
-    closeModal
+    closeModal,
+    reRender
 }: Props) {
 
     const { t } = useTranslation()
@@ -44,6 +46,7 @@ export default function SendSmsAnonimUserForm({
                 toast.success(`${t("SMS muvaffaqiyatli jo'natildi!")}`, {
                     position: 'top-center'
                 })
+                await reRender()
                 setLoading(false)
                 closeModal()
                 formik.resetForm()
