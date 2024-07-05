@@ -25,7 +25,7 @@ interface ItemChildTypes {
 
 
 export const UserViewStudentsItem = ({ item, setOpenEdit }: ItemChildTypes) => {
-    const { created_at, body, admin } = item
+    const { created_at, body, admin, id } = item
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
     const dispatch = useAppDispatch()
@@ -73,18 +73,18 @@ export const UserViewStudentsItem = ({ item, setOpenEdit }: ItemChildTypes) => {
                 onClose={() => handleClose(false)}
                 TransitionComponent={Fade}
             >
-                <MenuItem onClick={() => dispatch(handleOpenDeleteNote(true))}>O'chirish</MenuItem>
+                <MenuItem onClick={() => dispatch(handleOpenDeleteNote(id))}>O'chirish</MenuItem>
             </Menu>
         </Box>
     )
 }
 
-export default function StudentsNotesList({ comment, setOpenEdit }: any) {
+export default function StudentsNotesList({ getNotes, comment, setOpenEdit }: any) {
 
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%', gap: '5px' }}>
             <UserViewStudentsItem setOpenEdit={setOpenEdit} item={comment} />
-            <Delete />
+            <Delete getNotes={getNotes} />
         </Box>
     )
 }

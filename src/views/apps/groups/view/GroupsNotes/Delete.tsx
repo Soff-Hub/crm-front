@@ -1,13 +1,13 @@
-import LoadingButton from '@mui/lab/LoadingButton'
-import { Button, Dialog, DialogActions, DialogTitle, formGroupClasses } from '@mui/material'
-import { useRouter } from 'next/router'
-import { useState } from 'react'
-import { toast } from 'react-hot-toast'
-import { useTranslation } from 'react-i18next'
-import { useAppDispatch, useAppSelector } from 'src/store'
-import { deleteGroup, handleOpenDeleteNote } from 'src/store/apps/groupDetails'
+import LoadingButton from '@mui/lab/LoadingButton';
+import { Button, Dialog, DialogActions, DialogTitle } from '@mui/material';
+import { useRouter } from 'next/router';
+import { useState } from 'react';
+import { toast } from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
+import { useAppDispatch, useAppSelector } from 'src/store';
+import { deleteNote, handleOpenDeleteNote } from 'src/store/apps/groupDetails';
 
-export default function Delete() {
+export default function Delete({ getNotes }: any) {
     const [isLoading, setLoading] = useState(false)
     const { isOpenDelete } = useAppSelector(state => state.groupDetails)
 
@@ -15,12 +15,14 @@ export default function Delete() {
     const { t } = useTranslation()
     const { query, push } = useRouter()
 
-    const handleDelete = async () => {
+    const handleDelete = async (id: any) => {
         setLoading(true)
         if (query.id) {
-            const response = await dispatch(deleteGroup("12"))
+            const response = await dispatch(deleteNote(isOpenDelete))
             if (response.meta.requestStatus == "fulfilled") {
                 dispatch(handleOpenDeleteNote(false))
+                toast.success("Ma'lumot o'chirildi")
+                await getNotes()
             } else {
                 toast.error("Ma'lumotni o'chirib bo'lmadi")
             }
@@ -31,7 +33,7 @@ export default function Delete() {
     return (
         <Dialog
             open={isOpenDelete}
-            onClose={() => dispatch(handleOpenDeleteNote(formGroupClasses))}
+            onClose={() => dispatch(handleOpenDeleteNote(null))}
             aria-labelledby='user-view-edit'
             sx={{ '& .MuiPaper-root': { width: '100%', maxWidth: 450, p: [1, 3] } }}
             aria-describedby='user-view-edit-description'

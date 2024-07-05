@@ -62,6 +62,17 @@ export const deleteGroup = createAsyncThunk('delete/group', async (id: any, { re
     return rejectWithValue(err.message)
   }
 })
+export const deleteNote = createAsyncThunk('delete/Note', async (id: any, { rejectWithValue }) => {
+  try {
+    const resp = await api.delete(`/common/group-description/delete/${id}`)
+    return resp.data
+  } catch (err: any) {
+    if (err.response) {
+      return rejectWithValue(err.response.data)
+    }
+    return rejectWithValue(err.message)
+  }
+})
 
 export const getSMSTemp = createAsyncThunk('getSMSTemp', async () => {
   const resp = await api.get('common/sms-form/list/')
@@ -87,7 +98,7 @@ const initialState: IGroupDetailsState = {
   groupData: null,
   smsTemps: null,
   teachers: null,
-  isOpenDelete: false,
+  isOpenDelete: null,
   students: null,
   attendance: null,
   days: null,

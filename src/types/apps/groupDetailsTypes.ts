@@ -16,7 +16,7 @@ export interface IGroupDetailsState {
   isGettingAttendance: boolean
   isGettingStudents: boolean
   isGettingExamsResults: boolean
-  isOpenDelete: boolean
+  isOpenDelete: any
   rooms: BranchTypes[] | null
   teachers: TeacherType[] | null
   students: StudentDetailType[] | null

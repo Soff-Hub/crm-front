@@ -10,6 +10,7 @@ import { getExams, getResults, setEditData, setOpen, setResultId } from "src/sto
 import AddExam from "./AddExam";
 import ExamResults from "./ExamResults";
 import EditExam from "./EditExam";
+import DeleteExam from "./DeleteExam";
 
 export interface ExamType {
     id: number
@@ -27,14 +28,15 @@ const GroupExamsList = () => {
     const { t } = useTranslation()
 
     const handleEditOpen = async (id: any) => {
-        const findedItem = await exams.find((el: any) => el.id === id)
-        await dispatch(setEditData(findedItem))
+        const findedItem = exams.find((el: any) => el.id === id)
+        dispatch(setEditData(findedItem))
         dispatch(setOpen('edit'))
     }
 
-    const handleDeleteOpen = async (id: any) => {
+    const handleDeleteOpen = (id: any) => {
         dispatch(setEditData(id))
         dispatch(setOpen('delete'))
+
     }
 
 
@@ -89,7 +91,8 @@ const GroupExamsList = () => {
                     </div>
                     <DataTable rowClick={(id: any) => (dispatch(getResults({ groupId: query?.id, examId: id })), dispatch(setResultId(id)))} maxWidth="100%" minWidth="450px" loading={isGettingExams} data={exams} columns={columns} />
                     <AddExam />
-                    <EditExam/>
+                    <EditExam />
+                    <DeleteExam />
                 </Box>
             }
         </>
