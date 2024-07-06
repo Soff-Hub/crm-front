@@ -118,7 +118,7 @@ export default function ExamResults() {
                 dispatch(setOpen(null))
                 await dispatch(getResults({ groupId: query?.id, examId: resultId }))
                 formik.resetForm()
-            } catch (err) {
+            } catch (err: any) {
                 findedStudent.result.score > 0 ?
                     toast.error(err?.response?.data?.exam[0] || "") :
                     formik.setErrors(err?.response?.data);
