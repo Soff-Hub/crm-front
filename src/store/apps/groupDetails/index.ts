@@ -105,6 +105,7 @@ const initialState: IGroupDetailsState = {
   rooms: null,
   results: null,
   resultId: null,
+  examStudentId: null,
   editData: null,
   openEdit: null,
   queryParams: {
@@ -124,6 +125,9 @@ export const groupDetailsSlice = createSlice({
   name: 'groupDetails',
   initialState,
   reducers: {
+    setResultEdit: (state, action) => {
+      state.examStudentId = action.payload
+    },
     handleEditClickOpen: (state, action) => {
       state.openEdit = action.payload
     },
@@ -217,6 +221,7 @@ export const {
   setGettingAttendance,
   setOpen,
   setEditData,
+  setResultEdit,
   setResultId
 } = groupDetailsSlice.actions
 

@@ -102,7 +102,6 @@ export default function GroupsPage() {
     await dispatch(fetchTeachersList(new URLSearchParams({ page: String(page) }).toString()))
   }
 
-
   return (
     <div>
       <Box
@@ -128,7 +127,6 @@ export default function GroupsPage() {
         shape="rounded"
         onChange={(e: any, page) => handlePagination(e.target.value + page)}
       />}
-
       <TeacherCreateDialog />
       <TeacherEditDialog />
     </div>

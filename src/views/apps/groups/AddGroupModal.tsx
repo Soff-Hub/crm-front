@@ -54,8 +54,8 @@ export default function AddGroupModal() {
             if (resp.meta.requestStatus === 'rejected') {
                 formik.setErrors(resp.payload)
             } else {
+                handleClose()
                 await dispatch(fetchGroups(queryString))
-                formik.resetForm()
             }
             setLoading(false)
         }

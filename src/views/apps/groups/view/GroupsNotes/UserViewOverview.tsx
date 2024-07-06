@@ -103,7 +103,7 @@ const UserViewOverview = () => {
                 <TextField
                   rows={4}
                   multiline
-                  label={t("yozing...")}
+                  label={t("Kiriting...")}
                   name='body'
                   defaultValue={''}
                 />

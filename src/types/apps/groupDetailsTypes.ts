@@ -22,6 +22,7 @@ export interface IGroupDetailsState {
   students: StudentDetailType[] | null
   attendance: any
   results: any
+  examStudentId: any
   editData: any
   resultId: any
   courses: BranchTypes[] | null

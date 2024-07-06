@@ -24,3 +24,30 @@ code:not([class*='language-']):after {
 code[class*='language-'] {
   padding: 0;
 }
+/* Total scrollbar */
+::-webkit-scrollbar {
+  width: 10px; /* width of the scrollbar */
+  height: 10px; /* height of the scrollbar (for horizontal bars) */
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f3f4f6;
+  border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
+/* Define the width of the scrollbar */
+/* body {
+  scrollbar-width: thin; 
+  scrollbar-color: #888 #f1f1f1; 
+} */
