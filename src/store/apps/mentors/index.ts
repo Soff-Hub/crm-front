@@ -3,9 +3,12 @@ import api from 'src/@core/utils/api'
 import { IMentorsState } from 'src/types/apps/mentorsTypes'
 
 // ** Fetch All Departments
-export const fetchTeachersList = createAsyncThunk('mentors/fetchTeachersList', async (queryString?: string) => {
-  return (await api.get(`auth/teachers/?` + queryString)).data
-})
+export const fetchTeachersList = createAsyncThunk(
+  'mentors/fetchTeachersList',
+  async (queryString?: string | undefined = '') => {
+    return (await api.get(`auth/teachers/?` + queryString)).data
+  }
+)
 
 export const fetchTeacherdetail = createAsyncThunk('mentors/fetchTeacherdetail', async (id: number) => {
   return (await api.get(`auth/teachers/${id}`)).data
