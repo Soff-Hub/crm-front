@@ -78,12 +78,13 @@ export default function EditExam() {
                     formik.resetForm()
                     setParent(null)
                     setReExam(false)
+                    dispatch(setOpen(null))
                 }
             } catch (e: any) {
+                console.log(e?.response.data);
                 formik.setErrors(e?.response.data)
             }
             setLoading(false)
-            dispatch(setOpen(null))
         }
     })
 

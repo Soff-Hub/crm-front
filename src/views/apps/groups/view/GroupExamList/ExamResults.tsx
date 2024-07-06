@@ -1,6 +1,7 @@
 import LoadingButton from "@mui/lab/LoadingButton";
 import {
     Box,
+    Button,
     Drawer,
     FormControl,
     FormHelperText,
@@ -8,21 +9,24 @@ import {
     TextField,
     Typography,
 } from "@mui/material";
+import { useFormik } from "formik";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { toast } from "react-hot-toast";
 import { useTranslation } from "react-i18next";
-import Form from "src/@core/components/form";
 import IconifyIcon from "src/@core/components/icon";
 import DataTable from "src/@core/components/table";
 import useResponsive from "src/@core/hooks/useResponsive";
+import api from "src/@core/utils/api";
 import { customTableProps } from "src/pages/groups";
 import { useAppDispatch, useAppSelector } from "src/store";
-import { setOpen } from "src/store/apps/groupDetails";
+import { getResults, setOpen, setResultEdit, setResultId } from "src/store/apps/groupDetails";
+import * as Yup from "yup";
 
 
 
 export default function ExamResults() {
-    const { resultId, isGettingExams, open, results } = useAppSelector(state => state.groupDetails)
+    const { resultId, isGettingExamsResults, examStudentId, open, results } = useAppSelector(state => state.groupDetails)
     const { query } = useRouter()
     const dispatch = useAppDispatch()
     const [loading, setLoading] = useState(false)
@@ -33,25 +37,8 @@ export default function ExamResults() {
     const handleClose = () => {
         setLoading(false)
         dispatch(setOpen(null))
-    }
-
-    const sendResult = async (values: any) => {
-        setLoading(true)
-        // const findedStudent = result.find((el: any) => el.result.id === resultEdit)
-        // try {
-        //     await api[findedStudent.result.score > 0 ? 'patch' : 'post'](`common/exam/student/${findedStudent.result.score > 0 ? `update/${findedStudent.result.score > 0 ? findedStudent.result.result_id : resultEdit}` : 'create/'}`, {
-        //         student: resultEdit,
-        //         description: values.description,
-        //         score: values.score,
-        //         exam: resultId
-        //     })
-        //     getResults(resultId)
-        //     setOpen(null)
-        //     setLoading(false)
-        // } catch (err) {
-        // console.log(err);
-        // setLoading(false)
-        // }
+        dispatch(setResultEdit(null))
+        formik.resetForm()
     }
 
     const columnsResult: customTableProps[] = [
@@ -95,23 +82,63 @@ export default function ExamResults() {
             title: t("Amallar"),
             dataIndex: 'result',
             render: (result: any) => (
-                // <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-                //     {
-                //         result.score > 0 ? (
-                //             <IconifyIcon icon='mdi:edit' fontSize={20} onClick={() => (setResultEdit(result.id), setOpen('result'))} />
-                //         ) : (
-                //             <IconifyIcon icon='fluent:add-32-regular' fontSize={20} onClick={() => (setResultEdit(result.id), setOpen('result'))} />
-                //         )
-                //     }
-                // </div>
-                <></>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+                    {
+                        result.score > 0 ? (
+                            <IconifyIcon icon='mdi:edit' fontSize={20} onClick={() => (dispatch(setResultEdit(result.id)), dispatch(setOpen('result')))} />
+                        ) : (
+                            <IconifyIcon icon='fluent:add-32-regular' fontSize={20} onClick={() => (dispatch(setResultEdit(result.id)), dispatch(setOpen('result')))} />
+                        )
+                    }
+                </div>
             ),
         },
     ]
+
+
+    const formik = useFormik({
+        initialValues: {
+            score: "",
+            description: "",
+        },
+        validationSchema: () => Yup.object({
+            score: Yup.string().required("Natijasini kiriting"),
+            description: Yup.string(),
+        }),
+        onSubmit: async (values) => {
+            setLoading(true)
+            const findedStudent = results?.find((el: any) => el.result.id === examStudentId)
+            try {
+                await api[findedStudent.result.score > 0 ? 'patch' : 'post'](`common/exam/student/${findedStudent.result.score > 0 ? `update/${findedStudent.result.score > 0 ? findedStudent.result.result_id : examStudentId}` : 'create/'}`, {
+                    student: examStudentId,
+                    description: values.description,
+                    score: values.score,
+                    exam: resultId
+                })
+                dispatch(setOpen(null))
+                await dispatch(getResults({ groupId: query?.id, examId: resultId }))
+                formik.resetForm()
+            } catch (err) {
+                findedStudent.result.score > 0 ?
+                    toast.error(err?.response?.data?.exam[0] || "") :
+                    formik.setErrors(err?.response?.data);
+            } finally {
+                setLoading(false)
+            }
+        }
+    })
+
+    useEffect(() => {
+        const findedStudent = results?.find((el: any) => el.result.id === examStudentId)
+        formik.setFieldValue("score", findedStudent?.result?.score)
+        formik.setFieldValue("description", findedStudent?.result?.description)
+        console.log(findedStudent);
+    }, [examStudentId])
+
     return (
-        <Box>
-            {/* <Button onClick={() => (setResult([]), setResultEdit(null), setResultId(null))} size="small" variant="contained" startIcon={<IconifyIcon icon={'ep:back'} />}>{t("Orqaga")}</Button> */}
-            <DataTable loading={isGettingExams} maxWidth="100%" minWidth="450px" data={results} columns={columnsResult} />
+        <Box sx={{ display: "flex", flexDirection: "column", }}>
+            <Button sx={{ alignSelf: "end" }} onClick={() => dispatch(setResultId(null))} size="small" variant="contained" startIcon={<IconifyIcon icon={'ep:back'} />}>{t("Orqaga")}</Button>
+            <DataTable loading={isGettingExamsResults} maxWidth="100%" minWidth="450px" data={results} columns={columnsResult} />
             <Drawer open={open === 'result'} anchor='right' variant='persistent'>
                 <Box
                     className='customizer-header'
@@ -138,20 +165,36 @@ export default function ExamResults() {
                         <IconifyIcon icon='mdi:close' fontSize={20} />
                     </IconButton>
                 </Box>
-                {/* <Form setError={setError} valueTypes="json" onSubmit={sendResult} id="wtedtwetert" sx={{ padding: '15px', display: 'flex', flexDirection: 'column', gap: 12 }}>
-
+                <form onSubmit={formik.handleSubmit} style={{ padding: '15px', display: 'flex', flexDirection: 'column', gap: 12 }}>
                     <FormControl>
-                        <TextField size='small' label={t("Natija")} type="number" name='score' error={error.score?.error} />
-                        <FormHelperText error={error.score}>{error.score?.message}</FormHelperText>
+                        <TextField
+                            size='small'
+                            type="number"
+                            name='score'
+                            label={t("Natija")}
+                            value={formik.values?.score}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            error={!!formik.errors.score && !!formik.touched.score}
+                        />
+                        <FormHelperText error>{!!formik.errors.score && !!formik.touched.score && formik.errors.score}</FormHelperText>
                     </FormControl>
-
                     <FormControl>
-                        <TextField size='small' label={t("Izoh")} multiline minRows={4} name='description' error={error.description?.error} />
-                        <FormHelperText error={error.description}>{error.description?.message}</FormHelperText>
+                        <TextField
+                            size='small'
+                            label={t("Izoh")}
+                            multiline
+                            minRows={4}
+                            name='description'
+                            value={formik.values?.description}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            error={!!formik.errors.description && !!formik.touched.description}
+                        />
+                        <FormHelperText error>{!!formik.errors.description && !!formik.touched.description && formik.errors.description}</FormHelperText>
                     </FormControl>
-
                     <LoadingButton loading={loading} variant="outlined" type="submit">Saqlash</LoadingButton>
-                </Form> */}
+                </form>
             </Drawer>
         </Box>
     )

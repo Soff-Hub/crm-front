@@ -82,6 +82,10 @@ const GroupExamsList = () => {
         },
     ]
 
+    const handleOpenExamResult = async (id: any) => {
+        dispatch(setResultId(id))
+        await dispatch(getResults({ groupId: query?.id, examId: id }))
+    }
     return (
         <>
             {resultId ? < ExamResults /> :
@@ -89,7 +93,7 @@ const GroupExamsList = () => {
                     <div style={{ width: '100%', display: 'flex', justifyContent: 'flex-end', margin: 0 }}>
                         <Button variant="contained" sx={{ marginLeft: '15px' }} size="small" onClick={() => dispatch(setOpen('add'))}>{t('Yaratish')}</Button>
                     </div>
-                    <DataTable rowClick={(id: any) => (dispatch(getResults({ groupId: query?.id, examId: id })), dispatch(setResultId(id)))} maxWidth="100%" minWidth="450px" loading={isGettingExams} data={exams} columns={columns} />
+                    <DataTable rowClick={(id: any) => handleOpenExamResult(id)} maxWidth="100%" minWidth="450px" loading={isGettingExams} data={exams} columns={columns} />
                     <AddExam />
                     <EditExam />
                     <DeleteExam />
