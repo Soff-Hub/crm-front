@@ -5,7 +5,7 @@ import { IMentorsState } from 'src/types/apps/mentorsTypes'
 // ** Fetch All Departments
 export const fetchTeachersList = createAsyncThunk(
   'mentors/fetchTeachersList',
-  async (queryString?: string | undefined = '') => {
+  async (queryString?: any) => {
     return (await api.get(`auth/teachers/?` + queryString)).data
   }
 )
