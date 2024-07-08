@@ -7,6 +7,8 @@ import { createGroup, fetchCoursesList, setOpenCreateSms } from 'src/store/apps/
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import useBranches from 'src/hooks/useBranch'
+import { disablePage } from 'src/store/apps/page'
+import toast from 'react-hot-toast'
 
 type Props = {}
 
@@ -26,7 +28,6 @@ export default function CreateCourseForm({ }: Props) {
         name: Yup.string().required("Nom kiriting"),
         branch: Yup.string().required("Filial tanlang"),
         price: Yup.number().required("Kurs narxini kiriting"),
-        lesson_duration: Yup.string().required("Dars davomiyligi"),
         month_duration: Yup.number().required("Nechi oy davom etadi?").max(12, "12 oydan ko'p bo'lmasligi kerak"),
         description: Yup.string(),
         color: Yup.string()
@@ -37,7 +38,6 @@ export default function CreateCourseForm({ }: Props) {
             name: '',
             branch: '',
             price: '',
-            lesson_duration: '',
             month_duration: '',
             description: '',
             color: "#ffffff"
@@ -45,16 +45,19 @@ export default function CreateCourseForm({ }: Props) {
         validationSchema,
         onSubmit: async (values) => {
             setLoading(true)
+            dispatch(disablePage(true))
             const resp = await dispatch(createGroup(values))
             if (resp.meta.requestStatus === 'rejected') {
                 formik.setErrors(resp.payload)
                 setLoading(false)
             } else {
+                toast.success('Kurs muvaffaqiyatli yaratildi')
                 await dispatch(fetchCoursesList())
                 formik.resetForm()
                 setLoading(false)
                 return setOpenAddGroup()
             }
+            dispatch(disablePage(false))
         }
     })
 
@@ -129,35 +132,9 @@ export default function CreateCourseForm({ }: Props) {
             </FormControl>
 
             <FormControl fullWidth>
-                <InputLabel
-                    size='small'
-                    id='demo-simple-select-outlined-label'
-                    error={!!errors.lesson_duration && touched.lesson_duration}
-                >
-                    {t('Dars davomiyligi')}
-                </InputLabel>
-                <Select
-                    size='small'
-                    label={t('Dars davomiyligi')}
-                    id='demo-simple-select-outlined2'
-                    labelId='demo-simple-select-outlined-label2'
-                    name='lesson_duration'
-                    error={!!errors.lesson_duration && touched.lesson_duration}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    value={values.lesson_duration}
-                >
-                    <MenuItem value={'01:30:00'}>{t('1 soat 30 daqiqa')}</MenuItem>
-                    <MenuItem value={'02:00:00'}>{t('2 soat')}</MenuItem>
-                    <MenuItem value={'02:30:00'}>{t('2 soat 30 daqiqa')}</MenuItem>
-                    <MenuItem value={'03:00:00'}>{t('3 soat')}</MenuItem>
-                </Select>
-                {errors.lesson_duration && touched.lesson_duration && <FormHelperText error>{errors.branch}</FormHelperText>}
-            </FormControl>
-            <FormControl fullWidth>
                 <TextField
-                    // type='number'
-                    label={t('Kurs davomiyligi')}
+                    type='number'
+                    label={t('Kurs davomiyligi (oy)')}
                     size='small'
                     name='month_duration'
                     error={!!errors.month_duration && touched.month_duration}
@@ -191,7 +168,7 @@ export default function CreateCourseForm({ }: Props) {
                     value={values.color}
                 />
             </FormControl>
-            <LoadingButton loading={loading} type='submit' variant='contained' color='success' fullWidth>
+            <LoadingButton loading={loading} type='submit' variant='contained' fullWidth>
                 {' '}
                 {t("Saqlash")}
             </LoadingButton>

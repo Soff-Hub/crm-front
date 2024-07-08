@@ -275,7 +275,7 @@ function RequestForm({ uuid }: InferGetStaticPropsType<typeof getServerSideProps
                             />)
                         }
 
-                        <LoadingButton loading={loading} variant="contained" color='success' type="submit" size='large' sx={{ mt: 5 }} fullWidth>
+                        <LoadingButton loading={loading} variant="contained" type="submit" size='large' sx={{ mt: 5 }} fullWidth>
                             Yuborish
                         </LoadingButton>
                     </Form>

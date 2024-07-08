@@ -253,7 +253,7 @@ export default function FormsPage() {
           <Typography sx={{ fontSize: '20px', margin: '30px 20px' }}>{t("Formani o'chirmoqchimisiz")}?</Typography>
           <Box sx={{ display: 'flex', justifyContent: 'center', gap: '12px' }}>
             <LoadingButton variant='outlined' color='error' onClick={() => setOpen(null)}>{t("Bekor qilish")}</LoadingButton>
-            <LoadingButton loading={loading} variant='contained' color='success' onClick={onDelete}>{t("O'chirish")}</LoadingButton>
+            <LoadingButton loading={loading} variant='contained' onClick={onDelete}>{t("O'chirish")}</LoadingButton>
           </Box>
         </DialogContent>
       </Dialog>

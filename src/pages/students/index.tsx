@@ -14,6 +14,7 @@ import EditStudentModal from 'src/views/apps/students/EditStudentModal';
 import StudentRowOptions from 'src/views/apps/students/StudentRowOptions';
 import { useAppDispatch, useAppSelector } from 'src/store';
 import { clearStudentParams, fetchStudentsList, updateStudentParams } from 'src/store/apps/students';
+import { formatCurrency } from 'src/@core/utils/format-currency';
 
 export interface customTableProps {
   xs: number
@@ -84,7 +85,7 @@ export default function GroupsPage() {
       xs: 0.7,
       title: t("Balans"),
       dataIndex: 'balance',
-      render: (balance: string) => `${+balance} so'm`
+      render: (balance: string) => `${formatCurrency(+balance)} so'm`
     },
     {
       xs: 0.7,

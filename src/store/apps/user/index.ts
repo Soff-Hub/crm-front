@@ -62,7 +62,7 @@ export const appUsersSlice = createSlice({
     companyInfo: {
       id: 1,
       training_center_name: "SOFF CRM",
-      logo: 'https://soffstudy.uz/assets/imgs/template/soff study logo.png',
+      logo: '/images/default-logo.jpg',
       work_start_time: "00:00",
       work_end_time: "00:00",
       auto_sms: {

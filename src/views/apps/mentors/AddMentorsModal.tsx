@@ -26,6 +26,8 @@ import { useEffect, useRef, useState } from 'react';
 import CustomAvatar from 'src/@core/components/mui/avatar';
 import PhoneInput from 'src/@core/components/phone-input';
 import { reversePhone } from 'src/@core/components/phone-input/format-phone-number';
+import { disablePage } from 'src/store/apps/page';
+import toast from 'react-hot-toast';
 
 export const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
@@ -66,7 +68,7 @@ export default function AddMentorsModal() {
                 gender: Yup.string().required("Jinsini tanlang"),
                 is_fixed_salary: Yup.string().required("Jinsini tanlang"),
                 // image: Yup.string(),
-                password: Yup.string(),
+                password: Yup.string().required("Parol kiritish majburiy"),
                 amount: Yup.string().when("percentage", {
                     is: (kpiPercentage: string) => !kpiPercentage || kpiPercentage.trim() === "",
                     then: Yup.string().required("To'ldiring(Foiz kiritilmasa)."),
@@ -99,6 +101,7 @@ export default function AddMentorsModal() {
         validationSchema,
         onSubmit: async (values: CreateTeacherDto) => {
             setLoading(true)
+            dispatch(disablePage(true))
             const newValues = new FormData()
 
             for (const [key, value] of Object.entries(values)) {
@@ -118,11 +121,13 @@ export default function AddMentorsModal() {
             if (resp.meta.requestStatus === 'rejected') {
                 formik.setErrors(resp.payload)
             } else {
-                await dispatch(fetchTeachersList())
+                await dispatch(fetchTeachersList(''))
                 formik.resetForm()
                 setImage(null)
+                toast.success("O'qituvchi muvaffaqiyatli yaratildi")
             }
             setLoading(false)
+            dispatch(disablePage(false))
         }
     });
 
@@ -269,8 +274,8 @@ export default function AddMentorsModal() {
                 </FormControl>
 
                 <FormControl sx={{ width: '100%' }}>
-                    <TextField label={t("password")} name='password' onChange={formik.handleChange} onBlur={formik.handleBlur} value={formik.values.password} error={!!formik.errors.password} />
-                    <FormHelperText error={!!formik.errors.password}>{formik.errors.password}</FormHelperText>
+                    <TextField label={t("password")} name='password' onChange={formik.handleChange} onBlur={formik.handleBlur} value={formik.values.password} error={!!formik.errors.password && formik.touched.password} />
+                    {!!formik.errors.password && formik.touched.password && <FormHelperText error>{formik.errors.password}</FormHelperText>}
                 </FormControl>
 
                 <LoadingButton loading={loading} variant='contained' type='submit' fullWidth>{t("Saqlash")}</LoadingButton>

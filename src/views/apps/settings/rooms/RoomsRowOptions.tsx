@@ -8,6 +8,7 @@ import api from 'src/@core/utils/api'
 import ceoConfigs from 'src/configs/ceo'
 import toast from 'react-hot-toast'
 import { fetchRoomList, setOpenEditRoom } from 'src/store/apps/settings'
+import { disablePage } from 'src/store/apps/page'
 
 type Props = {
     id: number
@@ -41,6 +42,7 @@ export default function RoomListRowOptions({ id }: Props) {
     async function handleDeletePosts(id: number) {
         handleRowOptionsClose()
         setLoading(true)
+        dispatch(disablePage(true))
         try {
             await api.delete(`${ceoConfigs.rooms_delete}/${id}`)
             toast.success("Muvaffaqiyatli! o'chirildi", { position: 'top-center' })
@@ -48,7 +50,7 @@ export default function RoomListRowOptions({ id }: Props) {
         } catch (error: any) {
             toast.error('Xatolik yuz berdi!', { position: 'top-center' })
         }
-
+        dispatch(disablePage(false))
         setLoading(false)
     }
 

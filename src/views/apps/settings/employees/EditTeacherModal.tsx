@@ -29,6 +29,8 @@ import { TeacherAvatar } from './AddMentorsModal';
 import { editEmployee, fetchEmployees, setEmployeeData } from 'src/store/apps/settings';
 import PhoneInput from 'src/@core/components/phone-input';
 import { reversePhone } from 'src/@core/components/phone-input/format-phone-number';
+import { disablePage } from 'src/store/apps/page';
+import toast from 'react-hot-toast';
 
 export const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
@@ -104,6 +106,7 @@ export default function EditEmployeeForm() {
         validationSchema,
         onSubmit: async (values: UpdateTeacherDto) => {
             setLoading(true)
+            dispatch(disablePage(true))
             const newValues = new FormData()
 
             for (const [key, value] of Object.entries(values)) {
@@ -124,12 +127,14 @@ export default function EditEmployeeForm() {
             if (resp.meta.requestStatus === 'rejected') {
                 formik.setErrors(resp.payload)
             } else {
+                toast.success("O'zgarishlar muvaffaqiyatli saqlandi")
                 await dispatch(fetchEmployees())
                 dispatch(setEmployeeData(null))
                 formik.resetForm()
                 setImage(null)
             }
             setLoading(false)
+            dispatch(disablePage(false))
         }
     });
 

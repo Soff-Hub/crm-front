@@ -58,8 +58,8 @@ const TypographyStyled = styled(Typography)<TypographyProps>(({ theme }) => ({
 
 
 const schema = yup.object().shape({
-  phone: yup.string().required(),
-  password: yup.string().min(1).required()
+  phone: yup.string().required('Telefon raqam kiriting'),
+  password: yup.string().min(1).required("Parol kiriting")
 })
 
 const defaultValues = {

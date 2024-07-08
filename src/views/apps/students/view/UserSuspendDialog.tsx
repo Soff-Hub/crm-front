@@ -74,7 +74,6 @@ const UserSuspendDialog = (props: Props) => {
           <Button
             variant='contained'
             style={{ marginTop: '30px' }}
-            color='success'
             onClick={() => handleConfirmation('yes')}
           >
             Ha, o'chirish
@@ -117,7 +116,7 @@ const UserSuspendDialog = (props: Props) => {
             </Typography>
             <Typography>{userInput === 'yes' ? `Muvaffaqiyatli! o'chirilidi` : "O'chirish  bekor qilindi"}</Typography>
             <DialogActions sx={{ justifyContent: 'center', p: 3 }}>
-              <Button variant='contained' color='success' onClick={handleModalClose}>
+              <Button variant='contained' onClick={handleModalClose}>
                 Yaxshi
               </Button>
             </DialogActions>

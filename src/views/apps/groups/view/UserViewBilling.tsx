@@ -126,7 +126,7 @@ const UserViewBilling = () => {
         },
         {
             xs: 0.20,
-            title: t("Chegirma narx"),
+            title: t("Chegirmadagi kurs narxi"),
             dataIndex: 'student',
             render: (student: any) => student.personal_amount ? `${formatCurrency(student.personal_amount?.amount)}` : "yo'q"
         },
@@ -187,7 +187,7 @@ const UserViewBilling = () => {
                 </Box>
                 {editData && <Form setError={setError} valueTypes="json" onSubmit={handleEditSubmit} id="update-exam" sx={{ padding: '15px', display: 'flex', flexDirection: 'column', gap: 12 }}>
                     <FormControl>
-                        <TextField size='small' label={t("Chegirma narx")} type="number" name='amount' error={error.amount?.error} defaultValue={editData?.amount} />
+                        <TextField size='small' label={t("Chegirmadagi kurs narxi")} type="number" name='amount' error={error.amount?.error} defaultValue={editData?.amount} />
                         <FormHelperText error={error.amount}>{error.amount?.message}</FormHelperText>
                     </FormControl>
 

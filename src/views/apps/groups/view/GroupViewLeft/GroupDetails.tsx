@@ -44,8 +44,8 @@ export default function GroupDetails() {
                     <Typography sx={{ fontWeight: 600, fontSize: "18px" }}>{groupData?.name}</Typography>
                 </Box>
                 <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', alignItems: 'center' }}>
-                    <Typography>{t("O'quvchilar soni")}</Typography>
-                    <Typography>{groupData?.student_count}</Typography>
+                    <Typography>{t("O'quvchilar soni")}:</Typography>
+                    <Typography>{groupData?.student_count} ta</Typography>
                 </Box>
                 <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', alignItems: 'center' }}>
                     <Typography>{t("Kurs")}:</Typography>
@@ -109,9 +109,10 @@ export default function GroupDetails() {
                             </Box>
                         ) : ''
                     }
-                    <Box sx={{ display: 'flex' }}>
-                        <Typography sx={{ mr: 2 }}>{t("Ochilgan sana")}:</Typography>
-                        <Typography>{groupData?.start_date?.split('-').reverse().join(',')}</Typography>
+                    <Box sx={{ display: 'flex', gap: '5px' }}>
+                        <Typography sx={{ mr: 2 }}>{t("Kurs davomiyligi (oy)")}:</Typography>
+                        <Typography>{groupData?.start_date?.split('-').reverse().join('.')}</Typography> -
+                        <Typography>{groupData?.end_date?.split('-').reverse().join('.')}</Typography>
                     </Box>
                 </Box>
                 <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', alignItems: 'center' }}>
@@ -157,13 +158,6 @@ export default function GroupDetails() {
                                 <IconifyIcon icon='mdi-light:delete' />
                             </Button>
                         </Tooltip>
-                        {/* <Tooltip title={t('Tahrirlash')} placement='top'>
-                            <Button variant='outlined' color='success' onClick={() =>
-                                dispatch(handleEditClickOpen('edit'))
-                            }>
-                                <IconifyIcon icon='circum:edit' />
-                            </Button>
-                        </Tooltip> */}
                         <Tooltip title="SMS yuborish" placement='top'>
                             <Button variant='outlined' color="warning" onClick={handleOpenSendSMSModal}>
                                 <IconifyIcon icon='material-symbols-light:sms-outline' />

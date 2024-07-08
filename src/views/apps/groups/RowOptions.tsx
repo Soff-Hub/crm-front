@@ -11,6 +11,7 @@ import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from 'src/store';
 import { deleteGroups, fetchGroups, getDashboardLessons, getGroupsDetails, handleOpenEdit } from 'src/store/apps/groups';
 import { GroupType } from 'src/@fake-db/types';
+import { disablePage } from 'src/store/apps/page';
 
 const RowOptions = ({ id }: { id: number | string }) => {
     const { queryParams, groups } = useAppSelector(state => state.groups)
@@ -50,7 +51,9 @@ const RowOptions = ({ id }: { id: number | string }) => {
 
     const handleDeleteTeacher = async (id: string | number) => {
         setDeleting(true)
+        dispatch(disablePage(true))
         await dispatch(deleteGroups(id))
+        dispatch(disablePage(false))
         const queryString = new URLSearchParams(queryParams).toString()
         await dispatch(fetchGroups(queryString))
         setDeleting(false)

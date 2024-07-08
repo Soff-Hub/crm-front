@@ -20,6 +20,8 @@ import * as Yup from "yup";
 import SubLoader from '../loaders/SubLoader';
 import EmptyContent from 'src/@core/components/empty-content';
 import Calendar from './Calendar';
+import { disablePage } from 'src/store/apps/page';
+import toast from 'react-hot-toast';
 
 export default function EditGroupModal() {
     const { isOpenEdit, groupData, courses, initialValues, formParams, queryParams, teachers, rooms, isGettingGroupDetails } = useAppSelector(state => state.groups)
@@ -44,6 +46,7 @@ export default function EditGroupModal() {
         validationSchema,
         onSubmit: async (values) => {
             setLoading(true)
+            dispatch(disablePage(true))
             let obj = { ...values }
             if (!formik.values.day_of_week || formik.values.day_of_week == "0") {
                 obj = { ...obj, day_of_week: customWeekdays }
@@ -58,11 +61,13 @@ export default function EditGroupModal() {
             if (response.meta.requestStatus === 'rejected') {
                 formik.setErrors(response.payload)
             } else {
+                toast.success("O'zgrishlar muvafaqqiyati saqlandi")
                 const queryString = new URLSearchParams(queryParams).toString()
                 await dispatch(fetchGroups(queryString))
                 formik.resetForm()
             }
             setLoading(false)
+            dispatch(disablePage(false))
         }
     });
 

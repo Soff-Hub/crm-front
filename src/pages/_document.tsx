@@ -25,8 +25,8 @@ class CustomDocument extends Document {
             href='https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap'
           />
           <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css' />
-          <link rel='apple-touch-icon' sizes='180x180' href='/images/apple-touch-icon.png' />
-          <link rel='shortcut icon' href={state.user.companyInfo.logo} />
+          <link rel='apple-touch-icon' sizes='180x180' href='/images/default-logo.jpg' />
+          
         </Head>
         <body>
           <Main />

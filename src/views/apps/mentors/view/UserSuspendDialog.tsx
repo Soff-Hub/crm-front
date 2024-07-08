@@ -123,7 +123,7 @@ const UserSuspendDialog = (props: Props) => {
             </Typography>
             <Typography>{userInput === 'yes' ? t(`Muvaffaqiyatli o'chirilidi!`) : t("O'chirish  bekor qilindi")}</Typography>
             <DialogActions sx={{ justifyContent: 'center', p: 3 }}>
-              <Button variant='contained' color='success' onClick={handleModalClose}>
+              <Button variant='contained' onClick={handleModalClose}>
                 {t("Yaxshi")}
               </Button>
             </DialogActions>

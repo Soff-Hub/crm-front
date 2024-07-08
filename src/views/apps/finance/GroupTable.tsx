@@ -54,7 +54,7 @@ export default function GroupFinanceTable({ data, updateData }: any) {
             <Box className='header' sx={{ minWidth: '170px' }}>
                 <Div sx={{ mb: '5px' }}>{t('Nomi')}</Div>
                 <Box>
-                    <Box sx={{ border: '1px solid #c3cccc', p: '5px', fontSize: 13 }} >{t('Nomi')} / {t('Guruhlar')}</Box>
+                    <Box sx={{ border: '1px solid #c3cccc', p: '5px', fontSize: 13 }} >{t('Guruhlar')}</Box>
                     <Box sx={{ border: '1px solid #c3cccc', p: '5px', fontSize: 13 }} >{t("O'quvchilar soni")}</Box>
                     <Box sx={{ border: '1px solid #c3cccc', p: '5px', fontSize: 13 }} >{t("To'landi")}</Box>
                     <Box sx={{ border: '1px solid #c3cccc', p: '5px', fontSize: 13 }} >{t('Reja')}</Box>
@@ -74,7 +74,7 @@ export default function GroupFinanceTable({ data, updateData }: any) {
                 </Box>
             </Box>
             <Box className='body' sx={{ flexGrow: 1 }}>
-                <Div sx={{ textAlign: 'center', mb: '5px', padding: '2px' }}>
+                <Div sx={{ textAlign: 'end', mb: '5px', padding: '2px', borderRadius: '0' }}>
                     <TextField defaultValue={`${new Date().getFullYear()}-${Number(new Date().getMonth()) + 1 < 10 ? "0" + (1 + new Date().getMonth()) : new Date().getMonth() + 1}`} style={{ border: 'none' }} size='small' type='month' onChange={(e) => updateData(e.target.value)} />
                 </Div>
                 <NavigationMenu sx={{ display: 'flex', maxWidth: '1050px', overflowX: 'auto' }}>

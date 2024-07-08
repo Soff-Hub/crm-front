@@ -221,15 +221,10 @@ const UserViewLeft = ({ userData }: { userData: any }) => {
                 </Button>
               </Tooltip>
               <Tooltip title={t("Tahrirlash")} placement='bottom'>
-                <Button size='small' color='success' onClick={() => handleEditClickOpen('edit')}>
+                <Button size='small' onClick={() => handleEditClickOpen('edit')}>
                   <IconifyIcon icon='iconamoon:edit-thin' />
                 </Button>
               </Tooltip>
-              {/* <Tooltip title={t("O'chirish")} placement='bottom'>
-                <Button size='small' color='error' onClick={() => handleEditClickOpen('delete')}>
-                  <IconifyIcon icon='mdi-light:delete' />
-                </Button>
-              </Tooltip> */}
             </Box>
           </Card>
         </Grid>
@@ -447,11 +442,6 @@ const UserViewLeft = ({ userData }: { userData: any }) => {
                 <FormControl sx={{ width: '100%' }}>
                   <TextField size='small' label={t("phone")} name='phone' error={error.phone?.error} defaultValue={data.phone} />
                   <FormHelperText error={error.phone}>{error.phone?.message}</FormHelperText>
-                </FormControl>
-
-                <FormControl sx={{ width: '100%' }}>
-                  <TextField size='small' label={t("Balans")} name='balance' error={error.balance?.error} defaultValue={data.balance} />
-                  <FormHelperText error={error.balance}>{error.balance?.message}</FormHelperText>
                 </FormControl>
 
                 <FormControl sx={{ width: '100%' }}>

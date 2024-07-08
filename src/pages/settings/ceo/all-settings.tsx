@@ -433,7 +433,7 @@ export default function AllSettings() {
                 <DialogContent>
                     <Typography sx={{ fontSize: '20px', margin: '10px 10px 20px' }}>{t("O'chirishni tasdiqlang")}</Typography>
                     <Box sx={{ display: 'flex', gap: 1 }}>
-                        <Button variant='outlined' color='success' onClick={() => setDeleteId(null)}>Bekor qilish</Button>
+                        <Button variant='outlined' onClick={() => setDeleteId(null)}>Bekor qilish</Button>
                         <LoadingButton loading={loading === 'delete'} variant='contained' color='error' onClick={async () => {
                             setLoading('delete')
                             try {
@@ -451,7 +451,7 @@ export default function AllSettings() {
                 <DialogContent>
                     <Typography sx={{ fontSize: '20px', margin: '10px 10px 20px' }}>{t("O'chirishni tasdiqlang")}</Typography>
                     <Box sx={{ display: 'flex', gap: 1 }}>
-                        <Button variant='outlined' color='success' onClick={() => setDeleteId(null)}>{t('Bekor qilish')}</Button>
+                        <Button variant='outlined' onClick={() => setDeleteId(null)}>{t('Bekor qilish')}</Button>
                         <LoadingButton loading={loading === 'delete'} variant='contained' color='error' onClick={async () => {
                             setLoading('delete')
                             try {

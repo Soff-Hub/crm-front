@@ -8,7 +8,7 @@ import type { NextPage } from 'next'
 import type { AppProps } from 'next/app'
 
 // ** Store Imports
-import { store } from 'src/store'
+import { store, useAppSelector } from 'src/store'
 import { Provider } from 'react-redux'
 
 // ** Loader Import
@@ -114,20 +114,28 @@ const App = (props: ExtendedAppProps) => {
   const guestGuard = Component.guestGuard ?? false
 
   const aclAbilities = Component.acl ?? defaultACLObj
+  const state = store.getState()
+
+  function MyHead() {
+
+    const { companyInfo } = useAppSelector(state => state.user)
+
+    return <Head>
+      <title>{`${themeConfig.templateName} - Talim tizimini nazorat qilish platformasi`}</title>
+      <meta
+        name='description'
+        content={`${themeConfig.templateName} – SOFF CRM orqali siz o'z o'quv markazingizni ta'lim jarayonlarini nazorat qilishingiz mumkin`}
+      />
+      <meta name='keywords' content='Talim tizimini nazorat qilish platformasi' />
+      <meta name='viewport' content='initial-scale=1, width=device-width' />
+      <link rel='shortcut icon' href={companyInfo.logo} />
+    </Head>
+  }
 
   return (
     <Provider store={store}>
       <CacheProvider value={emotionCache}>
-        <Head>
-          <title>{`${themeConfig.templateName} - Talim tizimini nazorat qilish platformasi`}</title>
-          <meta
-            name='description'
-            content={`${themeConfig.templateName} – SOFF CRM orqali siz o'z o'quv markazingizni ta'lim jarayonlarini nazorat qilishingiz mumkin`}
-          />
-          <meta name='keywords' content='Talim tizimini nazorat qilish platformasi' />
-          <meta name='viewport' content='initial-scale=1, width=device-width' />
-        </Head>
-
+        <MyHead />
         <AuthProvider>
           <SettingsProvider {...(setConfig ? { pageSettings: setConfig() } : {})}>
             <SettingsConsumer>
@@ -140,6 +148,7 @@ const App = (props: ExtendedAppProps) => {
                           {getLayout(<Component {...pageProps} />)}
                         </AclGuard>
                       </Guard>
+                      <div id="full-page-overlay"></div>
                     </WindowWrapper>
                     <ReactHotToast>
                       <Toaster position={settings.toastPosition} toastOptions={{ className: 'react-hot-toast' }} />

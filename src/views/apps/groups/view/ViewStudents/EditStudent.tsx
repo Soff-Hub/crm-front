@@ -88,7 +88,7 @@ export default function EditStudent({ student, id, activate, setActivate }: { st
 
                     <Box sx={{ display: 'flex', justifyContent: 'center', gap: 4 }}>
                         <Button onClick={() => setActivate(false)} size='small' variant='outlined' color='error'>bekor qilish</Button>
-                        <LoadingButton loading={isLoading} type='submit' size='small' variant='contained' color='success'>Saqlash</LoadingButton>
+                        <LoadingButton loading={isLoading} type='submit' size='small' variant='contained'>Saqlash</LoadingButton>
                     </Box>
                 </form>
 

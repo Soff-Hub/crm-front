@@ -11,6 +11,7 @@ import api from 'src/@core/utils/api'
 import toast from 'react-hot-toast'
 import { useAppDispatch, useAppSelector } from 'src/store'
 import { fetchSmsList, setOpenEditSms } from 'src/store/apps/settings'
+import { disablePage } from 'src/store/apps/page'
 
 
 type Props = {
@@ -43,6 +44,7 @@ export default function SmsTableRowOptions({ id }: Props) {
     async function handleDeletePosts(id: number) {
         handleRowOptionsClose()
         setLoading(true)
+        dispatch(disablePage(true))
         try {
             await api.delete(`common/sms-form/delete/${id}`)
             toast.success("Muvaffaqiyatli! o'chirildi", { position: 'top-center' })
@@ -51,6 +53,7 @@ export default function SmsTableRowOptions({ id }: Props) {
             toast.error('Xatolik yuz berdi!', { position: 'top-center' })
         }
         setLoading(false)
+        dispatch(disablePage(false))
     }
 
     // Get functions

@@ -197,7 +197,7 @@ export const UserViewStudentsItem = ({ item, index, status, activeId }: ItemType
 
                     <Box sx={{ display: 'flex', justifyContent: 'center', gap: 4 }}>
                         <Button onClick={() => setOpenLeft(false)} size='small' variant='outlined' color='error'>bekor qilish</Button>
-                        <LoadingButton loading={loading} onClick={handleLeft} size='small' variant='contained' color='success'>Tasdiqlash</LoadingButton>
+                        <LoadingButton loading={loading} onClick={handleLeft} size='small' variant='contained'>Tasdiqlash</LoadingButton>
                     </Box>
                 </DialogContent>
             </Dialog>
