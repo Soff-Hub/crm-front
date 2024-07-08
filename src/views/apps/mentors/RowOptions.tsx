@@ -39,7 +39,7 @@ const RowOptions = ({ id }: { id: number | string }) => {
         if (resp.meta.requestStatus === 'rejected') {
             toast.error(`${resp.payload?.msg}`, { position: 'top-center' })
         } else {
-            await dispatch(fetchTeachersList())
+            await dispatch(fetchTeachersList(""))
             toast.success(`${t("O'qituvchilar ro'yxatidan o'chirildi")}`, { position: 'top-center' })
         }
         setLoaading(false)

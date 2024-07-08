@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useAppDispatch, useAppSelector } from 'src/store';
 import { addStudentToGroup, getAttendance, getDays, getStudents, handleEditClickOpen, setGettingAttendance } from 'src/store/apps/groupDetails';
 
@@ -11,33 +11,29 @@ import DialogTitle from '@mui/material/DialogTitle';
 import FormControl from '@mui/material/FormControl';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
-import { Box, FormHelperText, Typography } from '@mui/material';
+import { FormHelperText } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import api from 'src/@core/utils/api';
-import useDebounce from 'src/hooks/useDebounce';
-import IconifyIcon from 'src/@core/components/icon';
-import { StudentDetailType } from 'src/types/apps/studentsTypes';
 import { useRouter } from 'next/router';
 import { getMontNumber } from 'src/@core/utils/gwt-month-name';
+import AutoComplete from './AutoComplate';
 
 export default function AddStudents() {
     const [isLoading, setLoading] = useState(false)
-    const [searchData, setSearchData] = useState<StudentDetailType[]>([])
-    const [search, setSearch] = useState("")
-    const [selectedStudents, setSelectedStudents] = useState<any>(null)
+    const [selectedStudents, setSelectedStudents] = useState<number | null>(null)
+    const router = useRouter()
 
     const { openEdit, groupData, queryParams } = useAppSelector(state => state.groupDetails)
     const dispatch = useAppDispatch()
     const { t } = useTranslation()
-    const searchDebounce = useDebounce(search, 500)
-    const router = useRouter()
+
 
     const formik = useFormik({
         initialValues: {
             body: "",
-            start_date: ""
+            start_date: "",
+            student: ""
         },
         validationSchema: () => Yup.object({
             body: Yup.string(),
@@ -54,6 +50,7 @@ export default function AddStudents() {
             if (response.meta.requestStatus === 'rejected') {
                 formik.setErrors(response.payload)
             } else {
+                setSelectedStudents(null)
                 dispatch(setGettingAttendance(true))
                 dispatch(handleEditClickOpen(null))
                 const queryString = new URLSearchParams(queryParams).toString()
@@ -70,77 +67,49 @@ export default function AddStudents() {
         }
     })
 
-    const searchStudent = async () => {
-        setSearchData([])
-        const resp = await api.get('auth/student/list/?search=' + searchDebounce)
-        setSearchData(resp.data.results)
-    }
 
-    useEffect(() => {
-        if (searchDebounce !== '') {
-            searchStudent()
-        } else {
-            setSearchData([])
-        }
-    }, [searchDebounce])
+
 
     return (
         <Dialog
             open={openEdit === 'add-student'}
-            onClose={() => dispatch(handleEditClickOpen(null))}
+            onClose={() => (dispatch(handleEditClickOpen(null)), formik.resetForm(), setSelectedStudents(null))}
             aria-labelledby='user-view-edit'
             sx={{ '& .MuiPaper-root': { width: '100%', maxWidth: 450, p: [1, 2] } }}
             aria-describedby='user-view-edit-description'
         >
             <DialogTitle id='user-view-edit' sx={{ textAlign: 'center', fontSize: '1.5rem !important' }}>
                 {t("Guruhga o'quvchi qo'shish")}
-            </DialogTitle>
+            </DialogTitle>{
+                !!formik.errors.student && formik.touched.student &&
+                <FormHelperText
+                    sx={{ textAlign: "center", fontSize: "15px" }}
+                    error>
+                    {!!formik.errors.student && formik.touched.student && formik.errors.student}
+                </FormHelperText>
+            }
             <DialogContent>
                 <form style={{ marginTop: 10 }} onSubmit={formik.handleSubmit}>
-                    <FormControl fullWidth>
-                        <TextField
-                            size='small'
-                            label={t('first_name')}
-                            onChange={(e) => setSearch(e.target.value)}
-                        />
-                    </FormControl>
-                    <Typography
-                        variant='body2'
-                        mt={2}
-                        fontStyle={'italic'}
-                    >
-                        {searchData.length > 0 ? t("Qidiruv natijalari") : searchDebounce !== "" && searchData.length === 0 ? t('Natijalar topilmadi') : ''}
-                    </Typography>
-                    {
-                        searchData.map(user => (
-                            <Box onClick={() => setSelectedStudents(user.id)} sx={{ display: 'flex', flexDirection: 'column', gap: '5px', py: '5px', px: '5px', backgroundColor: selectedStudents === user.id ? '#ccc' : 'transparent' }}>
-                                <Box sx={{ display: 'flex', gap: '15px', alignItems: 'center', cursor: 'pointer' }}>
-                                    <Typography fontSize={14}>{`[ ${user?.first_name} ]`}</Typography>
-                                    <Typography fontSize={14}>{user?.phone}</Typography>
-                                    {selectedStudents === user?.id && <IconifyIcon icon={'mdi:check'} fontSize={14} style={{ marginLeft: 'auto' }} />}
-                                </Box>
-                            </Box>
-                        ))
-                    }
-
-                    {selectedStudents && <FormControl sx={{ width: '100%', margin: '10px 0' }}>
-                        <TextField
-                            type="date"
-                            size='small'
-                            label={t('Qo\'shilish sanasi')}
-                            name='start_date'
-                            value={formik.values.start_date}
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            style={{ background: 'transparent', width: '100%' }}
-                            error={!!formik.errors.start_date && formik.touched.start_date}
-                        />
-                        <FormHelperText
-                            sx={{ marginBottom: '10px' }}
-                            error={!!formik.errors.start_date && formik.touched.start_date}>
-                            {!!formik.errors.start_date && formik.touched.start_date && formik.errors.start_date}
-                        </FormHelperText>
-                    </FormControl>}
+                    <AutoComplete setSelectedStudents={setSelectedStudents} />
+                    {selectedStudents &&
+                        <FormControl sx={{ width: '100%', margin: '10px 0' }}>
+                            <TextField
+                                type="date"
+                                size='small'
+                                label={t('Qo\'shilish sanasi')}
+                                name='start_date'
+                                value={formik.values.start_date}
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                                style={{ background: 'transparent', width: '100%' }}
+                                error={!!formik.errors.start_date && formik.touched.start_date}
+                            />
+                            <FormHelperText
+                                sx={{ marginBottom: '10px' }}
+                                error={!!formik.errors.start_date && formik.touched.start_date}>
+                                {!!formik.errors.start_date && formik.touched.start_date && formik.errors.start_date}
+                            </FormHelperText>
+                        </FormControl>}
                     {selectedStudents && <FormControl fullWidth>
                         <TextField
                             rows={4}
@@ -158,7 +127,7 @@ export default function AddStudents() {
                         <LoadingButton loading={isLoading} type='submit' variant='contained' sx={{ mr: 1 }}>
                             {t("Saqlash")}
                         </LoadingButton>
-                        <Button variant='outlined' type='button' color='secondary' onClick={() => dispatch(handleEditClickOpen(null))}>
+                        <Button variant='outlined' type='button' color='secondary' onClick={() => (dispatch(handleEditClickOpen(null)), setSelectedStudents(null), formik.resetForm())}>
                             {t("Bekor Qilish")}
                         </Button>
                     </DialogActions>
