@@ -91,7 +91,7 @@ const UserViewBilling = () => {
     const handleEditSubmit = async (values: any) => {
         setLoading(true)
         try {
-            await api.post('common/personal-payment/', { ...values, student: Number(editData.id) })
+            await api.post('common/personal-payment/', { ...values, group: query.id, student: Number(editData.id) })
             await getExams()
             handleClose()
         } catch (err: any) {
