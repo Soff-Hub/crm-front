@@ -77,42 +77,23 @@ const clientSideEmotionCache = createEmotionCache()
 
 // ** Pace Loader
 if (themeConfig.routingLoader) {
-  Router.events.on('routeChangeStart', () => {
-    NProgress.start()
-  })
-  Router.events.on('routeChangeError', () => {
-    NProgress.done()
-  })
-  Router.events.on('routeChangeComplete', () => {
-    NProgress.done()
-  })
+  Router.events.on('routeChangeStart', NProgress.start)
+  Router.events.on('routeChangeError', NProgress.done)
+  Router.events.on('routeChangeComplete', NProgress.done)
 }
 
 const Guard = ({ children, authGuard, guestGuard }: GuardProps) => {
-  if (guestGuard) {
-    return <GuestGuard fallback={<Spinner />}>{children}</GuestGuard>
-  } else if (!guestGuard && !authGuard) {
-    return <>{children}</>
-  } else {
-    return <AuthGuard fallback={<Spinner />}>{children}</AuthGuard>
-  }
+  if (guestGuard) return <GuestGuard fallback={<Spinner />}>{children}</GuestGuard>
+  if (authGuard) return <AuthGuard fallback={<Spinner />}>{children}</AuthGuard>
+  return <>{children}</>
 }
 
-// ** Configure JSS & ClassName
-const App = (props: ExtendedAppProps) => {
-  const { Component, emotionCache = clientSideEmotionCache, pageProps } = props
-
-  // Variables
+const App = ({ Component, emotionCache = clientSideEmotionCache, pageProps }: ExtendedAppProps) => {
   const contentHeightFixed = Component.contentHeightFixed ?? false
-  const getLayout =
-    Component.getLayout ?? (page => <UserLayout contentHeightFixed={contentHeightFixed}>{page}</UserLayout>)
-
+  const getLayout = Component.getLayout ?? (page => <UserLayout contentHeightFixed={contentHeightFixed}>{page}</UserLayout>)
   const setConfig = Component.setConfig ?? undefined
-
   const authGuard = Component.authGuard ?? true
-
   const guestGuard = Component.guestGuard ?? false
-
   const aclAbilities = Component.acl ?? defaultACLObj
 
   return (
@@ -127,26 +108,23 @@ const App = (props: ExtendedAppProps) => {
           <meta name='keywords' content='Talim tizimini nazorat qilish platformasi' />
           <meta name='viewport' content='initial-scale=1, width=device-width' />
         </Head>
-
         <AuthProvider>
           <SettingsProvider {...(setConfig ? { pageSettings: setConfig() } : {})}>
             <SettingsConsumer>
-              {({ settings }) => {
-                return (
-                  <ThemeComponent settings={settings}>
-                    <WindowWrapper>
-                      <Guard authGuard={authGuard} guestGuard={guestGuard}>
-                        <AclGuard aclAbilities={aclAbilities} guestGuard={guestGuard}>
-                          {getLayout(<Component {...pageProps} />)}
-                        </AclGuard>
-                      </Guard>
-                    </WindowWrapper>
-                    <ReactHotToast>
-                      <Toaster position={settings.toastPosition} toastOptions={{ className: 'react-hot-toast' }} />
-                    </ReactHotToast>
-                  </ThemeComponent>
-                )
-              }}
+              {({ settings }) => (
+                <ThemeComponent settings={settings}>
+                  <WindowWrapper>
+                    <Guard authGuard={authGuard} guestGuard={guestGuard}>
+                      <AclGuard aclAbilities={aclAbilities} guestGuard={guestGuard}>
+                        {getLayout(<Component {...pageProps} />)}
+                      </AclGuard>
+                    </Guard>
+                  </WindowWrapper>
+                  <ReactHotToast>
+                    <Toaster position={settings.toastPosition} toastOptions={{ className: 'react-hot-toast' }} />
+                  </ReactHotToast>
+                </ThemeComponent>
+              )}
             </SettingsConsumer>
           </SettingsProvider>
         </AuthProvider>

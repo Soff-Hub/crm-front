@@ -8,6 +8,7 @@ const FallbackSpinner = ({ sx }: { sx?: BoxProps['sx'] }) => {
     <Box
       sx={{
         height: '100vh',
+        background: "transparent",
         display: 'flex',
         alignItems: 'center',
         flexDirection: 'column',
