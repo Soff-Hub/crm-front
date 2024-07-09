@@ -1,5 +1,5 @@
 import LoadingButton from '@mui/lab/LoadingButton'
-import { Button, Dialog, DialogActions, DialogTitle } from '@mui/material'
+import { Button, Dialog, DialogActions, DialogContentText, DialogTitle } from '@mui/material'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { toast } from 'react-hot-toast'
@@ -37,8 +37,9 @@ export default function Delete() {
             aria-describedby='user-view-edit-description'
         >
             <DialogTitle id='user-view-edit' sx={{ textAlign: 'center', fontSize: '1.5rem !important' }}>
-                {t("Guruh o'chirib tashlamoqchimisiz?")}
+                {t("Guruhni o'chirishga rozimisiz?")}
             </DialogTitle>
+            <DialogContentText sx={{ textAlign: 'center' }}>{t("O'chirilgan guruhlar arxivda saqlanadi")}</DialogContentText>
             <DialogActions sx={{ justifyContent: 'center' }}>
                 <LoadingButton loading={isLoading} color='error' onClick={handleDelete} variant='outlined' sx={{ mr: 1 }}>
                     {t("O'chirish")}
