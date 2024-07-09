@@ -141,7 +141,7 @@ export default function GroupsPage() {
   const pageLoad = async () => {
     const queryString = new URLSearchParams({ ...queryParams }).toString()
     await Promise.all([
-      dispatch(fetchGroups(queryString)),
+      // dispatch(fetchGroups(queryString)),
       dispatch(getMetaData())
     ])
   }

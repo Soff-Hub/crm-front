@@ -211,8 +211,8 @@ const UserViewLeft = ({ userData }: { userData: any }) => {
               </Box>
             </CardContent>
             <CardContent sx={{ display: 'flex', justifyContent: 'space-between' }}>
-              <Button size='small' variant='outlined' startIcon={<IconifyIcon icon={'icon-park-twotone:add-web'} />} onClick={() => handleEditClickOpen('group')}>{t("Guruhga qo'shish")}</Button>
-              <Button color='warning' size='small' startIcon={<IconifyIcon icon={'mdi:cash-plus'} />} variant='outlined' onClick={async () => (await getPaymentMethod(), handleEditClickOpen('payment'))}>{t("To'lov")}</Button>
+              <Button size='small' variant='outlined' startIcon={<IconifyIcon icon={'mdi:table-add'} />} onClick={() => handleEditClickOpen('group')}>{t("Guruhga qo'shish")}</Button>
+              <Button color='warning' size='small' startIcon={<IconifyIcon icon={'mdi:cash-plus'} />} variant='outlined' onClick={async () => (handleEditClickOpen('payment'), await getPaymentMethod())}>{t("To'lov")}</Button>
             </CardContent>
             <Box sx={{ display: 'flex', justifyContent: 'center', pb: 3 }}>
               <Tooltip title={t('Xabar (sms)')} placement='bottom'>

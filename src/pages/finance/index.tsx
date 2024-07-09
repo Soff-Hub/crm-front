@@ -11,7 +11,7 @@ import CardStatisticsLiveVisitors from 'src/views/ui/cards/statistics/CardStatis
 // ** Styled Component Import
 import KeenSliderWrapper from 'src/@core/styles/libs/keen-slider'
 import ApexChartWrapper from 'src/@core/styles/libs/react-apexcharts'
-import { Box, Button, Dialog, DialogContent, DialogTitle, TextField, Typography } from '@mui/material'
+import { Box, Button, Dialog, DialogContent, DialogTitle, Skeleton, TextField, Typography } from '@mui/material'
 import GroupFinanceTable from 'src/views/apps/finance/GroupTable'
 import IconifyIcon from 'src/@core/components/icon'
 import 'react-datepicker/dist/react-datepicker.css';
@@ -27,6 +27,7 @@ import { formatCurrency } from 'src/@core/utils/format-currency'
 import EmptyContent from 'src/@core/components/empty-content'
 import { getMonthFullName } from 'src/@core/utils/gwt-month-name'
 import Router from 'next/router'
+import SubLoader from 'src/views/apps/loaders/SubLoader'
 
 interface AllNumbersType {
     last_month_benefit: string,
@@ -184,21 +185,21 @@ const CardStatistics = () => {
     const createExpenseCategroy = async () => {
         setLoading(true)
         try {
-            const resp = await api.post(`common/finance/expense-category/create/`, { name: nameVal })
+            await api.post(`common/finance/expense-category/create/`, { name: nameVal })
             setOpen(null)
             getExpenseCategroy()
-            console.log(resp.data)
         } catch (err) {
             console.log(err)
         } finally {
-            console.log('finally');
             setLoading(false)
         }
     }
 
     const getGroupPays = async (date: string) => {
+        setLoading(true)
         const resp = await api.get(`/common/finance/group-payments/?date=${date}-01`)
         setGropPays(resp.data)
+        setLoading(false)
     }
 
     const getSalaries = async () => {
@@ -225,12 +226,13 @@ const CardStatistics = () => {
     }
 
     useEffect(() => {
-        getAllNumbers()
-        getExpenseCategroy()
-        getSalaries()
-        getGroupPays(`${new Date().getFullYear()}-${Number(new Date().getMonth()) + 1 < 10 ? "0" + (1 + new Date().getMonth()) : new Date().getMonth() + 1}`)
-    }, []) 
-
+        Promise.all([
+            getAllNumbers(),
+            getExpenseCategroy(),
+            getSalaries(),
+            getGroupPays(`${new Date().getFullYear()}-${Number(new Date().getMonth()) + 1 < 10 ? "0" + (1 + new Date().getMonth()) : new Date().getMonth() + 1}`)
+        ])
+    }, [])
 
     return (
         <ApexChartWrapper>
@@ -241,7 +243,24 @@ const CardStatistics = () => {
                     </Grid>
 
                     <Grid item xs={12}>
-                        <CardStatisticsHorizontal data={apiData.statsHorizontal} />
+                        {
+                            loading ? <Grid container spacing={6}>
+                                {
+                                    [1, 2, 3, 4].map((_, index) => (
+                                        <Grid item xs={12} md={3} sm={6}>
+                                            <Skeleton
+                                                sx={{ bgcolor: 'grey.300' }}
+                                                variant="rectangular"
+                                                width={'100%'}
+                                                height={'90px'}
+                                                style={{ borderRadius: '10px' }}
+                                                animation="wave"
+                                            />
+                                        </Grid>
+                                    ))}
+                            </Grid>
+                                : <CardStatisticsHorizontal data={apiData.statsHorizontal} />
+                        }
                     </Grid>
 
                     <Grid item xs={12} md={12} mb={10}>
@@ -254,7 +273,7 @@ const CardStatistics = () => {
                     </Grid>
 
                     <Grid item xs={12} md={12} mb={10}>
-                        {groupPays ? <GroupFinanceTable data={groupPays} updateData={getGroupPays} /> : <EmptyContent />}
+                        {loading ? <SubLoader /> : groupPays ? <GroupFinanceTable data={groupPays} updateData={getGroupPays} /> : <EmptyContent />}
                     </Grid>
 
                     <Grid item xs={12}>

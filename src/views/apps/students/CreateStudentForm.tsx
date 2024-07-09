@@ -81,6 +81,8 @@ export default function CreateStudentForm() {
 
 
     useEffect(() => {
+        
+        getGroups()
 
         return () => {
             formik.resetForm()
@@ -196,7 +198,7 @@ export default function CreateStudentForm() {
             }
 
             <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
-                {!isGroup && <Button onClick={async () => (setIsGroup(true), await getGroups())} type='button' variant='outlined' size='small' startIcon={<IconifyIcon icon={'material-symbols:add'} />}>{t("Guruhga qo'shish")}</Button>}
+                {!isGroup && <Button onClick={async () => (setIsGroup(true))} type='button' variant='outlined' size='small' startIcon={<IconifyIcon icon={'material-symbols:add'} />}>{t("Guruhga qo'shish")}</Button>}
             </Box>
             <LoadingButton loading={loading} variant='contained' type='submit' fullWidth>{t('Saqlash')}</LoadingButton>
         </form>

@@ -1,8 +1,13 @@
 import { Box, Card, Paper, TextField, Typography, styled } from '@mui/material'
-import React from 'react'
+import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { formatCurrency } from 'src/@core/utils/format-currency'
 import { hexToRGBA } from 'src/@core/utils/hex-to-rgba'
+import { DatePicker, CustomProvider } from 'rsuite';
+import 'rsuite/dist/rsuite.min.css';
+import uz_UZ from './uz_UZ'
+import locale from './uz_UZ'
+
 
 interface GroupStatsType {
     id: number
@@ -48,6 +53,8 @@ const Div = styled(Box)(({ theme }) => ({
 export default function GroupFinanceTable({ data, updateData }: any) {
 
     const { t } = useTranslation()
+    const [selectedDate, setSelectedDate] = useState<any>(null);
+
 
     return (
         <Card sx={{ display: 'flex', p: '15px', gap: '5px' }}>
@@ -75,7 +82,17 @@ export default function GroupFinanceTable({ data, updateData }: any) {
             </Box>
             <Box className='body' sx={{ flexGrow: 1 }}>
                 <Div sx={{ textAlign: 'end', mb: '5px', padding: '2px', borderRadius: '0' }}>
-                    <TextField defaultValue={`${new Date().getFullYear()}-${Number(new Date().getMonth()) + 1 < 10 ? "0" + (1 + new Date().getMonth()) : new Date().getMonth() + 1}`} style={{ border: 'none' }} size='small' type='month' onChange={(e) => updateData(e.target.value)} />
+                    {/* <TextField defaultValue={`${new Date().getFullYear()}-${Number(new Date().getMonth()) + 1 < 10 ? "0" + (1 + new Date().getMonth()) : new Date().getMonth() + 1}`} style={{ border: 'none' }} size='small' type='month' onChange={(e) => updateData(e.target.value)} /> */}
+                    <CustomProvider locale={locale}>
+                        <DatePicker
+                            placeholder="Oy tanlang"
+                            value={selectedDate}
+                            onChange={(newValue) => {
+                                setSelectedDate(newValue);
+                            }}
+                            format="yyyy-MM"
+                        />
+                    </CustomProvider>
                 </Div>
                 <NavigationMenu sx={{ display: 'flex', maxWidth: '1050px', overflowX: 'auto' }}>
                     {

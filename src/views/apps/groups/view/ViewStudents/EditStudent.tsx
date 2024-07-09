@@ -23,14 +23,14 @@ import { useAppDispatch, useAppSelector } from 'src/store';
 import { StudentDetailType } from 'src/types/apps/studentsTypes';
 
 
-export default function EditStudent({ student, id, activate, setActivate }: { student: any, id: string, activate: boolean, setActivate: (status: boolean) => void }) {
+export default function EditStudent({ student, id, activate, setActivate, status }: { student: any, id: string, activate: boolean, setActivate: (status: boolean) => void, status: string }) {
     const { studentsQueryParams } = useAppSelector(state => state.groupDetails)
     const dispatch = useAppDispatch()
     const [isLoading, setLoading] = useState(false)
     const { query } = useRouter()
 
     const formik = useFormik({
-        initialValues: { added_at: student.added_at, status: "" },
+        initialValues: { added_at: student.added_at, status },
         validationSchema: () => Yup.object({
             added_at: Yup.string(),
             status: Yup.string()
@@ -58,6 +58,7 @@ export default function EditStudent({ student, id, activate, setActivate }: { st
                 <form onSubmit={formik.handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
                     <FormControl>
                         <TextField
+                            error={!!formik.errors.added_at && !!formik.touched.added_at}
                             name='added_at'
                             type='date'
                             value={formik.values.added_at}
@@ -66,6 +67,7 @@ export default function EditStudent({ student, id, activate, setActivate }: { st
                             label={"Qo'shilgan sana"}
                             size='small'
                         />
+                        {!!formik.errors.added_at && !!formik.touched.added_at && <FormHelperText error>{`${formik.errors.added_at}`}</FormHelperText>}
                     </FormControl>
                     <FormControl sx={{ maxWidth: '100%', marginBottom: 3 }} fullWidth>
                         <InputLabel size='small' id='demo-simple-select-outlined-label'>Status (holati)</InputLabel>

@@ -65,10 +65,10 @@ const UserViewRight = ({ tab, invoiceData, groupData, rerender }: any) => {
   }, [tab])
 
   useEffect(() => {
-    if (invoiceData) {
+    if (groupData) {
       setIsLoading(false)
     }
-  }, [invoiceData])
+  }, [groupData])
 
   return (
     <TabContext value={activeTab}>
@@ -79,9 +79,9 @@ const UserViewRight = ({ tab, invoiceData, groupData, rerender }: any) => {
         aria-label='forced scroll tabs example'
         sx={{ borderBottom: theme => `1px solid ${theme.palette.divider}` }}
       >
-        <Tab value='security' label={t('Guruhlar')} icon={<Icon icon='mdi:unarchive' />} />
-        <Tab value='comments' label={t('Izoh va Eslatmalar')} icon={<Icon icon='mdi:account-clock' />} />
-        <Tab value='sms' label={t('SMS')} icon={<Icon icon='mdi:account-clock' />} />
+        <Tab value='security' label={t('Guruhlar')} icon={<Icon icon='uil:layer-group' />} />
+        <Tab value='comments' label={t('Izoh va Eslatmalar')} icon={<Icon icon='fluent:note-add-48-regular' />} />
+        <Tab value='sms' label={t('SMS')} icon={<Icon icon='bitcoin-icons:message-outline' />} />
       </TabList>
       <Box sx={{ mt: 6 }}>
         {isLoading ? (

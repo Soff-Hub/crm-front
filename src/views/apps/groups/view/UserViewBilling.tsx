@@ -1,5 +1,5 @@
 import LoadingButton from "@mui/lab/LoadingButton"
-import { Box, Button, Dialog, DialogActions, DialogContent, Drawer, FormControl, FormHelperText, IconButton, TextField, Typography } from "@mui/material"
+import { Box, Button, Dialog, DialogActions, DialogContent, Drawer, FormControl, FormHelperText, IconButton, InputLabel, OutlinedInput, TextField, Tooltip, Typography } from "@mui/material"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
@@ -192,7 +192,14 @@ const UserViewBilling = () => {
                     </FormControl>
 
                     <FormControl>
-                        <TextField size='small' type="number" label={t("Chegirma soni")} name='discount_count' error={error.discount_count?.error} />
+                        <InputLabel size='small' id='sale-count'>{t("Chegirma soni")}</InputLabel>
+                        <OutlinedInput endAdornment={
+                            <Tooltip
+                                placement="left"
+                                title="Kursning chegirmadagi narxi o'quvchi uchun necha marta to'lov qilguncha amal qilish soni">
+                                <span style={{ fontSize: '20px', fontWeight: 700, cursor: 'pointer' }}>?</span>
+                            </Tooltip>
+                        } id="sale-count" size='small' label={t("Chegirma soni")} name='discount_count' error={error.discount_count?.error} />
                         <FormHelperText error={error.discount_count}>{error.discount_count?.message}</FormHelperText>
                     </FormControl>
 

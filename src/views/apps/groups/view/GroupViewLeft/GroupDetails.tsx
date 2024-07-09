@@ -26,7 +26,6 @@ const roleColors: ColorsType = {
 export default function GroupDetails() {
     const { groupData } = useAppSelector(state => state.groupDetails)
     const dispatch = useAppDispatch()
-    console.log(groupData);
 
     const { user } = useContext(AuthContext)
     const { t } = useTranslation()
