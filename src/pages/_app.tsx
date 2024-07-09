@@ -114,7 +114,6 @@ const App = (props: ExtendedAppProps) => {
   const guestGuard = Component.guestGuard ?? false
 
   const aclAbilities = Component.acl ?? defaultACLObj
-  const state = store.getState()
 
   function MyHead() {
 
