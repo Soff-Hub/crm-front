@@ -68,9 +68,9 @@ const UserViewRight = ({ tab }: Props) => {
         aria-label='forced scroll tabs example'
         sx={{ borderBottom: theme => `1px solid ${theme.palette.divider}` }}
       >
-        <Tab value='security' label={t('Davomat')} icon={<Icon icon='mdi:account-clock' />} />
-        {!(user?.role.length === 1 && user?.role.includes('teacher')) && <Tab value='notes' label={t('Eslatmalar')} icon={<Icon icon='mdi:notebook-check-outline' />} />}
-        <Tab value='exams' label={t('Imtixon')} icon={<Icon icon='mdi:puzzle-check-outline' />} />
+        <Tab value='security' label={t('Davomat')} icon={<Icon icon='tabler:user-check' />} />
+        {!(user?.role.length === 1 && user?.role.includes('teacher')) && <Tab value='notes' label={t('Eslatmalar')} icon={<Icon icon='fluent:note-add-48-regular' />} />}
+        <Tab value='exams' label={t('Imtixon')} icon={<Icon icon='maki:racetrack' />} />
         {!(user?.role.length === 1 && user?.role.includes('teacher')) && <Tab value='discount' label={t('Chegirmalar')} icon={<Icon icon='mdi:sale' />} />}
         {/* {!(user?.role.length === 1 && user?.role.includes('teacher')) && <Tab value='money' label={t("Maosh")} icon={<Icon icon='mdi:money' />} />} */}
       </TabList>

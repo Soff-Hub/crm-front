@@ -25,6 +25,8 @@ import { useEffect, useRef, useState } from 'react';
 import { TeacherAvatar } from './AddMentorsModal';
 import PhoneInput from 'src/@core/components/phone-input';
 import { formatPhoneNumber, reversePhone } from 'src/@core/components/phone-input/format-phone-number';
+import { disablePage } from 'src/store/apps/page';
+import toast from 'react-hot-toast';
 
 export const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
@@ -94,12 +96,14 @@ export default function EditTeacherModal() {
         validationSchema,
         onSubmit: async (values: UpdateTeacherDto) => {
             setLoading(true)
+            dispatch(disablePage(true))
             const newValues = new FormData()
 
             for (const [key, value] of Object.entries(values)) {
                 if (!['image'].includes(key)) {
                     if (key == "password" && value == "") {
-                    } else if (key === 'phone') {
+                    }
+                    else if (key === 'phone') {
                         newValues.append(key, reversePhone(value))
                     } else newValues.append(key, value)
                 }
@@ -118,13 +122,18 @@ export default function EditTeacherModal() {
             if (resp.meta.requestStatus === 'rejected') {
                 formik.setErrors(resp.payload)
             } else {
-                await dispatch(fetchTeachersList())
+                await dispatch(fetchTeachersList(''))
                 formik.resetForm()
                 setImage(null)
+                toast.success("O'qituvchi muvaffaiyatli tahrirlandi")
             }
             setLoading(false)
+            dispatch(disablePage(false))
         }
     });
+
+    console.log(formik.values);
+    
 
     useEffect(() => {
         if (teacherData) {

@@ -52,7 +52,6 @@ export default function StudentActionsBox({ }: Props) {
                 <Tooltip title={t("Tahrirlash")} placement='bottom'>
                     <Button
                         size='small'
-                        color='success'
                         onClick={() => handleEditClickOpen('edit')}
                     >
                         <IconifyIcon icon='iconamoon:edit-thin' />

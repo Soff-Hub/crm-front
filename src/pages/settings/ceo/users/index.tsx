@@ -21,6 +21,8 @@ import { fetchEmployees, setEmployeeData, setOpenCreateSms, updateQueryParams } 
 import EditEmployeeModal from 'src/views/apps/settings/employees/TeacherEditDialog'
 import api from 'src/@core/utils/api'
 import ButtonGroup from '@mui/material/ButtonGroup';
+import { disablePage } from 'src/store/apps/page'
+import toast from 'react-hot-toast'
 
 export interface customTableProps {
     xs: number
@@ -60,7 +62,10 @@ export default function GroupsPage() {
 
         const handleDeleteSubmit = async () => {
             setSmallLoading(true)
+            dispatch(disablePage(true))
             await api.delete(`auth/delete/employee/${id}/`)
+            toast.success("Hodim muvaffaqiyatli o'chirildi")
+            dispatch(disablePage(false))
             dispatch(fetchEmployees(queryParams))
             setSmallLoading(false)
         }
@@ -94,13 +99,12 @@ export default function GroupsPage() {
                 >
                     <MenuItem
                         onClick={getUserById}
-                        sx={{ '& svg': { mr: 2 } }}
                     >
                         {
                             smallLoading ?
                                 <CircularProgress sx={{ mx: 'auto' }} size={28} /> :
                                 <>
-                                    <IconifyIcon icon='mdi:pencil-outline' fontSize={20} />
+                                    <IconifyIcon icon='mdi:pencil-outline' fontSize={20} style={{ marginRight: '4px' }} />
                                     {t('Tahrirlash')}
                                 </>
                         }

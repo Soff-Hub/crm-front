@@ -86,7 +86,7 @@ const UserSuspendDialog = (props: Props) => {
           </Box>
         </DialogContent>
         <DialogActions sx={{ justifyContent: 'center' }}>
-          <Button variant='contained' color='success' onClick={handleSecondDialogClose}>
+          <Button variant='contained' onClick={handleSecondDialogClose}>
             OK
           </Button>
         </DialogActions>

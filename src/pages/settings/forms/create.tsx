@@ -246,7 +246,7 @@ export default function CreateForm({ }: Props) {
                             components.map((el: any, i: number) => <CreatedComponent variants={el.question_variants} key={i} type={el.input_type} label={el.title} />)
                         }
 
-                        <LoadingButton variant="contained" color='success' type="submit" size='large' sx={{ mt: 5 }} fullWidth>
+                        <LoadingButton variant="contained" type="submit" size='large' sx={{ mt: 5 }} fullWidth>
                             {t('Yuborish')}
                         </LoadingButton>
                     </Form>
@@ -263,7 +263,7 @@ export default function CreateForm({ }: Props) {
 
                     <Box sx={{ display: 'flex', justifyContent: 'center', gap: 4, mt: 4 }}>
                         <LoadingButton onClick={handleClose} variant='outlined'>{t("Bekor qilish")}</LoadingButton>
-                        <LoadingButton color='success' variant='contained' onClick={() => createComponent('varchar', name)}>{t("Saqlash")}</LoadingButton>
+                        <LoadingButton variant='contained' onClick={() => createComponent('varchar', name)}>{t("Saqlash")}</LoadingButton>
                     </Box>
                 </DialogContent>
             </Dialog>
@@ -276,7 +276,7 @@ export default function CreateForm({ }: Props) {
 
                     <Box sx={{ display: 'flex', justifyContent: 'center', gap: 4, mt: 4 }}>
                         <LoadingButton onClick={handleClose} variant='outlined'>{t("Bekor qilish")}</LoadingButton>
-                        <LoadingButton color='success' variant='contained' onClick={() => createComponent('description', name)}>{t("Saqlash")}</LoadingButton>
+                        <LoadingButton variant='contained' onClick={() => createComponent('description', name)}>{t("Saqlash")}</LoadingButton>
                     </Box>
                 </DialogContent>
             </Dialog>
@@ -305,7 +305,7 @@ export default function CreateForm({ }: Props) {
 
                     <Box sx={{ display: 'flex', justifyContent: 'center', gap: 4, mt: 6 }}>
                         <LoadingButton onClick={handleClose} variant='outlined'>{t("Bekor qilish")}</LoadingButton>
-                        <LoadingButton color='success' variant='contained' onClick={() => createComponent(selectType, name)}>{t("Saqlash")}</LoadingButton>
+                        <LoadingButton variant='contained' onClick={() => createComponent(selectType, name)}>{t("Saqlash")}</LoadingButton>
                     </Box>
                 </DialogContent>
             </Dialog>

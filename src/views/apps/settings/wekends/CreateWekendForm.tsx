@@ -99,7 +99,7 @@ export default function CreateWekendForm({ }: Props) {
                 {errors.description && touched.description && <FormHelperText error>{errors.description}</FormHelperText>}
             </FormControl>
 
-            <LoadingButton loading={loading} type='submit' variant='contained' color='success' fullWidth>
+            <LoadingButton loading={loading} type='submit' variant='contained' fullWidth>
                 {' '}
                 {t("Saqlash")}
             </LoadingButton>

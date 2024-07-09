@@ -8,6 +8,7 @@ import { fetchCoursesList, setOpenEditCourse } from 'src/store/apps/settings'
 import api from 'src/@core/utils/api'
 import ceoConfigs from 'src/configs/ceo'
 import toast from 'react-hot-toast'
+import { disablePage } from 'src/store/apps/page'
 
 type Props = {
     id: number
@@ -42,6 +43,7 @@ export default function CourseListRowOptions({ id }: Props) {
     async function handleDeletePosts(id: number) {
         handleRowOptionsClose()
         setLoading(true)
+        dispatch(disablePage(true))
         try {
             await api.delete(`${ceoConfigs.courses_delete}/${id}`)
             setSuspendDialogOpen(false)
@@ -50,7 +52,7 @@ export default function CourseListRowOptions({ id }: Props) {
         } catch (error: any) {
             toast.error('Xatolik yuz berdi!', { position: 'top-center' })
         }
-
+        dispatch(disablePage(false))
         setLoading(false)
     }
 

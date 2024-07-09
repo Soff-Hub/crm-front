@@ -8,6 +8,8 @@ import MuiDrawer, { DrawerProps } from '@mui/material/Drawer'
 import { createSms, setOpenCreateSms } from 'src/store/apps/settings'
 import { useAppDispatch, useAppSelector } from 'src/store'
 import LoadingButton from '@mui/lab/LoadingButton'
+import { disablePage } from 'src/store/apps/page'
+import toast from 'react-hot-toast'
 
 
 
@@ -51,7 +53,11 @@ export default function CreateSmsDialog({ }: Props) {
         validationSchema,
         onSubmit: async (values) => {
             setLoading(true)
+            dispatch(disablePage(true))
             await dispatch(createSms(values))
+            dispatch(disablePage(false))
+            formik.resetForm()
+            toast.success("SMS shablon yaratildi")
             setOpenAddGroup(false)
             setLoading(false)
         }
@@ -114,7 +120,7 @@ export default function CreateSmsDialog({ }: Props) {
                     {!!errors.description && touched.description && <FormHelperText error>{errors.description}</FormHelperText>}
                 </FormControl>
 
-                <LoadingButton loading={loading} type='submit' variant='contained' color='success' fullWidth>
+                <LoadingButton loading={loading} type='submit' variant='contained' fullWidth>
                     {' '}
                     {t('Saqlash')}
                 </LoadingButton>

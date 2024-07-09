@@ -78,6 +78,9 @@
     "archive": "arxiv",
     "archived": "arxiv",
     "test": "sinov",
+    "new": "yangi",
+    "frozen": "muzlatilgan",
     "TEACHER": "O'qituvchi",
-    "CASHER": "Kassir"
+    "CASHER": "Kassir",
+    "Loading...": "Yuklanmoqda..."
 }

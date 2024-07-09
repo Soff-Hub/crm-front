@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next'
 import { toast } from 'react-hot-toast'
 import { useAppDispatch, useAppSelector } from 'src/store'
 import { deleteTeacher, fetchTeacherdetail, fetchTeachersList, setOpenEdit } from 'src/store/apps/mentors'
+import { disablePage } from 'src/store/apps/page'
 
 const RowOptions = ({ id }: { id: number | string }) => {
     const { t } = useTranslation()
@@ -35,6 +36,7 @@ const RowOptions = ({ id }: { id: number | string }) => {
 
     const handleDeleteTeacher = async (id: string | number) => {
         setLoaading(true)
+        dispatch(disablePage(true))
         const resp = await dispatch(deleteTeacher(id))
         if (resp.meta.requestStatus === 'rejected') {
             toast.error(`${resp.payload?.msg}`, { position: 'top-center' })
@@ -43,6 +45,7 @@ const RowOptions = ({ id }: { id: number | string }) => {
             toast.success(`${t("O'qituvchilar ro'yxatidan o'chirildi")}`, { position: 'top-center' })
         }
         setLoaading(false)
+        dispatch(disablePage(false))
     }
 
     const handleEdit = async (id: any) => {

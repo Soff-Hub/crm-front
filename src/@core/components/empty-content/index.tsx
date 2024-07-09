@@ -10,7 +10,7 @@ export default function EmptyContent() {
                 }}
                 variant="body2"
             >
-                Malumot yo'q
+                Ma'lumot yo'q
             </Typography>
         </Box>
     )

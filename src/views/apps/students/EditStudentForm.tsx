@@ -20,6 +20,8 @@ import useResponsive from 'src/@core/hooks/useResponsive';
 import SubLoader from '../loaders/SubLoader';
 import PhoneInput from 'src/@core/components/phone-input';
 import { reversePhone } from 'src/@core/components/phone-input/format-phone-number';
+import { disablePage } from 'src/store/apps/page';
+import toast from 'react-hot-toast';
 
 
 export default function EditStudentForm() {
@@ -59,6 +61,7 @@ export default function EditStudentForm() {
         validationSchema,
         onSubmit: async (valuess: UpdateStudentDto) => {
             setLoading(true)
+            dispatch(disablePage(true))
             const newVlaues = { ...valuess, phone: reversePhone(valuess.phone) }
 
             const resp = await dispatch(updateStudent(newVlaues))
@@ -66,12 +69,14 @@ export default function EditStudentForm() {
             if (resp.meta.requestStatus === 'rejected') {
                 formik.setErrors(resp.payload)
             } else {
+                toast.success("O'zgarishlar muvaffaqiyatli saqlandi")
                 await dispatch(fetchStudentsList())
                 dispatch(setOpenEdit(null))
                 formik.resetForm()
                 setIsGroup(false)
             }
             setLoading(false)
+            dispatch(disablePage(false))
         }
     });
 

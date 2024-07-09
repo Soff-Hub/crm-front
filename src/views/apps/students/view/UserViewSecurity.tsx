@@ -244,7 +244,6 @@ const UserViewSecurity = ({ groupData }: any) => {
                 size='small'
                 name='amount'
                 defaultValue={edit?.amount}
-                type='number'
               />
               <FormHelperText error={error.amount}>{error.amount?.message}</FormHelperText>
             </FormControl>

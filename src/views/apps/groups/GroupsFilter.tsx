@@ -1,14 +1,15 @@
 // @ts-nocheck
 
 // ** MUI Imports
-import { Box, FormControl, InputLabel, MenuItem, OutlinedInput, Select, SelectChangeEvent, TextField } from '@mui/material';
-import { useState } from 'react';
+import { Box, CircularProgress, FormControl, InputLabel, MenuItem, OutlinedInput, Select, SelectChangeEvent, TextField } from '@mui/material';
+import { useEffect, useState } from 'react';
 
 
 // ** Third Party Imports
 import 'react-datepicker/dist/react-datepicker.css'; // Import CSS file for react-datepicker
 import { useTranslation } from 'react-i18next';
 import IconifyIcon from 'src/@core/components/icon';
+import useDebounce from 'src/hooks/useDebounce';
 import { useAppDispatch, useAppSelector } from 'src/store';
 import { fetchGroups, updateParams } from 'src/store/apps/groups';
 
@@ -21,6 +22,8 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
     const { teachers, queryParams, courses } = useAppSelector(state => state.groups)
     const dispatch = useAppDispatch()
     const [search, setSearch] = useState<string>('')
+    const searchVal = useDebounce(search, 600)
+    const [loading, setLoading] = useState<boolean>(false)
 
     const { t } = useTranslation()
 
@@ -45,11 +48,18 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
         dispatch(fetchGroups(queryString))
     }
 
-    const handleSearch = () => {
-        dispatch(updateParams({ search }));
-        const queryString = new URLSearchParams({ ...queryParams, search }).toString()
-        dispatch(fetchGroups(queryString))
+    const handleSearch = async () => {
+        setLoading(true)
+        dispatch(updateParams({ search: searchVal }));
+        const queryString = new URLSearchParams({ ...queryParams, search: searchVal }).toString()
+        await dispatch(fetchGroups(queryString))
+        setLoading(false)
     }
+
+
+    useEffect(() => {
+        handleSearch()
+    }, [searchVal])
 
     if (isMobile) {
         return (
@@ -57,7 +67,7 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
                 <Box display={'flex'} gap={2} flexDirection={'column'} paddingTop={isMobile ? 3 : 0} rowGap={isMobile ? 4 : 0}>
                     <FormControl sx={{ width: '100%', maxWidth: 260 }}>
                         <InputLabel size='small' id='search-input'>{t("Qidirish")}</InputLabel>
-                        <OutlinedInput onChange={e => setSearch(e.target.value)} endAdornment={<IconifyIcon onClick={handleSearch} style={{ cursor: 'pointer' }} icon={'mingcute:search-line'} />} label='Qidirish' id='search-input' placeholder='Qidirish...' size='small' />
+                        <OutlinedInput onChange={e => setSearch(e.target.value)} endAdornment={<Box sx={{ display: 'flex' }}>{loading && <CircularProgress size={18} />}</Box>} label='Qidirish' id='search-input' placeholder='Qidirish...' size='small' />
                     </FormControl>
                     <FormControl sx={{ width: '100%' }}>
                         <InputLabel size='small' id='demo-simple-select-outlined-label'>{t("Holat")}</InputLabel>
@@ -144,7 +154,7 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
             <Box display={'flex'} gap={2} flexWrap={'nowrap'} >
                 <FormControl sx={{ width: '100%', maxWidth: 260 }}>
                     <InputLabel size='small' id='search-input'>{t("Qidirish")}</InputLabel>
-                    <OutlinedInput onChange={e => setSearch(e.target.value)} endAdornment={<IconifyIcon onClick={handleSearch} style={{ cursor: 'pointer' }} icon={'mingcute:search-line'} />} label='Qidirish' id='search-input' placeholder='Qidirish...' size='small' />
+                    <OutlinedInput onChange={e => setSearch(e.target.value)} endAdornment={<Box sx={{ display: 'flex' }}>{loading && <CircularProgress size={18} />}</Box>} label='Qidirish' id='search-input' placeholder='Qidirish...' size='small' />
                 </FormControl>
                 <FormControl sx={{ maxWidth: 220, width: '100%' }}>
                     <InputLabel size='small' id='demo-simple-select-outlined-label'>{t("Holat")}</InputLabel>

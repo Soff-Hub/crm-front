@@ -1,4 +1,5 @@
 import {
+  Box,
   Chip,
   Pagination,
   Typography
@@ -14,6 +15,7 @@ import EditStudentModal from 'src/views/apps/students/EditStudentModal';
 import StudentRowOptions from 'src/views/apps/students/StudentRowOptions';
 import { useAppDispatch, useAppSelector } from 'src/store';
 import { clearStudentParams, fetchStudentsList, updateStudentParams } from 'src/store/apps/students';
+import { formatCurrency } from 'src/@core/utils/format-currency';
 
 export interface customTableProps {
   xs: number
@@ -48,21 +50,22 @@ export default function GroupsPage() {
       dataIndex: 'phone'
     },
     {
-      xs: 1.3,
+      xs: 1.5,
       title: t("Guruhlar"),
-      dataIndex: 'group',
+      dataIndex: 'student_status',
       render: (group: {
-        group_data: {
-          id: number
-          name: string
-        }
-        start_at: string
-      }[]) => group.map((item, i) => (
-        <Typography fontSize={12} key={i}>
-          {item.start_at} {" - "}
-          {item.group_data.name}
-        </Typography>
-      ))
+        id: number,
+        group: number,
+        status: string,
+        group_name: string,
+        lesson_time: string
+      }[]) => group.length > 0 ? group.map((item, i) => (
+        <Box fontSize={12} key={i} sx={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '4px' }}>
+          {item.lesson_time} {" - "}
+          {item.group_name}
+          <Chip label={t(item.status)} size="small" variant='outlined' color={item.status === 'active' ? 'success' : item.status === 'archive' ? 'error' : item.status === 'frozen' ? 'secondary' : 'warning'} />
+        </Box>
+      )) : <Chip label="Guruhsiz" color="warning" variant='outlined' size='small' sx={{ fontWeight: 700 }} />
     },
     {
       xs: 1.3,
@@ -84,14 +87,14 @@ export default function GroupsPage() {
       xs: 0.7,
       title: t("Balans"),
       dataIndex: 'balance',
-      render: (balance: string) => `${+balance} so'm`
+      render: (balance: string) => `${formatCurrency(+balance)} so'm`
     },
-    {
-      xs: 0.7,
-      title: t("Status"),
-      dataIndex: 'status',
-      render: (status: string) => <Chip label={t(status)} size="small" variant='outlined' color={status === 'active' ? 'success' : status === 'archive' ? 'error' : 'warning'} />
-    },
+    // {
+    //   xs: 0.7,
+    //   title: t("Status"),
+    //   dataIndex: 'status',
+    //   render: (status: string) => <Chip label={t(status)} size="small" variant='outlined' color={status === 'active' ? 'success' : status === 'archive' ? 'error' : 'warning'} />
+    // },
     {
       xs: 0.8,
       dataIndex: 'id',

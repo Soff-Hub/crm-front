@@ -19,6 +19,8 @@ import useGroups from 'src/hooks/useGroups';
 import useResponsive from 'src/@core/hooks/useResponsive';
 import PhoneInput from 'src/@core/components/phone-input';
 import { reversePhone } from 'src/@core/components/phone-input/format-phone-number';
+import { disablePage } from 'src/store/apps/page';
+import toast from 'react-hot-toast';
 
 
 export default function CreateStudentForm() {
@@ -32,7 +34,6 @@ export default function CreateStudentForm() {
 
     // ** States
     const [isGroup, setIsGroup] = useState<boolean>(false)
-    const [isPassword, setIsPassword] = useState<boolean>(false)
     const [loading, setLoading] = useState<boolean>(false)
 
 
@@ -57,6 +58,7 @@ export default function CreateStudentForm() {
         validationSchema,
         onSubmit: async (valuess: CreateStudentDto) => {
             setLoading(true)
+            dispatch(disablePage(true))
             const newVlaues = { ...valuess, phone: reversePhone(values.phone), group: values?.group ? [values.group] : [] }
 
             const resp = await dispatch(createStudent(newVlaues))
@@ -64,11 +66,13 @@ export default function CreateStudentForm() {
             if (resp.meta.requestStatus === 'rejected') {
                 formik.setErrors(resp.payload)
             } else {
+                toast.success("O'quvchi muvaffaqiyatli yaratildi")
                 await dispatch(fetchStudentsList())
                 dispatch(setOpenEdit(null))
                 formik.resetForm()
                 setIsGroup(false)
             }
+            dispatch(disablePage(false))
             setLoading(false)
         }
     });
@@ -77,6 +81,8 @@ export default function CreateStudentForm() {
 
 
     useEffect(() => {
+        
+        getGroups()
 
         return () => {
             formik.resetForm()
@@ -142,6 +148,19 @@ export default function CreateStudentForm() {
                 </RadioGroup>
             </FormControl>
 
+            <FormControl sx={{ width: '100%' }}>
+                <TextField
+                    size='small'
+                    label={t("password")}
+                    name='password'
+                    error={!!errors.password && touched.password}
+                    value={values.password}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                />
+                <FormHelperText error={true}>{errors.password}</FormHelperText>
+            </FormControl>
+
             {
                 isGroup ? (
                     <FormControl fullWidth>
@@ -178,28 +197,10 @@ export default function CreateStudentForm() {
                 ) : ''
             }
 
-            {
-                isPassword ? (
-                    <FormControl sx={{ width: '100%' }}>
-                        <TextField
-                            size='small'
-                            label={t("password")}
-                            name='password'
-                            error={!!errors.password && touched.password}
-                            value={values.password}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                        />
-                        <FormHelperText error={true}>{errors.password}</FormHelperText>
-                    </FormControl>
-                ) : ''
-            }
-
-            <LoadingButton loading={loading} variant='contained' type='submit' fullWidth>{t('Saqlash')}</LoadingButton>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
-                {!isGroup && <Button onClick={async () => (setIsGroup(true), await getGroups())} type='button' variant='outlined' size='small' startIcon={<IconifyIcon icon={'material-symbols:add'} />}>{t("Guruhga qo'shish")}</Button>}
-                {!isPassword && <Button onClick={() => setIsPassword(true)} type='button' variant='outlined' size='small' color='warning' startIcon={<IconifyIcon icon={'lucide:key-round'} />}>{t("Parol qo'shish")}</Button>}
+                {!isGroup && <Button onClick={async () => (setIsGroup(true))} type='button' variant='outlined' size='small' startIcon={<IconifyIcon icon={'material-symbols:add'} />}>{t("Guruhga qo'shish")}</Button>}
             </Box>
+            <LoadingButton loading={loading} variant='contained' type='submit' fullWidth>{t('Saqlash')}</LoadingButton>
         </form>
     )
 }

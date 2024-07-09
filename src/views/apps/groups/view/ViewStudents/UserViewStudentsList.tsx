@@ -129,13 +129,13 @@ export const UserViewStudentsItem = ({ item, index, status, activeId }: ItemType
     return (
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>
             <Typography sx={{ width: '20px' }}>{index}.</Typography>
-            <Status color={status == 'active' ? 'success' : status == 'new' ? 'warning' : 'error'} />
+            <Status color={status == 'active' ? 'success' : status == 'new' ? 'warning' : status == 'frozen' ? "secondary" : 'error'} />
             {!(user?.role.length === 1 && user?.role.includes('teacher')) ? <HtmlTooltip className='' title={
                 <Box sx={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', padding: '10px' }}>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', py: 1 }}>
                         <Box>
                             <Typography fontSize={12}>{first_name}</Typography>
-                            <Typography variant='body2' fontSize={12}>{status == 'active' ? t('aktiv') : status == 'new' ? t('sinov') : t('arxiv')}</Typography>
+                            <Typography variant='body2' fontSize={12}>{t(status)}</Typography>
                         </Box>
                         <Typography variant='body2' fontSize={10}>{`( ID: 134 )`}</Typography>
                     </Box>
@@ -169,6 +169,7 @@ export const UserViewStudentsItem = ({ item, index, status, activeId }: ItemType
                 aria-controls={open ? 'fade-menu' : undefined}
                 aria-haspopup="true"
                 aria-expanded={open ? 'true' : undefined}
+                style={{ cursor: 'pointer' }}
                 onClick={!(user?.role.length === 1 && user?.role.includes('teacher')) ? handleClick : undefined}
             >
                 <IconifyIcon icon={"charm:menu-kebab"} fontSize={11} />
@@ -188,7 +189,7 @@ export const UserViewStudentsItem = ({ item, index, status, activeId }: ItemType
                 <MenuItem onClick={() => handleClose('left')}>{t('Guruhdan chiqarish')}</MenuItem>
                 <MenuItem onClick={() => handleClose('notes')}>{t('Eslatma')} +</MenuItem>
                 <MenuItem onClick={() => (handleClose('sms'), getSMSTemps())}>{t('Xabar (sms)')} +</MenuItem>
-                <MenuItem onClick={() => setActivate(true)}>{t('Tahrirlash')}</MenuItem>
+                <MenuItem onClick={() => (setActivate(true), handleClose('none'))}>{t('Tahrirlash')}</MenuItem>
             </Menu>
 
             <Dialog open={openLeft} onClose={() => setOpenLeft(false)}>
@@ -197,11 +198,11 @@ export const UserViewStudentsItem = ({ item, index, status, activeId }: ItemType
 
                     <Box sx={{ display: 'flex', justifyContent: 'center', gap: 4 }}>
                         <Button onClick={() => setOpenLeft(false)} size='small' variant='outlined' color='error'>bekor qilish</Button>
-                        <LoadingButton loading={loading} onClick={handleLeft} size='small' variant='contained' color='success'>Tasdiqlash</LoadingButton>
+                        <LoadingButton loading={loading} onClick={handleLeft} size='small' variant='contained'>Tasdiqlash</LoadingButton>
                     </Box>
                 </DialogContent>
             </Dialog>
-            <EditStudent student={student} id={activeId} activate={activate} setActivate={setActivate} />
+            <EditStudent status={status} student={student} id={activeId} activate={activate} setActivate={setActivate} />
             <AddNote id={id} modalRef={modalRef} setModalRef={setModalRef} />
             <SentSMS id={id} modalRef={modalRef} setModalRef={setModalRef} />
         </Box>

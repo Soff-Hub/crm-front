@@ -17,5 +17,9 @@ export const formatPhoneNumber = (value: any) => {
 };
 
 export const reversePhone = (value: string) => {
-    return `+998${value.replace(/[^\d]/g, '').length <= 9 ? value.replace(/[^\d]/g, '') : value.replace(/[^\d]/g, '').split('').slice(0, 9).join('')}`
+    const withoutPrefix = value.replace('+998', '');
+
+    console.log(withoutPrefix.replace(/[^\d]/g, ''));
+    
+    return `+998${withoutPrefix.replace(/[^\d]/g, '').length <= 9 ? withoutPrefix.replace(/[^\d]/g, '') : withoutPrefix.replace(/[^\d]/g, '').split('').slice(0, 9).join('')}`
 }

@@ -1,8 +1,14 @@
 import { Box, Card, Paper, TextField, Typography, styled } from '@mui/material'
-import React from 'react'
+import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { formatCurrency } from 'src/@core/utils/format-currency'
 import { hexToRGBA } from 'src/@core/utils/hex-to-rgba'
+import { DatePicker, CustomProvider } from 'rsuite';
+import 'rsuite/dist/rsuite.min.css';
+import uz_UZ from './uz_UZ'
+import locale from './uz_UZ'
+import { today } from 'src/@core/components/card-statistics/kanban-item'
+
 
 interface GroupStatsType {
     id: number
@@ -43,18 +49,30 @@ const Div = styled(Box)(({ theme }) => ({
     background: hexToRGBA('#72E128', theme.palette.mode === 'light' ? 0.4 : 0.2),
 }))
 
+function formatDateToMMYYYY(dateString: any) {
+    const date = new Date(dateString);
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${year}-${month}`;
+}
 
+function parseMMYYYYToDate(mmYYYY: any) {
+    const [month, year] = mmYYYY.split('-').map(Number);
+    const date = new Date(year, month - 1, 1, 11, 10, 35);
+    return date;
+}
 
 export default function GroupFinanceTable({ data, updateData }: any) {
 
     const { t } = useTranslation()
+    const [selectedDate, setSelectedDate] = useState<any>(parseMMYYYYToDate(data.date.split('-').reverse().join('-')));
 
     return (
         <Card sx={{ display: 'flex', p: '15px', gap: '5px' }}>
             <Box className='header' sx={{ minWidth: '170px' }}>
                 <Div sx={{ mb: '5px' }}>{t('Nomi')}</Div>
                 <Box>
-                    <Box sx={{ border: '1px solid #c3cccc', p: '5px', fontSize: 13 }} >{t('Nomi')} / {t('Guruhlar')}</Box>
+                    <Box sx={{ border: '1px solid #c3cccc', p: '5px', fontSize: 13 }} >{t('Guruhlar')}</Box>
                     <Box sx={{ border: '1px solid #c3cccc', p: '5px', fontSize: 13 }} >{t("O'quvchilar soni")}</Box>
                     <Box sx={{ border: '1px solid #c3cccc', p: '5px', fontSize: 13 }} >{t("To'landi")}</Box>
                     <Box sx={{ border: '1px solid #c3cccc', p: '5px', fontSize: 13 }} >{t('Reja')}</Box>
@@ -74,8 +92,19 @@ export default function GroupFinanceTable({ data, updateData }: any) {
                 </Box>
             </Box>
             <Box className='body' sx={{ flexGrow: 1 }}>
-                <Div sx={{ textAlign: 'center', mb: '5px', padding: '2px' }}>
-                    <TextField defaultValue={`${new Date().getFullYear()}-${Number(new Date().getMonth()) + 1 < 10 ? "0" + (1 + new Date().getMonth()) : new Date().getMonth() + 1}`} style={{ border: 'none' }} size='small' type='month' onChange={(e) => updateData(e.target.value)} />
+                <Div sx={{ textAlign: 'end', mb: '5px', padding: '2px', borderRadius: '0' }}>
+                    {/* <TextField defaultValue={`${new Date().getFullYear()}-${Number(new Date().getMonth()) + 1 < 10 ? "0" + (1 + new Date().getMonth()) : new Date().getMonth() + 1}`} style={{ border: 'none' }} size='small' type='month' onChange={(e) => updateData(e.target.value)} /> */}
+                    <CustomProvider locale={locale}>
+                        <DatePicker
+                            placeholder="Oy tanlang"
+                            value={selectedDate}
+                            onChange={async (newValue) => {
+                                await updateData(formatDateToMMYYYY(newValue))
+                                setSelectedDate(newValue);
+                            }}
+                            format="MM-yyyy"
+                        />
+                    </CustomProvider>
                 </Div>
                 <NavigationMenu sx={{ display: 'flex', maxWidth: '1050px', overflowX: 'auto' }}>
                     {

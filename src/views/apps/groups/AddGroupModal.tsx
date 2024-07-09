@@ -18,6 +18,8 @@ import { ChangeEvent, useState } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from "yup";
 import Calendar from './Calendar';
+import { disablePage } from 'src/store/apps/page';
+import toast from 'react-hot-toast';
 
 export default function AddGroupModal() {
     const { isOpenAddGroup, courses, teachers, formParams, queryParams, rooms, initialValues } = useAppSelector(state => state.groups)
@@ -42,6 +44,7 @@ export default function AddGroupModal() {
         validationSchema,
         onSubmit: async (values) => {
             setLoading(true)
+            dispatch(disablePage(true))
             let obj = { ...values }
             if (!formik.values.day_of_week || formik.values.day_of_week == "0") {
                 obj = { ...obj, day_of_week: customWeekdays }
@@ -55,9 +58,11 @@ export default function AddGroupModal() {
                 formik.setErrors(resp.payload)
             } else {
                 handleClose()
+                toast.success("Guruh muvaffaqiyatli yaratildi")
                 await dispatch(fetchGroups(queryString))
             }
             setLoading(false)
+            dispatch(disablePage(false))
         }
     });
 

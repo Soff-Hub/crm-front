@@ -7,6 +7,8 @@ import { createGroup, editRoom, fetchCoursesList, fetchRoomList, setOpenEditRoom
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import useBranches from 'src/hooks/useBranch'
+import { disablePage } from 'src/store/apps/page'
+import toast from 'react-hot-toast'
 
 type Props = {}
 
@@ -36,16 +38,19 @@ export default function EditRoomForm({ }: Props) {
         validationSchema,
         onSubmit: async (values) => {
             setLoading(true)
+            dispatch(disablePage(true))
             const resp = await dispatch(editRoom({ ...values, id: openEditRoom?.id }))
             if (resp.meta.requestStatus === 'rejected') {
                 formik.setErrors(resp.payload)
                 setLoading(false)
             } else {
                 setLoading(false)
+                toast.success("O'zgarishlar muvaffaqiyatli saqlandi")
                 await dispatch(fetchRoomList({ page: active_page }))
                 formik.resetForm()
-                return setOpenAddGroup()
+                setOpenAddGroup()
             }
+            dispatch(disablePage(false))
         }
     })
 
@@ -107,7 +112,7 @@ export default function EditRoomForm({ }: Props) {
                 {errors.branch && touched.branch && <FormHelperText error>{errors.branch}</FormHelperText>}
             </FormControl>
 
-            <LoadingButton loading={loading} type='submit' variant='contained' color='success' fullWidth>
+            <LoadingButton loading={loading} type='submit' variant='contained' fullWidth>
                 {' '}
                 {t("Saqlash")}
             </LoadingButton>

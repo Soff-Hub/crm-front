@@ -1,7 +1,7 @@
 import React from 'react'
 
 interface StatusTypes {
-    color?: 'warning' | 'success' | 'error' | undefined,
+    color?: 'warning' | 'success' | 'error' | 'secondary' | undefined,
 }
 
 export default function Status({ color }: StatusTypes) {
@@ -15,7 +15,7 @@ export default function Status({ color }: StatusTypes) {
                 width: '6px',
                 height: '6px',
                 borderRadius: '50%',
-                backgroundColor: color === "success" ? '#72E128' : color === 'error' ? '#FF4D49' : color === 'warning' ? '#ffc107' : 'secondary'
+                backgroundColor: color === "success" ? '#72E128' : color === 'error' ? '#FF4D49' : color === 'warning' ? '#ffc107' : 'gray'
             }}></span>
     )
 }

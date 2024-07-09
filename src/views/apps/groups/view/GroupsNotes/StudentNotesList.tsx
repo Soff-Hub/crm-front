@@ -49,32 +49,6 @@ export const UserViewStudentsItem = ({ item, setOpenEdit }: ItemChildTypes) => {
                     <Typography fontSize={10}>{formatDateTime(created_at)}</Typography>
                 </Box>
             </Box>
-            <Box>
-                <Typography
-                    fontSize={20}
-                    id="fade-button"
-                    aria-controls={open ? 'fade-menu' : undefined}
-                    aria-haspopup="true"
-                    aria-expanded={open ? 'true' : undefined}
-                    onClick={handleClick}
-                    sx={{ cursor: 'pointer' }}
-                >
-                    <IconifyIcon icon={"charm:menu-kebab"} fontSize={17} />
-                </Typography>
-            </Box>
-
-            <Menu
-                id="fade-menu"
-                MenuListProps={{
-                    'aria-labelledby': 'fade-button',
-                }}
-                anchorEl={anchorEl}
-                open={open}
-                onClose={() => handleClose(false)}
-                TransitionComponent={Fade}
-            >
-                <MenuItem onClick={() => dispatch(handleOpenDeleteNote(id))}>O'chirish</MenuItem>
-            </Menu>
         </Box>
     )
 }

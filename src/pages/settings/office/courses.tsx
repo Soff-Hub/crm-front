@@ -91,19 +91,9 @@ export default function GroupsPage() {
     },
     {
       xs: 1.5,
-      title: t('Kurs davomiyligi'),
+      title: t('Kurs davomiyligi (oy)'),
       dataIndex: 'month_duration',
       render: month => <span>{month} oy</span>
-    },
-    {
-      xs: 1.3,
-      title: t('Dars davomiyligi'),
-      dataIndex: 'lesson_duration',
-      render: date =>
-        date === '01:30:00' ? '1 soat 30 daqiqa'
-          : date === '02:00:00' ? '2 soat' :
-            date === '02:30:00' ? '2 soat 30 daqiqa'
-              : date === '03:00:00' ? '3 soat' : ''
     },
     {
       xs: 1,

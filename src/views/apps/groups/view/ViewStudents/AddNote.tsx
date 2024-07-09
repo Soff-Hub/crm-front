@@ -61,7 +61,7 @@ export default function AddNote({ id, modalRef, setModalRef }: { id: string, mod
                     </FormControl>
                     <Box sx={{ display: 'flex', justifyContent: 'center', gap: 4 }}>
                         <Button onClick={() => { formik.resetForm(), setModalRef(null) }} size='small' variant='outlined' color='error'>Bekor qilish</Button>
-                        <LoadingButton loading={isLoading} type='submit' size='small' variant='contained' color='success'>Saqlash</LoadingButton>
+                        <LoadingButton loading={isLoading} type='submit' size='small' variant='contained'>Saqlash</LoadingButton>
                     </Box>
                 </form>
             </DialogContent>

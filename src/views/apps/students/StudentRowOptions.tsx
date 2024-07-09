@@ -1,9 +1,11 @@
 import { IconButton, Menu, MenuItem } from '@mui/material'
 import Link from 'next/link'
 import React, { MouseEvent, useState } from 'react'
+import toast from 'react-hot-toast'
 import { useTranslation } from 'react-i18next'
 import IconifyIcon from 'src/@core/components/icon'
 import { useAppDispatch, useAppSelector } from 'src/store'
+import { disablePage } from 'src/store/apps/page'
 import { deleteStudent, fetchStudentDetail, fetchStudentsList, setOpenEdit } from 'src/store/apps/students'
 import UserSuspendDialog from 'src/views/apps/mentors/view/UserSuspendDialog';
 
@@ -42,7 +44,10 @@ export default function StudentRowOptions({ id }: Props) {
 
     async function submitDelete() {
         setLoading(true)
+        dispatch(disablePage(true))
         await dispatch(deleteStudent(id))
+        dispatch(disablePage(false))
+        toast.success("O'quvchi muvaffaqiyatli o'chirildi")
         await dispatch(fetchStudentsList({ status: 'active' }))
         setLoading(false)
     }
