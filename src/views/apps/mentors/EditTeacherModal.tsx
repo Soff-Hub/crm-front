@@ -102,7 +102,8 @@ export default function EditTeacherModal() {
             for (const [key, value] of Object.entries(values)) {
                 if (!['image'].includes(key)) {
                     if (key == "password" && value == "") {
-                    } else if (key === 'phone') {
+                    }
+                    else if (key === 'phone') {
                         newValues.append(key, reversePhone(value))
                     } else newValues.append(key, value)
                 }
@@ -130,6 +131,9 @@ export default function EditTeacherModal() {
             dispatch(disablePage(false))
         }
     });
+
+    console.log(formik.values);
+    
 
     useEffect(() => {
         if (teacherData) {

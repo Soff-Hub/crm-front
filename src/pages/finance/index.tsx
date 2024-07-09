@@ -198,7 +198,7 @@ const CardStatistics = () => {
     const getGroupPays = async (date: string) => {
         setLoading(true)
         const resp = await api.get(`/common/finance/group-payments/?date=${date}-01`)
-        setGropPays(resp.data)
+        setGropPays({...resp.data, date})
         setLoading(false)
     }
 

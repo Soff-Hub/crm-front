@@ -28,7 +28,7 @@ import { useEffect, useRef, useState } from 'react';
 import { TeacherAvatar } from './AddMentorsModal';
 import { editEmployee, fetchEmployees, setEmployeeData } from 'src/store/apps/settings';
 import PhoneInput from 'src/@core/components/phone-input';
-import { reversePhone } from 'src/@core/components/phone-input/format-phone-number';
+import { formatPhoneNumber, reversePhone } from 'src/@core/components/phone-input/format-phone-number';
 import { disablePage } from 'src/store/apps/page';
 import toast from 'react-hot-toast';
 
@@ -61,7 +61,7 @@ export default function EditEmployeeForm() {
 
     const initialValues = {
         first_name: employeeData.first_name,
-        phone: employeeData.phone,
+        phone: formatPhoneNumber(employeeData.phone),
         birth_date: employeeData.birth_date,
         activated_at: employeeData.activated_at,
         gender: employeeData.gender,

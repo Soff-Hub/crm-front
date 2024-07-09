@@ -7,6 +7,7 @@ import { DatePicker, CustomProvider } from 'rsuite';
 import 'rsuite/dist/rsuite.min.css';
 import uz_UZ from './uz_UZ'
 import locale from './uz_UZ'
+import { today } from 'src/@core/components/card-statistics/kanban-item'
 
 
 interface GroupStatsType {
@@ -48,13 +49,23 @@ const Div = styled(Box)(({ theme }) => ({
     background: hexToRGBA('#72E128', theme.palette.mode === 'light' ? 0.4 : 0.2),
 }))
 
+function formatDateToMMYYYY(dateString: any) {
+    const date = new Date(dateString);
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${year}-${month}`;
+}
 
+function parseMMYYYYToDate(mmYYYY: any) {
+    const [month, year] = mmYYYY.split('-').map(Number);
+    const date = new Date(year, month - 1, 1, 11, 10, 35);
+    return date;
+}
 
 export default function GroupFinanceTable({ data, updateData }: any) {
 
     const { t } = useTranslation()
-    const [selectedDate, setSelectedDate] = useState<any>(null);
-
+    const [selectedDate, setSelectedDate] = useState<any>(parseMMYYYYToDate(data.date.split('-').reverse().join('-')));
 
     return (
         <Card sx={{ display: 'flex', p: '15px', gap: '5px' }}>
@@ -87,10 +98,11 @@ export default function GroupFinanceTable({ data, updateData }: any) {
                         <DatePicker
                             placeholder="Oy tanlang"
                             value={selectedDate}
-                            onChange={(newValue) => {
+                            onChange={async (newValue) => {
+                                await updateData(formatDateToMMYYYY(newValue))
                                 setSelectedDate(newValue);
                             }}
-                            format="yyyy-MM"
+                            format="MM-yyyy"
                         />
                     </CustomProvider>
                 </Div>
