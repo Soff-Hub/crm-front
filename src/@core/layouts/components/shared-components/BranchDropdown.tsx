@@ -47,6 +47,7 @@ const BranchDropdown = () => {
 
     return (
         <OptionsMenu
+            iconButtonProps={{ sx: { borderRadius: '5px' } }}
             icon={<Typography>{profile ? profile.branches.find((el: any) => el.id === profile.active_branch.branch)?.name : " "} <Icon icon='ep:arrow-down-bold' fontSize={12} /></Typography>}
             options={
                 profile ? profile?.branches.filter((item: any) => item.exists === true).map((el: any) => (

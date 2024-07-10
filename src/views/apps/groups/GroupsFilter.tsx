@@ -1,7 +1,7 @@
 // @ts-nocheck
 
 // ** MUI Imports
-import { Box, CircularProgress, FormControl, InputLabel, MenuItem, OutlinedInput, Select, SelectChangeEvent, TextField } from '@mui/material';
+import { Box, CircularProgress, FormControl, IconButton, InputAdornment, InputLabel, MenuItem, OutlinedInput, Select, SelectChangeEvent, TextField } from '@mui/material';
 import { useEffect, useState } from 'react';
 
 
@@ -67,7 +67,11 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
                 <Box display={'flex'} gap={2} flexDirection={'column'} paddingTop={isMobile ? 3 : 0} rowGap={isMobile ? 4 : 0}>
                     <FormControl sx={{ width: '100%', maxWidth: 260 }}>
                         <InputLabel size='small' id='search-input'>{t("Qidirish")}</InputLabel>
-                        <OutlinedInput onChange={e => setSearch(e.target.value)} endAdornment={<Box sx={{ display: 'flex' }}>{loading && <CircularProgress size={18} />}</Box>} label='Qidirish' id='search-input' placeholder='Qidirish...' size='small' />
+                        <OutlinedInput onChange={e => setSearch(e.target.value)} endAdornment={
+                            <InputAdornment position="end">
+                                <IconifyIcon icon={'tabler:search'} />
+                            </InputAdornment>
+                        } label='Qidirish' id='search-input' placeholder='Qidirish...' size='small' />
                     </FormControl>
                     <FormControl sx={{ width: '100%' }}>
                         <InputLabel size='small' id='demo-simple-select-outlined-label'>{t("Holat")}</InputLabel>
@@ -154,7 +158,11 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
             <Box display={'flex'} gap={2} flexWrap={'nowrap'} >
                 <FormControl sx={{ width: '100%', maxWidth: 260 }}>
                     <InputLabel size='small' id='search-input'>{t("Qidirish")}</InputLabel>
-                    <OutlinedInput onChange={e => setSearch(e.target.value)} endAdornment={<Box sx={{ display: 'flex' }}>{loading && <CircularProgress size={18} />}</Box>} label='Qidirish' id='search-input' placeholder='Qidirish...' size='small' />
+                    <OutlinedInput onChange={e => setSearch(e.target.value)} endAdornment={
+                        <InputAdornment position="end">
+                            <IconifyIcon icon={'tabler:search'} />
+                        </InputAdornment>
+                    } label='Qidirish' id='search-input' placeholder='Qidirish...' size='small' />
                 </FormControl>
                 <FormControl sx={{ maxWidth: 220, width: '100%' }}>
                     <InputLabel size='small' id='demo-simple-select-outlined-label'>{t("Holat")}</InputLabel>

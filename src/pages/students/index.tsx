@@ -113,8 +113,6 @@ export default function GroupsPage() {
   }
 
   useEffect(() => {
-    dispatch(fetchStudentsList(queryParams))
-
 
     return () => {
       dispatch(clearStudentParams(null))

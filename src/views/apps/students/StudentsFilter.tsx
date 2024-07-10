@@ -6,6 +6,7 @@ import IconifyIcon from 'src/@core/components/icon';
 import { useAppDispatch, useAppSelector } from 'src/store';
 import { fetchStudentsList, updateStudentParams } from 'src/store/apps/students';
 import useCourses from 'src/hooks/useCourses';
+import useDebounce from 'src/hooks/useDebounce';
 
 const StudentsFilter = () => {
     const [search, setSearch] = useState<string>('')
@@ -15,6 +16,7 @@ const StudentsFilter = () => {
 
     const { t } = useTranslation()
     const { isMobile } = useResponsive()
+    const searchVal = useDebounce(search, 800)
 
 
     async function handleFilter(key: string, value: string | number | null) {
@@ -26,6 +28,10 @@ const StudentsFilter = () => {
         getCourses()
     }, [])
 
+    useEffect(() => {
+        dispatch(fetchStudentsList({ ...queryParams, search: searchVal }))
+    }, [searchVal])
+
     return (
         <Box sx={{ display: 'flex', gap: '20px', flexDirection: isMobile ? 'column' : 'row' }}>
             <FormControl variant="outlined" size='small' fullWidth>
@@ -34,30 +40,12 @@ const StudentsFilter = () => {
                     fullWidth
                     id="outlined-adornment-password"
                     type={'text'}
-                    onChange={(e: any) => {
-                        if (e.target.value === '') {
-                            handleFilter('search', '')
-                        }
-                        setSearch(e.target.value)
-                    }}
+                    onChange={(e: any) => setSearch(e.target.value)}
                     value={search}
                     autoComplete='off'
                     endAdornment={
                         <InputAdornment position="end">
-                            <IconButton
-                                aria-label="toggle password visibility"
-                                onClick={() => {
-                                    if (queryParams.search !== "" && queryParams.search === search) {
-                                        handleFilter('search', '')
-                                        setSearch('')
-                                    } else {
-                                        handleFilter('search', search)
-                                    }
-                                }}
-                                edge="end"
-                            >
-                                {queryParams.search === "" || queryParams.search !== search ? <IconifyIcon icon={'tabler:search'} /> : <IconifyIcon icon={'ic:twotone-clear'} />}
-                            </IconButton>
+                            <IconifyIcon icon={'tabler:search'} />
                         </InputAdornment>
                     }
                     label={t('Qidirish')}
@@ -96,6 +84,30 @@ const StudentsFilter = () => {
                     <Select
                         size='small'
                         label={t('Holat')}
+                        value={queryParams.status}
+                        id='demo-simple-select-outlined'
+                        labelId='demo-simple-select-outlined-label'
+                        onChange={(e: any) =>
+                            handleFilter('status', e.target.value)
+                        }
+                    >
+                        <MenuItem value=''>
+                            <b>{t('Barchasi')}</b>
+                        </MenuItem>
+                        <MenuItem value={'active'}>{t('aktiv')}</MenuItem>
+                        <MenuItem value={'archive'}>{t('arxiv')}</MenuItem>
+                        <MenuItem value={'new'}>{t('sinov')}</MenuItem>
+                    </Select>
+                </FormControl>
+            </Box>
+
+
+            <Box sx={{ width: '100%' }}>
+                <FormControl fullWidth>
+                    <InputLabel size='small' id='demo-simple-select-outlined-label'>{t("To'lov holati")}</InputLabel>
+                    <Select
+                        size='small'
+                        label={t("To'lov holati")}
                         value={queryParams.status}
                         id='demo-simple-select-outlined'
                         labelId='demo-simple-select-outlined-label'
