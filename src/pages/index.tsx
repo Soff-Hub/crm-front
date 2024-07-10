@@ -21,7 +21,7 @@ export const getHomeRoute = (role: string[]) => {
   if (role.includes('student')) {
     return '/student-profile'
   }
-  
+
   return '/dashboard'
 }
 
