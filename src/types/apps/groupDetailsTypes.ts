@@ -13,6 +13,7 @@ export interface IGroupDetailsState {
   openEdit: null | ActionTypes
   isGettingGroupDetails: boolean
   isGettingExams: boolean
+  isGettingDays: boolean
   isGettingAttendance: boolean
   isGettingStudents: boolean
   isGettingExamsResults: boolean

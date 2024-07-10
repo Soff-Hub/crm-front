@@ -115,6 +115,7 @@ const initialState: IGroupDetailsState = {
     status: 'active,new'
   },
   isGettingGroupDetails: false,
+  isGettingDays: false,
   isGettingStudents: false,
   isGettingExams: false,
   isGettingAttendance: false,
@@ -127,6 +128,12 @@ export const groupDetailsSlice = createSlice({
   reducers: {
     setResultEdit: (state, action) => {
       state.examStudentId = action.payload
+    },
+    setDays: (state, action) => {
+      state.days = action.payload
+    },
+    setGettingGroupDetails: (state, action) => {
+      state.isGettingGroupDetails = action.payload
     },
     handleEditClickOpen: (state, action) => {
       state.openEdit = action.payload
@@ -156,6 +163,7 @@ export const groupDetailsSlice = createSlice({
       state.groupData = null
       state.students = null
       state.attendance = null
+      state.days = null
     }
   },
 
@@ -185,8 +193,14 @@ export const groupDetailsSlice = createSlice({
     builder.addCase(getStudents.rejected, state => {
       state.isGettingStudents = false
     })
+    builder.addCase(getAttendance.pending, (state, action) => {
+      state.isGettingAttendance = true
+    })
     builder.addCase(getAttendance.fulfilled, (state, action) => {
       state.attendance = action.payload
+      // state.isGettingAttendance = false
+    })
+    builder.addCase(getAttendance.rejected, (state, action) => {
       state.isGettingAttendance = false
     })
     builder.addCase(getDays.fulfilled, (state, action) => {
@@ -222,7 +236,9 @@ export const {
   setOpen,
   setEditData,
   setResultEdit,
-  setResultId
+  setResultId,
+  setDays,
+  setGettingGroupDetails
 } = groupDetailsSlice.actions
 
 export default groupDetailsSlice.reducer

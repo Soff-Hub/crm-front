@@ -18,7 +18,7 @@ import UserViewSecurity from 'src/views/apps/groups/view/UserViewSecurity'
 import GroupExamsList from './GroupExamList/GroupExamsList'
 import { useTranslation } from 'react-i18next'
 import { AuthContext } from 'src/context/AuthContext'
-import { setOpen, setResultId } from 'src/store/apps/groupDetails'
+import { setDays, setResultId } from 'src/store/apps/groupDetails'
 import { useAppDispatch } from 'src/store'
 
 interface Props {
@@ -43,6 +43,7 @@ const UserViewRight = ({ tab }: Props) => {
 
   const handleChange = (event: SyntheticEvent, value: string) => {
     setActiveTab(value)
+    // dispatch(setDays(null))
     const path = router.route.replace('[tab]', value.toLowerCase())
     dispatch(setResultId(null))
     router

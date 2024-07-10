@@ -28,21 +28,21 @@ const UserViewLeft = () => {
   }, [studentsQueryParams.status])
 
 
-  if (groupData) {
-    return (
-      <Grid container spacing={6}>
-        <Grid item xs={12}>
-          <GroupDetails />
-        </Grid>
-        <Grid item xs={12}>
-          <CardContent>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '20px', marginBottom: '10px' }}>
-              {
-                ['new', 'active', 'archive', "frozen"].map(el => <div key={el} style={{ display: 'flex', alignItems: 'center', gap: '3px', cursor: 'pointer' }}><Status color={el == 'active' ? 'success' : el == 'new' ? 'warning' : el == "frozen" ? "secondary" : 'error'} /> {el == 'active' ? t('aktiv') : el == 'new' ? t('sinov') : el == "frozen" ? t('frozen') : t('arxiv')}</div>)
-              }
-            </div>
-            <UserViewStudentsList />
-            {!isGettingStudents && <Box sx={{ width: '100%', display: 'flex', pt: '10px' }}>
+  return (
+    <Grid container spacing={6}>
+      <Grid item xs={12}>
+        <GroupDetails />
+      </Grid>
+      <Grid item xs={12}>
+        <CardContent>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '20px', marginBottom: '10px' }}>
+            {
+              ['new', 'active', 'archive', "frozen"].map(el => <div key={el} style={{ display: 'flex', alignItems: 'center', gap: '3px', cursor: 'pointer' }}><Status color={el == 'active' ? 'success' : el == 'new' ? 'warning' : el == "frozen" ? "secondary" : 'error'} /> {el == 'active' ? t('aktiv') : el == 'new' ? t('sinov') : el == "frozen" ? t('frozen') : t('arxiv')}</div>)
+            }
+          </div>
+          <UserViewStudentsList />
+          {!isGettingStudents &&
+            <Box sx={{ width: '100%', display: 'flex', pt: '10px' }}>
               <Button
                 startIcon={<IconifyIcon style={{ fontSize: '12px' }} icon={`icon-park-outline:to-${studentsQueryParams.status === 'archive' ? 'top' : 'bottom'}`} />}
                 sx={{ fontSize: '10px', marginLeft: 'auto' }}
@@ -60,17 +60,14 @@ const UserViewLeft = () => {
                 }
               </Button>
             </Box>}
-          </CardContent>
-        </Grid>
-        <SendSMS />
-        <AddNote />
-        <AddStudents />
-        <Delete />
-      </Grid >
-    )
-  } else {
-    return null
-  }
+        </CardContent>
+      </Grid>
+      <SendSMS />
+      <AddNote />
+      <AddStudents />
+      <Delete />
+    </Grid >
+  )
 }
 
 export default UserViewLeft
