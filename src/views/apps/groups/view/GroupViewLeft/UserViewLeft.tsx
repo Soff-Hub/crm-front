@@ -38,7 +38,7 @@ const UserViewLeft = () => {
           <CardContent>
             <div style={{ display: 'flex', alignItems: 'center', gap: '20px', marginBottom: '10px' }}>
               {
-                ['new', 'active', 'archive'].map(el => <div key={el} style={{ display: 'flex', alignItems: 'center', gap: '3px', cursor: 'pointer' }}><Status color={el == 'active' ? 'success' : el == 'new' ? 'warning' : 'error'} /> {el == 'active' ? t('aktiv') : el == 'new' ? t('sinov') : t('arxiv')}</div>)
+                ['new', 'active', 'archive', "frozen"].map(el => <div key={el} style={{ display: 'flex', alignItems: 'center', gap: '3px', cursor: 'pointer' }}><Status color={el == 'active' ? 'success' : el == 'new' ? 'warning' : el == "frozen" ? "secondary" : 'error'} /> {el == 'active' ? t('aktiv') : el == 'new' ? t('sinov') : el == "frozen" ? t('frozen') : t('arxiv')}</div>)
               }
             </div>
             <UserViewStudentsList />

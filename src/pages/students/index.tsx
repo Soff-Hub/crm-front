@@ -89,12 +89,6 @@ export default function GroupsPage() {
       dataIndex: 'balance',
       render: (balance: string) => `${formatCurrency(+balance)} so'm`
     },
-    // {
-    //   xs: 0.7,
-    //   title: t("Status"),
-    //   dataIndex: 'status',
-    //   render: (status: string) => <Chip label={t(status)} size="small" variant='outlined' color={status === 'active' ? 'success' : status === 'archive' ? 'error' : 'warning'} />
-    // },
     {
       xs: 0.8,
       dataIndex: 'id',
@@ -126,12 +120,9 @@ export default function GroupsPage() {
   return (
     <div>
       <StudentsPageHeader />
-
       <StudentsFilter />
-
       <DataTable loading={isLoading} columns={columns} data={students} rowClick={rowClick} />
       {studentsCount > 10 && !isLoading && <Pagination defaultPage={queryParams?.page || 1} count={Math.ceil(studentsCount / 10)} variant="outlined" shape="rounded" onChange={(e: any, page) => handlePagination(page)} />}
-
       <CreateStudentModal />
       <EditStudentModal />
     </div >
