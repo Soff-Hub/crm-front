@@ -184,7 +184,12 @@ export default function AccordionCustom({ onView, item }: AccordionProps) {
                 {
                     queryParams.is_active ? (
                         <Box>
-                            <MenuItem onClick={() => (getSMSTemps(), setOpenDialog('sms'), setAnchorEl(null))} sx={{ '& svg': { mr: 2 } }}>
+                            <MenuItem onClick={async () => {
+                                getSMSTemps()
+                                setOpenDialog('sms')
+                                setAnchorEl(null)
+                                await handleGetLeads(false)
+                            }} sx={{ '& svg': { mr: 2 } }}>
                                 <IconifyIcon icon='mdi:sms' fontSize={20} />
                                 {t("SMS yuborish")}
                             </MenuItem>
@@ -287,6 +292,6 @@ export default function AccordionCustom({ onView, item }: AccordionProps) {
                     </Form>
                 </DialogContent>
             </Dialog>
-        </Card>
+        </Card >
     )
 }

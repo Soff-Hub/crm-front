@@ -1,5 +1,6 @@
 import LoadingButton from "@mui/lab/LoadingButton"
 import { Box, Button, Dialog, DialogActions, DialogContent, Drawer, FormControl, FormHelperText, IconButton, InputLabel, OutlinedInput, TextField, Tooltip, Typography } from "@mui/material"
+import { useFormik } from "formik"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
@@ -11,6 +12,8 @@ import api from "src/@core/utils/api"
 import { formatCurrency } from "src/@core/utils/format-currency"
 import showResponseError from "src/@core/utils/show-response-error"
 import { customTableProps } from "src/pages/groups"
+import * as Yup from 'yup';
+
 
 
 export const getFormattedDate = () => {
@@ -145,14 +148,46 @@ const UserViewBilling = () => {
         },
     ]
 
+    const validationSchema = Yup.object().shape({
+        amount: Yup.number().required("To'ldirish majburiy"),
+        discount_count: Yup.string().required("To'ldirish majburiy"),
+        description: Yup.string().required("To'ldirish majburiy")
+    });
+
+    const formik = useFormik({
+        initialValues: {
+            amount: 0,
+            discount_count: '0',
+            description: ""
+        },
+        validationSchema,
+        onSubmit: async (values) => {
+            setLoading(true)
+            try {
+                await api.post('common/personal-payment/', { ...values, group: query.id, student: Number(editData.id) })
+                await getExams()
+                handleClose()
+            } catch (err: any) {
+                showResponseError(err.response.data, setError)
+                setLoading(false)
+            }
+        }
+    })
+
+
 
 
     useEffect(() => {
         if (query?.id) {
             getExams()
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [query.id])
+
+    useEffect(() => {
+        if (open !== 'edit') {
+            formik.resetForm()
+        }
+    }, [open])
 
 
     return (
@@ -170,7 +205,7 @@ const UserViewBilling = () => {
                     }}
                 >
                     <Typography variant='h6' sx={{ fontWeight: 600 }}>
-                        {t("O'quvchi chegirmasini tahrirlash")}
+                        {t("O'quvchiga chegirma yarating")}
                     </Typography>
                     <IconButton
                         sx={{
@@ -185,31 +220,60 @@ const UserViewBilling = () => {
                         <IconifyIcon icon='mdi:close' fontSize={20} />
                     </IconButton>
                 </Box>
-                {editData && <Form setError={setError} valueTypes="json" onSubmit={handleEditSubmit} id="update-exam" sx={{ padding: '15px', display: 'flex', flexDirection: 'column', gap: 12 }}>
+                {editData && <form onSubmit={formik.handleSubmit} style={{ padding: '15px', display: 'flex', flexDirection: 'column', gap: 12 }}>
                     <FormControl>
-                        <TextField size='small' label={t("Chegirmadagi kurs narxi")} type="number" name='amount' error={error.amount?.error} defaultValue={editData?.amount} />
-                        <FormHelperText error={error.amount}>{error.amount?.message}</FormHelperText>
+                        <TextField
+                            size='small'
+                            label={t("Chegirmadagi kurs narxi")}
+                            type="number"
+                            name='amount'
+                            error={!!formik.errors.amount && !!formik.touched.amount}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            value={formik.values.amount}
+                        />
+                        {!!formik.errors.amount && !!formik.touched.amount && <FormHelperText error>{formik.errors.amount}</FormHelperText>}
                     </FormControl>
 
                     <FormControl>
-                        <InputLabel size='small' id='sale-count'>{t("Chegirma soni")}</InputLabel>
-                        <OutlinedInput endAdornment={
-                            <Tooltip
-                                placement="left"
-                                title="Kursning chegirmadagi narxi o'quvchi uchun necha marta to'lov qilguncha amal qilish soni">
-                                <span style={{ fontSize: '20px', fontWeight: 700, cursor: 'pointer' }}>?</span>
-                            </Tooltip>
-                        } id="sale-count" size='small' label={t("Chegirma soni")} name='discount_count' error={error.discount_count?.error} />
-                        <FormHelperText error={error.discount_count}>{error.discount_count?.message}</FormHelperText>
+                        <InputLabel error={!!formik.errors.discount_count && !!formik.touched.discount_count} size='small' id='sale-count'>{t("Chegirma soni")}</InputLabel>
+                        <OutlinedInput
+                            id="sale-count"
+                            size='small'
+                            label={t("Chegirma soni")}
+                            name='discount_count'
+                            error={!!formik.errors.discount_count && !!formik.touched.discount_count}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            value={formik.values.discount_count}
+                            endAdornment={
+                                <Tooltip
+                                    placement="left"
+                                    title="Chegirma soni - bu necha oy uchun chegirma amalda bo'lishi hisoblanadi. M-u: 4 sonini kiritsangiz, keyingi 4 oy uchun talabaga chegirma berildi deb hisoblanadi.">
+                                    <span style={{ fontSize: '20px', fontWeight: 700, cursor: 'pointer' }}>?</span>
+                                </Tooltip>
+                            }
+                        />
+                        {!!formik.errors.discount_count && !!formik.touched.discount_count && <FormHelperText error>{formik.errors.discount_count}</FormHelperText>}
                     </FormControl>
 
                     <FormControl>
-                        <TextField size='small' multiline rows={4} label={t("Izoh")} name='description' error={error.description?.error} />
-                        <FormHelperText error={error.description}>{error.description?.message}</FormHelperText>
+                        <TextField
+                            size='small'
+                            multiline
+                            rows={4}
+                            label={t("Izoh")}
+                            name='description'
+                            error={!!formik.errors.description && !!formik.touched.description}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            value={formik.values.description}
+                        />
+                        {!!formik.errors.description && !!formik.touched.description && <FormHelperText error>{formik.errors.description}</FormHelperText>}
                     </FormControl>
 
                     <LoadingButton loading={loading} variant="outlined" type="submit">{t('Saqlash')}</LoadingButton>
-                </Form>}
+                </form>}
             </Drawer>
 
             <Dialog open={open === 'delete'}>

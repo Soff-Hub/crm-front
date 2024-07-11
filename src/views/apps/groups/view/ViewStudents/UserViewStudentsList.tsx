@@ -25,6 +25,7 @@ import SentSMS from './SentSMS';
 import AddNote from './AddNote';
 import EditStudent from './EditStudent';
 import EmptyContent from 'src/@core/components/empty-content';
+import ExportStudent from './ExportStudent';
 
 
 interface StudentType {
@@ -68,21 +69,20 @@ const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
     },
 }));
 
-export const UserViewStudentsItem = ({ item, index, status, activeId }: ItemTypes) => {
+export const UserViewStudentsItem = ({ item, index, status, activeId, }: ItemTypes) => {
     const { studentsQueryParams, queryParams } = useAppSelector(state => state.groupDetails)
     const dispatch = useAppDispatch()
 
-    const { student } = item
-    const { first_name, phone, added_at, created_at, balance, comment, id, activated_at } = student
+    const { student, id: studentStatusId } = item
+    const { first_name, phone, added_at, balance, comment, id } = student
     const { push, query } = useRouter()
     const { user } = useContext(AuthContext)
-    const [error, setError] = useState<any>({})
 
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [openLeft, setOpenLeft] = useState<boolean>(false)
     const [activate, setActivate] = useState<boolean>(false)
     const [loading, setLoading] = useState<boolean>(false)
-    const [modalRef, setModalRef] = useState<'sms' | 'note' | null>(null)
+    const [modalRef, setModalRef] = useState<'sms' | 'note' | 'export' | null>(null)
     const { smsTemps, getSMSTemps } = useSMS()
     const { t } = useTranslation()
 
@@ -92,10 +92,11 @@ export const UserViewStudentsItem = ({ item, index, status, activeId }: ItemType
         setAnchorEl(event.currentTarget);
     };
 
-    const handleClose = (value: 'none' | 'left' | 'payment' | 'notes' | 'sms') => {
+    const handleClose = (value: 'none' | 'left' | 'payment' | 'notes' | 'sms' | 'export') => {
         setAnchorEl(null);
         if (value === 'notes') setModalRef('note')
         else if (value === 'sms') setModalRef('sms')
+        else if (value === 'export') setModalRef('export')
         else if (value === 'payment') push(`/students/view/security/?student=${id}`)
         else if (value === 'left') {
             setOpenLeft(true)
@@ -186,6 +187,7 @@ export const UserViewStudentsItem = ({ item, index, status, activeId }: ItemType
                 TransitionComponent={Fade}
             >
                 <MenuItem onClick={() => handleClose('payment')}>{t("To'lov")}</MenuItem>
+                <MenuItem onClick={() => handleClose('export')}>{t("Boshqa guruhga ko'chirish")}</MenuItem>
                 <MenuItem onClick={() => handleClose('left')}>{t('Guruhdan chiqarish')}</MenuItem>
                 <MenuItem onClick={() => handleClose('notes')}>{t('Eslatma')} +</MenuItem>
                 <MenuItem onClick={() => (handleClose('sms'), getSMSTemps())}>{t('Xabar (sms)')} +</MenuItem>
@@ -205,6 +207,7 @@ export const UserViewStudentsItem = ({ item, index, status, activeId }: ItemType
             <EditStudent status={status} student={student} id={activeId} activate={activate} setActivate={setActivate} />
             <AddNote id={id} modalRef={modalRef} setModalRef={setModalRef} />
             <SentSMS id={id} modalRef={modalRef} setModalRef={setModalRef} />
+            <ExportStudent id={studentStatusId} modalRef={modalRef} setModalRef={setModalRef} />
         </Box>
     )
 }

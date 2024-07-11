@@ -69,7 +69,7 @@ const initialState: IStudentState = {
     studentsCount: 0,
     studentData: null,
     isLoading: false,
-    queryParams: { status: 'active', is_debtor: '' },
+    queryParams: { status: 'active', is_debtor: '', group_status: '' },
     payments: []
 }
 

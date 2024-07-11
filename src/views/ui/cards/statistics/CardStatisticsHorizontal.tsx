@@ -20,7 +20,7 @@ const CardStatsHorizontal = ({ data }: Props) => {
       <Grid container spacing={6}>
         {data.map((item: CardStatsHorizontalProps, index: number) => {
           return (
-            <Grid item xs={12} md={3} sm={6} key={index}>
+            <Grid item xs={12} md={2} sm={4} key={index}>
               {item.id ? (
                 <a href={item.id} style={{ textDecoration: 'none', cursor: 'pointer' }}>
                   <CardStatisticsHorizontal {...item} icon={<Icon icon={item.icon as string} />} />

@@ -14,7 +14,7 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import { createGroup, fetchGroups, getDashboardLessons, handleOpenAddModal, resetFormParams, updateFormParams } from 'src/store/apps/groups';
 import { useAppDispatch, useAppSelector } from 'src/store';
 import { useTranslation } from 'react-i18next';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from "yup";
 import Calendar from './Calendar';
@@ -101,6 +101,13 @@ export default function AddGroupModal() {
         dispatch(resetFormParams())
         setCustomWeekDays([])
     }
+
+    useEffect(() => {
+
+        return () => {
+            // dispatch(se(null))
+        }
+    }, [])
 
     return (
         <Drawer open={isOpenAddGroup} hideBackdrop anchor='right' variant='temporary' sx={{ width: "100%" }}>

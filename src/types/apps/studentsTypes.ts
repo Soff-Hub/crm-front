@@ -111,4 +111,6 @@ export interface StudentsQueryParamsTypes {
     status?: string
     page?: number
     is_debtor?: any
+    last_payment?: any
+    group_status?: '' | 'new' | 'frozen' | 'active' | 'archive'
 }

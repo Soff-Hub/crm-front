@@ -31,14 +31,21 @@ const statsData: StatsDataType[] = [
     title: 'Qarzdorlar',
     color: 'error',
     key: 'debtor_users',
-    link: ''
+    link: 'debtor_users'
+  },
+  {
+    icon: 'material-symbols-light:warning-outline',
+    title: "To'lovi yaqin",
+    color: 'warning',
+    key: 'payment_approaching',
+    link: 'last_payment'
   },
   {
     icon: 'tabler:calendar-stats',
     title: 'Sinov darsida',
     color: 'primary',
     key: 'test_students',
-    link: '/students'
+    link: 'group_status'
   },
   {
     icon: 'fa-solid:chalkboard-teacher',

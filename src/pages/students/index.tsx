@@ -16,6 +16,7 @@ import StudentRowOptions from 'src/views/apps/students/StudentRowOptions';
 import { useAppDispatch, useAppSelector } from 'src/store';
 import { clearStudentParams, fetchStudentsList, updateStudentParams } from 'src/store/apps/students';
 import { formatCurrency } from 'src/@core/utils/format-currency';
+import { setOpenEdit } from 'src/store/apps/mentors';
 
 export interface customTableProps {
   xs: number
@@ -109,6 +110,7 @@ export default function GroupsPage() {
   useEffect(() => {
 
     return () => {
+      dispatch(setOpenEdit(null))
       dispatch(clearStudentParams(null))
     }
   }, [])
@@ -119,7 +121,7 @@ export default function GroupsPage() {
     <div>
       <StudentsPageHeader />
       <StudentsFilter />
-      <DataTable color loading={isLoading} columns={columns} data={[...students.map(el => ({ ...el, color: Number(el.balance) < 0 ? 'rgba(227, 18, 18, 0.1)' : el.payment_status <= 22 ? 'rgba(237, 156, 64, 0.22)' : '' }))]} rowClick={rowClick} />
+      <DataTable color loading={isLoading} columns={columns} data={[...students.map(el => ({ ...el, color: Number(el.balance) < 0 ? 'rgba(227, 18, 18, 0.1)' : el.payment_status <= 5 ? 'rgba(237, 156, 64, 0.22)' : '' }))]} rowClick={rowClick} />
       {studentsCount > 10 && !isLoading && <Pagination defaultPage={queryParams?.page || 1} count={Math.ceil(studentsCount / 10)} variant="outlined" shape="rounded" onChange={(e: any, page) => handlePagination(page)} />}
       <CreateStudentModal />
       <EditStudentModal />

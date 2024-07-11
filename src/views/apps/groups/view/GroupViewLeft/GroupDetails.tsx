@@ -10,6 +10,8 @@ import getLessonDays from 'src/@core/utils/getLessonDays';
 import { addPeriodToThousands } from 'src/pages/settings/office/courses';
 import IconifyIcon from 'src/@core/components/icon';
 import { getSMSTemp, handleEditClickOpen } from 'src/store/apps/groupDetails';
+import EditGroupModal from '../../EditGroupModal';
+import { getDashboardLessons, getGroupsDetails, getMetaData, handleOpenEdit } from 'src/store/apps/groups';
 
 interface ColorsType {
     [key: string]: ThemeColor
@@ -33,6 +35,20 @@ export default function GroupDetails() {
     const handleOpenSendSMSModal = async () => {
         dispatch(handleEditClickOpen('send-sms'))
         await dispatch(getSMSTemp())
+    }
+
+    const handleEdit = async (id: any) => {
+        dispatch(handleOpenEdit(true))
+        const filtered = { ...groupData }
+        const queryString = new URLSearchParams({
+            day_of_week: filtered?.day_of_week?.toString(),
+            teacher: String(filtered?.teacher_data?.id),
+            room: String(filtered?.room_data?.id)
+        }).toString()
+        await Promise.all([
+            dispatch(getDashboardLessons(queryString)),
+            dispatch(getGroupsDetails(id))
+        ])
     }
 
     return (
@@ -152,6 +168,11 @@ export default function GroupDetails() {
             {
                 !(user?.role.length === 1 && user?.role.includes('teacher')) ? (
                     <CardActions sx={{ display: 'flex', justifyContent: 'center' }}>
+                        {isGettingGroupDetails ? <Skeleton variant="rounded" animation="wave" width={70} height={40} /> : <Tooltip title="Tahrirlash" placement='top'>
+                            <Button variant='outlined' color='warning' onClick={async () => (dispatch(handleOpenEdit(true)), handleEdit(groupData?.id), await dispatch(getMetaData()))}>
+                                <IconifyIcon icon='iconamoon:edit-light' />
+                            </Button>
+                        </Tooltip>}
                         {isGettingGroupDetails ? <Skeleton variant="rounded" animation="wave" width={70} height={40} /> : <Tooltip title="O'chirish" placement='top'>
                             <Button variant='outlined' color='error' onClick={() => dispatch(handleEditClickOpen('delete'))}>
                                 <IconifyIcon icon='mdi-light:delete' />
@@ -168,7 +189,10 @@ export default function GroupDetails() {
                             </Button>
                         </Tooltip>}
                     </CardActions>
-                ) : ''}
+                ) : ''
+            }
+
+            <EditGroupModal />
         </Card>
     )
 }

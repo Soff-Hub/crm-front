@@ -22,7 +22,7 @@ export default function FinanceCategories({ categryData, confirmDeleteCategory, 
                         <Box onClick={() => push(`/finance/costs/${_.id}`)} sx={{ cursor: 'pointer' }}>
                             <CardFinanceCategory title={_.name} stats={_.total_expense} icon={<IconifyIcon fontSize={"3rem"} icon={''} />} color={'warning'} />
                         </Box>
-                        {isHover === _.id && <IconifyIcon onClick={() => setDeleteCategory(_.id)} style={{ position: 'absolute', zIndex: 999, bottom: '2px', right: 0 }} icon={'fluent:delete-20-regular'} />}
+                        {isHover === _.id && <IconifyIcon onClick={() => setDeleteCategory(_.id)} style={{ position: 'absolute', zIndex: 999, bottom: '2px', right: 0, cursor: 'pointer' }} icon={'fluent:delete-20-regular'} />}
                     </Grid>
                 ))
             }

@@ -64,6 +64,23 @@ const CardStatistics = () => {
         statsHorizontal: [
             {
                 color: 'success',
+                stats: label.last_year_benefit,
+                trend: 'negative',
+                icon: 'mdi:trending-up',
+                trendNumber: '12.6%',
+                title: t('Bugungi tushumlar'),
+                id: '#tushumlar'
+            },
+            {
+                stats: label.last_year_expense,
+                color: 'error',
+                icon: 'mdi:trending-down',
+                trendNumber: '22.5%',
+                title: t('Bugungi chiqimlar'),
+                id: '#chiqimlar'
+            },
+            {
+                color: 'success',
                 stats: label.last_month_benefit,
                 trend: 'negative',
                 icon: 'mdi:trending-up',
@@ -198,7 +215,7 @@ const CardStatistics = () => {
     const getGroupPays = async (date: string) => {
         setLoading(true)
         const resp = await api.get(`/common/finance/group-payments/?date=${date}-01`)
-        setGropPays({...resp.data, date})
+        setGropPays({ ...resp.data, date })
         setLoading(false)
     }
 
@@ -242,12 +259,12 @@ const CardStatistics = () => {
                         <Typography>{t('Umumiy raqamlar')}</Typography>
                     </Grid>
 
-                    <Grid item xs={12}>
+                    <Grid item xs={12} sx={{ marginBottom: '30px' }}>
                         {
                             loading ? <Grid container spacing={6}>
                                 {
-                                    [1, 2, 3, 4].map((_, index) => (
-                                        <Grid item xs={12} md={3} sm={6}>
+                                    [1, 2, 3, 4, 5, 6].map((_, index) => (
+                                        <Grid item xs={12} md={2} sm={4}>
                                             <Skeleton
                                                 sx={{ bgcolor: 'grey.300' }}
                                                 variant="rectangular"

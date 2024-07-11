@@ -7,6 +7,9 @@ import { useAppDispatch, useAppSelector } from 'src/store';
 import { fetchStudentsList, updateStudentParams } from 'src/store/apps/students';
 import useCourses from 'src/hooks/useCourses';
 import useDebounce from 'src/hooks/useDebounce';
+import { Stack, Toggle } from 'rsuite';
+import 'rsuite/Toggle/styles/index.css';
+
 
 const StudentsFilter = () => {
     const [search, setSearch] = useState<string>('')
@@ -22,9 +25,14 @@ const StudentsFilter = () => {
     async function handleFilter(key: string, value: string | number | null) {
         if (key === 'amount') {
             if (value === 'is_debtor') {
-                await dispatch(fetchStudentsList({ ...queryParams, is_debtor: true }))
-                dispatch(updateStudentParams({ is_debtor: true }))
-            } else if(value === 'all') {
+                await dispatch(fetchStudentsList({ ...queryParams, is_debtor: true, last_payment: '' }))
+                dispatch(updateStudentParams({ is_debtor: true, last_payment: '' }))
+            }
+            if (value === 'last_payment') {
+                await dispatch(fetchStudentsList({ ...queryParams, last_payment: true, is_debtor: '' }))
+                dispatch(updateStudentParams({ last_payment: true, is_debtor: '' }))
+            }
+            else if (value === 'all') {
                 await dispatch(fetchStudentsList({ ...queryParams, is_debtor: '' }))
                 dispatch(updateStudentParams({ is_debtor: '' }))
             }
@@ -90,15 +98,15 @@ const StudentsFilter = () => {
 
             <Box sx={{ width: '100%' }}>
                 <FormControl fullWidth>
-                    <InputLabel size='small' id='demo-simple-select-outlined-label'>{t('Holat')}</InputLabel>
+                    <InputLabel size='small' id='demo-simple-select-outlined-label'>{t('Guruhdagi holati')}</InputLabel>
                     <Select
                         size='small'
-                        label={t('Holat')}
-                        value={queryParams.status}
+                        label={t('Guruhdagi holati')}
+                        value={queryParams.group_status}
                         id='demo-simple-select-outlined'
                         labelId='demo-simple-select-outlined-label'
                         onChange={(e: any) =>
-                            handleFilter('status', e.target.value)
+                            handleFilter('group_status', e.target.value)
                         }
                     >
                         <MenuItem value=''>
@@ -107,6 +115,7 @@ const StudentsFilter = () => {
                         <MenuItem value={'active'}>{t('active')}</MenuItem>
                         <MenuItem value={'archive'}>{t('archive')}</MenuItem>
                         <MenuItem value={'new'}>{t('test')}</MenuItem>
+                        <MenuItem value={'frozen'}>Muzlatilgan</MenuItem>
                     </Select>
                 </FormControl>
             </Box>
@@ -118,14 +127,14 @@ const StudentsFilter = () => {
                     <Select
                         size='small'
                         label={t("To'lov holati")}
-                        value={queryParams.is_debtor ? "is_debtor" : ""}
+                        value={queryParams.is_debtor ? "is_debtor" : Boolean(queryParams.last_payment) ? "last_payment" : ''}
                         id='demo-simple-select-outlined'
                         labelId='demo-simple-select-outlined-label'
                         onChange={(e: any) => {
                             if (e.target.value === 'is_debtor') {
                                 handleFilter('amount', 'is_debtor')
-                            } else if (e.target.value === 'tolovi_yaqinlashgan') {
-                                handleFilter('amount', 'tolovi_yaqinlashgan')
+                            } else if (e.target.value === 'last_payment') {
+                                handleFilter('amount', 'last_payment')
                             } else {
                                 handleFilter('amount', 'all')
                             }
@@ -135,10 +144,19 @@ const StudentsFilter = () => {
                         <MenuItem value=''>
                             <b>{t('Barchasi')}</b>
                         </MenuItem>
-                        <MenuItem value={'tolovi_yaqinlashgan'}>{t("To'lov vaqti yaqinlashgan")}</MenuItem>
+                        <MenuItem value={'last_payment'}>{t("To'lov vaqti yaqinlashgan")}</MenuItem>
                         <MenuItem value={'is_debtor'}>{t('Qarzdor')}</MenuItem>
                     </Select>
                 </FormControl>
+            </Box>
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <Toggle color="red" checkedChildren="Arxiv" unCheckedChildren="Arxiv" onChange={e => {
+                    if (e) {
+                        handleFilter('status', 'archive')
+                    } else {
+                        handleFilter('status', 'active')
+                    }
+                }} />
             </Box>
         </Box >
     );

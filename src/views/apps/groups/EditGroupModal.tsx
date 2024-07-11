@@ -147,6 +147,13 @@ export default function EditGroupModal() {
         }
     }, [groupData]);
 
+
+    useEffect(() => {
+        return () => {
+            dispatch(handleOpenEdit(false))
+        }
+    }, [])
+
     return (
         <Drawer open={isOpenEdit} hideBackdrop anchor='right' variant='temporary' sx={{ width: "100%" }}>
             <Box sx={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", width: "100vw" }}>

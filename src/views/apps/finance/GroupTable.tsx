@@ -7,7 +7,6 @@ import { DatePicker, CustomProvider } from 'rsuite';
 import 'rsuite/dist/rsuite.min.css';
 import uz_UZ from './uz_UZ'
 import locale from './uz_UZ'
-import { today } from 'src/@core/components/card-statistics/kanban-item'
 
 
 interface GroupStatsType {

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
 // ** Components
 import MuiDrawer, { DrawerProps } from '@mui/material/Drawer';
@@ -40,6 +40,13 @@ export default function CreateStudentModal() {
     function onClose() {
         dispatch(setOpenEdit(null))
     }
+
+    useEffect(() => {
+
+        return () => {
+            dispatch(setOpenEdit(null))
+        }
+    }, [])
 
 
     return (

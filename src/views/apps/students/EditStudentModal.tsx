@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
 // ** Components
 import MuiDrawer, { DrawerProps } from '@mui/material/Drawer';
@@ -14,6 +14,7 @@ import { useAppDispatch, useAppSelector } from 'src/store';
 import useResponsive from 'src/@core/hooks/useResponsive';
 import { setOpenEdit } from 'src/store/apps/students';
 import SubLoader from '../loaders/SubLoader';
+import { handleOpenAddModal } from 'src/store/apps/groups';
 
 const Drawer = styled(MuiDrawer)<DrawerProps>(({ theme }) => ({
     width: 400,
@@ -43,6 +44,13 @@ export default function EditStudentModal() {
         dispatch(setOpenEdit(null))
     }
 
+
+    useEffect(() => {
+
+        return () => {
+            dispatch(handleOpenAddModal(false))
+        }
+    }, [])
 
 
     return (

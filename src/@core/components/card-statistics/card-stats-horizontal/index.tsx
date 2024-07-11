@@ -29,11 +29,11 @@ const CardStatsHorizontal = (props: CardStatsHorizontalProps) => {
   return (
     <Card>
       <CardContent sx={{ py: theme => `${theme.spacing(4.125)} !important` }}>
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <Avatar skin='light' color={color} variant='rounded'>
+        <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column', justifyContent: 'center' }}>
+          <Avatar skin='light' color={color} variant='rounded' sx={{ margin: '0' }}>
             {icon}
           </Avatar>
-          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
               <Typography variant='h6'>{stats}</Typography>
               <Box sx={{ display: 'flex', alignItems: 'center' }}>

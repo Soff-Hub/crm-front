@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next'
 import IconifyIcon from 'src/@core/components/icon'
 import { useAppDispatch, useAppSelector } from 'src/store'
 import { disablePage } from 'src/store/apps/page'
-import { deleteStudent, fetchStudentDetail, fetchStudentsList, setOpenEdit } from 'src/store/apps/students'
+import { deleteStudent, fetchStudentDetail, fetchStudentsList, setOpenEdit, updateStudent } from 'src/store/apps/students'
 import UserSuspendDialog from 'src/views/apps/mentors/view/UserSuspendDialog';
 
 
@@ -21,6 +21,7 @@ export default function StudentRowOptions({ id }: Props) {
     const [loading, setLoading] = useState<boolean>(false)
     const { t } = useTranslation()
     const dispatch = useAppDispatch()
+    const { queryParams } = useAppSelector(state => state.students)
 
     const rowOptionsOpen = Boolean(anchorEl)
 
@@ -42,13 +43,27 @@ export default function StudentRowOptions({ id }: Props) {
         await dispatch(fetchStudentDetail(id))
     }
 
+    const handleActive = async () => {
+        setLoading(true)
+        dispatch(disablePage(true))
+        await dispatch(updateStudent({ id, status: 'active' }))
+        dispatch(disablePage(false))
+        toast.success("O'quvchi muvaffaqiyatli aktivlashtirildi")
+        await dispatch(fetchStudentsList({ status: 'archive' }))
+        setLoading(false)
+    }
+
     async function submitDelete() {
         setLoading(true)
         dispatch(disablePage(true))
-        await dispatch(deleteStudent(id))
+        const resp = await dispatch(deleteStudent(id))
+        if (resp.meta.requestStatus === 'rejected') {
+            toast.error("Guruhga qo'shilgan o'quvchini o'chirib bo'lmaydi")
+        } else {
+            toast.success("O'quvchi muvaffaqiyatli o'chirildi")
+            await dispatch(fetchStudentsList({ status: 'active' }))
+        }
         dispatch(disablePage(false))
-        toast.success("O'quvchi muvaffaqiyatli o'chirildi")
-        await dispatch(fetchStudentsList({ status: 'active' }))
         setLoading(false)
     }
 
@@ -88,7 +103,7 @@ export default function StudentRowOptions({ id }: Props) {
                     {t("Tahrirlash")}
                 </MenuItem>
                 {
-                    false ? (
+                    queryParams.status === 'archive' ? (
                         <MenuItem onClick={() => setRecoveModal(true)} sx={{ '& svg': { mr: 2 } }}>
                             <IconifyIcon icon='bytesize:reload' fontSize={20} />
                             {t("Tiklash")}
@@ -102,7 +117,7 @@ export default function StudentRowOptions({ id }: Props) {
                 }
             </Menu>
             <UserSuspendDialog loading={loading} handleOk={submitDelete} open={suspendDialogOpen} setOpen={setSuspendDialogOpen} />
-            <UserSuspendDialog handleOk={() => null} open={recoveModal} setOpen={setRecoveModal} okText='Tiklash' />
+            <UserSuspendDialog loading={loading} handleOk={() => handleActive()} open={recoveModal} setOpen={setRecoveModal} okText='Tiklash' />
         </>
     )
 }
