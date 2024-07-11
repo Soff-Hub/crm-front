@@ -1,4 +1,4 @@
-import { Box, Button, Card, CardActions, CardContent, Tooltip, Typography } from '@mui/material';
+import { Box, Button, Card, CardActions, CardContent, Skeleton, Tooltip, Typography } from '@mui/material';
 import Link from 'next/link';
 import { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -24,7 +24,7 @@ const roleColors: ColorsType = {
 
 
 export default function GroupDetails() {
-    const { groupData } = useAppSelector(state => state.groupDetails)
+    const { groupData, isGettingGroupDetails } = useAppSelector(state => state.groupDetails)
     const dispatch = useAppDispatch()
 
     const { user } = useContext(AuthContext)
@@ -36,17 +36,17 @@ export default function GroupDetails() {
     }
 
     return (
-        <Card>
+        <Card sx={{ position: "relative" }}>
             <CardContent sx={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-                <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', alignItems: 'center' }}>
+                {isGettingGroupDetails ? <Skeleton variant="rounded" height={20} animation="wave" sx={{ my: "5px" }} /> : <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', alignItems: 'center' }}>
                     <Typography>Guruh:</Typography>
                     <Typography sx={{ fontWeight: 600, fontSize: "18px" }}>{groupData?.name}</Typography>
-                </Box>
-                <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', alignItems: 'center' }}>
+                </Box>}
+                {isGettingGroupDetails ? <Skeleton variant="rounded" height={20} animation="wave" sx={{ my: "5px" }} /> : <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', alignItems: 'center' }}>
                     <Typography>{t("O'quvchilar soni")}:</Typography>
                     <Typography>{groupData?.student_count} ta</Typography>
-                </Box>
-                <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', alignItems: 'center' }}>
+                </Box>}
+                {isGettingGroupDetails ? <Skeleton variant="rounded" height={20} animation="wave" sx={{ my: "5px" }} /> : <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', alignItems: 'center' }}>
                     <Typography>{t("Kurs")}:</Typography>
                     {
                         !(user?.role.length === 1 && user?.role.includes('teacher')) ? (
@@ -86,16 +86,16 @@ export default function GroupDetails() {
                         )
                     }
 
-                </Box>
-                <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', alignItems: 'center' }}>
+                </Box>}
+                {isGettingGroupDetails ? <Skeleton variant="rounded" height={20} animation="wave" sx={{ my: "5px" }} /> : <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', alignItems: 'center' }}>
                     <Typography>{t("Dars vaqti")}:</Typography>
-                    <Typography>{getLessonDays(groupData?.day_of_week || "")} {groupData?.start_at}</Typography>
-                </Box>
-                <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', alignItems: 'center' }}>
+                    {groupData && <Typography>{getLessonDays(groupData?.day_of_week || "")} {groupData?.start_at}</Typography>}
+                </Box>}
+                {isGettingGroupDetails ? <Skeleton variant="rounded" height={20} animation="wave" sx={{ my: "5px" }} /> : <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', alignItems: 'center' }}>
                     <Typography>{t("Dars xonasi")}:</Typography>
                     <Typography>{groupData?.room_data?.name}</Typography>
-                </Box>
-                <Box sx={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                </Box>}
+                {isGettingGroupDetails ? <Skeleton variant="rounded" height={20} animation="wave" sx={{ my: "5px" }} /> : <Box sx={{ display: "flex", flexDirection: "column", gap: "8px" }}>
                     {
                         !(user?.role.length === 1 && user?.role.includes('teacher')) ? (
                             <Box sx={{ display: 'flex' }}>
@@ -113,8 +113,8 @@ export default function GroupDetails() {
                         <Typography>{groupData?.start_date?.split('-').reverse().join('.')}</Typography> -
                         <Typography>{groupData?.end_date?.split('-').reverse().join('.')}</Typography>
                     </Box>
-                </Box>
-                <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', alignItems: 'center' }}>
+                </Box>}
+                {isGettingGroupDetails ? <Skeleton variant="rounded" height={20} animation="wave" sx={{ my: "5px" }} /> : <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', alignItems: 'center' }}>
                     <Typography>{t("branch")}:</Typography>
                     <CustomChip
                         skin='light'
@@ -130,8 +130,8 @@ export default function GroupDetails() {
                             '& .MuiChip-label': { mt: -0.25 }
                         }}
                     />
-                </Box>
-                <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', alignItems: 'center' }}>
+                </Box>}
+                {isGettingGroupDetails ? <Skeleton variant="rounded" height={20} animation="wave" sx={{ my: "5px" }} /> : <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', alignItems: 'center' }}>
                     <Typography>{t("Kurs narxi")}:</Typography>
                     <CustomChip
                         skin='light'
@@ -147,26 +147,26 @@ export default function GroupDetails() {
                             '& .MuiChip-label': { mt: -0.25 }
                         }}
                     />
-                </Box>
+                </Box>}
             </CardContent>
             {
                 !(user?.role.length === 1 && user?.role.includes('teacher')) ? (
                     <CardActions sx={{ display: 'flex', justifyContent: 'center' }}>
-                        <Tooltip title="O'chirish" placement='top'>
+                        {isGettingGroupDetails ? <Skeleton variant="rounded" animation="wave" width={70} height={40} /> : <Tooltip title="O'chirish" placement='top'>
                             <Button variant='outlined' color='error' onClick={() => dispatch(handleEditClickOpen('delete'))}>
                                 <IconifyIcon icon='mdi-light:delete' />
                             </Button>
-                        </Tooltip>
-                        <Tooltip title="SMS yuborish" placement='top'>
+                        </Tooltip>}
+                        {isGettingGroupDetails ? <Skeleton variant="rounded" animation="wave" width={70} height={40} /> : <Tooltip title="SMS yuborish" placement='top'>
                             <Button variant='outlined' color="warning" onClick={handleOpenSendSMSModal}>
                                 <IconifyIcon icon='material-symbols-light:sms-outline' />
                             </Button>
-                        </Tooltip>
-                        <Tooltip title="O'quvchi qo'shish" placement='top'>
+                        </Tooltip>}
+                        {isGettingGroupDetails ? <Skeleton variant="rounded" animation="wave" width={70} height={40} /> : <Tooltip title="O'quvchi qo'shish" placement='top'>
                             <Button variant='outlined' onClick={() => dispatch(handleEditClickOpen('add-student'))}>
                                 <IconifyIcon icon='mdi:user-add-outline' />
                             </Button>
-                        </Tooltip>
+                        </Tooltip>}
                     </CardActions>
                 ) : ''}
         </Card>

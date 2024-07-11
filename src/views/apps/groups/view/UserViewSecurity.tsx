@@ -93,7 +93,7 @@ const Item = ({ defaultValue, groupId, userId, date, opened_id, setOpenedId }: {
 }
 
 const UserViewSecurity = () => {
-  const { queryParams, attendance, isGettingAttendance, days, groupData } = useAppSelector(state => state.groupDetails)
+  const { queryParams, attendance, isGettingDays, isGettingAttendance, days, groupData } = useAppSelector(state => state.groupDetails)
   const dispatch = useAppDispatch()
 
   const start_date: any = groupData?.start_date ? Number(groupData?.start_date.split('-')[1]) : ''

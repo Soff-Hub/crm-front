@@ -118,12 +118,9 @@ export default function GroupsPage() {
   return (
     <div>
       <StudentsPageHeader />
-
       <StudentsFilter />
-
       <DataTable color loading={isLoading} columns={columns} data={[...students.map(el => ({ ...el, color: Number(el.balance) < 0 ? 'rgba(227, 18, 18, 0.1)' : el.payment_status <= 22 ? 'rgba(237, 156, 64, 0.22)' : '' }))]} rowClick={rowClick} />
       {studentsCount > 10 && !isLoading && <Pagination defaultPage={queryParams?.page || 1} count={Math.ceil(studentsCount / 10)} variant="outlined" shape="rounded" onChange={(e: any, page) => handlePagination(page)} />}
-
       <CreateStudentModal />
       <EditStudentModal />
     </div >
