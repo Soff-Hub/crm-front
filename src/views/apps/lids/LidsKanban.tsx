@@ -68,9 +68,9 @@ export default function HomeKanban({ title, items, id }: Props) {
             </Box>
 
             <Dialog open={open === 'delete'}>
-                <DialogContent sx={{ minWidth: '320px', padding: '20px 0' }}>
+                <DialogContent sx={{ width: '320px', padding: '20px 0' }}>
                     <Typography sx={{ fontSize: '24px', textAlign: 'center' }}>
-                        {t("O'chirmoqchimisiz?")}
+                        {t("Bo'limni rostdan ham o'chirmoqchimisiz?")}
                     </Typography>
                 </DialogContent>
                 <Box sx={{ padding: '0 0 20px', display: 'flex', justifyContent: 'center', gap: '10px' }}>

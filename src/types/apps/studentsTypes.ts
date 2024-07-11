@@ -2,27 +2,38 @@ import { genderTypes } from "./userTypes"
 
 
 export interface StudentListItemType {
-    id: number
+    id?: number
     first_name: string
     phone: string
-    birth_date: string
     gender: genderTypes
-    balance: string
-    groups: {
+    birth_date: null | string
+    balance: string | number
+    payment_status: number
+    status: 'active' | 'archive' | 'new'
+    group: {
         id: number
         group_data: {
             id: number
             name: string
         }
         start_at: string
+        course_name: string
         date: string
         teacher: {
             id: number
             first_name: string
             phone: string
         }
+        student_status: {
+            id: 22,
+            group: 11,
+            status: "new",
+            group_name: "G-2",
+            lesson_time: "11:00-13:00"
+        }[]
     }[]
 }
+
 
 export type StudentsListType = StudentListItemType[]
 
@@ -48,7 +59,7 @@ export interface UpdateStudentDto extends StudentItemType {
 
 export interface IStudentState {
     openEdit: 'edit' | 'create' | 'delete' | null,
-    students: StudentItemType[]
+    students: StudentsListType
     studentsCount: number
     studentData: StudentDetailType | UpdateStudentDto | null
     isLoading: boolean
@@ -99,4 +110,5 @@ export interface StudentsQueryParamsTypes {
     course?: number | null
     status?: string
     page?: number
+    is_debtor?: any
 }

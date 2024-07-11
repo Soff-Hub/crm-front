@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Box, FormControl, IconButton, InputAdornment, InputLabel, MenuItem, OutlinedInput, Select } from '@mui/material';
+import { Box, FormControl, InputAdornment, InputLabel, MenuItem, OutlinedInput, Select } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import useResponsive from 'src/@core/hooks/useResponsive';
 import IconifyIcon from 'src/@core/components/icon';
@@ -20,6 +20,16 @@ const StudentsFilter = () => {
 
 
     async function handleFilter(key: string, value: string | number | null) {
+        if (key === 'amount') {
+            if (value === 'is_debtor') {
+                await dispatch(fetchStudentsList({ ...queryParams, is_debtor: true }))
+                dispatch(updateStudentParams({ is_debtor: true }))
+            } else if(value === 'all') {
+                await dispatch(fetchStudentsList({ ...queryParams, is_debtor: '' }))
+                dispatch(updateStudentParams({ is_debtor: '' }))
+            }
+            return
+        }
         await dispatch(fetchStudentsList({ ...queryParams, [key]: value }))
         dispatch(updateStudentParams({ [key]: value }))
     }
@@ -94,9 +104,9 @@ const StudentsFilter = () => {
                         <MenuItem value=''>
                             <b>{t('Barchasi')}</b>
                         </MenuItem>
-                        <MenuItem value={'active'}>{t('aktiv')}</MenuItem>
-                        <MenuItem value={'archive'}>{t('arxiv')}</MenuItem>
-                        <MenuItem value={'new'}>{t('sinov')}</MenuItem>
+                        <MenuItem value={'active'}>{t('active')}</MenuItem>
+                        <MenuItem value={'archive'}>{t('archive')}</MenuItem>
+                        <MenuItem value={'new'}>{t('test')}</MenuItem>
                     </Select>
                 </FormControl>
             </Box>
@@ -108,19 +118,25 @@ const StudentsFilter = () => {
                     <Select
                         size='small'
                         label={t("To'lov holati")}
-                        value={queryParams.status}
+                        value={queryParams.is_debtor ? "is_debtor" : ""}
                         id='demo-simple-select-outlined'
                         labelId='demo-simple-select-outlined-label'
-                        onChange={(e: any) =>
-                            handleFilter('status', e.target.value)
+                        onChange={(e: any) => {
+                            if (e.target.value === 'is_debtor') {
+                                handleFilter('amount', 'is_debtor')
+                            } else if (e.target.value === 'tolovi_yaqinlashgan') {
+                                handleFilter('amount', 'tolovi_yaqinlashgan')
+                            } else {
+                                handleFilter('amount', 'all')
+                            }
+                        }
                         }
                     >
                         <MenuItem value=''>
                             <b>{t('Barchasi')}</b>
                         </MenuItem>
-                        <MenuItem value={'active'}>{t('aktiv')}</MenuItem>
-                        <MenuItem value={'archive'}>{t('arxiv')}</MenuItem>
-                        <MenuItem value={'new'}>{t('sinov')}</MenuItem>
+                        <MenuItem value={'tolovi_yaqinlashgan'}>{t("To'lov vaqti yaqinlashgan")}</MenuItem>
+                        <MenuItem value={'is_debtor'}>{t('Qarzdor')}</MenuItem>
                     </Select>
                 </FormControl>
             </Box>

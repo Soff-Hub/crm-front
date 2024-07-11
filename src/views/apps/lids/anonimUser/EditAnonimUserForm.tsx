@@ -90,7 +90,7 @@ export default function EditAnonimUserForm({ item, reRender }: Props) {
                 {!!errors.phone && touched.phone && <FormHelperText error>{formik.errors.phone}</FormHelperText>}
             </FormControl>
 
-            <LoadingButton loading={loading} type='submit' variant='outlined'>{t("Yaratish")}</LoadingButton>
+            <LoadingButton loading={loading} type='submit' variant='outlined'>{t("Saqlash")}</LoadingButton>
         </form>
     )
 }

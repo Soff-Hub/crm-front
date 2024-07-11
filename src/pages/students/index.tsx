@@ -87,14 +87,8 @@ export default function GroupsPage() {
       xs: 0.7,
       title: t("Balans"),
       dataIndex: 'balance',
-      render: (balance: string) => `${formatCurrency(+balance)} so'm`
+      render: (balance: string) => Number(balance) < 0 ? <Chip label={`${formatCurrency(+balance)} so'm`} color="error" variant='outlined' size='small' sx={{ fontWeight: 700 }} /> : `${formatCurrency(+balance)} so'm`
     },
-    // {
-    //   xs: 0.7,
-    //   title: t("Status"),
-    //   dataIndex: 'status',
-    //   render: (status: string) => <Chip label={t(status)} size="small" variant='outlined' color={status === 'active' ? 'success' : status === 'archive' ? 'error' : 'warning'} />
-    // },
     {
       xs: 0.8,
       dataIndex: 'id',
@@ -127,7 +121,7 @@ export default function GroupsPage() {
 
       <StudentsFilter />
 
-      <DataTable loading={isLoading} columns={columns} data={students} rowClick={rowClick} />
+      <DataTable color loading={isLoading} columns={columns} data={[...students.map(el => ({ ...el, color: Number(el.balance) < 0 ? 'rgba(227, 18, 18, 0.1)' : el.payment_status <= 22 ? 'rgba(237, 156, 64, 0.22)' : '' }))]} rowClick={rowClick} />
       {studentsCount > 10 && !isLoading && <Pagination defaultPage={queryParams?.page || 1} count={Math.ceil(studentsCount / 10)} variant="outlined" shape="rounded" onChange={(e: any, page) => handlePagination(page)} />}
 
       <CreateStudentModal />

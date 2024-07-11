@@ -6,7 +6,7 @@ import IconifyIcon from 'src/@core/components/icon'
 import useResponsive from 'src/@core/hooks/useResponsive'
 import { AuthContext } from 'src/context/AuthContext'
 import { useAppDispatch, useAppSelector } from 'src/store'
-import { fetchDepartmentList, fetchSources, setOpen } from 'src/store/apps/leads'
+import { fetchSources, setOpen } from 'src/store/apps/leads'
 import LidsHeader from 'src/views/apps/lids/LidsHeader'
 import LidsKanban from 'src/views/apps/lids/LidsKanban'
 import CreateAnonimDialogDialog from 'src/views/apps/lids/anonimUser/CreateAnonimUserDialog'
@@ -26,10 +26,7 @@ const Lids = () => {
 
 
   useEffect(() => {
-    Promise.all([
-      dispatch(fetchSources()),
-      dispatch(fetchDepartmentList())
-    ])
+    dispatch(fetchSources())
   }, [])
 
 

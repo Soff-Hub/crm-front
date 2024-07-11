@@ -54,11 +54,15 @@ export default function CreateSmsDialog({ }: Props) {
         onSubmit: async (values) => {
             setLoading(true)
             dispatch(disablePage(true))
-            await dispatch(createSms(values))
-            dispatch(disablePage(false))
-            formik.resetForm()
-            toast.success("SMS shablon yaratildi")
-            setOpenAddGroup(false)
+            const resp = await dispatch(createSms(values))
+            if (resp.meta.requestStatus === "rejected") {
+                formik.setErrors(resp.payload)
+            } else {
+                dispatch(disablePage(false))
+                formik.resetForm()
+                toast.success("SMS shablon yaratildi")
+                setOpenAddGroup(false)
+            }
             setLoading(false)
         }
     });

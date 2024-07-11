@@ -70,7 +70,7 @@ export default function EditDepartmentForm({ id, name }: Props) {
                 />
                 {formik.errors.name && formik.touched.name && <FormHelperText error={true}>{formik.errors.name}</FormHelperText>}
             </FormControl>
-            <LoadingButton loading={loading} type='submit' variant='outlined'>{t("Yaratish")}</LoadingButton>
+            <LoadingButton loading={loading} type='submit' variant='outlined'>{t("Saqlash")}</LoadingButton>
 
         </form>
     )

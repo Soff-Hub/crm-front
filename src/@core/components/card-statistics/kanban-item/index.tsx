@@ -354,7 +354,7 @@ const KanbanItem = (props: KanbarItemProps) => {
                             <FormHelperText error={error?.department?.error}>{error?.department?.message}</FormHelperText>
                         </FormControl>}
 
-                        <LoadingButton variant='contained' type={'submit'} loading={loading}>{t("Saqlash")}</LoadingButton>
+                        <LoadingButton variant='contained' type={'submit'} loading={loading}>{t("Ko'chirish")}</LoadingButton>
                     </Form>
                 </DialogContent>
             </Dialog>
@@ -384,8 +384,8 @@ const KanbanItem = (props: KanbarItemProps) => {
 
             {/* DELETE */}
             <Dialog open={open === 'delete'} onClose={() => setOpen(null)}>
-                <DialogContent sx={{ minWidth: '300px' }}>
-                    <Typography sx={{ fontSize: '24px', marginBottom: '20px', textAlign: 'center' }}>{t("O'chirishni tasdiqlang")}</Typography>
+                <DialogContent sx={{ minWidth: '300px', maxWidth: '350px' }}>
+                    <Typography sx={{ fontSize: '24px', marginBottom: '20px', textAlign: 'center' }}>{t("Rostdan ham o'chirib tashlamoqchimisiz?")}</Typography>
                     <Form setError={setError} valueTypes='json' onSubmit={noteDepartmentItem} id='rwerwf' sx={{ paddingTop: '5px', display: 'flex', flexDirection: 'column', gap: '15px' }}>
                         <FormControl fullWidth>
                             <TextField label={t("Sabab (majburiy emas)")} multiline rows={4} size='small' name='body' />

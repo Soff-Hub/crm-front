@@ -103,7 +103,7 @@ export default function AddToGroupForm({ item, reRender, groups, setLoading }: P
                 {!!errors.added_at && touched.added_at && <FormHelperText error>{errors.added_at}</FormHelperText>}
             </FormControl>
 
-            <LoadingButton loading={loading} type='submit' variant='outlined'>{t("Yaratish")}</LoadingButton>
+            <LoadingButton loading={loading} type='submit' variant='outlined'>{t("Qo'shsih")}</LoadingButton>
         </form>
     )
 }

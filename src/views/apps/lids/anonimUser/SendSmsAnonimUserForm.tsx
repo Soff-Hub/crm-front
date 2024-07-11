@@ -119,7 +119,7 @@ export default function SendSmsAnonimUserForm({
                 {formik.errors.message && formik.touched.message && <FormHelperText error={true}>{formik.errors.message}</FormHelperText>}
             </FormControl>
 
-            <LoadingButton loading={loading} type='submit' variant='outlined'>{t("Yaratish")}</LoadingButton>
+            <LoadingButton loading={loading} type='submit' variant='outlined'>{t("Yuborish")}</LoadingButton>
 
         </form>
     )

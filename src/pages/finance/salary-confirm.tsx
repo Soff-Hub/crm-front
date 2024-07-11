@@ -1,6 +1,6 @@
 
 import LoadingButton from '@mui/lab/LoadingButton'
-import { Box, Button, IconButton, Typography } from '@mui/material'
+import { Box, Button, Dialog, DialogContent, DialogTitle, IconButton, TextField, Typography } from '@mui/material'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
@@ -20,6 +20,7 @@ export default function SalaryConfirm({ }: Props) {
     const dispatch = useAppDispatch()
     const { moderation_salaries, isPending } = useAppSelector(state => state.finance)
     const [loading, setLoading] = useState<'frozen' | 'approved' | null>(null)
+    const [open, setOpen] = useState<boolean>(false)
 
     const withdrawCol: customTableDataProps[] = [
         {
@@ -136,16 +137,33 @@ export default function SalaryConfirm({ }: Props) {
                 >
                     {t("Vaqtincha saqlash")}
                 </LoadingButton>}
-                {moderation_salaries.length > 0 && !isPending && <LoadingButton
-                    loading={loading === 'approved'}
-                    sx={{ marginTop: '15px' }}
-                    size='small'
-                    variant='contained'
-                    onClick={() => confirmSalary('approved')}
-                >
-                    {t("Saqlash")}
-                </LoadingButton>}
+                {
+                    moderation_salaries.length > 0 && !isPending && <LoadingButton
+                        loading={loading === 'approved'}
+                        sx={{ marginTop: '15px' }}
+                        size='small'
+                        variant='contained'
+                        onClick={() => setOpen(true)}
+                    >
+                        {t("Saqlash")}
+                    </LoadingButton>
+                }
             </Box>
+
+            <Dialog
+                open={open}
+                onClose={() => setOpen(false)}
+            >
+                <DialogTitle sx={{ display: 'flex', alignItems: 'center', minWidth: '300px', justifyContent: 'space-between' }}>
+                    {/* <IconifyIcon icon={'mdi:close'} onClick={() => setOpen(false)} /> */}
+                </DialogTitle>
+                <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: '10px', maxWidth: '350px' }}>
+                    <Typography sx={{ fontSize: '24px', textAlign: 'center' }}>{t("O'zgarishlarni butunlay saqlamoqchimisiz?")}</Typography>
+                    <Typography sx={{ textAlign: 'center', marginBottom: '20px', color: 'orange' }}>{t("Bu amaliyotni ortga qaytarib bo'lmaydi")}</Typography>
+
+                    <LoadingButton loading={loading === 'approved'} onClick={() => confirmSalary('approved')} variant='contained'>{t("Saqlash")}</LoadingButton>
+                </DialogContent>
+            </Dialog>
         </div>
     )
 }

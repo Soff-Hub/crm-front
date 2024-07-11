@@ -8,8 +8,15 @@ export const fetchSmsList = createAsyncThunk('settings/fetchSmsList', async () =
     return (await api.get('common/sms-form/list/')).data
 })
 
-export const createSms = createAsyncThunk('settings/createSms', async (data: { description: string }) => {
-    return (await api.post('common/sms-form/create/', data)).data
+export const createSms = createAsyncThunk('settings/createSms', async (data: { description: string }, { rejectWithValue }) => {
+    try {
+        return (await api.post(`common/sms-form/create/`, data)).data;
+    } catch (err: any) {
+        if (err.response) {
+            return rejectWithValue(err.response.data);
+        }
+        return rejectWithValue(err.message);
+    }
 })
 
 

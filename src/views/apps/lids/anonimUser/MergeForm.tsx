@@ -88,7 +88,7 @@ export default function MergeToDepartment({ item, reRender }: Props) {
                 {!!errors.department && touched.department && <FormHelperText error>{errors.department}</FormHelperText>}
             </FormControl>}
 
-            <LoadingButton loading={loading} type='submit' variant='outlined'>{t("Yaratish")}</LoadingButton>
+            <LoadingButton loading={loading} type='submit' variant='outlined'>{t("Ko'chirish")}</LoadingButton>
         </form>
     )
 }
