@@ -17,14 +17,14 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
-import { getStudents } from 'src/store/apps/groupDetails';
+import { getAttendance, getDays, getStudents, setGettingAttendance } from 'src/store/apps/groupDetails';
 import { useRouter } from 'next/router';
 import { useAppDispatch, useAppSelector } from 'src/store';
-import { StudentDetailType } from 'src/types/apps/studentsTypes';
+import { getMontNumber } from 'src/@core/utils/gwt-month-name';
 
 
 export default function EditStudent({ student, id, activate, setActivate, status }: { student: any, id: string, activate: boolean, setActivate: (status: boolean) => void, status: string }) {
-    const { studentsQueryParams } = useAppSelector(state => state.groupDetails)
+    const { studentsQueryParams, queryParams } = useAppSelector(state => state.groupDetails)
     const dispatch = useAppDispatch()
     const [isLoading, setLoading] = useState(false)
     const { query } = useRouter()
@@ -43,7 +43,14 @@ export default function EditStudent({ student, id, activate, setActivate, status
                 setLoading(false)
                 setActivate(false)
                 const queryString = new URLSearchParams({ ...studentsQueryParams }).toString()
-                dispatch(getStudents({ id: query.id, queryString: queryString }))
+                const queryStringAttendance = new URLSearchParams(queryParams).toString()
+                dispatch(setGettingAttendance(true))
+                await dispatch(getStudents({ id: query.id, queryString: queryString }))
+                if (query.month && query?.id) {
+                    await dispatch(getAttendance({ date: `${query?.year || new Date().getFullYear()}-${getMontNumber(query.month)}`, group: query?.id, queryString: queryStringAttendance }))
+                    await dispatch(getDays({ date: `${query?.year || new Date().getFullYear()}-${getMontNumber(query.month)}`, group: query?.id }))
+                }
+                dispatch(setGettingAttendance(false))
             } catch (err: any) {
                 formik.setErrors(err?.response?.data)
                 setLoading(false)
