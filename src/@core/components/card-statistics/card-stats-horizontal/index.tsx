@@ -14,6 +14,7 @@ import Icon from 'src/@core/components/icon'
 
 // ** Types Imports
 import { CardStatsHorizontalProps } from 'src/@core/components/card-statistics/types'
+import { formatCurrency } from 'src/@core/utils/format-currency'
 
 // ** Styled Avatar component
 const Avatar = styled(CustomAvatar)<AvatarProps>(({ theme }) => ({
@@ -35,7 +36,7 @@ const CardStatsHorizontal = (props: CardStatsHorizontalProps) => {
           </Avatar>
           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
-              <Typography variant='h6'>{stats}</Typography>
+              <Typography variant='h6'>{formatCurrency(stats)}</Typography>
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 {/* <Box sx={{ display: 'inline-flex', color: trend === 'positive' ? 'success.main' : 'error.main' }}>
                   <Icon icon={trend === 'positive' ? 'mdi:chevron-up' : 'mdi:chevron-down'} />

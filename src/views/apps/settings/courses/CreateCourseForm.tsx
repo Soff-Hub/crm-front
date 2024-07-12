@@ -1,5 +1,5 @@
 import LoadingButton from '@mui/lab/LoadingButton'
-import {FormControl, FormHelperText, InputLabel, MenuItem, Select, TextField } from '@mui/material'
+import { FormControl, FormHelperText, InputLabel, MenuItem, Select, TextField } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch } from 'src/store'
@@ -55,7 +55,7 @@ export default function CreateCourseForm({ }: Props) {
                 await dispatch(fetchCoursesList())
                 formik.resetForm()
                 setLoading(false)
-                return setOpenAddGroup()
+                setOpenAddGroup()
             }
             dispatch(disablePage(false))
         }

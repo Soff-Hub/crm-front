@@ -28,6 +28,16 @@ import EmptyContent from 'src/@core/components/empty-content'
 import { getMonthFullName } from 'src/@core/utils/gwt-month-name'
 import Router from 'next/router'
 import SubLoader from 'src/views/apps/loaders/SubLoader'
+import { DateRangePicker } from 'rsuite'
+
+
+export function formatDateString(date: Date) {
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // getMonth() is zero-based
+    const year = date.getFullYear();
+
+    return `${day}-${month}-${year}`;
+}
 
 interface AllNumbersType {
     last_month_benefit: string,
@@ -59,6 +69,8 @@ const CardStatistics = () => {
 
     const [deleteCategory, setDeleteCategory] = useState<any>(null)
     const [salaries, setSalaries] = useState<any>([])
+    const [date, setDate] = useState<any>('')
+    const [numbersLoad, setNumbersLoad] = useState<boolean>(false)
 
     const apiData: CardStatsType = {
         statsHorizontal: [
@@ -180,6 +192,7 @@ const CardStatistics = () => {
     ]
 
     const getAllNumbers = async () => {
+        setNumbersLoad(true)
         const resp = await api.get(`common/finance/dashboard/`)
         setLabel(resp.data.label)
         setGraphData([
@@ -192,6 +205,7 @@ const CardStatistics = () => {
             },
 
         ])
+        setNumbersLoad(false)
     }
 
     const getExpenseCategroy = async () => {
@@ -242,6 +256,12 @@ const CardStatistics = () => {
         Router.push(`/finance/salary-detail/${date}`)
     }
 
+    const handleChangeDate = (e: any) => {
+        console.log(formatDateString(e[0]));
+
+        setDate(e)
+    }
+
     useEffect(() => {
         Promise.all([
             getAllNumbers(),
@@ -256,12 +276,35 @@ const CardStatistics = () => {
             <KeenSliderWrapper>
                 <Grid container spacing={2} columnSpacing={10}>
                     <Grid item xs={12}>
-                        <Typography>{t('Umumiy raqamlar')}</Typography>
+                        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                            <Typography variant="h5">{t('Umumiy raqamlar')}</Typography>
+                            <DateRangePicker locale={{
+                                last7Days: "Oxirgi 7 kun",
+                                sunday: "Yak",
+                                monday: "Du",
+                                tuesday: "Se",
+                                wednesday: "Cho",
+                                thursday: "Pa",
+                                friday: "Ju",
+                                saturday: "Sha",
+                                ok: "Ok",
+                                today: "Bugun",
+                                yesterday: "Ertaga",
+                                hours: "Soat",
+                                minutes: "Minut",
+                                seconds: "Sekund",
+                            }}
+                                format="yyyy-MM-dd"
+                                onChange={handleChangeDate}
+                                translate={'yes'}
+                                size="sm"
+                            />
+                        </Box>
                     </Grid>
 
                     <Grid item xs={12} sx={{ marginBottom: '30px' }}>
                         {
-                            loading ? <Grid container spacing={6}>
+                            numbersLoad ? <Grid container spacing={6}>
                                 {
                                     [1, 2, 3, 4, 5, 6].map((_, index) => (
                                         <Grid item xs={12} md={2} sm={4}>
@@ -269,7 +312,7 @@ const CardStatistics = () => {
                                                 sx={{ bgcolor: 'grey.300' }}
                                                 variant="rectangular"
                                                 width={'100%'}
-                                                height={'90px'}
+                                                height={'110px'}
                                                 style={{ borderRadius: '10px' }}
                                                 animation="wave"
                                             />
