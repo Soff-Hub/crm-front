@@ -32,8 +32,9 @@ export interface ILeadsState {
     loading: boolean
     search: string
     queryParams: LeadsQueryParamsTypes
-    openActionModal: 'delete' | 'edit' | null
+    openActionModal: 'delete' | string | number | null
     bigLoader: boolean
+    actionId: number | string
 }
 
 export interface CreateDepartmentUser {

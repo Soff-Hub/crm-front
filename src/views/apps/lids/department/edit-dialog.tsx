@@ -16,7 +16,7 @@ type Props = {
 
 export default function EditDepartmentDialog(props: Props) {
 
-    const { openActionModal } = useAppSelector((state) => state.leads)
+    const { openActionModal, actionId } = useAppSelector((state) => state.leads)
     const { t } = useTranslation()
     const dispatch = useAppDispatch()
 
@@ -24,7 +24,7 @@ export default function EditDepartmentDialog(props: Props) {
 
     return (
         <div>
-            <Dialog onClose={handleClose} open={openActionModal === 'edit'}>
+            <Dialog onClose={handleClose} open={openActionModal === 'edit' && actionId === props.id}>
                 <DialogTitle sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                     <Typography variant='h6' component='span'>
                         {t("Bo'limni tahrirlash")}

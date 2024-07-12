@@ -23,7 +23,7 @@ interface Props {
 export default function HomeKanban({ title, items, id }: Props) {
 
     //** Hooks
-    const { loading, openActionModal: open, queryParams } = useSelector((state: RootState) => state.leads)
+    const { loading, openActionModal: open, queryParams, actionId } = useSelector((state: RootState) => state.leads)
     const dispatch = useAppDispatch()
     const { query } = useRouter()
     const { t } = useTranslation()
@@ -39,7 +39,11 @@ export default function HomeKanban({ title, items, id }: Props) {
     }
 
     const setOpen = (value: 'delete' | 'edit' | null) => {
-        dispatch(setOpenActionModal(value))
+        if (!value) {
+            dispatch(setOpenActionModal({ open: null, id: null }))
+            return
+        }
+        dispatch(setOpenActionModal({ open: value, id }))
     }
 
     return (
@@ -67,7 +71,7 @@ export default function HomeKanban({ title, items, id }: Props) {
                 }
             </Box>
 
-            <Dialog open={open === 'delete'}>
+            <Dialog open={open === 'delete' && actionId === id}>
                 <DialogContent sx={{ width: '320px', padding: '20px 0' }}>
                     <Typography sx={{ fontSize: '24px', textAlign: 'center' }}>
                         {t("Bo'limni rostdan ham o'chirmoqchimisiz?")}

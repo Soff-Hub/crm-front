@@ -78,7 +78,8 @@ const initialState: ILeadsState = {
         is_active: true
     },
     openActionModal: null,
-    bigLoader: false
+    bigLoader: false,
+    actionId: ''
 }
 
 export const appLeadsSlice = createSlice({
@@ -104,7 +105,8 @@ export const appLeadsSlice = createSlice({
             state.queryParams = { ...state.queryParams, ...action.payload }
         },
         setOpenActionModal: (state, action) => {
-            state.openActionModal = action.payload
+            state.actionId = action.payload?.id || ''
+            state.openActionModal = action.payload?.open || null
         },
         setPageLoader: (state, action) => {
             state.bigLoader = action.payload

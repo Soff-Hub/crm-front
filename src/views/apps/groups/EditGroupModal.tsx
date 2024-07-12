@@ -1,4 +1,4 @@
-// @ts-nocheck
+//@ts-nocheck
 
 import {
     Box, Drawer, FormHelperText,
@@ -22,6 +22,9 @@ import EmptyContent from 'src/@core/components/empty-content';
 import Calendar from './Calendar';
 import { disablePage } from 'src/store/apps/page';
 import toast from 'react-hot-toast';
+import { useRouter } from 'next/router';
+import { getAttendance, getDays, getGroupById, setGettingAttendance, setGettingGroupDetails } from 'src/store/apps/groupDetails';
+import { getMontNumber } from 'src/@core/utils/gwt-month-name';
 
 export default function EditGroupModal() {
     const { isOpenEdit, groupData, courses, initialValues, formParams, queryParams, teachers, rooms, isGettingGroupDetails } = useAppSelector(state => state.groups)
@@ -29,6 +32,7 @@ export default function EditGroupModal() {
     const { t } = useTranslation()
     const [loading, setLoading] = useState(false)
     const [customWeekdays, setCustomWeekDays] = useState<string[]>([])
+    const { query } = useRouter()
 
     const validationSchema = Yup.object({
         name: Yup.string().required("Guruh nomini kiriting"),
@@ -63,7 +67,19 @@ export default function EditGroupModal() {
             } else {
                 toast.success("O'zgrishlar muvafaqqiyati saqlandi")
                 const queryString = new URLSearchParams(queryParams).toString()
-                await dispatch(fetchGroups(queryString))
+                if (query?.id) {
+                    dispatch(setGettingAttendance(true))
+                    dispatch(setGettingGroupDetails(true))
+                    await Promise.all([
+                        dispatch(getDays({ date: `${query?.year || new Date().getFullYear()}-${getMontNumber(query.month)}`, group: query.id })),
+                        dispatch(getGroupById(query.id)),
+                        dispatch(getAttendance({ date: `${query?.year || new Date().getFullYear()}-${getMontNumber(query.month)}`, group: query.id, queryString: queryString }))
+                    ])
+                    dispatch(setGettingAttendance(false))
+                    dispatch(setGettingGroupDetails(false))
+                } else {
+                    await dispatch(fetchGroups(queryString))
+                }
                 formik.resetForm()
             }
             setLoading(false)
