@@ -10,11 +10,11 @@ import ReactApexcharts from 'src/@core/components/react-apexcharts'
 
 // ** Util Import
 import { formatCurrency } from 'src/@core/utils/format-currency'
-import { Box, Typography } from '@mui/material'
+import { Box, Skeleton, Typography } from '@mui/material'
 import { useTranslation } from 'react-i18next'
-import SubLoader from 'src/views/apps/loaders/SubLoader'
+import EmptyContent from 'src/@core/components/empty-content'
 
-const CardWidgetsWeeklyOverview = ({ data }: any) => {
+const CardWidgetsWeeklyOverview = ({ data, loading, year }: any) => {
   // ** Hook
   const theme = useTheme()
   const { t } = useTranslation()
@@ -93,7 +93,7 @@ const CardWidgetsWeeklyOverview = ({ data }: any) => {
   return (
     <Card sx={{ p: '20px' }}>
       <Box sx={{ display: 'flex', alignItems: 'center' }}>
-        <Typography sx={{ fontSize: '22px' }}>{t('Yillik aylanmalar')}</Typography>
+        <Typography sx={{ fontSize: '22px' }}>{year} {t('Yildagi aylanmalar')}</Typography>
         {/* <FormControl className='ms-auto'>
           <InputLabel size='small' id='user-view-language-label'>{t('Yil')}</InputLabel>
           <Select
@@ -113,7 +113,13 @@ const CardWidgetsWeeklyOverview = ({ data }: any) => {
         </FormControl> */}
       </Box>
       <Box>
-        {data ? <ReactApexcharts type='line' height={208} series={data} options={options} /> : <SubLoader />}
+        {loading ? (
+          <Box sx={{ display: 'flex', alignItems: 'flex-end', gap: '20px' }}>
+            {
+              [10, 12, 7, 20, 30, 13, 45, 33, 12, 41, 18, 9, 21].map(el => <Skeleton variant="rounded" width={'50px'} height={el * 5} />)
+            }
+          </Box>
+        ) : data ? <ReactApexcharts type='line' height={208} series={data} options={options} /> : <EmptyContent />}
       </Box>
     </Card>
   )

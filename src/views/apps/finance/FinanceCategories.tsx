@@ -1,5 +1,5 @@
 import LoadingButton from '@mui/lab/LoadingButton'
-import { Box, Dialog, DialogContent, DialogTitle, Grid, Typography } from '@mui/material'
+import { Box, Dialog, DialogContent, DialogTitle, Grid, IconButton, Typography } from '@mui/material'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -22,7 +22,10 @@ export default function FinanceCategories({ categryData, confirmDeleteCategory, 
                         <Box onClick={() => push(`/finance/costs/${_.id}`)} sx={{ cursor: 'pointer' }}>
                             <CardFinanceCategory title={_.name} stats={_.total_expense} icon={<IconifyIcon fontSize={"3rem"} icon={''} />} color={'warning'} />
                         </Box>
-                        {isHover === _.id && _.is_delete && <IconifyIcon onClick={() => setDeleteCategory(_.id)} style={{ position: 'absolute', zIndex: 999, bottom: '2px', right: 0, cursor: 'pointer' }} icon={'fluent:delete-20-regular'} />}
+                        {/* {isHover === _.id && _.is_delete &&} */}
+                        {isHover === _.id && _.is_delete && <IconButton aria-label="delete" size="small" style={{ position: 'absolute', zIndex: 999, bottom: '2px', right: 0, cursor: 'pointer' }}>
+                            <IconifyIcon onClick={() => setDeleteCategory(_.id)} icon={'fluent:delete-20-regular'} />
+                        </IconButton>}
                     </Grid>
                 ))
             }

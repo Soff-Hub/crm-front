@@ -48,7 +48,7 @@ const Div = styled(Box)(({ theme }) => ({
     background: hexToRGBA('#72E128', theme.palette.mode === 'light' ? 0.4 : 0.2),
 }))
 
-function formatDateToMMYYYY(dateString: any) {
+export function formatDateToMMYYYY(dateString: any) {
     const date = new Date(dateString);
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const year = date.getFullYear();

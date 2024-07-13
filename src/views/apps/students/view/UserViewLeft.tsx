@@ -43,6 +43,7 @@ import { useRouter } from 'next/router'
 import { today } from 'src/@core/components/card-statistics/kanban-item'
 import { useAppDispatch } from 'src/store'
 import { fetchStudentDetail, fetchStudentPayment } from 'src/store/apps/students'
+import StudentPaymentForm from './StudentPaymentForm'
 
 
 type ModalTypes = 'group' | 'payment' | 'sms' | 'delete' | 'edit' | 'notes'
@@ -62,7 +63,7 @@ const UserViewLeft = ({ userData }: { userData: any }) => {
   const { mergeStudentToGroup, getGroupShort, groupShort } = useGroups()
   const { updateStudent, studentData } = useStudent()
   const { getBranches, branches } = useBranches()
-  const { getPaymentMethod, paymentMethods, createPayment } = usePayment()
+  const { } = usePayment()
   const [sms, setSMS] = useState<any>("")
   const { smsTemps, getSMSTemps } = useSMS()
   const { query } = useRouter()
@@ -152,23 +153,7 @@ const UserViewLeft = ({ userData }: { userData: any }) => {
   }
 
   const handlePayment = async (value: any) => {
-    setLoading(true)
-    const data = {
-      ...value,
-      student: query?.student,
-    }
-
-    try {
-      await createPayment(data)
-      setLoading(false)
-      setOpenEdit(null)
-
-      await dispatch(fetchStudentDetail(userData.id))
-      await dispatch(fetchStudentPayment(userData.id))
-    } catch (err: any) {
-      showResponseError(err.response.data, setError)
-      setLoading(false)
-    }
+    
   }
 
 
@@ -212,7 +197,7 @@ const UserViewLeft = ({ userData }: { userData: any }) => {
             </CardContent>
             <CardContent sx={{ display: 'flex', justifyContent: 'space-between' }}>
               <Button size='small' variant='outlined' startIcon={<IconifyIcon icon={'mdi:table-add'} />} onClick={() => handleEditClickOpen('group')}>{t("Guruhga qo'shish")}</Button>
-              <Button color='warning' size='small' startIcon={<IconifyIcon icon={'mdi:cash-plus'} />} variant='outlined' onClick={async () => (handleEditClickOpen('payment'), await getPaymentMethod())}>{t("To'lov")}</Button>
+              <Button color='warning' size='small' startIcon={<IconifyIcon icon={'mdi:cash-plus'} />} variant='outlined' onClick={async () => (handleEditClickOpen('payment'))}>{t("To'lov")}</Button>
             </CardContent>
             <Box sx={{ display: 'flex', justifyContent: 'center', pb: 3 }}>
               <Tooltip title={t('Xabar (sms)')} placement='bottom'>
@@ -324,93 +309,7 @@ const UserViewLeft = ({ userData }: { userData: any }) => {
         </Dialog>
 
         {/*   Payment  */}
-        <Dialog
-          open={openEdit === "payment"}
-          onClose={handleEditClose}
-          aria-labelledby='user-view-edit'
-          sx={{ '& .MuiPaper-root': { width: '100%', maxWidth: 450, p: [1, 3] } }}
-          aria-describedby='user-view-edit-description'
-        >
-          <DialogTitle id='user-view-edit' sx={{ textAlign: 'center', fontSize: '1.5rem !important' }}>
-            {t("To'lov")}
-          </DialogTitle>
-          <DialogContent>
-            <Form setError={setError} valueTypes='json' sx={{ marginTop: 10, display: 'flex', flexDirection: 'column', gap: '10px' }} onSubmit={handlePayment} id='edifsdt-employee-pay'>
-              <FormControl fullWidth error={error.payment_type?.error}>
-                <InputLabel size='small' id='user-view-language-label'>{t("To'lov usulini tanlang")}</InputLabel>
-                <Select
-                  size='small'
-                  label={t("To'lov usulini tanlang")}
-                  id='user-view-language'
-                  labelId='user-view-language-label'
-                  name='payment_type'
-                >
-                  {
-                    paymentMethods.map((branch: any) => <MenuItem key={branch.id} value={branch.id}>{branch.name}</MenuItem>)
-                  }
-                </Select>
-                <FormHelperText error={error.payment_type?.error}>{error.payment_type?.message}</FormHelperText>
-              </FormControl>
-
-              <FormControl fullWidth error={error.group?.error}>
-                <InputLabel size='small' id='user-view-language-label'>{t("Qaysi guruh uchun?")}</InputLabel>
-                <Select
-                  size='small'
-                  label={t("Qaysi guruh uchun?")}
-                  id='user-view-language'
-                  labelId='user-view-language-label'
-                  name='group'
-                >
-                  {
-                    userData?.groups.map((branch: any) => <MenuItem key={branch.id} value={branch.group_data.id}>{branch.group_data.name}</MenuItem>)
-                  }
-                </Select>
-                <FormHelperText error={error.group?.error}>{error.group?.message}</FormHelperText>
-              </FormControl>
-
-
-              <FormControl fullWidth>
-                <TextField
-                  error={error?.amount}
-                  rows={4}
-                  label={t("Summa")}
-                  size='small'
-                  name='amount'
-                  defaultValue={''}
-                  type='number'
-                />
-                <FormHelperText error={error.amount}>{error.amount?.message}</FormHelperText>
-              </FormControl>
-
-              <FormControl fullWidth>
-                <TextField
-                  error={error?.description}
-                  rows={4}
-                  multiline
-                  label={t("Izoh")}
-                  name='description'
-                  defaultValue={''}
-                />
-                <FormHelperText error={error.description}>{error.description?.message}</FormHelperText>
-              </FormControl>
-
-              <FormControl sx={{ width: '100%' }}>
-                <input type="date" style={{ borderRadius: '8px', padding: '10px', outline: 'none', border: '1px solid gray', marginTop: '10px' }} name='payment_date' defaultValue={today} />
-                <FormHelperText error={error.start_date?.error}>{error.start_date?.message}</FormHelperText>
-              </FormControl>
-
-
-              <DialogActions sx={{ justifyContent: 'center' }}>
-                <LoadingButton loading={loading} type='submit' variant='contained' sx={{ mr: 1 }}>
-                  {t("Saqlash")}
-                </LoadingButton>
-                <Button variant='outlined' type='button' color='secondary' onClick={handleEditClose}>
-                  {t("Bekor qilish")}
-                </Button>
-              </DialogActions>
-            </Form>
-          </DialogContent>
-        </Dialog>
+        <StudentPaymentForm openEdit={openEdit} setOpenEdit={setOpenEdit}/>
 
         {/*   Edit Student  */}
         <Dialog

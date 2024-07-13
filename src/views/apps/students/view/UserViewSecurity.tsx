@@ -1,5 +1,5 @@
 import LoadingButton from "@mui/lab/LoadingButton"
-import { Box, Button, Card, CardContent, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormHelperText, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material"
+import { Box, Button, Card, CardContent, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormHelperText, InputLabel, MenuItem, OutlinedInput, Select, TextField, Typography } from "@mui/material"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import { useCallback, useEffect, useState } from "react"
@@ -53,6 +53,7 @@ const UserViewSecurity = ({ groupData }: any) => {
   const [deleteId, setDelete] = useState<any>(null)
   const [error, setError] = useState<any>({})
   const [loading, setLoading] = useState<any>(null)
+  const [amount, setAmount] = useState<any>('')
 
   const dispatch = useAppDispatch()
   const { payments, isLoading } = useAppSelector(state => state.students)
@@ -60,6 +61,7 @@ const UserViewSecurity = ({ groupData }: any) => {
   const { paymentMethods, getPaymentMethod, updatePayment, deletePayment } = usePayment()
 
   const handleEdit = (id: any) => {
+    setAmount(payments.find((el: any) => el.id === id)?.amount)
     setEdit(payments.find((el: any) => el.id === id))
   }
 
@@ -215,11 +217,11 @@ const UserViewSecurity = ({ groupData }: any) => {
         aria-describedby='user-view-edit-description'
       >
         <DialogTitle id='user-view-edit' sx={{ textAlign: 'center', fontSize: '1.5rem !important' }}>
-          To'lovni tahrirlash
+          {edit?.amount <= 0 ? "Qarzdorlikni tahrirlash" : "To'lovni tahrirlash"}
         </DialogTitle>
         <DialogContent>
           <Form setError={setError} valueTypes='json' sx={{ marginTop: 10, display: 'flex', flexDirection: 'column', gap: '10px' }} onSubmit={onUpdatePayment} id='edifsdt-employee-pay'>
-            <FormControl fullWidth error={error.payment_type?.error}>
+            {edit?.amount > 0 && <FormControl fullWidth error={error.payment_type?.error}>
               <InputLabel size='small' id='user-view-language-label'>{t("To'lov usulini tanlang")}</InputLabel>
               <Select
                 size='small'
@@ -234,9 +236,9 @@ const UserViewSecurity = ({ groupData }: any) => {
                 }
               </Select>
               <FormHelperText error={error.payment_type?.error}>{error.payment_type?.message}</FormHelperText>
-            </FormControl>
+            </FormControl>}
 
-            <FormControl fullWidth>
+            {edit?.amount > 0 ? <FormControl fullWidth>
               <TextField
                 error={error?.amount}
                 rows={4}
@@ -246,7 +248,20 @@ const UserViewSecurity = ({ groupData }: any) => {
                 defaultValue={edit?.amount}
               />
               <FormHelperText error={error.amount}>{error.amount?.message}</FormHelperText>
-            </FormControl>
+            </FormControl> : <FormControl fullWidth>
+              <InputLabel>Miqdori (so'm)</InputLabel>
+              <OutlinedInput
+                error={error?.amount}
+                rows={4}
+                label="Miqdori (so'm)"
+                size='small'
+                name='amount'
+                startAdornment={amount < 0 ? `-` : ``}
+                onChange={e => setAmount(e.target.value)}
+                defaultValue={edit?.amount * (-1)}
+              />
+              <FormHelperText error={error.amount}>{error.amount?.message}</FormHelperText>
+            </FormControl>}
 
             <FormControl fullWidth>
               <TextField
@@ -260,10 +275,11 @@ const UserViewSecurity = ({ groupData }: any) => {
               <FormHelperText error={error.description}>{error.description?.message}</FormHelperText>
             </FormControl>
 
-            <FormControl sx={{ width: '100%' }}>
+
+            {edit?.amount > 0 && <FormControl sx={{ width: '100%' }}>
               <input type="date" style={{ borderRadius: '8px', padding: '10px', outline: 'none', border: '1px solid gray', marginTop: '10px' }} name='payment_date' defaultValue={today} />
               <FormHelperText defaultValue={edit?.payment_date} error={error.payment_date?.error}>{error.payment_date?.message}</FormHelperText>
-            </FormControl>
+            </FormControl>}
 
 
             <DialogActions sx={{ justifyContent: 'center' }}>
