@@ -91,7 +91,7 @@ export default function GroupFinanceTable({ data, updateData }: any) {
                 </Box>
             </Box>
             <Box className='body' sx={{ flexGrow: 1 }}>
-                <Div sx={{ textAlign: 'end', mb: '5px', padding: '2px', borderRadius: '0' }}>
+                <Div sx={{ textAlign: 'end', mb: '5px', padding: '4px', borderRadius: '0' }}>
                     {/* <TextField defaultValue={`${new Date().getFullYear()}-${Number(new Date().getMonth()) + 1 < 10 ? "0" + (1 + new Date().getMonth()) : new Date().getMonth() + 1}`} style={{ border: 'none' }} size='small' type='month' onChange={(e) => updateData(e.target.value)} /> */}
                     <CustomProvider locale={locale}>
                         <DatePicker
@@ -101,6 +101,7 @@ export default function GroupFinanceTable({ data, updateData }: any) {
                                 await updateData(formatDateToMMYYYY(newValue))
                                 setSelectedDate(newValue);
                             }}
+                            placement="bottomEnd"
                             format="MM-yyyy"
                         />
                     </CustomProvider>

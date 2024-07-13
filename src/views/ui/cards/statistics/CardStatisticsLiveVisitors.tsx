@@ -46,16 +46,16 @@ const CardWidgetsWeeklyOverview = ({ data }: any) => {
     markers: {
       size: 5,
       strokeWidth: 2,
-      fillOpacity: 1,
+      fillOpacity: 0,
       strokeOpacity: 1
     },
     stroke: {
-      width: [2, 2],
+      width: [2, 2, 2],
       curve: 'smooth'
     },
     legend: { show: false },
     dataLabels: { enabled: false },
-    colors: ['#EE6D7A', '#72E128'],  
+    colors: ['#EE6D7A', '#f2b92a', '#72E128'],
     grid: {
       strokeDashArray: 7,
       borderColor: theme.palette.divider
@@ -76,16 +76,16 @@ const CardWidgetsWeeklyOverview = ({ data }: any) => {
       axisBorder: { show: false }
     },
     yaxis: {
-      min: 0,
       show: true,
       tickAmount: 5,
       labels: {
-        formatter: (value) => `${formatCurrency(value)} so'm`,
+        formatter: (value) => `${formatCurrency(value)}`,
         style: {
           fontSize: '0.75rem'
         },
-
-      }
+        // rotate: -45,
+      },
+      forceNiceScale: true
     }
   }
 

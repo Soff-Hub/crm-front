@@ -33,8 +33,8 @@ const StudentsFilter = () => {
                 dispatch(updateStudentParams({ last_payment: true, is_debtor: '' }))
             }
             else if (value === 'all') {
-                await dispatch(fetchStudentsList({ ...queryParams, is_debtor: '' }))
-                dispatch(updateStudentParams({ is_debtor: '' }))
+                await dispatch(fetchStudentsList({ ...queryParams, is_debtor: '', last_payment: '' }))
+                dispatch(updateStudentParams({ is_debtor: '', last_payment: '' }))
             }
             return
         }

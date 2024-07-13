@@ -29,6 +29,7 @@ import { getMonthFullName } from 'src/@core/utils/gwt-month-name'
 import Router from 'next/router'
 import SubLoader from 'src/views/apps/loaders/SubLoader'
 import { DateRangePicker } from 'rsuite'
+import StatsPaymentMethods from 'src/views/apps/finance/StatsPaymentMethods'
 
 
 export function formatDateString(date: Date) {
@@ -36,14 +37,13 @@ export function formatDateString(date: Date) {
     const month = String(date.getMonth() + 1).padStart(2, '0'); // getMonth() is zero-based
     const year = date.getFullYear();
 
-    return `${day}-${month}-${year}`;
+    return `${year}-${month}-${day}`;
 }
 
 interface AllNumbersType {
-    last_month_benefit: string,
-    last_year_benefit: string,
-    last_month_expense: string,
-    last_year_expense: string
+    benefit: string,
+    expense: string,
+    difference: string,
 }
 
 const CardStatistics = () => {
@@ -53,10 +53,9 @@ const CardStatistics = () => {
     const [nameVal, setNameVal] = useState<string>('');
     const [open, setOpen] = useState<'create' | null>(null);
     const [label, setLabel] = useState<AllNumbersType>({
-        last_month_benefit: '0',
-        last_year_benefit: '0',
-        last_month_expense: '0',
-        last_year_expense: '0'
+        benefit: '0',
+        expense: '0',
+        difference: '0',
     }
     );
 
@@ -71,59 +70,35 @@ const CardStatistics = () => {
     const [salaries, setSalaries] = useState<any>([])
     const [date, setDate] = useState<any>('')
     const [numbersLoad, setNumbersLoad] = useState<boolean>(false)
+    const [paymentMenthods, setPaymentMethods] = useState<any[]>([])
 
     const apiData: CardStatsType = {
         statsHorizontal: [
             {
-                color: 'success',
-                stats: label.last_year_benefit,
+                color: 'warning',
+                stats: label.benefit,
                 trend: 'negative',
-                icon: 'mdi:trending-up',
+                icon: 'hugeicons:money-receive-flow-02',
                 trendNumber: '12.6%',
-                title: t('Bugungi tushumlar'),
+                title: t('Tushumlar'),
                 id: '#tushumlar'
             },
             {
-                stats: label.last_year_expense,
+                stats: label.expense,
                 color: 'error',
-                icon: 'mdi:trending-down',
+                icon: 'hugeicons:money-send-flow-02',
                 trendNumber: '22.5%',
-                title: t('Bugungi chiqimlar'),
+                title: t('Chiqimlar'),
                 id: '#chiqimlar'
             },
             {
-                color: 'success',
-                stats: label.last_month_benefit,
-                trend: 'negative',
-                icon: 'mdi:trending-up',
+                color: Number(label.difference) < 0 ? 'error' : 'success',
+                stats: label.difference,
+                trend: Number(label.difference) < 0 ? 'negative' : 'positive',
+                icon: Number(label.difference) < 0 ? 'mdi:trending-down' : 'mdi:trending-up',
                 trendNumber: '12.6%',
-                title: t('Tushum (oxirgi oy)'),
+                title: t("Foyda"),
                 id: '#tushumlar'
-            },
-            {
-                stats: label.last_month_expense,
-                color: 'error',
-                icon: 'mdi:trending-down',
-                trendNumber: '22.5%',
-                title: t('Chiqim (oxirgi oy)'),
-                id: '#chiqimlar'
-            },
-            {
-                color: 'success',
-                stats: label.last_year_benefit,
-                trend: 'negative',
-                icon: 'mdi:trending-up',
-                trendNumber: '12.6%',
-                title: t('Tushum (oxirgi yil)'),
-                id: '#tushumlar'
-            },
-            {
-                stats: label.last_year_expense,
-                color: 'error',
-                icon: 'mdi:trending-down',
-                trendNumber: '22.5%',
-                title: t('Chiqim (oxirgi yil)'),
-                id: '#chiqimlar'
             }
         ],
         statsVertical: [],
@@ -146,7 +121,7 @@ const CardStatistics = () => {
             xs: 0.1,
             title: t("Oy"),
             dataIndex: "month",
-            render: (date) => getMonthFullName(+date.split('-')[2])
+            render: (date) => getMonthFullName(+date.split('-')[1])
         },
         {
             xs: 0.16,
@@ -168,7 +143,7 @@ const CardStatistics = () => {
         },
         {
             xs: 0.2,
-            title: t("Jami KPI bo'yicha"),
+            title: t("Jami foiz (%)"),
             dataIndex: 'kpi_salaries',
             render: (kpi_salaries) => `${formatCurrency(kpi_salaries)} so'm`
         },
@@ -191,9 +166,9 @@ const CardStatistics = () => {
         },
     ]
 
-    const getAllNumbers = async () => {
+    const getAllNumbers = async (date?: string) => {
         setNumbersLoad(true)
-        const resp = await api.get(`common/finance/dashboard/`)
+        const resp = await api.get(`common/finance/dashboard/?${date ? date : ''}`)
         setLabel(resp.data.label)
         setGraphData([
             {
@@ -202,9 +177,12 @@ const CardStatistics = () => {
             }, {
                 name: 'Tushumlar',
                 data: Object.values(resp.data.benefit),
-            },
-
+            }, {
+                name: 'Foyda',
+                data: Object.values(resp.data.difference),
+            }
         ])
+        setPaymentMethods(resp.data?.payment_types?.map((el: any) => ({ ...el, data: el.amount })))
         setNumbersLoad(false)
     }
 
@@ -252,12 +230,15 @@ const CardStatistics = () => {
     }
 
     const clickSalaryDetail = (id: number) => {
-        const date = salaries.find((el: any) => el.id === id)?.date
-        Router.push(`/finance/salary-detail/${date}`)
+        const date = salaries.find((el: any) => el.id === id)
+
+        Router.push(`/finance/salary-detail/${date.date}`)
     }
 
-    const handleChangeDate = (e: any) => {
-        console.log(formatDateString(e[0]));
+    const handleChangeDate = async (e: any) => {
+        if (e) {
+            await getAllNumbers(`start_date=${formatDateString(e[0])}&end_date=${formatDateString(e[1])}`)
+        }
 
         setDate(e)
     }
@@ -274,12 +255,12 @@ const CardStatistics = () => {
     return (
         <ApexChartWrapper>
             <KeenSliderWrapper>
-                <Grid container spacing={2} columnSpacing={10}>
+                <Grid container spacing={4} columnSpacing={6}>
                     <Grid item xs={12}>
-                        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
                             <Typography variant="h5">{t('Umumiy raqamlar')}</Typography>
-                            <DateRangePicker locale={{
-                                last7Days: "Oxirgi 7 kun",
+                            <DateRangePicker showOneCalendar placement="bottomEnd" locale={{
+                                last7Days: "Oxirgi hafta",
                                 sunday: "Yak",
                                 monday: "Du",
                                 tuesday: "Se",
@@ -300,30 +281,32 @@ const CardStatistics = () => {
                                 size="sm"
                             />
                         </Box>
-                    </Grid>
-
-                    <Grid item xs={12} sx={{ marginBottom: '30px' }}>
                         {
-                            numbersLoad ? <Grid container spacing={6}>
+                            numbersLoad ? <Grid container spacing={7}>
                                 {
-                                    [1, 2, 3, 4, 5, 6].map((_, index) => (
-                                        <Grid item xs={12} md={2} sm={4}>
+                                    [1, 2, 3].map((_, index) => (
+                                        <Grid item xs={12} md={4} key={index}>
                                             <Skeleton
                                                 sx={{ bgcolor: 'grey.300' }}
                                                 variant="rectangular"
                                                 width={'100%'}
-                                                height={'110px'}
+                                                height={'80px'}
                                                 style={{ borderRadius: '10px' }}
                                                 animation="wave"
                                             />
                                         </Grid>
-                                    ))}
+                                    ))
+                                }
                             </Grid>
                                 : <CardStatisticsHorizontal data={apiData.statsHorizontal} />
                         }
                     </Grid>
 
-                    <Grid item xs={12} md={12} mb={10}>
+                    <Grid item xs={12} sm={12} md={4}>
+                        <StatsPaymentMethods data={paymentMenthods} />
+                    </Grid>
+
+                    <Grid item xs={12} md={8} mb={10}>
                         <CardStatisticsLiveVisitors data={graphData} />
                     </Grid>
 

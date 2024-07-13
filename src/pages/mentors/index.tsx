@@ -69,7 +69,7 @@ export default function GroupsPage() {
     },
     {
       xs: 1.7,
-      title: "KPI asosida(%)",
+      title: "Foiz ulush (%)",
       dataIndex: 'percentage'
     },
     {

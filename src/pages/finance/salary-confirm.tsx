@@ -42,13 +42,13 @@ export default function SalaryConfirm({ }: Props) {
         },
         {
             xs: 0.08,
-            title: t("KPI (%)"),
+            title: t("Foiz ulush (%)"),
             dataIndex: "kpi",
             render: (kpi) => `${+kpi} %`
         },
         {
             xs: 0.14,
-            title: t("Jami KPI (so'm)"),
+            title: t("Jami foiz ulush"),
             dataIndex: 'kpi_salary',
             render: (kpi_salary) => `${formatCurrency(kpi_salary)} so'm`
         },
@@ -103,7 +103,7 @@ export default function SalaryConfirm({ }: Props) {
             await api.patch(`common/finance/employee-salaries/update/`, { update_data })
             toast.success("Muvaffaqiyatli saqlandi")
             if (status === 'frozen') {
-                await dispatch(fetchModerationSalaries())
+                await dispatch(fetchModerationSalaries(''))
             } else {
                 push('/finance')
             }
@@ -114,7 +114,7 @@ export default function SalaryConfirm({ }: Props) {
     }
 
     useEffect(() => {
-        dispatch(fetchModerationSalaries())
+        dispatch(fetchModerationSalaries(''))
     }, [])
 
     return (
@@ -138,7 +138,7 @@ export default function SalaryConfirm({ }: Props) {
                     {t("Vaqtincha saqlash")}
                 </LoadingButton>}
                 {
-                    moderation_salaries.length > 0 && !isPending && <LoadingButton
+                    moderation_salaries.length > 0 && !isPending && moderation_salaries[0].status !== "approved" && <LoadingButton
                         loading={loading === 'approved'}
                         sx={{ marginTop: '15px' }}
                         size='small'

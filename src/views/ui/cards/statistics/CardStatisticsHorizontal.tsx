@@ -17,10 +17,10 @@ interface Props {
 const CardStatsHorizontal = ({ data }: Props) => {
   if (data) {
     return (
-      <Grid container spacing={6}>
+      <Grid container spacing={7}>
         {data.map((item: CardStatsHorizontalProps, index: number) => {
           return (
-            <Grid item xs={12} md={2} sm={4} key={index}>
+            <Grid item xs={12} md={4} sm={4} key={index}>
               {item.id ? (
                 <a href={item.id} style={{ textDecoration: 'none', cursor: 'pointer' }}>
                   <CardStatisticsHorizontal {...item} icon={<Icon icon={item.icon as string} />} />

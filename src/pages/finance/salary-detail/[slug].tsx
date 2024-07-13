@@ -1,6 +1,9 @@
+import { Box, IconButton, Typography } from "@mui/material";
+import { useRouter } from "next/router";
 import { GetServerSidePropsContext, InferGetStaticPropsType } from "next/types";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import IconifyIcon from "src/@core/components/icon";
 import DataTable, { customTableDataProps } from "src/@core/components/table";
 import { formatCurrency } from "src/@core/utils/format-currency";
 import { useAppDispatch, useAppSelector } from "src/store";
@@ -10,6 +13,7 @@ const UserView = ({ slug }: InferGetStaticPropsType<typeof getServerSideProps>) 
     const { moderation_salaries, isPending } = useAppSelector(state => state.finance)
     const dispatch = useAppDispatch()
     const { t } = useTranslation()
+    const { back } = useRouter()
 
     const withdrawCol: customTableDataProps[] = [
         {
@@ -31,13 +35,13 @@ const UserView = ({ slug }: InferGetStaticPropsType<typeof getServerSideProps>) 
         },
         {
             xs: 0.08,
-            title: t("KPI (%)"),
+            title: t("Foiz ulush (%)"),
             dataIndex: "kpi",
             render: (kpi) => `${+kpi} %`
         },
         {
             xs: 0.14,
-            title: t("Jami KPI (so'm)"),
+            title: t("Jami foiz ulush"),
             dataIndex: 'kpi_salary',
             render: (kpi_salary) => `${formatCurrency(kpi_salary)} so'm`
         },
@@ -89,12 +93,20 @@ const UserView = ({ slug }: InferGetStaticPropsType<typeof getServerSideProps>) 
         dispatch(fetchModerationSalaries(`date=${slug}`))
     }, [])
 
-    return <DataTable loading={isPending} maxWidth='100%' minWidth='800px' columns={withdrawCol} data={moderation_salaries} />
+    return <Box>
+        <Box sx={{ display: 'flex', gap: '10px', flexGrow: 1, alignItems: 'center' }}>
+            <IconButton color='primary'>
+                <IconifyIcon icon={'ep:back'} style={{ cursor: 'pointer' }} onClick={back} />
+            </IconButton>
+            <Typography sx={{ fontSize: '20px', flexGrow: 1 }}>{t("To'langan oyliklar hisoboti")}</Typography>
+        </Box>
+        <DataTable loading={isPending} maxWidth='100%' minWidth='800px' columns={withdrawCol} data={moderation_salaries} />
+    </Box>
 }
 
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-    const { query, params } = context;
+    const { params } = context;
 
     return {
         props: {
