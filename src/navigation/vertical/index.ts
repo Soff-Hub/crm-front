@@ -11,11 +11,11 @@ export const TeacherNavigation = (t: any): any => {
       icon: 'mdi:home-outline',
       path: '/dashboard',
     },
-    {
-      title: t("Profil"),
-      icon: 'mdi:receipt-text-edit-outline',
-      path: '/lids'
-    }
+    // {
+    //   title: t("Profil"),
+    //   icon: 'mdi:receipt-text-edit-outline',
+    //   path: '/lids'
+    // }
   ]
 }
 

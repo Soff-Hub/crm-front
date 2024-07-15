@@ -32,6 +32,7 @@ import PhoneInput from 'src/@core/components/phone-input';
 import { reversePhone } from 'src/@core/components/phone-input/format-phone-number';
 import { disablePage } from 'src/store/apps/page';
 import toast from 'react-hot-toast';
+import AmountInput, { revereAmount } from 'src/@core/components/amount-input';
 
 export const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
@@ -115,7 +116,7 @@ export default function CreateEmployeeForm() {
             dispatch(disablePage(true))
             const newValues = new FormData()
 
-            for (const [key, value] of Object.entries(values)) {
+            for (const [key, value] of Object.entries({ ...values, amount: revereAmount(values.amount) })) {
                 if (['branches', 'roles'].includes(key)) {
                     newValues.append(key, value.join(','))
                 } else {
@@ -304,8 +305,7 @@ export default function CreateEmployeeForm() {
                         </FormHelperText>
                     </FormControl>
                     <FormControl sx={{ width: '100%' }}>
-                        <TextField
-                            type='number'
+                        <AmountInput
                             label={"Oylik ish haqi"}
                             name='amount'
                             onChange={formik.handleChange}

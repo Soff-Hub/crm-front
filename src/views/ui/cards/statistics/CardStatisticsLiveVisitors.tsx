@@ -13,11 +13,27 @@ import { formatCurrency } from 'src/@core/utils/format-currency'
 import { Box, Skeleton, Typography } from '@mui/material'
 import { useTranslation } from 'react-i18next'
 import EmptyContent from 'src/@core/components/empty-content'
+import { useAppSelector } from 'src/store'
 
-const CardWidgetsWeeklyOverview = ({ data, loading, year }: any) => {
+const CardWidgetsWeeklyOverview = () => {
   // ** Hook
   const theme = useTheme()
   const { t } = useTranslation()
+
+  const { all_numbers, numbersLoad: loading } = useAppSelector(state => state.finance)
+
+  const data = all_numbers ? [
+    {
+      name: 'Chiqimlar',
+      data: Object.values(all_numbers.expense),
+    }, {
+      name: 'Tushumlar',
+      data: Object.values(all_numbers.benefit),
+    }, {
+      name: 'Foyda',
+      data: Object.values(all_numbers.difference),
+    }
+  ] : []
 
   const options: ApexOptions = {
     chart: {
@@ -83,7 +99,6 @@ const CardWidgetsWeeklyOverview = ({ data, loading, year }: any) => {
         style: {
           fontSize: '0.75rem'
         },
-        // rotate: -45,
       },
       forceNiceScale: true
     }
@@ -93,24 +108,7 @@ const CardWidgetsWeeklyOverview = ({ data, loading, year }: any) => {
   return (
     <Card sx={{ p: '20px' }}>
       <Box sx={{ display: 'flex', alignItems: 'center' }}>
-        <Typography sx={{ fontSize: '22px' }}>{year} {t('Yildagi aylanmalar')}</Typography>
-        {/* <FormControl className='ms-auto'>
-          <InputLabel size='small' id='user-view-language-label'>{t('Yil')}</InputLabel>
-          <Select
-            size='small'
-            label={t('Yil')}
-            id='user-view-language'
-            labelId='user-view-language-label'
-            sx={{ mb: 1 }}
-            defaultValue={2024}
-          >
-            {
-              [2024, 2025, 2026, 2027, 2028].map(year => (
-                <MenuItem key={year} value={year}>{year}</MenuItem>
-              ))
-            }
-          </Select>
-        </FormControl> */}
+        <Typography sx={{ fontSize: '22px' }}>{all_numbers?.year} {t('Yildagi aylanmalar')}</Typography>
       </Box>
       <Box>
         {loading ? (
@@ -119,7 +117,7 @@ const CardWidgetsWeeklyOverview = ({ data, loading, year }: any) => {
               [10, 12, 7, 20, 30, 13, 45, 33, 12, 41, 18, 9, 21].map(el => <Skeleton variant="rounded" width={'50px'} height={el * 5} />)
             }
           </Box>
-        ) : data ? <ReactApexcharts type='line' height={208} series={data} options={options} /> : <EmptyContent />}
+        ) : all_numbers ? <ReactApexcharts type='line' height={208} series={data} options={options} /> : <EmptyContent />}
       </Box>
     </Card>
   )

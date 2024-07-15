@@ -138,12 +138,20 @@ export default function AccordionCustom({ onView, item }: AccordionProps) {
 
     return (
         <Card sx={{ width: '100%', boxShadow: 'rgba(148, 163, 184, 0.7) 0px 3px 12px' }}>
-            <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', padding: '10px' }}>
-                <Typography fontSize={16}>{item.name}</Typography>
-                <Typography fontSize={16} fontWeight={'700'} sx={{ marginLeft: 'auto', marginRight: 2 }}>{count}</Typography>
+            <Box sx={{ width: '100%', display: 'flex', alignItems: 'center' }}>
+                <Typography
+                    fontSize={16}
+                    sx={{ flexGrow: 1, padding: '10px', cursor: 'pointer' }}
+                    onClick={() => !open ? handleGetLeads(true) : setOpen(!open)}
+                >{item.name}</Typography>
+                <Typography
+                    fontSize={16}
+                    fontWeight={'700'}
+                    sx={{ marginLeft: 'auto', marginRight: 2 }}
+                >{count}</Typography>
                 <IconifyIcon
                     style={{ cursor: 'pointer', transform: open ? 'rotateZ(180deg)' : '' }}
-                    onClick={() => !open ? handleGetLeads(true) : setOpen(!open)} icon={'mingcute:list-collapse-line'}
+                    onClick={() => !open ? handleGetLeads(true) : setOpen(!open)} icon={'iconamoon:arrow-down-2-light'}
                 />
                 <IconifyIcon
                     icon="system-uicons:circle-menu"

@@ -39,7 +39,6 @@ import showResponseError from 'src/@core/utils/show-response-error'
 import usePayment from 'src/hooks/usePayment'
 import api from 'src/@core/utils/api'
 import useSMS from 'src/hooks/useSMS'
-import { useRouter } from 'next/router'
 import { today } from 'src/@core/components/card-statistics/kanban-item'
 import { useAppDispatch } from 'src/store'
 import { fetchStudentDetail, fetchStudentPayment } from 'src/store/apps/students'
@@ -66,7 +65,6 @@ const UserViewLeft = ({ userData }: { userData: any }) => {
   const { } = usePayment()
   const [sms, setSMS] = useState<any>("")
   const { smsTemps, getSMSTemps } = useSMS()
-  const { query } = useRouter()
   const dispatch = useAppDispatch()
 
   // Handle Edit dialog

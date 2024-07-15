@@ -34,7 +34,7 @@ export default function ExportStudent({ id, modalRef, setModalRef }: { id: any, 
             try {
                 const response = await api.post('common/group-student/export/', { ...values, group_student: id })
                 if (response.status == 201) {
-                    toast.success(response.data.msg)
+                    toast.success("O'quvchi guruhga ko'chirildi")
                     await dispatch(getStudents({ id: groupData?.id, queryString: '' }))
                     dispatch(setGettingAttendance(true))
                     if (query.month && query?.id) {

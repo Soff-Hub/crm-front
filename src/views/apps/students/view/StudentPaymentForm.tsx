@@ -19,6 +19,7 @@ import * as Yup from 'yup'
 import usePayment from 'src/hooks/usePayment'
 import { useRouter } from 'next/router'
 import { fetchStudentDetail, fetchStudentPayment } from 'src/store/apps/students'
+import AmountInput, { revereAmount } from 'src/@core/components/amount-input'
 
 
 
@@ -61,6 +62,7 @@ export default function StudentPaymentForm({ openEdit, setOpenEdit }: Props) {
             const data = {
                 ...values,
                 student: query?.student,
+                amount: revereAmount(values.amount)
             }
 
             try {
@@ -151,12 +153,11 @@ export default function StudentPaymentForm({ openEdit, setOpenEdit }: Props) {
 
 
                         <FormControl fullWidth>
-                            <TextField
+                            <AmountInput
                                 label={t("Summa")}
                                 size='small'
                                 name='amount'
                                 defaultValue={''}
-                                type='number'
                                 error={!!errors.amount && touched.amount}
                                 value={values.amount}
                                 onChange={handleChange}

@@ -11,7 +11,7 @@ import { CardStatsHorizontalProps } from 'src/@core/components/card-statistics/t
 import CardStatisticsHorizontal from 'src/@core/components/card-statistics/card-stats-horizontal'
 
 interface Props {
-  data: CardStatsHorizontalProps[]
+  data: any[]
 }
 
 const CardStatsHorizontal = ({ data }: Props) => {

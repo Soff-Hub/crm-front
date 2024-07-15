@@ -15,6 +15,7 @@ import { useAppDispatch, useAppSelector } from 'src/store';
 import { fetchTeachersList, setOpenEdit } from 'src/store/apps/mentors';
 import TeacherEditDialog from 'src/views/apps/mentors/TeacherEditDialog';
 import TeacherCreateDialog from 'src/views/apps/mentors/TeacherCreateDialog';
+import { formatCurrency } from 'src/@core/utils/format-currency';
 
 export interface customTableProps {
   xs: number
@@ -65,7 +66,8 @@ export default function GroupsPage() {
     {
       xs: 1.7,
       title: "Doimiy oylik",
-      dataIndex: 'amount'
+      dataIndex: 'amount',
+      render: (amount) => formatCurrency(amount)
     },
     {
       xs: 1.7,

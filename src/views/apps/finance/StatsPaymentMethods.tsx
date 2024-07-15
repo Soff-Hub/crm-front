@@ -3,22 +3,20 @@ import React from 'react'
 import EmptyContent from 'src/@core/components/empty-content'
 import ReactApexcharts from 'src/@core/components/react-apexcharts'
 import { formatCurrency } from 'src/@core/utils/format-currency'
+import { useAppSelector } from 'src/store'
 
-type Props = {
-    data: { data: number, name: string }[]
-    loading: boolean
-}
 
-export default function StatsPaymentMethods({ data, loading }: Props) {
+export default function StatsPaymentMethods() {
+    const { all_numbers, numbersLoad: loading } = useAppSelector(state => state.finance)
 
     const props: any = {
-        series: data.map(el => el.data),
+        series: all_numbers?.payment_types.map(el => el.amount),
         options: {
             chart: {
                 width: 380,
                 type: 'pie',
             },
-            labels: data.map(el => el.name),
+            labels: all_numbers?.payment_types.map(el => el.name),
             responsive: [{
                 breakpoint: 480,
                 options: {
@@ -45,6 +43,7 @@ export default function StatsPaymentMethods({ data, loading }: Props) {
             }
         },
     }
+
     return <div>
         <div id="chart-circle">
             {loading ? (
@@ -59,7 +58,7 @@ export default function StatsPaymentMethods({ data, loading }: Props) {
                         </Box>
                     </Box>
                 </Box>
-            ) : props?.series?.some((el: number) => el > 0) ? < ReactApexcharts options={props.options} series={props.series} type="pie" width={380} /> : <EmptyContent title="To'lovlar mavjud emas" />}
+            ) : props?.series?.some((el: number) => el > 0) && all_numbers ? < ReactApexcharts options={props.options} series={props.series} type="pie" width={380} /> : <EmptyContent title="To'lovlar mavjud emas" />}
         </div>
         <div id="html-dist"></div>
     </div>

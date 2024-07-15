@@ -1,7 +1,7 @@
 // ** Redux Imports
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import api from 'src/@core/utils/api'
-import { IFinanceState } from 'src/types/apps/finance'
+import { AllNumbersParams, IFinanceState } from 'src/types/apps/finance'
 
 
 export const fetchModerationSalaries = createAsyncThunk('finance/fetchModerationSalaries', async (params?: string) => {
@@ -17,18 +17,17 @@ export const editSms = createAsyncThunk('finance/editSms', async (data: { descri
     return (await api.patch(`common/sms-form/update/${data?.id}`, data)).data
 })
 
-const calcBonus = (array: any[], bonus: number) => {
-    return array.map(el => ({ ...el, salary: bonus + Number(el.salary) }))
-}
-
-const calcFine = (array: any[], fine: number) => {
-    return array.map(el => ({ ...el, salary: fine + Number(el.salary) }))
-}
+export const fetchFinanceAllNumbers = createAsyncThunk('finance/fetchFinanceAllNumbers', async (params?: AllNumbersParams) => {
+    return (await api.get('common/finance/dashboard/', { params })).data
+})
 
 
 const initialState: IFinanceState = {
     isPending: false,
-    moderation_salaries: []
+    moderation_salaries: [],
+    all_numbers: undefined,
+    numbersLoad: false,
+    allNumbersParams: { date_year: `${new Date().getFullYear()}-01-01`, date_month: '', start_date: '', end_date: '' }
 }
 
 export const financeSlice = createSlice({
@@ -48,6 +47,10 @@ export const financeSlice = createSlice({
                 : el)
 
             state.moderation_salaries = data
+        },
+        updateNumberParams: (state, action) => {
+            const newParams = { ...state.allNumbersParams, ...action.payload }
+            state.allNumbersParams = newParams
         }
     },
     extraReducers: builder => {
@@ -59,12 +62,20 @@ export const financeSlice = createSlice({
                 state.isPending = false
                 state.moderation_salaries = action.payload.map((el: any) => ({ ...el, final_salary: Number(el.salary) + Number(el.bonus_amount) - Number(el.fine_amount) }))
             })
+            .addCase(fetchFinanceAllNumbers.pending, (state) => {
+                state.numbersLoad = true
+            })
+            .addCase(fetchFinanceAllNumbers.fulfilled, (state, action) => {
+                state.all_numbers = action.payload
+                state.numbersLoad = false
+            })
     }
 })
 
 export const {
     updateSalaryBonus,
-    updateSalaryFine
+    updateSalaryFine,
+    updateNumberParams
 } = financeSlice.actions
 
 export default financeSlice.reducer

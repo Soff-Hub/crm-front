@@ -9,6 +9,7 @@ import * as Yup from 'yup'
 import useBranches from 'src/hooks/useBranch'
 import { disablePage } from 'src/store/apps/page'
 import toast from 'react-hot-toast'
+import AmountInput, { revereAmount } from 'src/@core/components/amount-input'
 
 type Props = {}
 
@@ -40,7 +41,7 @@ export default function EditCourseForm({ }: Props) {
         onSubmit: async (values) => {
             setLoading(true)
             dispatch(disablePage(true))
-            const resp = await dispatch(editCourse(values))
+            const resp = await dispatch(editCourse({ ...values, price: revereAmount(`${values?.price}`) }))
             if (resp.meta.requestStatus === 'rejected') {
                 formik.setErrors(resp.payload)
                 setLoading(false)
@@ -113,7 +114,7 @@ export default function EditCourseForm({ }: Props) {
                 {errors.branch && touched.branch && <FormHelperText error>{errors.branch}</FormHelperText>}
             </FormControl>
             <FormControl fullWidth>
-                <TextField
+                <AmountInput
                     label={t('Kurs narxi')}
                     size='small'
                     name='price'

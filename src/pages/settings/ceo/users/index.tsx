@@ -23,6 +23,7 @@ import api from 'src/@core/utils/api'
 import ButtonGroup from '@mui/material/ButtonGroup';
 import { disablePage } from 'src/store/apps/page'
 import toast from 'react-hot-toast'
+import { formatCurrency } from 'src/@core/utils/format-currency'
 
 export interface customTableProps {
     xs: number
@@ -138,7 +139,8 @@ export default function GroupsPage() {
         {
             xs: 1,
             title: "Doimiy oylik",
-            dataIndex: 'amount'
+            dataIndex: 'amount',
+            render: (amount) => formatCurrency(amount)
         },
         {
             xs: 1,
