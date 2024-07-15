@@ -1,5 +1,5 @@
 import LoadingButton from "@mui/lab/LoadingButton"
-import { Box, Button, Card, CardContent, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormHelperText, InputLabel, MenuItem, OutlinedInput, Select, TextField, Typography } from "@mui/material"
+import { Box, Button, Card, CardContent, Chip, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormHelperText, InputLabel, MenuItem, OutlinedInput, Select, TextField, Typography } from "@mui/material"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import { useCallback, useEffect, useState } from "react"
@@ -186,6 +186,9 @@ const UserViewSecurity = ({ groupData }: any) => {
                 <Link key={group.id} href={`/groups/view/security/?id=${group.group_data.id}&month=${getMontName(null)}`} style={{ textDecoration: 'none' }}>
                   <Box sx={{ display: 'flex', gap: '20px' }} >
                     <Card sx={{ width: isMobile ? '100%' : '50%' }}>
+                      <CardContent sx={{ display: 'flex', justifyContent: 'space-between', margin: '0', py: '10px' }}>
+                        <Chip label={formatCurrency(group.group_data.balance)} size="small" variant='outlined' color={group.group_data.balance >= 0 ? 'success' : 'error'} />
+                      </CardContent>
                       <CardContent sx={{ display: 'flex', justifyContent: 'space-between' }}>
                         <Box sx={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
                           <Typography sx={{ fontSize: '12px' }}>{group.group_data.name}</Typography>

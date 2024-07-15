@@ -18,8 +18,6 @@ import CircularProgress from '@mui/material/CircularProgress'
 import Icon from 'src/@core/components/icon'
 
 // ** Demo Components Imports
-import UserViewBilling from 'src/views/apps/mentors/view/UserViewBilling'
-import UserViewOverview from 'src/views/apps/mentors/view/UserViewOverview'
 import UserViewSecurity from 'src/views/apps/mentors/view/UserViewSecurity'
 import { useTranslation } from 'react-i18next'
 
@@ -85,7 +83,6 @@ const UserViewRight = ({ tab, invoiceData }: Props) => {
         sx={{ borderBottom: theme => `1px solid ${theme.palette.divider}` }}
       >
         <Tab value='security' label={t('Guruhlar')} icon={<Icon icon='mdi:unarchive' />} />
-        {/* <Tab value='billing-plan' label={t('Ish haqi')} icon={<Icon icon='mdi:account-clock' />} /> */}
       </TabList>
       <Box sx={{ mt: 6 }}>
         {isLoading ? (
@@ -95,14 +92,8 @@ const UserViewRight = ({ tab, invoiceData }: Props) => {
           </Box>
         ) : (
           <>
-            <TabPanel sx={{ p: 0 }} value='overview'>
-              <UserViewOverview />
-            </TabPanel>
             <TabPanel sx={{ p: 0 }} value='security'>
               <UserViewSecurity data={invoiceData} />
-            </TabPanel>
-            <TabPanel sx={{ p: 0 }} value='billing-plan'>
-              <UserViewBilling />
             </TabPanel>
           </>
         )}

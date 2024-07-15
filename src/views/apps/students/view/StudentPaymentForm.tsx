@@ -80,7 +80,9 @@ export default function StudentPaymentForm({ openEdit, setOpenEdit }: Props) {
     const { errors, values, handleSubmit, handleBlur, touched, handleChange } = formik
 
 
-    const handleEditClose = () => { }
+    const handleEditClose = () => {
+        setOpenEdit(null)
+    }
 
     useEffect(() => {
         getPaymentMethod()
