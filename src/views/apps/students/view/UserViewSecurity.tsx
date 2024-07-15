@@ -17,6 +17,7 @@ import usePayment from "src/hooks/usePayment"
 import { customTableProps } from "src/pages/groups"
 import { useAppDispatch, useAppSelector } from "src/store"
 import { fetchStudentDetail, fetchStudentPayment } from "src/store/apps/students"
+import StudentPaymentEditForm from "./StudentPaymentEdit"
 
 // Rasm yuklab olish misoli
 export async function downloadImage(filename: string, url: string) {
@@ -55,7 +56,7 @@ const UserViewSecurity = ({ groupData }: any) => {
   const dispatch = useAppDispatch()
   const { payments, isLoading } = useAppSelector(state => state.students)
 
-  const { paymentMethods, getPaymentMethod, updatePayment, deletePayment } = usePayment()
+  const { getPaymentMethod, deletePayment } = usePayment()
 
   const handleEdit = (id: any) => {
     setAmount(payments.find((el: any) => el.id === id)?.amount)
@@ -108,10 +109,16 @@ const UserViewSecurity = ({ groupData }: any) => {
       dataIndex: 'payment_date',
     },
     {
+      xs: 0.2,
+      title: t(""),
+      dataIndex: 'is_debtor',
+      render: (debtor) => <Chip size="small" label={debtor ? "To'landi" : "Qarzdorlik"} color={debtor ? 'success' : 'error'} />
+    },
+    {
       xs: 0.7,
       title: t("Summa"),
       dataIndex: 'amount',
-      render: (amount) => `${formatCurrency(amount)} UZS`
+      render: (amount) => Number(amount) <= 0 ? `${formatCurrency(Number(amount) * (-1))} UZS` : `${formatCurrency(amount)} UZS`
     },
     {
       xs: 1,
@@ -126,37 +133,16 @@ const UserViewSecurity = ({ groupData }: any) => {
     {
       xs: 1,
       title: t("Amallar"),
-      dataIndex: 'id',
-      render: (id) => (
+      dataIndex: 'amount',
+      renderId: (id, src) => (
         <Box sx={{ display: 'flex', gap: '10px' }}>
           <IconifyIcon onClick={() => handleEdit(id)} icon='mdi:pencil-outline' fontSize={20} />
           <IconifyIcon onClick={() => setDelete(id)} icon='mdi:delete-outline' fontSize={20} />
-          {loading === id ? <IconifyIcon icon={'la:spinner'} fontSize={20} /> : <IconifyIcon onClick={() => getReceipt(id)} icon={`ph:receipt-light`} fontSize={20} />}
+          {Number(src) < 0 ? "" : loading === id ? <IconifyIcon icon={'la:spinner'} fontSize={20} /> : <IconifyIcon onClick={() => getReceipt(id)} icon={`ph: receipt - light`} fontSize={20} />}
         </Box>
       )
     }
   ]
-
-
-  const onUpdatePayment = async (value: {}) => {
-    setLoading(true)
-    const data = {
-      ...value,
-      student: query?.student,
-    }
-
-    try {
-      await updatePayment(edit?.id, data)
-      setLoading(false)
-      setEdit(null)
-
-      await dispatch(fetchStudentPayment(query?.student))
-      await dispatch(fetchStudentDetail(Number(query?.student)))
-    } catch (err: any) {
-      showResponseError(err.response.data, setError)
-      setLoading(false)
-    }
-  }
 
   const onHandleDelete = async () => {
     setLoading(true)
@@ -180,12 +166,12 @@ const UserViewSecurity = ({ groupData }: any) => {
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
             {
               groupData.map((group: any) => (
-                <Link key={group.id} href={`/groups/view/security/?id=${group.group_data.id}&month=${getMontName(null)}`} style={{ textDecoration: 'none' }}>
+                <Link key={group.id} href={`/ groups / view / security /? id = ${group.group_data.id} & month=${getMontName(null)}`} style={{ textDecoration: 'none' }}>
                   <Box sx={{ display: 'flex', gap: '20px' }} >
                     <Card sx={{ width: isMobile ? '100%' : '50%' }}>
                       <CardContent sx={{ display: 'flex', justifyContent: 'space-between', margin: '0', py: '10px' }}>
                         <Chip label={`${formatCurrency(group.group_data.balance)} so'm`} size="small" variant='outlined' color={group.group_data.balance >= 0 ? 'success' : 'error'} />
-                      </CardContent>
+                      </CardContent >
                       <CardContent sx={{ display: 'flex', justifyContent: 'space-between' }}>
                         <Box sx={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
                           <Typography sx={{ fontSize: '12px' }}>{group.group_data.name}</Typography>
@@ -197,103 +183,19 @@ const UserViewSecurity = ({ groupData }: any) => {
                           <Typography sx={{ fontSize: '12px' }}>Juft kunlar - {group.start_at}</Typography>
                         </Box>
                       </CardContent>
-                    </Card>
-                  </Box></Link>
+                    </Card >
+                  </Box ></Link >
               ))
             }
-          </Box> : <EmptyContent />
+          </Box > : <EmptyContent />
       }
 
       <Typography sx={{ my: 3, fontSize: '20px' }}>To'lov tarixi</Typography>
-      <DataTable loading={isLoading} maxWidth="100%" minWidth="450px" data={payments} columns={columns} />
+      <DataTable color loading={isLoading} maxWidth="100%" minWidth="450px" data={payments.map(el => ({ ...el, color: Number(el.amount) >= 0 ? 'transparent' : 'rgba(227, 18, 18, 0.1)', is_debtor: Number(el.amount) >= 0 }))} columns={columns} />
 
       <iframe src="" id="printFrame" style={{ height: 0 }}></iframe>
 
-      <Dialog
-        open={edit}
-        onClose={() => setEdit(null)}
-        aria-labelledby='user-view-edit'
-        sx={{ '& .MuiPaper-root': { width: '100%', maxWidth: 450, p: [1, 3] } }}
-        aria-describedby='user-view-edit-description'
-      >
-        <DialogTitle id='user-view-edit' sx={{ textAlign: 'center', fontSize: '1.5rem !important' }}>
-          {edit?.amount <= 0 ? "Qarzdorlikni tahrirlash" : "To'lovni tahrirlash"}
-        </DialogTitle>
-        <DialogContent>
-          <Form setError={setError} valueTypes='json' sx={{ marginTop: 10, display: 'flex', flexDirection: 'column', gap: '10px' }} onSubmit={onUpdatePayment} id='edifsdt-employee-pay'>
-            {edit?.amount > 0 && <FormControl fullWidth error={error.payment_type?.error}>
-              <InputLabel size='small' id='user-view-language-label'>{t("To'lov usulini tanlang")}</InputLabel>
-              <Select
-                size='small'
-                label={t("To'lov usulini tanlang")}
-                id='user-view-language'
-                labelId='user-view-language-label'
-                name='payment_type'
-                defaultValue={edit?.payment_type}
-              >
-                {
-                  paymentMethods.map((branch: any) => <MenuItem key={branch.id} value={branch.id}>{branch.name}</MenuItem>)
-                }
-              </Select>
-              <FormHelperText error={error.payment_type?.error}>{error.payment_type?.message}</FormHelperText>
-            </FormControl>}
-
-            {edit?.amount > 0 ? <FormControl fullWidth>
-              <TextField
-                error={error?.amount}
-                rows={4}
-                label="Miqdori (so'm)"
-                size='small'
-                name='amount'
-                defaultValue={edit?.amount}
-              />
-              <FormHelperText error={error.amount}>{error.amount?.message}</FormHelperText>
-            </FormControl> : <FormControl fullWidth>
-              <InputLabel>Miqdori (so'm)</InputLabel>
-              <OutlinedInput
-                error={error?.amount}
-                rows={4}
-                label="Miqdori (so'm)"
-                size='small'
-                name='amount'
-                startAdornment={amount < 0 ? `-` : ``}
-                onChange={e => setAmount(e.target.value)}
-                defaultValue={edit?.amount * (-1)}
-              />
-              <FormHelperText error={error.amount}>{error.amount?.message}</FormHelperText>
-            </FormControl>}
-
-            <FormControl fullWidth>
-              <TextField
-                error={error?.description}
-                rows={4}
-                multiline
-                label="Izoh"
-                name='description'
-                defaultValue={edit?.description}
-              />
-              <FormHelperText error={error.description}>{error.description?.message}</FormHelperText>
-            </FormControl>
-
-
-            {edit?.amount > 0 && <FormControl sx={{ width: '100%' }}>
-              <input type="date" style={{ borderRadius: '8px', padding: '10px', outline: 'none', border: '1px solid gray', marginTop: '10px' }} name='payment_date' defaultValue={today} />
-              <FormHelperText defaultValue={edit?.payment_date} error={error.payment_date?.error}>{error.payment_date?.message}</FormHelperText>
-            </FormControl>}
-
-
-            <DialogActions sx={{ justifyContent: 'center' }}>
-              <LoadingButton loading={loading} type='submit' variant='contained' sx={{ mr: 1 }}>
-                {t("Saqlash")}
-              </LoadingButton>
-              <Button variant='outlined' type='button' color='secondary' onClick={() => setEdit(null)}>
-                {t("Bekor Qilish")}
-              </Button>
-            </DialogActions>
-          </Form>
-        </DialogContent>
-      </Dialog>
-
+      <StudentPaymentEditForm openEdit={edit} setOpenEdit={setEdit} />
 
       <Dialog
         open={deleteId}

@@ -40,6 +40,7 @@ export interface customTableProps {
   title: string
   dataIndex?: string | ReactNode
   render?: (source: string) => any | undefined
+  renderId?: (id: any, source: any) => any | undefined
 }
 
 export const TranslateWeekName: any = {

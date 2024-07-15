@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { Box, Button, Card, CardContent, CircularProgress, Dialog, DialogContent, Switch, TextField, Typography } from '@mui/material'
 import IconifyIcon from 'src/@core/components/icon'
 import useResponsive from 'src/@core/hooks/useResponsive'
@@ -11,6 +11,7 @@ import { styled } from '@mui/material/styles'
 import { useTranslation } from 'react-i18next'
 import showResponseError from 'src/@core/utils/show-response-error'
 import { useAppDispatch, useAppSelector } from 'src/store'
+import { AuthContext } from 'src/context/AuthContext'
 
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
@@ -41,6 +42,8 @@ export default function AllSettings() {
     const dispatch = useAppDispatch()
     const { companyInfo } = useAppSelector((state: any) => state.user)
     const { t } = useTranslation()
+
+    const { } = useContext(AuthContext)
 
 
 
@@ -88,15 +91,6 @@ export default function AllSettings() {
         }
     }
 
-    // const getSettings = async () => {
-    //     try {
-    //         const resp = await api.get('common/settings/list/')
-    //         dispatch(setCompanyInfo(resp.data[0]))
-    //     } catch (err) {
-    //         console.log(err)
-    //     }
-    // }
-
     const updateSettings = async (key: any, value: any) => {
         try {
             const formData: any = new FormData()
@@ -133,6 +127,9 @@ export default function AllSettings() {
                 await api.patch(key === 'on_birthday' ? 'common/auto-sms/update/' : 'common/settings/update/', formData)
             }
 
+            if (key === 'branch') {
+
+            }
 
             const getresp = await api.get('common/settings/list/')
             dispatch(setCompanyInfo(getresp.data[0]))

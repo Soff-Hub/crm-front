@@ -157,6 +157,8 @@ export default function CreateEmployeeForm() {
 
         return () => {
             formik.resetForm()
+            dispatch(disablePage(false))
+            dispatch(setOpenCreateSms(false))
         }
     }, [])
 
