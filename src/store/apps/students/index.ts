@@ -61,6 +61,13 @@ export const fetchStudentPayment = createAsyncThunk(
     }
 )
 
+export const searchStudent = createAsyncThunk(
+    'students/searchStudent',
+    async (search?: string) => {
+        return (await api.get(`auth/student/list/`, { params: { search } })).data?.results
+    }
+)
+
 
 
 const initialState: IStudentState = {
@@ -70,7 +77,8 @@ const initialState: IStudentState = {
     studentData: null,
     isLoading: false,
     queryParams: { status: 'active', is_debtor: '', group_status: '' },
-    payments: []
+    payments: [],
+    global_pay: false
 }
 
 export const studentsSlice = createSlice({
@@ -87,9 +95,12 @@ export const studentsSlice = createSlice({
         updateStudentParams: (state, action) => {
             state.queryParams = { ...state.queryParams, ...action.payload }
         },
-        clearStudentParams: (state, action) => {
+        clearStudentParams: (state) => {
             state.queryParams = { status: 'active' }
-        }
+        },
+        setGlobalPay: (state, action) => {
+            state.global_pay = action.payload
+        },
     },
     extraReducers: builder => {
         builder
@@ -120,6 +131,12 @@ export const studentsSlice = createSlice({
     }
 })
 
-export const { setOpenEdit, setStudentData, updateStudentParams, clearStudentParams } = studentsSlice.actions
+export const {
+    setOpenEdit,
+    setStudentData,
+    updateStudentParams,
+    clearStudentParams,
+    setGlobalPay
+} = studentsSlice.actions
 
 export default studentsSlice.reducer

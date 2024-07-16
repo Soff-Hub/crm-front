@@ -12,16 +12,6 @@ import { formatCurrency } from 'src/@core/utils/format-currency';
 import 'react-datepicker/dist/react-datepicker.css';
 
 
-interface PickerProps {
-    label?: string;
-    start: Date | number;
-}
-
-
-type DateType = Date
-
-
-
 function Slug(props: { slug: string }) {
     const { settings } = useSettings()
     const { query } = useRouter()
@@ -66,7 +56,6 @@ function Slug(props: { slug: string }) {
         setToday(dates.target.value)
     };
 
-
     const updateCategory = async (value: any) => {
         try {
             await api.patch(`common/finance/expense-category/update/${query?.slug}/`, { name })
@@ -98,7 +87,6 @@ function Slug(props: { slug: string }) {
         }
     }
 
-
     const deleteExpense = async () => {
         setLoading(true)
         try {
@@ -113,11 +101,9 @@ function Slug(props: { slug: string }) {
         }
     }
 
-
     useEffect(() => {
         getExpense(query?.slug)
     }, [today])
-
 
     useEffect(() => {
         if (scrollContainerRef.current && dateRefs.current[todayDate - 1]) {
@@ -125,15 +111,12 @@ function Slug(props: { slug: string }) {
         }
     }, [todayDate, data2]);
 
-
     return (
         <Box>
             <Box className='header'>
                 <Box sx={{ display: 'flex', alignItems: 'center', mb: 4, px: 2 }}>
                     <TextField onBlur={updateCategory} size='small' sx={{ fontSize: '20px', marginRight: 'auto' }} value={name} onChange={(e) => setName(e.target.value)} />
-                    <Box>
-                        <TextField size='small' type='month' value={today} onChange={handleOnChangeRange} />
-                    </Box>
+
                     <Typography sx={{ fontSize: '14px', color: 'error.main', ml: 3, display: 'flex', flexDirection: 'column' }} >
                         <span>{t('Umumiy')}</span>
                         <span>
@@ -142,37 +125,9 @@ function Slug(props: { slug: string }) {
                     </Typography>
                 </Box>
             </Box>
-            <Box sx={{ display: 'flex', alignItems: isMobile ? 'center' : 'flex-start', gap: '15px', flexDirection: isMobile ? 'column' : 'row', overflowX: 'scroll' }}>
-                {
-                    data2.map((item, i: number) => (
-                        <Column
-                            ref={item => dateRefs.current[i] = item}
-                            sx={{ minWidth: isMobile ? '100%' : '220px', display: 'flex', flexDirection: 'column', gap: '12px', p: '5px' }}>
-                            <Th textAlign={'center'}>
-                                {Number(item.date?.split('-')?.[2])}
-                            </Th>
-                            {
-                                item.value.map((el: any, j: number) => (
-                                    <Box key={j} sx={{ borderBottom: `2px dashed ${mainColor}`, position: 'relative' }}>
-                                        <Box>
-                                            {formatCurrency(el.amount)}
-                                        </Box>
-                                        <Box sx={{ fontSize: '14px' }}>
-                                            {el.description}
-                                        </Box>
-                                        <Box sx={{ textAlign: 'center', py: 1, position: 'absolute', right: 0, top: '-5px' }}>
-                                            <IconifyIcon onClick={() => (setOpen('delete'), setDeleteId(el.id))} icon={'material-symbols-light:delete-outline'} cursor={'pointer'} />
-                                        </Box>
-                                    </Box>
-                                ))
-                            }
-                            <Button variant='outlined' onClick={() => (setDate(item.date), setOpen('create'))} size='small'>{t('Yangi')}</Button>
-                        </Column>
-                    ))
-                }
+            <Box sx={{ display: 'flex', alignItems: isMobile ? 'center' : 'flex-start', gap: '15px', flexDirection: isMobile ? 'column' : 'row' }}>
+                
             </Box>
-
-
 
             <Dialog open={open === 'create'} onClose={() => setOpen(null)}>
                 <DialogTitle sx={{ display: 'flex', alignItems: 'center', minWidth: '300px', justifyContent: 'space-between' }}>

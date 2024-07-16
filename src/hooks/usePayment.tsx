@@ -47,7 +47,7 @@ export default function usePayment() {
 
     const createPayment = async (data: any) => {
         try {
-            await api.post('common/student-payment/create/', data)
+            return (await api.post('common/student-payment/create/', data)).data
         } catch (err) {
             return Promise.reject(err)
         }

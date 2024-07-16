@@ -8,7 +8,7 @@ export const formatAmount = (value: string) => {
 
 // Helper function to unformat numbers
 export const revereAmount = (value: string) => {
-    return value.replace(/\s+/g, '');
+    return `${value}`.replace(/\s+/g, '');
 };
 
 export default function AmountInput(props: TextFieldProps) {

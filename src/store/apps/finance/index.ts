@@ -1,5 +1,6 @@
 // ** Redux Imports
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
+import { today } from 'src/@core/components/card-statistics/kanban-item'
 import api from 'src/@core/utils/api'
 import { AllNumbersParams, IFinanceState } from 'src/types/apps/finance'
 
@@ -27,7 +28,7 @@ const initialState: IFinanceState = {
     moderation_salaries: [],
     all_numbers: undefined,
     numbersLoad: false,
-    allNumbersParams: { date_year: `${new Date().getFullYear()}-01-01`, date_month: '', start_date: '', end_date: '' }
+    allNumbersParams: { date_year: `${new Date().getFullYear()}-01-01`, date_month: today.split('-')[1], start_date: '', end_date: '' }
 }
 
 export const financeSlice = createSlice({
