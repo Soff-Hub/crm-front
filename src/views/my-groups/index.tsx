@@ -1,20 +1,24 @@
 import { Box, Card, CardContent, Typography } from '@mui/material'
 import Link from 'next/link'
-import React, { useEffect } from 'react'
+import React, { useContext, useEffect } from 'react'
 import getLessonDays from 'src/@core/utils/getLessonDays'
 import getMonthName from 'src/@core/utils/gwt-month-name'
-import useGroups from 'src/hooks/useGroups'
+import { AuthContext } from 'src/context/AuthContext'
+import { useAppDispatch, useAppSelector } from 'src/store'
+import { fetchGroups } from 'src/store/apps/groups'
 
 
 export default function MyGroups() {
-    const { groups, getGroups } = useGroups()
+    const { user } = useContext(AuthContext)
 
-    const getData = async () => {
-        await getGroups()
-    }
+
+    console.log(user?.id);
+
+    const { groups } = useAppSelector(state => state.groups)
+    const dispatch = useAppDispatch()
 
     useEffect(() => {
-        getData()
+        dispatch(fetchGroups(`page=1&status=active&teacher=${user?.id}`))
     }, [])
 
     return (
@@ -22,7 +26,7 @@ export default function MyGroups() {
             <Typography sx={{ mb: 3 }}>Mening guruhlarim</Typography>
             <Box sx={{ display: 'flex', gap: '15px', mb: 3, flexWrap: 'wrap' }}>
                 {
-                    groups.map((group: any) => (
+                    groups && groups.map((group: any) => (
                         <Link key={'group.id'} href={`/groups/view/security/?id=${group.id}&month=${getMonthName(null)}`} style={{ textDecoration: 'none' }}>
                             <Box sx={{ display: 'flex', gap: '20px' }} >
                                 <Card>

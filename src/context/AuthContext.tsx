@@ -65,7 +65,7 @@ const AuthProvider = ({ children }: Props) => {
           .then(async response => {
             setLoading(false)
             setUser({
-              id: 1,
+              id: response.data.id,
               // role: response.data.roles.find((el: any) => el.name === "Teacher").exists && !response.data.roles.find((el: any) => el.name === "Admin").exists && !response.data.roles.find((el: any) => el.name === "CEO").exists ? 'teacher' : 'admin',
               fullName: response.data.first_name,
               username: response.data.phone,
