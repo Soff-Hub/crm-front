@@ -111,7 +111,7 @@ export default function GroupsPage() {
 
     return () => {
       dispatch(setOpenEdit(null))
-      dispatch(clearStudentParams(null))
+      dispatch(clearStudentParams())
     }
   }, [])
 
