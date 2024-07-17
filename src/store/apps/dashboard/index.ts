@@ -17,7 +17,7 @@ const statsData: StatsDataType[] = [
     title: 'Faol talabalar',
     color: 'info',
     key: 'active_students',
-    link: '/students'
+    link: 'active_students'
   },
   {
     icon: 'la:layer-group',

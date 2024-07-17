@@ -6,65 +6,47 @@ import OptionsMenu from 'src/@core/components/option-menu'
 
 // ** Type Import
 import { Typography } from '@mui/material'
-import { useRouter } from 'next/router'
 import api from 'src/@core/utils/api'
 
-import authConfig from 'src/configs/auth'
-import { useEffect, useState } from 'react'
+import { useContext } from 'react'
+import { AuthContext } from 'src/context/AuthContext'
 
 
 const BranchDropdown = () => {
     // ** Hook
-    const router = useRouter()
-    const [profile, setProfile] = useState<any>(null)
-
-    const getProfile = async () => {
-        try {
-            const resp = await api.get(authConfig.meEndpoint)
-            setProfile(resp.data)
-
-        } catch (err) {
-            console.log(err);
-        }
-    }
-
+    const { user, initAuth } = useContext(AuthContext)
 
 
     const handleLangItemClick = async (id: number) => {
         try {
-            if (profile.active_branch.branch !== id) {
+            if (user?.active_branch !== id) {
                 await api.post('auth/branch-update/', { branch: id })
-                router.push('/')
+                await initAuth()
             }
         } catch (err) {
             console.log(err);
         }
     }
 
-    useEffect(() => {
-        getProfile()
-    }, [])
-
     return (
-        <OptionsMenu
+        user && user?.branches ? <OptionsMenu
             iconButtonProps={{ sx: { borderRadius: '5px' } }}
-            icon={<Typography>{profile ? profile.branches.find((el: any) => el.id === profile.active_branch.branch)?.name : " "} <Icon icon='ep:arrow-down-bold' fontSize={12} /></Typography>}
+            icon={<Typography>{user?.branches.find((el: any) => Number(el.id) === Number(user.active_branch))?.name} <Icon icon='ep:arrow-down-bold' fontSize={12} /></Typography>}
             options={
-                profile ? profile?.branches.filter((item: any) => item.exists === true).map((el: any) => (
+                user?.branches.filter((item: any) => item.exists === true).map((el: any) => (
                     {
                         text: el.name,
                         menuItemProps: {
                             sx: { py: 2 },
-                            selected: el.id === profile.active_branch.branch,
+                            selected: Number(el.id) === Number(user.active_branch),
                             onClick: () => {
                                 handleLangItemClick(el.id)
                             }
                         }
                     }
-                )) :
-                    []
+                ))
             }
-        />
+        /> : <></>
     )
 }
 

@@ -8,7 +8,7 @@ export default function useRoles() {
     const getRoles = async () => {
         try {
             const resp = await api.get('auth/role-list/')
-            setRoles(resp.data.results)
+            setRoles(resp.data.results?.filter((el: any) => el.name?.toLowerCase() !== 'student'))
         } catch (err) {
             return err
         }

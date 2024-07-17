@@ -20,13 +20,14 @@ export default function DashboardStats() {
         if (link === 'debtor_users') {
             dispatch(updateStudentParams({ is_debtor: true, last_payment: '' }))
             return push('/students')
-        }
-        if (link === 'last_payment') {
+        } else if (link === 'last_payment') {
             dispatch(updateStudentParams({ is_debtor: '', last_payment: true }))
             return push('/students')
-        }
-        if (link === 'group_status') {
+        } else if (link === 'group_status') {
             dispatch(updateStudentParams({ group_status: 'new' }))
+            return push('/students')
+        } else if (link === 'active_students') {
+            dispatch(updateStudentParams({ group_status: 'active' }))
             return push('/students')
         }
 

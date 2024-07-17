@@ -1,4 +1,4 @@
-import { Dialog, DialogContent, DialogTitle, Drawer } from '@mui/material'
+import { Dialog, DialogContent, DialogTitle } from '@mui/material'
 import React from 'react'
 import { useAppDispatch, useAppSelector } from 'src/store'
 import { setGlobalPay } from 'src/store/apps/students'

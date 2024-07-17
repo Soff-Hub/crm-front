@@ -11,9 +11,6 @@ import { fetchGroups } from 'src/store/apps/groups'
 export default function MyGroups() {
     const { user } = useContext(AuthContext)
 
-
-    console.log(user?.id);
-
     const { groups } = useAppSelector(state => state.groups)
     const dispatch = useAppDispatch()
 

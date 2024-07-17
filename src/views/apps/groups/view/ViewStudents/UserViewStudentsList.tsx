@@ -138,7 +138,7 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, }: ItemTyp
                             <Typography fontSize={12}>{first_name}</Typography>
                             <Typography variant='body2' fontSize={12}>{t(status)}</Typography>
                         </Box>
-                        <Typography variant='body2' fontSize={10}>{`( ID: 134 )`}</Typography>
+                        <Typography variant='body2' fontSize={10}>{`( ID: ${activeId} )`}</Typography>
                     </Box>
                     <Box py={1} borderTop={'1px solid #c3cccc'}>
                         <Typography variant='body2' fontSize={12}>{t('phone')}</Typography>

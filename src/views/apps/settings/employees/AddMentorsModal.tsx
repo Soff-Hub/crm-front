@@ -33,6 +33,7 @@ import { reversePhone } from 'src/@core/components/phone-input/format-phone-numb
 import { disablePage } from 'src/store/apps/page';
 import toast from 'react-hot-toast';
 import AmountInput, { revereAmount } from 'src/@core/components/amount-input';
+import Router from 'next/router';
 
 export const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
@@ -92,7 +93,6 @@ export default function CreateEmployeeForm() {
         );
     };
 
-
     const initialValues = {
         first_name: "",
         phone: "",
@@ -148,11 +148,9 @@ export default function CreateEmployeeForm() {
         formik.setFieldValue("is_fixed_salary", checked)
         formik.setFieldValue("amount", 0)
         formik.setFieldValue("percentage", 0)
-
     }
 
     useEffect(() => {
-
         getBranches()
 
         return () => {
@@ -256,6 +254,10 @@ export default function CreateEmployeeForm() {
                         {
                             branches.map((branch, index) => <MenuItem key={index} value={branch.id}>{branch.name}</MenuItem>)
                         }
+                        <MenuItem sx={{ fontWeight: 600 }} onClick={() => Router.push('/settings/ceo/all-settings')}>
+                            Yangi yaratish
+                            <IconifyIcon icon={'ion:add-sharp'} />
+                        </MenuItem>
                     </Select>
                     {!!formik.errors.branches && <FormHelperText error>{formik.errors.branches}</FormHelperText>}
                 </FormControl>

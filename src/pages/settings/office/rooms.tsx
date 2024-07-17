@@ -27,12 +27,10 @@ export default function RoomsPage() {
   const { rooms, is_pending, active_page, room_count } = useAppSelector(state => state.settings)
   const dispatch = useAppDispatch()
 
-
   const handlePagination = async (page: number) => {
     await dispatch(fetchRoomList({ page }))
     dispatch(updatePage(page))
   }
-
 
   useEffect(() => {
     dispatch(fetchRoomList({ page: active_page }))

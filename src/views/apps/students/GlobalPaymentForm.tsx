@@ -160,7 +160,7 @@ export default function GlobalPaymentForm({ }: Props) {
                 {step === 'search' && <FormControl fullWidth>
                     <OutlinedInput
                         size='small'
-                        placeholder="O'quvchini qidiring"
+                        placeholder="Qidiring, Ism, Telefon..."
                         name='search'
                         value={formik.values.search}
                         onChange={(e) => (setStudentList([]), formik.handleChange(e))}
@@ -168,7 +168,7 @@ export default function GlobalPaymentForm({ }: Props) {
                     />
                     {!!formik.errors.search && formik.touched.search && <FormHelperText error>{formik.errors.search}</FormHelperText>}
                 </FormControl>}
-                
+
                 {loading ? <CircularProgress sx={{ margin: '30px auto', display: 'block' }} size={30} /> : ''}
                 {studentList.length > 0 && <Box sx={{ display: 'flex', width: '100%', flexDirection: 'column', gap: '5px' }}>
                     {

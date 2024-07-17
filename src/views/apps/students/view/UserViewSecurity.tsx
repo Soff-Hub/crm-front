@@ -136,7 +136,7 @@ const UserViewSecurity = ({ groupData }: any) => {
       renderId: (id, src) => (
         <Box sx={{ display: 'flex', gap: '10px' }}>
           <IconifyIcon onClick={() => handleEdit(id)} icon='mdi:pencil-outline' fontSize={20} />
-          <IconifyIcon onClick={() => setDelete(id)} icon='mdi:delete-outline' fontSize={20} />
+          {Number(src) < 0 ? "" : <IconifyIcon onClick={() => setDelete(id)} icon='mdi:delete-outline' fontSize={20} />}
           {Number(src) < 0 ? "" : loading === id ? <IconifyIcon icon={'la:spinner'} fontSize={20} /> : <IconifyIcon onClick={() => getReceipt(id)} icon={`ph:receipt-light`} fontSize={20} />}
         </Box>
       )
@@ -165,7 +165,7 @@ const UserViewSecurity = ({ groupData }: any) => {
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
             {
               groupData.map((group: any) => (
-                <Link key={group.id} href={`/groups/view/security/?id =${group.group_data.id}&month=${getMontName(null)}`} style={{ textDecoration: 'none' }}>
+                <Link key={group.id} href={`/groups/view/security/?id=${group.group_data.id}&month=${getMontName(null)}`} style={{ textDecoration: 'none' }}>
                   <Box sx={{ display: 'flex', gap: '20px' }} >
                     <Card sx={{ width: isMobile ? '100%' : '50%' }}>
                       <CardContent sx={{ display: 'flex', justifyContent: 'space-between', margin: '0', py: '10px' }}>
@@ -186,7 +186,7 @@ const UserViewSecurity = ({ groupData }: any) => {
                   </Box ></Link >
               ))
             }
-          </Box > : <EmptyContent />
+          </Box> : <EmptyContent />
       }
 
       <Typography sx={{ my: 3, fontSize: '20px' }}>To'lov tarixi</Typography>

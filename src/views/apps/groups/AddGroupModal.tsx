@@ -20,6 +20,7 @@ import * as Yup from "yup";
 import Calendar from './Calendar';
 import { disablePage } from 'src/store/apps/page';
 import toast from 'react-hot-toast';
+import Router from 'next/router';
 
 export default function AddGroupModal() {
     const { isOpenAddGroup, courses, teachers, formParams, queryParams, rooms, initialValues } = useAppSelector(state => state.groups)
@@ -173,6 +174,10 @@ export default function AddGroupModal() {
                                     {
                                         courses?.map(course => <MenuItem key={course.id} value={+course.id}>{course.name}</MenuItem>)
                                     }
+                                    <MenuItem sx={{ fontWeight: 600 }} onClick={() => Router.push('/settings/office/courses')}>
+                                        Yangi yaratish
+                                        <IconifyIcon icon={'ion:add-sharp'} />
+                                    </MenuItem>
                                 </Select>
                                 <FormHelperText error={!!formik.errors.course && !!formik.touched.course}>{!!formik.errors.course && !!formik.touched.course && formik.errors.course}</FormHelperText>
                             </FormControl>
@@ -240,6 +245,10 @@ export default function AddGroupModal() {
                                     {
                                         rooms?.map(branch => <MenuItem key={branch.id} value={+branch.id}>{branch.name}</MenuItem>)
                                     }
+                                    <MenuItem sx={{ fontWeight: 600 }} onClick={() => Router.push('/settings/office/rooms')}>
+                                        Yangi yaratish
+                                        <IconifyIcon icon={'ion:add-sharp'} />
+                                    </MenuItem>
                                 </Select>
                                 <FormHelperText error={!!formik.errors.room && !!formik.touched.room}>{!!formik.errors.room && !!formik.touched.room && formik.errors.room}</FormHelperText>
                             </FormControl>
@@ -262,6 +271,10 @@ export default function AddGroupModal() {
                                     {
                                         teachers?.map(teacher => <MenuItem key={teacher.id} value={+teacher.id}>{teacher.first_name}</MenuItem>)
                                     }
+                                    <MenuItem sx={{ fontWeight: 600 }} onClick={() => Router.push('/mentors')}>
+                                        Yangi yaratish
+                                        <IconifyIcon icon={'ion:add-sharp'} />
+                                    </MenuItem>
                                 </Select>
                                 <FormHelperText error={!!formik.errors.teacher && !!formik.touched.teacher}>{!!formik.errors.teacher && !!formik.touched.teacher && formik.errors.teacher}</FormHelperText>
                             </FormControl>

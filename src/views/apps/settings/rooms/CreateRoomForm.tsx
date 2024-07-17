@@ -9,6 +9,8 @@ import * as Yup from 'yup'
 import useBranches from 'src/hooks/useBranch'
 import { disablePage } from 'src/store/apps/page'
 import toast from 'react-hot-toast'
+import { useRouter } from 'next/router'
+import IconifyIcon from 'src/@core/components/icon'
 
 type Props = {}
 
@@ -20,6 +22,7 @@ export default function CreateRoomForm({ }: Props) {
     const { active_page } = useAppSelector(state => state.settings)
 
     const [loading, setLoading] = useState<boolean>(false)
+    const { push } = useRouter()
 
     const setOpenAddGroup = () => {
         dispatch(setOpenCreateSms(null))
@@ -55,7 +58,6 @@ export default function CreateRoomForm({ }: Props) {
     })
 
     const { errors, values, handleSubmit, handleChange, handleBlur, touched } = formik
-
 
     useEffect(() => {
         getBranches()
@@ -107,6 +109,10 @@ export default function CreateRoomForm({ }: Props) {
                     value={values.branch}
                 >
                     {branches.length > 0 && branches.map((item: any) => <MenuItem key={item.id} value={`${item.id}`}>{item?.name}</MenuItem>)}
+                    <MenuItem sx={{ fontWeight: 600 }} onClick={() => push('/settings/ceo/all-settings')}>
+                        Yangi yaratish
+                        <IconifyIcon icon={'ion:add-sharp'} />
+                    </MenuItem>
                 </Select>
 
                 {errors.branch && touched.branch && <FormHelperText error>{errors.branch}</FormHelperText>}

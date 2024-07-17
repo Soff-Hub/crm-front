@@ -21,6 +21,7 @@ import PhoneInput from 'src/@core/components/phone-input';
 import { reversePhone } from 'src/@core/components/phone-input/format-phone-number';
 import { disablePage } from 'src/store/apps/page';
 import toast from 'react-hot-toast';
+import Router from 'next/router';
 
 
 export default function CreateStudentForm() {
@@ -81,7 +82,7 @@ export default function CreateStudentForm() {
 
 
     useEffect(() => {
-        
+
         getGroups()
 
         return () => {
@@ -179,6 +180,10 @@ export default function CreateStudentForm() {
                             {
                                 groups.map(group => <MenuItem key={group.id} value={Number(group.id)}>{group.name}</MenuItem>)
                             }
+                            <MenuItem sx={{ fontWeight: 600 }} onClick={() => Router.push('/groups')}>
+                                Yangi yaratish
+                                <IconifyIcon icon={'ion:add-sharp'} />
+                            </MenuItem>
                         </Select>
                         {errors.group && <FormHelperText error={!!errors.group}>{errors.group}</FormHelperText>}
 

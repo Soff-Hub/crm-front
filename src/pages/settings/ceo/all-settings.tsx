@@ -36,16 +36,30 @@ export default function AllSettings() {
     const [loading, setLoading] = useState<null | 'create' | 'delete' | any>(null)
     const [error, setError] = useState<any>({})
 
-
     const { getPaymentMethod, paymentMethods, createPaymentMethod, updatePaymentMethod } = usePayment()
     const { getBranches, branches } = useBranches()
     const dispatch = useAppDispatch()
     const { companyInfo } = useAppSelector((state: any) => state.user)
     const { t } = useTranslation()
+    const { setUser } = useContext(AuthContext)
 
-    const { } = useContext(AuthContext)
-
-
+    const reloadProfile = async () => {
+        await api
+            .get('auth/profile/')
+            .then(async response => {
+                setUser({
+                    id: response.data.id,
+                    fullName: response.data.first_name,
+                    username: response.data.phone,
+                    password: 'null',
+                    avatar: response.data.image,
+                    role: response.data.roles.filter((el: any) => el.exists).map((el: any) => el.name?.toLowerCase()),
+                    balance: response.data?.balance || 0,
+                    branches: response.data.branches.filter((item: any) => item.exists === true),
+                    active_branch: response.data.active_branch?.branch
+                })
+            })
+    }
 
     const createPaymentType = async () => {
         setLoading('create')
@@ -66,6 +80,7 @@ export default function AllSettings() {
         setLoading('create')
         try {
             await api.post(`/common/branch/create`, { name })
+            await reloadProfile()
             setTimeout(() => {
                 setLoading(null)
                 setCreatable(null)
@@ -81,6 +96,7 @@ export default function AllSettings() {
         setLoading('create')
         try {
             await api.patch(`/common/branch/update/${id?.id}`, { name })
+            await reloadProfile()
             setCreatable(null)
             setLoading(null)
             getBranches()
@@ -144,7 +160,6 @@ export default function AllSettings() {
             setLoading(null)
         }
     }
-
 
     useEffect(() => {
         Promise.all([

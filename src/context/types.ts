@@ -19,7 +19,9 @@ export type UserDataType = {
   username: string
   password: string
   avatar: string,
-  balance?: number
+  balance?: number,
+  branches?: any[],
+  active_branch?: any
 }
 
 export type AuthValuesType = {
@@ -30,4 +32,5 @@ export type AuthValuesType = {
   setUser: (value: UserDataType | null) => void
   login: (params: LoginParams, errorCallback?: ErrCallbackType) => void
   register: (params: RegisterParams, errorCallback?: ErrCallbackType) => void
+  initAuth: () => void
 }

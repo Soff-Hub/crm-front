@@ -9,6 +9,7 @@ import { createDepartmentStudent, fetchDepartmentList, setAddSource } from 'src/
 import IconifyIcon from 'src/@core/components/icon';
 import PhoneInput from 'src/@core/components/phone-input';
 import { reversePhone } from 'src/@core/components/phone-input/format-phone-number';
+import Router from 'next/router';
 
 
 type Props = {}
@@ -107,6 +108,10 @@ export default function CreateAnonimUserForm({ }: Props) {
                     {
                         sourceData.map((lead: any) => <MenuItem key={lead.id} value={lead.id}>{lead.name}</MenuItem>)
                     }
+                    <MenuItem sx={{ fontWeight: 600 }} onClick={() => Router.push('/lids/stats')}>
+                        Yangi yaratish
+                        <IconifyIcon icon={'ion:add-sharp'} />
+                    </MenuItem>
                 </Select>
                 {!!errors.source && touched.source && <FormHelperText error>{formik.errors.source}</FormHelperText>}
             </FormControl>

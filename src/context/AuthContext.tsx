@@ -25,7 +25,8 @@ const defaultProvider: AuthValuesType = {
   setLoading: () => Boolean,
   login: () => Promise.resolve(),
   logout: () => Promise.resolve(),
-  register: () => Promise.resolve()
+  register: () => Promise.resolve(),
+  initAuth: () => Promise.resolve(),
 }
 
 const AuthContext = createContext(defaultProvider)
@@ -45,56 +46,58 @@ const AuthProvider = ({ children }: Props) => {
   // ** Hooks
   const dispatch = useAppDispatch()
 
-  useEffect(() => {
+  const initAuth = async (): Promise<void> => {
+    const storedToken = window.localStorage.getItem(authConfig.storageTokenKeyName)!
+    if (storedToken) {
 
-    const initAuth = async (): Promise<void> => {
-      const storedToken = window.localStorage.getItem(authConfig.storageTokenKeyName)!
-      if (storedToken) {
-
-        const settings: any = window.localStorage.getItem('settings')
-        i18n.changeLanguage(JSON.parse(settings)?.locale || 'uz')
+      const settings: any = window.localStorage.getItem('settings')
+      i18n.changeLanguage(JSON.parse(settings)?.locale || 'uz')
 
 
-        setLoading(true)
-        await api
-          .get(authConfig.meEndpoint, {
-            headers: {
-              Authorization: `Bearer ${storedToken}`
-            }
+      setLoading(true)
+      await api
+        .get(authConfig.meEndpoint, {
+          headers: {
+            Authorization: `Bearer ${storedToken}`
+          }
+        })
+        .then(async response => {
+          setLoading(false)
+          setUser({
+            id: response.data.id,
+            // role: response.data.roles.find((el: any) => el.name === "Teacher").exists && !response.data.roles.find((el: any) => el.name === "Admin").exists && !response.data.roles.find((el: any) => el.name === "CEO").exists ? 'teacher' : 'admin',
+            fullName: response.data.first_name,
+            username: response.data.phone,
+            password: 'null',
+            avatar: response.data.image,
+            role: response.data.roles.filter((el: any) => el.exists).map((el: any) => el.name?.toLowerCase()),
+            balance: response.data?.balance || 0,
+            branches: response.data.branches.filter((item: any) => item.exists === true),
+            active_branch: response.data.active_branch?.branch
           })
-          .then(async response => {
-            setLoading(false)
-            setUser({
-              id: response.data.id,
-              // role: response.data.roles.find((el: any) => el.name === "Teacher").exists && !response.data.roles.find((el: any) => el.name === "Admin").exists && !response.data.roles.find((el: any) => el.name === "CEO").exists ? 'teacher' : 'admin',
-              fullName: response.data.first_name,
-              username: response.data.phone,
-              password: 'null',
-              avatar: response.data.image,
-              role: response.data.roles.filter((el: any) => el.exists).map((el: any) => el.name?.toLowerCase()),
-              balance: response.data?.balance || 0
-            })
-          })
-          .catch(() => {
-            localStorage.removeItem('userData')
-            localStorage.removeItem('refreshToken')
-            localStorage.removeItem('accessToken')
-            setUser(null)
-            setLoading(false)
-            if (authConfig.onTokenExpiration === 'logout' && !router.pathname.includes('login')) {
-              router.replace('/login')
-            }
-          })
+        })
+        .catch(() => {
+          localStorage.removeItem('userData')
+          localStorage.removeItem('refreshToken')
+          localStorage.removeItem('accessToken')
+          setUser(null)
+          setLoading(false)
+          if (authConfig.onTokenExpiration === 'logout' && !router.pathname.includes('login')) {
+            router.replace('/login')
+          }
+        })
 
-        if (!window.location.hostname.split('.').includes('c-panel')) {
-          const resp = await api.get('common/settings/list/')
-          dispatch(setCompanyInfo(resp.data[0]))
-        }
-      } else {
-        setLoading(false)
-        window.localStorage.clear()
+      if (!window.location.hostname.split('.').includes('c-panel')) {
+        const resp = await api.get('common/settings/list/')
+        dispatch(setCompanyInfo(resp.data[0]))
       }
+    } else {
+      setLoading(false)
+      window.localStorage.clear()
     }
+  }
+
+  useEffect(() => {
 
     initAuth()
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -127,7 +130,9 @@ const AuthProvider = ({ children }: Props) => {
           password: 'null',
           avatar: response.data.image,
           role: response.data.roles.filter((el: any) => el.exists).map((el: any) => el.name?.toLowerCase()),
-          balance: response.data?.balance || 0
+          balance: response.data?.balance || 0,
+          branches: response.data.branches.filter((item: any) => item.exists === true),
+          active_branch: response.data.active_branch?.branch
         })
 
         !params.rememberMe ? window.localStorage.setItem('userData', JSON.stringify({ ...response.data, role: 'admin', tokens: null })) : null
@@ -172,7 +177,8 @@ const AuthProvider = ({ children }: Props) => {
     setLoading,
     login: handleLogin,
     logout: handleLogout,
-    register: handleRegister
+    register: handleRegister,
+    initAuth
   }
 
   return <AuthContext.Provider value={values}>{children}</AuthContext.Provider>

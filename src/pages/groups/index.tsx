@@ -126,8 +126,10 @@ export default function GroupsPage() {
     }
   ]
 
-  const handlePagination = (page: string) => {
-    dispatch(updateParams({ page: page }))
+  const handlePagination = async (page: string) => {
+    dispatch(updateParams({ page }))
+    const queryString = new URLSearchParams({ ...queryParams, page }).toString()
+    await dispatch(fetchGroups(queryString))
   }
 
   const handleOpenModal = async () => {
@@ -178,7 +180,7 @@ export default function GroupsPage() {
       )}
       {!isMobile && <GroupsFilter isMobile={isMobile} />}
       <DataTable columns={columns} loading={isLoading} data={groups || []} rowClick={rowClick} color />
-      {Math.ceil(groupCount / 10) > 1 && isLoading && <Pagination defaultPage={queryParams.page ? Number(queryParams.page) : 1} count={groupCount} variant="outlined" shape="rounded" onChange={(e: any, page) => handlePagination(e.target.value + page)} />}
+      {Math.ceil(groupCount / 10) > 1 && !isLoading && <Pagination defaultPage={queryParams.page ? Number(queryParams.page) : 1} count={Math.ceil(groupCount / 10)} variant="outlined" shape="rounded" onChange={(e: any, page) => handlePagination(page)} />}
 
       <AddGroupModal />
       <EditGroupModal />
