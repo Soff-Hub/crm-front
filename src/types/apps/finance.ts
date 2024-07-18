@@ -37,7 +37,8 @@ export interface AllNumbersParams {
     date_year: any,
     date_month: string,
     start_date: string,
-    end_date: string
+    end_date: string,
+    branch: string
 }
 
 export interface IFinanceState {

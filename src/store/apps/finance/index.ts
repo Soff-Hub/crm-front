@@ -28,7 +28,7 @@ const initialState: IFinanceState = {
     moderation_salaries: [],
     all_numbers: undefined,
     numbersLoad: false,
-    allNumbersParams: { date_year: `${new Date().getFullYear()}-01-01`, date_month: today.split('-')[1], start_date: '', end_date: '' }
+    allNumbersParams: { date_year: `${new Date().getFullYear()}-01-01`, date_month: today.split('-')[1], start_date: '', end_date: '', branch: '' }
 }
 
 export const financeSlice = createSlice({

@@ -2,37 +2,39 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import { FormControl, FormHelperText, TextField } from '@mui/material'
 import { useFormik } from 'formik';
 import React, { useState } from 'react'
-import AmountInput from 'src/@core/components/amount-input'
+import AmountInput, { revereAmount } from 'src/@core/components/amount-input'
+import { today } from 'src/@core/components/card-statistics/kanban-item';
+import api from 'src/@core/utils/api';
 import * as Yup from 'yup'
 
-export default function CreateCostForm() {
+export default function CreateCostForm({ slug, setOpen, reRender }: any) {
     const [loading, setLoading] = useState<boolean>(false)
 
     const validationSchema = Yup.object({
         amount: Yup.string().required("Summani kiriting"),
         description: Yup.string().required("Izoh kiriting"),
+        date: Yup.string().required("Sanani kiritish majburiy")
     });
 
     const initialValues = {
         amount: '',
-        description: ''
+        description: '',
+        date: today
     }
 
     const formik = useFormik({
         initialValues,
         validationSchema,
         onSubmit: async (values) => {
-            console.log(values);
-            
-            // const newVlaues = { ...valuess, phone: reversePhone(values.phone), group: values?.group ? [values.group] : [] }
-
-            // const resp = await dispatch(createStudent(newVlaues))
-
-            // if (resp.meta.requestStatus === 'rejected') {
-            //     formik.setErrors(resp.payload)
-            // } else {
-            //     await dispatch(fetchStudentsList())
-            // }
+            setLoading(true)
+            try {
+                await api.post(`common/finance/expense/create/`, { ...values, amount: revereAmount(values.amount), expense_category: slug })
+                await reRender()
+                setOpen(false)
+            } catch (err) {
+                console.log(err)
+            }
+            setLoading(false)
         }
     });
 
@@ -66,6 +68,20 @@ export default function CreateCostForm() {
                     onBlur={formik.handleBlur}
                 />
                 {!!formik.errors.description && formik.touched.description && <FormHelperText error>{formik.errors.description}</FormHelperText>}
+            </FormControl>
+
+            <FormControl fullWidth>
+                <TextField
+                    size='small'
+                    label="Sana"
+                    name='date'
+                    type='date'
+                    error={!!formik.errors.date && formik.touched.date}
+                    value={formik.values.date}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                />
+                {!!formik.errors.date && formik.touched.date && <FormHelperText error>{formik.errors.date}</FormHelperText>}
             </FormControl>
 
             <LoadingButton type='submit' variant='contained' loading={loading}>

@@ -13,7 +13,7 @@ import { setGlobalPay } from 'src/store/apps/students'
 import GlobalPaymentModal from 'src/views/apps/students/GlobalPaymentModal'
 
 const Toggler = styled(Box)<BoxProps>(({ theme }) => ({
-    right: 0,
+    left: 0,
     top: '30%',
     display: 'flex',
     cursor: 'pointer',
@@ -21,12 +21,12 @@ const Toggler = styled(Box)<BoxProps>(({ theme }) => ({
     gap: '2px',
     position: 'fixed',
     zIndex: theme.zIndex.modal,
-    padding: theme.spacing(1),
+    padding: theme.spacing(1.5),
     transform: 'translateY(-50%)',
     color: theme.palette.common.white,
     backgroundColor: theme.palette.primary.main,
-    borderTopLeftRadius: theme.shape.borderRadius,
-    borderBottomLeftRadius: theme.shape.borderRadius
+    borderTopRightRadius: theme.shape.borderRadius,
+    borderBottomRightRadius: theme.shape.borderRadius
 }))
 
 const GlobalPay = () => {

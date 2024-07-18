@@ -28,12 +28,12 @@ const VisuallyHiddenInput = styled('input')({
 export default function AllSettings() {
 
     const { isMobile } = useResponsive()
-    const [editable, setEditable] = useState<null | 'title' | 'logo' | 'start-time' | 'end-time'>(null)
+    const [editable, setEditable] = useState<null | 'title' | 'logo' | 'start-time' | 'end-time' | 'birthdate' | 'absend'>(null)
     const [createble, setCreatable] = useState<null | 'branch' | 'payment-type'>(null)
     const [id, setId] = useState<null | { key: 'branch' | 'payment-type', id: any }>(null)
     const [deleteId, setDeleteId] = useState<null | { open: null | 'payment-type' | 'branch', id: any }>(null)
     const [name, setName] = useState<string>('')
-    const [loading, setLoading] = useState<null | 'create' | 'delete' | any>(null)
+    const [loading, setLoading] = useState<'name' | 'branch' | 'paytype' | 'start-time' | 'end-time' | 'birthdate' | 'absend' | 'delete' | null>(null)
     const [error, setError] = useState<any>({})
 
     const { getPaymentMethod, paymentMethods, createPaymentMethod, updatePaymentMethod } = usePayment()
@@ -56,13 +56,13 @@ export default function AllSettings() {
                     role: response.data.roles.filter((el: any) => el.exists).map((el: any) => el.name?.toLowerCase()),
                     balance: response.data?.balance || 0,
                     branches: response.data.branches.filter((item: any) => item.exists === true),
-                    active_branch: response.data.active_branch?.branch
+                    active_branch: response.data.active_branch
                 })
             })
     }
 
     const createPaymentType = async () => {
-        setLoading('create')
+        setLoading('paytype')
         try {
             await createPaymentMethod({ name })
             setTimeout(() => {
@@ -77,7 +77,7 @@ export default function AllSettings() {
     }
 
     const createBranch = async () => {
-        setLoading('create')
+        setLoading('branch')
         try {
             await api.post(`/common/branch/create`, { name })
             await reloadProfile()
@@ -93,7 +93,7 @@ export default function AllSettings() {
     }
 
     const updateBranch = async () => {
-        setLoading('create')
+        setLoading('branch')
         try {
             await api.patch(`/common/branch/update/${id?.id}`, { name })
             await reloadProfile()
@@ -108,6 +108,14 @@ export default function AllSettings() {
     }
 
     const updateSettings = async (key: any, value: any) => {
+        if (key === 'training_center_name') {
+            setLoading('name')
+        } else if (key === 'work_start_time') {
+            setLoading('start-time')
+        } else if (key === 'work_end_time') {
+            setLoading('end-time')
+        }
+
         try {
             const formData: any = new FormData()
             formData.append(key, value)
@@ -115,23 +123,27 @@ export default function AllSettings() {
             if (key === 'on_birthday' || key === 'birthday_text' || key === 'on_absent' || key === 'absent_text') {
 
                 if (key === 'on_birthday') {
+                    setLoading('birthdate')
                     formData.append('birthday_text', 'Text')
                     formData.append('on_absent', companyInfo?.auto_sms?.on_absent)
                     formData.append('absent_text', companyInfo?.auto_sms?.absent_text)
                 }
 
                 else if (key === 'birthday_text') {
+                    setLoading('birthdate')
                     formData.append('on_birthday', true)
                     formData.append('on_absent', companyInfo?.auto_sms?.on_absent)
                     formData.append('absent_text', companyInfo?.auto_sms?.absent_text)
                 }
 
                 else if (key === 'on_absent') {
+                    setLoading('absend')
                     formData.append('absent_text', 'Assalomu Alaykum, siz kecha dars qoldirdingiz iltimos sababini bildirishni unurtmang')
                     formData.append('on_birthday', companyInfo?.auto_sms?.on_birthday)
                     formData.append('birthday_text', companyInfo?.auto_sms?.birthday_text)
                 }
                 else {
+                    setLoading('absend')
                     formData.append('on_absent', true)
                     formData.append('on_birthday', companyInfo?.auto_sms?.on_birthday)
                     formData.append('birthday_text', companyInfo?.auto_sms?.birthday_text)
@@ -143,16 +155,11 @@ export default function AllSettings() {
                 await api.patch(key === 'on_birthday' ? 'common/auto-sms/update/' : 'common/settings/update/', formData)
             }
 
-            if (key === 'branch') {
-
-            }
-
             const getresp = await api.get('common/settings/list/')
             dispatch(setCompanyInfo(getresp.data[0]))
             setEditable(null)
             setId(null)
         } catch (err: any) {
-            console.log(err)
             if (err?.response?.data) {
                 showResponseError(err?.response?.data, setError)
             }
@@ -180,7 +187,7 @@ export default function AllSettings() {
                                     editable === 'title' ? (
                                         <>
                                             <TextField size='small' focused defaultValue={companyInfo?.training_center_name} onChange={(e) => setName(e.target.value)} />
-                                            <IconifyIcon icon={'ic:baseline-check'} style={{ cursor: 'pointer' }} onClick={() => {
+                                            <IconifyIcon icon={loading === 'name' ? 'line-md:loading-loop' : 'ic:baseline-check'} style={{ cursor: 'pointer' }} onClick={() => {
                                                 updateSettings('training_center_name', name)
                                             }} />
                                         </>
@@ -231,7 +238,7 @@ export default function AllSettings() {
                                             }
                                             {
                                                 id?.id === branch.id && id?.key === 'branch' ? (
-                                                    <IconifyIcon icon={'ic:baseline-check'} style={{ cursor: 'pointer' }} onClick={updateBranch} />
+                                                    <IconifyIcon icon={loading === 'branch' ? 'line-md:loading-loop' : 'ic:baseline-check'} style={{ cursor: 'pointer' }} onClick={updateBranch} />
                                                 ) : (
                                                     <IconifyIcon icon={'basil:edit-outline'} style={{ cursor: 'pointer' }} onClick={() => setId({ id: branch.id, key: 'branch' })} />
                                                 )
@@ -244,7 +251,7 @@ export default function AllSettings() {
                                     createble === 'branch' && (
                                         <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                                             <TextField size='small' placeholder={t("Yangi filial")} onChange={(e) => setName(e.target.value)} />
-                                            <IconifyIcon icon={loading === 'create' ? 'line-md:loading-loop' : 'ic:baseline-check'} style={{ cursor: 'pointer' }} onClick={createBranch} />
+                                            <IconifyIcon icon={loading === 'branch' ? 'line-md:loading-loop' : 'ic:baseline-check'} style={{ cursor: 'pointer' }} onClick={createBranch} />
                                             <IconifyIcon icon={'ic:outline-close'} style={{ cursor: 'pointer' }} onClick={() => setCreatable(null)} />
                                         </Box>
                                     )
@@ -265,14 +272,19 @@ export default function AllSettings() {
                                         <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }} key={method.id}>
                                             {
                                                 id?.id === method.id && id?.key === 'payment-type' ? (
-                                                    <TextField size='small' focused defaultValue={method.name} onBlur={(e) => updatePaymentMethod(method.id, { name: e.target.value })} />
+                                                    <TextField size='small' focused defaultValue={method.name} onBlur={async (e) => {
+                                                        setLoading('paytype')
+                                                        await updatePaymentMethod(method.id, { name: e.target.value })
+                                                        setLoading(null)
+                                                    }
+                                                    } />
                                                 ) : (
                                                     <TextField size='small' value={method.name} onBlur={(e) => console.log(e.target.value)} />
                                                 )
                                             }
                                             {
                                                 id?.id === method.id && id?.key === 'payment-type' ? (
-                                                    <IconifyIcon icon={'ic:baseline-check'} style={{ cursor: 'pointer' }} onClick={() => setId(null)} />
+                                                    <IconifyIcon icon={loading === 'paytype' ? 'line-md:loading-loop' : 'ic:baseline-check'} style={{ cursor: 'pointer' }} onClick={() => setId(null)} />
                                                 ) : (
                                                     <IconifyIcon icon={'basil:edit-outline'} style={{ cursor: 'pointer' }} onClick={() => setId({ id: method.id, key: 'payment-type' })} />
                                                 )
@@ -285,7 +297,7 @@ export default function AllSettings() {
                                     createble === 'payment-type' && (
                                         <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                                             <TextField size='small' placeholder="To'lov turi" onChange={(e) => setName(e.target.value)} />
-                                            <IconifyIcon icon={loading === 'create' ? 'line-md:loading-loop' : 'ic:baseline-check'} style={{ cursor: 'pointer' }} onClick={createPaymentType} />
+                                            <IconifyIcon icon={loading === 'paytype' ? 'line-md:loading-loop' : 'ic:baseline-check'} style={{ cursor: 'pointer' }} onClick={createPaymentType} />
                                             <IconifyIcon icon={'ic:outline-close'} style={{ cursor: 'pointer' }} onClick={() => setCreatable(null)} />
                                         </Box>
                                     )
@@ -310,11 +322,12 @@ export default function AllSettings() {
                                                 size='small'
                                                 focused
                                                 defaultValue={companyInfo?.work_start_time}
+                                                onChange={e => setName(e.target.value)}
                                                 onBlur={(e) => {
                                                     updateSettings('work_start_time', e.target.value)
                                                 }}
                                             />
-                                            <IconifyIcon icon={'ic:baseline-check'} style={{ cursor: 'pointer' }} onClick={() => {
+                                            <IconifyIcon icon={loading === 'start-time' ? 'line-md:loading-loop' : 'ic:baseline-check'} style={{ cursor: 'pointer' }} onClick={() => {
                                                 updateSettings('work_start_time', name)
                                             }} />
                                         </>
@@ -342,7 +355,7 @@ export default function AllSettings() {
                                                     updateSettings('work_end_time', e.target.value)
                                                 }}
                                             />
-                                            <IconifyIcon icon={'ic:baseline-check'} style={{ cursor: 'pointer' }} onClick={() => {
+                                            <IconifyIcon icon={loading === 'end-time' ? 'line-md:loading-loop' : 'ic:baseline-check'} style={{ cursor: 'pointer' }} onClick={() => {
                                                 updateSettings('work_end_time', name)
                                             }} />
                                         </>
@@ -364,11 +377,10 @@ export default function AllSettings() {
                             <Typography sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}>{t("Tug'ilgan kunda sms bilan tabriklash")}:</Typography>
                             <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                                 {
-                                    loading === 'on_birthday' ? <CircularProgress disableShrink size={'20px'} sx={{ margin: '10px 0', marginLeft: '15px' }} /> : (
+                                    loading === 'birthdate' ? <CircularProgress disableShrink size={'20px'} sx={{ margin: '10px 0', marginLeft: '15px' }} /> : (
                                         <Switch
                                             checked={Boolean(companyInfo?.auto_sms?.on_birthday)}
                                             onChange={async (e, i) => {
-                                                setLoading('on_birthday')
                                                 await updateSettings('on_birthday', i)
                                             }}
                                         />
@@ -381,7 +393,7 @@ export default function AllSettings() {
                             <Typography sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}>{t('SMS Matni')}:</Typography>
                             <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: '10px', width: '100%' }}>
                                 {
-                                    loading === 'birthday_text' ? (
+                                    editable === 'birthdate' ? (
                                         <>
                                             <TextField
                                                 multiline
@@ -395,14 +407,14 @@ export default function AllSettings() {
                                                 onChange={(e) => setName(e.target.value)}
                                                 fullWidth
                                             />
-                                            <IconifyIcon icon={'ic:baseline-check'} style={{ cursor: 'pointer' }} onClick={() => {
+                                            <IconifyIcon icon={loading === 'birthdate' ? 'line-md:loading-loop' : 'ic:baseline-check'} style={{ cursor: 'pointer' }} onClick={() => {
                                                 updateSettings('birthday_text', name)
                                             }} />
                                         </>
                                     ) : (
                                         <>
                                             <TextField fullWidth multiline rows={4} type='text' value={`${companyInfo?.auto_sms?.birthday_text}`} size='small' placeholder={t('SMS Matni')} onBlur={(e) => console.log(e.target.value)} />
-                                            <IconifyIcon icon={'basil:edit-outline'} style={{ cursor: 'pointer' }} onClick={() => setLoading('birthday_text')} />
+                                            <IconifyIcon icon={'basil:edit-outline'} style={{ cursor: 'pointer' }} onClick={() => setEditable('birthdate')} />
                                         </>
                                     )
                                 }
@@ -418,11 +430,11 @@ export default function AllSettings() {
                             <Typography sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}>{t("Darsga kelmaganlarga sms yuborish")}:</Typography>
                             <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                                 {
-                                    loading === 'on_absent' ? <CircularProgress disableShrink size={'20px'} sx={{ margin: '10px 0', marginLeft: '15px' }} /> : (
+                                    loading === 'absend' ? <CircularProgress disableShrink size={'20px'} sx={{ margin: '10px 0', marginLeft: '15px' }} /> : (
                                         <Switch
                                             checked={Boolean(companyInfo?.auto_sms?.on_absent)}
                                             onChange={async (e, i) => {
-                                                setLoading('on_absent')
+                                                setLoading('absend')
                                                 await updateSettings('on_absent', i)
                                             }}
                                         />
@@ -435,7 +447,7 @@ export default function AllSettings() {
                             <Typography sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}>{t(`SMS matnini kiriting (kelmagan o'quvchiga ertasi kuni yuboriladi)`)}</Typography>
                             <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: '10px', width: '100%' }}>
                                 {
-                                    loading === 'absent_text' ? (
+                                    editable === 'absend' ? (
                                         <>
                                             <TextField
                                                 multiline
@@ -449,14 +461,14 @@ export default function AllSettings() {
                                                 onChange={(e) => setName(e.target.value)}
                                                 fullWidth
                                             />
-                                            <IconifyIcon icon={'ic:baseline-check'} style={{ cursor: 'pointer' }} onClick={() => {
+                                            <IconifyIcon icon={loading === 'absend' ? 'line-md:loading-loop' : 'ic:baseline-check'} style={{ cursor: 'pointer' }} onClick={() => {
                                                 updateSettings('absent_text', name)
                                             }} />
                                         </>
                                     ) : (
                                         <>
                                             <TextField fullWidth multiline rows={4} type='text' value={`${companyInfo?.auto_sms?.absent_text}`} size='small' placeholder={t('Boshlanish vaqti')} onBlur={(e) => console.log(e.target.value)} />
-                                            <IconifyIcon icon={'basil:edit-outline'} style={{ cursor: 'pointer' }} onClick={() => setLoading('absent_text')} />
+                                            <IconifyIcon icon={'basil:edit-outline'} style={{ cursor: 'pointer' }} onClick={() => setEditable('absend')} />
                                         </>
                                     )
                                 }

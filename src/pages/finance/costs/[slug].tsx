@@ -1,9 +1,8 @@
-import { Box, Dialog, DialogContent, DialogTitle, TextField, Typography } from '@mui/material';
+import { Box, Button, Dialog, DialogContent, DialogTitle, TextField, Typography } from '@mui/material';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next';
-import useResponsive from 'src/@core/hooks/useResponsive';
 import api from 'src/@core/utils/api';
 import { formatCurrency } from 'src/@core/utils/format-currency';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -15,26 +14,23 @@ function Slug(props: { slug: string }) {
     const { query } = useRouter()
 
     const { t } = useTranslation()
-    const { isMobile } = useResponsive()
 
-    const [data2, setData] = useState<any[]>([]);
-    const [today, setToday] = useState<string>('');
+    const [data, setData] = useState<any[]>([]);
     const [name, setName] = useState<string>('');
     const [allAmount, setAllAmount] = useState<string>('');
-    const [open, setOpen] = useState<boolean>(true)
+    const [open, setOpen] = useState<boolean>(false)
 
     const updateCategory = async (value: any) => {
         try {
             await api.patch(`common/finance/expense-category/update/${query?.slug}/`, { name })
-            getExpense(query?.slug)
+            getExpense()
         } catch (err) {
             console.log(err)
         }
-
     }
 
-    const getExpense = async (id: any) => {
-        const resp = await api.get(`common/finance/expense/list/${query?.slug}/?date_str=${today}-1`)
+    const getExpense = async () => {
+        const resp = await api.get(`common/finance/expense/list/${query?.slug}/?date_str=`)
         setData(resp.data.result);
         setName(resp.data?.category_name);
         setAllAmount(resp.data?.total_expense);
@@ -69,14 +65,9 @@ function Slug(props: { slug: string }) {
         }
     ]
 
-    const data = [
-        {
-            id: 1,
-            amount: '3400000',
-            date: '2024-06-01',
-            description: 'Novza filialga 3ta monitor olib kelindi'
-        }
-    ]
+    useEffect(() => {
+        getExpense()
+    }, [])
 
     return (
         <Box>
@@ -84,12 +75,14 @@ function Slug(props: { slug: string }) {
                 <Box sx={{ display: 'flex', alignItems: 'center', mb: 4, px: 2 }}>
                     <TextField onBlur={updateCategory} size='small' sx={{ fontSize: '20px', marginRight: 'auto' }} value={name} onChange={(e) => setName(e.target.value)} />
 
-                    <Typography sx={{ fontSize: '14px', color: 'error.main', ml: 3, display: 'flex', flexDirection: 'column' }} >
+                    <Typography sx={{ fontSize: '14px', color: 'error.main', ml: 3, display: 'flex', alignItems: 'center', mr: 4, gap: '5px' }} >
                         <span>{t('Umumiy')}</span>
                         <span>
                             {formatCurrency(allAmount)}
                         </span>
                     </Typography>
+
+                    <Button variant='contained' size='small' onClick={() => setOpen(true)}>Yangi</Button>
                 </Box>
             </Box>
 
@@ -98,7 +91,7 @@ function Slug(props: { slug: string }) {
             <Dialog open={open} onClose={() => setOpen(false)}>
                 <DialogTitle sx={{ textAlign: 'center' }}>Xarajat kiritish</DialogTitle>
                 <DialogContent sx={{ minWidth: '320px' }}>
-                    <CreateCostForm />
+                    <CreateCostForm slug={props.slug} setOpen={setOpen} reRender={() => getExpense()} />
                 </DialogContent>
             </Dialog>
         </Box>

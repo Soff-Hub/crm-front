@@ -25,7 +25,7 @@ import { useTranslation } from 'react-i18next'
 
 const Toggler = styled(Box)<BoxProps>(({ theme }) => ({
   right: 0,
-  top: '50%',
+  bottom: '5%',
   display: 'flex',
   cursor: 'pointer',
   position: 'fixed',

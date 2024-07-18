@@ -1,5 +1,5 @@
 import { Box, Grid, Skeleton, Typography } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { DateRangePicker, SelectPicker } from 'rsuite';
 import CardStatisticsHorizontal from 'src/views/ui/cards/statistics/CardStatisticsHorizontal'
 import { useAppDispatch, useAppSelector } from 'src/store';
@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import EmptyContent from 'src/@core/components/empty-content';
 import { fetchFinanceAllNumbers, updateNumberParams } from 'src/store/apps/finance';
 import { formatDateString } from 'src/pages/finance';
+import { AuthContext } from 'src/context/AuthContext';
 
 
 
@@ -16,9 +17,11 @@ const monthItems = ['Yanvar', 'Fevral', 'Mart', 'Aprel', 'May', 'Iyun', 'Iyul', 
 
 const FinanceAllNumber = () => {
     const { all_numbers, numbersLoad, allNumbersParams } = useAppSelector(state => state.finance)
+    const { user } = useContext(AuthContext)
     const dispatch = useAppDispatch()
     const { t } = useTranslation()
     const [date, setDate] = useState<any>('')
+    const [activeBranch, setActiveBranch] = useState<any>(user?.active_branch)
 
     const statsHorizontal = all_numbers ? [
         {
@@ -85,8 +88,20 @@ const FinanceAllNumber = () => {
         }
     }
 
+    const handleChangeBranch = async (branch: any) => {
+        if (branch) {
+            setActiveBranch(branch)
+            dispatch(updateNumberParams({ branch }))
+            await dispatch(fetchFinanceAllNumbers({ ...allNumbersParams, branch }))
+        } else {
+            setActiveBranch('')
+            dispatch(updateNumberParams({ branch: '' }))
+            await dispatch(fetchFinanceAllNumbers({ ...allNumbersParams, branch: '' }))
+        }
+    }
+
     useEffect(() => {
-        dispatch(fetchFinanceAllNumbers())
+        dispatch(fetchFinanceAllNumbers({ ...allNumbersParams, branch: activeBranch }))
     }, [])
 
     return (
@@ -94,6 +109,15 @@ const FinanceAllNumber = () => {
             <Grid xs={12}>
                 <Box sx={{ display: 'flex', alignItems: 'center', marginBottom: '20px', gap: 1 }}>
                     <Typography sx={{ flexGrow: 1 }} variant="h5">{t('Umumiy raqamlar')}</Typography>
+                    <SelectPicker
+                        onChange={handleChangeBranch}
+                        size='sm'
+                        data={user?.branches ? [...user?.branches?.map(el => ({ label: el.name, value: el.id })), { label: 'Barcha filiallar', value: '' }] : []}
+                        style={{ width: 224 }}
+                        searchable={false}
+                        placeholder="Filialni tanlang"
+                        value={activeBranch}
+                    />
                     <SelectPicker
                         onChange={(v) => handleYearDate(v, 'y')}
                         size='sm'

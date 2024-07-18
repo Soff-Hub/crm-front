@@ -73,7 +73,7 @@ const AuthProvider = ({ children }: Props) => {
             role: response.data.roles.filter((el: any) => el.exists).map((el: any) => el.name?.toLowerCase()),
             balance: response.data?.balance || 0,
             branches: response.data.branches.filter((item: any) => item.exists === true),
-            active_branch: response.data.active_branch?.branch
+            active_branch: response.data.active_branch
           })
         })
         .catch(() => {
@@ -132,7 +132,7 @@ const AuthProvider = ({ children }: Props) => {
           role: response.data.roles.filter((el: any) => el.exists).map((el: any) => el.name?.toLowerCase()),
           balance: response.data?.balance || 0,
           branches: response.data.branches.filter((item: any) => item.exists === true),
-          active_branch: response.data.active_branch?.branch
+          active_branch: response.data.active_branch
         })
 
         !params.rememberMe ? window.localStorage.setItem('userData', JSON.stringify({ ...response.data, role: 'admin', tokens: null })) : null

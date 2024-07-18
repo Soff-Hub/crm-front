@@ -108,7 +108,7 @@ const CardWidgetsWeeklyOverview = () => {
   return (
     <Card sx={{ p: '20px' }}>
       <Box sx={{ display: 'flex', alignItems: 'center' }}>
-        <Typography sx={{ fontSize: '22px' }}>{all_numbers?.year} {t('Yildagi aylanmalar')}</Typography>
+        {loading ?  <Skeleton variant='text' width={'200px'} /> : <Typography sx={{ fontSize: '22px' }}>{all_numbers?.year} {t('Yildagi aylanmalar')}</Typography>}
       </Box>
       <Box>
         {loading ? (

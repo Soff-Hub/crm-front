@@ -11,7 +11,7 @@ const ceoConfigs = {
     courses_update: 'common/course/update',
     courses_detail: 'common/course/detail',
 
-    barnchs: 'common/branchs/',
+    barnchs: 'common/branches/',
 
     teachers: 'auth/teachers/',
 

@@ -64,10 +64,16 @@ export default function GroupsPage() {
         const handleDeleteSubmit = async () => {
             setSmallLoading(true)
             dispatch(disablePage(true))
-            await api.delete(`auth/delete/employee/${id}/`)
-            toast.success("Hodim muvaffaqiyatli o'chirildi")
+            try {
+                await api.delete(`auth/delete/employee/${id}/`)
+                toast.success("Hodim muvaffaqiyatli o'chirildi")
+                dispatch(fetchEmployees(queryParams))
+            } catch (err: any) {
+                if (err?.response?.data) {
+                    toast.error(err?.response?.data?.msg)
+                }
+            }
             dispatch(disablePage(false))
-            dispatch(fetchEmployees(queryParams))
             setSmallLoading(false)
         }
 
