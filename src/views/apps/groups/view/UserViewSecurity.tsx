@@ -135,9 +135,13 @@ const UserViewSecurity = () => {
       month: date.date.split('-')[1],
       year: date.date.split('-')[0]
     }
+
+    dispatch(setGettingAttendance(true))
     const queryString = new URLSearchParams(queryParams).toString()
     await dispatch(getAttendance({ date: `${value.year}-${value.month}`, group: query?.id, queryString: queryString }))
     await dispatch(getDays({ date: `${value.year}-${value.month}`, group: query?.id }))
+    dispatch(setGettingAttendance(false))
+    
     push({
       pathname,
       query: { ...query, month: getMontName(Number(value.month)), year: value.year, id: query?.id }
@@ -179,7 +183,7 @@ const UserViewSecurity = () => {
       }
       dispatch(setGettingAttendance(false))
     })()
-  }, [query.month, queryParams.status])
+  }, [queryParams.status])
 
   return (
     isGettingAttendance ? <SubLoader /> :
