@@ -103,21 +103,26 @@ const UserViewSecurity = ({ groupData }: any) => {
       dataIndex: 'id'
     },
     {
-      xs: 0.8,
+      xs: 0.6,
       title: t("Sana"),
       dataIndex: 'payment_date',
     },
     {
-      xs: 0.2,
-      title: t(""),
+      xs: 0.6,
+      title: t("Turi"),
       dataIndex: 'is_debtor',
       render: (debtor) => <Chip size="small" label={debtor ? "To'landi" : "Qarzdorlik"} color={debtor ? 'success' : 'error'} />
     },
     {
       xs: 0.7,
-      title: t("Summa"),
+      title: t('Summa'),
       dataIndex: 'amount',
       render: (amount) => Number(amount) <= 0 ? `${formatCurrency(Number(amount) * (-1))} UZS` : `${formatCurrency(amount)} UZS`
+    },
+    {
+      xs: 1,
+      title: t("Guruh"),
+      dataIndex: 'group_name',
     },
     {
       xs: 1,
@@ -130,7 +135,7 @@ const UserViewSecurity = ({ groupData }: any) => {
       dataIndex: 'admin',
     },
     {
-      xs: 1,
+      xs: 0.2,
       title: t("Amallar"),
       dataIndex: 'amount',
       renderId: (id, src) => (

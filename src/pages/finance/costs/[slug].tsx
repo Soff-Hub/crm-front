@@ -1,4 +1,4 @@
-import { Box, TextField, Typography } from '@mui/material';
+import { Box, Dialog, DialogContent, DialogTitle, TextField, Typography } from '@mui/material';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
 import React, { useState } from 'react'
@@ -8,6 +8,7 @@ import api from 'src/@core/utils/api';
 import { formatCurrency } from 'src/@core/utils/format-currency';
 import 'react-datepicker/dist/react-datepicker.css';
 import DataTable, { customTableDataProps } from 'src/@core/components/table';
+import CreateCostForm from 'src/views/apps/finance/CreateCostForm';
 
 
 function Slug(props: { slug: string }) {
@@ -20,6 +21,7 @@ function Slug(props: { slug: string }) {
     const [today, setToday] = useState<string>('');
     const [name, setName] = useState<string>('');
     const [allAmount, setAllAmount] = useState<string>('');
+    const [open, setOpen] = useState<boolean>(true)
 
     const updateCategory = async (value: any) => {
         try {
@@ -92,6 +94,13 @@ function Slug(props: { slug: string }) {
             </Box>
 
             <DataTable columns={columns} data={data} />
+
+            <Dialog open={open} onClose={() => setOpen(false)}>
+                <DialogTitle sx={{ textAlign: 'center' }}>Xarajat kiritish</DialogTitle>
+                <DialogContent sx={{ minWidth: '320px' }}>
+                    <CreateCostForm />
+                </DialogContent>
+            </Dialog>
         </Box>
     )
 }

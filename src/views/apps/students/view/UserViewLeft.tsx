@@ -151,7 +151,7 @@ const UserViewLeft = ({ userData }: { userData: any }) => {
   }
 
   const handlePayment = async (value: any) => {
-    
+
   }
 
 
@@ -282,17 +282,19 @@ const UserViewLeft = ({ userData }: { userData: any }) => {
               </FormControl>}
 
 
-              {groupShort && <FormControl fullWidth>
-                <TextField
-                  error={error?.body}
-                  rows={4}
-                  multiline
-                  label="Izoh"
-                  name='body'
-                  defaultValue={''}
-                />
-                <FormHelperText error={error.body}>{error.body?.message}</FormHelperText>
-              </FormControl>}
+              {
+                groupShort && <FormControl fullWidth>
+                  <TextField
+                    error={error?.body}
+                    rows={4}
+                    multiline
+                    label="Izoh"
+                    name='body'
+                    defaultValue={''}
+                  />
+                  <FormHelperText error={error.body}>{error.body?.message}</FormHelperText>
+                </FormControl>
+              }
 
               <DialogActions sx={{ justifyContent: 'center' }}>
                 <LoadingButton loading={loading} type='submit' variant='contained' sx={{ mr: 1 }}>
@@ -307,7 +309,7 @@ const UserViewLeft = ({ userData }: { userData: any }) => {
         </Dialog>
 
         {/*   Payment  */}
-        <StudentPaymentForm openEdit={openEdit} setOpenEdit={setOpenEdit}/>
+        <StudentPaymentForm openEdit={openEdit} setOpenEdit={setOpenEdit} />
 
         {/*   Edit Student  */}
         <Dialog

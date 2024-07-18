@@ -87,8 +87,6 @@ export default function StudentPaymentEditForm({ openEdit, setOpenEdit }: Props)
 
     const { errors, values, handleSubmit, handleBlur, touched, handleChange } = formik
 
-    console.log(errors);
-
     const handleEditClose = () => {
         setOpenEdit(null)
         setOpen(false)
