@@ -12,6 +12,13 @@ import LanguageDropdown from 'src/@core/layouts/components/shared-components/Lan
 //   NotificationsType
 // } from 'src/@core/layouts/components/shared-components/NotificationDropdown'
 import BranchDropdown from 'src/@core/layouts/components/shared-components/BranchDropdown'
+import { useContext } from 'react'
+import { AuthContext } from 'src/context/AuthContext'
+import IconifyIcon from 'src/@core/components/icon'
+import { Button } from '@mui/material'
+import { useAppDispatch } from 'src/store'
+import { setGlobalPay } from 'src/store/apps/students'
+import GlobalPaymentModal from 'src/views/apps/students/GlobalPaymentModal'
 
 
 interface Props {
@@ -68,15 +75,32 @@ interface Props {
 const AppBarContent = (props: Props) => {
   // ** Props
   const { settings, saveSettings } = props
+  const { user } = useContext(AuthContext)
+  const dispatch = useAppDispatch()
+
+  function clickGlobalPay() {
+    dispatch(setGlobalPay(true))
+  }
 
   return (
     <Box sx={{ display: 'flex', alignItems: 'center' }}>
+      {(user?.role.includes('admin') || user?.role.includes('ceo')) && <Button
+        variant='contained'
+        size='small'
+        sx={{ margin: '0 7px' }}
+        onClick={clickGlobalPay}>
+        <IconifyIcon fontSize={18} icon={'weui:add-outlined'} />
+        <span>To'lov</span>
+      </Button>}
+
       {!window.location.hostname.split('.').includes('c-panel') && <BranchDropdown />}
 
       <LanguageDropdown settings={settings} saveSettings={saveSettings} />
+
       <ModeToggler settings={settings} saveSettings={saveSettings} />
       {/* <NotificationDropdown settings={settings} notifications={notifications} /> */}
       <UserDropdown settings={settings} />
+      <GlobalPaymentModal />
     </Box >
   )
 }

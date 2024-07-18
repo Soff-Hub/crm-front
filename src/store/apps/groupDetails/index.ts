@@ -119,7 +119,8 @@ const initialState: IGroupDetailsState = {
   isGettingStudents: false,
   isGettingExams: false,
   isGettingAttendance: false,
-  isGettingExamsResults: false
+  isGettingExamsResults: false,
+  month_list: []
 }
 
 export const groupDetailsSlice = createSlice({
@@ -204,7 +205,8 @@ export const groupDetailsSlice = createSlice({
       state.isGettingAttendance = false
     })
     builder.addCase(getDays.fulfilled, (state, action) => {
-      state.days = action.payload
+      state.days = action.payload?.result
+      state.month_list = action.payload?.months
     })
     builder.addCase(getExams.pending, state => {
       state.isGettingExams = true

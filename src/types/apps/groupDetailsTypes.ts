@@ -34,4 +34,8 @@ export interface IGroupDetailsState {
     status: 'active,new' | 'archive'
   }
   smsTemps: SmsItemType[] | null
+  month_list: {
+    month: string,
+    date: string
+  }[]
 }
