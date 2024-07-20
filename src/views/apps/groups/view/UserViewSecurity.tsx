@@ -266,7 +266,7 @@ const UserViewSecurity = () => {
                                 </form>
                               }
                             >
-                              <span onClick={() => setOpenTooltip((c) => c === hour.date ? null : hour.date)} >
+                              <span style={{ padding: "15px", minWidth: "60px", overflow: "hidden", textOverflow: "ellipsis", textWrap: "nowrap" }} onClick={() => setOpenTooltip((c) => c === hour.date ? null : hour.date)} >
                                 <IconifyIcon icon={'iconamoon:file-add-light'} />
                               </span>
                             </HtmlTooltip>
