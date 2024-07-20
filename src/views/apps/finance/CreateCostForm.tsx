@@ -58,7 +58,7 @@ export default function CreateCostForm({ slug, setOpen, reRender }: any) {
             <FormControl fullWidth>
                 <TextField
                     size='small'
-                    label="Summa"
+                    label="Izoh"
                     multiline
                     rows={4}
                     name='description'

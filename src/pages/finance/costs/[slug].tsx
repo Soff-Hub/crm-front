@@ -8,6 +8,7 @@ import { formatCurrency } from 'src/@core/utils/format-currency';
 import 'react-datepicker/dist/react-datepicker.css';
 import DataTable, { customTableDataProps } from 'src/@core/components/table';
 import CreateCostForm from 'src/views/apps/finance/CreateCostForm';
+import IconifyIcon from 'src/@core/components/icon';
 
 
 function Slug(props: { slug: string }) {
@@ -19,21 +20,26 @@ function Slug(props: { slug: string }) {
     const [name, setName] = useState<string>('');
     const [allAmount, setAllAmount] = useState<string>('');
     const [open, setOpen] = useState<boolean>(false)
+    const [editable, setEditable] = useState<boolean>(false)
+    const [loading, setLoading] = useState<boolean>(false)
 
     const updateCategory = async (value: any) => {
         try {
             await api.patch(`common/finance/expense-category/update/${query?.slug}/`, { name })
             getExpense()
+            setEditable(false)
         } catch (err) {
             console.log(err)
         }
     }
 
     const getExpense = async () => {
-        const resp = await api.get(`common/finance/expense/list/${query?.slug}/?date_str=`)
+        setLoading(true)
+        const resp = await api.get(`common/finance/expense/list/${query?.slug}/?date=`)
         setData(resp.data.result);
-        setName(resp.data?.category_name);
+        setName(resp.data?.category);
         setAllAmount(resp.data?.total_expense);
+        setLoading(false)
     }
 
     const columns: customTableDataProps[] = [
@@ -73,9 +79,10 @@ function Slug(props: { slug: string }) {
         <Box>
             <Box className='header'>
                 <Box sx={{ display: 'flex', alignItems: 'center', mb: 4, px: 2 }}>
-                    <TextField onBlur={updateCategory} size='small' sx={{ fontSize: '20px', marginRight: 'auto' }} value={name} onChange={(e) => setName(e.target.value)} />
+                    {editable ? <TextField onBlur={updateCategory} size='small' sx={{ fontSize: '20px', marginRight: 4 }} value={name} onChange={(e) => setName(e.target.value)} /> : <Typography variant='h6' sx={{ marginRight: 4 }}>{name}</Typography>}
+                    <IconifyIcon style={{ cursor: 'pointer' }} icon={editable ? 'ic:baseline-check' : 'mdi:edit'} onClick={() => setEditable(!editable)} />
 
-                    <Typography sx={{ fontSize: '14px', color: 'error.main', ml: 3, display: 'flex', alignItems: 'center', mr: 4, gap: '5px' }} >
+                    <Typography sx={{ fontSize: '14px', color: 'error.main', ml: 'auto', display: 'flex', alignItems: 'center', mr: 4, gap: '5px' }} >
                         <span>{t('Umumiy')}</span>
                         <span>
                             {formatCurrency(allAmount)}
@@ -86,7 +93,7 @@ function Slug(props: { slug: string }) {
                 </Box>
             </Box>
 
-            <DataTable columns={columns} data={data} />
+            <DataTable loading={loading} columns={columns} data={data} />
 
             <Dialog open={open} onClose={() => setOpen(false)}>
                 <DialogTitle sx={{ textAlign: 'center' }}>Xarajat kiritish</DialogTitle>
