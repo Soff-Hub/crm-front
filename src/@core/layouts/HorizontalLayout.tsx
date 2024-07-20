@@ -23,7 +23,6 @@ import AppBarContent from './components/horizontal/app-bar-content'
 
 // ** Util Import
 import { hexToRGBA } from 'src/@core/utils/hex-to-rgba'
-import GlobalPay from '../components/global-pay'
 
 const HorizontalLayoutWrapper = styled('div')({
   height: '100%',
@@ -187,7 +186,6 @@ const HorizontalLayout = (props: LayoutProps) => {
 
         {/* Customizer */}
         {themeConfig.disableCustomizer || hidden ? null : <Customizer />}
-        <GlobalPay />
 
         {/* Scroll to top button */}
         {scrollToTop ? (

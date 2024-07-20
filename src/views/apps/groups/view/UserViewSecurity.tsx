@@ -93,7 +93,7 @@ const Item = ({ defaultValue, groupId, userId, date, opened_id, setOpenedId }: {
 }
 
 const UserViewSecurity = () => {
-  const { queryParams, attendance, isGettingDays, isGettingAttendance, days, groupData } = useAppSelector(state => state.groupDetails)
+  const { queryParams, attendance, isGettingDays, isGettingAttendance, days, groupData, month_list } = useAppSelector(state => state.groupDetails)
   const dispatch = useAppDispatch()
 
   const start_date: any = groupData?.start_date ? Number(groupData?.start_date.split('-')[1]) : ''
@@ -127,13 +127,24 @@ const UserViewSecurity = () => {
   };
 
 
-  const handleClick = async (value: any) => {
+  const handleClick = async (date: any) => {
+    const value: {
+      month: string,
+      year: string
+    } = {
+      month: date.date.split('-')[1],
+      year: date.date.split('-')[0]
+    }
+
+    dispatch(setGettingAttendance(true))
     const queryString = new URLSearchParams(queryParams).toString()
-    await dispatch(getAttendance({ date: `${value.year}-${getMontNumber(value.date)}`, group: query?.id, queryString: queryString }))
-    await dispatch(getDays({ date: `${value.year}-${getMontNumber(value.date)}`, group: query?.id }))
+    await dispatch(getAttendance({ date: `${value.year}-${value.month}`, group: query?.id, queryString: queryString }))
+    await dispatch(getDays({ date: `${value.year}-${value.month}`, group: query?.id }))
+    dispatch(setGettingAttendance(false))
+    
     push({
       pathname,
-      query: { ...query, month: value.date, year: value.year, id: query?.id }
+      query: { ...query, month: getMontName(Number(value.month)), year: value.year, id: query?.id }
     })
   }
 
@@ -172,14 +183,14 @@ const UserViewSecurity = () => {
       }
       dispatch(setGettingAttendance(false))
     })()
-  }, [query.month, queryParams.status])
+  }, [queryParams.status])
 
   return (
     isGettingAttendance ? <SubLoader /> :
       <Box className='demo-space-y'>
         <ul style={{ display: 'flex', listStyle: 'none', margin: 0, padding: 0, gap: '15px', marginBottom: 12 }}>
           {
-            generateDates(getMontName(start_date), groupData?.month_duration).map(item => <li key={item.date} onClick={() => handleClick(item)} style={{ borderBottom: query?.month === item.date ? '2px solid #c3cccc' : '2px solid transparent', cursor: 'pointer' }}>{item.date}</li>)
+            month_list.map(item => <li key={item.date} onClick={() => handleClick(item)} style={{ borderBottom: query?.month === getMontName(Number(item.date.split('-')[1])) ? '2px solid #c3cccc' : '2px solid transparent', cursor: 'pointer' }}>{item.month}</li>)
           }
         </ul>
         <Box sx={{ display: 'flex', width: '100%', paddingBottom: 3, maxWidth: '100%', overflowX: 'auto' }}>

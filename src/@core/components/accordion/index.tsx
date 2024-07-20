@@ -137,7 +137,7 @@ export default function AccordionCustom({ onView, item }: AccordionProps) {
     }, [item.student_count])
 
     return (
-        <Card sx={{ width: '100%', boxShadow: 'rgba(148, 163, 184, 0.7) 0px 3px 12px' }}>
+        <Card sx={{ width: '100%', boxShadow: 'rgba(148, 163, 184, 0.1) 0px 3px 12px' }}>
             <Box sx={{ width: '100%', display: 'flex', alignItems: 'center' }}>
                 <Typography
                     fontSize={16}
@@ -150,12 +150,12 @@ export default function AccordionCustom({ onView, item }: AccordionProps) {
                     sx={{ marginLeft: 'auto', marginRight: 2 }}
                 >{count}</Typography>
                 <IconifyIcon
-                    style={{ cursor: 'pointer', transform: open ? 'rotateZ(180deg)' : '' }}
+                    style={{ cursor: 'pointer', transform: open ? 'rotateZ(180deg)' : '', minWidth: '20px', fontSize: '26px' }}
                     onClick={() => !open ? handleGetLeads(true) : setOpen(!open)} icon={'iconamoon:arrow-down-2-light'}
                 />
                 <IconifyIcon
                     icon="system-uicons:circle-menu"
-                    style={{ marginLeft: 10, cursor: 'pointer' }}
+                    style={{ marginLeft: 1, cursor: 'pointer', minWidth: '40px', fontSize: '26px' }}
                     aria-haspopup='true'
                     aria-controls='customized-menu'
                     onClick={handleClick}

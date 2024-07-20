@@ -489,8 +489,9 @@ export default function AllSettings() {
                             try {
                                 await updatePaymentMethod(deleteId?.id, { is_active: false })
                                 setDeleteId(null)
+                                setLoading(null)
                             } catch {
-
+                                setLoading(null)
                             }
                         }}>Ok</LoadingButton>
                     </Box>
@@ -506,9 +507,12 @@ export default function AllSettings() {
                             setLoading('delete')
                             try {
                                 await api.delete(`common/branch/delete/${deleteId?.id}`)
+                                await reloadProfile()
                                 setDeleteId(null)
                                 getBranches()
+                                setLoading(null)
                             } catch {
+                                setLoading(null)
                             }
                         }}>Ok</LoadingButton>
                     </Box>

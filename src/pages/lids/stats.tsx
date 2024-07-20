@@ -103,8 +103,8 @@ const Stats = () => {
                     <IconButton
                         aria-label='close'
                         onClick={() => setOpen(false)}
+                        icon={<IconifyIcon icon={'mdi:close'} />}
                     >
-                        <IconifyIcon icon='mdi:close' />
                     </IconButton>
                 </DialogTitle>
                 <DialogContent sx={{ minWidth: '320px' }}>
