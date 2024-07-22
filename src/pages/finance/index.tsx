@@ -10,7 +10,7 @@ import ApexChartWrapper from 'src/@core/styles/libs/react-apexcharts'
 import { Box, Button, Dialog, DialogContent, DialogTitle, TextField, Typography } from '@mui/material'
 import GroupFinanceTable from 'src/views/apps/finance/GroupTable'
 import IconifyIcon from 'src/@core/components/icon'
-import 'react-datepicker/dist/react-datepicker.css';
+import 'react-datepicker/dist/react-datepicker.css'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { customTableDataProps } from 'src/@core/components/lid-table'
@@ -115,7 +115,7 @@ const CardStatistics = () => {
 
     const getExpenseCategroy = async () => {
         const resp = await api.get(`common/finance/expense-category/list/`)
-        setCategryData(resp.data?.results)
+        setCategryData(resp.data)
     }
 
     const createExpenseCategroy = async () => {

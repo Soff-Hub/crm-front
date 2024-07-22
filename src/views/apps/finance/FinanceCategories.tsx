@@ -1,10 +1,10 @@
-import LoadingButton from '@mui/lab/LoadingButton'
-import { Box, Dialog, DialogContent, DialogTitle, Grid, IconButton, Typography } from '@mui/material'
-import { useRouter } from 'next/router'
-import React, { useState } from 'react'
-import { useTranslation } from 'react-i18next'
-import CardFinanceCategory from 'src/@core/components/card-statistics/card-finance-category'
-import IconifyIcon from 'src/@core/components/icon'
+import LoadingButton from '@mui/lab/LoadingButton';
+import { Box, Dialog, DialogContent, DialogTitle, Grid, IconButton, Typography } from '@mui/material';
+import { useRouter } from 'next/router';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import CardFinanceCategory from 'src/@core/components/card-statistics/card-finance-category';
+import IconifyIcon from 'src/@core/components/icon';
 
 
 export default function FinanceCategories({ categryData, confirmDeleteCategory, loading, setDeleteCategory, deleteCategory }: any) {
@@ -19,7 +19,7 @@ export default function FinanceCategories({ categryData, confirmDeleteCategory, 
             {
                 categryData.map((_: any, index: any) => (
                     <Grid item xs={12} sm={6} lg={2} key={index} onMouseEnter={() => setIsHover(_.id)} onMouseLeave={() => setIsHover(null)} sx={{ position: 'relative' }}>
-                        <Box onClick={() => push(`/finance/costs/${_.id}`)} sx={{ cursor: 'pointer' }}>
+                        <Box onClick={() => _.is_advanced ? push(`/finance/advance`) : push(`/finance/costs/${_.id}`)} sx={{ cursor: 'pointer' }}>
                             <CardFinanceCategory title={_.name} stats={_.total_expense} icon={<IconifyIcon fontSize={"3rem"} icon={''} />} color={'warning'} />
                         </Box>
                         {/* {isHover === _.id && _.is_delete &&} */}

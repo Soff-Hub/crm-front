@@ -1,7 +1,7 @@
-import { Box, Button, Dialog, DialogContent, DialogTitle, TextField, Typography } from '@mui/material';
+import { Box, Button, Chip, Dialog, DialogContent, DialogTitle, TextField, Typography } from '@mui/material';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import api from 'src/@core/utils/api';
 import { formatCurrency } from 'src/@core/utils/format-currency';
@@ -83,10 +83,7 @@ function Slug(props: { slug: string }) {
                     <IconifyIcon style={{ cursor: 'pointer' }} icon={editable ? 'ic:baseline-check' : 'mdi:edit'} onClick={() => setEditable(!editable)} />
 
                     <Typography sx={{ fontSize: '14px', color: 'error.main', ml: 'auto', display: 'flex', alignItems: 'center', mr: 4, gap: '5px' }} >
-                        <span>{t('Umumiy')}</span>
-                        <span>
-                            {formatCurrency(allAmount)}
-                        </span>
+                        <Chip variant='outlined' size='medium' sx={{ fontSize: "14px", fontWeight: "bold" }} color="error" label={`${formatCurrency(allAmount)} so'm`} />
                     </Typography>
 
                     <Button variant='contained' size='small' onClick={() => setOpen(true)}>Yangi</Button>
