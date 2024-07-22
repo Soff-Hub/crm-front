@@ -60,7 +60,8 @@ interface UsersType {
     exists: boolean
   }[],
   image: string | null,
-  _groups: any[]
+  _groups: any[],
+  active_groups?: number
 }
 
 const roleColors: ColorsType = {
@@ -167,7 +168,7 @@ const UserViewLeft = ({ userData }: { userData?: UsersType | undefined }) => {
                 <div style={{ display: 'flex', alignItems: 'center', marginTop: '10px', gap: 10 }}>
                   <Typography variant='body2'>{t("Faol Guruhlari")}:  </Typography>
                   <Typography variant='body1' sx={{ lineHeight: 1.3 }}>
-                    {data?._groups?.length || 0} ta
+                    {data?.active_groups || 0} ta
                   </Typography>
                 </div>
               </Box>

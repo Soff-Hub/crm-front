@@ -81,7 +81,7 @@ function Slug(props: { slug: string }) {
             xs: 0.05,
             title: '',
             dataIndex: 'id',
-            render: (id) => <CostRowActions id={Number(id)} onEdit={onEdit} />,
+            render: (id) => <CostRowActions reRender={() => getExpense(``)} id={Number(id)} onEdit={onEdit} />,
         }
     ]
 

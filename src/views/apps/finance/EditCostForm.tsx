@@ -3,7 +3,6 @@ import { FormControl, FormHelperText, TextField } from '@mui/material'
 import { useFormik } from 'formik';
 import React, { useState } from 'react'
 import AmountInput, { revereAmount } from 'src/@core/components/amount-input'
-import { today } from 'src/@core/components/card-statistics/kanban-item';
 import api from 'src/@core/utils/api';
 import * as Yup from 'yup'
 
@@ -17,9 +16,9 @@ export default function EditCostForm({ slug, setOpen, reRender, initials }: any)
     });
 
     const initialValues = {
-        amount: `${initials.amount}`,
-        description: `${initials.description}`,
-        date: `${initials.date}`
+        amount: `${initials?.amount}`,
+        description: `${initials?.description}`,
+        date: `${initials?.date}`
     }
 
     const formik = useFormik({

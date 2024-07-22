@@ -4,25 +4,24 @@ import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import IconifyIcon from 'src/@core/components/icon';
 import api from 'src/@core/utils/api';
-import { useAppDispatch, useAppSelector } from 'src/store';
-import { getAdvanceList, setOpenEdit } from 'src/store/apps/finance/advanceSlice';
+import { useAppDispatch } from 'src/store';
 import { disablePage } from 'src/store/apps/page';
 import UserSuspendDialog from 'src/views/apps/mentors/view/UserSuspendDialog';
 
 
 type Props = {
     id: number,
-    onEdit: any
+    onEdit: any,
+    reRender: any
 }
 
-export default function CostRowActions({ id, onEdit }: Props) {
+export default function CostRowActions({ id, onEdit, reRender }: Props) {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
     const [suspendDialogOpen, setSuspendDialogOpen] = useState<boolean>(false)
     const [loading, setLoading] = useState<boolean>(false)
 
     const { t } = useTranslation()
     const dispatch = useAppDispatch()
-    const { queryParams } = useAppSelector(state => state.advanceSlice)
 
     const rowOptionsOpen = Boolean(anchorEl)
 
@@ -47,10 +46,10 @@ export default function CostRowActions({ id, onEdit }: Props) {
     async function submitDelete() {
         setLoading(true)
         dispatch(disablePage(true))
-        const res = await api.delete(`/common/finance/prepayment/delete/${id}/`)
+        const res = await api.delete(`/common/finance/expense/destroy/${id}/`)
         if (res.status == 201 || 200) {
             toast.success("Avans o'chirildi")
-            await dispatch(getAdvanceList())
+            await reRender()
         } else {
             toast.error("Avansni o'chirib bo'lmaydi")
         }
