@@ -11,8 +11,8 @@ import { AuthContext } from 'src/context/AuthContext';
 
 
 
-const yearItems = [{ label: 2021, value: 2021 }, ...Array(new Date().getFullYear() - 2021).fill(1).map((item, index) => ({ label: 2021 + index + 1, value: 2021 + index + 1 }))]
-const monthItems = ['Yanvar', 'Fevral', 'Mart', 'Aprel', 'May', 'Iyun', 'Iyul', 'Avgust', 'Sentabr', 'Oktabr', 'Noyabr', 'Dekabr'].map((el, i) => ({ label: el, value: (i + 1) < 10 ? `0${i + 1}` : `${i + 1}` }))
+export const yearItems = [{ label: 2021, value: 2021 }, ...Array(new Date().getFullYear() - 2021).fill(1).map((item, index) => ({ label: 2021 + index + 1, value: 2021 + index + 1 }))]
+export const monthItems = ['Yanvar', 'Fevral', 'Mart', 'Aprel', 'May', 'Iyun', 'Iyul', 'Avgust', 'Sentabr', 'Oktabr', 'Noyabr', 'Dekabr'].map((el, i) => ({ label: el, value: (i + 1) < 10 ? `0${i + 1}` : `${i + 1}` }))
 
 
 const FinanceAllNumber = () => {
@@ -147,7 +147,7 @@ const FinanceAllNumber = () => {
                         saturday: "Sha",
                         ok: "Ok",
                         today: "Bugun",
-                        yesterday: "Ertaga",
+                        yesterday: "Kecha",
                         hours: "Soat",
                         minutes: "Minut",
                         seconds: "Sekund",

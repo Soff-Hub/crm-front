@@ -6,7 +6,7 @@ import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import AmountInput, { revereAmount } from 'src/@core/components/amount-input';
 import { useAppDispatch, useAppSelector } from 'src/store';
-import { createAdvance, getAdvanceList, setOpenCreateModal, setOpenEdit } from 'src/store/apps/finance/advanceSlice';
+import { createAdvance, getAdvanceList, setOpenCreateModal, setOpenEdit, updateAdvance } from 'src/store/apps/finance/advanceSlice';
 import { IAdvanceFormState } from 'src/types/apps/finance';
 import * as Yup from 'yup';
 
@@ -40,12 +40,12 @@ export default function EditModal() {
         validationSchema,
         onSubmit: async (values: Partial<IAdvanceFormState>) => {
             setLoading(true)
-            const response = await dispatch(createAdvance({ ...values, amount: revereAmount(values.amount || "") }))
+            const response = await dispatch(updateAdvance({ ...values, amount: revereAmount(values.amount || ""), id: Number(isEditId) }))
             if (response.meta.requestStatus == "rejected") {
                 formik.setErrors(response.payload)
             } else {
                 toast.success("Avans yangilandi")
-                dispatch(setOpenCreateModal(false))
+                dispatch(setOpenEdit(null))
                 formik.resetForm()
                 await dispatch(getAdvanceList())
             }
@@ -63,7 +63,7 @@ export default function EditModal() {
         <Dialog open={!!isEditId} onClose={onClose}>
             <DialogTitle sx={{ textAlign: 'center' }}>{t("Avans berish")}</DialogTitle>
             <DialogContent sx={{ minWidth: '320px' }}>
-                <form onSubmit={formik.handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '10px', padding: '15px 0' }}>
+                {formik.values?.amount && <form onSubmit={formik.handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '10px', padding: '15px 0' }}>
                     <FormControl fullWidth>
                         <InputLabel size='small' id='user-view-language-label'>{t("Xodim")}</InputLabel>
                         <Select
@@ -123,7 +123,7 @@ export default function EditModal() {
                     <LoadingButton type='submit' variant='contained' loading={loading}>
                         Yangilash
                     </LoadingButton>
-                </form>
+                </form>}
             </DialogContent>
         </Dialog>
     )

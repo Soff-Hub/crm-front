@@ -1,5 +1,5 @@
 import { Box, Button, Chip, Pagination, Typography } from '@mui/material';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { formatCurrency } from 'src/@core/utils/format-currency';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -8,16 +8,23 @@ import { useAppDispatch, useAppSelector } from 'src/store';
 import { getAdvanceList, getStaffs, setOpenCreateModal, updateParams } from 'src/store/apps/finance/advanceSlice';
 import CreateModal from 'src/views/apps/finance/advance/CreateModal';
 import EditModal from 'src/views/apps/finance/advance/EditModal';
+import { SelectPicker } from 'rsuite';
+import { monthItems, yearItems } from 'src/views/apps/finance/FinanceAllNumber';
+import { today } from 'src/@core/components/card-statistics/kanban-item';
 
 
 function Slug() {
     const { isLoading, queryParams, advanceList, columns } = useAppSelector(state => state.advanceSlice)
     const dispatch = useAppDispatch()
 
+    const [year, setYear] = useState<number>(new Date().getFullYear())
+    const [month, setMonth] = useState<string>(today.split('-')[1])
+
     const { t } = useTranslation()
 
     useEffect(() => {
-        dispatch(getAdvanceList())
+        const queryString = new URLSearchParams({ ...queryParams, page: `1` }).toString()
+        dispatch(getAdvanceList(queryString))
         dispatch(getStaffs())
     }, [])
 
@@ -27,12 +34,58 @@ function Slug() {
         await dispatch(getAdvanceList(queryString))
     }
 
+    const handleYearDate = async (value: any, t: 'm' | 'y') => {
+        let params: any = {
+            date_year: ``,
+            date_month: ``
+        }
+
+        if (value) {
+            if (t === 'y') {
+                setYear(value)
+                setMonth(``)
+                params.date_year = `${value}-01-01`
+            } else {
+                setMonth(value)
+                params.date_month = `${year}-${value}-01`
+                params.date_year = `${year}-01-01`
+            }
+        } else {
+            if (t === 'y') {
+                setYear(new Date().getFullYear())
+            } else {
+                setMonth(today.split('-')[1])
+            }
+        }
+        const queryString = new URLSearchParams({ ...queryParams, ...params }).toString()
+        dispatch(updateParams(params))
+        await dispatch(getAdvanceList(queryString))
+    }
+
     return (
         <Box>
             <Box className='header'>
                 <Box sx={{ display: 'flex', alignItems: 'center', mb: 4, px: 2 }}>
                     <Typography variant='h6' sx={{ marginRight: 4 }}>{t("Avanslar")}</Typography>
-                    <Typography sx={{ fontSize: '14px', color: 'error.main', ml: 'auto', display: 'flex', alignItems: 'center', mr: 4, gap: '5px' }} >
+                    <SelectPicker
+                        onChange={(v) => handleYearDate(v, 'y')}
+                        size='sm'
+                        data={yearItems}
+                        style={{ width: 224, margin: '0 10px 0 auto' }}
+                        value={year}
+                        searchable={false}
+                        placeholder="Yilni tanlang"
+                    />
+                    <SelectPicker
+                        onChange={(v) => handleYearDate(v, 'm')}
+                        size='sm'
+                        data={monthItems}
+                        style={{ width: 224 }}
+                        value={month}
+                        searchable={false}
+                        placeholder="Oyni tanlang"
+                    />
+                    <Typography sx={{ fontSize: '14px', color: 'error.main', ml: 4, display: 'flex', alignItems: 'center', mr: 4, gap: '5px' }} >
                         <Chip variant='outlined' size='medium' sx={{ fontSize: "14px", fontWeight: "bold" }} color="success" label={`${formatCurrency(advanceList?.total_prepayments)} UZS`} />
                     </Typography>
                     <Button variant='contained' size='small' onClick={() => dispatch(setOpenCreateModal(true))}>{t("Avans berish")}</Button>

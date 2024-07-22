@@ -28,6 +28,18 @@ export const createAdvance = createAsyncThunk('createAdvance', async (values: Pa
     }
 })
 
+export const updateAdvance = createAsyncThunk('updateAdvance', async (values: Partial<IAdvanceFormState>, { rejectWithValue }) => {
+    try {
+        const response = await api.patch(`/common/finance/prepayment/update/${values.id}/`, values)
+        return response.data
+    } catch (err: any) {
+        if (err.response) {
+            return rejectWithValue(err.response.data)
+        }
+        return rejectWithValue(err.message)
+    }
+})
+
 export const deleteStudent = createAsyncThunk(
     'deleteAdvance',
     async (id: number) => {
@@ -42,7 +54,7 @@ type StateProps = {
     isLoading: boolean,
     advanceList: IAdvanceResponseData | null,
     employee: EmployeeItemType[],
-    queryParams: { page: number },
+    queryParams: { page: number, date_year: string, date_month: string },
     formikState: Partial<IAdvanceFormState>,
     columns: customTableDataProps[]
 }
@@ -53,7 +65,7 @@ const initialState: StateProps = {
     isLoading: false,
     employee: [],
     advanceList: null,
-    queryParams: { page: 1 },
+    queryParams: { page: 1, date_year: `${new Date().getFullYear()}-01-01`, date_month: '' },
     formikState: {
         employee: '',
         amount: '',

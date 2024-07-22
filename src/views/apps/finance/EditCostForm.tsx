@@ -7,7 +7,7 @@ import { today } from 'src/@core/components/card-statistics/kanban-item';
 import api from 'src/@core/utils/api';
 import * as Yup from 'yup'
 
-export default function CreateCostForm({ slug, setOpen, reRender }: any) {
+export default function EditCostForm({ slug, setOpen, reRender, initials }: any) {
     const [loading, setLoading] = useState<boolean>(false)
 
     const validationSchema = Yup.object({
@@ -17,9 +17,9 @@ export default function CreateCostForm({ slug, setOpen, reRender }: any) {
     });
 
     const initialValues = {
-        amount: '',
-        description: '',
-        date: today
+        amount: `${initials.amount}`,
+        description: `${initials.description}`,
+        date: `${initials.date}`
     }
 
     const formik = useFormik({
@@ -28,9 +28,9 @@ export default function CreateCostForm({ slug, setOpen, reRender }: any) {
         onSubmit: async (values) => {
             setLoading(true)
             try {
-                await api.post(`common/finance/expense/create/`, { ...values, amount: revereAmount(values.amount), expense_category: slug })
+                await api.patch(`common/finance/expense/update/${initials.id}/`, { ...values, amount: revereAmount(values.amount), expense_category: slug })
                 await reRender()
-                setOpen(false)
+                setOpen(null)
             } catch (err: any) {
                 if (err?.response?.data) {
                     formik.setErrors(err?.response?.data)
