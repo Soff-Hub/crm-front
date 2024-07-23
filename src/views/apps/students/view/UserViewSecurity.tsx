@@ -175,6 +175,7 @@ const UserViewSecurity = ({ groupData }: any) => {
                     <Card sx={{ width: isMobile ? '100%' : '50%' }}>
                       <CardContent sx={{ display: 'flex', justifyContent: 'space-between', margin: '0', py: '10px' }}>
                         <Chip label={`${formatCurrency(group.group_data.balance)} so'm`} size="small" variant='outlined' color={group.group_data.balance >= 0 ? 'success' : 'error'} />
+                        <Chip label={`${t(group.status)}`} size="small" variant='outlined' color={group.status === 'active' ? 'success' : group.status === 'new' ? 'warning' : 'error'} />
                       </CardContent >
                       <CardContent sx={{ display: 'flex', justifyContent: 'space-between' }}>
                         <Box sx={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
@@ -188,7 +189,8 @@ const UserViewSecurity = ({ groupData }: any) => {
                         </Box>
                       </CardContent>
                     </Card >
-                  </Box ></Link >
+                  </Box >
+                </Link >
               ))
             }
           </Box> : <EmptyContent />

@@ -150,7 +150,7 @@ const StudentsFilter = () => {
                 </FormControl>
             </Box>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <Toggle color="red" checkedChildren="Arxiv" unCheckedChildren="Arxiv" onChange={e => {
+                <Toggle  checked={queryParams.status === 'archive'} color="red" checkedChildren="Arxiv" unCheckedChildren="Arxiv" onChange={e => {
                     if (e) {
                         handleFilter('status', 'archive')
                     } else {

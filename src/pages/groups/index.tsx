@@ -29,6 +29,7 @@ import {
   getDashboardLessons,
   getMetaData,
   handleOpenAddModal,
+  resetGroupParams,
   updateParams,
 } from 'src/store/apps/groups';
 import EditGroupModal from 'src/views/apps/groups/EditGroupModal';
@@ -151,6 +152,10 @@ export default function GroupsPage() {
 
   useEffect(() => {
     pageLoad()
+
+    return () => {
+      dispatch(resetGroupParams())
+    }
   }, [])
 
   return (

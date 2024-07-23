@@ -13,7 +13,7 @@ import { today } from 'src/@core/components/card-statistics/kanban-item';
 import * as Yup from "yup";
 import { useFormik } from 'formik';
 import { CreateStudentDto } from 'src/types/apps/studentsTypes';
-import { createStudent, fetchStudentsList, setOpenEdit } from 'src/store/apps/students';
+import { createStudent, fetchStudentsList, setOpenEdit, updateStudentParams } from 'src/store/apps/students';
 import { useAppDispatch } from 'src/store';
 import useGroups from 'src/hooks/useGroups';
 import useResponsive from 'src/@core/hooks/useResponsive';
@@ -68,7 +68,8 @@ export default function CreateStudentForm() {
                 formik.setErrors(resp.payload)
             } else {
                 toast.success("O'quvchi muvaffaqiyatli yaratildi")
-                await dispatch(fetchStudentsList())
+                await dispatch(updateStudentParams({ status: 'active' }))
+                await dispatch(fetchStudentsList({ status: 'active' }))
                 dispatch(setOpenEdit(null))
                 formik.resetForm()
                 setIsGroup(false)

@@ -120,6 +120,9 @@ export const groupsSlice = createSlice({
     updateParams: (state, action) => {
       state.queryParams = { ...state.queryParams, ...action.payload }
     },
+    resetGroupParams: state => {
+      state.queryParams = { page: 1, status: '' }
+    },
     updateFormParams: (state, action) => {
       state.formParams = { ...state.formParams, ...action.payload }
     },
@@ -190,6 +193,6 @@ export const groupsSlice = createSlice({
   }
 })
 
-export const { handleOpenEdit, resetFormParams, updateFormParams, handleOpenAddModal, updateParams, setGroupData } =
+export const { handleOpenEdit, resetFormParams, updateFormParams, handleOpenAddModal, updateParams, setGroupData, resetGroupParams } =
   groupsSlice.actions
 export default groupsSlice.reducer
