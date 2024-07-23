@@ -81,7 +81,8 @@ const initialState: IGroupsState = {
   isLoading: false,
   queryParams: {
     page: 1,
-    status: ''
+    status: '',
+    is_recovery: false
   },
   formParams: {
     day_of_week:

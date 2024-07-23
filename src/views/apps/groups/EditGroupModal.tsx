@@ -11,7 +11,7 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import LoadingButton from '@mui/lab/LoadingButton';
-import { fetchGroups, handleOpenEdit, setGroupData, resetFormParams, getDashboardLessons, updateGroup, updateFormParams } from 'src/store/apps/groups';
+import { fetchGroups, handleOpenEdit, setGroupData, resetFormParams, getDashboardLessons, updateGroup, updateFormParams, updateParams } from 'src/store/apps/groups';
 import { useAppDispatch, useAppSelector } from 'src/store';
 import { useTranslation } from 'react-i18next';
 import { ChangeEvent, useEffect, useState } from 'react';
@@ -57,6 +57,9 @@ export default function EditGroupModal() {
             } else {
                 obj = { ...obj, day_of_week: formik.values.day_of_week?.split(',') }
             }
+            if (queryParams?.is_recovery) {
+                Object.assign(obj, { status: 'active' })
+            }
             const response = await dispatch(updateGroup({
                 id: groupData?.id,
                 values: obj
@@ -65,6 +68,7 @@ export default function EditGroupModal() {
             if (response.meta.requestStatus === 'rejected') {
                 formik.setErrors(response.payload)
             } else {
+                dispatch(updateParams({ is_recovery: false }))
                 toast.success("O'zgrishlar muvafaqqiyati saqlandi")
                 const queryString = new URLSearchParams(queryParams).toString()
                 if (query?.id) {
@@ -167,6 +171,7 @@ export default function EditGroupModal() {
     useEffect(() => {
         return () => {
             dispatch(handleOpenEdit(false))
+            dispatch(updateParams({ is_recovery: false }))
         }
     }, [])
 

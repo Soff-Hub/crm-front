@@ -7,7 +7,7 @@ import { useAppDispatch, useAppSelector } from 'src/store';
 import { fetchStudentsList, updateStudentParams } from 'src/store/apps/students';
 import useCourses from 'src/hooks/useCourses';
 import useDebounce from 'src/hooks/useDebounce';
-import { Stack, Toggle } from 'rsuite';
+import { Toggle } from 'rsuite';
 import 'rsuite/Toggle/styles/index.css';
 
 
@@ -38,7 +38,11 @@ const StudentsFilter = () => {
             }
             return
         }
-        await dispatch(fetchStudentsList({ ...queryParams, [key]: value }))
+        if (key === 'status') {
+            await dispatch(fetchStudentsList({ status: value }))
+        } else {
+            await dispatch(fetchStudentsList({ ...queryParams, [key]: value }))
+        }
         dispatch(updateStudentParams({ [key]: value }))
     }
 
@@ -150,7 +154,7 @@ const StudentsFilter = () => {
                 </FormControl>
             </Box>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <Toggle  checked={queryParams.status === 'archive'} color="red" checkedChildren="Arxiv" unCheckedChildren="Arxiv" onChange={e => {
+                <Toggle checked={queryParams.status === 'archive'} color="red" checkedChildren="Arxiv" unCheckedChildren="Arxiv" onChange={e => {
                     if (e) {
                         handleFilter('status', 'archive')
                     } else {

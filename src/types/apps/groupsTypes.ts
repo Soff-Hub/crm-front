@@ -31,7 +31,8 @@ export interface IQueryParams {
   status?: string
   teacher?: string
   course?: string
-  day_of_week?: string
+  day_of_week?: string,
+  is_recovery?: boolean
 }
 
 export interface IFormParams {

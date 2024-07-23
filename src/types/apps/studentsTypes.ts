@@ -109,7 +109,7 @@ export interface StudentDetailType {
 export interface StudentsQueryParamsTypes {
     search?: string
     course?: number | null
-    status?: string
+    status?: string | any
     page?: number
     is_debtor?: any
     last_payment?: any

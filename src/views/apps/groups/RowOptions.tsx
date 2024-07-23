@@ -9,7 +9,7 @@ import UserSuspendDialog from 'src/views/apps/groups/view/UserSuspendDialog';
 import getMontName from 'src/@core/utils/gwt-month-name';
 import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from 'src/store';
-import { deleteGroups, fetchGroups, getDashboardLessons, getGroupsDetails, handleOpenEdit } from 'src/store/apps/groups';
+import { deleteGroups, fetchGroups, getDashboardLessons, getGroupsDetails, handleOpenEdit, updateParams } from 'src/store/apps/groups';
 import { GroupType } from 'src/@fake-db/types';
 import { disablePage } from 'src/store/apps/page';
 
@@ -42,6 +42,22 @@ const RowOptions = ({ id }: { id: number | string }) => {
             teacher: String(filtered?.teacher),
             room: String(filtered?.room_id)
         }).toString()
+        await Promise.all([
+            dispatch(getDashboardLessons(queryString)),
+            dispatch(getGroupsDetails(id))
+        ])
+    }
+
+    const handleRecovery = async (id: any) => {
+        setAnchorEl(null)
+        dispatch(handleOpenEdit(true))
+        const filtered = groups?.find(item => item.id == id)
+        const queryString = new URLSearchParams({
+            day_of_week: filtered?.week_days?.toString(),
+            teacher: String(filtered?.teacher),
+            room: String(filtered?.room_id)
+        }).toString()
+        dispatch(updateParams({ is_recovery: true }))
         await Promise.all([
             dispatch(getDashboardLessons(queryString)),
             dispatch(getGroupsDetails(id))
@@ -93,15 +109,18 @@ const RowOptions = ({ id }: { id: number | string }) => {
                     {t("Tahrirlash")}
                 </MenuItem>
 
-                <MenuItem onClick={handleDelete} sx={{ '& svg': { mr: 2 } }}>
+                {queryParams.status === 'archived' ? <MenuItem onClick={() => handleRecovery(id)} sx={{ '& svg': { mr: 2 } }}>
+                    <IconifyIcon icon='mdi:reload' fontSize={20} />
+                    {t("Tiklash")}
+                </MenuItem> : <MenuItem onClick={handleDelete} sx={{ '& svg': { mr: 2 } }}>
                     <IconifyIcon icon='mdi:delete-outline' fontSize={20} />
                     {t("O'chirish")}
-                </MenuItem>
+                </MenuItem>}
 
-                <MenuItem onClick={handleDelete} sx={{ '& svg': { mr: 2 } }}>
+                {queryParams.status !== 'archived' && <MenuItem onClick={handleDelete} sx={{ '& svg': { mr: 2 } }}>
                     <IconifyIcon icon='material-symbols-light:recommend-outline' fontSize={20} />
                     {t("Guruhni yakunlash")}
-                </MenuItem>
+                </MenuItem>}
             </Menu>
             <UserSuspendDialog isDeleting={isDeleting} handleOk={() => handleDeleteTeacher(id)} open={suspendDialogOpen} setOpen={setSuspendDialogOpen} />
         </>
