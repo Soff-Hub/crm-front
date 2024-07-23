@@ -22,6 +22,16 @@ const StudentsPageHeader = () => {
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
                     <Typography variant='h5'>{t("O'quvchilar")}</Typography>
                     {!isLoading && <Chip label={`${studentsCount} ta`} variant='outlined' color="primary" size="medium" />}
+
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                        <Status color='error' />
+                        <Typography variant='caption'>Qarzdor</Typography>
+                    </Box>
+
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                        <Status color='warning' />
+                        <Typography variant='caption'>To'lov sanasi yaqin</Typography>
+                    </Box>
                 </Box>
                 <Button
                     onClick={() => dispatch(setOpenEdit('create'))}
