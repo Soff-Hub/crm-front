@@ -18,7 +18,7 @@ export default function SalaryConfirm({ }: Props) {
     const { t } = useTranslation()
     const { back, push } = useRouter()
     const dispatch = useAppDispatch()
-    const { moderation_salaries, isPending } = useAppSelector(state => state.finance)
+    const { moderation_salaries, isPending, is_update } = useAppSelector(state => state.finance)
     const [loading, setLoading] = useState<'frozen' | 'approved' | null>(null)
     const [open, setOpen] = useState<boolean>(false)
 
@@ -138,7 +138,7 @@ export default function SalaryConfirm({ }: Props) {
                     {t("Vaqtincha saqlash")}
                 </LoadingButton>}
                 {
-                    moderation_salaries.length > 0 && !isPending && moderation_salaries[0].status !== "approved" && <LoadingButton
+                    moderation_salaries.length > 0 && !isPending && moderation_salaries[0].status !== "approved" && is_update && <LoadingButton
                         loading={loading === 'approved'}
                         sx={{ marginTop: '15px' }}
                         size='small'

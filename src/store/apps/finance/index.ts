@@ -28,7 +28,8 @@ const initialState: IFinanceState = {
     moderation_salaries: [],
     all_numbers: undefined,
     numbersLoad: false,
-    allNumbersParams: { date_year: `${new Date().getFullYear()}-01-01`, date_month: today.split('-')[1], start_date: '', end_date: '', branch: '' }
+    allNumbersParams: { date_year: `${new Date().getFullYear()}-01-01`, date_month: today.split('-')[1], start_date: '', end_date: '', branch: '' },
+    is_update: true
 }
 
 export const financeSlice = createSlice({
@@ -61,7 +62,8 @@ export const financeSlice = createSlice({
             })
             .addCase(fetchModerationSalaries.fulfilled, (state, action) => {
                 state.isPending = false
-                state.moderation_salaries = action.payload.map((el: any) => ({ ...el, final_salary: Number(el.salary) + Number(el.bonus_amount) - Number(el.fine_amount) }))
+                state.moderation_salaries = action.payload?.response.map((el: any) => ({ ...el, final_salary: Number(el.salary) + Number(el.bonus_amount) - Number(el.fine_amount) }))
+                state.is_update = action.payload?.is_update
             })
             .addCase(fetchFinanceAllNumbers.pending, (state) => {
                 state.numbersLoad = true

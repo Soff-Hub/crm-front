@@ -44,24 +44,25 @@ export interface IFinanceState {
   numbersLoad: boolean
   moderation_salaries: SalaryitemType[]
   all_numbers:
-    | {
-        label: {
-          benefit: string
-          expense: string
-          difference: string
-        }
-        year: number
-        expense: YearlyStats
-        benefit: YearlyStats
-        difference: YearlyStats
-        payment_types: {
-          id: number
-          name: string
-          amount: number
-        }[]
-      }
-    | undefined
-  allNumbersParams: AllNumbersParams
+  | {
+    label: {
+      benefit: string
+      expense: string
+      difference: string
+    }
+    year: number
+    expense: YearlyStats
+    benefit: YearlyStats
+    difference: YearlyStats
+    payment_types: {
+      id: number
+      name: string
+      amount: number
+    }[]
+  }
+  | undefined
+  allNumbersParams: AllNumbersParams,
+  is_update: boolean
 }
 
 export interface IAdvanceFormState {

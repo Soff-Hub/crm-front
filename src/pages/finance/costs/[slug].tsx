@@ -1,6 +1,6 @@
-import { Box, Button, Chip, Dialog, DialogContent, DialogTitle, TextField, Typography } from '@mui/material';
+import { Box, Button, Chip, Dialog, DialogContent, DialogTitle, IconButton, TextField, Typography } from '@mui/material';
 import 'react-datepicker/dist/react-datepicker.css';
-import { useRouter } from 'next/router';
+import Router, { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -104,8 +104,13 @@ function Slug(props: { slug: string }) {
         <Box>
             <Box className='header'>
                 <Box sx={{ display: 'flex', alignItems: 'center', mb: 4, px: 2 }}>
-                    {editable ? <TextField onBlur={updateCategory} size='small' sx={{ fontSize: '20px', marginRight: 4 }} value={name} onChange={(e) => setName(e.target.value)} /> : <Typography variant='h6' sx={{ marginRight: 4 }}>{name}</Typography>}
-                    <IconifyIcon style={{ cursor: 'pointer' }} icon={editable ? 'ic:baseline-check' : 'mdi:edit'} onClick={() => setEditable(!editable)} />
+                    <Box sx={{ display: 'flex', gap: '10px', flexGrow: 1, alignItems: 'center' }}>
+                        <IconButton color='primary'>
+                            <IconifyIcon icon={'ep:back'} style={{ cursor: 'pointer' }} onClick={() => Router.back()} />
+                        </IconButton>
+                        {editable ? <TextField onBlur={updateCategory} size='small' sx={{ fontSize: '20px', marginRight: 4 }} value={name} onChange={(e) => setName(e.target.value)} /> : <Typography variant='h6' sx={{ marginRight: 4 }}>{name}</Typography>}
+                        <IconifyIcon style={{ cursor: 'pointer' }} icon={editable ? 'ic:baseline-check' : 'mdi:edit'} onClick={() => setEditable(!editable)} />
+                    </Box>
 
                     <DateRangePicker showOneCalendar placement="bottomEnd" locale={{
                         last7Days: "Oxirgi hafta",

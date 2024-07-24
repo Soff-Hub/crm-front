@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Button, ButtonGroup, DialogContent, DialogTitle, FormControl, FormHelperText, TextField, Typography } from '@mui/material';
+import { Box, Button, ButtonGroup, DialogContent, DialogTitle, FormControl, FormHelperText, TextField, Typography, IconButton as IconButtonMui } from '@mui/material';
 import CardStatsVertical from 'src/@core/components/card-statistics/card-stats-vertical';
 import api from 'src/@core/utils/api';
 import { DateRangePicker, IconButton } from 'rsuite';
 import 'rsuite/DateRangePicker/styles/index.css';
-import { useRouter } from 'next/router';
+import Router, { useRouter } from 'next/router';
 import format from 'date-fns/format';
 import IconifyIcon from 'src/@core/components/icon';
 import { CustomeDrawer } from '../settings/office/courses';
@@ -76,6 +76,12 @@ const Stats = () => {
 
     return (
         <div>
+            <Box sx={{ display: 'flex', gap: '10px', flexGrow: 1, alignItems: 'center' }}>
+                <IconButtonMui color='primary'>
+                    <IconifyIcon icon={'ep:back'} style={{ cursor: 'pointer' }} onClick={() => Router.back()} />
+                </IconButtonMui>
+                <Typography sx={{ fontSize: '20px', flexGrow: 1 }}>{t("Statisika, Manbalr bo'yicha")}</Typography>
+            </Box>
             <Box sx={{ alignItems: 'center', paddingBottom: '20px', flexWrap: 'nowrap', width: '100%', display: 'flex' }}>
                 <DateRangePicker format="yyyy-MM-dd" onChange={handleChangeDate} translate={'yes'} size="sm" style={{ marginRight: 20 }} />
                 <ButtonGroup size="small">

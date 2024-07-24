@@ -1,4 +1,4 @@
-import { Box, Button, Chip, Pagination, Typography } from '@mui/material';
+import { Box, Button, Chip, IconButton, Pagination, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { formatCurrency } from 'src/@core/utils/format-currency';
@@ -11,6 +11,8 @@ import EditModal from 'src/views/apps/finance/advance/EditModal';
 import { SelectPicker } from 'rsuite';
 import { monthItems, yearItems } from 'src/views/apps/finance/FinanceAllNumber';
 import { today } from 'src/@core/components/card-statistics/kanban-item';
+import IconifyIcon from 'src/@core/components/icon';
+import Router from 'next/router';
 
 
 function Slug() {
@@ -66,7 +68,12 @@ function Slug() {
         <Box>
             <Box className='header'>
                 <Box sx={{ display: 'flex', alignItems: 'center', mb: 4, px: 2 }}>
-                    <Typography variant='h6' sx={{ marginRight: 4 }}>{t("Avanslar")}</Typography>
+                    <Box sx={{ display: 'flex', gap: '10px', flexGrow: 1, alignItems: 'center' }}>
+                        <IconButton color='primary'>
+                            <IconifyIcon icon={'ep:back'} style={{ cursor: 'pointer' }} onClick={() => Router.back()} />
+                        </IconButton>
+                        <Typography sx={{ fontSize: '20px', flexGrow: 1 }}>{t("Avanslar")}</Typography>
+                    </Box>
                     <SelectPicker
                         onChange={(v) => handleYearDate(v, 'y')}
                         size='sm'
