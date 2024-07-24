@@ -1,6 +1,6 @@
 import { Box, Button } from "@mui/material";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import IconifyIcon from "src/@core/components/icon";
 import DataTable from "src/@core/components/table";
@@ -11,6 +11,7 @@ import AddExam from "./AddExam";
 import ExamResults from "./ExamResults";
 import EditExam from "./EditExam";
 import DeleteExam from "./DeleteExam";
+import { AuthContext } from "src/context/AuthContext";
 
 export interface ExamType {
     id: number
@@ -23,6 +24,7 @@ export interface ExamType {
 const GroupExamsList = () => {
     const dispatch = useAppDispatch()
     const { exams, resultId, isGettingExams } = useAppSelector(state => state.groupDetails)
+    const { user } = useContext(AuthContext)
 
     const { query } = useRouter()
     const { t } = useTranslation()
@@ -36,7 +38,6 @@ const GroupExamsList = () => {
     const handleDeleteOpen = (id: any) => {
         dispatch(setEditData(id))
         dispatch(setOpen('delete'))
-
     }
 
 
@@ -86,13 +87,14 @@ const GroupExamsList = () => {
         dispatch(setResultId(id))
         await dispatch(getResults({ groupId: query?.id, examId: id }))
     }
+
     return (
         <>
             {resultId ? < ExamResults /> :
                 <Box className='demo-space-y'>
-                    <div style={{ width: '100%', display: 'flex', justifyContent: 'flex-end', margin: 0 }}>
+                    {user && user.role[0] !== 'teacher' && <div style={{ width: '100%', display: 'flex', justifyContent: 'flex-end', margin: 0 }}>
                         <Button variant="contained" sx={{ marginLeft: '15px' }} size="small" onClick={() => dispatch(setOpen('add'))}>{t('Yaratish')}</Button>
-                    </div>
+                    </div>}
                     <DataTable rowClick={(id: any) => handleOpenExamResult(id)} maxWidth="100%" minWidth="450px" loading={isGettingExams} data={exams} columns={columns} />
                     <AddExam />
                     <EditExam />

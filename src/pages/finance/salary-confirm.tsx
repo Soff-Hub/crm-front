@@ -1,6 +1,6 @@
 
 import LoadingButton from '@mui/lab/LoadingButton'
-import { Box, Button, Dialog, DialogContent, DialogTitle, IconButton, TextField, Typography } from '@mui/material'
+import { Box, Dialog, DialogContent, DialogTitle, IconButton, Typography } from '@mui/material'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
@@ -127,7 +127,7 @@ export default function SalaryConfirm({ }: Props) {
                     <Typography sx={{ fontSize: '20px', flexGrow: 1 }}>{t('Oylik hisoblash')}</Typography>
                 </Box>
                 <DataTable loading={isPending} maxWidth='100%' minWidth='800px' columns={withdrawCol} data={moderation_salaries} />
-                {moderation_salaries.length > 0 && !isPending && <LoadingButton
+                {moderation_salaries.length > 0 && !isPending && moderation_salaries[0].status !== "approved" && <LoadingButton
                     loading={loading === 'frozen'}
                     sx={{ marginTop: '15px', marginRight: '20px' }}
                     size='small'

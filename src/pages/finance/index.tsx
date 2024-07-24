@@ -59,13 +59,13 @@ const CardStatistics = () => {
             dataIndex: "index",
         },
         {
-            xs: 0.1,
+            xs: 0.07,
             title: t("Yil"),
             dataIndex: "date",
             render: (date) => `${date.split('-')[0]}`
         },
         {
-            xs: 0.1,
+            xs: 0.07,
             title: t("Oy"),
             dataIndex: "month",
             render: (date) => getMonthFullName(+date.split('-')[1])
@@ -78,21 +78,39 @@ const CardStatistics = () => {
         },
         {
             xs: 0.2,
-            title: t("Jami oyliklar"),
-            dataIndex: 'salaries',
-            render: (salaries) => `${formatCurrency(salaries)} so'm`
-        },
-        {
-            xs: 0.2,
             title: t("O'zgarmas oyliklar"),
             dataIndex: 'fixed_salaries',
             render: (fixed_salaries) => `${formatCurrency(fixed_salaries)} so'm`
         },
         {
             xs: 0.2,
+            title: t("Bonuslar"),
+            dataIndex: 'bonus_amount',
+            render: (kpi_salaries) => `${formatCurrency(kpi_salaries)} so'm`
+        },
+        {
+            xs: 0.2,
+            title: t("Jarimalar"),
+            dataIndex: 'fine_amount',
+            render: (kpi_salaries) => `${formatCurrency(kpi_salaries)} so'm`
+        },
+        {
+            xs: 0.2,
+            title: t("Avanslar"),
+            dataIndex: 'prepayments',
+            render: (kpi_salaries) => `${formatCurrency(kpi_salaries)} so'm`
+        },
+        {
+            xs: 0.2,
             title: t("Jami foiz (%)"),
             dataIndex: 'kpi_salaries',
             render: (kpi_salaries) => `${formatCurrency(kpi_salaries)} so'm`
+        },
+        {
+            xs: 0.2,
+            title: t("Jami oyliklar"),
+            dataIndex: 'salaries',
+            render: (salaries) => `${formatCurrency(salaries)} so'm`
         },
         // {
         //     xs: 0.15,

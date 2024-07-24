@@ -1,7 +1,6 @@
 import { Box, Card, CardContent, Typography } from "@mui/material"
 import { useRouter } from "next/router"
 import IconifyIcon from "src/@core/components/icon"
-import getMontName, { getMontNumber } from "src/@core/utils/gwt-month-name";
 import { useTranslation } from "react-i18next";
 import { useCallback, useEffect, useState } from "react";
 import api from "src/@core/utils/api";
@@ -9,27 +8,17 @@ import DataTable from "src/@core/components/table";
 import { formatCurrency } from "src/@core/utils/format-currency";
 import { formatDateTime } from "src/@core/utils/date-formatter";
 import { customTableProps } from "src/pages/groups";
-import { downloadImage } from "../students/view/UserViewSecurity";
 import useResponsive from "src/@core/hooks/useResponsive";
+import SubLoader from "../loaders/SubLoader";
 
-
-interface Result {
-    date: string;
-    year: string;
-}
-
-interface DateInfo {
-    date: string;
-    year: string;
-}
 
 const Item = ({ defaultValue }: { defaultValue: true | false | null | 0 }) => {
 
 
     if (defaultValue === true || defaultValue === false || defaultValue === null) {
         return (
-            <Box sx={{ position: 'relative' }}>
-                <span>
+            <Box sx={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+                <span style={{ display: 'flex' }}>
                     {
                         defaultValue === true ? (
                             <IconifyIcon icon={'game-icons:check-mark'} fontSize={18} color="#4be309" />
@@ -37,7 +26,7 @@ const Item = ({ defaultValue }: { defaultValue: true | false | null | 0 }) => {
                             <IconifyIcon icon={'mdi:cancel-bold'} fontSize={18} color="#e31309" />
                         ) : defaultValue === null ? (
                             <IconifyIcon icon={'fluent:square-20-regular'} fontSize={18} color="#9e9e9e" />
-                        ) : ''
+                        ) : <IconifyIcon icon={'material-symbols:lock-outline'} fontSize={18} color="#9e9e9e" />
                     }
                 </span>
             </Box>
@@ -51,37 +40,16 @@ const Item = ({ defaultValue }: { defaultValue: true | false | null | 0 }) => {
     }
 }
 
-const StudentGroupDetail = ({ slug, month, start_date, month_duration }: any) => {
+const StudentGroupDetail = ({ slug, month }: any) => {
     const { pathname, query, push } = useRouter()
     const { t } = useTranslation()
     const [data, setData] = useState<any>([])
-    const [days, setDays] = useState<any[]>([])
+    const [days, setDays] = useState<any>({})
     const [loading, setLoading] = useState<any>(null)
+    const [isLoading, setIsLoading] = useState<any>(null)
+    const [payLoading, setPayLoading] = useState<any>(null)
     const [pays, setPays] = useState<any[]>([])
     const { isMobile } = useResponsive()
-
-    const months: string[] = ['yan', 'fev', 'mar', 'apr', 'may', 'iyun', 'iyul', 'avg', 'sen', 'okt', 'noy', 'dek']
-
-    const generateDates = (startMonth: any, numMonths: number): Result[] => {
-        const result: DateInfo[] = [];
-        let currentDate = new Date(startMonth);
-
-        for (let i = 0; i < numMonths; i++) {
-            const year = currentDate.getFullYear();
-            const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
-            const day = currentDate.getDate().toString().padStart(2, '0');
-
-            result.push({
-                date: `${year}-${month}-${day}`,
-                year: `${year}`
-            });
-
-            currentDate.setMonth(currentDate.getMonth() + 1);
-        }
-
-        return result
-    };
-
 
     const handleClick = (value: any) => {
 
@@ -97,13 +65,17 @@ const StudentGroupDetail = ({ slug, month, start_date, month_duration }: any) =>
     }
 
     const getPayments = async () => {
+        setPayLoading(true)
         const resp = await api.get(`common/student/payments/${slug}/`)
         setPays(resp.data);
+        setPayLoading(false)
     }
 
     const getDays = async () => {
+        setIsLoading(true)
         const resp = await api.get(`common/day-of-week/${slug}/date/${month}/`)
         setDays(resp.data);
+        setIsLoading(false)
     }
 
     const handlePrint = useCallback(async (id: number | string) => {
@@ -140,7 +112,6 @@ const StudentGroupDetail = ({ slug, month, start_date, month_duration }: any) =>
         }
     }
 
-
     const columns: customTableProps[] = [
         {
             xs: 0.2,
@@ -161,11 +132,6 @@ const StudentGroupDetail = ({ slug, month, start_date, month_duration }: any) =>
         },
         {
             xs: 1,
-            title: t("Izoh"),
-            dataIndex: 'description',
-        },
-        {
-            xs: 1,
             title: t("Qabul qildi"),
             dataIndex: 'admin',
         },
@@ -182,31 +148,57 @@ const StudentGroupDetail = ({ slug, month, start_date, month_duration }: any) =>
     ]
 
     useEffect(() => {
-        getDays()
-        getAttendence()
+        Promise.all([
+            getDays(),
+            getAttendence()
+        ])
     }, [month])
 
     useEffect(() => {
         getPayments()
     }, [])
 
+
     return (
         <Box className='demo-space-y' sx={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', gap: '20px' }}>
-            <Card sx={{ maxWidth: '400px' }}>
+            <Card sx={{ maxWidth: '600px', minWidth: '600px' }}>
                 <CardContent>
-                    <Typography>{t("Davomat")}</Typography>
-                    <div style={{ display: 'flex', listStyle: 'none', margin: 0, padding: '10px 0', marginBottom: 12, overflowX: 'scroll' }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px', mb: 5 }} >
+                        <Typography variant='h6'>{t("Davomat")} |</Typography>
+
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                            <Item defaultValue />
+                            <Typography variant="body2">{t("Kelgan")}, </Typography>
+                        </Box>
+
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                            <Item defaultValue={false} />
+                            <Typography variant="body2">{t("Kelmagan")},</Typography>
+                        </Box>
+
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                            <Item defaultValue={null} />
+                            <Typography variant="body2">{t("Yoqlama qilinmagan")},</Typography>
+                        </Box>
+
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                            <Item defaultValue={0} />
+                            <Typography variant="body2">{t("Yopiq")},</Typography>
+                        </Box>
+
+                    </Box>
+                    <div style={{ display: 'flex', listStyle: 'none', margin: 0, padding: '5px 0', overflowX: 'auto' }}>
                         {
-                            generateDates(start_date, month_duration).map(item => (
+                            days?.months && days?.months.map((item: any) => (
                                 <div
                                     key={item.date}
                                     onClick={() => handleClick(item)}
                                     style={{
-                                        borderBottom: (month.split('-')[1] ? getMontName(Number(month.split('-')[1])) : month) === getMontName(Number(item.date.split('-')[1])) ? '2px solid #c3cccc' : '2px solid transparent',
+                                        borderBottom: month === item.date ? '2px solid #c3cccc' : '2px solid transparent',
                                         cursor: 'pointer',
                                         marginRight: '15px'
                                     }}>
-                                    {getMontName(Number(item.date.split('-')[1]))}
+                                    {item.month}
                                 </div>
                             ))
                         }
@@ -217,7 +209,7 @@ const StudentGroupDetail = ({ slug, month, start_date, month_duration }: any) =>
                         flexDirection: isMobile ? 'column' : 'row',
                     }}>
                         {
-                            days.map((day, key) => (
+                            !isLoading && days?.result ? days?.result.map((day: any, key: number) => (
                                 <Box
                                     key={key}
                                     sx={{
@@ -229,19 +221,17 @@ const StudentGroupDetail = ({ slug, month, start_date, month_duration }: any) =>
                                         gap: '10px'
                                     }}
                                 >
-                                    <span>{day.date}</span>
+                                    <span>{day.date.split('-').reverse().join('-')}</span>
                                     <span>
-                                        <Item defaultValue={
-                                            data.find((el: any) => el.date === day.date)?.is_available
-                                        } />
+                                        <Item defaultValue={data.find((el: any) => el.date === day.date)?.is_available} />
                                     </span>
                                 </Box>
-                            ))
+                            )) : <SubLoader />
                         }
                     </Box>
                 </CardContent>
             </Card>
-            <DataTable minWidth="900px" data={pays} columns={columns} />
+            <DataTable minWidth="600px" data={pays} columns={columns} loading={payLoading} />
         </Box >
     )
 }
