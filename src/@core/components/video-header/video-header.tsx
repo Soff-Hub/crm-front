@@ -1,5 +1,4 @@
-import { Alert, Box, Button } from '@mui/material'
-import React from 'react'
+import { Box, Button } from '@mui/material'
 import IconifyIcon from '../icon'
 import { useAppDispatch } from 'src/store'
 import { openVideoModal } from 'src/store/apps/settings'
@@ -10,6 +9,13 @@ interface VideoType {
 }
 
 export const videoUrls: {
+    all_settings: VideoType
+    employees: VideoType
+    courses: VideoType
+    rooms: VideoType
+    freedays: VideoType
+    sms: VideoType
+    forms: VideoType
     dashboard: VideoType
     leads: VideoType
     teachers: VideoType
@@ -17,14 +23,35 @@ export const videoUrls: {
     group: VideoType
     students: VideoType
     finance: VideoType
-    sms: VideoType
-    courses: VideoType
-    rooms: VideoType
-    freedays: VideoType
-    all_settings: VideoType
-    employees: VideoType
-    forms: VideoType
 } = {
+    all_settings: {
+        title: 'Umumiy sozlamalar',
+        url: 'https://www.youtube.com/embed/dPfexdHosjk?si=uvfr31ArDT2avxVo'
+    },
+    employees: {
+        title: 'Xodimlar',
+        url: 'https://www.youtube.com/embed/Ej6ellTSsbw?si=qWmUOjpfqFpoqxBx'
+    },
+    courses: {
+        title: 'Kurslar',
+        url: 'https://www.youtube.com/embed/_F834yt0gU0?si=T6pYxG_3XirI5OOb'
+    },
+    rooms: {
+        title: 'Xonalar',
+        url: 'https://www.youtube.com/embed/ie5yJodh5LA?si=HXuoFyOld2pkHFVS'
+    },
+    freedays: {
+        title: 'Dam olish kunlar',
+        url: 'https://www.youtube.com/embed/6h-206ik7xk?si=0otG8F4J2jt7T934'
+    },
+    sms: {
+        title: 'SMS shablonlar',
+        url: 'https://www.youtube.com/embed/iSQ3AI-55po?si=UFSLr2E9vObU85WO'
+    },
+    forms: {
+        title: 'Formalar',
+        url: 'https://www.youtube.com/embed/IlxxBcILFaY?si=oz5FAArU9G39URJM'
+    },
     dashboard: {
         title: "Asosiy",
         url: 'https://www.youtube.com/embed/j3EAsc_EFPE?si=Wj_f8-LyMToTLOmG'
@@ -53,34 +80,6 @@ export const videoUrls: {
         title: "Moliya",
         url: "https://www.youtube.com/embed/wMMjudbJXZg?si=9bCcWVcfrxlXuTjr"
     },
-    sms: {
-        title: 'SMS shablonlar',
-        url: 'https://www.youtube.com/embed/iSQ3AI-55po?si=UFSLr2E9vObU85WO'
-    },
-    courses: {
-        title: 'Kurslar',
-        url: 'https://www.youtube.com/embed/_F834yt0gU0?si=T6pYxG_3XirI5OOb'
-    },
-    rooms: {
-        title: 'Xonalar',
-        url: 'https://www.youtube.com/embed/ie5yJodh5LA?si=HXuoFyOld2pkHFVS'
-    },
-    freedays: {
-        title: 'Dam olish kunlar',
-        url: 'https://www.youtube.com/embed/6h-206ik7xk?si=0otG8F4J2jt7T934'
-    },
-    all_settings: {
-        title: 'Umumiy sozlamalar',
-        url: 'https://www.youtube.com/embed/dPfexdHosjk?si=uvfr31ArDT2avxVo'
-    },
-    employees: {
-        title: 'Xodimlar',
-        url: 'https://www.youtube.com/embed/Ej6ellTSsbw?si=qWmUOjpfqFpoqxBx'
-    },
-    forms: {
-        title: 'Formalar',
-        url: 'https://www.youtube.com/embed/IlxxBcILFaY?si=oz5FAArU9G39URJM'
-    }
 }
 
 export default function VideoHeader({ item }: { item: VideoType }) {
