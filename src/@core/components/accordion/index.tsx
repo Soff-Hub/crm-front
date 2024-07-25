@@ -137,7 +137,7 @@ export default function AccordionCustom({ onView, item }: AccordionProps) {
     }, [item.student_count])
 
     return (
-        <Card sx={{ width: '100%', boxShadow: 'rgba(148, 163, 184, 0.1) 0px 3px 12px' }}>
+        <Card sx={{ width: '100%', boxShadow: 'rgba(148, 163, 184, 0.1) 0px 3px 12px' }} id={item.id}>
             <Box sx={{ width: '100%', display: 'flex', alignItems: 'center' }}>
                 <Typography
                     fontSize={16}

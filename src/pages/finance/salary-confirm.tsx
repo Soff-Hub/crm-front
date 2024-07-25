@@ -53,23 +53,17 @@ export default function SalaryConfirm({ }: Props) {
             render: (kpi_salary) => `${formatCurrency(kpi_salary)} so'm`
         },
         {
-            xs: 0.17,
-            title: t("Tushurgan summa"),
-            dataIndex: 'profit_amount',
-            render: (profit_amount) => `${formatCurrency(profit_amount)} so'm`
-        },
-        {
             xs: 0.14,
             title: t("Jami ish haqqi"),
             dataIndex: 'salary',
             render: (salary) => `${formatCurrency(salary)} so'm`
         },
-        // {
-        //     xs: 0.15,
-        //     title: t("Avanslar"),
-        //     dataIndex: 'index',
-        //     render: () => "5 400 000"
-        // },
+        {
+            xs: 0.14,
+            title: t("Avanslar"),
+            dataIndex: 'profit_amount',
+            render: (profit_amount) => `${formatCurrency(profit_amount)} so'm`
+        },
         {
             xs: 0.13,
             title: `${t("Jarimalar soni")}`,

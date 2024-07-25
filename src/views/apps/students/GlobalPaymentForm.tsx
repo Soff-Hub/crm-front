@@ -12,6 +12,7 @@ import LoadingButton from '@mui/lab/LoadingButton'
 import usePayment from 'src/hooks/usePayment'
 import toast from 'react-hot-toast'
 import { disablePage } from 'src/store/apps/page'
+import { formatPhoneNumber } from 'src/@core/components/phone-input/format-phone-number'
 
 type Props = {}
 
@@ -180,7 +181,7 @@ export default function GlobalPaymentForm({ }: Props) {
                                 variant="outlined"
                                 icon={<IconifyIcon icon={'mdi:account-student'} />}
                             >
-                                {student.first_name}
+                                {student.first_name} | {formatPhoneNumber(student.phone)} | {student.student_status?.filter((el: any) => el.status === 'active')[0]?.group_name || ""}
                             </Alert>
                         ))
                     }

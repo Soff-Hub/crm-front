@@ -10,6 +10,7 @@ import IconifyIcon from 'src/@core/components/icon';
 import PhoneInput from 'src/@core/components/phone-input';
 import { reversePhone } from 'src/@core/components/phone-input/format-phone-number';
 import Router from 'next/router';
+import KanbanItem from 'src/@core/components/card-statistics/kanban-item';
 
 
 type Props = {}
@@ -25,7 +26,7 @@ export default function CreateAnonimUserForm({ }: Props) {
         source: Yup.string().required("Manbani kiritiing"),
         first_name: Yup.string().required("Ism kiriting"),
         phone: Yup.string().required("Telefon raqam"),
-        body: Yup.string()
+        body: Yup.string(),
     });
 
     const initialValues: {
@@ -34,11 +35,19 @@ export default function CreateAnonimUserForm({ }: Props) {
         first_name: string
         phone: string
         body?: string
+        user: {
+            phone: string,
+            first_name: string,
+            id: number,
+            department: number,
+            is_active: boolean
+        } | null
     } = {
         department: '',
         source: '',
         first_name: '',
         phone: '',
+        user: null
     }
 
     const formik = useFormik({
@@ -57,6 +66,7 @@ export default function CreateAnonimUserForm({ }: Props) {
     });
 
     const { values, errors, touched, handleBlur, handleChange } = formik
+    const newErrors: any = { ...errors }
 
     useEffect(() => {
 
@@ -143,6 +153,10 @@ export default function CreateAnonimUserForm({ }: Props) {
                 />
                 {!!errors.phone && touched.phone && <FormHelperText error>{formik.errors.phone}</FormHelperText>}
             </FormControl>
+
+            {
+                errors?.user && <KanbanItem id={newErrors.user.id} phone={newErrors.user.phone} status='new' title={newErrors.user.first_name} is_view />
+            }
 
             <FormControl fullWidth>
                 <TextField
