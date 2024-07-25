@@ -23,13 +23,29 @@ export const fetchSources = createAsyncThunk('appChat/fetchSources', async () =>
 })
 
 // ** Create Departments
-export const createDepartment = createAsyncThunk('appChat/createDepartment', async (values: CreatesDepartmentState) => {
-    return (await api.post(`leads/department/create/`, values)).data
+export const createDepartment = createAsyncThunk('appChat/createDepartment', async (values: CreatesDepartmentState, { rejectWithValue }) => {
+    try {
+        const response = await api.post(`leads/department/create/`, values)
+        return response.data;
+    } catch (err: any) {
+        if (err.response) {
+            return rejectWithValue(err.response.data);
+        }
+        return rejectWithValue(err.message);
+    }
 })
 
 // ** Create Departments
-export const editDepartment = createAsyncThunk('appChat/editDepartment', async (values: { name?: string, id: any, is_active?: boolean }) => {
-    return (await api.patch(`leads/department-update/${values.id}`, values)).data
+export const editDepartment = createAsyncThunk('appChat/editDepartment', async (values: { name?: string, id: any, is_active?: boolean }, { rejectWithValue }) => {
+    try {
+        const response = await api.patch(`leads/department-update/${values.id}`, values)
+        return response.data;
+    } catch (err: any) {
+        if (err.response) {
+            return rejectWithValue(err.response.data);
+        }
+        return rejectWithValue(err.message);
+    }
 })
 
 // ** Create Department Item

@@ -107,7 +107,7 @@ export default function CreateForm({ }: Props) {
     }
 
     async function getDepartments() {
-        const resp = await api.get(`leads/department/list/`)
+        const resp = await api.get(`leads/department/list/?lead=true`)
         setDepartments(resp.data);
     }
 

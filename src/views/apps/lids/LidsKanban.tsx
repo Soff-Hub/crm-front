@@ -54,8 +54,8 @@ export default function HomeKanban({ title, items, id }: Props) {
                     <>
                         <IconifyIcon icon={'system-uicons:user-add'} color='orange' onClick={() => dispatch(setOpenLid(id))} style={{ cursor: 'pointer', marginLeft: 'auto' }} />
                         <IconifyIcon icon={'iconoir:grid-add'} color='orange' onClick={() => dispatch(setOpenItem(id))} style={{ cursor: 'pointer', margin: '0 10px' }} />
-                        <IconifyIcon icon={'mingcute:edit-line'} color='orange' onClick={() => setOpen('edit')} style={{ cursor: 'pointer', fontSize: '20px', marginRight: '5px' }} />
-                        <IconifyIcon icon={'mingcute:delete-line'} color='red' onClick={() => setOpen('delete')} style={{ cursor: 'pointer', fontSize: '20px' }} />
+                        {title?.toLowerCase() !== 'leads' && <IconifyIcon icon={'mingcute:edit-line'} color='orange' onClick={() => setOpen('edit')} style={{ cursor: 'pointer', fontSize: '20px', marginRight: '5px' }} />}
+                        {title?.toLowerCase() !== 'leads' && <IconifyIcon icon={'mingcute:delete-line'} color='red' onClick={() => setOpen('delete')} style={{ cursor: 'pointer', fontSize: '20px' }} />}
                     </>
                 ) : ''}
             </Box>
