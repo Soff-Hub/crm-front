@@ -61,8 +61,8 @@ export default function SalaryConfirm({ }: Props) {
         {
             xs: 0.14,
             title: t("Avanslar"),
-            dataIndex: 'profit_amount',
-            render: (profit_amount) => `${formatCurrency(profit_amount)} so'm`
+            dataIndex: 'prepayment',
+            render: (prepayment) => `${formatCurrency(prepayment)} so'm`
         },
         {
             xs: 0.13,
