@@ -4,13 +4,12 @@ import { VerticalNavItemsType } from 'src/@core/layouts/types'
 import { AuthContext } from 'src/context/AuthContext'
 
 export const TeacherNavigation = (t: any): any => {
-
   return [
     {
-      title: t("Guruhlar"),
+      title: t('Guruhlar'),
       icon: 'mdi:home-outline',
-      path: '/dashboard',
-    },
+      path: '/dashboard'
+    }
     // {
     //   title: t("Profil"),
     //   icon: 'mdi:receipt-text-edit-outline',
@@ -19,15 +18,13 @@ export const TeacherNavigation = (t: any): any => {
   ]
 }
 
-
 export const StudentNavigation = (t: any): any => {
-
   return [
     {
-      title: t("Profil"),
+      title: t('Profil'),
       icon: 'et:profile-male',
       path: '/student-profile'
-    },
+    }
     // {
     //   title: t("Guruhlar"),
     //   icon: 'uil:layer-group',
@@ -37,15 +34,14 @@ export const StudentNavigation = (t: any): any => {
 }
 
 export const CPanelNavigation = (t: any): any => {
-
   return [
     {
-      title: t("CPanel"),
+      title: t('CPanel'),
       icon: 'mdi:home-outline',
-      path: '/c-panel',
+      path: '/c-panel'
     },
     {
-      title: t("Sozlamalar"),
+      title: t('Sozlamalar'),
       icon: 'mdi:receipt-text-edit-outline',
       path: '/c-panel/settings'
     }
@@ -53,27 +49,26 @@ export const CPanelNavigation = (t: any): any => {
 }
 
 const Navigation = (t: any): VerticalNavItemsType => {
-
   const { user } = useContext(AuthContext)
 
   const items = [
     {
-      title: t("Bosh sahifa"),
+      title: t('Bosh sahifa'),
       icon: 'mdi:home-outline',
       path: '/dashboard'
     },
     {
-      title: t("Lidlar"),
+      title: t('Lidlar'),
       icon: 'mdi:receipt-text-edit-outline',
       path: '/lids'
     },
     {
-      title: t("Mentorlar"),
+      title: t('Mentorlar'),
       icon: 'fa6-solid:chalkboard-user',
       path: '/mentors'
     },
     {
-      title: t("Guruhlar"),
+      title: t('Guruhlar'),
       icon: 'uil:layer-group',
       path: '/groups'
     },
@@ -83,7 +78,7 @@ const Navigation = (t: any): VerticalNavItemsType => {
       path: '/students'
     },
     {
-      title: t("Sozlamalar"),
+      title: t('Sozlamalar'),
       icon: 'mdi:settings',
       children: [
         {
@@ -104,7 +99,7 @@ const Navigation = (t: any): VerticalNavItemsType => {
             {
               title: 'Dam olish kunlari',
               path: '/settings/office/free-days'
-            },
+            }
             // {
             //   title: 'Arxiv',
             //   path: '/settings/office/archive'
@@ -125,7 +120,7 @@ const Navigation = (t: any): VerticalNavItemsType => {
             {
               title: 'Xodimlar',
               path: '/settings/ceo/users'
-            },
+            }
             // {
             //   title: 'Billing',
             //   path: '/settings/ceo/billing'
@@ -139,14 +134,20 @@ const Navigation = (t: any): VerticalNavItemsType => {
       ]
     },
     {
-      title: t("Moliya"),
+      title: t('Moliya'),
       icon: 'material-symbols-light:finance-mode',
       path: '/finance'
     },
+    {
+      title: t("Video qo'llanmalar"),
+      icon: 'ph:video-light',
+      path: '/video-tutorials'
+    }
   ]
 
-
-  return user?.role.includes('casher') || user?.role.includes('ceo') ? items : items.filter(el => el.path !== '/finance')
+  return user?.role.includes('casher') || user?.role.includes('ceo')
+    ? items
+    : items.filter(el => el.path !== '/finance')
 }
 
 export default Navigation

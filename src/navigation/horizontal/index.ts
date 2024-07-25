@@ -8,22 +8,22 @@ const Navigation = (t: any): HorizontalNavItemsType => {
 
   const items = [
     {
-      title: t("Bosh sahifa"),
+      title: t('Bosh sahifa'),
       icon: 'mdi:home-outline',
       path: '/dashboard'
     },
     {
-      title: t("Lidlar"),
+      title: t('Lidlar'),
       icon: 'mdi:receipt-text-edit-outline',
       path: '/lids'
     },
     {
-      title: t("Mentorlar"),
+      title: t('Mentorlar'),
       icon: 'fa6-solid:chalkboard-user',
       path: '/mentors'
     },
     {
-      title: t("Guruhlar"),
+      title: t('Guruhlar'),
       icon: 'uil:layer-group',
       path: '/groups'
     },
@@ -33,7 +33,7 @@ const Navigation = (t: any): HorizontalNavItemsType => {
       path: '/students'
     },
     {
-      title: t("Sozlamalar"),
+      title: t('Sozlamalar'),
       icon: 'mdi:settings',
       children: [
         {
@@ -54,7 +54,7 @@ const Navigation = (t: any): HorizontalNavItemsType => {
             {
               title: 'Dam olish kunlari',
               path: '/settings/office/free-days'
-            },
+            }
             // {
             //   title: 'Arxiv',
             //   path: '/settings/office/archive'
@@ -75,7 +75,7 @@ const Navigation = (t: any): HorizontalNavItemsType => {
             {
               title: 'Xodimlar',
               path: '/settings/ceo/users'
-            },
+            }
             // {
             //   title: 'Billing',
             //   path: '/settings/ceo/billing'
@@ -89,14 +89,20 @@ const Navigation = (t: any): HorizontalNavItemsType => {
       ]
     },
     {
-      title: t("Moliya"),
+      title: t('Moliya'),
       icon: 'material-symbols-light:finance-mode',
       path: '/finance'
     },
+    {
+      title: t("Video qo'llanmalar"),
+      icon: 'ph:video-light',
+      path: '/video-tutorials'
+    }
   ]
 
-
-  return (user?.role.includes('casher') || user?.role.includes('ceo') )? items : items.filter(el => el.path !== '/finance')
+  return user?.role.includes('casher') || user?.role.includes('ceo')
+    ? items
+    : items.filter(el => el.path !== '/finance')
 }
 
 export default Navigation
