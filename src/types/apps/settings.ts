@@ -66,5 +66,10 @@ export interface SettingsState {
     employees_count: number
     employeeData: any
     queryParams: { search: string, page: number, role: number | string }
-    roles: { name: string, id: number, count: number }[]
+    roles: { name: string, id: number, count: number }[],
+    videoAnchor: {
+        open: boolean,
+        title: string,
+        url: string
+    }
 }

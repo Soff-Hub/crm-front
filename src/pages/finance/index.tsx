@@ -26,6 +26,7 @@ import Router from 'next/router'
 import SubLoader from 'src/views/apps/loaders/SubLoader'
 import StatsPaymentMethods from 'src/views/apps/finance/StatsPaymentMethods'
 import FinanceAllNumber from 'src/views/apps/finance/FinanceAllNumber'
+import VideoHeader, { videoUrls } from 'src/@core/components/video-header/video-header'
 
 
 export function formatDateString(date: Date) {
@@ -191,6 +192,7 @@ const CardStatistics = () => {
 
     return (
         <ApexChartWrapper>
+            <VideoHeader item={videoUrls.finance} />
             <KeenSliderWrapper>
                 <Grid container spacing={4} columnSpacing={6}>
                     <Grid item xs={12}>

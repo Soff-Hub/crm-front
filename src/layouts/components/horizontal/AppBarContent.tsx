@@ -19,6 +19,7 @@ import { Button } from '@mui/material'
 import { useAppDispatch } from 'src/store'
 import { setGlobalPay } from 'src/store/apps/students'
 import GlobalPaymentModal from 'src/views/apps/students/GlobalPaymentModal'
+import VideoModal from 'src/@core/components/video-header'
 
 
 interface Props {
@@ -94,6 +95,8 @@ const AppBarContent = (props: Props) => {
       </Button>}
 
       {!window.location.hostname.split('.').includes('c-panel') && <BranchDropdown />}
+
+      <VideoModal/>
 
       <LanguageDropdown settings={settings} saveSettings={saveSettings} />
 

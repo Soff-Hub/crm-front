@@ -22,6 +22,7 @@ import IconifyIcon from 'src/@core/components/icon'
 import useResponsive from 'src/@core/hooks/useResponsive'
 import { useTranslation } from 'react-i18next'
 import { useAppSelector } from 'src/store'
+import VideoModal from 'src/@core/components/video-header'
 
 interface Props {
   hidden: boolean
@@ -94,6 +95,9 @@ const AppBarContent = (props: Props) => {
         ) : null}
         <BranchDropdown />
       </Box>
+
+      <VideoModal/>
+      
       {!isMobile && <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
         <Clock />
         <Typography variant='body2'>|</Typography>
