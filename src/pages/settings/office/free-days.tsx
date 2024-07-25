@@ -128,8 +128,8 @@ export default function RoomsPage() {
         {
             xs: 1,
             title: t('Sana'),
-            dataIndex: 'name',
-            render: () => "2024-14-03"
+            dataIndex: 'date',
+            render: (date) => date.split('-').reverse().join('.')
         },
         {
             xs: 2,
