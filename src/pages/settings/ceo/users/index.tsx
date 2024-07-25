@@ -24,6 +24,7 @@ import ButtonGroup from '@mui/material/ButtonGroup';
 import { disablePage } from 'src/store/apps/page'
 import toast from 'react-hot-toast'
 import { formatCurrency } from 'src/@core/utils/format-currency'
+import VideoHeader, { videoUrls } from 'src/@core/components/video-header/video-header'
 
 export interface customTableProps {
     xs: number
@@ -202,6 +203,8 @@ export default function GroupsPage() {
 
     return (
         <div>
+            <VideoHeader item={videoUrls.employees} />
+
             <Box
                 className='groups-page-header'
                 sx={{ display: 'flex', justifyContent: 'space-between', margin: '10px 0' }}

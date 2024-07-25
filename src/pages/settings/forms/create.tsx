@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import Form from 'src/@core/components/form'
 import IconifyIcon from 'src/@core/components/icon'
+import VideoHeader, { videoUrls } from 'src/@core/components/video-header/video-header'
 import useResponsive from 'src/@core/hooks/useResponsive'
 import api from 'src/@core/utils/api'
 import { useAppSelector } from 'src/store'
@@ -106,7 +107,7 @@ export default function CreateForm({ }: Props) {
     }
 
     async function getDepartments() {
-        const resp = await api.get(`leads/department/list/`)
+        const resp = await api.get(`leads/department/list/?lead=true`)
         setDepartments(resp.data);
     }
 
@@ -117,9 +118,6 @@ export default function CreateForm({ }: Props) {
         }
     }
 
-    console.log(components);
-
-
     useEffect(() => {
         getDepartments()
         getSources()
@@ -127,188 +125,192 @@ export default function CreateForm({ }: Props) {
 
 
     return (
-        <Box sx={{ display: 'flex', justifyContent: 'space-around' }}>
-            <Box sx={{ flex: 0.4 }}>
-                <Box sx={{ display: 'block', maxWidth: 400, mx: 'auto' }}>
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            gap: '20px',
-                            py: '20px',
-                        }}
-                    >
-                        <FormControl fullWidth>
-                            <InputLabel size='small' id='user-view-language-label'>{t("Bo'lim")}</InputLabel>
-                            <Select
-                                size='small'
-                                label={t("Bo'lim")}
+        <div>
+            <VideoHeader item={videoUrls.forms} />
 
-                                id='user-view-language'
-                                labelId='user-view-language-label'
-                                name='departmentParent'
-                                defaultValue={''}
-                                onChange={(e: any) => setSelectedDepartment(e.target.value)}
-                            >
-                                {
-                                    departments.map(item => <MenuItem key={item.id} value={item.id}>{item.name}</MenuItem>)
-                                }
-                            </Select>
-                        </FormControl>
-
-                        {selectedDepartment && (
+            <Box sx={{ display: 'flex', justifyContent: 'space-around' }}>
+                <Box sx={{ flex: 0.4 }}>
+                    <Box sx={{ display: 'block', maxWidth: 400, mx: 'auto' }}>
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                gap: '20px',
+                                py: '20px',
+                            }}
+                        >
                             <FormControl fullWidth>
-                                <InputLabel size='small' id='user-view-language-label'>{t("Quyi bo'lim")}</InputLabel>
+                                <InputLabel size='small' id='user-view-language-label'>{t("Bo'lim")}</InputLabel>
                                 <Select
                                     size='small'
-                                    label={t("Quyi bo'lim")}
+                                    label={t("Bo'lim")}
+
                                     id='user-view-language'
                                     labelId='user-view-language-label'
-                                    name='department'
+                                    name='departmentParent'
                                     defaultValue={''}
-                                    onChange={(e) => setDepartment(e.target.value)}
+                                    onChange={(e: any) => setSelectedDepartment(e.target.value)}
                                 >
                                     {
-                                        departments.find(el => Number(el.id) === selectedDepartment).children.map((item: any) => <MenuItem key={item.id} value={item.id}>{item.name}</MenuItem>)
+                                        departments.map(item => <MenuItem key={item.id} value={item.id}>{item.name}</MenuItem>)
                                     }
                                 </Select>
                             </FormControl>
-                        )}
 
-                        <FormControl fullWidth>
-                            <InputLabel size='small' id='fsdgsdgsgsdfsd-label'>{t('Manba')}</InputLabel>
-                            <Select
+                            {selectedDepartment && (
+                                <FormControl fullWidth>
+                                    <InputLabel size='small' id='user-view-language-label'>{t("Quyi bo'lim")}</InputLabel>
+                                    <Select
+                                        size='small'
+                                        label={t("Quyi bo'lim")}
+                                        id='user-view-language'
+                                        labelId='user-view-language-label'
+                                        name='department'
+                                        defaultValue={''}
+                                        onChange={(e) => setDepartment(e.target.value)}
+                                    >
+                                        {
+                                            departments.find(el => Number(el.id) === selectedDepartment).children.map((item: any) => <MenuItem key={item.id} value={item.id}>{item.name}</MenuItem>)
+                                        }
+                                    </Select>
+                                </FormControl>
+                            )}
+
+                            <FormControl fullWidth>
+                                <InputLabel size='small' id='fsdgsdgsgsdfsd-label'>{t('Manba')}</InputLabel>
+                                <Select
+                                    size='small'
+                                    label={t('Manba')}
+                                    id='fsdgsdgsgsdfsd'
+                                    labelId='fsdgsdgsgsdfsd-label'
+                                    name='source'
+                                    onChange={(e: any) => setAddSource(e?.target?.value)}
+                                    sx={{ mb: 1 }}
+                                >
+                                    {
+                                        sourceData.map((lead: any) => <MenuItem key={lead.id} value={lead.id}>{lead.name}</MenuItem>)
+                                    }
+                                </Select>
+                            </FormControl>
+
+                            <FormControl>
+                                <TextField label={t("Nomi")} size='small' onChange={(e) => e.target.value === "" ? setFields("Aloqa uchun kontakt qoldiring") : setFields(e.target.value)} />
+                            </FormControl>
+
+                            {
+                                components.map((el: any, i: number) => (
+                                    <Box key={i} sx={{ display: 'flex', alignItems: 'center', position: 'relative' }}>
+                                        <CreatedComponent type={el.input_type} label={el.title} variants={el.question_variants} />
+                                        <button style={{ margin: 0, border: 'unset', backgroundColor: 'unset', position: 'absolute', right: 0 }}>
+                                            <IconifyIcon icon={'line-md:remove'} onClick={() => deleteComponent(el.id)} />
+                                        </button>
+                                    </Box>
+                                ))
+                            }
+                        </Box>
+                        <Box sx={{ display: 'flex', gap: 3 }}>
+                            <Button variant='outlined' size='small' onClick={() => setOpen('input')} startIcon={<IconifyIcon icon={'ic:baseline-add'} />}>Input</Button>
+                            <Button variant='outlined' size='small' onClick={() => setOpen('single')} startIcon={<IconifyIcon icon={'ic:baseline-add'} />}>{t('Savol')}</Button>
+                            <Button variant='outlined' size='small' onClick={() => setOpen('description')} startIcon={<IconifyIcon icon={'ic:baseline-add'} />}>{t('Matn')}</Button>
+                            <LoadingButton loading={loading} variant='contained' size='small' onClick={createForm}>{t('Yaratish')}</LoadingButton>
+                        </Box>
+                    </Box>
+                </Box>
+                <Box sx={{ flex: 0.5 }}>
+                    <Box
+                        sx={{
+                            maxWidth: 500, mx: "auto",
+                            minWidth: isMobile ? 350 : 400,
+                            p: isMobile ? '40px 25px' : '40px 50px',
+                            // backgroundColor: 'white',
+                            borderRadius: '0',
+                        }}>
+
+                        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', flexDirection: 'column', marginBottom: '20px' }}>
+                            <img src={companyInfo.logo} width={40} />
+                            <h3>{companyInfo?.training_center_name}</h3>
+                        </Box>
+
+                        <Typography align="center" mb={isMobile ? 1 : 2} sx={{ fontSize: isMobile ? '20px' : '24px' }}>
+                            {fields}
+                        </Typography>
+
+                        <Form id='resuf0dshfsid' onSubmit={() => null} sx={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                            <FormControl>
+                                <TextField label={t("first_name")} size='small' variant='filled' />
+                            </FormControl>
+
+                            <FormControl fullWidth>
+                                <TextField label={t("phone")} size='small' variant='filled' defaultValue={"+998"} />
+                            </FormControl>
+                            {
+                                components.map((el: any, i: number) => <CreatedComponent variants={el.question_variants} key={i} type={el.input_type} label={el.title} />)
+                            }
+
+                            <LoadingButton variant="contained" type="submit" size='large' sx={{ mt: 5 }} fullWidth>
+                                {t('Yuborish')}
+                            </LoadingButton>
+                        </Form>
+                    </Box>
+                </Box>
+
+
+
+                <Dialog open={open === 'input'} onClose={handleClose}>
+                    <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                        <FormControl>
+                            <TextField label={t("Input nomi (Nima yozish uchun?)")} size='small' onChange={(e) => setName(e.target.value)} />
+                        </FormControl>
+
+                        <Box sx={{ display: 'flex', justifyContent: 'center', gap: 4, mt: 4 }}>
+                            <LoadingButton onClick={handleClose} variant='outlined'>{t("Bekor qilish")}</LoadingButton>
+                            <LoadingButton variant='contained' onClick={() => createComponent('varchar', name)}>{t("Saqlash")}</LoadingButton>
+                        </Box>
+                    </DialogContent>
+                </Dialog>
+
+                <Dialog open={open === 'description'} onClose={handleClose}>
+                    <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                        <FormControl>
+                            <TextField label={t("Ko'proq matn yozish uchun")} size='small' onChange={(e) => setName(e.target.value)} />
+                        </FormControl>
+
+                        <Box sx={{ display: 'flex', justifyContent: 'center', gap: 4, mt: 4 }}>
+                            <LoadingButton onClick={handleClose} variant='outlined'>{t("Bekor qilish")}</LoadingButton>
+                            <LoadingButton variant='contained' onClick={() => createComponent('description', name)}>{t("Saqlash")}</LoadingButton>
+                        </Box>
+                    </DialogContent>
+                </Dialog>
+
+                <Dialog open={open === 'single'} onClose={handleClose}>
+                    <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: '20px', minWidth: '350px' }}>
+                        <ButtonGroup size='small' fullWidth>
+                            <Button onClick={() => setSelectType('single')} variant={selectType === 'single' ? 'contained' : 'outlined'} size='small'>{t('Bitta javob')}</Button>
+                            <Button onClick={() => setSelectType('multiple')} variant={selectType === 'multiple' ? 'contained' : 'outlined'} size='small'>{t('Bir nechta javob')}</Button>
+                        </ButtonGroup>
+                        <FormControl>
+                            <TextField label={t("Savol matni")} multiline rows={2} size='small' onChange={(e) => setName(e.target.value)} />
+                        </FormControl>
+
+                        {
+                            variants.map((el: any, i: number) => <TextField
+                                key={i}
+                                label={el.value}
                                 size='small'
-                                label={t('Manba')}
-                                id='fsdgsdgsgsdfsd'
-                                labelId='fsdgsdgsgsdfsd-label'
-                                name='source'
-                                onChange={(e: any) => setAddSource(e?.target?.value)}
-                                sx={{ mb: 1 }}
-                            >
-                                {
-                                    sourceData.map((lead: any) => <MenuItem key={lead.id} value={lead.id}>{lead.name}</MenuItem>)
-                                }
-                            </Select>
-                        </FormControl>
-
-                        <FormControl>
-                            <TextField label={t("Nomi")} size='small' onChange={(e) => e.target.value === "" ? setFields("Aloqa uchun kontakt qoldiring") : setFields(e.target.value)} />
-                        </FormControl>
-
-                        {
-                            components.map((el: any, i: number) => (
-                                <Box key={i} sx={{ display: 'flex', alignItems: 'center', position: 'relative' }}>
-                                    <CreatedComponent type={el.input_type} label={el.title} variants={el.question_variants} />
-                                    <button style={{ margin: 0, border: 'unset', backgroundColor: 'unset', position: 'absolute', right: 0 }}>
-                                        <IconifyIcon icon={'line-md:remove'} onClick={() => deleteComponent(el.id)} />
-                                    </button>
-                                </Box>
-                            ))
-                        }
-                    </Box>
-                    <Box sx={{ display: 'flex', gap: 3 }}>
-                        <Button variant='outlined' size='small' onClick={() => setOpen('input')} startIcon={<IconifyIcon icon={'ic:baseline-add'} />}>Input</Button>
-                        <Button variant='outlined' size='small' onClick={() => setOpen('single')} startIcon={<IconifyIcon icon={'ic:baseline-add'} />}>{t('Savol')}</Button>
-                        <Button variant='outlined' size='small' onClick={() => setOpen('description')} startIcon={<IconifyIcon icon={'ic:baseline-add'} />}>{t('Matn')}</Button>
-                        <LoadingButton loading={loading} variant='contained' size='small' onClick={createForm}>{t('Yaratish')}</LoadingButton>
-                    </Box>
-                </Box>
-            </Box>
-            <Box sx={{ flex: 0.5 }}>
-                <Box
-                    sx={{
-                        maxWidth: 500, mx: "auto",
-                        minWidth: isMobile ? 350 : 400,
-                        p: isMobile ? '40px 25px' : '40px 50px',
-                        // backgroundColor: 'white',
-                        borderRadius: '0',
-                    }}>
-
-                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', flexDirection: 'column', marginBottom: '20px' }}>
-                        <img src={companyInfo.logo} width={40} />
-                        <h3>{companyInfo?.training_center_name}</h3>
-                    </Box>
-
-                    <Typography align="center" mb={isMobile ? 1 : 2} sx={{ fontSize: isMobile ? '20px' : '24px' }}>
-                        {fields}
-                    </Typography>
-
-                    <Form id='resuf0dshfsid' onSubmit={() => null} sx={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-                        <FormControl>
-                            <TextField label={t("first_name")} size='small' variant='filled' />
-                        </FormControl>
-
-                        <FormControl fullWidth>
-                            <TextField label={t("phone")} size='small' variant='filled' defaultValue={"+998"} />
-                        </FormControl>
-                        {
-                            components.map((el: any, i: number) => <CreatedComponent variants={el.question_variants} key={i} type={el.input_type} label={el.title} />)
+                                variant='standard'
+                                onChange={(e) => setVariants((c: any) => ([...c.filter((item: any) => item.id !== el.id), { id: new Date().getTime(), value: e.target.value, order: el.order }]))}
+                            />)
                         }
 
-                        <LoadingButton variant="contained" type="submit" size='large' sx={{ mt: 5 }} fullWidth>
-                            {t('Yuborish')}
-                        </LoadingButton>
-                    </Form>
-                </Box>
+                        <Button startIcon={<IconifyIcon icon={'ic:baseline-add'} />} onClick={() => setVariants((c: any) => ([...c, { id: new Date().getTime(), value: `Variant ${variants.length + 1}`, order: variants.length + 1 }]))} size='small'>{t("Javob varianti qo'shish")}</Button>
+
+                        <Box sx={{ display: 'flex', justifyContent: 'center', gap: 4, mt: 6 }}>
+                            <LoadingButton onClick={handleClose} variant='outlined'>{t("Bekor qilish")}</LoadingButton>
+                            <LoadingButton variant='contained' onClick={() => createComponent(selectType, name)}>{t("Saqlash")}</LoadingButton>
+                        </Box>
+                    </DialogContent>
+                </Dialog>
             </Box>
-
-
-
-            <Dialog open={open === 'input'} onClose={handleClose}>
-                <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                    <FormControl>
-                        <TextField label={t("Input nomi (Nima yozish uchun?)")} size='small' onChange={(e) => setName(e.target.value)} />
-                    </FormControl>
-
-                    <Box sx={{ display: 'flex', justifyContent: 'center', gap: 4, mt: 4 }}>
-                        <LoadingButton onClick={handleClose} variant='outlined'>{t("Bekor qilish")}</LoadingButton>
-                        <LoadingButton variant='contained' onClick={() => createComponent('varchar', name)}>{t("Saqlash")}</LoadingButton>
-                    </Box>
-                </DialogContent>
-            </Dialog>
-
-            <Dialog open={open === 'description'} onClose={handleClose}>
-                <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                    <FormControl>
-                        <TextField label={t("Ko'proq matn yozish uchun")} size='small' onChange={(e) => setName(e.target.value)} />
-                    </FormControl>
-
-                    <Box sx={{ display: 'flex', justifyContent: 'center', gap: 4, mt: 4 }}>
-                        <LoadingButton onClick={handleClose} variant='outlined'>{t("Bekor qilish")}</LoadingButton>
-                        <LoadingButton variant='contained' onClick={() => createComponent('description', name)}>{t("Saqlash")}</LoadingButton>
-                    </Box>
-                </DialogContent>
-            </Dialog>
-
-            <Dialog open={open === 'single'} onClose={handleClose}>
-                <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: '20px', minWidth: '350px' }}>
-                    <ButtonGroup size='small' fullWidth>
-                        <Button onClick={() => setSelectType('single')} variant={selectType === 'single' ? 'contained' : 'outlined'} size='small'>{t('Bitta javob')}</Button>
-                        <Button onClick={() => setSelectType('multiple')} variant={selectType === 'multiple' ? 'contained' : 'outlined'} size='small'>{t('Bir nechta javob')}</Button>
-                    </ButtonGroup>
-                    <FormControl>
-                        <TextField label={t("Savol matni")} multiline rows={2} size='small' onChange={(e) => setName(e.target.value)} />
-                    </FormControl>
-
-                    {
-                        variants.map((el: any, i: number) => <TextField
-                            key={i}
-                            label={el.value}
-                            size='small'
-                            variant='standard'
-                            onChange={(e) => setVariants((c: any) => ([...c.filter((item: any) => item.id !== el.id), { id: new Date().getTime(), value: e.target.value, order: el.order }]))}
-                        />)
-                    }
-
-                    <Button startIcon={<IconifyIcon icon={'ic:baseline-add'} />} onClick={() => setVariants((c: any) => ([...c, { id: new Date().getTime(), value: `Variant ${variants.length + 1}`, order: variants.length + 1 }]))} size='small'>{t("Javob varianti qo'shish")}</Button>
-
-                    <Box sx={{ display: 'flex', justifyContent: 'center', gap: 4, mt: 6 }}>
-                        <LoadingButton onClick={handleClose} variant='outlined'>{t("Bekor qilish")}</LoadingButton>
-                        <LoadingButton variant='contained' onClick={() => createComponent(selectType, name)}>{t("Saqlash")}</LoadingButton>
-                    </Box>
-                </DialogContent>
-            </Dialog>
-        </Box>
+        </div>
     )
 }

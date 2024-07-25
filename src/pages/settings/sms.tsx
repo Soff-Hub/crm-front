@@ -12,6 +12,7 @@ import { fetchSmsList, setOpenCreateSms } from 'src/store/apps/settings'
 import CreateSmsDialog from 'src/views/apps/settings/ceo/CreateSmsDialog'
 import SmsTableRowOptions from 'src/views/apps/settings/ceo/SmsTableRowOptions'
 import EditSmsDialog from 'src/views/apps/settings/ceo/EditSmsDialog'
+import VideoHeader, { videoUrls } from 'src/@core/components/video-header/video-header'
 
 export interface customTableProps {
     xs: number
@@ -60,6 +61,7 @@ export default function RoomsPage() {
 
     return (
         <div>
+            <VideoHeader item={videoUrls.sms} />
             <Box
                 className='groups-page-header'
                 sx={{ display: 'flex', justifyContent: 'space-between', margin: '10px 0' }}

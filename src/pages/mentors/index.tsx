@@ -16,6 +16,7 @@ import { fetchTeachersList, setOpenEdit } from 'src/store/apps/mentors';
 import TeacherEditDialog from 'src/views/apps/mentors/TeacherEditDialog';
 import TeacherCreateDialog from 'src/views/apps/mentors/TeacherCreateDialog';
 import { formatCurrency } from 'src/@core/utils/format-currency';
+import VideoHeader, { videoUrls } from 'src/@core/components/video-header/video-header';
 
 export interface customTableProps {
   xs: number
@@ -106,6 +107,7 @@ export default function GroupsPage() {
 
   return (
     <div>
+      <VideoHeader item={videoUrls.teachers} />
       <Box
         className='groups-page-header'
         sx={{ display: 'flex', justifyContent: 'space-between', margin: '10px 0' }}

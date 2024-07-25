@@ -35,6 +35,7 @@ import {
 import EditGroupModal from 'src/views/apps/groups/EditGroupModal';
 import AddGroupModal from 'src/views/apps/groups/AddGroupModal';
 import { useRouter } from 'next/router';
+import VideoHeader, { videoUrls } from 'src/@core/components/video-header/video-header';
 
 export interface customTableProps {
   xs: number
@@ -117,7 +118,7 @@ export default function GroupsPage() {
       xs: 0.7,
       title: t("Status"),
       dataIndex: 'status',
-      render: (status: string) => <Chip label={t(status)} size="small" variant='outlined' color={status === 'active' ? 'success' : status === 'archived' ? 'error' : 'warning'} />
+      render: (status: string) => <Chip label={t(status)} size="small" variant='filled' color={status === 'active' ? 'success' : status === 'archived' ? 'error' : 'warning'} />
     },
     {
       xs: 0.4,
@@ -159,6 +160,7 @@ export default function GroupsPage() {
 
   return (
     <div>
+      <VideoHeader item={videoUrls.groups} />
       <Box
         className='groups-page-header'
         sx={{ display: 'flex', justifyContent: 'space-between', margin: '10px 0' }}

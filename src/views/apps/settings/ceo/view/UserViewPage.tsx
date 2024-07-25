@@ -2,6 +2,7 @@
 import Grid from '@mui/material/Grid'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
+import VideoHeader, { videoUrls } from 'src/@core/components/video-header/video-header'
 import useEmployee from 'src/hooks/useEmployee'
 
 // ** Types
@@ -27,14 +28,18 @@ const UserView = ({ }: Props) => {
   }, [])
 
   return (
-    <Grid container spacing={6}>
-      <Grid item xs={12} md={5} lg={4}>
-        <UserViewLeft userData={employeeData} />
+    <div>
+      <VideoHeader item={videoUrls.employees} />
+
+      <Grid container spacing={6}>
+        <Grid item xs={12} md={5} lg={4}>
+          <UserViewLeft userData={employeeData} />
+        </Grid>
+        <Grid item xs={12} md={7} lg={8}>
+          {/* <UserViewRight tab={tab} invoiceData={invoiceData} /> */}
+        </Grid>
       </Grid>
-      <Grid item xs={12} md={7} lg={8}>
-        {/* <UserViewRight tab={tab} invoiceData={invoiceData} /> */}
-      </Grid>
-    </Grid>
+    </div>
   )
 }
 

@@ -14,6 +14,7 @@ import { fetchCoursesList, setOpenCreateSms } from 'src/store/apps/settings'
 import CourseListRowOptions from 'src/views/apps/settings/courses/CourseListRowOptions'
 import CreateCourseDialog from 'src/views/apps/settings/courses/CreateCourseDialog'
 import EditCourseDialog from 'src/views/apps/settings/courses/EditCourseDialog'
+import VideoHeader, { videoUrls } from 'src/@core/components/video-header/video-header'
 
 export interface customTableProps {
   xs: number
@@ -105,6 +106,8 @@ export default function GroupsPage() {
 
   return (
     <div>
+      <VideoHeader item={videoUrls.courses} />
+
       <Box
         className='groups-page-header'
         sx={{ display: 'flex', justifyContent: 'space-between', margin: '10px 0' }}

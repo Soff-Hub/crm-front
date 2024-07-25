@@ -159,7 +159,12 @@ const initialState: SettingsState = {
         page: 1,
         role: ''
     },
-    roles: []
+    roles: [],
+    videoAnchor: {
+        open: false,
+        title: "",
+        url: ""
+    }
 }
 
 export const settingsSlice = createSlice({
@@ -190,6 +195,16 @@ export const settingsSlice = createSlice({
         updateQueryParams: (state, action) => {
             state.queryParams = { ...state.queryParams, ...action.payload }
         },
+        openVideoModal: (state, action) => {
+            state.videoAnchor = action.payload
+        },
+        closeVideoModal: state => {
+            state.videoAnchor = {
+                open: false,
+                title: '',
+                url: ''
+            }
+        }
     },
     extraReducers: builder => {
         builder
@@ -248,7 +263,9 @@ export const {
     updatePage,
     setWekendData,
     setEmployeeData,
-    updateQueryParams
+    updateQueryParams,
+    closeVideoModal,
+    openVideoModal
 } = settingsSlice.actions
 
 export default settingsSlice.reducer

@@ -34,8 +34,7 @@ export default function EditDepartmentForm({ id, name }: Props) {
 
             const resp = await dispatch(editDepartment({ name: valuess.name, id }))
 
-            await dispatch(fetchDepartmentList())
-
+            
             if (resp.meta.requestStatus === 'rejected') {
                 formik.setErrors(resp.payload)
             } else {
@@ -45,14 +44,12 @@ export default function EditDepartmentForm({ id, name }: Props) {
         }
     });
 
-
     useEffect(() => {
 
         return () => {
             formik.resetForm()
         }
     }, [])
-
 
     return (
         <form onSubmit={formik.handleSubmit} style={{ padding: '5px 0', width: '100%', display: 'flex', flexDirection: 'column', gap: '15px' }}>
@@ -66,9 +63,9 @@ export default function EditDepartmentForm({ id, name }: Props) {
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.name}
-                    error={!!formik.errors.name && formik.touched.name}
+                    error={!!formik.errors.name}
                 />
-                {formik.errors.name && formik.touched.name && <FormHelperText error={true}>{formik.errors.name}</FormHelperText>}
+                {formik.errors.name && <FormHelperText error={true}>{formik.errors.name}</FormHelperText>}
             </FormControl>
             <LoadingButton loading={loading} type='submit' variant='outlined'>{t("Saqlash")}</LoadingButton>
 

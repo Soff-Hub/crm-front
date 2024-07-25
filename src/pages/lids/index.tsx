@@ -3,6 +3,7 @@ import { Box, Button } from '@mui/material'
 import { useContext, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import IconifyIcon from 'src/@core/components/icon'
+import VideoHeader, { videoUrls } from 'src/@core/components/video-header/video-header'
 import useResponsive from 'src/@core/hooks/useResponsive'
 import { AuthContext } from 'src/context/AuthContext'
 import { useAppDispatch, useAppSelector } from 'src/store'
@@ -32,6 +33,7 @@ const Lids = () => {
 
   return user?.role.length === 1 && user?.role.includes('teacher') ? <TeacherProfile /> : (
     <Box sx={{ maxWidth: '100%', overflowX: 'auto', padding: '10px', pt: 0 }}>
+      <VideoHeader item={videoUrls.leads} />
       <LidsHeader />
       {!bigLoader ? <Box
         padding={'10px 0'}

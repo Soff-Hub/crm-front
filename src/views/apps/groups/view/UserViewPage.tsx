@@ -1,6 +1,7 @@
 import Grid from '@mui/material/Grid'
 import { useRouter } from 'next/router'
 import { useContext, useEffect } from 'react'
+import VideoHeader, { videoUrls } from 'src/@core/components/video-header/video-header'
 import { getMontNumber } from 'src/@core/utils/gwt-month-name'
 import { AuthContext } from 'src/context/AuthContext'
 import { useAppDispatch, useAppSelector } from 'src/store'
@@ -39,14 +40,17 @@ const UserView = () => {
   }, [])
 
   return (
-    <Grid container spacing={6}>
-      <Grid item xs={12} md={5} lg={4}>
-        <UserViewLeft />
+    <div>
+      <VideoHeader item={videoUrls.group} />
+      <Grid container spacing={6}>
+        <Grid item xs={12} md={5} lg={4}>
+          <UserViewLeft />
+        </Grid>
+        <Grid item xs={12} md={7} lg={8}>
+          <UserViewRight tab={url} />
+        </Grid>
       </Grid>
-      <Grid item xs={12} md={7} lg={8}>
-        <UserViewRight tab={url} />
-      </Grid>
-    </Grid>
+    </div>
   )
 }
 

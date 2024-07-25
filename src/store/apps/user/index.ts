@@ -74,7 +74,7 @@ export const appUsersSlice = createSlice({
       },
       sms_limit: "0/0",
     },
-    departmentsState: []
+    departmentsState: [],
   },
   reducers: {
     addUserData: (state, action) => {

@@ -12,6 +12,7 @@ import { useTranslation } from 'react-i18next'
 import showResponseError from 'src/@core/utils/show-response-error'
 import { useAppDispatch, useAppSelector } from 'src/store'
 import { AuthContext } from 'src/context/AuthContext'
+import VideoHeader, { videoUrls } from 'src/@core/components/video-header/video-header'
 
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
@@ -176,348 +177,353 @@ export default function AllSettings() {
     }, [])
 
     return (
-        <Box sx={{ display: 'flex', gap: '15px', flexDirection: isMobile ? 'column' : 'row', px: 4 }}>
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: '15px', width: '100%' }}>
-                <Card>
-                    <CardContent>
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: '20px', marginBottom: '20px' }}>
-                            <Typography sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}>{t('Tashkilot nomi')}:</Typography>
-                            <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                                {
-                                    editable === 'title' ? (
-                                        <>
-                                            <TextField size='small' focused defaultValue={companyInfo?.training_center_name} onChange={(e) => setName(e.target.value)} />
-                                            <IconifyIcon icon={loading === 'name' ? 'line-md:loading-loop' : 'ic:baseline-check'} style={{ cursor: 'pointer' }} onClick={() => {
-                                                updateSettings('training_center_name', name)
-                                            }} />
-                                        </>
-                                    ) : (
-                                        <>
-                                            <TextField value={companyInfo?.training_center_name} size='small' placeholder={t('Tashkilot nomi')} onBlur={(e) => console.log(e.target.value)} />
-                                            <IconifyIcon icon={'basil:edit-outline'} style={{ cursor: 'pointer' }} onClick={() => setEditable('title')} />
-                                        </>
-                                    )
-                                }
-                            </Box>
-                        </Box>
+        <div>
+            <VideoHeader item={videoUrls.all_settings} />
 
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-                            <Typography sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}>{t('Logo')}:</Typography>
-                            <img src={companyInfo?.logo} height={35} />
-                            <Button
-                                component="label"
-                                role={undefined}
-                                variant="contained"
-                                size='small'
-                                tabIndex={-1}
-                                startIcon={<IconifyIcon icon={'mynaui:upload'} />}
-                            >
-                                {t('Yangilash')}
-                                <VisuallyHiddenInput type="file" onChange={(e: any) => {
-                                    updateSettings('logo', e.target.files[0])
-                                }} />
-                            </Button>
-                        </Box>
-                    </CardContent>
-                </Card>
+            <Box sx={{ display: 'flex', gap: '15px', flexDirection: isMobile ? 'column' : 'row', px: 4 }}>
 
-                <Card>
-                    <CardContent>
-                        <Box sx={{ display: 'flex', gap: '20px' }}>
-                            <Typography sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}>{t('Filiallar')}:</Typography>
-                            <Box sx={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
-                                {
-                                    branches.map((branch: any) => (
-                                        <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }} key={branch.id}>
-                                            {
-                                                id?.id === branch.id && id?.key === 'branch' ? (
-                                                    <TextField size='small' focused defaultValue={branch.name} onChange={(e) => setName(e.target.value)} onBlur={updateBranch} />
-                                                ) : (
-                                                    <TextField size='small' value={branch.name} />
-                                                )
-                                            }
-                                            {
-                                                id?.id === branch.id && id?.key === 'branch' ? (
-                                                    <IconifyIcon icon={loading === 'branch' ? 'line-md:loading-loop' : 'ic:baseline-check'} style={{ cursor: 'pointer' }} onClick={updateBranch} />
-                                                ) : (
-                                                    <IconifyIcon icon={'basil:edit-outline'} style={{ cursor: 'pointer' }} onClick={() => setId({ id: branch.id, key: 'branch' })} />
-                                                )
-                                            }
-                                            <IconifyIcon icon={'fluent:delete-20-regular'} style={{ cursor: 'pointer' }} onClick={() => setDeleteId({ open: 'branch', id: branch.id })} />
-                                        </Box>
-                                    ))
-                                }
-                                {
-                                    createble === 'branch' && (
-                                        <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                                            <TextField size='small' placeholder={t("Yangi filial")} onChange={(e) => setName(e.target.value)} />
-                                            <IconifyIcon icon={loading === 'branch' ? 'line-md:loading-loop' : 'ic:baseline-check'} style={{ cursor: 'pointer' }} onClick={createBranch} />
-                                            <IconifyIcon icon={'ic:outline-close'} style={{ cursor: 'pointer' }} onClick={() => setCreatable(null)} />
-                                        </Box>
-                                    )
-                                }
-                                <Button size='small' startIcon={<IconifyIcon icon={'ic:outline-add'} />} variant='outlined' onClick={() => setCreatable('branch')}>{t('Yangi')}</Button>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: '15px', width: '100%' }}>
+                    <Card>
+                        <CardContent>
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: '20px', marginBottom: '20px' }}>
+                                <Typography sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}>{t('Tashkilot nomi')}:</Typography>
+                                <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                    {
+                                        editable === 'title' ? (
+                                            <>
+                                                <TextField size='small' focused defaultValue={companyInfo?.training_center_name} onChange={(e) => setName(e.target.value)} />
+                                                <IconifyIcon icon={loading === 'name' ? 'line-md:loading-loop' : 'ic:baseline-check'} style={{ cursor: 'pointer' }} onClick={() => {
+                                                    updateSettings('training_center_name', name)
+                                                }} />
+                                            </>
+                                        ) : (
+                                            <>
+                                                <TextField value={companyInfo?.training_center_name} size='small' placeholder={t('Tashkilot nomi')} onBlur={(e) => console.log(e.target.value)} />
+                                                <IconifyIcon icon={'basil:edit-outline'} style={{ cursor: 'pointer' }} onClick={() => setEditable('title')} />
+                                            </>
+                                        )
+                                    }
+                                </Box>
                             </Box>
-                        </Box>
-                    </CardContent>
-                </Card>
 
-                <Card>
-                    <CardContent>
-                        <Box sx={{ display: 'flex', gap: '20px' }}>
-                            <Typography sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}>{t('Tolov usullari')}:</Typography>
-                            <Box sx={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
-                                {
-                                    paymentMethods.map((method: any) => (
-                                        <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }} key={method.id}>
-                                            {
-                                                id?.id === method.id && id?.key === 'payment-type' ? (
-                                                    <TextField size='small' focused defaultValue={method.name} onBlur={async (e) => {
-                                                        setLoading('paytype')
-                                                        await updatePaymentMethod(method.id, { name: e.target.value })
-                                                        setLoading(null)
-                                                    }
-                                                    } />
-                                                ) : (
-                                                    <TextField size='small' value={method.name} onBlur={(e) => console.log(e.target.value)} />
-                                                )
-                                            }
-                                            {
-                                                id?.id === method.id && id?.key === 'payment-type' ? (
-                                                    <IconifyIcon icon={loading === 'paytype' ? 'line-md:loading-loop' : 'ic:baseline-check'} style={{ cursor: 'pointer' }} onClick={() => setId(null)} />
-                                                ) : (
-                                                    <IconifyIcon icon={'basil:edit-outline'} style={{ cursor: 'pointer' }} onClick={() => setId({ id: method.id, key: 'payment-type' })} />
-                                                )
-                                            }
-                                            <IconifyIcon icon={'fluent:delete-20-regular'} style={{ cursor: 'pointer' }} onClick={() => setDeleteId({ open: 'payment-type', id: method.id })} />
-                                        </Box>
-                                    ))
-                                }
-                                {
-                                    createble === 'payment-type' && (
-                                        <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                                            <TextField size='small' placeholder="To'lov turi" onChange={(e) => setName(e.target.value)} />
-                                            <IconifyIcon icon={loading === 'paytype' ? 'line-md:loading-loop' : 'ic:baseline-check'} style={{ cursor: 'pointer' }} onClick={createPaymentType} />
-                                            <IconifyIcon icon={'ic:outline-close'} style={{ cursor: 'pointer' }} onClick={() => setCreatable(null)} />
-                                        </Box>
-                                    )
-                                }
-                                <Button size='small' startIcon={<IconifyIcon icon={'ic:outline-add'} />} variant='outlined' onClick={() => setCreatable('payment-type')}>{t('Yangi')}</Button>
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+                                <Typography sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}>{t('Logo')}:</Typography>
+                                <img src={companyInfo?.logo} height={35} />
+                                <Button
+                                    component="label"
+                                    role={undefined}
+                                    variant="contained"
+                                    size='small'
+                                    tabIndex={-1}
+                                    startIcon={<IconifyIcon icon={'mynaui:upload'} />}
+                                >
+                                    {t('Yangilash')}
+                                    <VisuallyHiddenInput type="file" onChange={(e: any) => {
+                                        updateSettings('logo', e.target.files[0])
+                                    }} />
+                                </Button>
                             </Box>
+                        </CardContent>
+                    </Card>
+
+                    <Card>
+                        <CardContent>
+                            <Box sx={{ display: 'flex', gap: '20px' }}>
+                                <Typography sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}>{t('Filiallar')}:</Typography>
+                                <Box sx={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                                    {
+                                        branches.map((branch: any) => (
+                                            <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }} key={branch.id}>
+                                                {
+                                                    id?.id === branch.id && id?.key === 'branch' ? (
+                                                        <TextField size='small' focused defaultValue={branch.name} onChange={(e) => setName(e.target.value)} onBlur={updateBranch} />
+                                                    ) : (
+                                                        <TextField size='small' value={branch.name} />
+                                                    )
+                                                }
+                                                {
+                                                    id?.id === branch.id && id?.key === 'branch' ? (
+                                                        <IconifyIcon icon={loading === 'branch' ? 'line-md:loading-loop' : 'ic:baseline-check'} style={{ cursor: 'pointer' }} onClick={updateBranch} />
+                                                    ) : (
+                                                        <IconifyIcon icon={'basil:edit-outline'} style={{ cursor: 'pointer' }} onClick={() => setId({ id: branch.id, key: 'branch' })} />
+                                                    )
+                                                }
+                                                <IconifyIcon icon={'fluent:delete-20-regular'} style={{ cursor: 'pointer' }} onClick={() => setDeleteId({ open: 'branch', id: branch.id })} />
+                                            </Box>
+                                        ))
+                                    }
+                                    {
+                                        createble === 'branch' && (
+                                            <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                                <TextField size='small' placeholder={t("Yangi filial")} onChange={(e) => setName(e.target.value)} />
+                                                <IconifyIcon icon={loading === 'branch' ? 'line-md:loading-loop' : 'ic:baseline-check'} style={{ cursor: 'pointer' }} onClick={createBranch} />
+                                                <IconifyIcon icon={'ic:outline-close'} style={{ cursor: 'pointer' }} onClick={() => setCreatable(null)} />
+                                            </Box>
+                                        )
+                                    }
+                                    <Button size='small' startIcon={<IconifyIcon icon={'ic:outline-add'} />} variant='outlined' onClick={() => setCreatable('branch')}>{t('Yangi')}</Button>
+                                </Box>
+                            </Box>
+                        </CardContent>
+                    </Card>
+
+                    <Card>
+                        <CardContent>
+                            <Box sx={{ display: 'flex', gap: '20px' }}>
+                                <Typography sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}>{t('Tolov usullari')}:</Typography>
+                                <Box sx={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                                    {
+                                        paymentMethods.map((method: any) => (
+                                            <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }} key={method.id}>
+                                                {
+                                                    id?.id === method.id && id?.key === 'payment-type' ? (
+                                                        <TextField size='small' focused defaultValue={method.name} onBlur={async (e) => {
+                                                            setLoading('paytype')
+                                                            await updatePaymentMethod(method.id, { name: e.target.value })
+                                                            setLoading(null)
+                                                        }
+                                                        } />
+                                                    ) : (
+                                                        <TextField size='small' value={method.name} onBlur={(e) => console.log(e.target.value)} />
+                                                    )
+                                                }
+                                                {
+                                                    id?.id === method.id && id?.key === 'payment-type' ? (
+                                                        <IconifyIcon icon={loading === 'paytype' ? 'line-md:loading-loop' : 'ic:baseline-check'} style={{ cursor: 'pointer' }} onClick={() => setId(null)} />
+                                                    ) : (
+                                                        <IconifyIcon icon={'basil:edit-outline'} style={{ cursor: 'pointer' }} onClick={() => setId({ id: method.id, key: 'payment-type' })} />
+                                                    )
+                                                }
+                                                <IconifyIcon icon={'fluent:delete-20-regular'} style={{ cursor: 'pointer' }} onClick={() => setDeleteId({ open: 'payment-type', id: method.id })} />
+                                            </Box>
+                                        ))
+                                    }
+                                    {
+                                        createble === 'payment-type' && (
+                                            <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                                <TextField size='small' placeholder="To'lov turi" onChange={(e) => setName(e.target.value)} />
+                                                <IconifyIcon icon={loading === 'paytype' ? 'line-md:loading-loop' : 'ic:baseline-check'} style={{ cursor: 'pointer' }} onClick={createPaymentType} />
+                                                <IconifyIcon icon={'ic:outline-close'} style={{ cursor: 'pointer' }} onClick={() => setCreatable(null)} />
+                                            </Box>
+                                        )
+                                    }
+                                    <Button size='small' startIcon={<IconifyIcon icon={'ic:outline-add'} />} variant='outlined' onClick={() => setCreatable('payment-type')}>{t('Yangi')}</Button>
+                                </Box>
+                            </Box>
+                        </CardContent>
+                    </Card>
+                </Box>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: '15px', width: '100%' }}>
+                    <Card>
+                        <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+                                <Typography sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}>{t('Ish boshlanish vaqti')}:</Typography>
+                                <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                    {
+                                        editable === 'start-time' ? (
+                                            <>
+                                                <TextField
+                                                    type='time'
+                                                    size='small'
+                                                    focused
+                                                    defaultValue={companyInfo?.work_start_time}
+                                                    onChange={e => setName(e.target.value)}
+                                                    onBlur={(e) => {
+                                                        updateSettings('work_start_time', e.target.value)
+                                                    }}
+                                                />
+                                                <IconifyIcon icon={loading === 'start-time' ? 'line-md:loading-loop' : 'ic:baseline-check'} style={{ cursor: 'pointer' }} onClick={() => {
+                                                    updateSettings('work_start_time', name)
+                                                }} />
+                                            </>
+                                        ) : (
+                                            <>
+                                                <TextField type='text' value={`${companyInfo?.work_start_time}`} size='small' placeholder={t('Ish boshlanish vaqti')} onBlur={(e) => console.log(e.target.value)} />
+                                                <IconifyIcon icon={'basil:edit-outline'} style={{ cursor: 'pointer' }} onClick={() => setEditable('start-time')} />
+                                            </>
+                                        )
+                                    }
+                                </Box>
+                            </Box>
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+                                <Typography sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}>{t('Ish tugash vaqti')}:</Typography>
+                                <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                    {
+                                        editable === 'end-time' ? (
+                                            <>
+                                                <TextField
+                                                    type='time'
+                                                    size='small'
+                                                    focused
+                                                    defaultValue={companyInfo?.work_end_time}
+                                                    onBlur={(e) => {
+                                                        updateSettings('work_end_time', e.target.value)
+                                                    }}
+                                                />
+                                                <IconifyIcon icon={loading === 'end-time' ? 'line-md:loading-loop' : 'ic:baseline-check'} style={{ cursor: 'pointer' }} onClick={() => {
+                                                    updateSettings('work_end_time', name)
+                                                }} />
+                                            </>
+                                        ) : (
+                                            <>
+                                                <TextField type='text' value={`${companyInfo?.work_end_time}`} size='small' placeholder={t('Boshlanish vaqti')} onBlur={(e) => console.log(e.target.value)} />
+                                                <IconifyIcon icon={'basil:edit-outline'} style={{ cursor: 'pointer' }} onClick={() => setEditable('end-time')} />
+                                            </>
+                                        )
+                                    }
+                                </Box>
+                            </Box>
+                        </CardContent>
+                    </Card>
+
+                    <Card>
+                        <CardContent>
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+                                <Typography sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}>{t("Tug'ilgan kunda sms bilan tabriklash")}:</Typography>
+                                <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                    {
+                                        loading === 'birthdate' ? <CircularProgress disableShrink size={'20px'} sx={{ margin: '10px 0', marginLeft: '15px' }} /> : (
+                                            <Switch
+                                                checked={Boolean(companyInfo?.auto_sms?.on_birthday)}
+                                                onChange={async (e, i) => {
+                                                    await updateSettings('on_birthday', i)
+                                                }}
+                                            />
+                                        )
+                                    }
+                                </Box>
+                            </Box>
+
+                            <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: '20px', flexDirection: 'column' }}>
+                                <Typography sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}>{t('SMS Matni')}:</Typography>
+                                <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: '10px', width: '100%' }}>
+                                    {
+                                        editable === 'birthdate' ? (
+                                            <>
+                                                <TextField
+                                                    multiline
+                                                    rows={4}
+                                                    size='small'
+                                                    focused
+                                                    defaultValue={companyInfo?.auto_sms?.birthday_text}
+                                                    onBlur={(e) => {
+                                                        updateSettings('birthday_text', e.target.value)
+                                                    }}
+                                                    onChange={(e) => setName(e.target.value)}
+                                                    fullWidth
+                                                />
+                                                <IconifyIcon icon={loading === 'birthdate' ? 'line-md:loading-loop' : 'ic:baseline-check'} style={{ cursor: 'pointer' }} onClick={() => {
+                                                    updateSettings('birthday_text', name)
+                                                }} />
+                                            </>
+                                        ) : (
+                                            <>
+                                                <TextField fullWidth multiline rows={4} type='text' value={`${companyInfo?.auto_sms?.birthday_text}`} size='small' placeholder={t('SMS Matni')} onBlur={(e) => console.log(e.target.value)} />
+                                                <IconifyIcon icon={'basil:edit-outline'} style={{ cursor: 'pointer' }} onClick={() => setEditable('birthdate')} />
+                                            </>
+                                        )
+                                    }
+                                </Box>
+                            </Box>
+                        </CardContent>
+                    </Card>
+
+
+                    <Card>
+                        <CardContent>
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+                                <Typography sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}>{t("Darsga kelmaganlarga sms yuborish")}:</Typography>
+                                <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                    {
+                                        loading === 'absend' ? <CircularProgress disableShrink size={'20px'} sx={{ margin: '10px 0', marginLeft: '15px' }} /> : (
+                                            <Switch
+                                                checked={Boolean(companyInfo?.auto_sms?.on_absent)}
+                                                onChange={async (e, i) => {
+                                                    setLoading('absend')
+                                                    await updateSettings('on_absent', i)
+                                                }}
+                                            />
+                                        )
+                                    }
+                                </Box>
+                            </Box>
+
+                            <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: '20px', flexDirection: 'column' }}>
+                                <Typography sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}>{t(`SMS matnini kiriting (kelmagan o'quvchiga ertasi kuni yuboriladi)`)}</Typography>
+                                <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: '10px', width: '100%' }}>
+                                    {
+                                        editable === 'absend' ? (
+                                            <>
+                                                <TextField
+                                                    multiline
+                                                    rows={4}
+                                                    size='small'
+                                                    focused
+                                                    defaultValue={companyInfo?.auto_sms?.absent_text}
+                                                    onBlur={(e) => {
+                                                        updateSettings('absent_text', e.target.value)
+                                                    }}
+                                                    onChange={(e) => setName(e.target.value)}
+                                                    fullWidth
+                                                />
+                                                <IconifyIcon icon={loading === 'absend' ? 'line-md:loading-loop' : 'ic:baseline-check'} style={{ cursor: 'pointer' }} onClick={() => {
+                                                    updateSettings('absent_text', name)
+                                                }} />
+                                            </>
+                                        ) : (
+                                            <>
+                                                <TextField fullWidth multiline rows={4} type='text' value={`${companyInfo?.auto_sms?.absent_text}`} size='small' placeholder={t('Boshlanish vaqti')} onBlur={(e) => console.log(e.target.value)} />
+                                                <IconifyIcon icon={'basil:edit-outline'} style={{ cursor: 'pointer' }} onClick={() => setEditable('absend')} />
+                                            </>
+                                        )
+                                    }
+                                </Box>
+                            </Box>
+                        </CardContent>
+                    </Card>
+                </Box>
+
+
+                <Dialog open={deleteId?.open === 'payment-type'} onClose={() => setDeleteId(null)}>
+                    <DialogContent>
+                        <Typography sx={{ fontSize: '20px', margin: '10px 10px 20px' }}>{t("O'chirishni tasdiqlang")}</Typography>
+                        <Box sx={{ display: 'flex', gap: 1 }}>
+                            <Button variant='outlined' onClick={() => setDeleteId(null)}>Bekor qilish</Button>
+                            <LoadingButton loading={loading === 'delete'} variant='contained' color='error' onClick={async () => {
+                                setLoading('delete')
+                                try {
+                                    await updatePaymentMethod(deleteId?.id, { is_active: false })
+                                    setDeleteId(null)
+                                    setLoading(null)
+                                } catch {
+                                    setLoading(null)
+                                }
+                            }}>Ok</LoadingButton>
                         </Box>
-                    </CardContent>
-                </Card>
+                    </DialogContent>
+                </Dialog>
+
+                <Dialog open={deleteId?.open === 'branch'} onClose={() => setDeleteId(null)}>
+                    <DialogContent>
+                        <Typography sx={{ fontSize: '20px', margin: '10px 10px 20px' }}>{t("O'chirishni tasdiqlang")}</Typography>
+                        <Box sx={{ display: 'flex', gap: 1 }}>
+                            <Button variant='outlined' onClick={() => setDeleteId(null)}>{t('Bekor qilish')}</Button>
+                            <LoadingButton loading={loading === 'delete'} variant='contained' color='error' onClick={async () => {
+                                setLoading('delete')
+                                try {
+                                    await api.delete(`common/branch/delete/${deleteId?.id}`)
+                                    await reloadProfile()
+                                    setDeleteId(null)
+                                    getBranches()
+                                    setLoading(null)
+                                } catch {
+                                    setLoading(null)
+                                }
+                            }}>Ok</LoadingButton>
+                        </Box>
+                    </DialogContent>
+                </Dialog>
             </Box>
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: '15px', width: '100%' }}>
-                <Card>
-                    <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-                            <Typography sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}>{t('Ish boshlanish vaqti')}:</Typography>
-                            <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                                {
-                                    editable === 'start-time' ? (
-                                        <>
-                                            <TextField
-                                                type='time'
-                                                size='small'
-                                                focused
-                                                defaultValue={companyInfo?.work_start_time}
-                                                onChange={e => setName(e.target.value)}
-                                                onBlur={(e) => {
-                                                    updateSettings('work_start_time', e.target.value)
-                                                }}
-                                            />
-                                            <IconifyIcon icon={loading === 'start-time' ? 'line-md:loading-loop' : 'ic:baseline-check'} style={{ cursor: 'pointer' }} onClick={() => {
-                                                updateSettings('work_start_time', name)
-                                            }} />
-                                        </>
-                                    ) : (
-                                        <>
-                                            <TextField type='text' value={`${companyInfo?.work_start_time}`} size='small' placeholder={t('Ish boshlanish vaqti')} onBlur={(e) => console.log(e.target.value)} />
-                                            <IconifyIcon icon={'basil:edit-outline'} style={{ cursor: 'pointer' }} onClick={() => setEditable('start-time')} />
-                                        </>
-                                    )
-                                }
-                            </Box>
-                        </Box>
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-                            <Typography sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}>{t('Ish tugash vaqti')}:</Typography>
-                            <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                                {
-                                    editable === 'end-time' ? (
-                                        <>
-                                            <TextField
-                                                type='time'
-                                                size='small'
-                                                focused
-                                                defaultValue={companyInfo?.work_end_time}
-                                                onBlur={(e) => {
-                                                    updateSettings('work_end_time', e.target.value)
-                                                }}
-                                            />
-                                            <IconifyIcon icon={loading === 'end-time' ? 'line-md:loading-loop' : 'ic:baseline-check'} style={{ cursor: 'pointer' }} onClick={() => {
-                                                updateSettings('work_end_time', name)
-                                            }} />
-                                        </>
-                                    ) : (
-                                        <>
-                                            <TextField type='text' value={`${companyInfo?.work_end_time}`} size='small' placeholder={t('Boshlanish vaqti')} onBlur={(e) => console.log(e.target.value)} />
-                                            <IconifyIcon icon={'basil:edit-outline'} style={{ cursor: 'pointer' }} onClick={() => setEditable('end-time')} />
-                                        </>
-                                    )
-                                }
-                            </Box>
-                        </Box>
-                    </CardContent>
-                </Card>
-
-                <Card>
-                    <CardContent>
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-                            <Typography sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}>{t("Tug'ilgan kunda sms bilan tabriklash")}:</Typography>
-                            <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                                {
-                                    loading === 'birthdate' ? <CircularProgress disableShrink size={'20px'} sx={{ margin: '10px 0', marginLeft: '15px' }} /> : (
-                                        <Switch
-                                            checked={Boolean(companyInfo?.auto_sms?.on_birthday)}
-                                            onChange={async (e, i) => {
-                                                await updateSettings('on_birthday', i)
-                                            }}
-                                        />
-                                    )
-                                }
-                            </Box>
-                        </Box>
-
-                        <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: '20px', flexDirection: 'column' }}>
-                            <Typography sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}>{t('SMS Matni')}:</Typography>
-                            <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: '10px', width: '100%' }}>
-                                {
-                                    editable === 'birthdate' ? (
-                                        <>
-                                            <TextField
-                                                multiline
-                                                rows={4}
-                                                size='small'
-                                                focused
-                                                defaultValue={companyInfo?.auto_sms?.birthday_text}
-                                                onBlur={(e) => {
-                                                    updateSettings('birthday_text', e.target.value)
-                                                }}
-                                                onChange={(e) => setName(e.target.value)}
-                                                fullWidth
-                                            />
-                                            <IconifyIcon icon={loading === 'birthdate' ? 'line-md:loading-loop' : 'ic:baseline-check'} style={{ cursor: 'pointer' }} onClick={() => {
-                                                updateSettings('birthday_text', name)
-                                            }} />
-                                        </>
-                                    ) : (
-                                        <>
-                                            <TextField fullWidth multiline rows={4} type='text' value={`${companyInfo?.auto_sms?.birthday_text}`} size='small' placeholder={t('SMS Matni')} onBlur={(e) => console.log(e.target.value)} />
-                                            <IconifyIcon icon={'basil:edit-outline'} style={{ cursor: 'pointer' }} onClick={() => setEditable('birthdate')} />
-                                        </>
-                                    )
-                                }
-                            </Box>
-                        </Box>
-                    </CardContent>
-                </Card>
-
-
-                <Card>
-                    <CardContent>
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-                            <Typography sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}>{t("Darsga kelmaganlarga sms yuborish")}:</Typography>
-                            <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                                {
-                                    loading === 'absend' ? <CircularProgress disableShrink size={'20px'} sx={{ margin: '10px 0', marginLeft: '15px' }} /> : (
-                                        <Switch
-                                            checked={Boolean(companyInfo?.auto_sms?.on_absent)}
-                                            onChange={async (e, i) => {
-                                                setLoading('absend')
-                                                await updateSettings('on_absent', i)
-                                            }}
-                                        />
-                                    )
-                                }
-                            </Box>
-                        </Box>
-
-                        <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: '20px', flexDirection: 'column' }}>
-                            <Typography sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}>{t(`SMS matnini kiriting (kelmagan o'quvchiga ertasi kuni yuboriladi)`)}</Typography>
-                            <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: '10px', width: '100%' }}>
-                                {
-                                    editable === 'absend' ? (
-                                        <>
-                                            <TextField
-                                                multiline
-                                                rows={4}
-                                                size='small'
-                                                focused
-                                                defaultValue={companyInfo?.auto_sms?.absent_text}
-                                                onBlur={(e) => {
-                                                    updateSettings('absent_text', e.target.value)
-                                                }}
-                                                onChange={(e) => setName(e.target.value)}
-                                                fullWidth
-                                            />
-                                            <IconifyIcon icon={loading === 'absend' ? 'line-md:loading-loop' : 'ic:baseline-check'} style={{ cursor: 'pointer' }} onClick={() => {
-                                                updateSettings('absent_text', name)
-                                            }} />
-                                        </>
-                                    ) : (
-                                        <>
-                                            <TextField fullWidth multiline rows={4} type='text' value={`${companyInfo?.auto_sms?.absent_text}`} size='small' placeholder={t('Boshlanish vaqti')} onBlur={(e) => console.log(e.target.value)} />
-                                            <IconifyIcon icon={'basil:edit-outline'} style={{ cursor: 'pointer' }} onClick={() => setEditable('absend')} />
-                                        </>
-                                    )
-                                }
-                            </Box>
-                        </Box>
-                    </CardContent>
-                </Card>
-            </Box>
-
-
-            <Dialog open={deleteId?.open === 'payment-type'} onClose={() => setDeleteId(null)}>
-                <DialogContent>
-                    <Typography sx={{ fontSize: '20px', margin: '10px 10px 20px' }}>{t("O'chirishni tasdiqlang")}</Typography>
-                    <Box sx={{ display: 'flex', gap: 1 }}>
-                        <Button variant='outlined' onClick={() => setDeleteId(null)}>Bekor qilish</Button>
-                        <LoadingButton loading={loading === 'delete'} variant='contained' color='error' onClick={async () => {
-                            setLoading('delete')
-                            try {
-                                await updatePaymentMethod(deleteId?.id, { is_active: false })
-                                setDeleteId(null)
-                                setLoading(null)
-                            } catch {
-                                setLoading(null)
-                            }
-                        }}>Ok</LoadingButton>
-                    </Box>
-                </DialogContent>
-            </Dialog>
-
-            <Dialog open={deleteId?.open === 'branch'} onClose={() => setDeleteId(null)}>
-                <DialogContent>
-                    <Typography sx={{ fontSize: '20px', margin: '10px 10px 20px' }}>{t("O'chirishni tasdiqlang")}</Typography>
-                    <Box sx={{ display: 'flex', gap: 1 }}>
-                        <Button variant='outlined' onClick={() => setDeleteId(null)}>{t('Bekor qilish')}</Button>
-                        <LoadingButton loading={loading === 'delete'} variant='contained' color='error' onClick={async () => {
-                            setLoading('delete')
-                            try {
-                                await api.delete(`common/branch/delete/${deleteId?.id}`)
-                                await reloadProfile()
-                                setDeleteId(null)
-                                getBranches()
-                                setLoading(null)
-                            } catch {
-                                setLoading(null)
-                            }
-                        }}>Ok</LoadingButton>
-                    </Box>
-                </DialogContent>
-            </Dialog>
-        </Box>
+        </div>
     )
 }

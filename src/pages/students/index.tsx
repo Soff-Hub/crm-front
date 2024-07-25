@@ -17,6 +17,7 @@ import { useAppDispatch, useAppSelector } from 'src/store';
 import { clearStudentParams, fetchStudentsList, updateStudentParams } from 'src/store/apps/students';
 import { formatCurrency } from 'src/@core/utils/format-currency';
 import { setOpenEdit } from 'src/store/apps/mentors';
+import VideoHeader, { videoUrls } from 'src/@core/components/video-header/video-header';
 
 export interface customTableProps {
   xs: number
@@ -119,6 +120,7 @@ export default function GroupsPage() {
 
   return (
     <div>
+      <VideoHeader item={videoUrls.students} />
       <StudentsPageHeader />
       <StudentsFilter />
       <DataTable color loading={isLoading} columns={columns} data={[...students.map(el => ({ ...el, color: Number(el.balance) < 0 ? 'rgba(227, 18, 18, 0.1)' : el.payment_status <= 5 && el.payment_status ? 'rgba(237, 156, 64, 0.22)' : '' }))]} rowClick={rowClick} />

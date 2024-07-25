@@ -11,6 +11,7 @@ import UseBgColor from 'src/@core/hooks/useBgColor'
 import { useTranslation } from 'react-i18next'
 import showResponseError from 'src/@core/utils/show-response-error'
 import { useRouter } from 'next/router'
+import VideoHeader, { videoUrls } from 'src/@core/components/video-header/video-header'
 
 export default function FormsPage() {
 
@@ -144,6 +145,8 @@ export default function FormsPage() {
 
   return (
     <Box>
+      <VideoHeader item={videoUrls.forms} />
+
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <Typography fontSize={'18px'}>{t('Formalar')}</Typography>
         {/* <Button size='small' variant='contained' startIcon={<IconifyIcon icon={'ic:baseline-add'} />} onClick={openDialog}>Yangi</Button> */}

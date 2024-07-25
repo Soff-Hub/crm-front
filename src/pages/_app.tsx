@@ -101,13 +101,8 @@ const App = ({ Component, emotionCache = clientSideEmotionCache, pageProps }: Ex
     const { companyInfo } = useAppSelector(state => state.user)
 
     return <Head>
+      <meta name="robots" content="noindex, nofollow" />
       <title>{`${themeConfig.templateName} - Talim tizimini nazorat qilish platformasi`}</title>
-      <meta
-        name='description'
-        content={`${themeConfig.templateName} – SOFF CRM orqali siz o'z o'quv markazingizni ta'lim jarayonlarini nazorat qilishingiz mumkin`}
-      />
-      <meta name='keywords' content='Talim tizimini nazorat qilish platformasi' />
-      <meta name='viewport' content='initial-scale=1, width=device-width' />
       <link rel='shortcut icon' href={companyInfo.logo} />
     </Head>
   }

@@ -17,6 +17,7 @@ import { useAppDispatch, useAppSelector } from 'src/store'
 import { fetchWekends, setOpenCreateSms, setWekendData } from 'src/store/apps/settings'
 import EditWekendDialog from 'src/views/apps/settings/wekends/EditWekendDialog'
 import CreateWekendDialog from 'src/views/apps/settings/wekends/CreateWekendDialog'
+import VideoHeader, { videoUrls } from 'src/@core/components/video-header/video-header'
 
 export interface customTableProps {
     xs: number
@@ -128,8 +129,8 @@ export default function RoomsPage() {
         {
             xs: 1,
             title: t('Sana'),
-            dataIndex: 'name',
-            render: () => "2024-14-03"
+            dataIndex: 'date',
+            render: (date) => date.split('-').reverse().join('.')
         },
         {
             xs: 2,
@@ -147,6 +148,8 @@ export default function RoomsPage() {
 
     return (
         <div>
+            <VideoHeader item={videoUrls.freedays} />
+
             <Box
                 className='groups-page-header'
                 sx={{ display: 'flex', justifyContent: 'space-between', margin: '10px 0' }}

@@ -2,6 +2,7 @@
 import Grid from '@mui/material/Grid'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
+import VideoHeader, { videoUrls } from 'src/@core/components/video-header/video-header'
 import useTeachers from 'src/hooks/useTeachers'
 
 // ** Demo Components Imports
@@ -21,14 +22,17 @@ const UserView = ({ tab }: any) => {
   }, [])
 
   return (
-    <Grid container spacing={6}>
-      <Grid item xs={12} md={5} lg={4}>
-        <UserViewLeft userData={teacherData} />
+    <div>
+      <VideoHeader item={videoUrls.teachers} />
+      <Grid container spacing={6}>
+        <Grid item xs={12} md={5} lg={4}>
+          <UserViewLeft userData={teacherData} />
+        </Grid>
+        <Grid item xs={12} md={7} lg={8}>
+          <UserViewRight tab={url} invoiceData={teacherData} />
+        </Grid>
       </Grid>
-      <Grid item xs={12} md={7} lg={8}>
-        <UserViewRight tab={url} invoiceData={teacherData} />
-      </Grid>
-    </Grid>
+    </div>
   )
 }
 
