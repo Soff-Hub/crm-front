@@ -16,7 +16,7 @@ const VideoTutorials = () => {
             <Box sx={{ display: 'flex', maxWidth: "500px", gap: '10px', flexDirection: 'column', mb: '20px' }}>
                 <Alert icon={false} sx={{ py: 2, mb: 0, ...bgColors.primaryLight, '& .MuiAlert-message': { p: 0 } }}>
                     <Typography variant='caption' sx={{ display: 'block', color: 'primary.main' }}>
-                        {t("Platformadan foydalanishni ushbu ketma-ketlik bilan boshlang")}
+                        {t("Video qo'llanmalarni berilgan tartib raqam bo'yicha ko'rib, ma'lumotlarni kiritish orqali o'z markazingizni aftomatlashtirishingiz mumkin.")}
                     </Typography>
                 </Alert>
             </Box>
