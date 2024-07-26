@@ -29,7 +29,6 @@ export default function CreateCourseForm({ }: Props) {
 
     const validationSchema = Yup.object({
         name: Yup.string().required("Nom kiriting"),
-        branch: Yup.string().required("Filial tanlang"),
         price: Yup.number().required("Kurs narxini kiriting"),
         month_duration: Yup.number().required("Nechi oy davom etadi?").max(12, "12 oydan ko'p bo'lmasligi kerak"),
         description: Yup.string(),
@@ -39,7 +38,6 @@ export default function CreateCourseForm({ }: Props) {
     const formik = useFormik({
         initialValues: {
             name: '',
-            branch: '',
             price: '',
             month_duration: '',
             description: '',
@@ -101,30 +99,6 @@ export default function CreateCourseForm({ }: Props) {
                 {errors.name && touched.name && <FormHelperText error>{errors.name}</FormHelperText>}
             </FormControl>
 
-            <FormControl fullWidth>
-                <InputLabel error={!!errors.branch && touched.branch} size='small' id='demo-simple-select-outlined-label'>
-                    {t('branch')}
-                </InputLabel>
-                <Select
-                    size='small'
-                    label={t('branch')}
-                    id='demo-simple-select-outlined'
-                    labelId='demo-simple-select-outlined-label'
-                    name='branch'
-                    error={!!errors.branch && !!touched.branch}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    value={values.branch}
-                >
-                    {branches.length > 0 && branches.map((item: any) => <MenuItem key={item.id} value={`${item.id}`}>{item?.name}</MenuItem>)}
-                    <MenuItem sx={{ fontWeight: 600 }} onClick={() => Router.push('/settings/ceo/all-settings')}>
-                        Yangi yaratish
-                        <IconifyIcon icon={'ion:add-sharp'} />
-                    </MenuItem>
-                </Select>
-
-                {errors.branch && touched.branch && <FormHelperText error>{errors.branch}</FormHelperText>}
-            </FormControl>
             <FormControl fullWidth>
                 <AmountInput
                     label={t('Kurs narxi')}

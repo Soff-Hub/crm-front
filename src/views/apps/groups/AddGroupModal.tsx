@@ -103,12 +103,12 @@ export default function AddGroupModal() {
         setCustomWeekDays([])
     }
 
-    useEffect(() => {
+    // useEffect(() => {
 
-        return () => {
-            // dispatch(se(null))
-        }
-    }, [])
+    //     return () => {
+    //         // dispatch(se(null))
+    //     }
+    // }, [])
 
     return (
         <Drawer open={isOpenAddGroup} hideBackdrop anchor='right' variant='temporary' sx={{ width: "100%" }}>

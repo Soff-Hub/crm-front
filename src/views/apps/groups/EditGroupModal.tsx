@@ -194,7 +194,7 @@ export default function EditGroupModal() {
                         }}
                     >
                         <Typography variant='h6' sx={{ fontWeight: 600 }}>
-                            {t("Guruh malumotlarini tahrirlash")}
+                            {t("Guruh ma'lumotlarini tahrirlash")}
                         </Typography>
                         <IconButton
                             onClick={handleClose}
