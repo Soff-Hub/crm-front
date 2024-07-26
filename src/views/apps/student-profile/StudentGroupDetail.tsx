@@ -78,7 +78,7 @@ const StudentGroupDetail = ({ slug, month }: any) => {
         setIsLoading(false)
     }
 
-    const handlePrint = useCallback(async (id: number | string) => {
+    const handlePrint = async (id: number | string) => {
         const subdomain = location.hostname.split('.')
         try {
             const response = await fetch(
@@ -100,7 +100,7 @@ const StudentGroupDetail = ({ slug, month }: any) => {
         } catch (error) {
             console.error("Print error:", error);
         }
-    }, []);
+    };
 
     async function getReceipt(id: any) {
         setLoading(id)

@@ -1,23 +1,30 @@
-import LoadingButton from "@mui/lab/LoadingButton"
-import { Box, Button, Card, CardContent, Chip, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormHelperText, InputLabel, MenuItem, OutlinedInput, Select, TextField, Typography } from "@mui/material"
-import Link from "next/link"
-import { useRouter } from "next/router"
-import { useCallback, useEffect, useState } from "react"
-import { useTranslation } from "react-i18next"
-import { today } from "src/@core/components/card-statistics/kanban-item"
-import EmptyContent from "src/@core/components/empty-content"
-import Form from "src/@core/components/form"
-import IconifyIcon from "src/@core/components/icon"
-import DataTable from "src/@core/components/table"
-import useResponsive from "src/@core/hooks/useResponsive"
-import { formatCurrency } from "src/@core/utils/format-currency"
-import getMontName from "src/@core/utils/gwt-month-name"
-import showResponseError from "src/@core/utils/show-response-error"
-import usePayment from "src/hooks/usePayment"
-import { customTableProps } from "src/pages/groups"
-import { useAppDispatch, useAppSelector } from "src/store"
-import { fetchStudentDetail, fetchStudentPayment } from "src/store/apps/students"
-import StudentPaymentEditForm from "./StudentPaymentEdit"
+import LoadingButton from "@mui/lab/LoadingButton";
+import {
+  Box,
+  Button,
+  Card,
+  CardContent,
+  Chip,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  Typography,
+} from "@mui/material";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import EmptyContent from "src/@core/components/empty-content";
+import IconifyIcon from "src/@core/components/icon";
+import DataTable from "src/@core/components/table";
+import useResponsive from "src/@core/hooks/useResponsive";
+import { formatCurrency } from "src/@core/utils/format-currency";
+import getMontName from "src/@core/utils/gwt-month-name";
+import usePayment from "src/hooks/usePayment";
+import { customTableProps } from "src/pages/groups";
+import { useAppDispatch, useAppSelector } from "src/store";
+import { fetchStudentDetail, fetchStudentPayment } from "src/store/apps/students";
+import StudentPaymentEditForm from "./StudentPaymentEdit";
 
 // Rasm yuklab olish misoli
 export async function downloadImage(filename: string, url: string) {
@@ -62,7 +69,7 @@ const UserViewSecurity = ({ groupData }: any) => {
     setEdit(payments.find((el: any) => el.id === id))
   }
 
-  const handlePrint = useCallback(async (id: number | string) => {
+  const handlePrint = async (id: number | string) => {
     const subdomain = location.hostname.split('.')
     try {
       const response = await fetch(
@@ -84,7 +91,7 @@ const UserViewSecurity = ({ groupData }: any) => {
     } catch (error) {
       console.error("Print error:", error);
     }
-  }, []);
+  };
 
   async function getReceipt(id: any) {
     setLoading(id)

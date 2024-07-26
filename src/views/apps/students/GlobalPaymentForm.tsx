@@ -1,18 +1,18 @@
-import { Alert, Box, CircularProgress, FormControl, FormHelperText, InputLabel, MenuItem, OutlinedInput, Select, TextField, Typography } from '@mui/material'
-import { useFormik } from 'formik'
-import React, { useCallback, useEffect, useState } from 'react'
-import useDebounce from 'src/hooks/useDebounce'
-import { useAppDispatch, useAppSelector } from 'src/store'
-import { fetchStudentDetail, searchStudent, setGlobalPay, setStudentData } from 'src/store/apps/students'
-import * as Yup from 'yup'
-import IconifyIcon from 'src/@core/components/icon'
-import { today } from 'src/@core/components/card-statistics/kanban-item'
-import AmountInput, { revereAmount } from 'src/@core/components/amount-input'
-import LoadingButton from '@mui/lab/LoadingButton'
-import usePayment from 'src/hooks/usePayment'
-import toast from 'react-hot-toast'
-import { disablePage } from 'src/store/apps/page'
-import { formatPhoneNumber } from 'src/@core/components/phone-input/format-phone-number'
+import { Alert, Box, CircularProgress, FormControl, FormHelperText, InputLabel, MenuItem, OutlinedInput, Select, TextField, Typography } from '@mui/material';
+import { useFormik } from 'formik';
+import { useEffect, useState } from 'react';
+import useDebounce from 'src/hooks/useDebounce';
+import { useAppDispatch, useAppSelector } from 'src/store';
+import { fetchStudentDetail, searchStudent, setGlobalPay, setStudentData } from 'src/store/apps/students';
+import * as Yup from 'yup';
+import IconifyIcon from 'src/@core/components/icon';
+import { today } from 'src/@core/components/card-statistics/kanban-item';
+import AmountInput, { revereAmount } from 'src/@core/components/amount-input';
+import LoadingButton from '@mui/lab/LoadingButton';
+import usePayment from 'src/hooks/usePayment';
+import toast from 'react-hot-toast';
+import { disablePage } from 'src/store/apps/page';
+import { formatPhoneNumber } from 'src/@core/components/phone-input/format-phone-number';
 
 type Props = {}
 
@@ -28,7 +28,7 @@ export default function GlobalPaymentForm({ }: Props) {
 
     const userData: any = { ...studentData }
 
-    const handlePrint = useCallback(async (id: number | string) => {
+    const handlePrint = async (id: number | string) => {
         const subdomain = location.hostname.split('.');
         try {
             const response = await fetch(
@@ -55,7 +55,7 @@ export default function GlobalPaymentForm({ }: Props) {
         } catch (error) {
             console.error("Print error:", error);
         }
-    }, []);
+    };
 
     const validationSchema = Yup.object({
         search: Yup.string().min(4, "Qidirish uchun ma'lumot yetarli emas")
