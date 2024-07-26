@@ -10,7 +10,7 @@ export default function Header() {
             sx={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}
             py={2}
         >
-            <Typography variant='h5'>{t("Platformadan foydalanish uchun video qo'llanmalar")}</Typography>
+            <Typography variant='h5'>{t("Soff CRM dasturidan foydalanish uchun video qo'llanmalar.")}</Typography>
         </Box>
     )
 }
