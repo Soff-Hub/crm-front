@@ -13,7 +13,6 @@ const DashboardNumbers = () => {
                     <Grid item xs={12}>
                         <FinanceAllNumber />
                     </Grid>
-
                     <Grid item xs={12} sm={12} md={4}>
                         <StatsPaymentMethods />
                     </Grid>

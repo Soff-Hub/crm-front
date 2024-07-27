@@ -29,7 +29,7 @@ export default function TeacherEditDialog() {
                     }}
                 >
                     <Typography variant='h6' sx={{ fontWeight: 600 }}>
-                        {t("O'qituvchi malumotlarini tahrirlash")}
+                        {t("O'qituvchi ma'lumotlarini tahrirlash")}
                     </Typography>
                     <IconButton
                         onClick={() => (onClose(), dispatch(setTeacherData(undefined)))}

@@ -10,7 +10,6 @@ import getMontName from 'src/@core/utils/gwt-month-name';
 import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from 'src/store';
 import { deleteGroups, fetchGroups, getDashboardLessons, getGroupsDetails, handleOpenEdit, updateParams } from 'src/store/apps/groups';
-import { GroupType } from 'src/@fake-db/types';
 import { disablePage } from 'src/store/apps/page';
 
 const RowOptions = ({ id }: { id: number | string }) => {
@@ -108,14 +107,14 @@ const RowOptions = ({ id }: { id: number | string }) => {
                     <IconifyIcon icon='mdi:pencil-outline' fontSize={20} />
                     {t("Tahrirlash")}
                 </MenuItem>
-
+                {/* 
                 {queryParams.status === 'archived' ? <MenuItem onClick={() => handleRecovery(id)} sx={{ '& svg': { mr: 2 } }}>
                     <IconifyIcon icon='mdi:reload' fontSize={20} />
                     {t("Tiklash")}
                 </MenuItem> : <MenuItem onClick={handleDelete} sx={{ '& svg': { mr: 2 } }}>
                     <IconifyIcon icon='mdi:delete-outline' fontSize={20} />
                     {t("O'chirish")}
-                </MenuItem>}
+                </MenuItem>} */}
 
                 {queryParams.status !== 'archived' && <MenuItem onClick={handleDelete} sx={{ '& svg': { mr: 2 } }}>
                     <IconifyIcon icon='material-symbols-light:recommend-outline' fontSize={20} />

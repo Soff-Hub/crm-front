@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 // ** MUI Imports
 import { styled } from '@mui/material/styles'
-import MuiMenu, { MenuProps } from '@mui/material/Menu'
 
 import { Box, Checkbox, CircularProgress, Dialog, DialogContent, DialogTitle, FormControl, FormHelperText, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material'
 
@@ -231,8 +230,8 @@ const KanbanItem = (props: KanbarItemProps) => {
                         <Box sx={{ display: 'flex', paddingTop: '10px', flexDirection: 'column', gap: '6px' }}>
                             <Box sx={{ display: 'flex', gap: '15px' }}>
                                 <Typography onClick={() => togglerTab('tab-2')} sx={{ fontSize: '12px', borderBottom: activeTab === 'tab-2' ? '2px solid #0d6efd' : '2px solid #c3cccc', px: 1 }} variant={activeTab === 'tab-2' ? 'body1' : 'body2'}>{t("Eslatmalar")}</Typography>
-                                <Typography onClick={() => togglerTab('tab-1')} sx={{ fontSize: '12px', borderBottom: activeTab === 'tab-1' ? '2px solid #0d6efd' : '2px solid #c3cccc', px: 1 }} variant={activeTab === 'tab-1' ? 'body1' : 'body2'}>{t("Malumtlari")}</Typography>
-                                <Typography onClick={() => togglerTab('tab-3')} sx={{ fontSize: '12px', borderBottom: activeTab === 'tab-3' ? '2px solid #0d6efd' : '2px solid #c3cccc', px: 1 }} variant={activeTab === 'tab-3' ? 'body1' : 'body2'}>{t("SMS tarix")}</Typography>
+                                <Typography onClick={() => togglerTab('tab-1')} sx={{ fontSize: '12px', borderBottom: activeTab === 'tab-1' ? '2px solid #0d6efd' : '2px solid #c3cccc', px: 1 }} variant={activeTab === 'tab-1' ? 'body1' : 'body2'}>{t("Ma'lumotlar")}</Typography>
+                                <Typography onClick={() => togglerTab('tab-3')} sx={{ fontSize: '12px', borderBottom: activeTab === 'tab-3' ? '2px solid #0d6efd' : '2px solid #c3cccc', px: 1 }} variant={activeTab === 'tab-3' ? 'body1' : 'body2'}>{t("SMS tarixi")}</Typography>
                             </Box>
                             {
                                 loadingDetail ? <CircularProgress disableShrink sx={{ mt: 1, mb: 2, mx: 'auto' }} size={25} /> : activeTab === 'tab-1' ? (
