@@ -2,9 +2,6 @@ import CalendarWrapper from "src/@core/styles/libs/fullcalendar";
 import Box from '@mui/material/Box';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { Typography } from '@mui/material';
-import generateTimeSlots from 'src/@core/utils/generate-time-slots';
-import { hourFormatter } from 'src/@core/utils/hourFormatter';
-import getMonthName from 'src/@core/utils/gwt-month-name';
 import { ILessonResponse } from 'src/types/apps/dashboardTypes';
 import { useAppSelector } from "src/store";
 import { useRouter } from "next/router";
@@ -12,6 +9,7 @@ import { useTranslation } from "react-i18next";
 import { Theme } from '@mui/material/styles';
 import SubLoader from "../loaders/SubLoader";
 import DashboardTable from "./DashboardTable";
+import EmptyContent from "src/@core/components/empty-content";
 
 export default function Calendar() {
     const { dashboardLessons, isUpdatingDashboard, workTime, formParams } = useAppSelector((state) => state.groups)
@@ -43,7 +41,7 @@ export default function Calendar() {
                 }}
             >
                 <Box sx={{
-                    padding: '0 15px',
+                    padding: '0 15px 15px 15px',
                     maxWidth: '100%',
                     overflowX: 'auto'
                 }}>
@@ -66,37 +64,20 @@ export default function Calendar() {
                                         </Box>
                                     </td>
                                 </tr>
-                                {dashboardLessons?.map((lesson: ILessonResponse) => (
+                                {dashboardLessons.length > 0 ? dashboardLessons?.map((lesson: ILessonResponse) => (
                                     <tr style={{ borderBottom: '1px solid #c3cccc65' }} key={lesson.room_id}>
                                         <td style={{ minWidth: '100px', fontSize: '12px' }}>
                                             {lesson.room_name}
                                         </td>
                                         <td>
                                             <DashboardTable lesson={lesson} />
-                                            {/* <Box sx={{ display: 'flex', position: 'relative', marginLeft: '25px' }}>
-                                                {workTime?.map((el: string) => <Box key={el} sx={{ width: '50px', height: '45px', borderLeft: '1px solid #c3cccc', display: 'flex', alignItems: 'center', justifyContent: 'center' }}></Box>)}
-                                                {Object.entries(exclude_time).forEach(item => {
-                                                    console.log(item);
-
-                                                    // < Box sx={{ width: `${generateTimeSlots(item.start_at, item.end_at).length * 50}px`, height: '45px', position: 'absolute', padding: '5px', left: `${workTime.findIndex(el => el === generateTimeSlots(item.start_at, item.end_at)[0]) * 50}px` }}>
-                                                    //     <Box sx={{ borderRadius: '8px', backgroundColor: `${item.color}`, width: '100%', height: '100%', cursor: 'pointer', padding: '2px 6px', overflow: 'hidden' }}>
-                                                    //         <Typography sx={{ color: 'black', fontSize: '10px' }}>{hourFormatter(item.start_at)} - {hourFormatter(item.end_at)} / {item.name}</Typography>
-                                                    //         <Typography sx={{ color: 'black', fontSize: '10px' }}>{item.teacher_name}</Typography>
-                                                    //     </Box>
-                                                    // </Box>
-                                                })}
-                                                {lesson.lessons.map((item: any) => (
-                                                    <Box onClick={() => push(`/groups/view/security?id=${item.id}&month=${getMonthName(null)}`)} key={item.id} sx={{ width: `${generateTimeSlots(item.start_at, item.end_at).length * 50}px`, height: '45px', position: 'absolute', padding: '5px', left: `${workTime.findIndex(el => el === generateTimeSlots(item.start_at, item.end_at)[0]) * 50}px` }}>
-                                                        <Box sx={{ borderRadius: '8px', backgroundColor: `${item.color}`, width: '100%', height: '100%', cursor: 'pointer', padding: '2px 6px', overflow: 'hidden' }}>
-                                                            <Typography sx={{ color: 'black', fontSize: '10px' }}>{hourFormatter(item.start_at)} - {hourFormatter(item.end_at)} / {item.name}</Typography>
-                                                            <Typography sx={{ color: 'black', fontSize: '10px' }}>{item.teacher_name}</Typography>
-                                                        </Box>
-                                                    </Box>
-                                                ))}
-                                            </Box> */}
                                         </td>
                                     </tr>
-                                ))
+                                )) : <tr>
+                                    <td colSpan={workTime.length + 1}>
+                                        <EmptyContent />
+                                    </td>
+                                </tr>
                                 }
                             </tbody>}
                     </table>

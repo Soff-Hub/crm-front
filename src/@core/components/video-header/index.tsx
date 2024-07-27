@@ -1,5 +1,4 @@
-import { Dialog, DialogContent, DialogTitle, Drawer, IconButton, Typography } from '@mui/material'
-import React from 'react'
+import { Dialog, DialogContent, DialogTitle, IconButton, Typography } from '@mui/material'
 import { useAppDispatch, useAppSelector } from 'src/store'
 import { closeVideoModal } from 'src/store/apps/settings'
 import IconifyIcon from '../icon'
@@ -22,8 +21,8 @@ export default function VideoModal({ }: Props) {
                     <IconifyIcon icon={'mingcute:close-fill'} />
                 </IconButton>
             </DialogTitle>
-            <DialogContent sx={{ width: '100%' }}>
-                <iframe style={{ minHeight: isMobile ? '320px' : isTablet ? '420px' : '600px', minWidth: isMobile ? '320px' : isTablet ? '600px' : '1024px' }} src={videoAnchor.url} title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen></iframe>
+            <DialogContent sx={{ width: '100%', }}>
+                <iframe style={{ minHeight: isMobile ? '320px' : isTablet ? '420px' : '500px', minWidth: isMobile ? '320px' : isTablet ? '600px' : '1024px' }} src={videoAnchor.url} title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen></iframe>
             </DialogContent>
         </Dialog >
     )

@@ -1,13 +1,12 @@
-import { Box, Card, Paper, TextField, Typography, styled } from '@mui/material'
-import React, { useState } from 'react'
-import { useTranslation } from 'react-i18next'
-import { formatCurrency } from 'src/@core/utils/format-currency'
-import { hexToRGBA } from 'src/@core/utils/hex-to-rgba'
+import { Box, Card, Paper, Typography } from '@mui/material';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { formatCurrency } from 'src/@core/utils/format-currency';
+import { hexToRGBA } from 'src/@core/utils/hex-to-rgba';
 import { DatePicker, CustomProvider } from 'rsuite';
 import 'rsuite/dist/rsuite.min.css';
-import uz_UZ from './uz_UZ'
-import locale from './uz_UZ'
-
+import locale from './uz_UZ';
+import { styled } from '@mui/material/styles'
 
 interface GroupStatsType {
     id: number

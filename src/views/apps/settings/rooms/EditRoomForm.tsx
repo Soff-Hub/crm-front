@@ -27,13 +27,11 @@ export default function EditRoomForm({ }: Props) {
 
     const validationSchema = Yup.object({
         name: Yup.string().required("Nom kiriting"),
-        branch: Yup.string().required("Filial tanlang"),
     });
 
     const formik = useFormik({
         initialValues: {
             name: openEditRoom?.name,
-            branch: Number(openEditRoom?.branch.id)
         },
         validationSchema,
         onSubmit: async (values) => {
@@ -89,27 +87,6 @@ export default function EditRoomForm({ }: Props) {
                     value={values.name}
                 />
                 {errors.name && touched.name && <FormHelperText error>{errors.name}</FormHelperText>}
-            </FormControl>
-
-            <FormControl fullWidth>
-                <InputLabel error={!!errors.branch && touched.branch} size='small' id='demo-simple-select-outlined-label'>
-                    {t('branch')}
-                </InputLabel>
-                <Select
-                    size='small'
-                    label={t('branch')}
-                    id='demo-simple-select-outlined'
-                    labelId='demo-simple-select-outlined-label'
-                    name='branch'
-                    error={!!errors.branch && !!touched.branch}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    value={values.branch}
-                >
-                    {branches.length > 0 && branches.map((item: any) => <MenuItem key={item.id} value={`${item.id}`}>{item?.name}</MenuItem>)}
-                </Select>
-
-                {errors.branch && touched.branch && <FormHelperText error>{errors.branch}</FormHelperText>}
             </FormControl>
 
             <LoadingButton loading={loading} type='submit' variant='contained' fullWidth>

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react';
 
 // ** Components
 import MuiDrawer, { DrawerProps } from '@mui/material/Drawer';
@@ -64,7 +64,7 @@ export default function EditStudentModal() {
                 }}
             >
                 <Typography variant='h6' sx={{ fontWeight: 600 }}>
-                    {t("O'quvchi malumotlarini tahrirlash")}
+                    {t("O'quvchi ma'lumotlarini tahrirlash")}
                 </Typography>
                 <IconButton
                     onClick={onClose}

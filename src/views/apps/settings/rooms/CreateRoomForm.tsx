@@ -1,6 +1,6 @@
 import LoadingButton from '@mui/lab/LoadingButton'
-import { FormControl, FormHelperText, InputLabel, MenuItem, Select, TextField } from '@mui/material'
-import React, { useEffect, useState } from 'react'
+import { FormControl, FormHelperText, TextField } from '@mui/material'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch, useAppSelector } from 'src/store'
 import { createRoom, fetchRoomList, setOpenCreateSms } from 'src/store/apps/settings'
@@ -10,7 +10,6 @@ import useBranches from 'src/hooks/useBranch'
 import { disablePage } from 'src/store/apps/page'
 import toast from 'react-hot-toast'
 import { useRouter } from 'next/router'
-import IconifyIcon from 'src/@core/components/icon'
 
 type Props = {}
 
@@ -30,13 +29,11 @@ export default function CreateRoomForm({ }: Props) {
 
     const validationSchema = Yup.object({
         name: Yup.string().required("Nom kiriting"),
-        branch: Yup.string().required("Filial tanlang"),
     });
 
     const formik = useFormik({
         initialValues: {
             name: '',
-            branch: ''
         },
         validationSchema,
         onSubmit: async (values) => {
@@ -91,31 +88,6 @@ export default function CreateRoomForm({ }: Props) {
                     value={values.name}
                 />
                 {errors.name && touched.name && <FormHelperText error>{errors.name}</FormHelperText>}
-            </FormControl>
-
-            <FormControl fullWidth>
-                <InputLabel error={!!errors.branch && touched.branch} size='small' id='demo-simple-select-outlined-label'>
-                    {t('branch')}
-                </InputLabel>
-                <Select
-                    size='small'
-                    label={t('branch')}
-                    id='demo-simple-select-outlined'
-                    labelId='demo-simple-select-outlined-label'
-                    name='branch'
-                    error={!!errors.branch && !!touched.branch}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    value={values.branch}
-                >
-                    {branches.length > 0 && branches.map((item: any) => <MenuItem key={item.id} value={`${item.id}`}>{item?.name}</MenuItem>)}
-                    <MenuItem sx={{ fontWeight: 600 }} onClick={() => push('/settings/ceo/all-settings')}>
-                        Yangi yaratish
-                        <IconifyIcon icon={'ion:add-sharp'} />
-                    </MenuItem>
-                </Select>
-
-                {errors.branch && touched.branch && <FormHelperText error>{errors.branch}</FormHelperText>}
             </FormControl>
 
             <LoadingButton loading={loading} type='submit' variant='contained' fullWidth>

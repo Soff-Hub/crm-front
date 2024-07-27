@@ -6,25 +6,24 @@ import {
     Menu,
     Pagination,
     Typography
-} from '@mui/material'
-import React, { MouseEvent, ReactNode, useEffect, useState } from 'react'
-import IconifyIcon from 'src/@core/components/icon'
-import DataTable from 'src/@core/components/table'
-import MenuItem from '@mui/material/MenuItem'
-import UserSuspendDialog from 'src/views/apps/mentors/view/UserSuspendDialog'
-import { useTranslation } from 'react-i18next'
-import useEmployee from 'src/hooks/useEmployee'
-import LoadingButton from '@mui/lab/LoadingButton'
-import EmployeeCreateDialog from 'src/views/apps/settings/employees/TeacherCreateDialog'
-import { useAppDispatch, useAppSelector } from 'src/store'
-import { fetchEmployees, setEmployeeData, setOpenCreateSms, updateQueryParams } from 'src/store/apps/settings'
-import EditEmployeeModal from 'src/views/apps/settings/employees/TeacherEditDialog'
-import api from 'src/@core/utils/api'
+} from '@mui/material';
+import { MouseEvent, ReactNode, useEffect, useState } from 'react';
+import IconifyIcon from 'src/@core/components/icon';
+import DataTable from 'src/@core/components/table';
+import MenuItem from '@mui/material/MenuItem';
+import UserSuspendDialog from 'src/views/apps/mentors/view/UserSuspendDialog';
+import { useTranslation } from 'react-i18next';
+import useEmployee from 'src/hooks/useEmployee';
+import EmployeeCreateDialog from 'src/views/apps/settings/employees/TeacherCreateDialog';
+import { useAppDispatch, useAppSelector } from 'src/store';
+import { fetchEmployees, setEmployeeData, setOpenCreateSms, updateQueryParams } from 'src/store/apps/settings';
+import EditEmployeeModal from 'src/views/apps/settings/employees/TeacherEditDialog';
+import api from 'src/@core/utils/api';
 import ButtonGroup from '@mui/material/ButtonGroup';
-import { disablePage } from 'src/store/apps/page'
-import toast from 'react-hot-toast'
-import { formatCurrency } from 'src/@core/utils/format-currency'
-import VideoHeader, { videoUrls } from 'src/@core/components/video-header/video-header'
+import { disablePage } from 'src/store/apps/page';
+import toast from 'react-hot-toast';
+import VideoHeader, { videoUrls } from 'src/@core/components/video-header/video-header';
+import { formatCurrency } from 'src/@core/utils/format-currency';
 
 export interface customTableProps {
     xs: number
@@ -40,6 +39,7 @@ export default function GroupsPage() {
     const { getEmployeeById } = useEmployee()
     const { employees, is_pending, employees_count, queryParams, roles } = useAppSelector(state => state.settings)
     const dispatch = useAppDispatch()
+    console.log(employees);
 
 
     const RowOptions = ({ id }: { id: number | string }) => {
@@ -147,7 +147,13 @@ export default function GroupsPage() {
             xs: 1,
             title: "Doimiy oylik",
             dataIndex: 'amount',
-            render: (amount) => formatCurrency(amount)
+            render: (amount) => {
+                if (!isNaN(Number(amount))) {
+                    return formatCurrency(amount);
+                } else {
+                    return "*****";
+                }
+            }
         },
         {
             xs: 1,
@@ -179,7 +185,7 @@ export default function GroupsPage() {
             onClick={() => handleFilter('')}
             variant={queryParams.role === '' ? 'contained' : 'outlined'}
         >
-            {t("Barchasi")} - {roles.reduce((accumulator, role) => accumulator + role.count, 0)}
+            {t("Barchasi")} - {employees.length}
         </Button>,
         ...roles.map(el => (
             <Button

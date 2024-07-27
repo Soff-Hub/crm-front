@@ -15,8 +15,27 @@ const withTM = require('next-transpile-modules')([
 module.exports = withTM({
   trailingSlash: false,
   reactStrictMode: false,
+
+  productionBrowserSourceMaps: false, // Disable source maps in development
+  optimizeFonts: false, // Disable font optimization
+  minify: false, // Disable minification
+
   experimental: {
-    esmExternals: false
+    esmExternals: false,
+    // modularizeImports: {
+    //   lodash: {
+    //     transform: 'lodash/{{member}}'
+    //   },
+    //   '@mui/material': {
+    //     transform: '@mui/material/{{member}}'
+    //   },
+    //   '@mui/lab': {
+    //     transform: '@mui/lab/{{member}}'
+    //   },
+    //   '@mui/icons-material/?(((\\w*)?/?)*)': {
+    //     transform: '@mui/icons-material/{{ matches.[1] }}/{{member}}'
+    //   }
+    // }
   },
   webpack: config => {
     config.resolve.alias = {

@@ -6,13 +6,14 @@ import getMonthName from 'src/@core/utils/gwt-month-name'
 import SubLoader from "../loaders/SubLoader"
 import { useRouter } from "next/router"
 import { Typography } from '@mui/material'
+import EmptyContent from 'src/@core/components/empty-content'
 
 const LessonsTable = () => {
     const { events, workTime, isLessonLoading } = useAppSelector((state) => state.dashboard)
     const { push } = useRouter()
 
     return (
-        <Box sx={{ padding: '0 15px', maxWidth: '100%', overflowX: 'auto' }}>
+        <Box sx={{ padding: '0 15px 15px 15px', maxWidth: '100%', overflowX: 'auto' }}>
             <table border={0} style={{ width: "100%" }}>
                 <tbody>
                     <tr>
@@ -36,7 +37,7 @@ const LessonsTable = () => {
                             </td>
                         </tr>
                     ) : (
-                        events?.map((lesson) => (
+                        events.length > 0 ? events?.map((lesson) => (
                             <tr style={{ borderBottom: '1px solid #c3cccc65' }} key={lesson.room_id}>
                                 <td style={{ minWidth: '100px', fontSize: '12px' }}>
                                     {lesson.room_name}
@@ -71,7 +72,11 @@ const LessonsTable = () => {
                                     </Box>
                                 </td>
                             </tr>
-                        ))
+                        )) : <tr>
+                            <td colSpan={workTime.length + 1}>
+                                <EmptyContent />
+                            </td>
+                        </tr>
                     )}
                 </tbody>
             </table>
