@@ -70,7 +70,7 @@ const UserViewSecurity = ({ groupData }: any) => {
   }
 
   const handlePrint = async (id: number | string) => {
-    const subdomain = location.hostname.split('.')
+    const subdomain = location.hostname.split('.');
     try {
       const response = await fetch(
         `${process.env.NODE_ENV === 'development' ? process.env.NEXT_PUBLIC_TEST_BASE_URL : subdomain.length < 3 ? `https://${process.env.NEXT_PUBLIC_BASE_URL}` : `https://${subdomain[0]}.${process.env.NEXT_PUBLIC_BASE_URL}`}/common/generate-check/${id}/`,
@@ -83,11 +83,15 @@ const UserViewSecurity = ({ groupData }: any) => {
       );
       const data = await response.blob();
       const blobUrl = URL.createObjectURL(data);
-      const printFrame: any = document.getElementById("printFrame");
-      printFrame.src = blobUrl;
-      printFrame.onload = function () {
-        printFrame.contentWindow.print();
-      };
+      const printFrame: HTMLIFrameElement | null = document.getElementById("printFrame") as HTMLIFrameElement;
+      if (printFrame) {
+        printFrame.src = blobUrl;
+        printFrame.onload = function () {
+          if (printFrame.contentWindow) {
+            printFrame.contentWindow?.print();
+          }
+        };
+      }
     } catch (error) {
       console.error("Print error:", error);
     }

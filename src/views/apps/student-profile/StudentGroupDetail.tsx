@@ -1,8 +1,8 @@
-import { Box, Card, CardContent, Typography } from "@mui/material"
-import { useRouter } from "next/router"
-import IconifyIcon from "src/@core/components/icon"
+import { Box, Card, CardContent, Typography } from "@mui/material";
+import { useRouter } from "next/router";
+import IconifyIcon from "src/@core/components/icon";
 import { useTranslation } from "react-i18next";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import api from "src/@core/utils/api";
 import DataTable from "src/@core/components/table";
 import { formatCurrency } from "src/@core/utils/format-currency";
@@ -79,7 +79,7 @@ const StudentGroupDetail = ({ slug, month }: any) => {
     }
 
     const handlePrint = async (id: number | string) => {
-        const subdomain = location.hostname.split('.')
+        const subdomain = location.hostname.split('.');
         try {
             const response = await fetch(
                 `${process.env.NODE_ENV === 'development' ? process.env.NEXT_PUBLIC_TEST_BASE_URL : subdomain.length < 3 ? `https://${process.env.NEXT_PUBLIC_BASE_URL}` : `https://${subdomain[0]}.${process.env.NEXT_PUBLIC_BASE_URL}`}/common/generate-check/${id}/`,
@@ -92,15 +92,20 @@ const StudentGroupDetail = ({ slug, month }: any) => {
             );
             const data = await response.blob();
             const blobUrl = URL.createObjectURL(data);
-            const printFrame: any = document.getElementById("printFrame");
-            printFrame.src = blobUrl;
-            printFrame.onload = function () {
-                printFrame.contentWindow.print();
-            };
+            const printFrame: HTMLIFrameElement | null = document.getElementById("printFrame") as HTMLIFrameElement;
+            if (printFrame) {
+                printFrame.src = blobUrl;
+                printFrame.onload = function () {
+                    if (printFrame.contentWindow) {
+                        printFrame.contentWindow?.print();
+                    }
+                };
+            }
         } catch (error) {
             console.error("Print error:", error);
         }
     };
+
 
     async function getReceipt(id: any) {
         setLoading(id)

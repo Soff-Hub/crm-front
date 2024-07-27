@@ -20,6 +20,7 @@ import { useAppDispatch } from 'src/store'
 import { setGlobalPay } from 'src/store/apps/students'
 import GlobalPaymentModal from 'src/views/apps/students/GlobalPaymentModal'
 import VideoModal from 'src/@core/components/video-header'
+import { useTranslation } from 'react-i18next'
 
 
 interface Props {
@@ -78,6 +79,7 @@ const AppBarContent = (props: Props) => {
   const { settings, saveSettings } = props
   const { user } = useContext(AuthContext)
   const dispatch = useAppDispatch()
+  const { t } = useTranslation()
 
   function clickGlobalPay() {
     dispatch(setGlobalPay(true))
@@ -91,12 +93,12 @@ const AppBarContent = (props: Props) => {
         sx={{ margin: '0 7px' }}
         onClick={clickGlobalPay}>
         <IconifyIcon fontSize={18} icon={'weui:add-outlined'} />
-        <span>To'lov</span>
+        <span>{t("To'lov")}</span>
       </Button>}
 
       {!window.location.hostname.split('.').includes('c-panel') && <BranchDropdown />}
 
-      <VideoModal/>
+      <VideoModal />
 
       <LanguageDropdown settings={settings} saveSettings={saveSettings} />
 
