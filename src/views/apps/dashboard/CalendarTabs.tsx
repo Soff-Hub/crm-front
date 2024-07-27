@@ -16,10 +16,10 @@ const CalendarTabs = ({ handleUpdateWeekDays }: ICalendarTabsProps) => {
 
     return (
         <TabContext value={tabValue}>
-            <TabList onChange={(event, value: string) => dispatch(handleTabValue(value))} aria-label='centered tabs example'>
-                <Tab value='1' label={t('Juft kunlar')} sx={{ p: '0 !important', fontSize: '9px' }} onClick={() => handleUpdateWeekDays(['tuesday', 'thursday', 'saturday'])} />
-                <Tab value='2' label={t('Toq kunlar')} sx={{ p: '0 !important', fontSize: '9px' }} onClick={() => handleUpdateWeekDays(['monday', 'wednesday', 'friday'])} />
-                <Tab value='4' label={t('Boshqa')} sx={{ p: '0 !important', fontSize: '9px' }} onClick={() => dispatch(handleOpen("week"))} />
+            <TabList sx={{ px: 2, }} onChange={(event, value: string) => dispatch(handleTabValue(value))} aria-label='centered tabs example'>
+                <Tab value='1' label={t('Juft kunlar')} sx={{ px: '10px', fontSize: '9px' }} onClick={() => handleUpdateWeekDays(['tuesday', 'thursday', 'saturday'])} />
+                <Tab value='2' label={t('Toq kunlar')} sx={{ px: '10px', fontSize: '9px' }} onClick={() => handleUpdateWeekDays(['monday', 'wednesday', 'friday'])} />
+                <Tab value='4' label={t('Boshqa')} sx={{ px: '10px', fontSize: '9px' }} onClick={() => dispatch(handleOpen("week"))} />
             </TabList>
         </TabContext>
     )

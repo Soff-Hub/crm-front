@@ -1,7 +1,7 @@
 import { Box, Grid, Skeleton, Typography } from '@mui/material';
-import React, { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { DateRangePicker, SelectPicker } from 'rsuite';
-import CardStatisticsHorizontal from 'src/views/ui/cards/statistics/CardStatisticsHorizontal'
+import CardStatisticsHorizontal from 'src/views/ui/cards/statistics/CardStatisticsHorizontal';
 import { useAppDispatch, useAppSelector } from 'src/store';
 import { useTranslation } from 'react-i18next';
 import EmptyContent from 'src/@core/components/empty-content';
@@ -105,17 +105,17 @@ const FinanceAllNumber = () => {
     }, [])
 
     return (
-        <div>
+        <div >
             <Grid xs={12}>
                 <Box sx={{ display: 'flex', alignItems: 'center', marginBottom: '20px', gap: 1 }}>
                     <Typography sx={{ flexGrow: 1 }} variant="h5">{t('Umumiy raqamlar')}</Typography>
                     <SelectPicker
                         onChange={handleChangeBranch}
                         size='sm'
-                        data={user?.branches ? [...user?.branches?.map(el => ({ label: el.name, value: el.id })), { label: 'Barcha filiallar', value: '' }] : []}
+                        data={user?.branches ? [...user?.branches?.map(el => ({ label: el.name, value: el.id })), { label: t('Barcha filiallar'), value: '' }] : []}
                         style={{ width: 224 }}
                         searchable={false}
-                        placeholder="Filialni tanlang"
+                        placeholder={t("Filialni tanlang")}
                         value={activeBranch}
                     />
                     <SelectPicker
@@ -125,7 +125,7 @@ const FinanceAllNumber = () => {
                         style={{ width: 224 }}
                         value={Number(allNumbersParams.date_year.split('-')[0])}
                         searchable={false}
-                        placeholder="Yilni tanlang"
+                        placeholder={t("Yilni tanlang")}
                     />
                     <SelectPicker
                         onChange={(v) => handleYearDate(v, 'm')}
@@ -134,23 +134,23 @@ const FinanceAllNumber = () => {
                         style={{ width: 224 }}
                         value={allNumbersParams.date_month}
                         searchable={false}
-                        placeholder="Oyni tanlang"
+                        placeholder={t("Oyni tanlang")}
                     />
                     <DateRangePicker showOneCalendar placement="bottomEnd" locale={{
-                        last7Days: "Oxirgi hafta",
-                        sunday: "Yak",
-                        monday: "Du",
-                        tuesday: "Se",
-                        wednesday: "Cho",
-                        thursday: "Pa",
-                        friday: "Ju",
-                        saturday: "Sha",
-                        ok: "Ok",
-                        today: "Bugun",
-                        yesterday: "Kecha",
-                        hours: "Soat",
-                        minutes: "Minut",
-                        seconds: "Sekund",
+                        last7Days: t("Oxirgi hafta"),
+                        sunday: t("Yak"),
+                        monday: t("Du"),
+                        tuesday: t("Se"),
+                        wednesday: t("Chor"),
+                        thursday: t("Pa"),
+                        friday: t("Ju"),
+                        saturday: t("Sha"),
+                        ok: t("Saqlash"),
+                        today: t("Bugun"),
+                        yesterday: t("Kecha"),
+                        hours: t("Soat"),
+                        minutes: t("Minut"),
+                        seconds: t("Sekund"),
                     }}
                         format="yyyy-MM-dd"
                         onChange={handleChangeDate}

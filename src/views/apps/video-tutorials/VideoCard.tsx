@@ -1,5 +1,6 @@
 import { CardContent, Typography } from '@mui/material';
 import Card from '@mui/material/Card';
+import { useTranslation } from 'react-i18next';
 import { useAppDispatch } from 'src/store';
 import { openVideoModal } from 'src/store/apps/settings';
 
@@ -13,6 +14,8 @@ export default function MediaCard({ link, index, title }: { index: number, link:
             url: link
         }))
     }
+    const { t } = useTranslation()
+
     return (
         <Card onClick={clickBtn} sx={{ minHeight: 200, position: 'relative' }}>
             <iframe
@@ -25,7 +28,7 @@ export default function MediaCard({ link, index, title }: { index: number, link:
                     {index + 1}.
                 </Typography>
                 <Typography variant="body1" fontWeight="bold" color="text.primary">
-                    {title}{" "} sahifasidan to'g'ri foydalanish
+                    {t(title)}
                 </Typography>
             </CardContent>
 

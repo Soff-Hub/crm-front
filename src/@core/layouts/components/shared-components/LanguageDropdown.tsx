@@ -10,6 +10,8 @@ import OptionsMenu from 'src/@core/components/option-menu'
 // ** Type Import
 import { Settings } from 'src/@core/context/settingsContext'
 import { useRouter } from 'next/router'
+import { disablePage } from 'src/store/apps/page'
+import { useAppDispatch } from 'src/store'
 
 interface Props {
   settings: Settings
@@ -19,6 +21,7 @@ interface Props {
 const LanguageDropdown = ({ settings, saveSettings }: Props) => {
   // ** Hook
   const { i18n } = useTranslation()
+  const dispatch = useAppDispatch()
 
   const router = useRouter();
   const { locales, locale: activeLocale, pathname, query, asPath } = router;
@@ -30,7 +33,7 @@ const LanguageDropdown = ({ settings, saveSettings }: Props) => {
   // ** Vars
   const { layout } = settings
 
-  const handleLangItemClick = (lang: 'uz' | 'ru' | 'en' | 'fr' | 'ar') => {
+  const handleLangItemClick = async (lang: 'uz' | 'ru' | 'en' | 'fr' | 'ar') => {
     i18n.changeLanguage(lang)
 
     if (lang === 'ar') {
@@ -38,8 +41,9 @@ const LanguageDropdown = ({ settings, saveSettings }: Props) => {
     } else {
       saveSettings({ ...settings, locale: lang, direction: 'ltr' })
     }
-
+    dispatch(disablePage(false))
     router.push({ pathname, query }, asPath, { locale: lang })
+    dispatch(disablePage(false))
   }
 
   return (

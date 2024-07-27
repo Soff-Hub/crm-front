@@ -1,8 +1,8 @@
-import React, { useState } from 'react'
-import { Box, Card, CardContent, FormControl, Input, InputLabel, MenuItem, Select } from '@mui/material'
-import { useTranslation } from 'react-i18next'
-import IconifyIcon from 'src/@core/components/icon'
-import DataTable, { customTableDataProps } from 'src/@core/components/table'
+import { useState } from 'react';
+import { Box, Card, CardContent, FormControl, Input, InputLabel, MenuItem, Select } from '@mui/material';
+import { useTranslation } from 'react-i18next';
+import IconifyIcon from 'src/@core/components/icon';
+import DataTable, { customTableDataProps } from 'src/@core/components/table';
 
 export default function Archive() {
 
@@ -108,16 +108,16 @@ export default function Archive() {
                             }}
                         >
                             <MenuItem value={1}>
-                                Guruhlar
+                                {t("Guruhlar")}
                             </MenuItem>
                             <MenuItem value={2}>
-                                O'quvchilar
+                                {t("O'quvchilar")}
                             </MenuItem>
                             <MenuItem value={3}>
-                                Kurslar
+                                {t("Kurslar")}
                             </MenuItem>
                             <MenuItem value={4}>
-                                O'qituvchilar
+                                {t("O'qituvchilar")}
                             </MenuItem>
                         </Select>
                     </FormControl>

@@ -1,11 +1,12 @@
 // ** Next Import
 import Document, { Html, Head, Main, NextScript } from 'next/document'
+import { useAppSelector } from 'src/store'
 
 
 
 class CustomDocument extends Document {
-  render() {
 
+  render() {
     return (
       <Html lang='en'>
         <Head>

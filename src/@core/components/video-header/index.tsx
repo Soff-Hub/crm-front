@@ -3,6 +3,7 @@ import { useAppDispatch, useAppSelector } from 'src/store'
 import { closeVideoModal } from 'src/store/apps/settings'
 import IconifyIcon from '../icon'
 import useResponsive from 'src/@core/hooks/useResponsive'
+import { useTranslation } from 'react-i18next'
 
 type Props = {}
 
@@ -10,12 +11,13 @@ export default function VideoModal({ }: Props) {
     const { videoAnchor } = useAppSelector(state => state.settings)
     const dispatch = useAppDispatch()
     const { isMobile, isTablet } = useResponsive()
+    const { t } = useTranslation()
 
     return (
         <Dialog open={videoAnchor.open} onClose={() => dispatch(closeVideoModal())} maxWidth={isMobile ? 'xs' : isTablet ? 'md' : 'xl'}>
             <DialogTitle sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <Typography variant='h5'>
-                    {videoAnchor.title} sahifasidan foydalanish bo'yicha video qo'llanma
+                    {t(videoAnchor.title)}
                 </Typography>
                 <IconButton onClick={() => dispatch(closeVideoModal())}>
                     <IconifyIcon icon={'mingcute:close-fill'} />

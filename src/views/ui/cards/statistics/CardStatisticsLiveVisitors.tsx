@@ -24,13 +24,13 @@ const CardWidgetsWeeklyOverview = () => {
 
   const data = all_numbers ? [
     {
-      name: 'Chiqimlar',
+      name: t('Chiqimlar'),
       data: Object.values(all_numbers.expense),
     }, {
-      name: 'Tushumlar',
+      name: t('Tushumlar'),
       data: Object.values(all_numbers.benefit),
     }, {
-      name: 'Foyda',
+      name: t('Foyda'),
       data: Object.values(all_numbers.difference),
     }
   ] : []
@@ -85,7 +85,7 @@ const CardWidgetsWeeklyOverview = () => {
       }
     },
     xaxis: {
-      categories: ['Yan', 'Fev', 'Mar', 'Apr', 'May', 'Iyun', 'Iyul', 'Avg', "Sen", 'Okt', 'Noy', 'Dek'],
+      categories: ['Yan', 'Fev', 'Mart', 'Apr', 'May', 'Iyun', 'Iyul', 'Avg', 'Sen', 'Okt', 'Noy', 'Dek'].map(month => t([month])),
       tickPlacement: 'on',
       labels: { show: true },
       axisTicks: { show: false },
@@ -108,7 +108,7 @@ const CardWidgetsWeeklyOverview = () => {
   return (
     <Card sx={{ p: '20px' }}>
       <Box sx={{ display: 'flex', alignItems: 'center' }}>
-        {loading ?  <Skeleton variant='text' width={'200px'} /> : <Typography sx={{ fontSize: '22px' }}>{all_numbers?.year} {t('Yildagi aylanmalar')}</Typography>}
+        {loading ? <Skeleton variant='text' width={'200px'} /> : <Typography sx={{ fontSize: '22px' }}>{all_numbers?.year} {t('yildagi aylanmalar')}</Typography>}
       </Box>
       <Box>
         {loading ? (

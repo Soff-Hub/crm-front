@@ -1,5 +1,5 @@
 import { Box, Skeleton } from '@mui/material'
-import React from 'react'
+import { useTranslation } from 'react-i18next'
 import EmptyContent from 'src/@core/components/empty-content'
 import ReactApexcharts from 'src/@core/components/react-apexcharts'
 import { formatCurrency } from 'src/@core/utils/format-currency'
@@ -8,7 +8,7 @@ import { useAppSelector } from 'src/store'
 
 export default function StatsPaymentMethods() {
     const { all_numbers, numbersLoad: loading } = useAppSelector(state => state.finance)
-
+    const { t } = useTranslation()
     const props: any = {
         series: all_numbers?.payment_types.map(el => el.amount),
         options: {
@@ -29,7 +29,7 @@ export default function StatsPaymentMethods() {
                 }
             }],
             title: {
-                text: "Tushumlar",
+                text: t("Tushumlar"),
                 style: {
                     fontSize: '20px',
                     fontWeight: 500,

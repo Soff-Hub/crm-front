@@ -7,10 +7,12 @@ import SubLoader from "../loaders/SubLoader"
 import { useRouter } from "next/router"
 import { Typography } from '@mui/material'
 import EmptyContent from 'src/@core/components/empty-content'
+import { useTranslation } from 'react-i18next'
 
 const LessonsTable = () => {
     const { events, workTime, isLessonLoading } = useAppSelector((state) => state.dashboard)
     const { push } = useRouter()
+    const { t } = useTranslation()
 
     return (
         <Box sx={{ padding: '0 15px 15px 15px', maxWidth: '100%', overflowX: 'auto' }}>
@@ -18,7 +20,7 @@ const LessonsTable = () => {
                 <tbody>
                     <tr>
                         <td style={{ minWidth: '100px', fontSize: '12px' }}>
-                            {"Xonalar / Soat"}
+                            {t("Xonalar / Soat")}
                         </td>
                         <td>
                             <Box sx={{ display: 'flex' }}>
