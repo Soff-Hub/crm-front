@@ -34,7 +34,7 @@ export const videoUrls: {
     },
     courses: {
         title: 'Kurslar',
-        url: 'https://www.youtube.com/embed/_F834yt0gU0?si=T6pYxG_3XirI5OOb'
+        url: 'https://www.youtube.com/embed/h4e3uFEutXg?si=7Y4wXiXSzkc3078Z'
     },
     rooms: {
         title: 'Xonalar',
@@ -42,15 +42,15 @@ export const videoUrls: {
     },
     freedays: {
         title: 'Dam olish kunlar',
-        url: 'https://www.youtube.com/embed/6h-206ik7xk?si=0otG8F4J2jt7T934'
+        url: 'https://www.youtube.com/embed/SXZusS3PzDc?si=GygrE3BO5phyezow'
     },
     sms: {
         title: 'SMS shablonlar',
-        url: 'https://www.youtube.com/embed/iSQ3AI-55po?si=UFSLr2E9vObU85WO'
+        url: 'https://www.youtube.com/embed/MCoIPJfs_-s?si=YYQCmQwcc9DJGpm8'
     },
     forms: {
         title: 'Formalar',
-        url: 'https://www.youtube.com/embed/IlxxBcILFaY?si=oz5FAArU9G39URJM'
+        url: 'https://www.youtube.com/embed/jfIako9-4Ls?si=Pf3Nk7DcEChYUH4r'
     },
     dashboard: {
         title: "Asosiy",

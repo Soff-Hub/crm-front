@@ -1,11 +1,11 @@
-import { Box, Card, CardContent, Skeleton, Typography } from '@mui/material'
-import Link from 'next/link'
-import React, { useContext, useEffect } from 'react'
-import getLessonDays from 'src/@core/utils/getLessonDays'
-import getMonthName from 'src/@core/utils/gwt-month-name'
-import { AuthContext } from 'src/context/AuthContext'
-import { useAppDispatch, useAppSelector } from 'src/store'
-import { fetchGroups } from 'src/store/apps/groups'
+import { Box, Card, CardContent, Skeleton, Typography } from '@mui/material';
+import Link from 'next/link';
+import { useContext, useEffect } from 'react';
+import getLessonDays from 'src/@core/utils/getLessonDays';
+import getMonthName from 'src/@core/utils/gwt-month-name';
+import { AuthContext } from 'src/context/AuthContext';
+import { useAppDispatch, useAppSelector } from 'src/store';
+import { fetchGroups } from 'src/store/apps/groups';
 
 
 export default function MyGroups() {
@@ -17,6 +17,7 @@ export default function MyGroups() {
     useEffect(() => {
         dispatch(fetchGroups(`page=1&status=active&teacher=${user?.id}`))
     }, [])
+    console.log(groups);
 
     return (
         <div>
@@ -49,7 +50,7 @@ export default function MyGroups() {
                             <Link key={'group.id'} href={`/groups/view/security/?id=${group.id}&month=${getMonthName(null)}`} style={{ textDecoration: 'none' }}>
                                 <Box sx={{ display: 'flex', gap: '20px' }} >
                                     <Card>
-                                        <CardContent sx={{ display: 'flex', justifyContent: 'space-between', minWidth: '320px' }}>
+                                        <CardContent sx={{ display: 'flex', justifyContent: 'space-between', minWidth: '320px', gap: "20px" }}>
                                             <Box sx={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
                                                 <Typography sx={{ fontSize: '12px' }}>{group.name}</Typography>
                                                 <Typography sx={{ fontSize: '12px' }}>{group.course_name}</Typography>
