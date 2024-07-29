@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Box, Button, ButtonGroup, DialogContent, DialogTitle, FormControl, FormHelperText, TextField, Typography, IconButton as IconButtonMui } from '@mui/material';
 import CardStatsVertical from 'src/@core/components/card-statistics/card-stats-vertical';
 import api from 'src/@core/utils/api';
 import { DateRangePicker, IconButton } from 'rsuite';
 import 'rsuite/DateRangePicker/styles/index.css';
-import Router, { useRouter } from 'next/router';
+import Router from 'next/router';
 import format from 'date-fns/format';
 import IconifyIcon from 'src/@core/components/icon';
 import { CustomeDrawer } from '../settings/office/courses';
@@ -15,10 +15,8 @@ import LoadingButton from '@mui/lab/LoadingButton';
 
 
 const Stats = () => {
-
     const [sources, setSources] = useState<{ id: number, name: string, students_count: number }[]>([])
     const [filter, setFilter] = useState<'a' | 1>('a')
-    const { push } = useRouter()
     const [date, setDate] = useState<any>('')
     const { t } = useTranslation()
     const [loading, setLoading] = useState<boolean>(false)
@@ -80,7 +78,7 @@ const Stats = () => {
                 <IconButtonMui color='primary'>
                     <IconifyIcon icon={'ep:back'} style={{ cursor: 'pointer' }} onClick={() => Router.back()} />
                 </IconButtonMui>
-                <Typography sx={{ fontSize: '20px', flexGrow: 1 }}>{t("Statisika, Manbalr bo'yicha")}</Typography>
+                <Typography sx={{ fontSize: '20px', flexGrow: 1 }}>{t("Manbalar hisoboti")}</Typography>
             </Box>
             <Box sx={{ alignItems: 'center', paddingBottom: '20px', flexWrap: 'nowrap', width: '100%', display: 'flex' }}>
                 <DateRangePicker format="yyyy-MM-dd" onChange={handleChangeDate} translate={'yes'} size="sm" style={{ marginRight: 20 }} />
@@ -88,7 +86,7 @@ const Stats = () => {
                     <Button variant={filter === 'a' ? 'contained' : 'outlined'} onClick={() => handleFilter('a')}>A {">"} Z</Button>
                     <Button variant={filter === 1 ? 'contained' : 'outlined'} onClick={() => handleFilter(1)}>1 {">"} 0</Button>
                 </ButtonGroup>
-                <Button onClick={() => setOpen(true)} variant='contained' sx={{ marginLeft: 'auto' }} size='small' startIcon={<IconifyIcon icon={'carbon:add'} />}>Yangi Manba</Button>
+                <Button onClick={() => setOpen(true)} variant='contained' sx={{ marginLeft: 'auto' }} size='small' startIcon={<IconifyIcon icon={'carbon:add'} />}>{t("Yangi Manba")}</Button>
             </Box>
             <Box sx={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
                 {

@@ -12,10 +12,8 @@ import LoadingButton from '@mui/lab/LoadingButton'
 import toast from 'react-hot-toast'
 import showResponseError from 'src/@core/utils/show-response-error'
 import useSMS from 'src/hooks/useSMS'
-import { useRouter } from 'next/router'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch, useAppSelector } from 'src/store'
-import { RootState } from 'src/store'
 import { fetchDepartmentList } from 'src/store/apps/leads'
 import DepartmentSendSmsForm from 'src/views/apps/lids/departmentItem/DepartmentSendSmsForm'
 import EditDepartmentItemForm from 'src/views/apps/lids/departmentItem/EditDepartmentItemForm'
@@ -259,7 +257,7 @@ export default function AccordionCustom({ onView, item }: AccordionProps) {
                 <DialogContent sx={{ minWidth: '300px' }}>
                     <Typography sx={{ fontSize: '24px', marginBottom: '20px', textAlign: 'center' }}>{t("O'chirishni tasdiqlang")}</Typography>
                     <Box sx={{ justifyContent: 'space-around', display: 'flex' }}>
-                        <LoadingButton variant='outlined' size='small' color='error'>{t("Bekor qilish")}</LoadingButton>
+                        <LoadingButton variant='outlined' size='small' color='error' onClick={() => setOpenDialog(null)}>{t("Bekor qilish")}</LoadingButton>
                         <LoadingButton loading={loading} size='small' variant='outlined' onClick={deleteDepartmentItem}>{t("O'chirish")}</LoadingButton>
                     </Box>
                 </DialogContent>

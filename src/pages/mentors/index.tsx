@@ -44,7 +44,7 @@ export default function GroupsPage() {
     },
     {
       xs: 0.4,
-      title: t('Rasmi'),
+      title: t('Rasm'),
       dataIndex: 'image',
       render: (actions) => <TeacherAvatar skin='light' color={'info'} variant='rounded' sx={{ width: 33, height: 33 }}
       >{
@@ -66,13 +66,13 @@ export default function GroupsPage() {
     },
     {
       xs: 1.7,
-      title: "Doimiy oylik",
+      title: t("Doimiy oylik"),
       dataIndex: 'amount',
       render: (amount) => formatCurrency(amount)
     },
     {
       xs: 1.7,
-      title: "Foiz ulush (%)",
+      title: t("Foiz ulush (%)"),
       dataIndex: 'percentage'
     },
     {
