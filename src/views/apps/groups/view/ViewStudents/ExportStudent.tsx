@@ -26,15 +26,15 @@ export default function ExportStudent({ id, modalRef, setModalRef }: { id: any, 
     const formik = useFormik({
         initialValues: { added_at: today, new_group: '', status: "new" },
         validationSchema: () => Yup.object({
-            added_at: Yup.string().required("Maydonni to'ldiring"),
-            new_group: Yup.string().required("Maydonni to'ldiring")
+            added_at: Yup.string().required(t("Maydonni to'ldiring") as string),
+            new_group: Yup.string().required(t("Maydonni to'ldiring") as string)
         }),
         onSubmit: async (values) => {
             setLoading(true)
             try {
                 const response = await api.post('common/group-student/export/', { ...values, group_student: id })
                 if (response.status == 201) {
-                    toast.success("O'quvchi guruhga ko'chirildi")
+                    toast.success(t("O'quvchi guruhga ko'chirildi") as string)
                     await dispatch(getStudents({ id: groupData?.id, queryString: '' }))
                     dispatch(setGettingAttendance(true))
                     if (query.month && query?.id) {
@@ -66,7 +66,7 @@ export default function ExportStudent({ id, modalRef, setModalRef }: { id: any, 
             aria-describedby='user-view-edit-description'
         >
             <DialogTitle id='user-view-edit' sx={{ textAlign: 'center', fontSize: '1.5rem !important' }}>
-                O'quvchini boshqa guruhga ko'chirish
+                {t("O'quvchini boshqa guruhga ko'chirish")}
             </DialogTitle>
             <DialogContent>
                 <form style={{ marginTop: 10 }} onSubmit={formik.handleSubmit} >
@@ -75,7 +75,7 @@ export default function ExportStudent({ id, modalRef, setModalRef }: { id: any, 
                         <Select
                             error={!!formik.errors.new_group && formik.touched.new_group}
                             size='small'
-                            label="Yangi guruh"
+                            label={t("Yangi guruh")}
                             id='demo-simple-select-outlined'
                             labelId='demo-simple-select-outlined-label'
                             name='new_group'
@@ -101,7 +101,7 @@ export default function ExportStudent({ id, modalRef, setModalRef }: { id: any, 
                         <Select
                             error={!!formik.errors.status && formik.touched.status}
                             size='small'
-                            label="Guruhdagi holati"
+                            label={t("Guruhdagi holati")}
                             id='demo-simple-select-outlined'
                             labelId='demo-simple-select-outlined-label'
                             name='status'

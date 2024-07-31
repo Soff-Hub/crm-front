@@ -35,14 +35,14 @@ export default function EditGroupModal() {
     const { query } = useRouter()
 
     const validationSchema = Yup.object({
-        name: Yup.string().required("Guruh nomini kiriting"),
-        course: Yup.string().required("Kursni tanlang"),
-        teacher: Yup.string().required("O'qituvchini tanlang"),
-        room: Yup.string().required("Xonani tanlang"),
-        start_date: Yup.string().required("Boshlanish sanasini tanlang"),
-        start_at: Yup.string().required("Boshlanish vaqtini tanlang"),
-        day_of_week: Yup.string().required("Dars kunlarini tanlang"),
-        end_at: Yup.string().required("Tugash vaqtini tanlang"),
+        name: Yup.string().required(t("Guruh nomini kiriting")),
+        course: Yup.string().required(t("Kursni tanlang")),
+        teacher: Yup.string().required(t("O'qituvchini tanlang")),
+        room: Yup.string().required(t("Xonani tanlang")),
+        start_date: Yup.string().required(t("Boshlanish sanasini tanlang")),
+        start_at: Yup.string().required(t("Boshlanish vaqtini tanlang")),
+        day_of_week: Yup.string().required(t("Dars kunlarini tanlang")),
+        end_at: Yup.string().required(t("Tugash vaqtini tanlang")),
     });
 
     const formik = useFormik({
@@ -69,7 +69,7 @@ export default function EditGroupModal() {
                 formik.setErrors(response.payload)
             } else {
                 dispatch(updateParams({ is_recovery: false }))
-                toast.success("O'zgrishlar muvafaqqiyati saqlandi")
+                toast.success(t("O'zgrishlar muvafaqqiyati saqlandi"))
                 const queryString = new URLSearchParams(queryParams).toString()
                 if (query?.id) {
                     dispatch(setGettingAttendance(true))

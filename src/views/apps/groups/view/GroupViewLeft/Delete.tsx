@@ -22,8 +22,9 @@ export default function Delete() {
                 dispatch(handleEditClickOpen(null))
                 push("/groups")
             } else {
-                toast.error("Guruhni o'chirib bo'lmadi")
+                toast.error(response.payload.msg || "Guruhni o'chirib bo'lmadi")
             }
+
         }
         setLoading(false)
     }

@@ -53,6 +53,7 @@ export default function EditStudent({ student, id, activate, setActivate, status
                 dispatch(setGettingAttendance(false))
             } catch (err: any) {
                 formik.setErrors(err?.response?.data)
+                console.log(err?.response?.data);
                 setLoading(false)
             }
         }
@@ -87,12 +88,14 @@ export default function EditStudent({ student, id, activate, setActivate, status
                             id='demo-simple-select-outlined'
                             labelId='demo-simple-select-outlined-label'
                             name='status'
+                            error={!!formik.errors.status && formik.touched.status}
                         >
                             <MenuItem value={'active'}>Aktiv</MenuItem>
                             <MenuItem value={'new'}>Sinov darsi</MenuItem>
                             <MenuItem value={'archive'}>Arxiv</MenuItem>
                             <MenuItem value={'frozen'}>Muzlatish</MenuItem>
                         </Select>
+                        <FormHelperText error>{formik.errors.status}</FormHelperText>
                     </FormControl>
 
                     <Box sx={{ display: 'flex', justifyContent: 'center', gap: 4 }}>

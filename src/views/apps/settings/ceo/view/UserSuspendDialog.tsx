@@ -11,6 +11,7 @@ import DialogActions from '@mui/material/DialogActions'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
+import { useTranslation } from 'react-i18next'
 
 type Props = {
   open: boolean
@@ -20,7 +21,7 @@ type Props = {
 const UserSuspendDialog = (props: Props) => {
   // ** Props
   const { open, setOpen } = props
-
+  const { t } = useTranslation()
   // ** States
   const [userInput, setUserInput] = useState<string>('yes')
   const [secondDialogOpen, setSecondDialogOpen] = useState<boolean>(false)
@@ -43,18 +44,18 @@ const UserSuspendDialog = (props: Props) => {
             <Box sx={{ mb: 4, maxWidth: '85%', textAlign: 'center', '& svg': { mb: 12.25, color: 'warning.main' } }}>
               <Icon icon='mdi:alert-circle-outline' fontSize='5.5rem' />
               <Typography variant='h4' sx={{ color: 'text.secondary' }}>
-              Ishonchingiz komilmi?
+                {t("Ishonchingiz komilmi?")}
               </Typography>
             </Box>
-            <Typography>Siz foydalanuvchini qaytara olmaysiz!</Typography>
+            <Typography>{t("Siz foydalanuvchini qaytara olmaysiz!")}</Typography>
           </Box>
         </DialogContent>
         <DialogActions sx={{ justifyContent: 'center' }}>
           <Button variant='contained' onClick={() => handleConfirmation('yes')}>
-          Ha, foydalanuvchini o'chirish
+            {t("Ha, foydalanuvchini o'chirish")}
           </Button>
           <Button variant='outlined' color='secondary' onClick={() => handleConfirmation('cancel')}>
-          Bekor qilish
+            {t("Bekor qilish")}
           </Button>
         </DialogActions>
       </Dialog>
@@ -81,9 +82,9 @@ const UserSuspendDialog = (props: Props) => {
               icon={userInput === 'yes' ? 'mdi:check-circle-outline' : 'mdi:close-circle-outline'}
             />
             <Typography variant='h4' sx={{ mb: 8 }}>
-              {userInput === 'yes' ? "Muvaffaqiyatli!" : 'Bekor qilindi'}
+              {userInput === 'yes' ? t("Muvaffaqiyatli!") : t('Bekor qilindi')}
             </Typography>
-            <Typography>{userInput === 'yes' ? "Foydalanuvchi o'chirilidi " : "O'chirish  bekor qilindi"}</Typography>
+            <Typography>{userInput === 'yes' ? t("Foydalanuvchi o'chirilidi") : t("O'chirish  bekor qilindi")}</Typography>
           </Box>
         </DialogContent>
         <DialogActions sx={{ justifyContent: 'center' }}>

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react';
 import * as Yup from "yup";
 import { useFormik } from 'formik';
 import { FormControl, FormHelperText, InputLabel, MenuItem, Select, TextField } from '@mui/material';
@@ -119,7 +119,7 @@ export default function CreateAnonimUserForm({ }: Props) {
                         sourceData.map((lead: any) => <MenuItem key={lead.id} value={lead.id}>{lead.name}</MenuItem>)
                     }
                     <MenuItem sx={{ fontWeight: 600 }} onClick={() => Router.push('/lids/stats')}>
-                        Yangi yaratish
+                        {t("Yangi yaratish")}
                         <IconifyIcon icon={'ion:add-sharp'} />
                     </MenuItem>
                 </Select>

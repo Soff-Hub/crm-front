@@ -65,10 +65,10 @@ export default function AddExam() {
             parent: null
         },
         validationSchema: () => Yup.object({
-            title: Yup.string().required("Maydonni to'ldiring"),
-            date: Yup.string().required("Sanani tanlang"),
-            max_score: Yup.string().required("Maydonni to'ldiring"),
-            min_score: Yup.string().required("Maydonni to'ldiring")
+            title: Yup.string().required(t("Maydonni to'ldiring") as string),
+            date: Yup.string().required(t("Sanani tanlang") as string),
+            max_score: Yup.string().required(t("Maydonni to'ldiring") as string),
+            min_score: Yup.string().required(t("Maydonni to'ldiring") as string)
         }),
         onSubmit: async (values) => {
             setLoading(true)

@@ -11,6 +11,7 @@ import DialogActions from '@mui/material/DialogActions'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
+import { useTranslation } from 'react-i18next'
 
 type Props = {
   open: boolean
@@ -55,7 +56,7 @@ const UserSuspendDialog = (props: Props) => {
   function handleModalClose() {
     setSecondDialogOpen(false)
   }
-
+  const { t } = useTranslation()
   return (
     <>
       <Dialog fullWidth open={open} onClose={handleClose} sx={{ '& .MuiPaper-root': { width: '100%', maxWidth: 512 } }}>
@@ -64,10 +65,10 @@ const UserSuspendDialog = (props: Props) => {
             <Box sx={{ mb: 4, maxWidth: '85%', textAlign: 'center', '& svg': { mb: 12.25, color: 'warning.main' } }}>
               <Icon icon='mdi:alert-circle-outline' fontSize='5.5rem' />
               <Typography variant='h4' sx={{ color: 'text.secondary' }}>
-                Ishonchingiz komilmi?
+                {t("Ishonchingiz komilmi?")}
               </Typography>
             </Box>
-            <Typography>Siz bu jarayonni ortqa qaytara olmaysiz qaytara olmaysiz!</Typography>
+            <Typography>{t("Siz bu jarayonni ortqa qaytara olmaysiz")}</Typography>
           </Box>
         </DialogContent>
         <DialogActions sx={{ justifyContent: 'center' }}>
@@ -76,7 +77,7 @@ const UserSuspendDialog = (props: Props) => {
             style={{ marginTop: '30px' }}
             onClick={() => handleConfirmation('yes')}
           >
-            Ha, o'chirish
+            {t("Ha, o'chirish")}
           </Button>
           <Button
             variant='outlined'
@@ -84,7 +85,7 @@ const UserSuspendDialog = (props: Props) => {
             color='secondary'
             onClick={() => handleConfirmation2('cancel')}
           >
-            Bekor qilish
+            {t("Bekor qilish")}
           </Button>
         </DialogActions>
       </Dialog>
@@ -112,12 +113,12 @@ const UserSuspendDialog = (props: Props) => {
               icon={userInput === 'yes' ? 'mdi:check-circle-outline' : 'mdi:close-circle-outline'}
             />
             <Typography variant='h4' sx={{ mb: 6 }}>
-              {userInput === 'yes' ? 'Muvaffaqiyatli!' : 'Bekor qilindi'}
+              {userInput === 'yes' ? t('Muvaffaqiyatli!') : t('Bekor qilindi')}
             </Typography>
-            <Typography>{userInput === 'yes' ? `Muvaffaqiyatli! o'chirilidi` : "O'chirish  bekor qilindi"}</Typography>
+            <Typography>{userInput === 'yes' ? t(`Muvaffaqiyatli! o'chirilidi`) : t("O'chirish  bekor qilindi")}</Typography>
             <DialogActions sx={{ justifyContent: 'center', p: 3 }}>
               <Button variant='contained' onClick={handleModalClose}>
-                Yaxshi
+                {t("Yaxshi")}
               </Button>
             </DialogActions>
           </Box>

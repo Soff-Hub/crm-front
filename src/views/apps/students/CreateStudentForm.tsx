@@ -1,7 +1,20 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react';
 
 // ** Components
-import { Box, Button, FormControl, FormControlLabel, FormHelperText, FormLabel, InputLabel, MenuItem, OutlinedInput, Radio, RadioGroup, Select, TextField } from '@mui/material';
+import {
+    Box,
+    Button,
+    FormControl,
+    FormControlLabel,
+    FormHelperText,
+    FormLabel,
+    InputLabel,
+    MenuItem,
+    Radio,
+    RadioGroup,
+    Select,
+    TextField,
+} from '@mui/material';
 import IconifyIcon from 'src/@core/components/icon';
 import LoadingButton from '@mui/lab/LoadingButton';
 
@@ -182,7 +195,7 @@ export default function CreateStudentForm() {
                                 groups.map(group => <MenuItem key={group.id} value={Number(group.id)}>{group.name}</MenuItem>)
                             }
                             <MenuItem sx={{ fontWeight: 600 }} onClick={() => Router.push('/groups')}>
-                                Yangi yaratish
+                                {t("Yangi yaratish")}
                                 <IconifyIcon icon={'ion:add-sharp'} />
                             </MenuItem>
                         </Select>

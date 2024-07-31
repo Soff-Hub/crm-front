@@ -45,7 +45,7 @@ export default function Calendar() {
                     maxWidth: '100%',
                     overflowX: 'auto'
                 }}>
-                    <Typography variant="h5">{formParams.day_of_week == `tuesday,thursday,saturday` ? "Juft kunlar" : formParams.day_of_week == `monday,wednesday,friday` ? "Toq kunlar" : formParams.day_of_week == `tuesday,thursday,saturday,monday,wednesday,friday` ? "Har kuni" : "Boshqa kunlar"}</Typography>
+                    <Typography variant="h5">{formParams.day_of_week == `tuesday,thursday,saturday` ? t("Juft kunlar") : formParams.day_of_week == `monday,wednesday,friday` ? t("Toq kunlar") : formParams.day_of_week == `tuesday,thursday,saturday,monday,wednesday,friday` ? t("Har kun") : t("Boshqa")}</Typography>
                     <table border={0} style={{ width: "100%" }}>
                         {isUpdatingDashboard ?
                             <tr>

@@ -55,7 +55,7 @@ export default function GroupDetails() {
         <Card sx={{ position: "relative" }}>
             <CardContent sx={{ display: "flex", flexDirection: "column", gap: "8px" }}>
                 {isGettingGroupDetails ? <Skeleton variant="rounded" height={20} animation="wave" sx={{ my: "5px" }} /> : <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', alignItems: 'center' }}>
-                    <Typography>Guruh:</Typography>
+                    <Typography>{t("Guruh")}:</Typography>
                     <Typography sx={{ fontWeight: 600, fontSize: "18px" }}>{groupData?.name}</Typography>
                 </Box>}
                 {isGettingGroupDetails ? <Skeleton variant="rounded" height={20} animation="wave" sx={{ my: "5px" }} /> : <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', alignItems: 'center' }}>
@@ -168,22 +168,22 @@ export default function GroupDetails() {
             {
                 !(user?.role.length === 1 && user?.role.includes('teacher')) ? (
                     <CardActions sx={{ display: 'flex', justifyContent: 'center' }}>
-                        {isGettingGroupDetails ? <Skeleton variant="rounded" animation="wave" width={70} height={40} /> : <Tooltip title="Tahrirlash" placement='top'>
+                        {isGettingGroupDetails ? <Skeleton variant="rounded" animation="wave" width={70} height={40} /> : <Tooltip title={t("Tahrirlash")} placement='top'>
                             <Button variant='outlined' color='warning' onClick={async () => (dispatch(handleOpenEdit(true)), handleEdit(groupData?.id), await dispatch(getMetaData()))}>
                                 <IconifyIcon icon='iconamoon:edit-light' />
                             </Button>
                         </Tooltip>}
-                        {isGettingGroupDetails ? <Skeleton variant="rounded" animation="wave" width={70} height={40} /> : <Tooltip title="O'chirish" placement='top'>
+                        {isGettingGroupDetails ? <Skeleton variant="rounded" animation="wave" width={70} height={40} /> : <Tooltip title={t("O'chirish")} placement='top'>
                             <Button variant='outlined' color='error' onClick={() => dispatch(handleEditClickOpen('delete'))}>
                                 <IconifyIcon icon='mdi-light:delete' />
                             </Button>
                         </Tooltip>}
-                        {isGettingGroupDetails ? <Skeleton variant="rounded" animation="wave" width={70} height={40} /> : <Tooltip title="SMS yuborish" placement='top'>
+                        {isGettingGroupDetails ? <Skeleton variant="rounded" animation="wave" width={70} height={40} /> : <Tooltip title={t("SMS yuborish")} placement='top'>
                             <Button variant='outlined' color="warning" onClick={handleOpenSendSMSModal}>
                                 <IconifyIcon icon='material-symbols-light:sms-outline' />
                             </Button>
                         </Tooltip>}
-                        {isGettingGroupDetails ? <Skeleton variant="rounded" animation="wave" width={70} height={40} /> : <Tooltip title="O'quvchi qo'shish" placement='top'>
+                        {isGettingGroupDetails ? <Skeleton variant="rounded" animation="wave" width={70} height={40} /> : <Tooltip title={t("O'quvchi qo'shish")} placement='top'>
                             <Button variant='outlined' onClick={() => dispatch(handleEditClickOpen('add-student'))}>
                                 <IconifyIcon icon='mdi:user-add-outline' />
                             </Button>

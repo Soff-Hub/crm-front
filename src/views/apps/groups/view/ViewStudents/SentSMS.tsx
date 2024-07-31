@@ -18,7 +18,7 @@ export default function SentSMS({ id, modalRef, setModalRef }: { id: string, mod
     const formik = useFormik({
         initialValues: { message: "" },
         validationSchema: () => Yup.object({
-            message: Yup.string().required("Maydonni to'ldiring")
+            message: Yup.string().required(t("Maydonni to'ldiring") as string)
         }),
         onSubmit: async (values) => {
             setLoading(true)

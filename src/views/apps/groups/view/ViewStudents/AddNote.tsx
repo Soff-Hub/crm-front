@@ -14,22 +14,23 @@ import {
     Typography,
 } from '@mui/material';
 import { toast } from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
 
 
 export default function AddNote({ id, modalRef, setModalRef }: { id: string, modalRef: string | null, setModalRef: any }) {
     const [isLoading, setLoading] = useState(false)
-
+    const { t } = useTranslation()
     const formik = useFormik({
         initialValues: { description: "" },
         validationSchema: () => Yup.object({
-            description: Yup.string().required("Maydonni to'ldiring")
+            description: Yup.string().required(t("Maydonni to'ldiring") as string)
         }),
         onSubmit: async (values) => {
             setLoading(true)
             try {
                 const response = await api.post('auth/student/description/', { user: id, ...values })
                 if (response.status == 200) {
-                    toast.success("Eslatma qo'shildi")
+                    toast.success(t("Eslatma qo'shildi") as string)
                 }
                 setLoading(false)
                 setModalRef(null)

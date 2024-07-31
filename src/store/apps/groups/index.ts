@@ -46,10 +46,20 @@ export const updateGroup = createAsyncThunk('groups/updateGroup', async ({ id, v
   }
 })
 
-export const deleteGroups = createAsyncThunk('groups/deleteGroups', async (id: number | string) => {
-  const response = await api.delete(`common/group/delete/${id}`)
-  return response
-})
+export const deleteGroups = createAsyncThunk(
+  'groups/deleteGroups',
+  async (id: number | string, { rejectWithValue }) => {
+    try {
+      const response = await api.delete(`common/group/delete/${id}`)
+      return response
+    } catch (err: any) {
+      if (err.response) {
+        return rejectWithValue(err.response.data)
+      }
+      return rejectWithValue(err.message)
+    }
+  }
+)
 
 export const fetchGroups = createAsyncThunk('groups/fetchGroups', async (queryString: string = '') => {
   const resp = await api.get(ceoConfigs.groups + '?' + queryString)
@@ -159,7 +169,6 @@ export const groupsSlice = createSlice({
     })
     builder.addCase(deleteGroups.rejected, state => {
       state.isDeleting = false
-      toast.error("Guruhni o'chirib bo'lmadi", { position: 'bottom-center' })
     })
     builder.addCase(fetchGroups.pending, state => {
       state.isLoading = true
@@ -194,6 +203,13 @@ export const groupsSlice = createSlice({
   }
 })
 
-export const { handleOpenEdit, resetFormParams, updateFormParams, handleOpenAddModal, updateParams, setGroupData, resetGroupParams } =
-  groupsSlice.actions
+export const {
+  handleOpenEdit,
+  resetFormParams,
+  updateFormParams,
+  handleOpenAddModal,
+  updateParams,
+  setGroupData,
+  resetGroupParams
+} = groupsSlice.actions
 export default groupsSlice.reducer

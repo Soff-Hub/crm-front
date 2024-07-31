@@ -1,17 +1,31 @@
-import LoadingButton from "@mui/lab/LoadingButton"
-import { Box, Button, Dialog, DialogActions, DialogContent, Drawer, FormControl, FormHelperText, IconButton, InputLabel, OutlinedInput, TextField, Tooltip, Typography } from "@mui/material"
-import { useFormik } from "formik"
-import { useRouter } from "next/router"
-import { useEffect, useState } from "react"
-import { useTranslation } from "react-i18next"
-import Form from "src/@core/components/form"
-import IconifyIcon from "src/@core/components/icon"
-import DataTable from "src/@core/components/table"
-import useResponsive from "src/@core/hooks/useResponsive"
-import api from "src/@core/utils/api"
-import { formatCurrency } from "src/@core/utils/format-currency"
-import showResponseError from "src/@core/utils/show-response-error"
-import { customTableProps } from "src/pages/groups"
+import LoadingButton from "@mui/lab/LoadingButton";
+import {
+    Box,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    Drawer,
+    FormControl,
+    FormHelperText,
+    IconButton,
+    InputLabel,
+    OutlinedInput,
+    TextField,
+    Tooltip,
+    Typography,
+} from "@mui/material";
+import { useFormik } from "formik";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import IconifyIcon from "src/@core/components/icon";
+import DataTable from "src/@core/components/table";
+import useResponsive from "src/@core/hooks/useResponsive";
+import api from "src/@core/utils/api";
+import { formatDateTime } from "src/@core/utils/date-formatter";
+import { formatCurrency } from "src/@core/utils/format-currency";
+import showResponseError from "src/@core/utils/show-response-error";
+import { customTableProps } from "src/pages/groups";
 import * as Yup from 'yup';
 
 
@@ -122,6 +136,12 @@ const UserViewBilling = () => {
             render: (student: any) => student.personal_amount?.discount_count || "bo'sh"
         },
         {
+            xs: 0.20,
+            title: t("Berilgan sana"),
+            dataIndex: 'student',
+            render: (student: any) => student.personal_amount?.created_at ? formatDateTime(student.personal_amount?.created_at) : "bo'sh"
+        },
+        {
             xs: 0.30,
             title: t("Izoh"),
             dataIndex: 'student',
@@ -149,9 +169,9 @@ const UserViewBilling = () => {
     ]
 
     const validationSchema = Yup.object().shape({
-        amount: Yup.number().required("To'ldirish majburiy"),
-        discount_count: Yup.string().required("To'ldirish majburiy"),
-        description: Yup.string().required("To'ldirish majburiy")
+        amount: Yup.number().required(t("To'ldirish majburiy") as string),
+        discount_count: Yup.string().required(t("To'ldirish majburiy") as string),
+        description: Yup.string().required(t("To'ldirish majburiy") as string)
     });
 
     const formik = useFormik({

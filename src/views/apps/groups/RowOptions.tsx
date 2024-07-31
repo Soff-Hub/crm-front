@@ -11,6 +11,7 @@ import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from 'src/store';
 import { deleteGroups, fetchGroups, getDashboardLessons, getGroupsDetails, handleOpenEdit, updateParams } from 'src/store/apps/groups';
 import { disablePage } from 'src/store/apps/page';
+import { toast } from 'react-hot-toast';
 
 const RowOptions = ({ id }: { id: number | string }) => {
     const { queryParams, groups } = useAppSelector(state => state.groups)
@@ -67,11 +68,15 @@ const RowOptions = ({ id }: { id: number | string }) => {
     const handleDeleteTeacher = async (id: string | number) => {
         setDeleting(true)
         dispatch(disablePage(true))
-        await dispatch(deleteGroups(id))
-        dispatch(disablePage(false))
-        const queryString = new URLSearchParams(queryParams).toString()
-        await dispatch(fetchGroups(queryString))
+        const response = await dispatch(deleteGroups(id))
+        if (response.meta.requestStatus == "rejected") {
+            toast.error(response.payload.msg || "Guruhni o'chirib bo'lmadi")
+        } else {
+            const queryString = new URLSearchParams(queryParams).toString()
+            await dispatch(fetchGroups(queryString))
+        }
         setDeleting(false)
+        dispatch(disablePage(false))
     }
 
     return (

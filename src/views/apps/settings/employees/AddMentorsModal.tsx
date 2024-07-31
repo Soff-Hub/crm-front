@@ -255,7 +255,7 @@ export default function CreateEmployeeForm() {
                             branches.map((branch, index) => <MenuItem key={index} value={branch.id}>{branch.name}</MenuItem>)
                         }
                         <MenuItem sx={{ fontWeight: 600 }} onClick={() => Router.push('/settings/ceo/all-settings')}>
-                            Yangi yaratish
+                            {t("Yangi yaratish")}
                             <IconifyIcon icon={'ion:add-sharp'} />
                         </MenuItem>
                     </Select>

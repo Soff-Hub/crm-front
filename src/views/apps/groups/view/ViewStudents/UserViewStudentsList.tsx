@@ -112,7 +112,6 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, }: ItemTyp
             })
             toast.success("O'quvchi guruhdan chetlatildi", { position: 'top-center' })
             setLoading(false)
-            setOpenLeft(false)
             const queryString = new URLSearchParams(studentsQueryParams).toString()
             const queryStringAttendance = new URLSearchParams(queryParams).toString()
             await dispatch(getStudents({ id: query.id, queryString: queryString }))
@@ -121,10 +120,12 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, }: ItemTyp
                 await dispatch(getAttendance({ date: `${query?.year || new Date().getFullYear()}-${getMontNumber(query.month)}`, group: query?.id, queryString: queryStringAttendance }))
             }
             dispatch(setGettingAttendance(false))
-        } catch (err) {
+        } catch (err: any) {
             console.log(err)
+            toast.error(err.response.data.msg)
             setLoading(false)
         }
+        setOpenLeft(false)
     }
 
     return (

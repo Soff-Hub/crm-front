@@ -14,7 +14,7 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import { createGroup, fetchGroups, getDashboardLessons, handleOpenAddModal, resetFormParams, updateFormParams } from 'src/store/apps/groups';
 import { useAppDispatch, useAppSelector } from 'src/store';
 import { useTranslation } from 'react-i18next';
-import { ChangeEvent, useEffect, useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from "yup";
 import Calendar from './Calendar';
@@ -30,14 +30,14 @@ export default function AddGroupModal() {
     const [customWeekdays, setCustomWeekDays] = useState<string[]>([])
 
     const validationSchema = Yup.object({
-        name: Yup.string().required("Guruh nomini kiriting"),
-        course: Yup.string().required("Kursni tanlang"),
-        teacher: Yup.string().required("O'qituvchini tanlang"),
-        room: Yup.string().required("Xonani tanlang"),
-        start_date: Yup.string().required("Boshlanish sanasini tanlang"),
-        start_at: Yup.string().required("Boshlanish vaqtini tanlang"),
-        day_of_week: Yup.string().required("Dars kunlarini tanlang"),
-        end_at: Yup.string().required("Tugash vaqtini tanlang"),
+        name: Yup.string().required(t("Guruh nomini kiriting")),
+        course: Yup.string().required(t("Kursni tanlang")),
+        teacher: Yup.string().required(t("O'qituvchini tanlang")),
+        room: Yup.string().required(t("Xonani tanlang")),
+        start_date: Yup.string().required(t("Boshlanish sanasini tanlang")),
+        start_at: Yup.string().required(t("Boshlanish vaqtini tanlang")),
+        day_of_week: Yup.string().required(t("Dars kunlarini tanlang")),
+        end_at: Yup.string().required(t("Tugash vaqtini tanlang")),
     });
 
     const formik = useFormik({
@@ -59,7 +59,7 @@ export default function AddGroupModal() {
                 formik.setErrors(resp.payload)
             } else {
                 handleClose()
-                toast.success("Guruh muvaffaqiyatli yaratildi")
+                toast.success(t("Guruh muvaffaqiyatli yaratildi"))
                 await dispatch(fetchGroups(queryString))
             }
             setLoading(false)
@@ -175,7 +175,7 @@ export default function AddGroupModal() {
                                         courses?.map(course => <MenuItem key={course.id} value={+course.id}>{course.name}</MenuItem>)
                                     }
                                     <MenuItem sx={{ fontWeight: 600 }} onClick={() => Router.push('/settings/office/courses')}>
-                                        Yangi yaratish
+                                        {t("Yangi yaratish")}
                                         <IconifyIcon icon={'ion:add-sharp'} />
                                     </MenuItem>
                                 </Select>
@@ -246,7 +246,7 @@ export default function AddGroupModal() {
                                         rooms?.map(branch => <MenuItem key={branch.id} value={+branch.id}>{branch.name}</MenuItem>)
                                     }
                                     <MenuItem sx={{ fontWeight: 600 }} onClick={() => Router.push('/settings/office/rooms')}>
-                                        Yangi yaratish
+                                        {t("Yangi yaratish")}
                                         <IconifyIcon icon={'ion:add-sharp'} />
                                     </MenuItem>
                                 </Select>
@@ -272,7 +272,7 @@ export default function AddGroupModal() {
                                         teachers?.map(teacher => <MenuItem key={teacher.id} value={+teacher.id}>{teacher.first_name}</MenuItem>)
                                     }
                                     <MenuItem sx={{ fontWeight: 600 }} onClick={() => Router.push('/mentors')}>
-                                        Yangi yaratish
+                                        {t("Yangi yaratish")}
                                         <IconifyIcon icon={'ion:add-sharp'} />
                                     </MenuItem>
                                 </Select>
