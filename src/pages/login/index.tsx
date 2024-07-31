@@ -1,8 +1,6 @@
 // ** React Imports
-import { useState, ReactNode } from 'react'
+import { useState, ReactNode, useEffect } from 'react'
 
-// ** MUI Components
-import TextField from '@mui/material/TextField'
 import InputLabel from '@mui/material/InputLabel'
 import IconButton from '@mui/material/IconButton'
 import Box, { BoxProps } from '@mui/material/Box'
@@ -38,6 +36,7 @@ import toast from 'react-hot-toast'
 import PhoneInput from 'src/@core/components/phone-input'
 import { useTranslation } from 'react-i18next'
 import { reversePhone } from 'src/@core/components/phone-input/format-phone-number'
+import api from 'src/@core/utils/api'
 
 // ** Styled Components
 const LoginIllustrationWrapper = styled(Box)<BoxProps>(({ theme }) => ({
@@ -75,11 +74,28 @@ interface FormData {
 const LoginPage = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false)
   const [loading, setLoading] = useState<boolean>(false)
+  const [data, setData] = useState<any>(null)
 
   // ** Hooks
   const auth = useAuth()
   const { isMobile } = useResponsive()
   const { t } = useTranslation()
+
+  const pageLoad = async () => {
+    try {
+      const response = await api.get("common/public-settings/")
+      if (response.status == 200) {
+        setData(response.data)
+      }
+    } catch {
+      toast.error("Markaz ma'lumotini olib bo'lmadi")
+    }
+  }
+
+  useEffect(() => {
+    pageLoad()
+  }, [])
+  console.log(data);
 
   const {
     control,
@@ -114,10 +130,14 @@ const LoginPage = () => {
 
   return (
     <Box className='content-right'>
-      <Box sx={{ flex: 1, display: 'flex', position: 'relative', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
+      {data && <Box sx={{ flex: 1, display: 'flex', position: 'relative', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
         <LoginIllustrationWrapper sx={{ maxWidth: isMobile ? '300px' : '450px' }}>
-          <Box sx={{ mb: 6 }}>
-            <TypographyStyled variant='h5'>{`${themeConfig.templateName}! ga Xush kelibsiz 👋🏻`}</TypographyStyled>
+          <Box sx={{ mb: 6, display: "flex", justifyContent: "center", flexDirection: "column", alignItems: "center" }}>
+            {data && <Box style={{ width: "auto", height: "80px", marginBottom: "10px" }}>
+              <img src={data?.logo} alt="" style={{ width: "100%", height: "100%", objectFit: "scale-down" }} />
+            </Box>}
+            {data ? <TypographyStyled variant='h5'>{`${data?.training_center_name || themeConfig.templateName}! ga Xush kelibsiz 👋🏻`}</TypographyStyled> :
+              <TypographyStyled variant='h5'>{`Xush kelibsiz 👋🏻`}</TypographyStyled>}
             <Typography variant='body2'>Iltimos tizimga kirish uchun shaxsiy malumotlaringizni kiriting</Typography>
           </Box>
           <form noValidate autoComplete='off' onSubmit={handleSubmit(onSubmit)}>
@@ -189,7 +209,7 @@ const LoginPage = () => {
           </form>
         </LoginIllustrationWrapper>
         <FooterIllustrationsV2 />
-      </Box>
+      </Box>}
     </Box>
   )
 }
