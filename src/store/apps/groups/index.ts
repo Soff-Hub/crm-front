@@ -91,7 +91,7 @@ const initialState: IGroupsState = {
   isLoading: false,
   queryParams: {
     page: 1,
-    status: '',
+    status: 'active',
     is_recovery: false
   },
   formParams: {
@@ -132,7 +132,7 @@ export const groupsSlice = createSlice({
       state.queryParams = { ...state.queryParams, ...action.payload }
     },
     resetGroupParams: state => {
-      state.queryParams = { page: 1, status: '' }
+      state.queryParams = { page: 1, status: 'active' }
     },
     updateFormParams: (state, action) => {
       state.formParams = { ...state.formParams, ...action.payload }

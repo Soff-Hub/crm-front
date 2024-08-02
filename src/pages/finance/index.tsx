@@ -69,13 +69,13 @@ const CardStatistics = () => {
             xs: 0.07,
             title: t("Oy"),
             dataIndex: "month",
-            render: (date) => getMonthFullName(+date.split('-')[1])
+            render: (date) => getMonthFullName(+date?.split('-')[1])
         },
         {
             xs: 0.16,
             title: t("Jami xodimlar"),
             dataIndex: "employee_count",
-            render: (employee_count) => `${employee_count} ta`
+            render: (employee_count) => `${employee_count || 0} ta`
         },
         {
             xs: 0.2,
@@ -105,7 +105,7 @@ const CardStatistics = () => {
             xs: 0.2,
             title: t("Jami foiz (%)"),
             dataIndex: 'kpi_salaries',
-            render: (kpi_salaries) => `${formatCurrency(kpi_salaries)} so'm`
+            render: (kpi_salaries) => `${formatCurrency(kpi_salaries)} %`
         },
         {
             xs: 0.2,
@@ -113,12 +113,6 @@ const CardStatistics = () => {
             dataIndex: 'salaries',
             render: (salaries) => `${formatCurrency(salaries)} so'm`
         },
-        // {
-        //     xs: 0.15,
-        //     title: t("Avanslar"),
-        //     dataIndex: 'index',
-        //     render: () => "5 400 000"
-        // },
         {
             xs: 0.2,
             title: t("Kassir"),
@@ -127,8 +121,8 @@ const CardStatistics = () => {
         {
             xs: 0.2,
             title: t("Tasdiqlangan sana"),
-            dataIndex: 'date',
-            render: (date) => date.split('-').reverse().join('/')
+            dataIndex: 'checked_date',
+            render: (date) => date?.split('-').reverse().join('/')
         },
     ]
 

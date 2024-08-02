@@ -18,14 +18,14 @@ export default function FinanceCategories({ categryData, confirmDeleteCategory, 
         <Grid container spacing={6} mb={10}>
             {
                 categryData.map((_: any, index: any) => (
-                    <Grid item xs={12} sm={6} lg={2} key={index} onMouseEnter={() => setIsHover(_.id)} onMouseLeave={() => setIsHover(null)} sx={{ position: 'relative' }}>
-                        <Box onClick={() => _.is_advanced ? push(`/finance/advance`) : push(`/finance/costs/${_.id}`)} sx={{ cursor: 'pointer' }}>
+                    <Grid item xs={12} sm={6} lg={2} key={index} onMouseEnter={() => setIsHover(_.id)} onMouseLeave={() => setIsHover(null)} >
+                        <Box onClick={() => _.is_advanced ? push(`/finance/advance`) : push(`/finance/costs/${_.id}`)} sx={{ cursor: 'pointer', position: "relative" }}>
                             <CardFinanceCategory title={_.name} stats={_.total_expense} icon={<IconifyIcon fontSize={"3rem"} icon={''} />} color={'warning'} />
+                            {isHover === _.id && _.is_delete && <IconButton onClick={(e) => (e.stopPropagation(), setDeleteCategory(_.id))} aria-label="delete" size="small" style={{ position: 'absolute', zIndex: 999, bottom: '2px', right: 0, cursor: 'pointer' }}>
+                                <IconifyIcon icon={'fluent:delete-20-regular'} />
+                            </IconButton>}
                         </Box>
                         {/* {isHover === _.id && _.is_delete &&} */}
-                        {isHover === _.id && _.is_delete && <IconButton aria-label="delete" size="small" style={{ position: 'absolute', zIndex: 999, bottom: '2px', right: 0, cursor: 'pointer' }}>
-                            <IconifyIcon onClick={() => setDeleteCategory(_.id)} icon={'fluent:delete-20-regular'} />
-                        </IconButton>}
                     </Grid>
                 ))
             }

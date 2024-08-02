@@ -53,21 +53,6 @@ const Div = styled(Box)(({ theme }) => ({
 
 export default function GroupFinanceTable() {
 
-
-    const data: GroupStatsType = {
-        id: 1,
-        name: "Frontend 001",
-        student_count: 12,
-        plan: 6500000,
-        income: 5700000
-    }
-
-    const expenses: ExpensesType = {
-        id: 1,
-        amount: 300000,
-        description: "Ofis uchun 2ta monitor"
-    }
-
     return (
         <Card>
             <Box sx={{ padding: '5px 0' }}>
@@ -89,7 +74,7 @@ export default function GroupFinanceTable() {
                 </Box>
             </Box>
             <Card sx={{ display: 'flex', p: '15px', gap: '5px' }}>
-                
+
             </Card>
         </Card>
     )
