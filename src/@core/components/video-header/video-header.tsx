@@ -61,6 +61,7 @@ export const videoUrls: {
         title: "Lidlar sahifasidan qanday foydalaniladi?",
         url: "https://www.youtube.com/embed/VrVlkMRz5BQ?si=SKK0WwsWlh4q0V-J"
     },
+
     teachers: {
         title: "O'qituvchilar sahifasidan qanday foydalaniladi?",
         url: "https://www.youtube.com/embed/BiJBQvlbkJg?si=8wAp7pFaGC8sGpO6"
