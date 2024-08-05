@@ -257,7 +257,7 @@ export default function EditTeacherModal() {
                 </Box>
 
                 <FormControl sx={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 1 }}>
-                    <FormLabel>{t('Jinsni tanlang')}</FormLabel>
+                    <FormLabel>{t('Jinsini tanlang')}</FormLabel>
                     <RadioGroup
                         aria-labelledby="demo-controlled-radio-buttons-group"
                         name="gender"

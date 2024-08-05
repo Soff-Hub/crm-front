@@ -63,18 +63,18 @@ function Slug(props: { slug: string }) {
         },
         {
             xs: 0.2,
-            title: 'Summa',
+            title: t('Summa'),
             dataIndex: 'amount',
             render: (amount) => `${formatCurrency(amount)} so'm`
         },
         {
             xs: 0.2,
-            title: 'Sana',
+            title: t('Sana'),
             dataIndex: 'date'
         },
         {
             xs: 0.5,
-            title: 'Izoh',
+            title: t('Izoh'),
             dataIndex: 'description'
         },
         {
@@ -92,7 +92,6 @@ function Slug(props: { slug: string }) {
         } else {
             await getExpense(``)
         }
-
         setDate(e)
     }
 
@@ -113,20 +112,20 @@ function Slug(props: { slug: string }) {
                     </Box>
 
                     <DateRangePicker showOneCalendar placement="bottomEnd" locale={{
-                        last7Days: "Oxirgi hafta",
-                        sunday: "Yak",
-                        monday: "Du",
-                        tuesday: "Se",
-                        wednesday: "Cho",
-                        thursday: "Pa",
-                        friday: "Ju",
-                        saturday: "Sha",
-                        ok: "Ok",
-                        today: "Bugun",
-                        yesterday: "Kecha",
-                        hours: "Soat",
-                        minutes: "Minut",
-                        seconds: "Sekund",
+                        last7Days: t("Oxirgi hafta"),
+                        sunday: t("Yak"),
+                        monday: t("Du"),
+                        tuesday: t("Se"),
+                        wednesday: t("Cho"),
+                        thursday: t("Pa"),
+                        friday: t("Ju"),
+                        saturday: t("Sha"),
+                        ok: t("Saqlash"),
+                        today: t("Bugun"),
+                        yesterday: t("Kecha"),
+                        hours: t("Soat"),
+                        minutes: t("Minut"),
+                        seconds: t("Sekund"),
                     }}
                         style={{ marginLeft: 'auto' }}
                         format="yyyy-MM-dd"
@@ -140,21 +139,21 @@ function Slug(props: { slug: string }) {
                         <Chip variant='outlined' size='medium' sx={{ fontSize: "14px", fontWeight: "bold" }} color="error" label={`${formatCurrency(allAmount)} so'm`} />
                     </Typography>
 
-                    <Button variant='contained' size='small' onClick={() => setOpen('create')}>Yangi</Button>
+                    <Button variant='contained' size='small' onClick={() => setOpen('create')}>{t("Yangi qo'shish")}</Button>
                 </Box>
             </Box>
 
             <DataTable loading={loading} columns={columns} data={data} />
 
             <Dialog open={open === 'create'} onClose={() => setOpen(null)}>
-                <DialogTitle sx={{ textAlign: 'center' }}>Xarajat kiritish</DialogTitle>
+                <DialogTitle sx={{ textAlign: 'center' }}>{t("Xarajat kiritish")}</DialogTitle>
                 <DialogContent sx={{ minWidth: '320px' }}>
                     <CreateCostForm slug={props.slug} setOpen={setOpen} reRender={() => getExpense('')} />
                 </DialogContent>
             </Dialog>
 
             <Dialog open={open?.id} onClose={() => setOpen(null)}>
-                <DialogTitle sx={{ textAlign: 'center' }}>Xarajatni tahrirlash</DialogTitle>
+                <DialogTitle sx={{ textAlign: 'center' }}>{t("Xarajatni tahrirlash")}</DialogTitle>
                 <DialogContent sx={{ minWidth: '320px' }}>
                     <EditCostForm slug={props.slug} setOpen={setOpen} reRender={() => getExpense('')} initials={open} />
                 </DialogContent>

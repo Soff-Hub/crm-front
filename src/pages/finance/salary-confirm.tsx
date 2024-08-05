@@ -48,13 +48,13 @@ export default function SalaryConfirm({ }: Props) {
         },
         {
             xs: 0.14,
-            title: t("Jami foiz ulush"),
+            title: t("Foiz ulush (so'm)"),
             dataIndex: 'kpi_salary',
             render: (kpi_salary) => `${formatCurrency(kpi_salary)} so'm`
         },
         {
             xs: 0.14,
-            title: t("Jami ish haqqi"),
+            title: t("Ish haqqi"),
             dataIndex: 'salary',
             render: (salary) => `${formatCurrency(salary)} so'm`
         },

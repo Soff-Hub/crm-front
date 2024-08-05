@@ -207,7 +207,7 @@ const UserViewSecurity = ({ groupData }: any) => {
           </Box> : <EmptyContent />
       }
 
-      <Typography sx={{ my: 3, fontSize: '20px' }}>To'lov tarixi</Typography>
+      <Typography sx={{ my: 3, fontSize: '20px' }}>{t("To'lov tarixi")}</Typography>
       <DataTable color loading={isLoading} maxWidth="100%" minWidth="450px" data={payments.map(el => ({ ...el, color: Number(el.amount) >= 0 ? 'transparent' : 'rgba(227, 18, 18, 0.1)', is_debtor: Number(el.amount) >= 0 }))} columns={columns} />
 
       <iframe src="" id="printFrame" style={{ height: 0 }}></iframe>

@@ -1,23 +1,21 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react';
 
 // ** Components
-import { Box, Button, FormControl, FormControlLabel, FormHelperText, FormLabel, InputLabel, MenuItem, OutlinedInput, Radio, RadioGroup, Select, TextField } from '@mui/material';
+import { Box, Button, FormControl, FormControlLabel, FormHelperText, FormLabel, InputLabel, Radio, RadioGroup, TextField } from '@mui/material';
 import IconifyIcon from 'src/@core/components/icon';
 import LoadingButton from '@mui/lab/LoadingButton';
 
 // ** Assets
 import { useTranslation } from 'react-i18next';
-import { today } from 'src/@core/components/card-statistics/kanban-item';
 
 // ** Packs
 import * as Yup from "yup";
 import { useFormik } from 'formik';
-import { StudentDetailType, UpdateStudentDto } from 'src/types/apps/studentsTypes';
-import { createStudent, fetchStudentsList, setOpenEdit, setStudentData, updateStudent } from 'src/store/apps/students';
+import { UpdateStudentDto } from 'src/types/apps/studentsTypes';
+import { fetchStudentsList, setOpenEdit, updateStudent } from 'src/store/apps/students';
 import { useAppDispatch, useAppSelector } from 'src/store';
 import useGroups from 'src/hooks/useGroups';
 import useResponsive from 'src/@core/hooks/useResponsive';
-import SubLoader from '../loaders/SubLoader';
 import PhoneInput from 'src/@core/components/phone-input';
 import { reversePhone } from 'src/@core/components/phone-input/format-phone-number';
 import { disablePage } from 'src/store/apps/page';
@@ -134,7 +132,7 @@ export default function EditStudentForm() {
             </FormControl>
 
             <FormControl sx={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 1 }}>
-                <FormLabel>{t('Jinsni tanlang')}</FormLabel>
+                <FormLabel>{t('Jinsini tanlang')}</FormLabel>
                 <RadioGroup
                     aria-labelledby="demo-controlled-radio-buttons-group"
                     name="gender"

@@ -59,7 +59,7 @@ export default function CreateForm({ }: Props) {
     const { push } = useRouter()
 
     const [open, setOpen] = useState<any>(null)
-    const [fields, setFields] = useState<any>("Aloqa uchun kontakt qoldiring")
+    const [fields, setFields] = useState<any>(t("Aloqa uchun kontakt qoldiring"))
     const [components, setComponents] = useState<any>([])
     const [variants, setVariants] = useState<any>([])
     const [name, setName] = useState<any>(null)

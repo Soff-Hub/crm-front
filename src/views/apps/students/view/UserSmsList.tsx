@@ -87,15 +87,15 @@ const UserSmsList = () => {
                 aria-describedby='user-view-edit-description'
             >
                 <DialogTitle id='user-view-edit' sx={{ textAlign: 'center', fontSize: '1.5rem !important' }}>
-                    Xabar yuborish (sms)
+                    {t("Xabar yuborish (sms)")}
                 </DialogTitle>
                 <DialogContent>
                     <Form setError={setError} valueTypes='json' sx={{ marginTop: 10 }} onSubmit={handleAddNote} id='dsdsdsds'>
                         <FormControl sx={{ maxWidth: '100%', mb: 3 }} fullWidth>
-                            <InputLabel size='small' id='demo-simple-select-outlined-label'>Shablonlar</InputLabel>
+                            <InputLabel size='small' id='demo-simple-select-outlined-label'>{t("Shablonlar")}</InputLabel>
                             <Select
                                 size='small'
-                                label="Shablonlar"
+                                label={t("Shablonlar")}
                                 defaultValue=''
                                 id='demo-simple-select-outlined'
                                 labelId='demo-simple-select-outlined-label'
@@ -134,7 +134,7 @@ const UserSmsList = () => {
 
                         <DialogActions sx={{ justifyContent: 'center' }}>
                             <Button variant='outlined' type='button' color='secondary' onClick={() => setOpen(false)}>
-                                {t("Bekor Qilish")}
+                                {t("Bekor qilish")}
                             </Button>
                             <LoadingButton loading={loading} type='submit' variant='contained' sx={{ mr: 1 }}>
                                 {t("Yuborish")}

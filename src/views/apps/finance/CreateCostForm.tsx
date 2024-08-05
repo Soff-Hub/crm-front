@@ -1,19 +1,20 @@
 import LoadingButton from '@mui/lab/LoadingButton';
-import { FormControl, FormHelperText, TextField } from '@mui/material'
+import { FormControl, FormHelperText, TextField } from '@mui/material';
 import { useFormik } from 'formik';
-import React, { useState } from 'react'
-import AmountInput, { revereAmount } from 'src/@core/components/amount-input'
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import AmountInput, { revereAmount } from 'src/@core/components/amount-input';
 import { today } from 'src/@core/components/card-statistics/kanban-item';
 import api from 'src/@core/utils/api';
-import * as Yup from 'yup'
+import * as Yup from 'yup';
 
 export default function CreateCostForm({ slug, setOpen, reRender }: any) {
     const [loading, setLoading] = useState<boolean>(false)
-
+    const { t } = useTranslation()
     const validationSchema = Yup.object({
-        amount: Yup.string().required("Summani kiriting"),
-        description: Yup.string().required("Izoh kiriting"),
-        date: Yup.string().required("Sanani kiritish majburiy")
+        amount: Yup.string().required(t("Summani kiriting") as string),
+        description: Yup.string().required(t("Izoh kiriting") as string),
+        date: Yup.string().required(t("Sanani kiritish majburiy") as string)
     });
 
     const initialValues = {
@@ -48,7 +49,7 @@ export default function CreateCostForm({ slug, setOpen, reRender }: any) {
             <FormControl fullWidth>
                 <AmountInput
                     size='small'
-                    label="Summa"
+                    label={t("Summa")}
                     name='amount'
                     error={!!formik.errors.amount && formik.touched.amount}
                     value={formik.values.amount}
@@ -61,7 +62,7 @@ export default function CreateCostForm({ slug, setOpen, reRender }: any) {
             <FormControl fullWidth>
                 <TextField
                     size='small'
-                    label="Izoh"
+                    label={t("Izoh")}
                     multiline
                     rows={4}
                     name='description'
@@ -76,7 +77,7 @@ export default function CreateCostForm({ slug, setOpen, reRender }: any) {
             <FormControl fullWidth>
                 <TextField
                     size='small'
-                    label="Sana"
+                    label={t("Sana")}
                     name='date'
                     type='date'
                     error={!!formik.errors.date && formik.touched.date}
@@ -88,7 +89,7 @@ export default function CreateCostForm({ slug, setOpen, reRender }: any) {
             </FormControl>
 
             <LoadingButton type='submit' variant='contained' loading={loading}>
-                Yaratish
+                {t("Yaratish")}
             </LoadingButton>
 
         </form>

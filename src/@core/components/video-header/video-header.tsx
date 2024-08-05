@@ -59,7 +59,7 @@ export const videoUrls: {
     },
     leads: {
         title: "Lidlar sahifasidan qanday foydalaniladi?",
-        url: "https://www.youtube.com/embed/Ckk0AMEUnCI?si=wuujN-Q0OszfpXNe"
+        url: "https://www.youtube.com/embed/VrVlkMRz5BQ?si=SKK0WwsWlh4q0V-J"
     },
     teachers: {
         title: "O'qituvchilar sahifasidan qanday foydalaniladi?",

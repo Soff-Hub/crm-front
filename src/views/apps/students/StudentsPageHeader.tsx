@@ -25,12 +25,12 @@ const StudentsPageHeader = () => {
 
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
                         <Status color='error' />
-                        <Typography variant='caption'>Qarzdor</Typography>
+                        <Typography variant='caption'>{t("Qarzdor")}</Typography>
                     </Box>
 
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
                         <Status color='warning' />
-                        <Typography variant='caption'>To'lov sanasi yaqin</Typography>
+                        <Typography variant='caption'>{t("To'lov sanasi yaqin")}</Typography>
                     </Box>
                 </Box>
                 <Button

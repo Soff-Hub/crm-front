@@ -405,7 +405,7 @@ export default function AllSettings() {
                                                     rows={4}
                                                     size='small'
                                                     focused
-                                                    defaultValue={companyInfo?.auto_sms?.birthday_text}
+                                                    defaultValue={companyInfo?.auto_sms?.birthday_text || ""}
                                                     onBlur={(e) => {
                                                         updateSettings('birthday_text', e.target.value)
                                                     }}
@@ -459,7 +459,7 @@ export default function AllSettings() {
                                                     rows={4}
                                                     size='small'
                                                     focused
-                                                    defaultValue={companyInfo?.auto_sms?.absent_text}
+                                                    defaultValue={companyInfo?.auto_sms?.absent_text || ""}
                                                     onBlur={(e) => {
                                                         updateSettings('absent_text', e.target.value)
                                                     }}

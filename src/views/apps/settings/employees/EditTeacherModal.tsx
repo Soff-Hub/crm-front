@@ -22,8 +22,7 @@ import { useTranslation } from 'react-i18next';
 import * as Yup from "yup";
 import { useFormik } from 'formik';
 import { useAppDispatch, useAppSelector } from 'src/store';
-import { fetchTeachersList, updateTeacher } from 'src/store/apps/mentors';
-import { CreateTeacherDto, UpdateTeacherDto } from 'src/types/apps/mentorsTypes';
+import { UpdateTeacherDto } from 'src/types/apps/mentorsTypes';
 import { useEffect, useRef, useState } from 'react';
 import { TeacherAvatar } from './AddMentorsModal';
 import { editEmployee, fetchEmployees, setEmployeeData } from 'src/store/apps/settings';
@@ -295,7 +294,7 @@ export default function EditEmployeeForm() {
                 </FormControl>
 
                 <FormControl sx={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 1 }}>
-                    <FormLabel>{t('Jinsni tanlang')}</FormLabel>
+                    <FormLabel>{t('Jinsini tanlang')}</FormLabel>
                     <RadioGroup
                         aria-labelledby="demo-controlled-radio-buttons-group"
                         name="gender"
