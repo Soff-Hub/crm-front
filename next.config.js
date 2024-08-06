@@ -22,27 +22,17 @@ module.exports = withTM({
 
   experimental: {
     esmExternals: false,
-    // modularizeImports: {
-    //   lodash: {
-    //     transform: 'lodash/{{member}}'
-    //   },
-    //   '@mui/material': {
-    //     transform: '@mui/material/{{member}}'
-    //   },
-    //   '@mui/lab': {
-    //     transform: '@mui/lab/{{member}}'
-    //   },
-    //   '@mui/icons-material/?(((\\w*)?/?)*)': {
-    //     transform: '@mui/icons-material/{{ matches.[1] }}/{{member}}'
-    //   }
-    // }
   },
-  webpack: config => {
+  webpack: (config, { buildId, dev, isServer, defaultLoaders, nextRuntime, webpack }) => {
     config.resolve.alias = {
       ...config.resolve.alias,
       apexcharts: path.resolve(__dirname, './node_modules/apexcharts-clevision')
     }
-
+    if (config.cache && !dev) {
+      config.cache = Object.freeze({
+        type: 'memory',
+      })
+    }
     return config
   },
   images: {
