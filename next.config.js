@@ -14,16 +14,15 @@ const withTM = require('next-transpile-modules')([
 
 module.exports = withTM({
   trailingSlash: false,
-  reactStrictMode: false,
 
   productionBrowserSourceMaps: false, // Disable source maps in development
   optimizeFonts: false, // Disable font optimization
-  minify: false, // Disable minification
+  swcMinify: false, // Disable SWC minification
 
   experimental: {
     esmExternals: false,
   },
-  webpack: (config, { buildId, dev, isServer, defaultLoaders, nextRuntime, webpack }) => {
+  webpack: (config, { dev }) => {
     config.resolve.alias = {
       ...config.resolve.alias,
       apexcharts: path.resolve(__dirname, './node_modules/apexcharts-clevision')
