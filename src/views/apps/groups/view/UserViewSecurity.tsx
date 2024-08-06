@@ -49,10 +49,17 @@ const Item = ({ defaultValue, groupId, userId, date, opened_id, setOpenedId }: {
         date: date,
         is_available: status
       }
-
-      await api.post('common/student-attendance/', data)
+      try {
+        const response = await api.post('common/student-attendance/', data)
+        console.log(response);
+      } catch (e: any) {
+        toast.error(e.response.data.msg[0])
+        setValue(defaultValue)
+      }
     }
   }
+
+  console.log(value);
 
   useEffect(() => {
     if (`${userId}-${date}` === opened_id) {
@@ -141,7 +148,7 @@ const UserViewSecurity = () => {
     await dispatch(getAttendance({ date: `${value.year}-${value.month}`, group: query?.id, queryString: queryString }))
     await dispatch(getDays({ date: `${value.year}-${value.month}`, group: query?.id }))
     dispatch(setGettingAttendance(false))
-    
+
     push({
       pathname,
       query: { ...query, month: getMontName(Number(value.month)), year: value.year, id: query?.id }
