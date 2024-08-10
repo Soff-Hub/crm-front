@@ -31,7 +31,7 @@ export interface IQueryParams {
   status?: string
   teacher?: string
   course?: string
-  day_of_week?: string,
+  day_of_week?: string
   is_recovery?: boolean
 }
 
@@ -40,8 +40,23 @@ export interface IFormParams {
   teacher?: string
   room?: string
 }
+export interface TeacherSalariesResponse {
+  count: number
+  next: string | null
+  previous: string | null
+  results: {
+    bonus_amount: string
+    checked_date: string
+    fine_amount: string
+    date: string
+    prepayment: string
+    salary: string
+    updated_salary: number
+  }[]
+}
 
 export interface IGroupsState {
+  isTableLoading: boolean
   isOpenEdit: boolean
   isUpdatingDashboard: boolean
   dashboardLessons: ILessonResponse[]
@@ -52,9 +67,11 @@ export interface IGroupsState {
   rooms: MetaTypes[] | null
   courses: MetaTypes[] | null
   teachers: TeacherType[] | null
+  teacherSalaries: TeacherSalariesResponse | null
   groupData: GroupType | null
   groupCount: number
   queryParams: IQueryParams
+  myGroupParams: Pick<IQueryParams, 'page'>
   formParams: IFormParams
   isDeleting: boolean
   isGettingGroupDetails: boolean

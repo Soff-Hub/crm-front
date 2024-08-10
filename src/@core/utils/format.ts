@@ -19,6 +19,13 @@ const isToday = (date: Date | string) => {
   )
 }
 
+export function formatMonthYear(date: Date) {
+  const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long' }
+
+  // Format the date to show only the month and year
+  return date.toLocaleDateString('en-US', options)
+}
+
 export const formatDate = (
   value: Date | string,
   formatting: Intl.DateTimeFormatOptions = { month: 'short', day: 'numeric', year: 'numeric' }

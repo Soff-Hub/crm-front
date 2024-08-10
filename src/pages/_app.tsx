@@ -1,5 +1,5 @@
 // ** React Imports
-import { ReactNode } from 'react'
+import { ReactNode, useEffect } from 'react'
 
 // ** Next Imports
 import Head from 'next/head'
@@ -8,7 +8,7 @@ import type { NextPage } from 'next'
 import type { AppProps } from 'next/app'
 
 // ** Store Imports
-import { store, useAppSelector } from 'src/store'
+import { store, useAppDispatch, useAppSelector } from 'src/store'
 import { Provider } from 'react-redux'
 
 // ** Loader Import
@@ -61,6 +61,7 @@ import 'src/iconify-bundle/icons-bundle-react'
 // ** Global css styles
 import '../../styles/globals.css'
 import DisabledProvider from 'src/@core/layouts/DisabledProvider'
+import { fetchNotification } from 'src/store/apps/user'
 
 // ** Extend App Props with Emotion
 type ExtendedAppProps = AppProps & {

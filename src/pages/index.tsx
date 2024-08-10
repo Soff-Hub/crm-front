@@ -29,15 +29,15 @@ const Home = () => {
   // ** Hooks
   const auth = useAuth()
   const router = useRouter()
+  console.log(window.location.hostname);
 
   useEffect(() => {
     if (auth.user && auth.user.role) {
       const homeRoute = getHomeRoute(auth.user.role)
-
       // Redirect user to Home URL
       router.replace(homeRoute)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
   }, [])
 
   return <Spinner sx={{ height: '100%' }} />

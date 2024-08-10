@@ -44,6 +44,11 @@ export const CPanelNavigation = (t: any): any => {
       title: t('Sozlamalar'),
       icon: 'mdi:receipt-text-edit-outline',
       path: '/c-panel/settings'
+    },
+    {
+      title: t("To'lovlar"),
+      icon: 'material-symbols:payments',
+      path: '/c-panel/payments'
     }
   ]
 }

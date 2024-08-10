@@ -1,19 +1,14 @@
-import { Box, Grid, Pagination, Typography } from '@mui/material';
-import { useContext, useEffect } from 'react';
+import { Box, Pagination, Typography } from '@mui/material';
+import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import DataTable, { customTableDataProps } from 'src/@core/components/table';
 import { formatCurrency } from 'src/@core/utils/format-currency';
-import { AuthContext } from 'src/context/AuthContext';
 import { useAppDispatch, useAppSelector } from 'src/store';
-import { fetchGroups, fetchTeacherSalaries, updateMyGroupParams } from 'src/store/apps/groups';
-import GroupCard from './components/GroupCard';
-import GroupSkeleton from './components/Skeleton';
-import TeachersDetails from './components/TeachersDetails';
+import { fetchTeacherSalaries, updateMyGroupParams } from 'src/store/apps/groups';
 
 
 
-export default function MyGroups() {
-    const { user } = useContext(AuthContext)
+export default function PaymentsList() {
     const { t } = useTranslation()
     const { groups, isTableLoading, myGroupParams, isLoading, teacherSalaries } = useAppSelector(state => state.groups)
     const dispatch = useAppDispatch()
@@ -25,53 +20,39 @@ export default function MyGroups() {
             dataIndex: 'index',
         },
         {
+            xs: 0.3,
+            title: t("Markaz nomi"),
+            dataIndex: 'title',
+        },
+        {
             xs: 0.2,
-            title: t("Oy"),
+            title: t("To'lov summasi"),
+            dataIndex: 'amount',
+            render: (salaries) => `${formatCurrency(salaries)} so'm`
+        },
+        {
+            xs: 0.2,
+            title: t("To'lov qilingan sana"),
             dataIndex: 'date',
-        },
-        {
-            xs: 0.2,
-            title: t("Bonuslar"),
-            dataIndex: 'bonus_amount',
             render: (salaries) => `${formatCurrency(salaries)} so'm`
         },
         {
             xs: 0.2,
-            title: t("Jarimalar"),
-            dataIndex: 'fine_amount',
+            title: t("To'lov hujjati"),
+            dataIndex: 'file',
             render: (salaries) => `${formatCurrency(salaries)} so'm`
         },
         {
-            xs: 0.2,
-            title: t("Avanslar"),
-            dataIndex: 'prepayment',
-            render: (salaries) => `${formatCurrency(salaries)} so'm`
-        },
-        {
-            xs: 0.2,
-            title: t("Oylik ish haqi"),
-            dataIndex: 'salary',
-            render: (salaries) => `${formatCurrency(salaries)} so'm`
-        },
-        {
-            xs: 0.2,
-            title: t("Oylik berilgan sana"),
-            dataIndex: 'checked_date',
-        },
-        {
-            xs: 0.2,
-            title: t("Yakuniy ish haqqi"),
-            dataIndex: 'updated_salary',
+            xs: 0.1,
+            title: t("Holati"),
+            dataIndex: '',
             render: (salaries) => `${formatCurrency(salaries)} so'm`
         },
     ]
 
     useEffect(() => {
         (async function () {
-            await Promise.all([
-                dispatch(fetchGroups(`page=1&status=active&teacher=${user?.id}`)),
-                dispatch(fetchTeacherSalaries())
-            ])
+            dispatch(fetchTeacherSalaries())
         })()
     }, [])
 
@@ -84,24 +65,8 @@ export default function MyGroups() {
 
     return (
         <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
-            <Grid container spacing={4}>
-                <Grid item xs={12} md={5} lg={4}>
-                    <TeachersDetails />
-                </Grid>
-                <Grid item xs={12} md={7} lg={8} >
-                    <Typography variant='h6' sx={{ mb: 3 }}>{t("Mening guruhlarim")}</Typography>
-                    <Box sx={{ display: 'flex', gap: '15px', flexWrap: 'wrap' }}>
-                        {
-                            isLoading ? <GroupSkeleton /> :
-                                groups && groups.map((group: any) => (
-                                    <GroupCard key={group.id} group={group} />
-                                ))
-                        }
-                    </Box>
-                </Grid>
-            </Grid>
             <Box sx={{ width: "100%", display: "flex", flexDirection: "column", gap: 1 }}>
-                <Typography variant='h6'>{t("Oylik to'lovlar tarixi")}</Typography>
+                <Typography variant='h6'>{t("O'quv markaz to'lovlari")}</Typography>
                 <DataTable
                     loading={isTableLoading}
                     columns={column}

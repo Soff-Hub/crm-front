@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Box, FormControl, InputAdornment, InputLabel, MenuItem, OutlinedInput, Select } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import useResponsive from 'src/@core/hooks/useResponsive';
@@ -9,6 +9,7 @@ import useCourses from 'src/hooks/useCourses';
 import useDebounce from 'src/hooks/useDebounce';
 import { Toggle } from 'rsuite';
 import 'rsuite/Toggle/styles/index.css';
+import Excel from 'src/@core/components/excelButton/Excel';
 
 
 const StudentsFilter = () => {
@@ -54,8 +55,9 @@ const StudentsFilter = () => {
         dispatch(fetchStudentsList({ ...queryParams, search: searchVal }))
     }, [searchVal])
 
+    const queryString = new URLSearchParams({ ...queryParams } as Record<string, string>).toString()
     return (
-        <Box sx={{ display: 'flex', gap: '20px', flexDirection: isMobile ? 'column' : 'row' }}>
+        <Box sx={{ display: 'flex', gap: '20px', alignItems: "center", flexDirection: isMobile ? 'column' : 'row' }}>
             <FormControl variant="outlined" size='small' fullWidth>
                 <InputLabel htmlFor="outlined-adornment-password">{t('Qidirish')}</InputLabel>
                 <OutlinedInput
@@ -119,7 +121,7 @@ const StudentsFilter = () => {
                         <MenuItem value={'active'}>{t('active')}</MenuItem>
                         <MenuItem value={'archive'}>{t('archive')}</MenuItem>
                         <MenuItem value={'new'}>{t('test')}</MenuItem>
-                        <MenuItem value={'frozen'}>Muzlatilgan</MenuItem>
+                        <MenuItem value={'frozen'}>{t("Muzlatilgan")}</MenuItem>
                     </Select>
                 </FormControl>
             </Box>
@@ -162,6 +164,7 @@ const StudentsFilter = () => {
                     }
                 }} />
             </Box>
+            <Excel url='/common/students/export/' queryString={queryString} />
         </Box >
     );
 }

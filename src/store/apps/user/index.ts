@@ -4,6 +4,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 
 // ** Axios Imports
 import axios from 'axios'
+import api from 'src/@core/utils/api'
 
 interface DataParams {
   q: string
@@ -23,6 +24,11 @@ export const fetchData = createAsyncThunk('appUsers/fetchData', async (params: D
     params
   })
 
+  return response.data
+})
+
+export const fetchNotification = createAsyncThunk('appUsers/fetchNotification', async () => {
+  const response = await api.get('/common/notification-list/')
   return response.data
 })
 
@@ -56,25 +62,26 @@ export const appUsersSlice = createSlice({
   name: 'appUsers',
   initialState: {
     data: [],
+    notifications: [],
     total: null,
     params: {},
     allData: [],
     companyInfo: {
       id: 1,
-      training_center_name: "SOFF CRM",
+      training_center_name: 'SOFF CRM',
       logo: '/images/default-logo.jpg',
-      work_start_time: "00:00",
-      work_end_time: "00:00",
+      work_start_time: '00:00',
+      work_end_time: '00:00',
       auto_sms: {
         id: 1,
         on_absent: true,
-        birthday_text: "Text",
+        birthday_text: 'Text',
         on_birthday: true,
-        absent_text: "Text"
+        absent_text: 'Text'
       },
-      sms_limit: "0/0",
+      sms_limit: '0/0'
     },
-    departmentsState: [],
+    departmentsState: []
   },
   reducers: {
     addUserData: (state, action) => {
@@ -86,13 +93,15 @@ export const appUsersSlice = createSlice({
     setCompanyInfo: (state, action) => {
       state.companyInfo = {
         ...action.payload,
-        work_start_time: `${action.payload.work_start_time.split(':')?.[0]}:${action.payload.work_start_time.split(':')?.[1]}`,
+        work_start_time: `${action.payload.work_start_time.split(':')?.[0]}:${
+          action.payload.work_start_time.split(':')?.[1]
+        }`,
         work_end_time: `${action.payload.work_end_time.split(':')?.[0]}:${action.payload.work_end_time.split(':')?.[1]}`
       }
     },
     setDepartmentsState: (state, action) => {
       state.departmentsState = action.payload
-    },
+    }
   },
   extraReducers: builder => {
     builder.addCase(fetchData.fulfilled, (state, action) => {
@@ -100,6 +109,9 @@ export const appUsersSlice = createSlice({
       state.total = action.payload.total
       state.params = action.payload.params
       state.allData = action.payload.allData
+    })
+    builder.addCase(fetchNotification.fulfilled, (state, action) => {
+      state.notifications = action.payload
     })
   }
 })

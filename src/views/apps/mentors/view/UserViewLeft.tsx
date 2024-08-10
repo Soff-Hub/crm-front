@@ -5,20 +5,8 @@ import { useEffect, useState } from 'react'
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
 import Card from '@mui/material/Card'
-import LoadingButton from '@mui/lab/LoadingButton';
-import Dialog from '@mui/material/Dialog'
-import Button from '@mui/material/Button'
-import Select from '@mui/material/Select'
-import MenuItem from '@mui/material/MenuItem'
-import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
-import InputLabel from '@mui/material/InputLabel'
 import CardContent from '@mui/material/CardContent'
-import CardActions from '@mui/material/CardActions'
-import DialogTitle from '@mui/material/DialogTitle'
-import FormControl from '@mui/material/FormControl'
-import DialogContent from '@mui/material/DialogContent'
-import DialogActions from '@mui/material/DialogActions'
 
 // ** Custom Components
 import CustomChip from 'src/@core/components/mui/chip'
@@ -30,13 +18,9 @@ import { ThemeColor } from 'src/@core/layouts/types'
 // ** Utils Import
 import { getInitials } from 'src/@core/utils/get-initials'
 import { useTranslation } from 'react-i18next'
-import IconifyIcon from 'src/@core/components/icon';
 
-import { styled } from '@mui/material/styles';
-import { FormHelperText } from '@mui/material';
-import Form from 'src/@core/components/form';
-import useTeachers from 'src/hooks/useTeachers';
-import showResponseError from 'src/@core/utils/show-response-error';
+import useTeachers from 'src/hooks/useTeachers'
+import showResponseError from 'src/@core/utils/show-response-error'
 
 interface ColorsType {
   [key: string]: ThemeColor
@@ -77,21 +61,6 @@ const branchColors: ColorsType = {
   3: 'success',
   1: 'info',
 }
-
-
-const VisuallyHiddenInput = styled('input')({
-  clip: 'rect(0 0 0 0)',
-  clipPath: 'inset(50%)',
-  height: 1,
-  overflow: 'hidden',
-  position: 'absolute',
-  bottom: 0,
-  left: 0,
-  whiteSpace: 'nowrap',
-  width: 1,
-});
-
-
 
 
 const UserViewLeft = ({ userData }: { userData?: UsersType | undefined }) => {
@@ -177,7 +146,7 @@ const UserViewLeft = ({ userData }: { userData?: UsersType | undefined }) => {
             <CardContent>
               <Typography variant='h6' sx={{ textAlign: 'center', mb: 4 }}>{t("Boshqa Tafsilotlar")}</Typography>
               <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', alignItems: 'center' }}>
-                {t("Tizimdagi rollari")} : {
+                <Typography sx={{ mr: 2, fontWeight: 500, fontSize: '0.875rem' }}>{t("Tizimdagi rollari")}</Typography> : {
                   data.roles.map((role) => {
                     return role.exists ? (<CustomChip
                       key={role.id}

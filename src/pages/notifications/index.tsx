@@ -1,7 +1,11 @@
 import { Box, BoxProps, IconButton, styled, Typography, TypographyProps } from "@mui/material";
 import { useRouter } from "next/router";
+import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import IconifyIcon from "src/@core/components/icon";
+import { NotificationsType } from "src/@core/layouts/components/shared-components/NotificationDropdown";
+import { useAppDispatch, useAppSelector } from "src/store";
+import { fetchNotification } from "src/store/apps/user";
 
 const MenuItemTitle = styled(Typography)<TypographyProps>(({ theme }) => ({
     fontWeight: 600,
@@ -39,6 +43,15 @@ const NotificationContainer = styled(Box)<BoxProps>(({ theme }) => ({
 export default function Notifications() {
     const { t } = useTranslation()
     const { back } = useRouter()
+    const dispatch = useAppDispatch()
+    const { notifications } = useAppSelector(state => state.user)
+
+    useEffect(() => {
+        (async function () {
+            await dispatch(fetchNotification())
+        })()
+    }, [])
+
     return (
         <Box sx={{ display: "flex", flexDirection: "column", gap: "10px" }}>
             <Box
@@ -53,18 +66,14 @@ export default function Notifications() {
                 </Box>
             </Box>
             <NotificationContainer sx={{ display: "flex", flexDirection: "column", gap: "10px" }} >
-                <Box sx={{ bgcolor: "#F8EFE0", p: 3, borderRadius: "10px" }}>
-                    <Box sx={{ flex: '1 1', display: 'flex', fontSize: "12px", overflow: 'hidden', flexDirection: 'column' }}>
-                        <MenuItemTitle>{"Salom!"}</MenuItemTitle>
-                        <MenuItemSubtitle variant='body2'>{"CRM uchun tolov esdan chiqmasin"}</MenuItemSubtitle>
+                {notifications?.map((element: NotificationsType) => (
+                    <Box sx={{ bgcolor: "#F8EFE0", p: 3, borderRadius: "10px" }}>
+                        <Box sx={{ flex: '1 1', display: 'flex', fontSize: "12px", overflow: 'hidden', flexDirection: 'column' }}>
+                            <MenuItemTitle>{element.title}</MenuItemTitle>
+                            <MenuItemSubtitle variant='body2'>{element.body}</MenuItemSubtitle>
+                        </Box>
                     </Box>
-                </Box>
-                <Box sx={{ bgcolor: "#F8EFE0", p: 3, borderRadius: "10px" }}>
-                    <Box sx={{ flex: '1 1', display: 'flex', overflow: 'hidden', flexDirection: 'column' }}>
-                        <MenuItemTitle>{"Assalomu alaykum!"}</MenuItemTitle>
-                        <MenuItemSubtitle variant='body2'>{"G-001 guruhi uchun iyun aoyi uchu ohirgi darsga 5 kun qoldi imtihon tashkillashni esdan chiqarmang"}</MenuItemSubtitle>
-                    </Box>
-                </Box>
+                ))}
             </NotificationContainer >
         </Box >
     )

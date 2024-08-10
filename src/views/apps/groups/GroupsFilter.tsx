@@ -1,13 +1,23 @@
 // @ts-nocheck
 
 // ** MUI Imports
-import { Box, CircularProgress, FormControl, IconButton, InputAdornment, InputLabel, MenuItem, OutlinedInput, Select, SelectChangeEvent, TextField } from '@mui/material';
+import {
+    Box,
+    FormControl,
+    InputAdornment,
+    InputLabel,
+    MenuItem,
+    OutlinedInput,
+    Select,
+    SelectChangeEvent,
+} from '@mui/material';
 import { useEffect, useState } from 'react';
 
 
 // ** Third Party Imports
 import 'react-datepicker/dist/react-datepicker.css'; // Import CSS file for react-datepicker
 import { useTranslation } from 'react-i18next';
+import Excel from 'src/@core/components/excelButton/Excel';
 import IconifyIcon from 'src/@core/components/icon';
 import useDebounce from 'src/hooks/useDebounce';
 import { useAppDispatch, useAppSelector } from 'src/store';
@@ -60,6 +70,9 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
     useEffect(() => {
         handleSearch()
     }, [searchVal])
+
+
+    const queryString = new URLSearchParams({ ...queryParams }).toString()
 
     if (isMobile) {
         return (
@@ -155,91 +168,94 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
         )
     } else
         return (
-            <Box display={'flex'} gap={2} flexWrap={'nowrap'} >
-                <FormControl sx={{ width: '100%', maxWidth: 260 }}>
-                    <InputLabel size='small' id='search-input'>{t("Qidirish")}</InputLabel>
-                    <OutlinedInput onChange={e => setSearch(e.target.value)} endAdornment={
-                        <InputAdornment position="end">
-                            <IconifyIcon icon={'tabler:search'} />
-                        </InputAdornment>
-                    } label='Qidirish' id='search-input' placeholder='Qidirish...' size='small' />
-                </FormControl>
-                <FormControl sx={{ maxWidth: 220, width: '100%' }}>
-                    <InputLabel size='small' id='demo-simple-select-outlined-label'>{t("Holat")}</InputLabel>
-                    <Select
-                        size='small'
-                        label={t("Holat")}
-                        id='demo-simple-select-outlined'
-                        labelId='demo-simple-select-outlined-label'
-                        value={queryParams.status || ""}
-                        onChange={handleChangeStatus}
-                    >
-                        <MenuItem value=''>
-                            <b>Barchasi</b>
-                        </MenuItem>
-                        <MenuItem value={'active'}>{'Aktiv'}</MenuItem>
-                        <MenuItem value={'archived'}>{'Arxivlangan'}</MenuItem>
-                        <MenuItem value={'new'}>{'Yangi'}</MenuItem>
-                    </Select>
-                </FormControl>
-                <FormControl sx={{ maxWidth: 180, width: '100%' }}>
-                    <InputLabel size='small' id='demo-simple-select-outlined-label'>{t("O'qituvchi")}</InputLabel>
-                    <Select
-                        size='small'
-                        label={t("O'qituvchi")}
-                        id='demo-simple-select-outlined'
-                        labelId='demo-simple-select-outlined-label'
-                        value={queryParams.teacher || ""}
-                        onChange={handleChangeTeacher}
-                    >
-                        <MenuItem value=''>
-                            <b>Barchasi</b>
-                        </MenuItem>
-                        {
-                            teachers?.map(teacher => (
-                                <MenuItem key={teacher.id} value={teacher.id}>{teacher.first_name}</MenuItem>
-                            ))
-                        }
-                    </Select>
-                </FormControl>
-                <FormControl sx={{ maxWidth: 180, width: '100%' }}>
-                    <InputLabel size='small' id='demo-simple-select-outlined-label'>{t("Kurslar")}</InputLabel>
-                    <Select
-                        size='small'
-                        label={t("Kurslar")}
-                        id='demo-simple-select-outlined'
-                        labelId='demo-simple-select-outlined-label'
-                        value={queryParams.course || ""}
-                        onChange={handleChangeCourse}
-                    >
-                        <MenuItem value=''>
-                            <b>Barchasi</b>
-                        </MenuItem>
-                        {
-                            courses?.map(course => (
-                                <MenuItem key={course.id} value={course.id}>{course.name}</MenuItem>
-                            ))
-                        }
-                    </Select>
-                </FormControl>
-                <FormControl sx={{ maxWidth: 180, width: '100%' }}>
-                    <InputLabel size='small' id='demo-simple-select-outlined-label'>{t("Kunlar")}</InputLabel>
-                    <Select
-                        size='small'
-                        label={t("Kunlar")}
-                        id='demo-simple-select-outlined'
-                        labelId='demo-simple-select-outlined-label'
-                        value={queryParams.day_of_week || ""}
-                        onChange={handleChangeDateOfWeek}
-                    >
-                        <MenuItem value=''>
-                            <b>Barchasi</b>
-                        </MenuItem>
-                        <MenuItem value={'tuesday,thursday,saturday'}>Juft kunlari</MenuItem>
-                        <MenuItem value={'monday,wednesday,friday'}>Toq kunlari</MenuItem>
-                        <MenuItem value={'monday,tuesday,wednesday,thursday,friday,saturday,sunday'}>Har kuni</MenuItem>
-                    </Select>
-                </FormControl>
+            <Box display={'flex'} gap={2} flexWrap={'nowrap'} alignItems="center" justifyContent="space-between" width="100%" >
+                <Box display={'flex'} width="90%" gap={2} flexWrap={'nowrap'}>
+                    <FormControl sx={{ width: '100%', maxWidth: 260 }}>
+                        <InputLabel size='small' id='search-input'>{t("Qidirish")}</InputLabel>
+                        <OutlinedInput onChange={e => setSearch(e.target.value)} endAdornment={
+                            <InputAdornment position="end">
+                                <IconifyIcon icon={'tabler:search'} />
+                            </InputAdornment>
+                        } label='Qidirish' id='search-input' placeholder='Qidirish...' size='small' />
+                    </FormControl>
+                    <FormControl sx={{ maxWidth: 220, width: '100%' }}>
+                        <InputLabel size='small' id='demo-simple-select-outlined-label'>{t("Holat")}</InputLabel>
+                        <Select
+                            size='small'
+                            label={t("Holat")}
+                            id='demo-simple-select-outlined'
+                            labelId='demo-simple-select-outlined-label'
+                            value={queryParams.status || ""}
+                            onChange={handleChangeStatus}
+                        >
+                            <MenuItem value=''>
+                                <b>Barchasi</b>
+                            </MenuItem>
+                            <MenuItem value={'active'}>{'Aktiv'}</MenuItem>
+                            <MenuItem value={'archived'}>{'Arxivlangan'}</MenuItem>
+                            <MenuItem value={'new'}>{'Yangi'}</MenuItem>
+                        </Select>
+                    </FormControl>
+                    <FormControl sx={{ maxWidth: 180, width: '100%' }}>
+                        <InputLabel size='small' id='demo-simple-select-outlined-label'>{t("O'qituvchi")}</InputLabel>
+                        <Select
+                            size='small'
+                            label={t("O'qituvchi")}
+                            id='demo-simple-select-outlined'
+                            labelId='demo-simple-select-outlined-label'
+                            value={queryParams.teacher || ""}
+                            onChange={handleChangeTeacher}
+                        >
+                            <MenuItem value=''>
+                                <b>Barchasi</b>
+                            </MenuItem>
+                            {
+                                teachers?.map(teacher => (
+                                    <MenuItem key={teacher.id} value={teacher.id}>{teacher.first_name}</MenuItem>
+                                ))
+                            }
+                        </Select>
+                    </FormControl>
+                    <FormControl sx={{ maxWidth: 180, width: '100%' }}>
+                        <InputLabel size='small' id='demo-simple-select-outlined-label'>{t("Kurslar")}</InputLabel>
+                        <Select
+                            size='small'
+                            label={t("Kurslar")}
+                            id='demo-simple-select-outlined'
+                            labelId='demo-simple-select-outlined-label'
+                            value={queryParams.course || ""}
+                            onChange={handleChangeCourse}
+                        >
+                            <MenuItem value=''>
+                                <b>Barchasi</b>
+                            </MenuItem>
+                            {
+                                courses?.map(course => (
+                                    <MenuItem key={course.id} value={course.id}>{course.name}</MenuItem>
+                                ))
+                            }
+                        </Select>
+                    </FormControl>
+                    <FormControl sx={{ maxWidth: 180, width: '100%' }}>
+                        <InputLabel size='small' id='demo-simple-select-outlined-label'>{t("Kunlar")}</InputLabel>
+                        <Select
+                            size='small'
+                            label={t("Kunlar")}
+                            id='demo-simple-select-outlined'
+                            labelId='demo-simple-select-outlined-label'
+                            value={queryParams.day_of_week || ""}
+                            onChange={handleChangeDateOfWeek}
+                        >
+                            <MenuItem value=''>
+                                <b>Barchasi</b>
+                            </MenuItem>
+                            <MenuItem value={'tuesday,thursday,saturday'}>Juft kunlari</MenuItem>
+                            <MenuItem value={'monday,wednesday,friday'}>Toq kunlari</MenuItem>
+                            <MenuItem value={'monday,tuesday,wednesday,thursday,friday,saturday,sunday'}>Har kuni</MenuItem>
+                        </Select>
+                    </FormControl>
+                </Box>
+                <Excel url='/common/groups/export/' queryString={queryString} />
             </Box >
         )
 }

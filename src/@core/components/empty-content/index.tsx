@@ -5,7 +5,7 @@ export default function EmptyContent({ title = "Ma'lumot yo'q" }: { title?: stri
     const { t } = useTranslation()
 
     return (
-        <Box sx={{ display: "flex", justifyContent: "center", height: "300px", position: 'relative', flexDirection: 'column', alignItems: 'center' }}>
+        <Box sx={{ width: "100%", display: "flex", justifyContent: "center", height: "300px", position: 'relative', flexDirection: 'column', alignItems: 'center' }}>
             <img style={{ height: "80%" }} src="/images/empty state.png" alt="" />
             <Typography
                 sx={{

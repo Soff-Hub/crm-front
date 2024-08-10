@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react'
-import { Box, Button, CircularProgress, Switch, TextField } from '@mui/material'
-import DataTable, { customTableDataProps } from '../table'
-import Router, { useRouter } from 'next/router'
-import useDebounce from 'src/hooks/useDebounce'
-import { useTranslation } from 'react-i18next'
-import api from 'src/@core/utils/api'
-import Status from '../status'
+import { useEffect, useState } from 'react';
+import { Box, Button, CircularProgress, Switch, TextField } from '@mui/material';
+import DataTable, { customTableDataProps } from '../table';
+import Router, { useRouter } from 'next/router';
+import { useTranslation } from 'react-i18next';
+import api from 'src/@core/utils/api';
+import Status from '../status';
+import { toast } from 'react-hot-toast';
 
 export interface CompanyType {
     id: number
@@ -22,27 +22,29 @@ export interface CompanyType {
 export default function CompanyList() {
     const { t } = useTranslation()
     const [data, setData] = useState<CompanyType[]>([])
-    const [loading, setLoading] = useState<any>(null)
+    const [centerId, setCenterId] = useState<number | null>(null)
+    const [isLoading, setLoading] = useState(false)
 
     async function getData() {
+        setLoading(true)
         try {
             const resp = await api.get(`/owner/list/client/`)
             setData(resp.data);
         } catch (err: any) {
-            console.log(err);
+            toast.error(err);
         }
+        setLoading(false)
     }
 
     const suspendCompany = async (item: any, id: any) => {
-        setLoading(item.id)
+        setCenterId(item.id)
         try {
             await api.patch(`/owner/client/${item.id}/`, { is_active: id })
             await getData()
         } catch (err: any) {
             console.log(err?.response?.data);
-
         }
-        setLoading(null)
+        setCenterId(null)
     }
 
     const column: customTableDataProps[] = [
@@ -102,7 +104,7 @@ export default function CompanyList() {
             render: (status: any) => {
                 const find = data.find(el => el.id === status)
                 return <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    {loading === find?.id ? <>
+                    {centerId === find?.id ? <>
                         <CircularProgress disableShrink size={'20px'} sx={{ margin: '10px 0', marginLeft: '15px' }} />
                     </> : <>
                         {find?.is_active === true ? <Status color='success' /> : <Status color='error' />}
@@ -115,15 +117,11 @@ export default function CompanyList() {
 
     const { push } = useRouter()
     const [search, setSearch] = useState<string>('')
-    const seachValue = useDebounce(search, 1000)
 
 
 
     const rowClick = (id: any) => {
         const find = data.find(el => el.id === Number(id))
-        // if (find?.is_create) {
-        //     push(`/c-panel/company/${id}`)
-        // }
         push(`/c-panel/company/${id}`)
     }
 
@@ -139,7 +137,7 @@ export default function CompanyList() {
                 <Button onClick={() => Router.push('/c-panel/company/create')} sx={{ marginLeft: 'auto' }} variant='contained'>{t('Yaratish')}</Button>
             </Box>
             <Box>
-                <DataTable columns={column} data={data} rowClick={(id: number) => rowClick(id)} />
+                <DataTable loading={isLoading} columns={column} data={data} rowClick={(id: number) => rowClick(id)} />
             </Box>
         </Box>
     )

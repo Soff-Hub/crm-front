@@ -49,12 +49,11 @@ const AuthProvider = ({ children }: Props) => {
   const initAuth = async (): Promise<void> => {
     const storedToken = window.localStorage.getItem(authConfig.storageTokenKeyName)!
     if (storedToken) {
-
       const settings: any = window.localStorage.getItem('settings')
       i18n.changeLanguage(JSON.parse(settings)?.locale || 'uz')
 
-
       setLoading(true)
+
       await api
         .get(authConfig.meEndpoint, {
           headers: {
@@ -87,7 +86,9 @@ const AuthProvider = ({ children }: Props) => {
           }
         })
 
-      if (!window.location.hostname.split('.').includes('c-panel')) {
+
+
+      if (!window.location.hostname.split('.').includes('c-panel') && !window.location.hostname.split('.').includes('localhost')) {
         const resp = await api.get('common/settings/list/')
         dispatch(setCompanyInfo(resp.data[0]))
       }
@@ -98,9 +99,7 @@ const AuthProvider = ({ children }: Props) => {
   }
 
   useEffect(() => {
-
     initAuth()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
@@ -116,7 +115,7 @@ const AuthProvider = ({ children }: Props) => {
           : null
         const returnUrl = router.query.returnUrl
 
-        if (!window.location.hostname.split('.').includes('c-panel')) {
+        if (!window.location.hostname.split('.').includes('c-panel') && !window.location.hostname.split('.').includes('localhost')) {
           const resp = await api.get('common/settings/list/')
           dispatch(setCompanyInfo(resp.data[0]))
         }

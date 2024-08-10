@@ -72,7 +72,7 @@ const UserSuspendDialog = (props: Props) => {
                 {t("Ishonchingiz komilmi?")}
               </Typography>
             </Box>
-            <Typography>{t("Siz bu jarayonni ortqa qaytara olmaysiz qaytara olmaysiz!")}</Typography>
+            <Typography>{t("Siz bu jarayonni ortqa qaytara olmaysiz!")}</Typography>
           </Box>
         </DialogContent>
         <DialogActions sx={{ justifyContent: 'center' }}>

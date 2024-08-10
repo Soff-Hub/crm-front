@@ -65,6 +65,13 @@ export const fetchGroups = createAsyncThunk('groups/fetchGroups', async (querySt
   const resp = await api.get(ceoConfigs.groups + '?' + queryString)
   return resp.data
 })
+export const fetchTeacherSalaries = createAsyncThunk(
+  'groups/fetchTeacherSalaries',
+  async (queryString: string = '') => {
+    const resp = await api.get('/auth/employee/salaries/' + '?' + queryString)
+    return resp.data
+  }
+)
 
 export const getDashboardLessons = createAsyncThunk('groups/fetchLessons', async (queryString: string = '') => {
   const response = await api.get(`common/dashboard/?` + queryString)
@@ -78,17 +85,22 @@ const initialState: IGroupsState = {
   groupData: null,
   courses: null,
   teachers: null,
+  teacherSalaries: null,
   rooms: null,
   dashboardLessons: [],
   workTime: [],
   exclude_time: {},
   groupCount: 0,
+  isTableLoading: false,
   isOpenEdit: false,
   isOpenAddGroup: false,
   isDeleting: false,
   isUpdatingDashboard: false,
   isGettingGroupDetails: false,
   isLoading: false,
+  myGroupParams: {
+    page: 1
+  },
   queryParams: {
     page: 1,
     status: 'active',
@@ -130,6 +142,9 @@ export const groupsSlice = createSlice({
     },
     updateParams: (state, action) => {
       state.queryParams = { ...state.queryParams, ...action.payload }
+    },
+    updateMyGroupParams: (state, action) => {
+      state.myGroupParams = { ...state.myGroupParams, ...action.payload }
     },
     resetGroupParams: state => {
       state.queryParams = { page: 1, status: 'active' }
@@ -200,6 +215,16 @@ export const groupsSlice = createSlice({
     builder.addCase(getDashboardLessons.rejected, state => {
       state.isUpdatingDashboard = false
     })
+    builder.addCase(fetchTeacherSalaries.pending, (state, action) => {
+      state.isTableLoading = true
+    })
+    builder.addCase(fetchTeacherSalaries.fulfilled, (state, action) => {
+      state.teacherSalaries = action.payload
+      state.isTableLoading = false
+    })
+    builder.addCase(fetchTeacherSalaries.rejected, (state, action) => {
+      state.isTableLoading = false
+    })
   }
 })
 
@@ -210,6 +235,7 @@ export const {
   handleOpenAddModal,
   updateParams,
   setGroupData,
-  resetGroupParams
+  resetGroupParams,
+  updateMyGroupParams
 } = groupsSlice.actions
 export default groupsSlice.reducer

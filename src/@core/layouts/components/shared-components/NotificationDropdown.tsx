@@ -18,8 +18,6 @@ import Icon from 'src/@core/components/icon'
 // ** Third Party Components
 import PerfectScrollbarComponent from 'react-perfect-scrollbar'
 
-// ** Type Imports
-import { ThemeColor } from 'src/@core/layouts/types'
 import { Settings } from 'src/@core/context/settingsContext'
 import { CustomAvatarProps } from 'src/@core/components/mui/avatar/types'
 
@@ -27,32 +25,15 @@ import { CustomAvatarProps } from 'src/@core/components/mui/avatar/types'
 import CustomChip from 'src/@core/components/mui/chip'
 import CustomAvatar from 'src/@core/components/mui/avatar'
 
-// ** Util Import
-import { getInitials } from 'src/@core/utils/get-initials'
-import { useTranslation } from 'react-i18next'
 import { useRouter } from 'next/router'
+import { useTranslation } from 'react-i18next'
 
 export type NotificationsType = {
-  meta: string
+  created_at: string
   title: string
-  subtitle: string
-} & (
-    | { avatarAlt: string; avatarImg: string; avatarText?: never; avatarColor?: never; avatarIcon?: never }
-    | {
-      avatarAlt?: never
-      avatarImg?: never
-      avatarText: string
-      avatarIcon?: never
-      avatarColor?: ThemeColor
-    }
-    | {
-      avatarAlt?: never
-      avatarImg?: never
-      avatarText?: never
-      avatarIcon: ReactNode
-      avatarColor?: ThemeColor
-    }
-  )
+  body: string
+}
+
 interface Props {
   settings: Settings
   notifications: NotificationsType[]
@@ -124,6 +105,7 @@ const ScrollWrapper = ({ children, hidden }: { children: ReactNode; hidden: bool
 const NotificationDropdown = (props: Props) => {
   // ** Props
   const { settings, notifications } = props
+  const { t } = useTranslation()
 
   // ** States
   const [anchorEl, setAnchorEl] = useState<(EventTarget & Element) | null>(null)
@@ -143,34 +125,15 @@ const NotificationDropdown = (props: Props) => {
     setAnchorEl(null)
   }
 
-  const RenderAvatar = ({ notification }: { notification: NotificationsType }) => {
-    const { avatarAlt, avatarImg, avatarIcon, avatarText, avatarColor } = notification
+  if (!notifications.length) { return null }
 
-    if (avatarImg) {
-      return <Avatar alt={avatarAlt} src={avatarImg} />
-    } else if (avatarIcon) {
-      return (
-        <Avatar skin='light' color={avatarColor}>
-          {avatarIcon}
-        </Avatar>
-      )
-    } else {
-      return (
-        <Avatar skin='light' color={avatarColor}>
-          {getInitials(avatarText as string)}
-        </Avatar>
-      )
-    }
-  }
-
-  const { t } = useTranslation()
   return (
     <Fragment>
       <IconButton color='inherit' aria-haspopup='true' onClick={handleDropdownOpen} aria-controls='customized-menu'>
         <Badge
           color='error'
           variant='standard'
-          badgeContent={2}
+          badgeContent={notifications.length}
           invisible={!notifications.length}
           sx={{
             '& .MuiBadge-badge': { top: 4, right: 4, boxShadow: theme => `0 0 0 2px ${theme.palette.background.paper}` }
@@ -197,7 +160,7 @@ const NotificationDropdown = (props: Props) => {
               skin='light'
               size='small'
               color='primary'
-              label={`${notifications.length} New`}
+              label={`${notifications.length} ` + t("Yangi")}
               sx={{ height: 20, fontSize: '0.75rem', fontWeight: 500, borderRadius: '10px' }}
             />
           </Box>
@@ -209,31 +172,33 @@ const NotificationDropdown = (props: Props) => {
                 {/* <RenderAvatar notification={notification} /> */}
                 <Box sx={{ mx: 4, flex: '1 1', display: 'flex', overflow: 'hidden', flexDirection: 'column' }}>
                   <MenuItemTitle>{notification.title}</MenuItemTitle>
-                  <MenuItemSubtitle variant='body2'>{notification.subtitle}</MenuItemSubtitle>
+                  <MenuItemSubtitle variant='body2'>{notification?.body}</MenuItemSubtitle>
                 </Box>
                 <Typography variant='caption' sx={{ color: 'text.disabled' }}>
-                  {notification.meta}
+                  {notification?.created_at}
                 </Typography>
               </Box>
             </MenuItem>
           ))}
         </ScrollWrapper>
-        <MenuItem
-          disableRipple
-          disableTouchRipple
-          sx={{
-            py: 3.5,
-            borderBottom: 0,
-            cursor: 'default',
-            userSelect: 'auto',
-            backgroundColor: 'transparent !important',
-            borderTop: theme => `1px solid ${theme.palette.divider}`
-          }}
-        >
-          <Button fullWidth variant='contained' onClick={() => router.push("/notifications")}>
-            {t("Barcha xabarnomalar")}
-          </Button>
-        </MenuItem>
+        {notifications.length > 5 &&
+          <MenuItem
+            disableRipple
+            disableTouchRipple
+            sx={{
+              py: 3.5,
+              borderBottom: 0,
+              cursor: 'default',
+              userSelect: 'auto',
+              backgroundColor: 'transparent !important',
+              borderTop: theme => `1px solid ${theme.palette.divider}`
+            }}
+          >
+            <Button fullWidth variant='contained' onClick={() => router.push("/notifications")}>
+              {t("Barcha xabarnomalar")}
+            </Button>
+          </MenuItem>
+        }
       </Menu>
     </Fragment>
   )

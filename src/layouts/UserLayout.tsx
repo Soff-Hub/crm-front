@@ -1,5 +1,5 @@
 // ** React Imports
-import { ReactNode, useContext } from 'react'
+import { ReactNode, useContext, useEffect } from 'react'
 
 // ** MUI Imports
 import { Theme } from '@mui/material/styles'
@@ -26,6 +26,8 @@ import { useSettings } from 'src/@core/hooks/useSettings'
 import { AuthContext } from 'src/context/AuthContext'
 import { useTranslation } from 'react-i18next'
 import { useRouter } from 'next/router'
+import { useAppDispatch } from 'src/store'
+import { fetchNotification } from 'src/store/apps/user'
 
 interface Props {
   children: ReactNode
@@ -37,6 +39,7 @@ const UserLayout = ({ children, contentHeightFixed }: Props) => {
   const { settings, saveSettings } = useSettings()
   const { user } = useContext(AuthContext)
   const { t } = useTranslation()
+  const dispatch = useAppDispatch()
 
   const hidden = useMediaQuery((theme: Theme) => theme.breakpoints.down('lg'))
 
@@ -46,6 +49,14 @@ const UserLayout = ({ children, contentHeightFixed }: Props) => {
     settings.layout = 'vertical'
   }
 
+
+  useEffect(() => {
+    if (user) {
+      (async function () {
+        await dispatch(fetchNotification())
+      })()
+    }
+  }, [])
 
   return (
     <Layout

@@ -12,6 +12,7 @@ import { useAppDispatch, useAppSelector } from 'src/store';
 import { deleteGroups, fetchGroups, getDashboardLessons, getGroupsDetails, handleOpenEdit, updateParams } from 'src/store/apps/groups';
 import { disablePage } from 'src/store/apps/page';
 import { toast } from 'react-hot-toast';
+import Excel from 'src/@core/components/excelButton/Excel';
 
 const RowOptions = ({ id }: { id: number | string }) => {
     const { queryParams, groups } = useAppSelector(state => state.groups)
@@ -78,6 +79,7 @@ const RowOptions = ({ id }: { id: number | string }) => {
         setDeleting(false)
         dispatch(disablePage(false))
     }
+    const queryString = new URLSearchParams({ ...queryParams }).toString()
 
     return (
         <>
@@ -125,6 +127,7 @@ const RowOptions = ({ id }: { id: number | string }) => {
                     <IconifyIcon icon='material-symbols-light:recommend-outline' fontSize={20} />
                     {t("Guruhni yakunlash")}
                 </MenuItem>}
+                <Excel url={`/common/group/export/${id}`} fullWidth variant='text' sx={{ width: "100%", py: 2, px: 5, borderRadius: "0px", display: "flex", justifyContent: "start" }} />
             </Menu>
             <UserSuspendDialog isDeleting={isDeleting} handleOk={() => handleDeleteTeacher(id)} open={suspendDialogOpen} setOpen={setSuspendDialogOpen} />
         </>
