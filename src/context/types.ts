@@ -18,9 +18,10 @@ export type UserDataType = {
   fullName: string
   username: string
   password: string
-  avatar: string,
-  balance?: number,
-  branches?: any[],
+  avatar: string
+  payment_page?: boolean
+  balance?: number
+  branches?: any[]
   active_branch?: any
 }
 

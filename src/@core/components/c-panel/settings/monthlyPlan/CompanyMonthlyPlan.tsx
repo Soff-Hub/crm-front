@@ -1,4 +1,5 @@
-import { Box, Skeleton } from '@mui/material';
+import { Box, Paper, Skeleton, Typography } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import EmptyContent from 'src/@core/components/empty-content';
 import { useAppSelector } from 'src/store';
 import CreateMonthlyPlan from './components/CreateMonthlyPlan';
@@ -10,12 +11,12 @@ type Props = {}
 
 export default function CompanyMonthlyPlan({ }: Props) {
     const { tariffs, isGettingTariffs } = useAppSelector(state => state.cPanelSlice)
-    console.log(isGettingTariffs);
+    const { t } = useTranslation()
 
     return (
-        <Box sx={{ borderBottom: "2px solid #d1d5db", pb: 5 }}>
+        <Box sx={{ pb: 5 }}>
             <Heading />
-            <Box sx={{ display: 'grid', gridTemplateColumns: "repeat(5,1fr)", alignItems: "center", gap: '15px', marginTop: '10px', flexWrap: 'wrap' }}>
+            <Box sx={{ display: 'grid', gridTemplateColumns: "repeat(4,1fr)", alignItems: "start", gap: '15px', marginTop: '10px', flexWrap: 'wrap' }}>
                 {isGettingTariffs ?
                     [1, 2, 3, 4].map((el, i) => (
                         <Box key={i} onClick={() => { }}>
@@ -28,7 +29,10 @@ export default function CompanyMonthlyPlan({ }: Props) {
                                 animation="wave"
                             />
                         </Box>)) : tariffs.length ? tariffs.map(tariff => (
-                            <MonthlyCard key={tariff.id} item={tariff} />
+                            <Paper sx={{ display: "flex", flexDirection: "column", gap: "15px", padding: "15px" }}>
+                                <Typography sx={{ color: "orange" }} variant="h6">{tariff.min_count}-{tariff.max_count} {t("ta o'quvchi")}</Typography>
+                                {tariff.tariffs?.map(item => <MonthlyCard key={item.id} item={item} />)}
+                            </Paper>
                         )) : <EmptyContent />}
             </Box>
             <CreateMonthlyPlan />

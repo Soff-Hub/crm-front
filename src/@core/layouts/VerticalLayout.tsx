@@ -62,27 +62,28 @@ const VerticalLayout = (props: LayoutProps) => {
 
   // ** Toggle Functions
   const toggleNavVisibility = () => setNavVisible(!navVisible)
+  const userData = JSON.parse(localStorage.getItem("userData") as string)
 
   return (
     <>
       <VerticalLayoutWrapper className='layout-wrapper'>
         {/* Navigation Menu */}
         {navHidden && !(navHidden && settings.lastLayout === 'horizontal') ? null : (
-          <Navigation
+          !userData?.payment_page && <Navigation
             navWidth={navWidth}
             navVisible={navVisible}
             setNavVisible={setNavVisible}
             collapsedNavWidth={collapsedNavWidth}
             toggleNavVisibility={toggleNavVisibility}
             navigationBorderWidth={navigationBorderWidth}
-            navMenuContent={verticalLayoutProps.navMenu.content}
-            navMenuBranding={verticalLayoutProps.navMenu.branding}
-            menuLockedIcon={verticalLayoutProps.navMenu.lockedIcon}
-            verticalNavItems={verticalLayoutProps.navMenu.navItems}
-            navMenuProps={verticalLayoutProps.navMenu.componentProps}
-            menuUnlockedIcon={verticalLayoutProps.navMenu.unlockedIcon}
-            afterNavMenuContent={verticalLayoutProps.navMenu.afterContent}
-            beforeNavMenuContent={verticalLayoutProps.navMenu.beforeContent}
+            navMenuContent={verticalLayoutProps?.navMenu.content}
+            navMenuBranding={verticalLayoutProps?.navMenu.branding}
+            menuLockedIcon={verticalLayoutProps?.navMenu.lockedIcon}
+            verticalNavItems={verticalLayoutProps?.navMenu.navItems}
+            navMenuProps={verticalLayoutProps?.navMenu.componentProps}
+            menuUnlockedIcon={verticalLayoutProps?.navMenu.unlockedIcon}
+            afterNavMenuContent={verticalLayoutProps?.navMenu.afterContent}
+            beforeNavMenuContent={verticalLayoutProps?.navMenu.beforeContent}
             {...props}
           />
         )}
@@ -91,12 +92,12 @@ const VerticalLayout = (props: LayoutProps) => {
           sx={{ ...(contentHeightFixed && { maxHeight: '100vh' }) }}
         >
           {/* AppBar Component */}
-          <AppBar
+          {!userData.payment_page && <AppBar
             toggleNavVisibility={toggleNavVisibility}
-            appBarContent={verticalLayoutProps.appBar?.content}
-            appBarProps={verticalLayoutProps.appBar?.componentProps}
+            appBarContent={verticalLayoutProps?.appBar?.content}
+            appBarProps={verticalLayoutProps?.appBar?.componentProps}
             {...props}
-          />
+          />}
 
           {/* Content */}
           <ContentWrapper

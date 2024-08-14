@@ -56,6 +56,7 @@ const StudentsFilter = () => {
     }, [searchVal])
 
     const queryString = new URLSearchParams({ ...queryParams } as Record<string, string>).toString()
+
     return (
         <Box sx={{ display: 'flex', gap: '20px', alignItems: "center", flexDirection: isMobile ? 'column' : 'row' }}>
             <FormControl variant="outlined" size='small' fullWidth>

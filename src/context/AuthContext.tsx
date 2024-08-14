@@ -69,6 +69,7 @@ const AuthProvider = ({ children }: Props) => {
             username: response.data.phone,
             password: 'null',
             avatar: response.data.image,
+            payment_page: response.data.payment_page,
             role: response.data.roles.filter((el: any) => el.exists).map((el: any) => el.name?.toLowerCase()),
             balance: response.data?.balance || 0,
             branches: response.data.branches.filter((item: any) => item.exists === true),
@@ -115,11 +116,20 @@ const AuthProvider = ({ children }: Props) => {
           : null
         const returnUrl = router.query.returnUrl
 
-        if (!window.location.hostname.split('.').includes('c-panel') && !window.location.hostname.split('.').includes('localhost')) {
-          const resp = await api.get('common/settings/list/')
-          dispatch(setCompanyInfo(resp.data[0]))
-        }
+        !params.rememberMe ? window.localStorage.setItem('userData', JSON.stringify({ ...response.data, role: 'admin', tokens: null })) : null
 
+        const settings: any = window.localStorage.getItem('settings')
+        i18n.changeLanguage(JSON.parse(settings)?.locale || 'uz')
+        if (!response.data.payment_page) {
+          if (!window.location.hostname.split('.').includes('c-panel') && !window.location.hostname.split('.').includes('localhost')) {
+            const resp = await api.get('common/settings/list/')
+            dispatch(setCompanyInfo(resp.data[0]))
+          }
+          const redirectURL = returnUrl && returnUrl !== '/' ? returnUrl : '/'
+          router.replace(redirectURL as string)
+        } else {
+          router.replace("/crm-payments")
+        }
 
         setUser({
           id: response.data.id,
@@ -128,20 +138,12 @@ const AuthProvider = ({ children }: Props) => {
           username: response.data.phone,
           password: 'null',
           avatar: response.data.image,
+          payment_page: response.data.payment_page,
           role: response.data.roles.filter((el: any) => el.exists).map((el: any) => el.name?.toLowerCase()),
           balance: response.data?.balance || 0,
           branches: response.data.branches.filter((item: any) => item.exists === true),
           active_branch: response.data.active_branch
         })
-
-        !params.rememberMe ? window.localStorage.setItem('userData', JSON.stringify({ ...response.data, role: 'admin', tokens: null })) : null
-
-        const settings: any = window.localStorage.getItem('settings')
-        i18n.changeLanguage(JSON.parse(settings)?.locale || 'uz')
-
-        const redirectURL = returnUrl && returnUrl !== '/' ? returnUrl : '/'
-
-        router.replace(redirectURL as string)
       })
 
       .catch(err => {

@@ -23,7 +23,7 @@ const WindowWrapper = ({ children }: Props) => {
       if (typeof window !== 'undefined') {
         setWindowReadyFlag(true)
       }
-      if (auth.user && auth.user.role) {
+      if (auth.user && auth.user.role && !window.location.hostname.split('.').includes('c-panel')) {
         (async function () { await dispatch(fetchNotification()) })()
       }
     },

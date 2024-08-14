@@ -95,7 +95,7 @@ const LoginPage = () => {
   useEffect(() => {
     pageLoad()
   }, [])
-  console.log(data);
+
 
   const {
     control,

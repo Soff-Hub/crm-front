@@ -23,6 +23,8 @@ import { useAuth } from 'src/hooks/useAuth'
 // ** Type Imports
 import { Settings } from 'src/@core/context/settingsContext'
 import { AuthContext } from 'src/context/AuthContext'
+import { useTranslation } from 'react-i18next'
+import { Button } from '@mui/material'
 
 interface Props {
   settings: Settings
@@ -40,7 +42,7 @@ const BadgeContentSpan = styled('span')(({ theme }) => ({
 const UserDropdown = (props: Props) => {
   // ** Props
   const { settings } = props
-
+  const { t } = useTranslation()
   // ** States
   const [anchorEl, setAnchorEl] = useState<Element | null>(null)
 
@@ -68,18 +70,20 @@ const UserDropdown = (props: Props) => {
   const styles = {
     py: 2,
     px: 4,
+    m: 0,
+    borderRadius: "0",
     width: '100%',
     display: 'flex',
+    justifyContent: "flex-start",
     alignItems: 'center',
-    color: 'text.primary',
-    textDecoration: 'none',
+    // color: 'text.primary',
+    // textDecoration: 'none',
     '& svg': {
       mr: 2,
-      fontSize: '1.375rem',
-      color: 'text.primary'
+      // fontSize: '1.375rem',
+      // color: 'text.primary'
     }
   }
-
   const handleLogout = () => {
     logout()
     handleDropdownClose()
@@ -135,21 +139,18 @@ const UserDropdown = (props: Props) => {
         <Typography variant='body2' sx={{ fontSize: '0.8rem', color: 'black', paddingLeft: '20px' }}>
           {user?.username}
         </Typography>
-        <Divider sx={{ mt: '0 !important' }} />
-        {/* <Divider />
-        <MenuItem sx={{ p: 0 }} onClick={() => handleDropdownClose('/pages/account-settings/account')}>
-          <Box sx={styles}>
-            <Icon icon='mdi:cog-outline' />
-            Settings
-          </Box>
-        </MenuItem>
-        <Divider /> */}
+        <Divider sx={{ mb: '0 !important', mt: "1 !important" }} />
+        <Button color="success" sx={styles} onClick={() => router.push('/crm-payments')}>
+          <Icon icon='material-symbols-light:payments-sharp' />
+          {t("CRM sozlamalari")}
+        </Button>
+        <Divider sx={{ m: '0 !important' }} />
         <MenuItem
           onClick={handleLogout}
           sx={{ py: 2, '& svg': { mr: 2, fontSize: '1.375rem', color: 'text.primary' } }}
         >
           <Icon icon='mdi:logout-variant' />
-          Logout
+          {t("Logout")}
         </MenuItem>
       </Menu>
     </Fragment>

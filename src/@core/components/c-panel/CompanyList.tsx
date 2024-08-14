@@ -1,11 +1,24 @@
 import { useEffect, useState } from 'react';
-import { Box, Button, CircularProgress, Switch, TextField } from '@mui/material';
+import {
+    Box,
+    Button,
+    CircularProgress,
+    FormControl,
+    InputAdornment,
+    InputLabel,
+    MenuItem,
+    OutlinedInput,
+    Pagination,
+    Select,
+    Switch,
+} from '@mui/material';
 import DataTable, { customTableDataProps } from '../table';
 import Router, { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
 import api from 'src/@core/utils/api';
 import Status from '../status';
 import { toast } from 'react-hot-toast';
+import IconifyIcon from '../icon';
 
 export interface CompanyType {
     id: number
@@ -18,23 +31,39 @@ export interface CompanyType {
     domains: { id: number, domain: string }[]
     is_create: boolean
 }
+export interface CompanyDataType {
+    count: number
+    next: string | null
+    previous: string | null
+    results: CompanyType[]
+}
+export interface QueryParams {
+    page?: string
+    search?: string
+    payment_status_nearly?: string
+    debtor?: string
+}
 
 export default function CompanyList() {
     const { t } = useTranslation()
-    const [data, setData] = useState<CompanyType[]>([])
+    const [data, setData] = useState<CompanyDataType | null>(null)
     const [centerId, setCenterId] = useState<number | null>(null)
     const [isLoading, setLoading] = useState(false)
+    const [queryParams, updateParams] = useState<QueryParams>({ page: "1" })
 
-    async function getData() {
-        setLoading(true)
+    const queryString = new URLSearchParams({ ...queryParams } as Record<string, string>).toString()
+
+    async function getData(queryString: string = "") {
+        setLoading(true);
         try {
-            const resp = await api.get(`/owner/list/client/`)
+            const resp = await api.get(`/owner/list/client/?` + queryString);
             setData(resp.data);
         } catch (err: any) {
-            toast.error(err);
+            toast.error(err.message || 'An error occurred while fetching data');
         }
-        setLoading(false)
+        setLoading(false);
     }
+
 
     const suspendCompany = async (item: any, id: any) => {
         setCenterId(item.id)
@@ -102,7 +131,7 @@ export default function CompanyList() {
             title: t("Status"),
             dataIndex: 'id',
             render: (status: any) => {
-                const find = data.find(el => el.id === status)
+                const find = data?.results.find(el => el.id === status)
                 return <Box sx={{ display: 'flex', alignItems: 'center' }}>
                     {centerId === find?.id ? <>
                         <CircularProgress disableShrink size={'20px'} sx={{ margin: '10px 0', marginLeft: '15px' }} />
@@ -121,7 +150,6 @@ export default function CompanyList() {
 
 
     const rowClick = (id: any) => {
-        const find = data.find(el => el.id === Number(id))
         push(`/c-panel/company/${id}`)
     }
 
@@ -129,15 +157,111 @@ export default function CompanyList() {
         getData()
     }, [])
 
+
+    const handlePagination = async (page: number) => {
+        const queryString = new URLSearchParams({ ...queryParams, page: String(page) }).toString();
+        updateParams(prevState => ({ ...prevState, page: String(page) }))
+        await getData(queryString)
+    }
+
+    const handleSearch = async (value: string) => {
+        const queryString = new URLSearchParams({ ...queryParams, search: value, page: "1" }).toString();
+        updateParams(prevState => ({ ...prevState, search: value, page: "1" }))
+        await getData(queryString)
+    }
+
+    async function handleFilter(key: string, value: string | number | null) {
+        if (key === 'amount') {
+            if (value === 'debtor') {
+                const queryString = new URLSearchParams({ ...queryParams, debtor: 'true', payment_status_nearly: '' }).toString();
+                await getData(queryString);
+                updateParams(prevState => ({ ...prevState, debtor: 'true', payment_status_nearly: '' }));
+            } else if (value === 'payment_status_nearly') {
+                const queryString = new URLSearchParams({ ...queryParams, payment_status_nearly: 'true', debtor: '' }).toString();
+                await getData(queryString);
+                updateParams(prevState => ({ ...prevState, payment_status_nearly: 'true', debtor: '' }));
+            } else if (value === 'all') {
+                const queryString = new URLSearchParams({ ...queryParams, debtor: '', payment_status_nearly: '' }).toString();
+                await getData(queryString);
+                updateParams(prevState => ({ ...prevState, debtor: '', payment_status_nearly: '' }));
+            }
+            return;
+        }
+
+        if (key === 'status') {
+            const queryString = new URLSearchParams({ status: String(value) }).toString();
+            await getData(queryString);
+        } else {
+            const queryString = new URLSearchParams({ ...queryParams, [key]: String(value) }).toString();
+            await getData(queryString);
+        }
+        updateParams((prevState) => ({ ...prevState, [key]: value }));
+    }
+
+
     return (
         <Box>
             <Box sx={{ display: 'flex' }}>
-                <TextField onChange={(e) => setSearch(e.target.value)} size='small' placeholder={`${t("Qidirish")}...`} sx={{ minWidth: '300px' }} />
-                <Button className='ms-2' variant='outlined'>{t("Qidirish")}</Button>
+                <FormControl variant="outlined" size='small'
+                    sx={{ width: "300px" }}>
+                    <InputLabel htmlFor="outlined-adornment-password">{t('Qidirish')}</InputLabel>
+                    <OutlinedInput
+                        id="outlined-adornment-password"
+                        type={'text'}
+                        onChange={(e) => handleSearch(e.target.value)}
+                        value={queryParams.search}
+                        autoComplete='off'
+                        endAdornment={
+                            <InputAdornment position="end">
+                                <IconifyIcon icon={'tabler:search'} />
+                            </InputAdornment>
+                        }
+                        label={t('Qidirish')}
+                    />
+                </FormControl>
+                <Box sx={{ width: '300px', ml: 3 }}>
+                    <FormControl fullWidth>
+                        <InputLabel size='small' id='demo-simple-select-outlined-label'>{t("To'lov holati")}</InputLabel>
+                        <Select
+                            size='small'
+                            label={t("To'lov holati")}
+                            value={queryParams.debtor ? "debtor" : Boolean(queryParams.payment_status_nearly) ? "payment_status_nearly" : ''}
+                            id='demo-simple-select-outlined'
+                            labelId='demo-simple-select-outlined-label'
+                            onChange={(e: any) => {
+                                if (e.target.value === 'debtor') {
+                                    handleFilter('amount', 'debtor')
+                                } else if (e.target.value === 'payment_status_nearly') {
+                                    handleFilter('amount', 'payment_status_nearly')
+                                } else {
+                                    handleFilter('amount', 'all')
+                                }
+                            }
+                            }
+                        >
+                            <MenuItem value=''>
+                                <b>{t('Barchasi')}</b>
+                            </MenuItem>
+                            <MenuItem value={'payment_status_nearly'}>{t("To'lov vaqti yaqinlashgan")}</MenuItem>
+                            <MenuItem value={'debtor'}>{t('Qarzdor')}</MenuItem>
+                        </Select>
+                    </FormControl>
+                </Box>
                 <Button onClick={() => Router.push('/c-panel/company/create')} sx={{ marginLeft: 'auto' }} variant='contained'>{t('Yaratish')}</Button>
             </Box>
             <Box>
-                <DataTable loading={isLoading} columns={column} data={data} rowClick={(id: number) => rowClick(id)} />
+                <DataTable loading={isLoading} columns={column} data={data?.results || []} rowClick={(id: number) => rowClick(id)} />
+                {data &&
+                    data?.count > 10 &&
+                    !isLoading &&
+                    <Pagination
+                        defaultPage={Number(queryParams?.page) || 1}
+                        count={Math.ceil(data?.count / 10)}
+                        variant="outlined"
+                        shape="rounded"
+                        onChange={(e: any, page) => handlePagination(page)}
+                    />
+                }
             </Box>
         </Box>
     )

@@ -87,11 +87,13 @@ const HorizontalLayout = (props: LayoutProps) => {
   const userAppBarProps = Object.assign({}, appBarProps)
   delete userAppBarProps.sx
 
+  const userData = JSON.parse(localStorage.getItem("userData") as string)
+
   return (
     <HorizontalLayoutWrapper className='layout-wrapper'>
       <MainContentWrapper className='layout-content-wrapper' sx={{ ...(contentHeightFixed && { maxHeight: '100vh' }) }}>
         {/* Navbar (or AppBar) and Navigation Menu Wrapper */}
-        <AppBar
+        {!userData.payment_page && <AppBar
           color='default'
           elevation={skin === 'bordered' ? 0 : 3}
           className='layout-navbar-and-nav-container'
@@ -164,7 +166,7 @@ const HorizontalLayout = (props: LayoutProps) => {
               </Toolbar>
             </Box>
           )}
-        </AppBar>
+        </AppBar>}
 
         {/* Content */}
         <ContentWrapper

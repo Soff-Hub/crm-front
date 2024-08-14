@@ -1,16 +1,18 @@
-import { Box, Pagination, Typography } from '@mui/material';
-import { useEffect } from 'react';
+import { Box, Button, Chip, Pagination, Typography } from '@mui/material';
+import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
 import DataTable, { customTableDataProps } from 'src/@core/components/table';
 import { formatCurrency } from 'src/@core/utils/format-currency';
+import UserIcon from 'src/layouts/components/UserIcon';
 import { useAppDispatch, useAppSelector } from 'src/store';
-import { fetchTeacherSalaries, updateMyGroupParams } from 'src/store/apps/groups';
+import { fetchCRMPayments, setOpenModal, updateClientParams } from 'src/store/apps/c-panel';
+import TransitionsModal from './EditModal';
 
 
 
 export default function PaymentsList() {
     const { t } = useTranslation()
-    const { groups, isTableLoading, myGroupParams, isLoading, teacherSalaries } = useAppSelector(state => state.groups)
+    const { clientOwnPayments, clientQueryParams, isGettingOwnPayments } = useAppSelector(state => state.cPanelSlice)
     const dispatch = useAppDispatch()
 
     const column: customTableDataProps[] = [
@@ -20,70 +22,87 @@ export default function PaymentsList() {
             dataIndex: 'index',
         },
         {
+            xs: 0.4,
+            title: t("Markaz"),
+            dataIndex: 'tenant_data',
+            render: (item: any) => <span>{item.name}</span>
+        },
+        {
             xs: 0.3,
-            title: t("Markaz nomi"),
-            dataIndex: 'title',
-        },
-        {
-            xs: 0.2,
-            title: t("To'lov summasi"),
+            title: t("Summasi"),
             dataIndex: 'amount',
-            render: (salaries) => `${formatCurrency(salaries)} so'm`
+            render: (amount) => `${formatCurrency(amount)} so'm`
         },
         {
-            xs: 0.2,
-            title: t("To'lov qilingan sana"),
+            xs: 0.3,
+            title: t("Chek"),
+            dataIndex: 'receipt',
+            render: (chek) => <Link href={chek} target="_blank"><Button
+                component="label"
+                role={undefined}
+                size="small"
+                variant="outlined"
+                tabIndex={-1}
+                startIcon={<UserIcon icon={"material-symbols:download"} />}
+            >
+                {t("Chekni ko'rish")}
+            </Button>
+            </Link>
+        },
+        {
+            xs: 0.3,
+            title: t("Sana"),
             dataIndex: 'date',
-            render: (salaries) => `${formatCurrency(salaries)} so'm`
+            render: (date) => date
         },
         {
-            xs: 0.2,
-            title: t("To'lov hujjati"),
-            dataIndex: 'file',
-            render: (salaries) => `${formatCurrency(salaries)} so'm`
+            xs: 0.3,
+            title: t("To'lov holati"),
+            dataIndex: 'status',
+            render: (status) => status == "moderation" ? <Chip label={t("Tasdiqlanmagan")} size="small" />
+                : status == "approved" ? <Chip color="success" label={t("Qabul qilindi")} size="small" />
+                    : <Chip color="error" label={t("Bekor qilindi")} size="small" />
         },
         {
             xs: 0.1,
-            title: t("Holati"),
-            dataIndex: '',
-            render: (salaries) => `${formatCurrency(salaries)} so'm`
+            title: t(""),
+            dataIndex: 'id',
+            render: (id) => (
+                <>
+                    <UserIcon onClick={() => dispatch(setOpenModal(id))} icon="lucide:edit" />
+                    <TransitionsModal id={id} />
+                </>)
         },
     ]
 
-    useEffect(() => {
-        (async function () {
-            dispatch(fetchTeacherSalaries())
-        })()
-    }, [])
-
     const handlePagination = async (page: number) => {
-        const queryString = new URLSearchParams({ ...myGroupParams, page: String(page) }).toString();
-        dispatch(updateMyGroupParams({ page: page }))
-        await dispatch(fetchTeacherSalaries(queryString))
+        const queryString = new URLSearchParams({ ...clientQueryParams, page: String(page) }).toString();
+        dispatch(updateClientParams({ page: page }))
+        await dispatch(fetchCRMPayments(queryString))
     }
-
 
     return (
         <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
-            <Box sx={{ width: "100%", display: "flex", flexDirection: "column", gap: 1 }}>
-                <Typography variant='h6'>{t("O'quv markaz to'lovlari")}</Typography>
+            <Box sx={{ width: "100%", display: "flex", flexDirection: "column", gap: 1 }
+            } >
+                <Typography variant='h6'>{t("CRM uchun to'lovlari")}</Typography>
                 <DataTable
-                    loading={isTableLoading}
+                    loading={isGettingOwnPayments}
                     columns={column}
-                    data={teacherSalaries?.results || []}
-                    rowClick={(id: number) => null}
+                    data={clientOwnPayments?.results || []}
                 />
-            </Box>
-            {teacherSalaries &&
-                teacherSalaries?.count > 10 &&
-                !isTableLoading &&
+            </Box >
+            {clientOwnPayments &&
+                clientOwnPayments?.count > 10 &&
+                !isGettingOwnPayments &&
                 <Pagination
-                    defaultPage={myGroupParams?.page || 1}
-                    count={Math.ceil(teacherSalaries?.count / 10)}
+                    defaultPage={clientQueryParams?.page || 1}
+                    count={Math.ceil(clientOwnPayments?.count / 10)}
                     variant="outlined"
                     shape="rounded"
                     onChange={(e: any, page) => handlePagination(page)}
-                />}
-        </Box>
+                />
+            }
+        </Box >
     )
 }

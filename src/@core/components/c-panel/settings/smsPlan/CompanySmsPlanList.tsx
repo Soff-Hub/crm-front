@@ -5,7 +5,7 @@ type Props = {}
 
 export default function CompanySmsPlanList({ }: Props) {
     return (
-        <Box sx={{ borderBottom: "2px solid #d1d5db", pb: 5 }}>
+        <Box sx={{ pb: 5 }}>
             <Box sx={{ display: "flex", justifyContent: "space-between" }}>
                 <Typography variant='h6'>SMS tariflar</Typography>
                 <Button variant='contained' color='primary'>SMS tarif qo'shish</Button>

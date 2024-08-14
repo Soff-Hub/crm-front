@@ -53,7 +53,9 @@ const UserLayout = ({ children, contentHeightFixed }: Props) => {
   useEffect(() => {
     if (user) {
       (async function () {
-        await dispatch(fetchNotification())
+        if (!window.location.hostname.split('.').includes('c-panel')) {
+          await dispatch(fetchNotification())
+        }
       })()
     }
   }, [])
@@ -64,25 +66,27 @@ const UserLayout = ({ children, contentHeightFixed }: Props) => {
       settings={settings}
       saveSettings={saveSettings}
       contentHeightFixed={contentHeightFixed}
-      verticalLayoutProps={{
-        navMenu: {
-          navItems: router.pathname.split('/')?.[1] === 'c-panel' ?
-            CPanelNavigation(t) : user?.role.length === 1 && user?.role.includes('teacher') ?
-              TeacherNavigation(t) : user?.role.includes('student') ? StudentNavigation(t) :
-                user?.role.includes('teacher') ?
-                  VerticalNavItems(t) : VerticalNavItems(t)
-        },
-        appBar: {
-          content: props => (
-            <VerticalAppBarContent
-              hidden={hidden}
-              settings={settings}
-              saveSettings={saveSettings}
-              toggleNavVisibility={props.toggleNavVisibility}
-            />
-          )
+      verticalLayoutProps={
+        {
+          navMenu: {
+            navItems: router.pathname.split('/')?.[1] === 'c-panel' ?
+              CPanelNavigation(t) : user?.role.length === 1 && user?.role.includes('teacher') ?
+                TeacherNavigation(t) : user?.role.includes('student') ? StudentNavigation(t) :
+                  user?.role.includes('teacher') ?
+                    VerticalNavItems(t) : VerticalNavItems(t)
+          },
+          appBar: {
+            content: props => (
+              <VerticalAppBarContent
+                hidden={hidden}
+                settings={settings}
+                saveSettings={saveSettings}
+                toggleNavVisibility={props.toggleNavVisibility}
+              />
+            )
+          }
         }
-      }}
+      }
       {...(settings.layout === 'horizontal' && {
         horizontalLayoutProps: {
           navMenu: {

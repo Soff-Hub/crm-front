@@ -17,7 +17,6 @@ export const getHomeRoute = (role: string[]) => {
   if (window.location.hostname.split('.').includes('c-panel')) {
     return '/c-panel'
   }
-
   if (role.includes('student')) {
     return '/student-profile'
   }
@@ -29,15 +28,15 @@ const Home = () => {
   // ** Hooks
   const auth = useAuth()
   const router = useRouter()
-  console.log(window.location.hostname);
 
   useEffect(() => {
     if (auth.user && auth.user.role) {
       const homeRoute = getHomeRoute(auth.user.role)
       // Redirect user to Home URL
-      router.replace(homeRoute)
-    }
 
+      if (auth.user.payment_page) router.replace("/crm-payments")
+      else router.replace(homeRoute)
+    }
   }, [])
 
   return <Spinner sx={{ height: '100%' }} />

@@ -48,7 +48,9 @@ export default function Notifications() {
 
     useEffect(() => {
         (async function () {
-            await dispatch(fetchNotification())
+            if (!window.location.hostname.split('.').includes('c-panel')) {
+                await dispatch(fetchNotification())
+            }
         })()
     }, [])
 

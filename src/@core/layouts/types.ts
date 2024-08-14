@@ -69,7 +69,7 @@ export type FooterProps = {
 }
 
 export type VerticalLayoutProps = {
-  appBar?: {
+  appBar: {
     componentProps?: AppBarProps
     content?: (props?: any) => ReactNode
   }

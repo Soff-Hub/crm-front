@@ -1,4 +1,4 @@
-import { Box, Button, Card, CardContent, Typography } from "@mui/material";
+import { Box, Button, Card, CardContent, Chip, Typography } from "@mui/material";
 import IconifyIcon from "src/@core/components/icon";
 import { TariffType } from "src/types/apps/cpanelTypes";
 import { formatCurrency } from "src/@core/utils/format-currency";
@@ -39,16 +39,16 @@ export default function MonthlyCard({ item }: MonthlyCardProps) {
                 <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '5px', minWidth: '150px' }}>
                     <Box sx={{ width: "100%", display: "flex", justifyContent: "space-between", alignItems: "center", gap: "10px" }}>
                         <Typography variant='body2'>{t("Tarif oylari")} :</Typography>
-                        <Typography variant='body1' color="blueviolet">{item.month_count} oy</Typography>
+                        <Chip sx={{ borderRadius: "5px", }} label={`${item.month_count} oy`} variant="outlined" color="primary" />
                     </Box>
                     <Box sx={{ width: "100%", display: "flex", justifyContent: "space-between", alignItems: "center", gap: "10px" }}>
                         <Typography variant='body2'>{t("Summasi")} :</Typography>
-                        <Typography variant="body1" color='green'>{formatCurrency(item.amount)} so'm</Typography>
+                        <Chip sx={{ borderRadius: "5px", }} label={`${formatCurrency(item.amount)} so'm`} variant="outlined" color="success" />
                     </Box>
-                    <Box sx={{ width: "100%", display: "flex", justifyContent: "space-between", alignItems: "center", gap: "10px" }}>
+                    {/* <Box sx={{ width: "100%", display: "flex", justifyContent: "space-between", alignItems: "center", gap: "10px" }}>
                         <Typography variant='body2'>{t("O'quvchilar")} :</Typography>
-                        <Typography variant='body1' sx={{ color: 'orange' }}>{item.min_count}-{item.max_count} ta</Typography>
-                    </Box>
+                        <Chip sx={{ borderRadius: "5px", }} label={`${item.min_count}-${item.max_count} ta`} variant="outlined" color="warning" />
+                    </Box> */}
                     <Box>
                         <Button onClick={() => setOpenDelete(true)} size='small' color='error'>
                             <IconifyIcon icon={'material-symbols-light:delete-outline'} />
