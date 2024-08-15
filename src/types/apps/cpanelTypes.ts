@@ -28,6 +28,8 @@ export type TariffResponseType = {
 
 export type ClientPaymentType = {
   count: number
+  expiration_date: string | null
+  is_demo: boolean
   next: string | null
   previous: string | null
   results: {
@@ -77,6 +79,8 @@ export interface CompanyDetailsPageTypes {
   } | null
   isLoading: boolean
   isGettingSMS: boolean
+  isGettingPayments: boolean
+  payments: ClientPaymentType | null
   sms: {
     id: number
     phone: string

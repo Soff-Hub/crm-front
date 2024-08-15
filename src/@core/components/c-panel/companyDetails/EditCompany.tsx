@@ -4,7 +4,7 @@ import useResponsive from 'src/@core/hooks/useResponsive';
 import CompanyPaymentList from './CompanyPaymentList';
 import CompanySmsHistory from './CompanySmsHistory';
 import { useAppDispatch } from 'src/store';
-import { fetchCompanyDetails, fetchSMSHistory } from 'src/store/apps/c-panel/companySlice';
+import { fetchClientPayments, fetchCompanyDetails, fetchSMSHistory } from 'src/store/apps/c-panel/companySlice';
 import Details from './Details';
 import EditDetails from './EditDetails';
 
@@ -19,7 +19,8 @@ export default function CreateCompany({ slug }: Props) {
     async function pageLoad() {
         if (slug) return await Promise.all([
             dispatch(fetchCompanyDetails(slug)),
-            dispatch(fetchSMSHistory(slug))
+            dispatch(fetchSMSHistory(slug)),
+            dispatch(fetchClientPayments(slug)),
         ])
     }
 

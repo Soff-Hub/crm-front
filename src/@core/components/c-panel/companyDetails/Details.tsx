@@ -135,11 +135,11 @@ export default function Details() {
                         <Typography>
                             {t(statsFields.last_payment.name)}
                         </Typography>
-                        <Typography color={'green'}>
+                        {statsFields.last_payment.value ? <Typography color={'green'}>
                             <span style={{ color: "#22d3ee", marginRight: "5px" }}>{statsFields.last_payment.value?.month_count} {t("oylik")}</span>
                             <span style={{ color: "#f59e0b", marginRight: "5px" }}>({formatCurrency(statsFields.last_payment.value?.amount)} so'm)</span>
                             <span style={{ color: "#84cc16" }}>({statsFields.last_payment.value?.min_count}-{statsFields.last_payment.value?.max_count} {t("ta o'quvchi")})</span>
-                        </Typography>
+                        </Typography> : <Typography color={"red"}>Tarifsiz</Typography>}
                     </Box>
                 }
                 {isLoading ? <Skeleton variant="rounded" height={20} animation="wave" /> :

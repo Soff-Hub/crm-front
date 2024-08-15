@@ -24,15 +24,15 @@ import CustomAvatar from 'src/@core/components/mui/avatar'
 
 // ** Utils Import
 import { useTranslation } from 'react-i18next'
-import IconifyIcon from 'src/@core/components/icon';
+import IconifyIcon from 'src/@core/components/icon'
 
-import { FormHelperText, Tooltip } from '@mui/material';
-import Form from 'src/@core/components/form';
-import { addPeriodToThousands } from 'src/pages/settings/office/courses';
-import UserViewStudentsList from './UserViewStudentsList';
-import useStudent, { StudentTypes } from 'src/hooks/useStudents';
-import { getInitials } from 'src/@core/utils/get-initials';
-import useGroups from 'src/hooks/useGroups';
+import { FormHelperText, Tooltip } from '@mui/material'
+import Form from 'src/@core/components/form'
+import { addPeriodToThousands } from 'src/pages/settings/office/courses'
+import UserViewStudentsList from './UserViewStudentsList'
+import useStudent, { StudentTypes } from 'src/hooks/useStudents'
+import { getInitials } from 'src/@core/utils/get-initials'
+import useGroups from 'src/hooks/useGroups'
 import LoadingButton from '@mui/lab/LoadingButton'
 import useBranches from 'src/hooks/useBranch'
 import showResponseError from 'src/@core/utils/show-response-error'
@@ -43,6 +43,7 @@ import { today } from 'src/@core/components/card-statistics/kanban-item'
 import { useAppDispatch } from 'src/store'
 import { fetchStudentDetail, fetchStudentPayment } from 'src/store/apps/students'
 import StudentPaymentForm from './StudentPaymentForm'
+import { useRouter } from 'next/router'
 
 
 type ModalTypes = 'group' | 'payment' | 'sms' | 'delete' | 'edit' | 'notes'
@@ -66,7 +67,7 @@ const UserViewLeft = ({ userData }: { userData: any }) => {
   const [sms, setSMS] = useState<any>("")
   const { smsTemps, getSMSTemps } = useSMS()
   const dispatch = useAppDispatch()
-
+  const router = useRouter()
   // Handle Edit dialog
   const handleEditClickOpen = (value: ModalTypes) => {
     if (value === "group") {
@@ -267,6 +268,10 @@ const UserViewLeft = ({ userData }: { userData: any }) => {
                   {
                     groupShort.map(branch => <MenuItem key={branch.id} value={branch.id}>{branch.name}</MenuItem>)
                   }
+                  <MenuItem sx={{ fontWeight: 600 }} onClick={() => router.push('/groups')}>
+                    {t("Yangi yaratish")}
+                    <IconifyIcon icon={'ion:add-sharp'} />
+                  </MenuItem>
                 </Select>
                 <FormHelperText error={error.branch?.error}>{error.branch?.message}</FormHelperText>
               </FormControl>}

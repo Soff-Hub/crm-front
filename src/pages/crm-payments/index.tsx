@@ -67,6 +67,11 @@ export default function PaymentsList() {
         },
         {
             xs: 0.3,
+            title: t("Izoh"),
+            dataIndex: 'description'
+        },
+        {
+            xs: 0.3,
             title: t("Holati"),
             dataIndex: 'status',
             render: (status) => status == "moderation" ? <Chip label={t("Tasdiqlanmagan")} size="small" />
@@ -122,11 +127,12 @@ export default function PaymentsList() {
                         </IconButton>
                         <Typography variant='h6'>{t("O'quv markaz to'lovlari")}</Typography>
                         <Chip size='medium' sx={{ borderRadius: "5px" }} icon={
-                            <Tooltip arrow title="Platforma uchun to'lovni o'ng tomondagi To'lov qilish tugmasini bosish orqali markazga mos tushuvchi tariflardan birini tanlab ushbu karta raqamga qilingan to'lov chekini yuboring ">
+                            <Tooltip arrow title="Platforma uchun to'lovni o'ng tomondagi To'lov qilish tugmasini bosish orqali markazga mos tushuvchi tariflardan birini tanlab ushbu karta raqamga qilingan to'lov chekini yuboring (Axmadaliyeva Roxatoy)">
                                 <IconButton size='small'>
                                     <UserIcon fontSize={20} icon={"bitcoin-icons:question-circle-filled"} />
                                 </IconButton>
                             </Tooltip>} label="5614 6816 0913 8700" color="primary" variant="outlined" />
+                        <Chip size='medium' sx={{ borderRadius: "5px" }} label={clientOwnPayments?.is_demo ? `Demo tugash vaqti : ${clientOwnPayments?.expiration_date}` : `Keyingi to'lov vaqti : ${clientOwnPayments?.expiration_date}`} color="warning" variant="outlined" />
                     </Stack>
                     <Button onClick={() => dispatch(handleOpenClientModal(true))} color='primary' variant="contained">{t("To'lov qilish")}</Button>
                 </Box>

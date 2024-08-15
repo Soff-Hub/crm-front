@@ -6,8 +6,14 @@ export const fetchCompanyDetails = createAsyncThunk('fetchClientSideTariff', asy
   const response = await api.get(`owner/client/${slug}/`)
   return response.data
 })
+
 export const fetchSMSHistory = createAsyncThunk('fetchSMSHistory', async (id: number) => {
   const response = await api.get(`owner/sms-history/${id}/`)
+  return response.data
+})
+
+export const fetchClientPayments = createAsyncThunk('fetchClientPayments', async (id: number) => {
+  const response = await api.get(`owner/orders/?client=${id}`)
   return response.data
 })
 
@@ -25,6 +31,7 @@ export const createTariff = createAsyncThunk(
     }
   }
 )
+
 export const updateClient = createAsyncThunk('updateClient', async (values: Partial<any>, { rejectWithValue }) => {
   try {
     const response = await api.patch(`owner/client/${values.id}/`, values.formData)
@@ -39,9 +46,11 @@ export const updateClient = createAsyncThunk('updateClient', async (values: Part
 
 const initialState: CompanyDetailsPageTypes = {
   sms: [],
+  payments: null,
   details: null,
   isLoading: false,
-  isGettingSMS: false
+  isGettingSMS: false,
+  isGettingPayments: false
 }
 
 export const companyDetails = createSlice({
@@ -71,6 +80,16 @@ export const companyDetails = createSlice({
     })
     builder.addCase(fetchSMSHistory.rejected, (state, action) => {
       state.isGettingSMS = false
+    })
+    builder.addCase(fetchClientPayments.pending, (state, action) => {
+      state.isGettingPayments = true
+    })
+    builder.addCase(fetchClientPayments.fulfilled, (state, action) => {
+      state.payments = action.payload
+      state.isGettingPayments = false
+    })
+    builder.addCase(fetchClientPayments.rejected, (state, action) => {
+      state.isGettingPayments = false
     })
   }
 })

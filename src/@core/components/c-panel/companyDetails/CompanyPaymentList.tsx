@@ -1,77 +1,68 @@
-import { Box, Typography } from '@mui/material';
-import { useState } from 'react';
+import { Box, Chip, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { customTableProps } from 'src/pages/groups';
-import DataTable from '../../table';
+import DataTable, { customTableDataProps } from '../../table';
 import useResponsive from 'src/@core/hooks/useResponsive';
+import { formatCurrency } from 'src/@core/utils/format-currency';
+import Link from 'next/link';
+import { useAppSelector } from 'src/store';
 
 type Props = {}
 
 export default function CompanyPaymentList({ }: Props) {
-
+    const { isGettingPayments, payments } = useAppSelector(state => state.companyDetails)
     const { t } = useTranslation()
-    const [loading, setLoading] = useState<any>(null)
     const { isMobile } = useResponsive()
 
 
-    const [data, setData] = useState<any>([
+    const column: customTableDataProps[] = [
         {
-            id: 1,
-            created_at: "12.12.2024",
-            amount: 500000
-        },
-        {
-            id: 1,
-            created_at: "12.12.2024",
-            amount: 500000
-        }
-    ])
-
-    const columns: customTableProps[] = [
-        {
-            xs: 0.1,
-            title: t("ID"),
-            dataIndex: 'index'
-        },
-        {
-            xs: 0.5,
-            title: t("Sana"),
-            dataIndex: 'created_at',
-            // render: (date: string) => formatDateTime(date)
+            xs: 0.03,
+            title: "#",
+            dataIndex: 'index',
         },
         {
             xs: 0.4,
-            title: t("Summa"),
-            dataIndex: 'amount',
-            // render: (amount: any) => `${formatCurrency(amount)} UZS`
+            title: t("Tarif"),
+            dataIndex: 'tariff_data',
+            render: (item: any) => (<div>
+                <span style={{ color: "#22d3ee", marginRight: "5px" }}>{item.month_count} {t("oylik")}</span><br />
+                <span style={{ color: "#f59e0b", marginRight: "5px" }}>({formatCurrency(item.amount)} so'm)</span><br />
+                <span style={{ color: "#84cc16" }}>({item.min_count}-{item.max_count} {t("ta o'quvchi")})</span>
+            </div>)
         },
-        // {
-        //     xs: 1,
-        //     title: t("Izoh"),
-        //     dataIndex: 'description',
-        // },
-        // {
-        //     xs: 1,
-        //     title: t("Qabul qildi"),
-        //     dataIndex: 'admin',
-        // },
-        // {
-        //     xs: 1,
-        //     title: t("Amallar"),
-        //     dataIndex: 'id',
-        //     render: (id) => (
-        //         <Box sx={{ display: 'flex', gap: '10px' }}>
-        //             {loading === id ? <IconifyIcon icon={'la:spinner'} fontSize={20} /> : <IconifyIcon onClick={() => getReceipt(id)} icon={`ph:receipt-light`} fontSize={20} />}
-        //         </Box>
-        //     )
-        // }
+        {
+            xs: 0.3,
+            title: t("Chek"),
+            dataIndex: 'receipt',
+            render: (chek) => <Link href={chek} target="_blank">
+                {t("Chekni ko'rish")}
+            </Link>
+        },
+        {
+            xs: 0.3,
+            title: t("Sana"),
+            dataIndex: 'date',
+            render: (date) => date
+        },
+        {
+            xs: 0.3,
+            title: t("To'lov holati"),
+            dataIndex: 'status',
+            render: (status) => status == "moderation" ? <Chip label={t("Tasdiqlanmagan")} size="small" />
+                : status == "approved" ? <Chip color="success" label={t("Qabul qilindi")} size="small" />
+                    : <Chip color="error" label={t("Bekor qilindi")} size="small" />
+        },
     ]
 
-
     return (
-        <Box sx={{ display: 'flex', gap: '15px', mt: 3, flexWrap: 'wrap', justifyContent: isMobile ? 'center' : 'flex-start', flexDirection: 'column' }}>
+        <Box sx={{ display: 'flex', width: "auto", gap: '15px', mt: 3, flexWrap: 'wrap', justifyContent: isMobile ? 'center' : 'flex-start', flexDirection: 'column' }}>
             <Typography sx={{ fontSize: '20px' }}>{"To'lovlar tarixi"}</Typography>
-            <DataTable minWidth={isMobile ? '300px' : '400px'} data={data} columns={columns} />
+            <DataTable
+                minWidth={"500px"}
+                loading={isGettingPayments}
+                columns={column}
+                data={payments?.results || []}
+            />
         </Box>
     )
 }
