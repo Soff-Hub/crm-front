@@ -3,12 +3,11 @@ import { formatPhoneNumber } from "./format-phone-number"
 import { OutlinedInput, OutlinedInputProps } from "@mui/material"
 
 
-export default function PhoneInput(props: OutlinedInputProps) {
+export default function PhoneInput({ name = "phone", ...props }: OutlinedInputProps) {
     const [value, setValue] = useState<string>(props.value ? formatPhoneNumber(props.value) : '')
 
     function handleChange(event: ChangeEvent<HTMLInputElement>) {
         props.onChange?.(event)
-
         setValue(formatPhoneNumber(event.target.value))
     }
 
@@ -20,7 +19,7 @@ export default function PhoneInput(props: OutlinedInputProps) {
             type="text"
             onChange={handleChange}
             value={value}
-            name="phone"
+            name={name}
             startAdornment={
                 <span style={{ paddingLeft: '7px', paddingRight: '2px' }}>+998</span>
             }

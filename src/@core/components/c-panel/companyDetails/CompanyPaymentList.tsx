@@ -1,10 +1,9 @@
-import { Box, Typography } from '@mui/material'
-import React, { useState } from 'react'
-import { useTranslation } from 'react-i18next'
-import { customTableProps } from 'src/pages/groups'
-import IconifyIcon from '../icon'
-import DataTable from '../table'
-import useResponsive from 'src/@core/hooks/useResponsive'
+import { Box, Typography } from '@mui/material';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { customTableProps } from 'src/pages/groups';
+import DataTable from '../../table';
+import useResponsive from 'src/@core/hooks/useResponsive';
 
 type Props = {}
 

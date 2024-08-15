@@ -15,6 +15,7 @@ import groups from 'src/store/apps/groups'
 import mentors from 'src/store/apps/mentors'
 import students from 'src/store/apps/students'
 import cPanelSlice from 'src/store/apps/c-panel'
+import companyDetails from 'src/store/apps/c-panel/companySlice'
 import settings from 'src/store/apps/settings'
 import advanceSlice from './apps/finance/advanceSlice'
 import groupDetails from 'src/store/apps/groupDetails'
@@ -39,7 +40,8 @@ export const store = configureStore({
     finance,
     page,
     advanceSlice,
-    cPanelSlice
+    cPanelSlice,
+    companyDetails
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({

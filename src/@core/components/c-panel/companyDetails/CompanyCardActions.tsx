@@ -1,10 +1,13 @@
-import { Box, Button, Dialog, DialogContent, TextField } from '@mui/material'
-import React, { useState } from 'react'
-import { useTranslation } from 'react-i18next'
-import { today } from '../card-statistics/kanban-item'
-import api from 'src/@core/utils/api'
-import { useRouter } from 'next/router'
-import LoadingButton from '@mui/lab/LoadingButton'
+import { Box, Button, Dialog, DialogContent, TextField } from '@mui/material';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { today } from '../../card-statistics/kanban-item';
+import api from 'src/@core/utils/api';
+import { useRouter } from 'next/router';
+import LoadingButton from '@mui/lab/LoadingButton';
+import { fetchSMSHistory } from 'src/store/apps/c-panel/companySlice';
+import { useAppDispatch } from 'src/store';
+import { toast } from 'react-hot-toast';
 
 type Props = {}
 
@@ -13,6 +16,7 @@ export default function CompanyCardActions({ }: Props) {
     const [open, setOpen] = useState<null | 'sms' | 'payment' | 'pack'>(null)
     const [message, setMessage] = useState<any>(null)
     const [loading, setLoading] = useState<boolean>(false)
+    const dispatch = useAppDispatch()
 
     const { query } = useRouter()
 
@@ -21,8 +25,10 @@ export default function CompanyCardActions({ }: Props) {
         try {
             await api.post(`owner/send-message/`, { client: query?.slug, message })
             setOpen(null)
+            toast.success("Xabar yuborildi")
+            query?.slug && dispatch(fetchSMSHistory(Number(query?.slug)))
         } catch (err) {
-            console.log(err);
+            toast.error("Xabarni jo'natib bo'lmadi")
         }
         setLoading(false)
     }
@@ -62,7 +68,7 @@ export default function CompanyCardActions({ }: Props) {
                         multiline
                         fullWidth
                         rows={4}
-                        label={t("yozing...")}
+                        label={t("Xabar...")}
                         sx={{ marginBottom: '10px' }}
                         onChange={(e) => setMessage(e.target.value)}
                     />

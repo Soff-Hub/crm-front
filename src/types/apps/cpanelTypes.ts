@@ -43,3 +43,45 @@ export type ClientPaymentType = {
     tenant_data: { id: number; name: string }
   }[]
 }
+
+export interface CompanyDetailsPageTypes {
+  details: {
+    order_data: {
+      amount: string | null
+      description: string
+      receipt: string | null
+      status: string | null
+      tariff: string | null
+      tariff_data: TariffType
+      tenant: string | null
+    }
+    client_data: {
+      branches_count: number
+      courses_count: number
+      groups_count: number
+      id: number
+      rooms_count: number
+      students_count: number
+      employees_count: number
+    }
+    expiration_date: string
+    name: string
+    id: number
+    is_active: boolean
+    number_of_lesson: number
+    payment_service: string
+    reference_name: string
+    reference_phone: string
+    sms_data: string
+    students_count: number
+  } | null
+  isLoading: boolean
+  isGettingSMS: boolean
+  sms: {
+    id: number
+    phone: string
+    message: string
+    client: number
+    created_at: string
+  }[]
+}
