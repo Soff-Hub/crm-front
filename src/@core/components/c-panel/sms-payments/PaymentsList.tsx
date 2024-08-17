@@ -100,7 +100,7 @@ export default function PaymentsList() {
         <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
             <Box sx={{ width: "100%", display: "flex", flexDirection: "column", gap: 1 }
             } >
-                <Typography variant='h6'>{t("CRM uchun to'lovlari")}</Typography>
+                <Typography variant='h6'>{t("SMS paket uchun to'lovlari")}</Typography>
                 <DataTable
                     loading={isGettingOwnPayments}
                     columns={column}

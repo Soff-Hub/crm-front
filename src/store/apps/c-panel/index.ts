@@ -11,6 +11,10 @@ export const fetchTariffs = createAsyncThunk('dashboard/fetchTariffs', async () 
   const response = await api.get('owner/tariffs/')
   return response.data
 })
+export const fetchSMSTariffs = createAsyncThunk('dashboard/fetchSMSTariffs', async () => {
+  const response = await api.get('owner/tariffs/')
+  return response.data
+})
 
 export const fetchCRMPayments = createAsyncThunk('dashboard/fetchCRMPayments', async (queryString: string = '') => {
   const response = await api.get('owner/orders/?' + queryString)
@@ -90,14 +94,18 @@ export const deleteCRMPayment = createAsyncThunk(
 
 const initialState: CPanelTypes = {
   tariffs: [],
+  smsTariffs: [],
   clientOwnPayments: null,
   clientSideTariffs: [],
   editedMonthlyPlan: null,
   open: null,
+  isGettingSMSTariffs: false,
   isOpenMonthlyModal: false,
   isOpenClientModal: false,
   isGettingTariffs: false,
+  isOpenCreateSMS: false,
   isGettingOwnPayments: false,
+  isOpenClientSMSModal: false,
   editClientPayment: null,
   clientQueryParams: { page: 1 }
 }
@@ -114,6 +122,12 @@ export const cPanelSlice = createSlice({
     },
     handleOpenClientModal: (state, action) => {
       state.isOpenClientModal = action.payload
+    },
+    handleOpenClientSMSModal: (state, action) => {
+      state.isOpenClientSMSModal = action.payload
+    },
+    handleOpenSMSModal: (state, action) => {
+      state.isOpenCreateSMS = action.payload
     },
     handleEditMonthlyPlan: (state, action) => {
       state.editedMonthlyPlan = action.payload
@@ -147,6 +161,16 @@ export const cPanelSlice = createSlice({
     builder.addCase(fetchCRMPayments.rejected, (state, action) => {
       state.isGettingOwnPayments = false
     })
+    builder.addCase(fetchSMSTariffs.pending, state => {
+      state.isGettingSMSTariffs = true
+    })
+    builder.addCase(fetchSMSTariffs.fulfilled, (state, action) => {
+      state.smsTariffs = action.payload
+      state.isGettingSMSTariffs = false
+    })
+    builder.addCase(fetchSMSTariffs.rejected, (state, action) => {
+      state.isGettingSMSTariffs = false
+    })
     builder.addCase(fetchClientSideTariffs.fulfilled, (state, action) => {
       state.clientSideTariffs = action.payload
     })
@@ -159,6 +183,7 @@ export const {
   handleOpenClientModal,
   updateClientParams,
   handleEditMonthlyPlan,
+  handleOpenClientSMSModal,
   setOpenModal
 } = cPanelSlice.actions
 export default cPanelSlice.reducer

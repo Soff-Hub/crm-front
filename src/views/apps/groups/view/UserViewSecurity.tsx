@@ -223,14 +223,14 @@ const UserViewSecurity = () => {
                               arrow
                               title={
                                 <div>
-                                  <p style={{ margin: '0', marginBottom: '4px' }}>{hour.exam.title}</p>
+                                  <p style={{ margin: '0', marginBottom: '4px', }}>{hour.exam.title}</p>
                                   <p style={{ margin: '0', marginBottom: '4px' }}>Ball: {hour.exam.min_score} / {hour.exam.max_score}</p>
                                 </div>
                               }
                             >
-                              <span onClick={() => setOpenTooltip((c) => c === hour.date ? null : hour.date)} >
+                              <Box sx={{ padding: "5px", width: "60px", overflow: "hidden", textOverflow: "ellipsis", textWrap: "nowrap" }} onClick={() => setOpenTooltip((c) => c === hour.date ? null : hour.date)} >
                                 {hour.exam?.title}
-                              </span>
+                              </Box>
                             </HtmlTooltip>
                           ) : hour.lesson ? (
                             <HtmlTooltip

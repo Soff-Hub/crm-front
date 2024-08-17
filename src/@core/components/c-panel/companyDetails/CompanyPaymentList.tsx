@@ -46,6 +46,11 @@ export default function CompanyPaymentList({ }: Props) {
         },
         {
             xs: 0.3,
+            title: t("Izoh"),
+            dataIndex: 'description'
+        },
+        {
+            xs: 0.3,
             title: t("To'lov holati"),
             dataIndex: 'status',
             render: (status) => status == "moderation" ? <Chip label={t("Tasdiqlanmagan")} size="small" />

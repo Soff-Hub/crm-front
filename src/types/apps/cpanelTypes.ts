@@ -2,9 +2,13 @@ export type CPanelTypes = {
   isGettingTariffs: boolean
   isOpenMonthlyModal: boolean
   isGettingOwnPayments: boolean
+  isOpenClientSMSModal: boolean
+  isOpenCreateSMS: boolean
+  isGettingSMSTariffs: boolean
   isOpenClientModal: boolean
   open: string | null
   tariffs: TariffResponseType[]
+  smsTariffs: TariffResponseType[]
   clientSideTariffs: TariffResponseType[]
   clientOwnPayments: ClientPaymentType | null
   clientQueryParams: { page: number }
@@ -66,6 +70,7 @@ export interface CompanyDetailsPageTypes {
       students_count: number
       employees_count: number
     }
+    date: string
     expiration_date: string
     name: string
     id: number

@@ -8,11 +8,13 @@ import DataTable, { customTableDataProps } from 'src/@core/components/table';
 import { formatCurrency } from 'src/@core/utils/format-currency';
 import UserIcon from 'src/layouts/components/UserIcon';
 import { useAppDispatch, useAppSelector } from 'src/store';
-import { fetchClientSideTariffs, fetchCRMPayments, handleOpenClientModal, updateClientParams } from 'src/store/apps/c-panel';
+import { fetchClientSideTariffs, fetchCRMPayments, handleOpenClientModal, handleOpenClientSMSModal, updateClientParams } from 'src/store/apps/c-panel';
 import CreatePayment from 'src/views/apps/crm-payments/CreatePayment';
 import EditPaymentClientModal from 'src/views/apps/crm-payments/EditPaymentClientModal';
 import RowOptions from 'src/views/apps/crm-payments/RowOptions';
 import authConfig from 'src/configs/auth';
+import CreateSMSPayment from 'src/views/apps/crm-payments/CreateSMSPayment';
+import EditSMSPaymentClientModal from 'src/views/apps/crm-payments/EditSMSPayment';
 
 
 export default function PaymentsList() {
@@ -116,7 +118,6 @@ export default function PaymentsList() {
         } else router.back()
     }
 
-
     return (
         <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
             <Box sx={{ width: "100%", display: "flex", flexDirection: "column", gap: 1 }}>
@@ -132,9 +133,12 @@ export default function PaymentsList() {
                                     <UserIcon fontSize={20} icon={"bitcoin-icons:question-circle-filled"} />
                                 </IconButton>
                             </Tooltip>} label="5614 6816 0913 8700" color="primary" variant="outlined" />
-                        <Chip size='medium' sx={{ borderRadius: "5px" }} label={clientOwnPayments?.is_demo ? `Demo tugash vaqti : ${clientOwnPayments?.expiration_date}` : `Keyingi to'lov vaqti : ${clientOwnPayments?.expiration_date}`} color="warning" variant="outlined" />
+                        <Chip size='medium' sx={{ borderRadius: "5px" }} label={clientOwnPayments?.is_demo ? `${t("Demo tugash vaqti")} : ${clientOwnPayments?.expiration_date}` : `${t("Keyingi to'lov vaqti")} : ${clientOwnPayments?.expiration_date}`} color="warning" variant="outlined" />
                     </Stack>
-                    <Button onClick={() => dispatch(handleOpenClientModal(true))} color='primary' variant="contained">{t("To'lov qilish")}</Button>
+                    <Stack direction={"row"} alignItems={"center"} gap="15px">
+                        <Button onClick={() => dispatch(handleOpenClientSMSModal(true))} color='primary' variant="outlined">{t("SMS paket olish")}</Button>
+                        <Button onClick={() => dispatch(handleOpenClientModal(true))} color='primary' variant="contained">{t("To'lov qilish")}</Button>
+                    </Stack>
                 </Box>
                 <DataTable
                     loading={isGettingOwnPayments}
@@ -153,7 +157,9 @@ export default function PaymentsList() {
                     />}
             </Box>
             <CreatePayment />
+            <CreateSMSPayment />
             <EditPaymentClientModal />
+            {/* <EditSMSPaymentClientModal /> */}
         </Box >
     )
 }

@@ -2,15 +2,16 @@ import LoadingButton from "@mui/lab/LoadingButton";
 import { Button, Drawer, FormControl, FormHelperText, IconButton, InputLabel, MenuItem, Select, styled, TextField, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { useFormik } from "formik";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { toast } from "react-hot-toast";
 import { useTranslation } from "react-i18next";
-import { formatAmount, revereAmount } from "src/@core/components/amount-input";
+import AmountInput from "src/@core/components/amount-input";
+import { revereAmount } from "src/@core/components/amount-input";
 import IconifyIcon from "src/@core/components/icon";
 import { formatCurrency } from "src/@core/utils/format-currency";
 import UserIcon from "src/layouts/components/UserIcon";
 import { useAppDispatch, useAppSelector } from "src/store";
-import { fetchCRMPayments, handleEditClientPayment, updatePaymentModal } from "src/store/apps/c-panel";
+import { createClientPayment, fetchCRMPayments, handleOpenClientSMSModal } from "src/store/apps/c-panel";
 import * as Yup from "yup";
 // import BackupIcon from '@mui/icons-material/Backup';
 
@@ -26,28 +27,12 @@ const VisuallyHiddenInput = styled('input')({
     width: 1,
 });
 
-export default function EditPaymentClientModal() {
+export default function CreateSMSPayment() {
     const { t } = useTranslation()
     const [isLoading, setLoading] = useState(false)
     const [file, setFile] = useState<any>(null)
-    const { clientOwnPayments, editClientPayment, clientSideTariffs } = useAppSelector(state => state.cPanelSlice)
+    const { isOpenClientSMSModal, clientSideTariffs } = useAppSelector(state => state.cPanelSlice)
     const dispatch = useAppDispatch()
-
-    useEffect(() => {
-        const found = clientOwnPayments?.results?.find(item => item.id == editClientPayment);
-        console.log(found);
-        if (found) {
-            formik.setValues({
-                ...formik.initialValues, // Ensures you maintain the structure
-                ...found,
-                description: found.description || "",
-                receipt: found.receipt || "",
-                tariff: String(found.tariff) || "",
-                amount: found.amount || "",
-            });
-        }
-    }, [editClientPayment]);
-
 
     const validationSchema = Yup.object({
         description: Yup.string().nullable(),
@@ -58,29 +43,26 @@ export default function EditPaymentClientModal() {
 
     const formik = useFormik({
         initialValues: {
-            description: "",
-            receipt: "",
-            tariff: "",
-            amount: "",
+            description: null,
+            receipt: null,
+            tariff: null,
+            amount: null,
         },
         validationSchema,
-        onSubmit: async (values: any) => {
+        onSubmit: async (values: Partial<any>) => {
             setLoading(true)
             const formData = new FormData()
             if (values.receipt) {
                 formData.append("description", String(values.description))
+                formData.append("receipt", values.receipt)
                 formData.append("tariff", String(values.tariff))
-                if (typeof values.receipt !== "string") {
-                    formData.append("receipt", values.receipt)
-                }
                 formData.append("amount", String(values.amount))
             }
-            const response = await dispatch(updatePaymentModal({ id: values.id, formData: formData }));
-
+            const response = await dispatch(createClientPayment(formData))
             if (response.meta.requestStatus == "rejected") {
                 formik.setErrors(response.payload)
             } else {
-                toast.success(t("To'lov yangilandi") as string)
+                toast.success("To'lov yuborildi")
                 handleClose()
                 await dispatch(fetchCRMPayments())
             }
@@ -91,14 +73,12 @@ export default function EditPaymentClientModal() {
     const handleClose = () => {
         formik.resetForm()
         setFile(null)
-        setLoading(false)
-        dispatch(handleEditClientPayment(null))
+        dispatch(handleOpenClientSMSModal(false))
     }
 
-    console.log(formik.values);
 
     return (
-        <Drawer open={!!editClientPayment} hideBackdrop anchor='right' variant='temporary' >
+        <Drawer open={isOpenClientSMSModal} hideBackdrop anchor='right' variant='temporary' >
             <Box sx={{ display: "flex", flexDirection: "column", minWidth: "400px" }}>
                 <Box
                     className='customizer-header'
@@ -109,7 +89,7 @@ export default function EditPaymentClientModal() {
                     }}
                 >
                     <Typography variant='h6' sx={{ fontWeight: 600 }}>
-                        {t("To'lovni tahrirlash")}
+                        {t("SMS paket uchun to'lov")}
                     </Typography>
                     <IconButton
                         onClick={() => handleClose()}
@@ -127,11 +107,11 @@ export default function EditPaymentClientModal() {
                 <Box width={'100%'}>
                     <form onSubmit={formik.handleSubmit} style={{ display: 'flex', flexDirection: 'column', width: '100%', alignItems: 'baseline', padding: '20px 10px', gap: '10px' }}>
                         <FormControl fullWidth>
-                            <InputLabel size='small' id='user-view-language-label'>{t("Tariflar")}</InputLabel>
+                            <InputLabel size='small' id='user-view-language-label'>{t("SMS tariflar")}</InputLabel>
                             <Select
                                 size='small'
                                 name='tariff'
-                                label={t('Tariflar')}
+                                label={t('SMS tariflar')}
                                 id='user-view-language'
                                 labelId='user-view-language-label'
                                 onChange={formik.handleChange}
@@ -154,13 +134,12 @@ export default function EditPaymentClientModal() {
                             <FormHelperText error={!!formik.errors.tariff && !!formik.touched.tariff}>{!!formik.errors.tariff && !!formik.touched.tariff && formik.errors.tariff}</FormHelperText>
                         </FormControl>
                         <FormControl sx={{ width: '100%' }}>
-                            <TextField
+                            <AmountInput
                                 name='amount'
                                 size='small'
                                 label={t("Tarif summasi")}
-                                error={!!formik.errors.amount && !!formik.touched.amount}
-                                value={formatAmount(String(formik.values.amount))}
-                                defaultValue={formik.values.amount}
+                                error={!!formik.errors.amount && formik.touched.amount}
+                                value={formik.values.amount || ""}
                                 onChange={(e) => formik.setFieldValue("amount", revereAmount(e.target.value))}
                                 onBlur={formik.handleBlur}
                             />
@@ -198,7 +177,7 @@ export default function EditPaymentClientModal() {
                             />
                             <FormHelperText error={!!formik.errors.description && !!formik.touched.description}>{!!formik.errors.description && !!formik.touched.description && formik.errors.description}</FormHelperText>
                         </FormControl>
-                        <LoadingButton loading={isLoading} variant='contained' type='submit' fullWidth>{t("Yangilash")}</LoadingButton>
+                        <LoadingButton loading={isLoading} variant='contained' type='submit' fullWidth>{t("Yuborish")}</LoadingButton>
                     </form>
                 </Box>
             </Box>

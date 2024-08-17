@@ -1,13 +1,13 @@
 import { Box, Button, Dialog, DialogContent, TextField } from '@mui/material';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { today } from '../../card-statistics/kanban-item';
 import api from 'src/@core/utils/api';
 import { useRouter } from 'next/router';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { fetchSMSHistory } from 'src/store/apps/c-panel/companySlice';
 import { useAppDispatch } from 'src/store';
 import { toast } from 'react-hot-toast';
+import { handleOpenClientModal } from 'src/store/apps/c-panel';
 
 type Props = {}
 
@@ -55,7 +55,7 @@ export default function CompanyCardActions({ }: Props) {
                     variant='outlined'
                     size='small'
                     color='secondary'
-                    onClick={() => setOpen('payment')}
+                    onClick={() => dispatch(handleOpenClientModal(true))}
                 >
                     {t("To'lov")}
                 </Button>
@@ -84,26 +84,6 @@ export default function CompanyCardActions({ }: Props) {
                         label={t("SMS soni")}
                         sx={{ marginBottom: '10px' }}
                         type='number'
-                    />
-                    <Button variant='outlined' fullWidth>{t('Saqlash')}</Button>
-                </DialogContent>
-            </Dialog>
-
-            {/* Payment */}
-            <Dialog open={open === 'payment'} onClose={() => setOpen(null)}>
-                <DialogContent sx={{ minWidth: '300px', display: 'flex', flexDirection: 'column' }}>
-                    <TextField
-                        fullWidth
-                        label={t("Summa")}
-                        sx={{ marginBottom: '10px' }}
-                        type='number'
-                    />
-                    <TextField
-                        fullWidth
-                        label={t("Sana")}
-                        sx={{ marginBottom: '10px' }}
-                        type='date'
-                        defaultValue={today}
                     />
                     <Button variant='outlined' fullWidth>{t('Saqlash')}</Button>
                 </DialogContent>

@@ -46,9 +46,14 @@ export const CPanelNavigation = (t: any): any => {
       path: '/c-panel/settings'
     },
     {
-      title: t("To'lovlar"),
+      title: t("Tarif to'lovlar"),
       icon: 'material-symbols:payments',
       path: '/c-panel/payments'
+    },
+    {
+      title: t("SMS to'lovlar"),
+      icon: 'material-symbols:payments',
+      path: '/c-panel/sms-payments'
     }
   ]
 }

@@ -62,7 +62,7 @@ export default function CreatePayment() {
             if (response.meta.requestStatus == "rejected") {
                 formik.setErrors(response.payload)
             } else {
-                toast.success("To'lov yuborildi")
+                toast.success(t("To'lov yuborildi") as string)
                 handleClose()
                 await dispatch(fetchCRMPayments())
             }
@@ -75,8 +75,6 @@ export default function CreatePayment() {
         setFile(null)
         dispatch(handleOpenClientModal(false))
     }
-
-    console.log(clientSideTariffs);
 
     return (
         <Drawer open={isOpenClientModal} hideBackdrop anchor='right' variant='temporary' >
@@ -155,9 +153,8 @@ export default function CreatePayment() {
                             color={formik.errors.receipt && formik.touched.receipt ? "error" : "primary"}
                             startIcon={<UserIcon icon={"iconamoon:cloud-upload-fill"} />}
                         >
-                            {formik.errors.receipt && formik.touched.receipt && formik.errors.receipt || file?.name || "Chekni yuklash"}
+                            {formik.errors.receipt && formik.touched.receipt && formik.errors.receipt || file?.name || t("Chekni yuklash")}
                             <VisuallyHiddenInput
-                                // value={formik.values.receipt || ""}
                                 onChange={(e: any) => (formik.setFieldValue("receipt", e.target.files[0]), setFile(e.target.files[0]))}
                                 onBlur={formik.handleBlur}
                                 name="receipt"

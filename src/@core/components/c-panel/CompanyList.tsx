@@ -173,17 +173,17 @@ export default function CompanyList() {
     async function handleFilter(key: string, value: string | number | null) {
         if (key === 'amount') {
             if (value === 'debtor') {
-                const queryString = new URLSearchParams({ ...queryParams, debtor: 'true', payment_status_nearly: '' }).toString();
+                const queryString = new URLSearchParams({ ...queryParams, debtor: 'true', payment_status_nearly: '', page: "1" }).toString();
                 await getData(queryString);
-                updateParams(prevState => ({ ...prevState, debtor: 'true', payment_status_nearly: '' }));
+                updateParams(prevState => ({ ...prevState, debtor: 'true', payment_status_nearly: '', page: "1" }));
             } else if (value === 'payment_status_nearly') {
-                const queryString = new URLSearchParams({ ...queryParams, payment_status_nearly: 'true', debtor: '' }).toString();
+                const queryString = new URLSearchParams({ ...queryParams, payment_status_nearly: 'true', debtor: '', page: "1" }).toString();
                 await getData(queryString);
-                updateParams(prevState => ({ ...prevState, payment_status_nearly: 'true', debtor: '' }));
+                updateParams(prevState => ({ ...prevState, payment_status_nearly: 'true', debtor: '', page: "1" }));
             } else if (value === 'all') {
-                const queryString = new URLSearchParams({ ...queryParams, debtor: '', payment_status_nearly: '' }).toString();
+                const queryString = new URLSearchParams({ ...queryParams, debtor: '', payment_status_nearly: '', page: "1" }).toString();
                 await getData(queryString);
-                updateParams(prevState => ({ ...prevState, debtor: '', payment_status_nearly: '' }));
+                updateParams(prevState => ({ ...prevState, debtor: '', payment_status_nearly: '', page: "1" }));
             }
             return;
         }

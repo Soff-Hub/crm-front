@@ -26,7 +26,7 @@ const VisuallyHiddenInput = styled('input')({
     width: 1,
 });
 
-export default function EditPaymentClientModal() {
+export default function EditSMSPaymentClientModal() {
     const { t } = useTranslation()
     const [isLoading, setLoading] = useState(false)
     const [file, setFile] = useState<any>(null)
@@ -80,7 +80,7 @@ export default function EditPaymentClientModal() {
             if (response.meta.requestStatus == "rejected") {
                 formik.setErrors(response.payload)
             } else {
-                toast.success(t("To'lov yangilandi") as string)
+                toast.success("To'lov yangilandi")
                 handleClose()
                 await dispatch(fetchCRMPayments())
             }
@@ -95,8 +95,6 @@ export default function EditPaymentClientModal() {
         dispatch(handleEditClientPayment(null))
     }
 
-    console.log(formik.values);
-
     return (
         <Drawer open={!!editClientPayment} hideBackdrop anchor='right' variant='temporary' >
             <Box sx={{ display: "flex", flexDirection: "column", minWidth: "400px" }}>
@@ -109,7 +107,7 @@ export default function EditPaymentClientModal() {
                     }}
                 >
                     <Typography variant='h6' sx={{ fontWeight: 600 }}>
-                        {t("To'lovni tahrirlash")}
+                        {t("SMS to'lovni tahrirlash")}
                     </Typography>
                     <IconButton
                         onClick={() => handleClose()}
@@ -127,11 +125,11 @@ export default function EditPaymentClientModal() {
                 <Box width={'100%'}>
                     <form onSubmit={formik.handleSubmit} style={{ display: 'flex', flexDirection: 'column', width: '100%', alignItems: 'baseline', padding: '20px 10px', gap: '10px' }}>
                         <FormControl fullWidth>
-                            <InputLabel size='small' id='user-view-language-label'>{t("Tariflar")}</InputLabel>
+                            <InputLabel size='small' id='user-view-language-label'>{t("SMS tariflar")}</InputLabel>
                             <Select
                                 size='small'
                                 name='tariff'
-                                label={t('Tariflar')}
+                                label={t('SMS tariflar')}
                                 id='user-view-language'
                                 labelId='user-view-language-label'
                                 onChange={formik.handleChange}

@@ -209,10 +209,21 @@ export default function AccordionCustom({ onView, item }: AccordionProps) {
                             </MenuItem>
                         </Box>
                     ) : (
-                        <MenuItem onClick={() => (getSMSTemps(), setOpenDialog('recover'))} sx={{ '& svg': { mr: 2 } }}>
-                            <IconifyIcon icon='mdi:reload' fontSize={20} />
-                            {t("Tiklash")}
-                        </MenuItem>
+                        <>
+                            <MenuItem onClick={async () => {
+                                getSMSTemps()
+                                setOpenDialog('sms')
+                                setAnchorEl(null)
+                                await handleGetLeads(false)
+                            }} sx={{ '& svg': { mr: 2 } }}>
+                                <IconifyIcon icon='mdi:sms' fontSize={20} />
+                                {t("SMS yuborish")}
+                            </MenuItem>
+                            <MenuItem onClick={() => (getSMSTemps(), setOpenDialog('recover'))} sx={{ '& svg': { mr: 2 } }}>
+                                <IconifyIcon icon='mdi:reload' fontSize={20} />
+                                {t("Tiklash")}
+                            </MenuItem>
+                        </>
                     )
                 }
             </Menu>

@@ -73,7 +73,7 @@ export default function GroupFinanceTable({ data, updateData }: any) {
                     <Box sx={{ border: '1px solid #c3cccc', p: '5px', fontSize: 13 }} >{t('Guruhlar')}</Box>
                     <Box sx={{ border: '1px solid #c3cccc', p: '5px', fontSize: 13 }} >{t("O'quvchilar soni")}</Box>
                     <Box sx={{ border: '1px solid #c3cccc', p: '5px', fontSize: 13 }} >{t("To'landi")}</Box>
-                    <Box sx={{ border: '1px solid #c3cccc', p: '5px', fontSize: 13 }} >{t('Reja')}</Box>
+                    {/* <Box sx={{ border: '1px solid #c3cccc', p: '5px', fontSize: 13 }} >{t('Reja')}</Box> */}
                     <Box sx={{ border: '1px solid #c3cccc', p: '5px', fontSize: 13 }} >{t("To'lanishi kerak")}</Box>
                 </Box>
             </Box>
@@ -83,7 +83,7 @@ export default function GroupFinanceTable({ data, updateData }: any) {
                     <Box sx={{ border: '1px solid #c3cccc', p: '5px', fontSize: 13 }}>{data?.result?.length}</Box>
                     <Box sx={{ border: '1px solid #c3cccc', p: '5px', fontSize: 13 }}>{data?.students_count}</Box>
                     <Box sx={{ border: '1px solid #c3cccc', p: '5px', fontSize: 13 }}>{formatCurrency(data.total_payments)}</Box>
-                    <Box sx={{ border: '1px solid #c3cccc', p: '5px', fontSize: 13 }}>{formatCurrency(data?.result.reduce((acc: number, curr: any) => acc + curr.planed_payment, 0))}</Box>
+                    {/* <Box sx={{ border: '1px solid #c3cccc', p: '5px', fontSize: 13 }}>{formatCurrency(data?.result.reduce((acc: number, curr: any) => acc + curr.planed_payment, 0))}</Box> */}
                     <Box sx={{ border: '1px solid #c3cccc', p: '5px', fontSize: 13 }}>{
                         formatCurrency(data?.result.map((el: any) => el?.payment_difference > 0 ? el.payment_difference : el.payment_difference * -1).reduce((acc: number, curr: any) => acc + curr, 0))
                     }</Box>
@@ -124,11 +124,11 @@ export default function GroupFinanceTable({ data, updateData }: any) {
                                         {formatCurrency(group.total_payment)}
                                     </Typography>
                                 </Box>
-                                <Box sx={{ border: '1px solid #c3cccc', p: '5px' }}>
+                                {/* <Box sx={{ border: '1px solid #c3cccc', p: '5px' }}>
                                     <Typography fontSize={13}>
                                         {formatCurrency(group.planed_payment)}
                                     </Typography>
-                                </Box>
+                                </Box> */}
                                 <Box sx={{ border: '1px solid #c3cccc', p: '5px' }}>
                                     <Typography fontSize={13}>
                                         {group.payment_difference > 0 ? formatCurrency(group.payment_difference) : formatCurrency(-1 * group.payment_difference)}

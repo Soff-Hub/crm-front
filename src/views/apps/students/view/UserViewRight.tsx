@@ -22,6 +22,7 @@ import UserViewOverview from 'src/views/apps/students/view/UserViewOverview'
 import UserViewSecurity from 'src/views/apps/students/view/UserViewSecurity'
 import UserSmsList from './UserSmsList'
 import { useTranslation } from 'react-i18next'
+import StudentHistory from './StudentHistory'
 
 
 // ** Styled Tab component
@@ -81,7 +82,8 @@ const UserViewRight = ({ tab, invoiceData, groupData, rerender }: any) => {
       >
         <Tab value='security' label={t('Guruhlar')} icon={<Icon icon='uil:layer-group' />} />
         <Tab value='comments' label={t('Izoh va Eslatmalar')} icon={<Icon icon='fluent:note-add-48-regular' />} />
-        <Tab value='sms' label={t('SMS')} icon={<Icon icon='bitcoin-icons:message-outline' />} />
+        <Tab value='sms' label={t('SMS')} icon={<Icon fontSize={"28px"} icon='bitcoin-icons:message-outline' />} />
+        {/* <Tab value='history' label={t("O'quvchi tarixi")} icon={<Icon fontSize={"22px"} icon='material-symbols:history' />} /> */}
       </TabList>
       <Box sx={{ mt: 6 }}>
         {isLoading ? (
@@ -99,6 +101,9 @@ const UserViewRight = ({ tab, invoiceData, groupData, rerender }: any) => {
             </TabPanel>
             <TabPanel sx={{ p: 0 }} value='sms'>
               <UserSmsList />
+            </TabPanel>
+            <TabPanel sx={{ p: 0 }} value='history'>
+              <StudentHistory />
             </TabPanel>
           </>
         )}

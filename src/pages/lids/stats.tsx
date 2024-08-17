@@ -12,6 +12,7 @@ import * as Yup from "yup";
 import { useFormik } from 'formik';
 import { useTranslation } from 'react-i18next';
 import LoadingButton from '@mui/lab/LoadingButton';
+import EmptyContent from 'src/@core/components/empty-content';
 
 
 const Stats = () => {
@@ -90,11 +91,11 @@ const Stats = () => {
             </Box>
             <Box sx={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
                 {
-                    sources.map((el, i) => (
+                    sources.length ? sources.map((el, i) => (
                         <Box key={i} className='' sx={{ cursor: 'pointer', minHeight: '100px', minWidth: '180px' }}>
                             <CardStatsVertical title={el.name} stats={`${el.students_count}`} color={'success'} />
                         </Box>
-                    ))
+                    )) : <EmptyContent />
                 }
             </Box>
 

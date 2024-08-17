@@ -17,6 +17,7 @@ export interface IGroupDetailsState {
   isGettingAttendance: boolean
   isGettingStudents: boolean
   isGettingExamsResults: boolean
+  openLeadModal: boolean
   isOpenDelete: any
   rooms: BranchTypes[] | null
   teachers: TeacherType[] | null
@@ -35,7 +36,7 @@ export interface IGroupDetailsState {
   }
   smsTemps: SmsItemType[] | null
   month_list: {
-    month: string,
+    month: string
     date: string
   }[]
 }

@@ -1,5 +1,4 @@
 import { Box, Menu, MenuItem } from '@mui/material'
-import React from 'react'
 import { useAppSelector } from 'src/store'
 import IconifyIcon from '../../icon'
 import { useTranslation } from 'react-i18next'
@@ -85,10 +84,16 @@ export default function KanbanItemMenu({
                         </MenuItem>
                     </Box>
                 ) : (
-                    <MenuItem onClick={() => setOpen('recover')} sx={{ '& svg': { mr: 2 } }}>
-                        <IconifyIcon icon='mdi:reload' fontSize={20} />
-                        {t("Tiklash")}
-                    </MenuItem>
+                    <>
+                        <MenuItem onClick={() => (getSMSTemps(), setOpen('sms'))} sx={{ '& svg': { mr: 2 } }}>
+                            <IconifyIcon icon='mdi:sms' fontSize={20} />
+                            {t("SMS yuborish")}
+                        </MenuItem>
+                        <MenuItem onClick={() => setOpen('recover')} sx={{ '& svg': { mr: 2 } }}>
+                            <IconifyIcon icon='mdi:reload' fontSize={20} />
+                            {t("Tiklash")}
+                        </MenuItem>
+                    </>
                 )
             }
         </Menu>

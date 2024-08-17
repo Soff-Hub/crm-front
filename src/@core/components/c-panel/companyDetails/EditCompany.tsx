@@ -5,8 +5,10 @@ import CompanyPaymentList from './CompanyPaymentList';
 import CompanySmsHistory from './CompanySmsHistory';
 import { useAppDispatch } from 'src/store';
 import { fetchClientPayments, fetchCompanyDetails, fetchSMSHistory } from 'src/store/apps/c-panel/companySlice';
+import { fetchTariffs } from 'src/store/apps/c-panel';
 import Details from './Details';
 import EditDetails from './EditDetails';
+import CreatePayment from './CreatePayment';
 
 type Props = {
     slug?: number | undefined
@@ -21,6 +23,7 @@ export default function CreateCompany({ slug }: Props) {
             dispatch(fetchCompanyDetails(slug)),
             dispatch(fetchSMSHistory(slug)),
             dispatch(fetchClientPayments(slug)),
+            dispatch(fetchTariffs()),
         ])
     }
 
@@ -43,6 +46,7 @@ export default function CreateCompany({ slug }: Props) {
                 <CompanySmsHistory />
                 <CompanyPaymentList />
             </Box>
+            <CreatePayment />
             <EditDetails />
         </Box>
     )

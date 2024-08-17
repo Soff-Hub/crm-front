@@ -5,23 +5,20 @@ import { FormControl, FormHelperText, InputLabel, MenuItem, Select } from '@mui/
 import LoadingButton from '@mui/lab/LoadingButton';
 import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from 'src/store';
-import { fetchDepartmentList, updateDepartmentStudent } from 'src/store/apps/leads';
+import { fetchDepartmentList } from 'src/store/apps/leads';
+import api from 'src/@core/utils/api';
+import { setOpenLeadModal } from 'src/store/apps/groupDetails';
+import { toast } from 'react-hot-toast';
 
-
-type Props = {
-    item: any
-    reRender: any
-}
-
-export default function MergeToDepartment({ item, reRender }: Props) {
-
+export default function MergeToDepartment({ studentId }: { studentId: string }) {
     const { t } = useTranslation()
     const dispatch = useAppDispatch()
-    const { loading, leadData } = useAppSelector((state) => state.leads)
+    const { leadData } = useAppSelector((state) => state.leads)
     const [department, setDepartment] = useState<any>(null)
+    const [loading, setLoading] = useState(false)
 
     const validationSchema = Yup.object({
-        department: Yup.number().required("Bo'limni tanlang")
+        department: Yup.number().required(t("Bo'limni tanlang") as string)
     });
 
     const initialValues: {
@@ -34,22 +31,25 @@ export default function MergeToDepartment({ item, reRender }: Props) {
         initialValues,
         validationSchema,
         onSubmit: async (values) => {
-            const resp = await dispatch(updateDepartmentStudent({ id: item.id, ...values }))
-
-            if (resp.meta.requestStatus === 'rejected') {
-                formik.setErrors(resp.payload)
-            } else {
-                // await reRender()
-                await dispatch(fetchDepartmentList())
+            setLoading(true)
+            try {
+                const response = await api.post(`leads/back-to-lead/`, { ...values, group_student: studentId });
+                if (response.status) {
+                    dispatch(setOpenLeadModal(false)),
+                        toast.success(t("Amaliyot bajarildi") as string)
+                }
                 formik.resetForm()
+            } catch (err: any) {
+                formik.setErrors(err.response.data)
             }
+            setLoading(false)
         }
     });
 
     const { values, errors, touched, handleBlur, handleChange } = formik
 
     useEffect(() => {
-
+        dispatch(fetchDepartmentList())
         return () => {
             formik.resetForm()
         }
@@ -80,9 +80,7 @@ export default function MergeToDepartment({ item, reRender }: Props) {
                     onBlur={handleBlur}
                     value={values.department}
                 >
-                    {
-                        leadData.find((item: any) => item.id === department)?.children?.map((el: any) => <MenuItem key={el.id} value={el.id}>{el.name}</MenuItem>)
-                    }
+                    {leadData.find((item: any) => item.id === department)?.children?.map((el: any) => <MenuItem key={el.id} value={el.id}>{el.name}</MenuItem>)}
                 </Select>
                 {!!errors.department && touched.department && <FormHelperText error>{errors.department}</FormHelperText>}
             </FormControl>}

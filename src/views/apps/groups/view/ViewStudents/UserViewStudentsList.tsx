@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Box, Button, Dialog, DialogContent, TextField, Typography } from '@mui/material';
+import { Box, Button, Dialog, DialogContent, DialogTitle, TextField, Typography } from '@mui/material';
 import Status from 'src/@core/components/status';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
@@ -17,7 +17,7 @@ import toast from 'react-hot-toast';
 import useSMS from 'src/hooks/useSMS';
 import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from 'src/store';
-import { getAttendance, getStudents, setGettingAttendance, studentsUpdateParams } from 'src/store/apps/groupDetails';
+import { getAttendance, getStudents, setGettingAttendance, setOpenLeadModal, studentsUpdateParams } from 'src/store/apps/groupDetails';
 import SubLoader from '../../../loaders/SubLoader';
 import useDebounce from 'src/hooks/useDebounce';
 import { getMontNumber } from 'src/@core/utils/gwt-month-name';
@@ -26,6 +26,7 @@ import AddNote from './AddNote';
 import EditStudent from './EditStudent';
 import EmptyContent from 'src/@core/components/empty-content';
 import ExportStudent from './ExportStudent';
+import MergeToDepartment from './MergeForm';
 
 
 interface StudentType {
@@ -70,14 +71,13 @@ const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
 }));
 
 export const UserViewStudentsItem = ({ item, index, status, activeId, }: ItemTypes) => {
-    const { studentsQueryParams, queryParams } = useAppSelector(state => state.groupDetails)
+    const { studentsQueryParams, queryParams, openLeadModal } = useAppSelector(state => state.groupDetails)
     const dispatch = useAppDispatch()
 
     const { student, id: studentStatusId } = item
     const { first_name, phone, added_at, balance, comment, id } = student
     const { push, query } = useRouter()
     const { user } = useContext(AuthContext)
-
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [openLeft, setOpenLeft] = useState<boolean>(false)
     const [activate, setActivate] = useState<boolean>(false)
@@ -190,6 +190,7 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, }: ItemTyp
                 <MenuItem onClick={() => handleClose('payment')}>{t("To'lov")}</MenuItem>
                 <MenuItem onClick={() => handleClose('export')}>{t("Boshqa guruhga ko'chirish")}</MenuItem>
                 <MenuItem onClick={() => handleClose('left')}>{t('Guruhdan chiqarish')}</MenuItem>
+                <MenuItem onClick={() => (dispatch(setOpenLeadModal(true)), handleClose('none'))}>{t('Lidlarga qaytarish')}</MenuItem>
                 <MenuItem onClick={() => handleClose('notes')}>{t('Eslatma')} +</MenuItem>
                 <MenuItem onClick={() => (handleClose('sms'), getSMSTemps())}>{t('Xabar (sms)')} +</MenuItem>
                 <MenuItem onClick={() => (setActivate(true), handleClose('none'))}>{t('Tahrirlash')}</MenuItem>
@@ -197,12 +198,20 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, }: ItemTyp
 
             <Dialog open={openLeft} onClose={() => setOpenLeft(false)}>
                 <DialogContent sx={{ maxWidth: '350px' }}>
-                    <Typography sx={{ fontSize: '20px', textAlign: 'center', mb: 3 }}>O'quvchini guruhdan chetlatishni tasdiqlang</Typography>
-
+                    <Typography sx={{ fontSize: '20px', textAlign: 'center', mb: 3 }}>{t("O'quvchini guruhdan chetlatishni tasdiqlang")}</Typography>
                     <Box sx={{ display: 'flex', justifyContent: 'center', gap: 4 }}>
-                        <Button onClick={() => setOpenLeft(false)} size='small' variant='outlined' color='error'>bekor qilish</Button>
-                        <LoadingButton loading={loading} onClick={handleLeft} size='small' variant='contained'>Tasdiqlash</LoadingButton>
+                        <Button onClick={() => setOpenLeft(false)} size='small' variant='outlined' color='error'>{t("Bekor qilish")}</Button>
+                        <LoadingButton loading={loading} onClick={handleLeft} size='small' variant='contained'>{t("Tasdiqlash")}</LoadingButton>
                     </Box>
+                </DialogContent>
+            </Dialog>
+            <Dialog open={openLeadModal} onClose={() => (dispatch(setOpenLeadModal(false)), handleClose('none'))}>
+                <DialogTitle sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <Typography sx={{ fontSize: '20px', textAlign: 'center' }}>{t("Lidlar bo'limga qo'shish")}</Typography>
+                    <IconifyIcon icon={'material-symbols:close'} onClick={() => (dispatch(setOpenLeadModal(false)), handleClose('none'))} />
+                </DialogTitle>
+                <DialogContent>
+                    <MergeToDepartment studentId={String(studentStatusId)} />
                 </DialogContent>
             </Dialog>
             <EditStudent status={status} student={student} id={activeId} activate={activate} setActivate={setActivate} />

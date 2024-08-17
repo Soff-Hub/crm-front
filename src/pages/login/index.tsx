@@ -112,6 +112,7 @@ const LoginPage = () => {
     setLoading(true)
     const { phone, password } = data
     await auth.login({ phone: reversePhone(phone), password }, (resp: any) => {
+      console.log(resp.response);
       if (resp?.response) {
         setLoading(false)
         Object.keys(resp?.response?.data).map((el: any) => {

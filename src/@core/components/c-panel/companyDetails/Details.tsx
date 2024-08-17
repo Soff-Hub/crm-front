@@ -45,6 +45,10 @@ export default function Details() {
             name: "Tarif",
             value: details?.order_data?.tariff_data
         },
+        created_at: {
+            name: "Markaz ochilgan sana",
+            value: details?.date
+        },
         next_payment: {
             name: "Keyingi to'lov",
             value: details?.expiration_date
@@ -127,6 +131,16 @@ export default function Details() {
                         </Typography>
                         <Typography color={'green'}>
                             {statsFields.sms_service.value}
+                        </Typography>
+                    </Box>
+                }
+                {isLoading ? <Skeleton variant="rounded" height={20} animation="wave" /> :
+                    <Box sx={{ display: 'flex', gap: '10px' }}>
+                        <Typography>
+                            {t(statsFields.created_at.name)}
+                        </Typography>
+                        <Typography color={'green'}>
+                            {statsFields.created_at.value}
                         </Typography>
                     </Box>
                 }

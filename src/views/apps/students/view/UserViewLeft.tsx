@@ -44,6 +44,8 @@ import { useAppDispatch } from 'src/store'
 import { fetchStudentDetail, fetchStudentPayment } from 'src/store/apps/students'
 import StudentPaymentForm from './StudentPaymentForm'
 import { useRouter } from 'next/router'
+import { useFormik } from 'formik'
+import * as Yup from 'yup'
 
 
 type ModalTypes = 'group' | 'payment' | 'sms' | 'delete' | 'edit' | 'notes'
@@ -57,17 +59,16 @@ const UserViewLeft = ({ userData }: { userData: any }) => {
   const [error, setError] = useState<any>({})
   const [groupDate, setGroupDate] = useState<any>(null)
 
-
   // Hooks
   const { t } = useTranslation()
   const { mergeStudentToGroup, getGroupShort, groupShort } = useGroups()
   const { updateStudent, studentData } = useStudent()
   const { getBranches, branches } = useBranches()
   const { } = usePayment()
-  const [sms, setSMS] = useState<any>("")
   const { smsTemps, getSMSTemps } = useSMS()
   const dispatch = useAppDispatch()
   const router = useRouter()
+
   // Handle Edit dialog
   const handleEditClickOpen = (value: ModalTypes) => {
     if (value === "group") {
@@ -108,11 +109,8 @@ const UserViewLeft = ({ userData }: { userData: any }) => {
       await api.post('auth/student/description/', { user: userData?.id, ...value })
       setLoading(false)
       setOpenEdit(null)
-
       await dispatch(fetchStudentDetail(userData.id))
     } catch (err: any) {
-      console.log(err);
-
       showResponseError(err?.response?.data, setError)
       setLoading(false)
     }
@@ -131,30 +129,6 @@ const UserViewLeft = ({ userData }: { userData: any }) => {
       setLoading(false)
     }
   }
-
-  const handleSendSms = async (value: any) => {
-    setLoading(true)
-    const data = {
-      ...value,
-      users: [userData?.id],
-    }
-
-    try {
-      await api.post(`common/send-message-user/`, data)
-      setLoading(false)
-      setOpenEdit(null)
-
-      await dispatch(fetchStudentDetail(userData.id))
-    } catch (err: any) {
-      showResponseError(err.response.data, setError)
-      setLoading(false)
-    }
-  }
-
-  const handlePayment = async (value: any) => {
-
-  }
-
 
   useEffect(() => {
     setData(userData)
@@ -236,13 +210,13 @@ const UserViewLeft = ({ userData }: { userData: any }) => {
             {t('Guruhga biriktirish')}
           </DialogTitle>
           <DialogContent>
-            <Form reqiuredFields={['group']} setError={setError} valueTypes='json' sx={{ marginTop: 10 }} onSubmit={handleMergeToGroup} id='edit-efwemployee-gr'>
+            <Form reqiuredFields={['group']} setError={setError} valueTypes='json' sx={{ marginTop: 10, display: "flex", flexDirection: "column", gap: "10px" }} onSubmit={handleMergeToGroup} id='edit-efwemployee-gr'>
               <FormControl fullWidth>
                 <InputLabel size='small' id='user-view-language-label'>{t('branch')}</InputLabel>
                 <Select
                   size='small'
                   label={t('branch')}
-                  sx={{ marginBottom: 3 }}
+                  sx={{ marginBottom: 0 }}
                   id='user-view-language'
                   labelId='user-view-language-label'
                   onChange={(e: any) => getGroupShort(e.target.value)}
@@ -261,9 +235,10 @@ const UserViewLeft = ({ userData }: { userData: any }) => {
                   label={t('Guruhni tanlang')}
                   id='user-view-language'
                   labelId='user-view-language-label'
+                  error={error.group?.error}
                   onChange={(e: any) => setGroupDate(e.target.value)}
                   name='group'
-                  sx={{ marginBottom: '10px' }}
+                  sx={{ marginBottom: '0px' }}
                 >
                   {
                     groupShort.map(branch => <MenuItem key={branch.id} value={branch.id}>{branch.name}</MenuItem>)
@@ -273,7 +248,7 @@ const UserViewLeft = ({ userData }: { userData: any }) => {
                     <IconifyIcon icon={'ion:add-sharp'} />
                   </MenuItem>
                 </Select>
-                <FormHelperText error={error.branch?.error}>{error.branch?.message}</FormHelperText>
+                <FormHelperText error={error.group}>{error.group?.message}</FormHelperText>
               </FormControl>}
 
               {groupDate && <FormControl sx={{ width: '100%' }}>
@@ -283,7 +258,7 @@ const UserViewLeft = ({ userData }: { userData: any }) => {
                   // min={groupShort?.find(el => el.id === groupDate)?.start_date || ''} 
                   defaultValue={today}
                   style={{ background: 'transparent', width: '100%' }} />
-                <FormHelperText sx={{ marginBottom: '10px' }} error={error.start_date?.error}>{error.start_date?.message}</FormHelperText>
+                <FormHelperText sx={{ marginBottom: '0px' }} error={error.start_date?.error}>{error.start_date?.message}</FormHelperText>
               </FormControl>}
 
 
@@ -418,70 +393,13 @@ const UserViewLeft = ({ userData }: { userData: any }) => {
         </Dialog>
 
         {/*   SMS  */}
-        <Dialog
-          open={openEdit === "sms"}
-          onClose={handleEditClose}
-          aria-labelledby='user-view-edit'
-          sx={{ '& .MuiPaper-root': { width: '100%', maxWidth: 450, p: [1, 3] } }}
-          aria-describedby='user-view-edit-description'
-        >
-          <DialogTitle id='user-view-edit' sx={{ textAlign: 'center', fontSize: '1.5rem !important' }}>
-            {t('Xabar (sms)')}
-          </DialogTitle>
-          <DialogContent>
-            <Form setError={setError} valueTypes='json' sx={{ marginTop: 10 }} onSubmit={handleSendSms} id='dsdsdsds'>
-              <FormControl sx={{ maxWidth: '100%', mb: 3 }} fullWidth>
-                <InputLabel size='small' id='demo-simple-select-outlined-label'>{t('Shablonlar')}</InputLabel>
-                <Select
-                  size='small'
-                  label={t("Shablonlar")}
-                  defaultValue=''
-                  id='demo-simple-select-outlined'
-                  labelId='demo-simple-select-outlined-label'
-                  onChange={(e) => setSMS(e.target.value)}
-                >
-                  {
-                    smsTemps.map((el: any) => (
-                      <MenuItem value={el.description} sx={{ wordBreak: 'break-word' }}>
-                        <span style={{ maxWidth: '250px', wordBreak: 'break-word', fontSize: '10px' }}>
-                          {el.description}
-                        </span>
-                      </MenuItem>
-                    ))
-                  }
-                </Select>
-              </FormControl>
-
-              <FormControl fullWidth>
-                {sms ? <TextField
-                  label={t("SMS matni")}
-                  multiline rows={4}
-                  size='small'
-                  name='message'
-                  defaultValue={sms}
-                  onChange={(e) => setSMS(null)}
-                /> : <TextField
-                  label={t("SMS matni")}
-                  error={error?.message}
-                  multiline rows={4}
-                  size='small'
-                  name='message'
-                />}
-                <FormHelperText error={error.message}>{error.message?.message}</FormHelperText>
-              </FormControl>
-
-
-              <DialogActions sx={{ justifyContent: 'center' }}>
-                <Button variant='outlined' type='button' color='secondary' onClick={handleEditClose}>
-                  {t("Bekor qilish")}
-                </Button>
-                <LoadingButton loading={loading} type='submit' variant='contained' sx={{ mr: 1 }}>
-                  {t("Yuborish")}
-                </LoadingButton>
-              </DialogActions>
-            </Form>
-          </DialogContent>
-        </Dialog>
+        <SendSMSModal
+          handleEditClose={handleEditClose}
+          openEdit={openEdit}
+          smsTemps={smsTemps}
+          setOpenEdit={setOpenEdit}
+          userData={userData}
+        />
       </Grid>
     )
   } else {
@@ -490,3 +408,103 @@ const UserViewLeft = ({ userData }: { userData: any }) => {
 }
 
 export default UserViewLeft
+
+const SendSMSModal = ({ handleEditClose, openEdit, setOpenEdit, smsTemps, userData }: any) => {
+  const { t } = useTranslation()
+  const dispatch = useAppDispatch()
+  const [loading, setLoading] = useState(false)
+
+  const formik = useFormik({
+    initialValues: {
+      message: ""
+    },
+    validationSchema: Yup.object({
+      message: Yup.string().required(t("Xabar matnini kiriting") as string),
+    }),
+    onSubmit: async (values) => {
+      await handleSendSms(values)
+    }
+  })
+
+  const handleSendSms = async (value: any) => {
+    setLoading(true)
+    const data = {
+      ...value,
+      users: [userData?.id],
+    }
+
+    try {
+      await api.post(`common/send-message-user/`, data)
+      setLoading(false)
+      setOpenEdit(null)
+      await dispatch((userData.id))
+    } catch (err: any) {
+      setLoading(false)
+    }
+  }
+
+
+  return (
+    <Dialog
+      open={openEdit === "sms"}
+      onClose={() => (handleEditClose(), formik.resetForm())}
+      aria-labelledby='user-view-edit'
+      sx={{ '& .MuiPaper-root': { width: '100%', maxWidth: 450, p: [1, 3] } }}
+      aria-describedby='user-view-edit-description'
+    >
+      <DialogTitle id='user-view-edit' sx={{ textAlign: 'center', fontSize: '1.5rem !important' }}>
+        {t('Xabar (sms)')}
+      </DialogTitle>
+      <DialogContent>
+        <form style={{ marginTop: 10 }} onSubmit={formik.handleSubmit}>
+          <FormControl sx={{ maxWidth: '100%', mb: 3 }} fullWidth>
+            <InputLabel size='small' id='demo-simple-select-outlined-label'>{t('Shablonlar')}</InputLabel>
+            <Select
+              size='small'
+              label={t("Shablonlar")}
+              value={""}
+              id='demo-simple-select-outlined'
+              labelId='demo-simple-select-outlined-label'
+              onChange={(e) => formik?.setFieldValue("message", e.target.value)}
+            >
+              {
+                smsTemps.map((el: any) => (
+                  <MenuItem value={el.description} sx={{ wordBreak: 'break-word' }}>
+                    <span style={{ maxWidth: '250px', wordBreak: 'break-word', fontSize: '10px' }}>
+                      {el.description}
+                    </span>
+                  </MenuItem>
+                ))
+              }
+            </Select>
+          </FormControl>
+
+          <FormControl fullWidth>
+            <TextField
+              size='small'
+              name='message'
+              multiline rows={4}
+              label={t("SMS matni")}
+              onBlur={formik.handleBlur}
+              value={formik.values.message}
+              onChange={formik.handleChange}
+              error={!!formik.errors?.message && formik.touched.message}
+            />
+            <FormHelperText error={!!formik.errors.message && formik.touched.message}>{formik.errors.message}</FormHelperText>
+          </FormControl>
+
+
+          <DialogActions sx={{ justifyContent: 'center' }}>
+            <Button variant='outlined' type='button' color='secondary' onClick={() => (handleEditClose(), formik.resetForm())}>
+              {t("Bekor qilish")}
+            </Button>
+            <LoadingButton loading={loading} type='submit' variant='contained' sx={{ mr: 1 }}>
+              {t("Yuborish")}
+            </LoadingButton>
+          </DialogActions>
+        </form>
+      </DialogContent>
+    </Dialog>
+  )
+}
+

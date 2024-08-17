@@ -109,14 +109,11 @@ export default function GroupsPage() {
   }
 
   useEffect(() => {
-
     return () => {
       dispatch(setOpenEdit(null))
       dispatch(clearStudentParams())
     }
   }, [])
-
-
 
   return (
     <div>

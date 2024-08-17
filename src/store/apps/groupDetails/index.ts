@@ -120,6 +120,7 @@ const initialState: IGroupDetailsState = {
   isGettingExams: false,
   isGettingAttendance: false,
   isGettingExamsResults: false,
+  openLeadModal: false,
   month_list: []
 }
 
@@ -132,6 +133,9 @@ export const groupDetailsSlice = createSlice({
     },
     setDays: (state, action) => {
       state.days = action.payload
+    },
+    setOpenLeadModal: (state, action) => {
+      state.openLeadModal = action.payload
     },
     setGettingGroupDetails: (state, action) => {
       state.isGettingGroupDetails = action.payload
@@ -239,6 +243,7 @@ export const {
   setEditData,
   setResultEdit,
   setResultId,
+  setOpenLeadModal,
   setDays,
   setGettingGroupDetails
 } = groupDetailsSlice.actions

@@ -13,6 +13,7 @@ import usePayment from 'src/hooks/usePayment';
 import toast from 'react-hot-toast';
 import { disablePage } from 'src/store/apps/page';
 import { formatPhoneNumber } from 'src/@core/components/phone-input/format-phone-number';
+import { useTranslation } from 'react-i18next';
 
 type Props = {}
 
@@ -21,6 +22,7 @@ export default function GlobalPaymentForm({ }: Props) {
     const [loadingBtn, setLoadingBtn] = useState<boolean>(false)
     const [studentList, setStudentList] = useState<any[]>([])
     const [step, setStep] = useState<'search' | 'pay' | 'print'>('search')
+    const { t } = useTranslation()
 
     const dispatch = useAppDispatch()
     const { studentData } = useAppSelector(state => state.students)
@@ -56,7 +58,6 @@ export default function GlobalPaymentForm({ }: Props) {
         }
     };
 
-
     const validationSchema = Yup.object({
         search: Yup.string().min(4, "Qidirish uchun ma'lumot yetarli emas")
     })
@@ -66,11 +67,11 @@ export default function GlobalPaymentForm({ }: Props) {
     }
 
     const validationSchemaPay = Yup.object({
-        amount: Yup.string().required("Summani aniq kiriting"),
-        description: Yup.string().required("Izoh yozishingiz shart"),
-        payment_date: Yup.string().required("Sana kiritish shart"),
-        group: Yup.string().required("Guruh tanlash shart"),
-        payment_type: Yup.string().required("To'lov turini tanlang"),
+        amount: Yup.string().required(t("Summani aniq kiriting") as string),
+        description: Yup.string().required(t("Izoh yozishingiz shart") as string),
+        payment_date: Yup.string().required(t("Sana kiritish shart") as string),
+        group: Yup.string().required(t("Guruh tanlash shart") as string),
+        payment_type: Yup.string().required(t("To'lov turini tanlang") as string),
     })
 
     const initialValuesPay = {
@@ -100,13 +101,12 @@ export default function GlobalPaymentForm({ }: Props) {
                 student: userData?.id,
                 amount: revereAmount(values.amount)
             }
-
             try {
                 const resp = await createPayment(data)
                 await handlePrint(resp.id)
                 setStep('print')
                 setLoadingBtn(false)
-                toast.success("Tolov amalaga oshirildi", { duration: 4000 })
+                toast.success(t("Tolov amalaga oshirildi") as string, { duration: 4000 })
             } catch (err: any) {
                 if (err?.respnse?.data) {
                     payform.setErrors(err?.respnse?.data)
@@ -131,7 +131,7 @@ export default function GlobalPaymentForm({ }: Props) {
         setLoading(true)
         const resp = await dispatch(searchStudent(search))
         if (!resp.payload?.length) {
-            formik.setFieldError('search', "O'quvchi topilmadi")
+            formik.setFieldError('search', t("O'quvchi topilmadi"))
         }
         setStudentList(resp.payload);
         setLoading(false)
@@ -156,12 +156,12 @@ export default function GlobalPaymentForm({ }: Props) {
 
     return (
         <Box>
-            <iframe src="" id="printFrame" style={{ height: 0 }}></iframe>
+            <iframe src="" id="printFrame" style={{ display: "none" }}></iframe>
             {step === 'search' || step === 'pay' ? <form onSubmit={e => e.preventDefault()} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
                 {step === 'search' && <FormControl fullWidth>
                     <OutlinedInput
                         size='small'
-                        placeholder="Qidiring, Ism, Telefon..."
+                        placeholder={t("O'quvchini qidiring... (Ismi yoki telefon raqami)")}
                         name='search'
                         value={formik.values.search}
                         onChange={(e) => (setStudentList([]), formik.handleChange(e))}
@@ -192,10 +192,10 @@ export default function GlobalPaymentForm({ }: Props) {
                         size='small'
                         id='user-view-language-label'
                         error={!!payform.errors.group && payform.touched.group}
-                    >Qaysi guruh uchun?</InputLabel>
+                    >{t("Qaysi guruh uchun?")}</InputLabel>
                     <Select
                         size='small'
-                        label="Qaysi guruh uchun?"
+                        label={t("Qaysi guruh uchun?")}
                         id='user-view-language'
                         labelId='user-view-language-label'
                         name='group'
@@ -216,10 +216,10 @@ export default function GlobalPaymentForm({ }: Props) {
                         size='small'
                         id='user-view-language-label'
                         error={!!payform.errors.group && payform.touched.group}
-                    >Tolov turi</InputLabel>
+                    >{t("To'lov turi")}</InputLabel>
                     <Select
                         size='small'
-                        label="Tolov turi"
+                        label={t("To'lov turi")}
                         id='user-view-language'
                         labelId='user-view-language-label'
                         name='payment_type'
@@ -238,51 +238,51 @@ export default function GlobalPaymentForm({ }: Props) {
                 {step === 'pay' && <FormControl fullWidth>
                     <AmountInput
                         size='small'
-                        placeholder="Summa"
-                        error={!!payform.errors.amount}
+                        placeholder={t("Summa")}
+                        error={!!payform.errors.amount && payform.touched.amount}
                         name='amount'
                         value={payform.values.amount}
                         onChange={payform.handleChange}
                         onBlur={payform.handleBlur}
                     />
-                    {!!payform.errors.amount && <FormHelperText error>{payform.errors.amount}</FormHelperText>}
+                    {!!payform.errors.amount && payform.touched.amount && <FormHelperText error>{payform.errors.amount}</FormHelperText>}
                 </FormControl>}
 
                 {step === 'pay' && <FormControl fullWidth>
                     <TextField
                         size='small'
-                        placeholder="Izoh"
+                        placeholder={t("Izoh")}
                         rows={4}
-                        error={!!payform.errors.description}
+                        error={!!payform.errors.description && payform.touched.description}
                         multiline
                         name='description'
                         value={payform.values.description}
                         onChange={payform.handleChange}
                         onBlur={payform.handleBlur}
                     />
-                    {!!payform.errors.description && <FormHelperText error>{payform.errors.description}</FormHelperText>}
+                    {!!payform.errors.description && payform.touched.description && <FormHelperText error>{payform.errors.description}</FormHelperText>}
                 </FormControl>}
 
                 {step === 'pay' && <FormControl fullWidth>
                     <TextField
                         type='date'
                         size='small'
-                        placeholder="Sana"
-                        error={!!payform.errors.payment_date}
+                        placeholder={t("Sana")}
+                        error={!!payform.errors.payment_date && payform.touched.payment_date}
                         name='payment_date'
                         value={payform.values.payment_date}
                         onChange={payform.handleChange}
                         onBlur={payform.handleBlur}
                     />
-                    {!!payform.errors.payment_date && <FormHelperText error>{payform.errors.payment_date}</FormHelperText>}
+                    {!!payform.errors.payment_date && payform.touched.payment_date && <FormHelperText error>{payform.errors.payment_date}</FormHelperText>}
                 </FormControl>}
 
-                {step === 'pay' && <LoadingButton loading={loadingBtn} sx={{ mt: '20px' }} onClick={() => payform.handleSubmit()} variant='contained'>Tolov qilish</LoadingButton>}
+                {step === 'pay' && <LoadingButton loading={loadingBtn} sx={{ mt: '20px' }} onClick={() => payform.handleSubmit()} variant='contained'>{t("To'lov qilish")}</LoadingButton>}
             </form> : <Box onSubmit={e => e.preventDefault()} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
 
-                <Typography sx={{ fontSize: '20px', textAlign: 'center' }}>Ilitmos chekni talab qiluvchiga <br /> berishni unutmang</Typography>
+                <Typography sx={{ fontSize: '20px', textAlign: 'center', whiteSpace: "break-spaces" }}>{t("Ilitmos chekni talab qiluvchiga berishni unutmang")}</Typography>
 
-                <LoadingButton loading={loadingBtn} sx={{ mt: '20px' }} onClick={handleClose} variant='contained'>Yakunlash</LoadingButton>
+                <LoadingButton loading={loadingBtn} sx={{ mt: '20px' }} onClick={handleClose} variant='contained'>{t("Yakunlash")}</LoadingButton>
             </Box>}
         </Box>
     )

@@ -24,18 +24,19 @@ const StudentsFilter = () => {
 
 
     async function handleFilter(key: string, value: string | number | null) {
+        dispatch(updateStudentParams({ [key]: value }))
         if (key === 'amount') {
             if (value === 'is_debtor') {
-                await dispatch(fetchStudentsList({ ...queryParams, is_debtor: true, last_payment: '' }))
                 dispatch(updateStudentParams({ is_debtor: true, last_payment: '' }))
+                await dispatch(fetchStudentsList({ ...queryParams, is_debtor: true, last_payment: '' }))
             }
             if (value === 'last_payment') {
-                await dispatch(fetchStudentsList({ ...queryParams, last_payment: true, is_debtor: '' }))
                 dispatch(updateStudentParams({ last_payment: true, is_debtor: '' }))
+                await dispatch(fetchStudentsList({ ...queryParams, last_payment: true, is_debtor: '' }))
             }
             else if (value === 'all') {
-                await dispatch(fetchStudentsList({ ...queryParams, is_debtor: '', last_payment: '' }))
                 dispatch(updateStudentParams({ is_debtor: '', last_payment: '' }))
+                await dispatch(fetchStudentsList({ ...queryParams, is_debtor: '', last_payment: '' }))
             }
             return
         }
@@ -44,7 +45,6 @@ const StudentsFilter = () => {
         } else {
             await dispatch(fetchStudentsList({ ...queryParams, [key]: value }))
         }
-        dispatch(updateStudentParams({ [key]: value }))
     }
 
     useEffect(() => {
@@ -120,7 +120,7 @@ const StudentsFilter = () => {
                             <b>{t('Barchasi')}</b>
                         </MenuItem>
                         <MenuItem value={'active'}>{t('active')}</MenuItem>
-                        <MenuItem value={'archive'}>{t('archive')}</MenuItem>
+                        {/* <MenuItem value={'archive'}>{t('archive')}</MenuItem> */}
                         <MenuItem value={'new'}>{t('test')}</MenuItem>
                         <MenuItem value={'frozen'}>{t("Muzlatilgan")}</MenuItem>
                     </Select>
