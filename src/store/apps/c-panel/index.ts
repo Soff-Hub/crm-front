@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import api from 'src/@core/utils/api'
-import { CPanelTypes, TariffType } from 'src/types/apps/cpanelTypes'
+import { CPanelTypes, SMSTariff, TariffType } from 'src/types/apps/cpanelTypes'
 
 export const fetchClientSideTariffs = createAsyncThunk('dashboard/fetchClientSideTariff', async () => {
   const response = await api.get('owner/tariffs/')
@@ -12,7 +12,7 @@ export const fetchTariffs = createAsyncThunk('dashboard/fetchTariffs', async () 
   return response.data
 })
 export const fetchSMSTariffs = createAsyncThunk('dashboard/fetchSMSTariffs', async () => {
-  const response = await api.get('owner/tariffs/')
+  const response = await api.get('owner/sms-tariffs/')
   return response.data
 })
 
@@ -35,11 +35,39 @@ export const createTariff = createAsyncThunk(
     }
   }
 )
+export const createSMSTariff = createAsyncThunk(
+  'createSMSTariff',
+  async (values: Partial<SMSTariff>, { rejectWithValue }) => {
+    try {
+      const response = await api.post('/owner/sms-tariff/create/', values)
+      return response.data
+    } catch (err: any) {
+      if (err.response) {
+        return rejectWithValue(err.response.data)
+      }
+      return rejectWithValue(err.message)
+    }
+  }
+)
 export const createClientPayment = createAsyncThunk(
   'createClientPayment',
   async (values: Partial<any>, { rejectWithValue }) => {
     try {
       const response = await api.post('/owner/order/create/', values)
+      return response.data
+    } catch (err: any) {
+      if (err.response) {
+        return rejectWithValue(err.response.data)
+      }
+      return rejectWithValue(err.message)
+    }
+  }
+)
+export const updateSMSTariff = createAsyncThunk(
+  'updateSMSTariff',
+  async (values: Partial<SMSTariff>, { rejectWithValue }) => {
+    try {
+      const response = await api.patch(`/owner/sms-tariff/update/${values.id}/`, values)
       return response.data
     } catch (err: any) {
       if (err.response) {
@@ -98,12 +126,13 @@ const initialState: CPanelTypes = {
   clientOwnPayments: null,
   clientSideTariffs: [],
   editedMonthlyPlan: null,
+  editedSMSTariff: null,
   open: null,
   isGettingSMSTariffs: false,
   isOpenMonthlyModal: false,
   isOpenClientModal: false,
   isGettingTariffs: false,
-  isOpenCreateSMS: false,
+  isOpenCreateSMSTariff: false,
   isGettingOwnPayments: false,
   isOpenClientSMSModal: false,
   editClientPayment: null,
@@ -127,10 +156,13 @@ export const cPanelSlice = createSlice({
       state.isOpenClientSMSModal = action.payload
     },
     handleOpenSMSModal: (state, action) => {
-      state.isOpenCreateSMS = action.payload
+      state.isOpenCreateSMSTariff = action.payload
     },
     handleEditMonthlyPlan: (state, action) => {
       state.editedMonthlyPlan = action.payload
+    },
+    handleEditSMSTariff: (state, action) => {
+      state.editedSMSTariff = action.payload
     },
     handleEditClientPayment: (state, action) => {
       state.editClientPayment = action.payload
@@ -184,6 +216,8 @@ export const {
   updateClientParams,
   handleEditMonthlyPlan,
   handleOpenClientSMSModal,
-  setOpenModal
+  setOpenModal,
+  handleOpenSMSModal,
+  handleEditSMSTariff
 } = cPanelSlice.actions
 export default cPanelSlice.reducer

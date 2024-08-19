@@ -9,7 +9,7 @@ export default function Payments() {
     const dispatch = useAppDispatch()
 
     useEffect(() => {
-        dispatch(fetchCRMPayments())
+        dispatch(fetchCRMPayments("tariff=true"))
     }, [])
 
     return (

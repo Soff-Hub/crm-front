@@ -30,11 +30,10 @@ export default function PaymentsList() {
         {
             xs: 0.4,
             title: t("Tarif"),
-            dataIndex: 'tariff_data',
+            dataIndex: 'sms_data',
             render: (item: any) => (<div>
-                <span style={{ color: "#22d3ee", marginRight: "5px" }}>{item.month_count} {t("oylik")}</span>
+                <span style={{ color: "#84cc16" }}>{item.sms_count} {t("SMS")}</span>{" "}
                 <span style={{ color: "#f59e0b", marginRight: "5px" }}>({formatCurrency(item.amount)} so'm)</span>
-                <span style={{ color: "#84cc16" }}>({item.min_count}-{item.max_count} {t("ta o'quvchi")})</span>
             </div>)
         },
         {

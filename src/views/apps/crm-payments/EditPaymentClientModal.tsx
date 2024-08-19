@@ -33,9 +33,8 @@ export default function EditPaymentClientModal() {
     const { clientOwnPayments, editClientPayment, clientSideTariffs } = useAppSelector(state => state.cPanelSlice)
     const dispatch = useAppDispatch()
 
+    const found = clientOwnPayments?.results?.find(item => item.id == editClientPayment);
     useEffect(() => {
-        const found = clientOwnPayments?.results?.find(item => item.id == editClientPayment);
-        console.log(found);
         if (found) {
             formik.setValues({
                 ...formik.initialValues, // Ensures you maintain the structure
@@ -95,10 +94,8 @@ export default function EditPaymentClientModal() {
         dispatch(handleEditClientPayment(null))
     }
 
-    console.log(formik.values);
-
     return (
-        <Drawer open={!!editClientPayment} hideBackdrop anchor='right' variant='temporary' >
+        <Drawer open={!!editClientPayment && !!found?.tariff} hideBackdrop anchor='right' variant='temporary' >
             <Box sx={{ display: "flex", flexDirection: "column", minWidth: "400px" }}>
                 <Box
                     className='customizer-header'

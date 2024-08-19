@@ -8,7 +8,7 @@ import DataTable, { customTableDataProps } from 'src/@core/components/table';
 import { formatCurrency } from 'src/@core/utils/format-currency';
 import UserIcon from 'src/layouts/components/UserIcon';
 import { useAppDispatch, useAppSelector } from 'src/store';
-import { fetchClientSideTariffs, fetchCRMPayments, handleOpenClientModal, handleOpenClientSMSModal, updateClientParams } from 'src/store/apps/c-panel';
+import { fetchClientSideTariffs, fetchCRMPayments, fetchSMSTariffs, handleOpenClientModal, handleOpenClientSMSModal, updateClientParams } from 'src/store/apps/c-panel';
 import CreatePayment from 'src/views/apps/crm-payments/CreatePayment';
 import EditPaymentClientModal from 'src/views/apps/crm-payments/EditPaymentClientModal';
 import RowOptions from 'src/views/apps/crm-payments/RowOptions';
@@ -32,12 +32,24 @@ export default function PaymentsList() {
         {
             xs: 0.4,
             title: t("Tarif"),
-            dataIndex: 'tariff_data',
-            render: (item: any) => (<div>
-                <span style={{ color: "#22d3ee", marginRight: "5px" }}>{item.month_count} {t("oylik")}</span>
-                <span style={{ color: "#f59e0b", marginRight: "5px" }}>({formatCurrency(item.amount)} so'm)</span>
-                <span style={{ color: "#84cc16" }}>({item.min_count}-{item.max_count} {t("ta o'quvchi")})</span>
-            </div>)
+            dataIndex: 'id',
+            render: (item: any) => {
+                const found = clientOwnPayments?.results.find(payment => payment.id == item)
+                if (found?.tariff) {
+                    return (
+                        <div>
+                            <span style={{ color: "#22d3ee", marginRight: "5px" }}>{found?.tariff_data?.month_count} {t("oylik")}</span>
+                            <span style={{ color: "#f59e0b", marginRight: "5px" }}>({formatCurrency(found?.tariff_data?.amount)} so'm)</span>
+                            <span style={{ color: "#84cc16" }}>({found?.tariff_data?.min_count}-{found?.tariff_data?.max_count} {t("ta o'quvchi")})</span>
+                        </div>)
+                } else {
+                    return (
+                        <div>
+                            <span style={{ color: "#84cc16" }}>({found?.sms_data?.sms_count} {t("SMS")})</span>{" "}
+                            <span style={{ color: "#f59e0b", marginRight: "5px" }}>({formatCurrency(found?.sms_data?.amount)} so'm)</span>
+                        </div>)
+                }
+            }
         },
         {
             xs: 0.3,
@@ -76,7 +88,7 @@ export default function PaymentsList() {
             xs: 0.3,
             title: t("Holati"),
             dataIndex: 'status',
-            render: (status) => status == "moderation" ? <Chip label={t("Tasdiqlanmagan")} size="small" />
+            render: (status) => status == "moderation" ? <Chip label={t("Tekshirilmoqda")} size="small" />
                 : status == "approved" ? <Chip color="success" label={t("Qabul qilindi")} size="small" />
                     : <Chip color="error" label={t("Bekor qilindi")} size="small" />
         },
@@ -97,7 +109,8 @@ export default function PaymentsList() {
         (async function () {
             await Promise.all([
                 dispatch(fetchCRMPayments()),
-                dispatch(fetchClientSideTariffs())
+                dispatch(fetchClientSideTariffs()),
+                dispatch(fetchSMSTariffs())
             ])
         })()
     }, [])
@@ -128,7 +141,7 @@ export default function PaymentsList() {
                         </IconButton>
                         <Typography variant='h6'>{t("O'quv markaz to'lovlari")}</Typography>
                         <Chip size='medium' sx={{ borderRadius: "5px" }} icon={
-                            <Tooltip arrow title="Platforma uchun to'lovni o'ng tomondagi To'lov qilish tugmasini bosish orqali markazga mos tushuvchi tariflardan birini tanlab ushbu karta raqamga qilingan to'lov chekini yuboring (Axmadaliyeva Roxatoy)">
+                            <Tooltip arrow title="Platforma uchun to'lov hamda qo'shimcha SMS paket olish  uchun to'lovlarni o'ng tomonda joylashgan To'lov qilish yoki SMS paket olish tugmasini bosish orqali markazga mos tushuvchi tariflardan birini tanlab ushbu karta raqamga qilingan to'lov chekini yuboring (Axmadaliyeva Roxatoy)">
                                 <IconButton size='small'>
                                     <UserIcon fontSize={20} icon={"bitcoin-icons:question-circle-filled"} />
                                 </IconButton>
@@ -159,7 +172,7 @@ export default function PaymentsList() {
             <CreatePayment />
             <CreateSMSPayment />
             <EditPaymentClientModal />
-            {/* <EditSMSPaymentClientModal /> */}
+            <EditSMSPaymentClientModal />
         </Box >
     )
 }

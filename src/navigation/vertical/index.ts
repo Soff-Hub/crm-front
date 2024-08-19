@@ -41,11 +41,6 @@ export const CPanelNavigation = (t: any): any => {
       path: '/c-panel'
     },
     {
-      title: t('Sozlamalar'),
-      icon: 'mdi:receipt-text-edit-outline',
-      path: '/c-panel/settings'
-    },
-    {
       title: t("Tarif to'lovlar"),
       icon: 'material-symbols:payments',
       path: '/c-panel/payments'
@@ -54,6 +49,11 @@ export const CPanelNavigation = (t: any): any => {
       title: t("SMS to'lovlar"),
       icon: 'material-symbols:payments',
       path: '/c-panel/sms-payments'
+    },
+    {
+      title: t('Sozlamalar'),
+      icon: 'mdi:receipt-text-edit-outline',
+      path: '/c-panel/settings'
     }
   ]
 }

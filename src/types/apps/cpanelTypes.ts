@@ -3,16 +3,17 @@ export type CPanelTypes = {
   isOpenMonthlyModal: boolean
   isGettingOwnPayments: boolean
   isOpenClientSMSModal: boolean
-  isOpenCreateSMS: boolean
+  isOpenCreateSMSTariff: boolean
   isGettingSMSTariffs: boolean
   isOpenClientModal: boolean
   open: string | null
   tariffs: TariffResponseType[]
-  smsTariffs: TariffResponseType[]
+  smsTariffs: SMSTariff[]
   clientSideTariffs: TariffResponseType[]
   clientOwnPayments: ClientPaymentType | null
   clientQueryParams: { page: number }
   editedMonthlyPlan: TariffType | null
+  editedSMSTariff: SMSTariff | null
   editClientPayment: null | number
 }
 
@@ -39,6 +40,7 @@ export type ClientPaymentType = {
   results: {
     id: number
     tariff: number | null
+    sms_tariff: number | null
     receipt: string | null
     description: string | null
     status: string | null
@@ -46,6 +48,7 @@ export type ClientPaymentType = {
     created_at?: string | null
     date?: string | null
     tariff_data: TariffType | null
+    sms_data: SMSTariff | null
     tenant_data: { id: number; name: string }
   }[]
 }
@@ -93,4 +96,9 @@ export interface CompanyDetailsPageTypes {
     client: number
     created_at: string
   }[]
+}
+export interface SMSTariff {
+  id: number
+  sms_count: string | null
+  amount: string | null
 }

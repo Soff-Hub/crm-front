@@ -30,19 +30,18 @@ export default function EditSMSPaymentClientModal() {
     const { t } = useTranslation()
     const [isLoading, setLoading] = useState(false)
     const [file, setFile] = useState<any>(null)
-    const { clientOwnPayments, editClientPayment, clientSideTariffs } = useAppSelector(state => state.cPanelSlice)
+    const { clientOwnPayments, editClientPayment, smsTariffs } = useAppSelector(state => state.cPanelSlice)
     const dispatch = useAppDispatch()
 
+    const found = clientOwnPayments?.results?.find(item => item.id == editClientPayment);
     useEffect(() => {
-        const found = clientOwnPayments?.results?.find(item => item.id == editClientPayment);
-        console.log(found);
         if (found) {
             formik.setValues({
                 ...formik.initialValues, // Ensures you maintain the structure
                 ...found,
                 description: found.description || "",
                 receipt: found.receipt || "",
-                tariff: String(found.tariff) || "",
+                sms_tariff: String(found.sms_tariff) || "",
                 amount: found.amount || "",
             });
         }
@@ -52,7 +51,7 @@ export default function EditSMSPaymentClientModal() {
     const validationSchema = Yup.object({
         description: Yup.string().nullable(),
         receipt: Yup.string().nullable().required(t("To'lov chekini kiriting") as string),
-        tariff: Yup.string().nullable().required(t("Tarifni tanlang kiriting") as string),
+        sms_tariff: Yup.string().nullable().required(t("Tarifni tanlang kiriting") as string),
         amount: Yup.string().nullable().required(t("Tarif summasini kiriting") as string),
     });
 
@@ -60,7 +59,7 @@ export default function EditSMSPaymentClientModal() {
         initialValues: {
             description: "",
             receipt: "",
-            tariff: "",
+            sms_tariff: "",
             amount: "",
         },
         validationSchema,
@@ -69,7 +68,7 @@ export default function EditSMSPaymentClientModal() {
             const formData = new FormData()
             if (values.receipt) {
                 formData.append("description", String(values.description))
-                formData.append("tariff", String(values.tariff))
+                formData.append("sms_tariff", String(values.sms_tariff))
                 if (typeof values.receipt !== "string") {
                     formData.append("receipt", values.receipt)
                 }
@@ -96,7 +95,7 @@ export default function EditSMSPaymentClientModal() {
     }
 
     return (
-        <Drawer open={!!editClientPayment} hideBackdrop anchor='right' variant='temporary' >
+        <Drawer open={!!editClientPayment && !!found?.sms_tariff} hideBackdrop anchor='right' variant='temporary' >
             <Box sx={{ display: "flex", flexDirection: "column", minWidth: "400px" }}>
                 <Box
                     className='customizer-header'
@@ -128,28 +127,25 @@ export default function EditSMSPaymentClientModal() {
                             <InputLabel size='small' id='user-view-language-label'>{t("SMS tariflar")}</InputLabel>
                             <Select
                                 size='small'
-                                name='tariff'
+                                name='sms_tariff'
                                 label={t('SMS tariflar')}
                                 id='user-view-language'
                                 labelId='user-view-language-label'
                                 onChange={formik.handleChange}
                                 onBlur={formik.handleBlur}
-                                value={formik.values.tariff || ""}
-                                error={!!formik.errors.tariff && !!formik.touched.tariff}
+                                value={formik.values.sms_tariff || ""}
+                                error={!!formik.errors.sms_tariff && !!formik.touched.sms_tariff}
                             >
                                 {
-                                    clientSideTariffs?.map(tariff => (
-                                        tariff.tariffs.map(item => (
-                                            <MenuItem key={item.id} value={+item.id}>
-                                                <span style={{ color: "#22d3ee", marginRight: "5px" }}>{item.month_count} {t("oylik")}</span>
-                                                <span style={{ color: "#f59e0b", marginRight: "5px" }}>({formatCurrency(item.amount)} so'm)</span>
-                                                <span style={{ color: "#84cc16" }}>({item.min_count}-{item.max_count} {t("ta o'quvchi")})</span>
-                                            </MenuItem>)
-                                        ))
+                                    smsTariffs?.map(item => (
+                                        <MenuItem key={item.id} value={+item.id}>
+                                            <span style={{ color: "#84cc16" }}>({item.sms_count} {t("ta sms")})</span>
+                                            <span style={{ color: "#f59e0b", marginRight: "5px" }}>({formatCurrency(item.amount)} so'm)</span>
+                                        </MenuItem>)
                                     )
                                 }
                             </Select>
-                            <FormHelperText error={!!formik.errors.tariff && !!formik.touched.tariff}>{!!formik.errors.tariff && !!formik.touched.tariff && formik.errors.tariff}</FormHelperText>
+                            <FormHelperText error={!!formik.errors.sms_tariff && !!formik.touched.sms_tariff}>{!!formik.errors.sms_tariff && !!formik.touched.sms_tariff && formik.errors.sms_tariff}</FormHelperText>
                         </FormControl>
                         <FormControl sx={{ width: '100%' }}>
                             <TextField

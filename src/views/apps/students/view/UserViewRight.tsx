@@ -83,7 +83,7 @@ const UserViewRight = ({ tab, invoiceData, groupData, rerender }: any) => {
         <Tab value='security' label={t('Guruhlar')} icon={<Icon icon='uil:layer-group' />} />
         <Tab value='comments' label={t('Izoh va Eslatmalar')} icon={<Icon icon='fluent:note-add-48-regular' />} />
         <Tab value='sms' label={t('SMS')} icon={<Icon fontSize={"28px"} icon='bitcoin-icons:message-outline' />} />
-        {/* <Tab value='history' label={t("O'quvchi tarixi")} icon={<Icon fontSize={"22px"} icon='material-symbols:history' />} /> */}
+        <Tab value='history' label={t("O'quvchi tarixi")} icon={<Icon fontSize={"22px"} icon='material-symbols:history' />} />
       </TabList>
       <Box sx={{ mt: 6 }}>
         {isLoading ? (

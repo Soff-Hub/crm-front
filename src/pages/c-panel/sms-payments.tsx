@@ -9,7 +9,7 @@ export default function SMSPayments() {
     const dispatch = useAppDispatch()
 
     useEffect(() => {
-        dispatch(fetchCRMPayments())
+        dispatch(fetchCRMPayments("tariff=false"))
     }, [])
 
     return (

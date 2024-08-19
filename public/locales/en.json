@@ -11,6 +11,7 @@
   "Davom etish": "Continue",
   "Modal title": "Continue",
 
+  "O'quvchi tarixi": "Student History",
   "Lidlarga qaytarish": "Return to leads",
   "Lidlar bo'limga qo'shish": "Add leads to section",
   "Bo'limni tanlang": "Select section",
@@ -51,7 +52,7 @@
   "Chekni yuklash": "Upload receipt",
   "To'lov yangilandi": "Payment updated",
   "To'lovni tahrirlash": "Edit payment",
-  "Platforma uchun to'lovni o'ng tomondagi To'lov qilish tugmasini bosish orqali markazga mos tushuvchi tariflardan birini tanlab ushbu karta raqamga qilingan to'lov chekini yuboring (Axmadaliyeva Roxatoy)": "To pay for the platform, select one of the center's suitable rates by clicking the 'Make payment' button on the right and send the payment receipt to the specified card number (Axmadaliyeva Roxatoy)",
+  "Platforma uchun to'lov hamda qo'shimcha SMS paket olish  uchun to'lovlarni o'ng tomonda joylashgan To'lov qilish yoki SMS paket olish tugmasini bosish orqali markazga mos tushuvchi tariflardan birini tanlab ushbu karta raqamga qilingan to'lov chekini yuboring (Axmadaliyeva Roxatoy)": "To make a payment for the platform or to purchase an additional SMS package, please click on the 'Make Payment' or 'Purchase SMS Package' button on the right side. Then, select one of the suitable tariffs and send the payment receipt to this card number (Ahmadaliyeva Roxatoy).",
 
   "Mening guruhlarim": "My groups",
   "Oylik to'lovlar tarixi": "Monthly payment history",
