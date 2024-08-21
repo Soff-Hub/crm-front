@@ -29,6 +29,9 @@ export default function DashboardStats() {
         } else if (link === 'active_students') {
             dispatch(updateStudentParams({ group_status: 'active' }))
             return push('/students')
+        } else if (link === 'not_activated') {
+            dispatch(updateStudentParams({ group_status: 'not_activated' }))
+            return push('/students')
         }
 
         push(link)

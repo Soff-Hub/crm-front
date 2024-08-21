@@ -21,7 +21,12 @@ api.interceptors.request.use(
       config.headers['Authorization'] = `Bearer ${storedToken}`
       config.headers['Accept-Language'] = localStorage.getItem('i18nextLng')
     }
-
+    if (typeof window !== 'undefined') {
+      const language = localStorage.getItem('i18nextLng')
+      if (language) {
+        config.headers['Accept-Language'] = language
+      }
+    }
     return config
   },
   err => err

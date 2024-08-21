@@ -52,7 +52,7 @@ const statsData: StatsDataType[] = [
     title: 'Kelib ketganlar',
     color: 'error',
     key: 'not_activated_students',
-    link: 'group_status'
+    link: 'not_activated'
   },
   {
     icon: 'fa-solid:chalkboard-teacher',
