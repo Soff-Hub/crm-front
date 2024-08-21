@@ -1,8 +1,8 @@
 import { Box, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import DataTable, { customTableDataProps } from '../../table';
 import useResponsive from 'src/@core/hooks/useResponsive';
 import { useAppSelector } from 'src/store';
+import DataTable, { customTableDataProps } from '../../table';
 
 export default function ClientLogs() {
     const { isGettingLogs, logs } = useAppSelector(state => state.companyDetails)
