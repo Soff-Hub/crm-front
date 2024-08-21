@@ -22,11 +22,11 @@ const CardStatsVertical = (props: CardStatsVerticalProps) => {
     <Card sx={{ width: '100%' }}>
       <CardContent sx={{ display: 'flex', flexDirection: 'column', padding: isMobile ? '10px 0px !important' : '15px 10px !important' }}>
         <Box sx={{ width: '100%', display: 'flex', alignItems: 'flex-start', justifyContent: 'center', mb: 2 }}>
-          <CustomAvatar sx={{ width: isMobile ? '30px' : "40px", height: isMobile ? '30px' : "40px" }} className='text-center fs-2' skin='light' variant='rounded' color={color}>
+          <CustomAvatar sx={{ width: isMobile ? '30px' : "40px", height: isMobile ? '30px' : "40px", p: 1 }} className='text-center fs-2' skin='light' variant='rounded' color={color}>
             {icon}
           </CustomAvatar>
         </Box>
-        <Typography className='text-center' variant='body2' sx={{ mb: 2, fontSize: isMobile ? '12px !important' : isTablet ? '14px !important' : '20px !important' }}>
+        <Typography className='text-center' variant='caption' sx={{ mb: 2, fontSize: isMobile ? '12px !important' : isTablet ? '14px !important' : '18px !important' }}>
           {stats}
         </Typography>
         <Typography className='text-center' variant='h4' sx={{ mb: 0, fontSize: '20px !important' }}>

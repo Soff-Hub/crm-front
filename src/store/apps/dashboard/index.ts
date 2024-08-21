@@ -13,13 +13,6 @@ const statsData: StatsDataType[] = [
     link: '/lids'
   },
   {
-    icon: 'arcticons:studentid',
-    title: 'Faol talabalar',
-    color: 'info',
-    key: 'active_students',
-    link: 'active_students'
-  },
-  {
     icon: 'la:layer-group',
     title: 'Guruhlar',
     color: 'warning',
@@ -41,10 +34,24 @@ const statsData: StatsDataType[] = [
     link: 'last_payment'
   },
   {
+    icon: 'arcticons:studentid',
+    title: 'Faol talabalar',
+    color: 'info',
+    key: 'active_students',
+    link: 'active_students'
+  },
+  {
     icon: 'tabler:calendar-stats',
     title: 'Sinov darsida',
     color: 'primary',
     key: 'test_students',
+    link: 'group_status'
+  },
+  {
+    icon: 'tabler:calendar-stats',
+    title: 'Kelib ketganlar',
+    color: 'error',
+    key: 'not_activated_students',
     link: 'group_status'
   },
   {
