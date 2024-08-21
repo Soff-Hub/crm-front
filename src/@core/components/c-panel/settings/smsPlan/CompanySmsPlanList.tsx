@@ -32,7 +32,7 @@ export default function CompanySmsPlanList() {
                             />
                         </Box>)) : smsTariffs.length ? smsTariffs.map(tariff => (
                             <SMSCard item={tariff} />
-                        )) : <EmptyContent />}
+                        )) : <Box sx={{ gridColumn: "1/6" }}><EmptyContent /></Box>}
 
             </Box>
             <CreateMonthlyPlan />

@@ -11,6 +11,7 @@ export const fetchTariffs = createAsyncThunk('dashboard/fetchTariffs', async () 
   const response = await api.get('owner/tariffs/')
   return response.data
 })
+
 export const fetchSMSTariffs = createAsyncThunk('dashboard/fetchSMSTariffs', async () => {
   const response = await api.get('owner/sms-tariffs/')
   return response.data

@@ -1,16 +1,16 @@
 
-import LoadingButton from '@mui/lab/LoadingButton'
-import { Box, Dialog, DialogContent, DialogTitle, IconButton, Typography } from '@mui/material'
-import { useRouter } from 'next/router'
-import React, { useEffect, useState } from 'react'
-import toast from 'react-hot-toast'
-import { useTranslation } from 'react-i18next'
-import IconifyIcon from 'src/@core/components/icon'
-import DataTable, { customTableDataProps } from 'src/@core/components/table'
-import api from 'src/@core/utils/api'
-import { formatCurrency } from 'src/@core/utils/format-currency'
-import { useAppDispatch, useAppSelector } from 'src/store'
-import { fetchModerationSalaries, updateSalaryBonus, updateSalaryFine } from 'src/store/apps/finance'
+import LoadingButton from '@mui/lab/LoadingButton';
+import { Box, Dialog, DialogContent, DialogTitle, IconButton, Typography } from '@mui/material';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
+import IconifyIcon from 'src/@core/components/icon';
+import DataTable, { customTableDataProps } from 'src/@core/components/table';
+import api from 'src/@core/utils/api';
+import { formatCurrency } from 'src/@core/utils/format-currency';
+import { useAppDispatch, useAppSelector } from 'src/store';
+import { fetchModerationSalaries, updateSalaryBonus, updateSalaryFine } from 'src/store/apps/finance';
 
 type Props = {}
 

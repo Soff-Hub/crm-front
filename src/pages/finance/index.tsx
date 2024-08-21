@@ -7,7 +7,7 @@ import CardStatisticsLiveVisitors from 'src/views/ui/cards/statistics/CardStatis
 // ** Styled Component Import
 import KeenSliderWrapper from 'src/@core/styles/libs/keen-slider'
 import ApexChartWrapper from 'src/@core/styles/libs/react-apexcharts'
-import { Box, Button, Dialog, DialogContent, DialogTitle, TextField, Typography } from '@mui/material'
+import { Box, Button, Chip, Dialog, DialogContent, DialogTitle, TextField, Typography } from '@mui/material'
 import GroupFinanceTable from 'src/views/apps/finance/GroupTable'
 import IconifyIcon from 'src/@core/components/icon'
 import 'react-datepicker/dist/react-datepicker.css'
@@ -17,7 +17,6 @@ import { customTableDataProps } from 'src/@core/components/lid-table'
 import DataTable from 'src/@core/components/table'
 import api from 'src/@core/utils/api'
 import LoadingButton from '@mui/lab/LoadingButton'
-import Link from 'next/link'
 import FinanceCategories from 'src/views/apps/finance/FinanceCategories'
 import { formatCurrency } from 'src/@core/utils/format-currency'
 import EmptyContent from 'src/@core/components/empty-content'
@@ -112,6 +111,15 @@ const CardStatistics = () => {
             title: t("Jami oyliklar"),
             dataIndex: 'salaries',
             render: (salaries) => `${formatCurrency(salaries)} so'm`
+        },
+        {
+            xs: 0.3,
+            title: t("Holati"),
+            dataIndex: 'status',
+            render: (status) => status == "in_progress" ? <Chip color="info" label={t("Jarayonda")} size="small" />
+                : status == "approved" ? <Chip color="success" label={t("Tasdiqlangan")} size="small" />
+                    : status == "frozen" ? <Chip color="warning" label={t("Vaqtincha saqlangan")} size="small" /> :
+                        <Chip color="error" label={t("Tasdiqlanmagan")} size="small" />
         },
         {
             xs: 0.2,
@@ -226,9 +234,9 @@ const CardStatistics = () => {
                     <Grid item xs={12} md={12} >
                         <Box sx={{ display: 'flex', gap: '10px', flexGrow: 1 }}>
                             <Typography sx={{ fontSize: '20px', flexGrow: 1 }}>{t('Oyliklar hisoboti')}</Typography>
-                            <Link href='/finance/salary-confirm' >
+                            {/* <Link href='/finance/salary-confirm' >
                                 <Button variant='contained'>{t("Oylik ishlash")}</Button>
-                            </Link>
+                            </Link> */}
                         </Box>
                         <DataTable maxWidth='100%' minWidth='800px' columns={withdrawCol} data={salaries} rowClick={clickSalaryDetail} />
                     </Grid>

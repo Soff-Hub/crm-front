@@ -23,12 +23,26 @@ export default function CompanyPaymentList({ }: Props) {
         {
             xs: 0.4,
             title: t("Tarif"),
-            dataIndex: 'tariff_data',
-            render: (item: any) => (<div>
-                <span style={{ color: "#22d3ee", marginRight: "5px" }}>{item.month_count} {t("oylik")}</span><br />
-                <span style={{ color: "#f59e0b", marginRight: "5px" }}>({formatCurrency(item.amount)} so'm)</span><br />
-                <span style={{ color: "#84cc16" }}>({item.min_count}-{item.max_count} {t("ta o'quvchi")})</span>
-            </div>)
+            dataIndex: 'id',
+            render: (id: string) => {
+                const found = payments?.results?.find(item => item.id == Number(id))
+                if (found?.tariff) {
+                    return (
+                        <div>
+                            <span style={{ color: "#22d3ee", marginRight: "5px" }}>{found?.tariff_data?.month_count} {t("oylik")}</span><br />
+                            <span style={{ color: "#f59e0b", marginRight: "5px" }}>({formatCurrency(found?.tariff_data?.amount)} so'm)</span><br />
+                            <span style={{ color: "#84cc16" }}>({found?.tariff_data?.min_count}-{found?.tariff_data?.max_count} {t("ta o'quvchi")})</span>
+                        </div>
+                    )
+                } else {
+                    return (
+                        <div>
+                            <span style={{ color: "#f59e0b", marginRight: "5px" }}>({formatCurrency(found?.sms_data?.amount)} so'm)</span><br />
+                            <span style={{ color: "#84cc16" }}>({found?.sms_data?.sms_count} {t("SMS")})</span>
+                        </div>
+                    )
+                }
+            }
         },
         {
             xs: 0.3,

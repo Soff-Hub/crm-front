@@ -7,7 +7,7 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import { fetchSMSHistory } from 'src/store/apps/c-panel/companySlice';
 import { useAppDispatch } from 'src/store';
 import { toast } from 'react-hot-toast';
-import { handleOpenClientModal } from 'src/store/apps/c-panel';
+import { handleOpenClientModal, handleOpenSMSModal } from 'src/store/apps/c-panel';
 
 type Props = {}
 
@@ -47,7 +47,7 @@ export default function CompanyCardActions({ }: Props) {
                 <Button
                     variant='outlined'
                     size='small'
-                    onClick={() => setOpen('pack')}
+                    onClick={() => dispatch(handleOpenSMSModal(true))}
                 >
                     {t("SMS paket")}
                 </Button>
@@ -73,19 +73,6 @@ export default function CompanyCardActions({ }: Props) {
                         onChange={(e) => setMessage(e.target.value)}
                     />
                     <LoadingButton loading={loading} onClick={sendSms} variant='outlined' fullWidth>{t('Yuborish')}</LoadingButton>
-                </DialogContent>
-            </Dialog>
-
-            {/* SMS pack */}
-            <Dialog open={open === 'pack'} onClose={() => setOpen(null)}>
-                <DialogContent sx={{ minWidth: '300px' }}>
-                    <TextField
-                        fullWidth
-                        label={t("SMS soni")}
-                        sx={{ marginBottom: '10px' }}
-                        type='number'
-                    />
-                    <Button variant='outlined' fullWidth>{t('Saqlash')}</Button>
                 </DialogContent>
             </Dialog>
         </div>

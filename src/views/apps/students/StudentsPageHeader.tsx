@@ -1,5 +1,4 @@
 import { Box, Button, Chip, Typography } from '@mui/material';
-import React from 'react';
 import { useTranslation } from 'react-i18next';
 import IconifyIcon from 'src/@core/components/icon';
 import Status from 'src/@core/components/status';
@@ -21,7 +20,7 @@ const StudentsPageHeader = () => {
             >
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
                     <Typography variant='h5'>{t("O'quvchilar")}</Typography>
-                    {!isLoading && <Chip label={`${studentsCount} ta`} variant='outlined' color="primary" size="medium" />}
+                    {!isLoading && <Chip label={`${studentsCount}`} variant='outlined' color="primary" size="medium" />}
 
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
                         <Status color='error' />

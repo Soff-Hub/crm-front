@@ -33,7 +33,7 @@ export default function CompanyMonthlyPlan({ }: Props) {
                                 <Typography sx={{ color: "orange" }} variant="h6">{tariff.min_count}-{tariff.max_count} {t("ta o'quvchi")}</Typography>
                                 {tariff.tariffs?.map(item => <MonthlyCard key={item.id} item={item} />)}
                             </Paper>
-                        )) : <EmptyContent />}
+                        )) : <Box sx={{ gridColumn: "1/5" }}><EmptyContent /></Box>}
             </Box>
             <CreateMonthlyPlan />
             <EditMonthlyPlan />

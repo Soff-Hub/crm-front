@@ -3,12 +3,9 @@ import api from 'src/@core/utils/api'
 import { IMentorsState } from 'src/types/apps/mentorsTypes'
 
 // ** Fetch All Departments
-export const fetchTeachersList = createAsyncThunk(
-  'mentors/fetchTeachersList',
-  async (queryString?: any) => {
-    return (await api.get(`auth/teachers/?` + queryString)).data
-  }
-)
+export const fetchTeachersList = createAsyncThunk('mentors/fetchTeachersList', async (queryString?: any) => {
+  return (await api.get(`auth/teachers/?` + queryString)).data
+})
 
 export const fetchTeacherdetail = createAsyncThunk('mentors/fetchTeacherdetail', async (id: number) => {
   return (await api.get(`auth/teachers/${id}`)).data
@@ -82,8 +79,7 @@ export const mentorsSlice = createSlice({
       })
       .addCase(fetchTeachersList.fulfilled, (state, action) => {
         state.teachers = action.payload.results
-        state.teachersCount = Math.ceil(action.payload.count / 10)
-        state.isLoading = false
+        ;(state.teachersCount = action.payload.count), (state.isLoading = false)
       })
       .addCase(fetchTeachersList.rejected, state => {
         state.isLoading = false

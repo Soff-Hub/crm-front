@@ -86,6 +86,7 @@ export interface CompanyDetailsPageTypes {
     students_count: number
   } | null
   isLoading: boolean
+  isGettingLogs: boolean
   isGettingSMS: boolean
   isGettingPayments: boolean
   payments: ClientPaymentType | null
@@ -96,6 +97,15 @@ export interface CompanyDetailsPageTypes {
     client: number
     created_at: string
   }[]
+  logs: {
+    data: {
+      date: string
+      id: number
+      user: number
+      user_phone: string
+      user_name: string
+    }[]
+  } | null
 }
 export interface SMSTariff {
   id: number

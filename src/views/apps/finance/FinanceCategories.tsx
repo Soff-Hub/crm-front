@@ -25,7 +25,6 @@ export default function FinanceCategories({ categryData, confirmDeleteCategory, 
                                 <IconifyIcon icon={'fluent:delete-20-regular'} />
                             </IconButton>}
                         </Box>
-                        {/* {isHover === _.id && _.is_delete &&} */}
                     </Grid>
                 ))
             }

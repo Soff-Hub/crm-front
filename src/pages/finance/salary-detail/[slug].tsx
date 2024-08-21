@@ -1,19 +1,24 @@
-import { Box, IconButton, Typography } from "@mui/material";
+import LoadingButton from "@mui/lab/LoadingButton";
+import { Box, Dialog, DialogContent, DialogTitle, IconButton, Typography } from "@mui/material";
 import { useRouter } from "next/router";
 import { GetServerSidePropsContext, InferGetStaticPropsType } from "next/types";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { toast } from "react-hot-toast";
 import { useTranslation } from "react-i18next";
 import IconifyIcon from "src/@core/components/icon";
 import DataTable, { customTableDataProps } from "src/@core/components/table";
+import api from "src/@core/utils/api";
 import { formatCurrency } from "src/@core/utils/format-currency";
 import { useAppDispatch, useAppSelector } from "src/store";
-import { fetchModerationSalaries } from "src/store/apps/finance";
+import { fetchModerationSalaries, updateSalaryBonus, updateSalaryFine } from "src/store/apps/finance";
 
 const UserView = ({ slug }: InferGetStaticPropsType<typeof getServerSideProps>) => {
-    const { moderation_salaries, isPending } = useAppSelector(state => state.finance)
+    const { moderation_salaries, isPending, is_update } = useAppSelector(state => state.finance)
     const dispatch = useAppDispatch()
     const { t } = useTranslation()
-    const { back } = useRouter()
+    const [loading, setLoading] = useState<'frozen' | 'approved' | null>(null)
+    const { back, push } = useRouter()
+    const [open, setOpen] = useState<boolean>(false)
 
     const withdrawCol: customTableDataProps[] = [
         {
@@ -46,22 +51,16 @@ const UserView = ({ slug }: InferGetStaticPropsType<typeof getServerSideProps>) 
             render: (kpi_salary) => `${formatCurrency(kpi_salary)} so'm`
         },
         {
-            xs: 0.17,
-            title: t("Tushurgan summa"),
-            dataIndex: 'profit_amount',
-            render: (profit_amount) => `${formatCurrency(profit_amount)} so'm`
-        },
-        {
             xs: 0.14,
             title: t("Ish haqqi"),
             dataIndex: 'salary',
             render: (salary) => `${formatCurrency(salary)} so'm`
         },
         {
-            xs: 0.15,
+            xs: 0.14,
             title: t("Avanslar"),
             dataIndex: 'prepayment',
-            render: (salary) => `${formatCurrency(salary)} so'm`
+            render: (prepayment) => `${formatCurrency(prepayment)} so'm`
         },
         {
             xs: 0.13,
@@ -73,13 +72,13 @@ const UserView = ({ slug }: InferGetStaticPropsType<typeof getServerSideProps>) 
             xs: 0.15,
             title: `${t("Bonuslar")} (so'm)`,
             dataIndex: 'bonus_amount',
-            render: (bonus_amount) => `${formatCurrency(bonus_amount)} so'm`
+            renderId: (id, bonus_amount) => <input disabled={!is_update} style={{ width: '80px' }} type='string' value={+bonus_amount} onChange={(e) => dispatch(updateSalaryBonus({ id, bonus_amount: Number(e.target.value) || 0 }))} />
         },
         {
             xs: 0.16,
             title: `${t("Jarimalar")} (so'm)`,
             dataIndex: 'fine_amount',
-            render: (fine_amount) => `${formatCurrency(fine_amount)} so'm`
+            renderId: (id, fine_amount) => <input disabled={!is_update} style={{ width: '80px' }} type='string' value={+fine_amount} onChange={(e) => dispatch(updateSalaryFine({ id, fine_amount: Number(e.target.value) || 0 }))} />
         },
         {
             xs: 0.18,
@@ -89,19 +88,72 @@ const UserView = ({ slug }: InferGetStaticPropsType<typeof getServerSideProps>) 
         },
     ]
 
+
     useEffect(() => {
         dispatch(fetchModerationSalaries(`date=${slug}`))
     }, [])
 
-    return <Box>
-        <Box sx={{ display: 'flex', gap: '10px', flexGrow: 1, alignItems: 'center' }}>
-            <IconButton color='primary'>
-                <IconifyIcon icon={'ep:back'} style={{ cursor: 'pointer' }} onClick={back} />
-            </IconButton>
-            <Typography sx={{ fontSize: '20px', flexGrow: 1 }}>{t("To'langan oyliklar hisoboti")}</Typography>
-        </Box>
-        <DataTable loading={isPending} maxWidth='100%' minWidth='800px' columns={withdrawCol} data={moderation_salaries} />
-    </Box>
+    const confirmSalary = async (status: 'frozen' | 'approved') => {
+        setLoading(status)
+        const update_data = moderation_salaries.map(el => ({ ...el, status }))
+        try {
+            await api.patch(`common/finance/employee-salaries/update/`, { update_data })
+            toast.success("Ma'lumotlar saqlandi")
+            // await dispatch(fetchModerationSalaries(''))
+            push('/finance')
+        } catch (err) {
+            console.log(err);
+        }
+        setLoading(null)
+    }
+
+
+    return (
+        <Box>
+            <Box sx={{ display: 'flex', gap: '10px', flexGrow: 1, alignItems: 'center' }}>
+                <IconButton color='primary'>
+                    <IconifyIcon icon={'ep:back'} style={{ cursor: 'pointer' }} onClick={back} />
+                </IconButton>
+                {is_update ? <Typography sx={{ fontSize: '20px', flexGrow: 1 }}>{t("Oylik ishlash")}</Typography> :
+                    <Typography sx={{ fontSize: '20px', flexGrow: 1 }}>{t("To'langan oyliklar hisoboti")}</Typography>}
+            </Box>
+            <DataTable loading={isPending} maxWidth='100%' minWidth='800px' columns={withdrawCol} data={moderation_salaries} />
+            {is_update && !isPending && <LoadingButton
+                loading={loading === 'frozen'}
+                sx={{ marginTop: '15px', marginRight: '20px' }}
+                size='small'
+                variant='contained'
+                color='secondary'
+                onClick={() => confirmSalary('frozen')}
+            >
+                {t("Vaqtincha saqlash")}
+            </LoadingButton>}
+            {
+                is_update && !isPending && <LoadingButton
+                    loading={loading === 'approved'}
+                    sx={{ marginTop: '15px' }}
+                    size='small'
+                    variant='contained'
+                    onClick={() => setOpen(true)}
+                >
+                    {t("Saqlash")}
+                </LoadingButton>
+            }
+            <Dialog
+                open={open}
+                onClose={() => setOpen(false)}
+            >
+                <DialogTitle sx={{ display: 'flex', alignItems: 'center', minWidth: '300px', justifyContent: 'space-between' }}>
+                    {/* <IconifyIcon icon={'mdi:close'} onClick={() => setOpen(false)} /> */}
+                </DialogTitle>
+                <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: '10px', maxWidth: '350px' }}>
+                    <Typography sx={{ fontSize: '24px', textAlign: 'center' }}>{t("O'zgarishlarni butunlay saqlamoqchimisiz?")}</Typography>
+                    <Typography sx={{ textAlign: 'center', marginBottom: '20px', color: 'orange' }}>{t("Bu amaliyotni ortga qaytarib bo'lmaydi")}</Typography>
+
+                    <LoadingButton loading={loading === 'approved'} onClick={() => confirmSalary('approved')} variant='contained'>{t("Saqlash")}</LoadingButton>
+                </DialogContent>
+            </Dialog>
+        </Box>)
 }
 
 

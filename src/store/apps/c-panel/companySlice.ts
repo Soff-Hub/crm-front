@@ -44,12 +44,19 @@ export const updateClient = createAsyncThunk('updateClient', async (values: Part
   }
 })
 
+export const fetchLogs = createAsyncThunk('fetchHistory', async (id: number | undefined) => {
+  const response = await api.get(`owner/client/logs/${id}/`)
+  return response.data
+})
+
 const initialState: CompanyDetailsPageTypes = {
   sms: [],
+  logs: null,
   payments: null,
   details: null,
   isLoading: false,
   isGettingSMS: false,
+  isGettingLogs: false,
   isGettingPayments: false
 }
 
@@ -90,6 +97,13 @@ export const companyDetails = createSlice({
     })
     builder.addCase(fetchClientPayments.rejected, (state, action) => {
       state.isGettingPayments = false
+    })
+    builder.addCase(fetchLogs.pending, (state, action) => {
+      state.isGettingLogs = true
+    })
+    builder.addCase(fetchLogs.fulfilled, (state, action) => {
+      state.logs = action.payload
+      state.isGettingLogs = false
     })
   }
 })

@@ -168,7 +168,7 @@ export default function GroupsPage() {
       >
         <Box sx={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
           <Typography variant='h5'>{t("Guruhlar")}</Typography>
-          {!isLoading && <Chip label={`${groupCount} ta`} variant='outlined' color="primary" />}
+          {!isLoading && <Chip label={`${groupCount}`} variant='outlined' color="primary" />}
         </Box>
         <Button
           onClick={handleOpenModal}

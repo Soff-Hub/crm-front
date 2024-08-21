@@ -1,6 +1,7 @@
 import { Box } from "@mui/material"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
+import EmptyContent from "src/@core/components/empty-content"
 import api from "src/@core/utils/api"
 
 interface IStudentHistory {
@@ -35,11 +36,11 @@ export default function StudentHistory() {
 
     return (
         <Box sx={{ width: "100%" }}>
-            {data?.results.map(item => (
+            {data?.results?.length ? data?.results.map(item => (
                 <Box key={item.id} sx={{ marginBottom: 5, }}>
                     <div dangerouslySetInnerHTML={{ __html: item.description }} />
                 </Box>
-            ))}
+            )) : <EmptyContent />}
         </Box>
     )
 }

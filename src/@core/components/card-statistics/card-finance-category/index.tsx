@@ -6,6 +6,7 @@ import CardContent from '@mui/material/CardContent'
 // ** Types Imports
 import { CardStatsVerticalProps } from 'src/@core/components/card-statistics/types'
 import useResponsive from 'src/@core/hooks/useResponsive'
+import { formatCurrency } from 'src/@core/utils/format-currency'
 
 const CardFinanceCategory = (props: CardStatsVerticalProps) => {
   // ** Props
@@ -20,7 +21,7 @@ const CardFinanceCategory = (props: CardStatsVerticalProps) => {
           {title}
         </Typography>
         <Typography className='text-center' variant='body2' sx={{ mb: 2, fontSize: isMobile ? '12px !important' : isTablet ? '14px !important' : '20px !important' }}>
-          {stats}
+          {formatCurrency(stats)} UZS
         </Typography>
       </CardContent>
     </Card>

@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  Chip,
   Pagination,
   Typography,
 } from '@mui/material';
@@ -68,12 +69,19 @@ export default function GroupsPage() {
       xs: 1.7,
       title: t("Doimiy oylik"),
       dataIndex: 'amount',
-      render: (amount) => formatCurrency(amount)
+      render: (amount) => {
+        if (!isNaN(Number(amount))) {
+          return `${formatCurrency(amount)} UZS`;
+        } else {
+          return "*****";
+        }
+      }
     },
     {
       xs: 1.7,
       title: t("Foiz ulush (%)"),
-      dataIndex: 'percentage'
+      dataIndex: 'percentage',
+      render: (per) => `${per} %`
     },
     {
       xs: 1.7,
@@ -81,9 +89,14 @@ export default function GroupsPage() {
       dataIndex: 'birth_date'
     },
     {
+      xs: 1.7,
+      title: t("Ishga olingan sana"),
+      dataIndex: 'activated_at'
+    },
+    {
       xs: 0.4,
       dataIndex: 'id',
-      title: t("Harakatlar"),
+      title: t(""),
       render: actions => <RowOptions id={actions} />
     }
   ]
@@ -113,7 +126,10 @@ export default function GroupsPage() {
         sx={{ display: 'flex', justifyContent: 'space-between', margin: '10px 0' }}
         py={2}
       >
-        <Typography variant='h5'>{t("Mentorlar")}</Typography>
+        <Box sx={{ display: "flex", alignItems: "center", gap: "10px" }}>
+          <Typography variant='h5'>{t("Mentorlar")}</Typography>
+          {!isLoading && <Chip label={`${teachersCount}`} variant='outlined' color="primary" size="medium" />}
+        </Box>
         <Button
           onClick={() => dispatch(setOpenEdit('create'))}
           variant='contained'
@@ -124,9 +140,9 @@ export default function GroupsPage() {
         </Button>
       </Box>
       <DataTable loading={isLoading} columns={columns} data={teachers} rowClick={rowClick} />
-      {teachersCount > 1 && !isLoading && <Pagination
+      {Math.ceil(teachersCount / 10) > 1 && !isLoading && <Pagination
         defaultPage={Number(page)}
-        count={teachersCount}
+        count={Math.ceil(teachersCount / 10)}
         variant="outlined"
         shape="rounded"
         onChange={(e: any, page) => handlePagination(e.target.value + page)}

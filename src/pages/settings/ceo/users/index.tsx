@@ -149,7 +149,7 @@ export default function GroupsPage() {
             dataIndex: 'amount',
             render: (amount) => {
                 if (!isNaN(Number(amount))) {
-                    return formatCurrency(amount);
+                    return `${formatCurrency(amount)} UZS`;
                 } else {
                     return "*****";
                 }
@@ -158,7 +158,8 @@ export default function GroupsPage() {
         {
             xs: 1,
             title: t("Foiz ulush (%)"),
-            dataIndex: 'percentage'
+            dataIndex: 'percentage',
+            render: (per) => `${per} %`
         },
         {
             xs: 0.6,
@@ -167,10 +168,16 @@ export default function GroupsPage() {
             render: (roles_list: any) => roles_list.join(', ')
         },
         {
+            xs: 0.6,
+            title: t("Ishga olingan sana"),
+            dataIndex: 'activated_at',
+            render: date => <Box sx={{ textAlign: "center" }}>{date}</Box>
+        },
+        {
             xs: 0.5,
             dataIndex: 'id',
-            title: t("Harakatlar"),
-            render: actions => <RowOptions id={actions} />
+            title: t(""),
+            render: actions => <Box sx={{ textAlign: "end" }}><RowOptions id={actions} /></Box>
         }
     ]
 
