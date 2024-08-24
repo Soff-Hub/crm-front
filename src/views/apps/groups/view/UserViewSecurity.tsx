@@ -39,6 +39,7 @@ const Item = ({ defaultValue, groupId, userId, date, opened_id, setOpenedId }: {
   const [value, setValue] = useState<true | false | null | 0>(defaultValue)
   const [open, setOpen] = useState<boolean>(false)
 
+
   const handleClick = async (status: any) => {
     setOpenedId(null)
     if (value !== status) {

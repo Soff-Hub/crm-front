@@ -123,6 +123,7 @@ const StudentsFilter = () => {
                         {/* <MenuItem value={'archive'}>{t('archive')}</MenuItem> */}
                         <MenuItem value={'new'}>{t('test')}</MenuItem>
                         <MenuItem value={'frozen'}>{t("Muzlatilgan")}</MenuItem>
+                        <MenuItem value={'not_activated'}>{t("Sinov darsidan ketganlar")}</MenuItem>
                     </Select>
                 </FormControl>
             </Box>

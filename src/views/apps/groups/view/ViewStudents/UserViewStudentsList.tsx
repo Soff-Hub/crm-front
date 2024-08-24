@@ -106,10 +106,7 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, }: ItemTyp
     const handleLeft = async () => {
         setLoading(true)
         try {
-            await api.post('common/group-student/destroy/', {
-                group: query.id,
-                student: id
-            })
+            await api.delete(`common/group-student-delete/${studentStatusId}/`)
             toast.success("O'quvchi guruhdan chetlatildi", { position: 'top-center' })
             setLoading(false)
             const queryString = new URLSearchParams(studentsQueryParams).toString()

@@ -37,10 +37,19 @@ const CardWidgetsWeeklyOverview = () => {
 
   const options: ApexOptions = {
     chart: {
+      type: 'area',
       offsetY: 3,
       offsetX: 0,
       parentHeightOffset: 0,
       toolbar: { show: true, tools: { zoom: false, zoomin: false, zoomout: false, pan: false, reset: false } },
+      dropShadow: {
+        enabled: true,
+        color: '#563BFF',
+        top: 18,
+        left: 7,
+        blur: 10,
+        opacity: 0.2
+      },
     },
     plotOptions: {
       bar: {
@@ -66,30 +75,38 @@ const CardWidgetsWeeklyOverview = () => {
       strokeOpacity: 1
     },
     stroke: {
-      width: [2, 2, 2],
       curve: 'smooth'
     },
     legend: { show: false },
-    dataLabels: { enabled: false },
-    colors: ['#EE6D7A', '#f2b92a', '#72E128'],
-    grid: {
-      strokeDashArray: 7,
-      borderColor: theme.palette.divider
+    dataLabels: {
+      enabled: false
     },
-    states: {
-      hover: {
-        filter: { type: 'none' }
+    colors: ['#EE6D7A', '#f2b92a', '#72E128'],
+    fill: {
+      type: 'gradient',
+      gradient: {
+        opacityFrom: 0,
+        opacityTo: 0,
       },
-      active: {
-        filter: { type: 'none' }
-      }
+    },
+    grid: {
+      show: true,
+      borderColor: "#f3f4f6"
     },
     xaxis: {
       categories: ['Yan', 'Fev', 'Mart', 'Apr', 'May', 'Iyun', 'Iyul', 'Avg', 'Sen', 'Okt', 'Noy', 'Dek'].map(month => t([month])),
       tickPlacement: 'on',
-      labels: { show: true },
       axisTicks: { show: false },
-      axisBorder: { show: false }
+      axisBorder: { show: false },
+      labels: {
+        show: true,
+        style: {
+          fontFamily: "Inter,Verdana",
+          fontWeight: "bold",
+          fontSize: "12px",
+          colors: "#9ca3af"
+        }
+      },
     },
     yaxis: {
       show: true,
@@ -97,18 +114,24 @@ const CardWidgetsWeeklyOverview = () => {
       labels: {
         formatter: (value) => `${formatCurrency(value)}`,
         style: {
-          fontSize: '0.75rem'
-        },
+          fontFamily: "Inter,Verdana",
+          fontWeight: "bold",
+          fontSize: "12px",
+          colors: "#9ca3af"
+        }
       },
       forceNiceScale: true
-    }
+    },
+    tooltip: {
+      enabled: true
+    },
   }
 
 
   return (
     <Card sx={{ p: '20px' }}>
       <Box sx={{ display: 'flex', alignItems: 'center' }}>
-        {loading ? <Skeleton variant='text' width={'200px'} /> : <Typography sx={{ fontSize: '22px' }}>{all_numbers?.year} {t('yildagi aylanmalar')}</Typography>}
+        {loading ? <Skeleton variant='text' width={'200px'} /> : <Typography sx={{ fontSize: '22px', fontFamily: "Inter" }}>{all_numbers?.year} {t('yildagi aylanmalar')}</Typography>}
       </Box>
       <Box>
         {loading ? (
@@ -117,7 +140,7 @@ const CardWidgetsWeeklyOverview = () => {
               [10, 12, 7, 20, 30, 13, 45, 33, 12, 41, 18, 9, 21].map(el => <Skeleton variant="rounded" width={'50px'} height={el * 5} />)
             }
           </Box>
-        ) : all_numbers ? <ReactApexcharts type='line' height={208} series={data} options={options} /> : <EmptyContent />}
+        ) : all_numbers ? <ReactApexcharts type='area' height={208} series={data} options={options} /> : <EmptyContent />}
       </Box>
     </Card>
   )

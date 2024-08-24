@@ -29,13 +29,16 @@ export default function DashboardStats() {
         } else if (link === 'active_students') {
             dispatch(updateStudentParams({ group_status: 'active' }))
             return push('/students')
+        } else if (link === 'not_activated') {
+            dispatch(updateStudentParams({ group_status: 'not_activated' }))
+            return push('/students')
         }
 
         push(link)
     }
 
     return (
-        <Box sx={{ display: 'grid', gap: '10px', mb: 5, gridTemplateColumns: `repeat(${isMobile ? 3 : isTablet ? 4 : 7}, 1fr)` }} >
+        <Box sx={{ display: 'grid', gap: '10px', mb: 5, gridTemplateColumns: `repeat(${isMobile ? 3 : isTablet ? 4 : 8}, 1fr)` }} >
             {
                 isStatsLoading ? statsData.map((_, index) => (
                     <Box key={index} className='' sx={{ cursor: 'pointer' }} onClick={() => click(_.link)}>
