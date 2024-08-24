@@ -41,7 +41,6 @@ const Item = ({ defaultValue, reasonText, groupId, userId, date, opened_id, setO
   const [reason, setReasonValue] = useState("")
   const [reasonTooltip, setReasonTooltip] = useState(false)
   const { t } = useTranslation()
-
   const handleClick = async (status: "true" | "false" | "null" | "with_reason" | 0, reason?: string) => {
     setOpenedId(null)
     setReasonTooltip(false)
