@@ -1,4 +1,4 @@
-import { Box, Button, TextField, Typography } from "@mui/material";
+import { Box, Button, ClickAwayListener, IconButton, TextField, Typography } from "@mui/material";
 import { useRouter } from "next/router";
 import IconifyIcon from "src/@core/components/icon";
 import Tooltip, { TooltipProps, tooltipClasses } from '@mui/material/Tooltip';
@@ -35,23 +35,27 @@ const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
 }));
 
 
-const Item = ({ defaultValue, groupId, userId, date, opened_id, setOpenedId }: { defaultValue: true | false | null | 0, groupId?: any, userId?: any, date?: any, opened_id: any, setOpenedId: any }) => {
-  const [value, setValue] = useState<true | false | null | 0>(defaultValue)
+const Item = ({ defaultValue, reasonText, groupId, userId, date, opened_id, setOpenedId }: { defaultValue: "true" | "false" | "null" | "with_reason" | 0, groupId?: any, userId?: any, reasonText?: null | string, date?: any, opened_id: any, setOpenedId: any }) => {
+  const [value, setValue] = useState<"true" | "false" | "null" | "with_reason" | 0>(defaultValue)
   const [open, setOpen] = useState<boolean>(false)
+  const [reason, setReasonValue] = useState("")
+  const [reasonTooltip, setReasonTooltip] = useState(false)
+  const { t } = useTranslation()
 
-  const handleClick = async (status: any) => {
+  const handleClick = async (status: "true" | "false" | "null" | "with_reason" | 0, reason?: string) => {
     setOpenedId(null)
+    setReasonTooltip(false)
     if (value !== status) {
       setValue(status)
       const data = {
         group: groupId,
         student: userId,
         date: date,
-        is_available: status
+        is_available: String(status),
+        reason: reason || null
       }
       try {
         const response = await api.post('common/student-attendance/', data)
-        console.log(response);
       } catch (e: any) {
         toast.error(e.response.data.msg[0])
         setValue(defaultValue)
@@ -59,36 +63,93 @@ const Item = ({ defaultValue, groupId, userId, date, opened_id, setOpenedId }: {
     }
   }
 
-  console.log(value);
-
   useEffect(() => {
-    if (`${userId}-${date}` === opened_id) {
-      setOpen(true)
-    } else {
-      setOpen(false)
-    }
+    if (`${userId}-${date}` === opened_id) setOpen(true)
+    else setOpen(false)
+    // return () => setOpenedId(null)
   }, [opened_id])
 
-  if (value === true || value === false || value === null) {
+  if (value === "true" || value === "false" || value === "null" || value === "with_reason") {
     return (
-      <Box sx={{ position: 'relative' }}>
-        {open && <Box onBlur={() => setOpen(false)} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-evenly', gap: '4px', position: 'absolute', width: '80px', height: '30px', backgroundColor: 'rgba(0, 0, 0, 0.5)', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
-          <IconifyIcon icon={'mdi:cancel-bold'} onClick={() => handleClick(false)} fontSize={18} color="#e31309" cursor={'pointer'} />
-          <IconifyIcon icon={'game-icons:check-mark'} onClick={() => handleClick(true)} fontSize={18} color="#4be309" cursor={'pointer'} />
-          <IconifyIcon icon={'material-symbols-light:square-outline'} onClick={() => handleClick(null)} fontSize={18} color="#4be309" cursor={'pointer'} />
-        </Box>}
-        {!open && <span onClick={() => setOpenedId(`${userId}-${date}`)}>
-          {
-            value === true ? (
-              <IconifyIcon icon={'game-icons:check-mark'} fontSize={18} color="#4be309" />
-            ) : value === false ? (
-              <IconifyIcon icon={'mdi:cancel-bold'} fontSize={18} color="#e31309" />
-            ) : value === null ? (
-              <IconifyIcon icon={'fluent:square-20-regular'} fontSize={18} color="#9e9e9e" />
-            ) : ''
-          }
-        </span>}
-      </Box>
+      <Box sx={{ position: 'relative' }} >
+        {
+          <ClickAwayListener onClickAway={() => (setOpenedId(null), setOpen(false))}>
+            <Tooltip onClick={(e) => (e.stopPropagation(), setOpenedId(`${userId}-${date}`))} disableFocusListener disableHoverListener disableTouchListener arrow open={open}
+              title={<Box onClick={(e) => e.stopPropagation()} style={{ display: 'flex', zIndex: 99, alignItems: 'center', justifyContent: 'space-evenly', gap: '4px', minWidth: '100px', height: '30px', }}>
+                <HtmlTooltip
+                  PopperProps={{
+                    disablePortal: false,
+                  }}
+                  onClose={() => setReasonTooltip(false)}
+                  open={reasonTooltip}
+                  disableFocusListener
+                  disableHoverListener
+                  disableTouchListener
+                  arrow
+                  title={
+                    <form
+                      style={{
+                        width: '100%',
+                        padding: '3px',
+                      }}
+                      onSubmit={async (e) => {
+                        await handleClick("with_reason", reason)
+                      }}
+                    >
+                      <TextField rows={3} multiline autoComplete="off" onChange={(e) => setReasonValue(e.target.value)} size="small" placeholder={t("Izoh")} />
+                      <Button fullWidth sx={{ mt: 1 }} onClick={async () => await handleClick("with_reason", reason)} size="small" >{t("Saqlash")}</Button>
+                    </form>
+                  }
+                >
+                  <Tooltip arrow title={t("Ushbu holatta o'quvchi sababli deb belgilanadi va shu kun uchun bu o'quvchidan to'lov yechilmaydi")}>
+                    <IconButton onClick={() => setReasonTooltip(true)}>
+                      <IconifyIcon icon={'fluent-emoji-high-contrast:white-exclamation-mark'} fontSize={18} color="#fcd34d" cursor={'pointer'} />
+                    </IconButton>
+                  </Tooltip>
+                </HtmlTooltip>
+                <Tooltip arrow title={t("O'quvchi darsga sababsiz kelmadi")}>
+                  <IconButton onClick={() => handleClick("false")}>
+                    <IconifyIcon icon={'mdi:cancel-bold'} fontSize={18} color="#e31309" cursor={'pointer'} />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip arrow title={t("O'quvchi darsga keldi")}>
+                  <IconButton onClick={() => handleClick("true")} >
+                    <IconifyIcon icon={'game-icons:check-mark'} fontSize={18} color="#4be309" cursor={'pointer'} />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip arrow title={t("Bo'sh qoldirish")}>
+                  <IconButton onClick={() => handleClick("null")} >
+                    <IconifyIcon icon={'material-symbols-light:square-outline'} onClick={() => handleClick("null")} fontSize={18} color="#4be309" cursor={'pointer'} />
+                  </IconButton>
+                </Tooltip>
+              </Box>}>
+              <span style={{ zIndex: 0 }}>
+                {
+                  value === "true" ? (
+                    <IconButton>
+                      <IconifyIcon icon={'game-icons:check-mark'} fontSize={18} color="#4be309" />
+                    </IconButton>
+                  ) : value === "false" ? (
+                    <IconButton>
+                      <IconifyIcon icon={'mdi:cancel-bold'} fontSize={18} color="#e31309" />
+                    </IconButton>
+                  ) : value == "null" ? (
+                    <IconButton>
+                      <IconifyIcon icon={'fluent:square-20-regular'} fontSize={18} color="#9e9e9e" />
+                    </IconButton>
+                  ) : value === "with_reason" ? (
+                    <Tooltip arrow title={`Sababli: ${reasonText}`}>
+                      <IconButton>
+                        <IconifyIcon icon={'fluent-emoji-high-contrast:white-exclamation-mark'} fontSize={18} color="#fcd34d" />
+                      </IconButton>
+                    </Tooltip>
+                  ) : ''
+                }
+              </span>
+            </Tooltip>
+          </ClickAwayListener>
+        }
+      </Box >
     )
   } else {
     return (
@@ -311,15 +372,18 @@ const UserViewSecurity = () => {
                           student.attendance.some((el: any) => el.date === hour.date) && student.attendance.find((el: any) => el.date === hour.date) ? (
                             <td key={student.attendance.find((el: any) => el.date === hour.date).date} style={{ padding: '8px 0', textAlign: 'center', cursor: 'pointer' }}>
                               {
-                                student.attendance.find((el: any) => el.date === hour.date).is_available === true ? (
-                                  <Item opened_id={opened_id} setOpenedId={setOpenedId} defaultValue={true} groupId={query?.id} userId={student.id} date={hour.date} />
+                                student.attendance.find((el: any) => el.date === hour.date).is_available === "true" ? (
+                                  <Item opened_id={opened_id} setOpenedId={setOpenedId} defaultValue={"true"} groupId={query?.id} userId={student.id} date={hour.date} />
                                 ) :
-                                  student.attendance.find((el: any) => el.date === hour.date).is_available === false ? (
-                                    <Item opened_id={opened_id} setOpenedId={setOpenedId} defaultValue={false} groupId={query?.id} userId={student.id} date={hour.date} />
+                                  student.attendance.find((el: any) => el.date === hour.date).is_available === "false" ? (
+                                    <Item opened_id={opened_id} setOpenedId={setOpenedId} defaultValue={"false"} groupId={query?.id} userId={student.id} date={hour.date} />
                                   ) :
-                                    student.attendance.find((el: any) => el.date === hour.date).is_available === null ? (
-                                      <Item opened_id={opened_id} setOpenedId={setOpenedId} defaultValue={null} groupId={query?.id} userId={student.id} date={hour.date} />
-                                    ) : <></>
+                                    student.attendance.find((el: any) => el.date === hour.date).is_available === "with_reason" ? (
+                                      <Item opened_id={opened_id} setOpenedId={setOpenedId} defaultValue={"with_reason"} reasonText={student.attendance.find((el: any) => el.date === hour.date).reason} groupId={query?.id} userId={student.id} date={hour.date} />
+                                    ) :
+                                      student.attendance.find((el: any) => el.date === hour.date).is_available === "null" ? (
+                                        <Item opened_id={opened_id} setOpenedId={setOpenedId} defaultValue={"null"} groupId={query?.id} userId={student.id} date={hour.date} />
+                                      ) : <></>
                               }
                             </td>
                           ) : <td key={hour.date} style={{ padding: '8px 0', textAlign: 'center', cursor: 'not-allowed' }}>

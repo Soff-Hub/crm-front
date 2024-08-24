@@ -12,19 +12,19 @@ import useResponsive from "src/@core/hooks/useResponsive";
 import SubLoader from "../loaders/SubLoader";
 
 
-const Item = ({ defaultValue }: { defaultValue: true | false | null | 0 }) => {
+const Item = ({ defaultValue }: { defaultValue: "true" | "false" | "null" | 0 }) => {
 
 
-    if (defaultValue === true || defaultValue === false || defaultValue === null) {
+    if (defaultValue === "true" || defaultValue === "false" || defaultValue === "null") {
         return (
             <Box sx={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
                 <span style={{ display: 'flex' }}>
                     {
-                        defaultValue === true ? (
+                        defaultValue === "true" ? (
                             <IconifyIcon icon={'game-icons:check-mark'} fontSize={18} color="#4be309" />
-                        ) : defaultValue === false ? (
+                        ) : defaultValue === "false" ? (
                             <IconifyIcon icon={'mdi:cancel-bold'} fontSize={18} color="#e31309" />
-                        ) : defaultValue === null ? (
+                        ) : defaultValue === "null" ? (
                             <IconifyIcon icon={'fluent:square-20-regular'} fontSize={18} color="#9e9e9e" />
                         ) : <IconifyIcon icon={'material-symbols:lock-outline'} fontSize={18} color="#9e9e9e" />
                     }
@@ -172,17 +172,17 @@ const StudentGroupDetail = ({ slug, month }: any) => {
                         <Typography variant='h6'>{t("Davomat")} |</Typography>
 
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                            <Item defaultValue />
+                            <Item defaultValue="true" />
                             <Typography variant="body2">{t("Kelgan")}, </Typography>
                         </Box>
 
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                            <Item defaultValue={false} />
+                            <Item defaultValue={"false"} />
                             <Typography variant="body2">{t("Kelmagan")},</Typography>
                         </Box>
 
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                            <Item defaultValue={null} />
+                            <Item defaultValue={"null"} />
                             <Typography variant="body2">{t("Yoqlama qilinmagan")},</Typography>
                         </Box>
 

@@ -140,10 +140,10 @@ const UserDropdown = (props: Props) => {
           {user?.username}
         </Typography>
         <Divider sx={{ mb: '0 !important', mt: "1 !important" }} />
-        <Button color="success" sx={styles} onClick={() => router.push('/crm-payments')}>
+        {user?.role.includes("ceo") && <Button color="success" sx={styles} onClick={() => router.push('/crm-payments')}>
           <Icon icon='material-symbols-light:payments-sharp' />
           {t("CRM sozlamalari")}
-        </Button>
+        </Button>}
         <Divider sx={{ m: '0 !important' }} />
         <MenuItem
           onClick={handleLogout}

@@ -10,8 +10,10 @@ import OptionsMenu from 'src/@core/components/option-menu'
 // ** Type Import
 import { Settings } from 'src/@core/context/settingsContext'
 import { useRouter } from 'next/router'
-import { disablePage } from 'src/store/apps/page'
 import { useAppDispatch } from 'src/store'
+import { disablePage } from 'src/store/apps/page'
+import { useContext } from 'react'
+import { AuthContext } from 'src/context/AuthContext'
 
 interface Props {
   settings: Settings
@@ -22,6 +24,7 @@ const LanguageDropdown = ({ settings, saveSettings }: Props) => {
   // ** Hook
   const { i18n } = useTranslation()
   const dispatch = useAppDispatch()
+  const { initAuth } = useContext(AuthContext)
 
   const router = useRouter();
   const { locales, locale: activeLocale, pathname, query, asPath } = router;
@@ -41,9 +44,12 @@ const LanguageDropdown = ({ settings, saveSettings }: Props) => {
     } else {
       saveSettings({ ...settings, locale: lang, direction: 'ltr' })
     }
-    dispatch(disablePage(false))
     router.push({ pathname, query }, asPath, { locale: lang })
+    if (router.pathname.includes("students/view/")) {
+      await initAuth()
+    }
     dispatch(disablePage(false))
+
   }
 
   return (
