@@ -3,18 +3,12 @@
     "baseUrl": ".",
     "rootDir": "src",
     "target": "es6",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
-    "typeRoots": [
-      "node_modules/@types"
-    ],
+    "typeRoots": ["node_modules/@types"],
     "noEmit": true,
     "esModuleInterop": true,
     "module": "esnext",
@@ -22,22 +16,13 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     // "jsx": "preserve",
-    "jsx": "preserve",
+    "jsx": "react-jsx",
     "incremental": true,
     "paths": {
-      "apexcharts": [
-        "./node_modules/apexcharts-clevision"
-      ],
-      "apexcharts/*": [
-        "./node_modules/apexcharts-clevision/*"
-      ]
+      "apexcharts": ["./node_modules/apexcharts-clevision"],
+      "apexcharts/*": ["./node_modules/apexcharts-clevision/*"]
     }
   },
-  "include": [
-    "src",
-    "declaration.d.ts"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  "include": ["src", "declaration.d.ts"],
+  "exclude": ["node_modules"]
 }
