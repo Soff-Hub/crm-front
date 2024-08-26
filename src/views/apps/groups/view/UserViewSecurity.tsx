@@ -39,12 +39,14 @@ const Item = ({ defaultValue, reasonText, groupId, userId, date, opened_id, setO
   const [value, setValue] = useState<"true" | "false" | "null" | "with_reason" | 0>(defaultValue)
   const [open, setOpen] = useState<boolean>(false)
   const [reason, setReasonValue] = useState("")
+  const [reasonValue, setReasonText] = useState(reasonText)
   const [reasonTooltip, setReasonTooltip] = useState(false)
   const { t } = useTranslation()
 
   const handleClick = async (status: "true" | "false" | "null" | "with_reason" | 0, reason?: string) => {
     setOpenedId(null)
     setReasonTooltip(false)
+    setReasonText(reason)
     if (value !== status) {
       setValue(status)
       const data = {
@@ -138,7 +140,7 @@ const Item = ({ defaultValue, reasonText, groupId, userId, date, opened_id, setO
                       <IconifyIcon icon={'fluent:square-20-regular'} fontSize={18} color="#9e9e9e" />
                     </IconButton>
                   ) : value === "with_reason" ? (
-                    <Tooltip arrow title={`Sababli: ${reasonText}`}>
+                    <Tooltip arrow title={`Sababli: ${reasonValue}`}>
                       <IconButton>
                         <IconifyIcon icon={'fluent-emoji-high-contrast:white-exclamation-mark'} fontSize={18} color="#fcd34d" />
                       </IconButton>
