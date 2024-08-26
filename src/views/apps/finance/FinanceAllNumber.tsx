@@ -109,7 +109,7 @@ const FinanceAllNumber = () => {
             <Grid xs={12}>
                 <Box sx={{ display: 'flex', alignItems: 'center', marginBottom: '20px', gap: 1 }}>
                     <Typography sx={{ flexGrow: 1 }} variant="h5">{t('Umumiy raqamlar')}</Typography>
-                    <SelectPicker
+                    {/* <SelectPicker
                         onChange={handleChangeBranch}
                         size='sm'
                         data={user?.branches ? [...user?.branches?.map(el => ({ label: el.name, value: el.id })), { label: t('Barcha filiallar'), value: '' }] : []}
@@ -157,7 +157,7 @@ const FinanceAllNumber = () => {
                         translate={'yes'}
                         size="sm"
                         value={date}
-                    />
+                    /> */}
                 </Box>
                 {
                     numbersLoad ? <Grid container spacing={7}>

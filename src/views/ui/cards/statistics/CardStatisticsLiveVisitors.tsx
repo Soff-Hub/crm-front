@@ -45,10 +45,10 @@ const CardWidgetsWeeklyOverview = () => {
       dropShadow: {
         enabled: true,
         color: '#563BFF',
-        top: 18,
-        left: 7,
+        top: 10,
+        left: 5,
         blur: 10,
-        opacity: 0.2
+        opacity: 0.1
       },
     },
     plotOptions: {

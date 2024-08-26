@@ -26,6 +26,7 @@ import SubLoader from 'src/views/apps/loaders/SubLoader'
 import StatsPaymentMethods from 'src/views/apps/finance/StatsPaymentMethods'
 import FinanceAllNumber from 'src/views/apps/finance/FinanceAllNumber'
 import VideoHeader, { videoUrls } from 'src/@core/components/video-header/video-header'
+import HeadingFilter from 'src/views/apps/finance/HeadingFilter'
 
 
 export function formatDateString(date: Date) {
@@ -194,7 +195,10 @@ const CardStatistics = () => {
 
     return (
         <ApexChartWrapper>
-            <VideoHeader item={videoUrls.finance} />
+            <Box sx={{ display: "flex", mb: 1, alignItems: "center", justifyContent: "space-between" }}>
+                <HeadingFilter />
+                <VideoHeader item={videoUrls.finance} />
+            </Box>
             <KeenSliderWrapper>
                 <Grid container spacing={4} columnSpacing={6}>
                     <Grid item xs={12}>
@@ -213,8 +217,9 @@ const CardStatistics = () => {
                         <Typography sx={{ fontSize: '20px' }}>{t("Guruh to'lovlari")}</Typography>
                     </Grid>
 
-                    <Grid item xs={12} md={12} mb={10}>
-                        {loading ? <SubLoader /> : groupPays ? <GroupFinanceTable data={groupPays} updateData={getGroupPays} /> : <EmptyContent />}
+                    <Grid item xs={12} md={12} mb={10} sx={{ position: "relative" }}>
+                        {loading && <Box sx={{ position: "absolute", borderRadius: "10px", bgcolor: "rgba(0,0,0,0.1)", top: "16px", left: "24px", right: 0, bottom: 0 }}><SubLoader /></Box>}
+                        {groupPays ? <GroupFinanceTable data={groupPays} updateData={getGroupPays} /> : <EmptyContent />}
                     </Grid>
 
                     <Grid item xs={12}>
@@ -256,7 +261,7 @@ const CardStatistics = () => {
                     <LoadingButton loading={loading} onClick={() => createExpenseCategroy()} variant='contained'>{t("Saqlash")}</LoadingButton>
                 </DialogContent>
             </Dialog>
-        </ApexChartWrapper>
+        </ApexChartWrapper >
     )
 }
 

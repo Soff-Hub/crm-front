@@ -120,7 +120,7 @@ const initialState: IGroupDetailsState = {
   isGettingExams: false,
   isGettingAttendance: false,
   isGettingExamsResults: false,
-  openLeadModal: false,
+  openLeadModal: null,
   month_list: []
 }
 

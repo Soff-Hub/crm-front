@@ -6,7 +6,7 @@ import { hexToRGBA } from 'src/@core/utils/hex-to-rgba';
 import { DatePicker, CustomProvider } from 'rsuite';
 import 'rsuite/dist/rsuite.min.css';
 import locale from './uz_UZ';
-import { styled } from '@mui/material/styles'
+import { styled } from '@mui/material/styles';
 
 interface GroupStatsType {
     id: number
@@ -67,7 +67,7 @@ export default function GroupFinanceTable({ data, updateData }: any) {
 
     return (
         <Card sx={{ display: 'flex', p: '15px', gap: '5px' }}>
-            <Box className='header' sx={{ minWidth: '170px' }}>
+            <Box className='header' sx={{ width: '170px' }}>
                 <Div sx={{ mb: '5px' }}>{t('Nomi')}</Div>
                 <Box>
                     <Box sx={{ border: '1px solid #c3cccc', p: '5px', fontSize: 13 }} >{t('Guruhlar')}</Box>
@@ -77,7 +77,7 @@ export default function GroupFinanceTable({ data, updateData }: any) {
                     <Box sx={{ border: '1px solid #c3cccc', p: '5px', fontSize: 13 }} >{t("To'lanishi kerak")}</Box>
                 </Box>
             </Box>
-            <Box className='header' sx={{ minWidth: '150px' }}>
+            <Box className='header' sx={{ width: '150px' }}>
                 <Div sx={{ mb: '5px' }}>{t('Umumiy')}</Div>
                 <Box>
                     <Box sx={{ border: '1px solid #c3cccc', p: '5px', fontSize: 13 }}>{data?.result?.length}</Box>
@@ -89,7 +89,7 @@ export default function GroupFinanceTable({ data, updateData }: any) {
                     }</Box>
                 </Box>
             </Box>
-            <Box className='body' sx={{ flexGrow: 1 }}>
+            <Box className='body' sx={{ width: "calc(100% - 320px)" }}>
                 <Div sx={{ textAlign: 'end', mb: '5px', padding: '4px', borderRadius: '0' }}>
                     {/* <TextField defaultValue={`${new Date().getFullYear()}-${Number(new Date().getMonth()) + 1 < 10 ? "0" + (1 + new Date().getMonth()) : new Date().getMonth() + 1}`} style={{ border: 'none' }} size='small' type='month' onChange={(e) => updateData(e.target.value)} /> */}
                     <CustomProvider locale={locale}>
@@ -105,7 +105,7 @@ export default function GroupFinanceTable({ data, updateData }: any) {
                         />
                     </CustomProvider>
                 </Div>
-                <NavigationMenu sx={{ display: 'flex', maxWidth: '1050px', overflowX: 'auto' }}>
+                <NavigationMenu sx={{ display: 'flex', width: '100%', overflowX: 'auto' }}>
                     {
                         data?.result.map((group: any, i: number) => (
                             <Box sx={{ minWidth: '160px' }} key={i}>

@@ -187,7 +187,7 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, }: ItemTyp
                 <MenuItem onClick={() => handleClose('payment')}>{t("To'lov")}</MenuItem>
                 <MenuItem onClick={() => handleClose('export')}>{t("Boshqa guruhga ko'chirish")}</MenuItem>
                 <MenuItem onClick={() => handleClose('left')}>{t('Guruhdan chiqarish')}</MenuItem>
-                <MenuItem onClick={() => (dispatch(setOpenLeadModal(true)), handleClose('none'))}>{t('Lidlarga qaytarish')}</MenuItem>
+                <MenuItem onClick={() => (dispatch(setOpenLeadModal(studentStatusId)), handleClose('none'))}>{t('Lidlarga qaytarish')}</MenuItem>
                 <MenuItem onClick={() => handleClose('notes')}>{t('Eslatma')} +</MenuItem>
                 <MenuItem onClick={() => (handleClose('sms'), getSMSTemps())}>{t('Xabar (sms)')} +</MenuItem>
                 <MenuItem onClick={() => (setActivate(true), handleClose('none'))}>{t('Tahrirlash')}</MenuItem>
@@ -202,10 +202,10 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, }: ItemTyp
                     </Box>
                 </DialogContent>
             </Dialog>
-            <Dialog open={openLeadModal} onClose={() => (dispatch(setOpenLeadModal(false)), handleClose('none'))}>
+            <Dialog open={openLeadModal == studentStatusId} onClose={() => (dispatch(setOpenLeadModal(null)), handleClose('none'))}>
                 <DialogTitle sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                     <Typography sx={{ fontSize: '20px', textAlign: 'center' }}>{t("Lidlar bo'limga qo'shish")}</Typography>
-                    <IconifyIcon icon={'material-symbols:close'} onClick={() => (dispatch(setOpenLeadModal(false)), handleClose('none'))} />
+                    <IconifyIcon icon={'material-symbols:close'} onClick={() => (dispatch(setOpenLeadModal(null)), handleClose('none'))} />
                 </DialogTitle>
                 <DialogContent>
                     <MergeToDepartment studentId={String(studentStatusId)} />
