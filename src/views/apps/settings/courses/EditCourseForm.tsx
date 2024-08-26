@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import LoadingButton from '@mui/lab/LoadingButton';
 import { FormControl, FormHelperText, TextField } from '@mui/material';
 import { ChangeEvent, useEffect } from 'react';

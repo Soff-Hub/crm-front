@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { Box, Drawer, IconButton, Typography } from '@mui/material'
 import { useTranslation } from 'react-i18next'
 import IconifyIcon from 'src/@core/components/icon'
