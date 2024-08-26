@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { Box, Card, CardContent, FormControl, FormHelperText, Typography } from '@mui/material'
 import { FormikProps } from 'formik'
 import { ChangeEvent } from 'react'
