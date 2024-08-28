@@ -100,64 +100,13 @@ const FinanceAllNumber = () => {
         }
     }
 
-    useEffect(() => {
-        dispatch(fetchFinanceAllNumbers({ ...allNumbersParams, branch: activeBranch }))
-    }, [])
+
 
     return (
         <div >
             <Grid xs={12}>
                 <Box sx={{ display: 'flex', alignItems: 'center', marginBottom: '20px', gap: 1 }}>
                     <Typography sx={{ flexGrow: 1 }} variant="h5">{t('Umumiy raqamlar')}</Typography>
-                    {/* <SelectPicker
-                        onChange={handleChangeBranch}
-                        size='sm'
-                        data={user?.branches ? [...user?.branches?.map(el => ({ label: el.name, value: el.id })), { label: t('Barcha filiallar'), value: '' }] : []}
-                        style={{ width: 224 }}
-                        searchable={false}
-                        placeholder={t("Filialni tanlang")}
-                        value={activeBranch}
-                    />
-                    <SelectPicker
-                        onChange={(v) => handleYearDate(v, 'y')}
-                        size='sm'
-                        data={yearItems}
-                        style={{ width: 224 }}
-                        value={Number(allNumbersParams.date_year.split('-')[0])}
-                        searchable={false}
-                        placeholder={t("Yilni tanlang")}
-                    />
-                    <SelectPicker
-                        onChange={(v) => handleYearDate(v, 'm')}
-                        size='sm'
-                        data={monthItems}
-                        style={{ width: 224 }}
-                        value={allNumbersParams.date_month}
-                        searchable={false}
-                        placeholder={t("Oyni tanlang")}
-                    />
-                    <DateRangePicker showOneCalendar placement="bottomEnd" locale={{
-                        last7Days: t("Oxirgi hafta"),
-                        sunday: t("Yak"),
-                        monday: t("Du"),
-                        tuesday: t("Se"),
-                        wednesday: t("Chor"),
-                        thursday: t("Pa"),
-                        friday: t("Ju"),
-                        saturday: t("Sha"),
-                        ok: t("Saqlash"),
-                        today: t("Bugun"),
-                        yesterday: t("Kecha"),
-                        hours: t("Soat"),
-                        minutes: t("Minut"),
-                        seconds: t("Sekund"),
-                    }}
-                        format="yyyy-MM-dd"
-                        onChange={handleChangeDate}
-                        translate={'yes'}
-                        size="sm"
-                        value={date}
-                    /> */}
                 </Box>
                 {
                     numbersLoad ? <Grid container spacing={7}>

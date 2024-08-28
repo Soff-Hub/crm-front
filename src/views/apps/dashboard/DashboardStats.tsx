@@ -6,7 +6,7 @@ import { useAppDispatch, useAppSelector } from 'src/store';
 import useResponsive from 'src/@core/hooks/useResponsive';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
-import { Skeleton } from '@mui/material';
+import { Skeleton, Tooltip } from '@mui/material';
 import { updateStudentParams } from 'src/store/apps/students';
 
 export default function DashboardStats() {
@@ -37,6 +37,17 @@ export default function DashboardStats() {
         push(link)
     }
 
+    const tooltip = {
+        active_groups: "Ayni vaqtda faol guruhlar soni",
+        active_students: "Ayni vaqtda faol o'quvchilar soni",
+        debtor_users: "Qarzdor o'quvchilar soni",
+        leads_count: "Kurslarga ro'yxatdan o'tgan faol lidlar soni",
+        not_activated_students: "Sinov darsiga kelib ketgan o'quvchilar soni",
+        payment_approaching: "To'lov qilishiga 7 kundan kam qolgan o'quvchilar soni",
+        teacher_count: "O'qituvchilar soni",
+        test_students: "Sinov darsida o'qiyotgan o'quvchilar soni"
+    }
+
     return (
         <Box sx={{ display: 'grid', gap: '10px', mb: 5, gridTemplateColumns: `repeat(${isMobile ? 3 : isTablet ? 4 : 8}, 1fr)` }} >
             {
@@ -55,9 +66,11 @@ export default function DashboardStats() {
             }
             {
                 stats && !isStatsLoading ? statsData.map((_, index) => (
-                    <Box key={index} className='' sx={{ cursor: 'pointer' }} onClick={() => click(_.link)}>
-                        <CardStatsVertical title={stats?.[_.key]} stats={t(_.title)} icon={<IconifyIcon fontSize={"4rem"} icon={_.icon} />} color={_.color} />
-                    </Box>
+                    <Tooltip arrow title={tooltip[_.key]}>
+                        <Box key={index} className='' sx={{ cursor: 'pointer' }} onClick={() => click(_.link)}>
+                            <CardStatsVertical title={stats?.[_.key]} stats={t(_.title)} icon={<IconifyIcon fontSize={"4rem"} icon={_.icon} />} color={_.color} />
+                        </Box>
+                    </Tooltip>
                 )) : null
             }
         </Box>

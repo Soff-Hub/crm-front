@@ -23,11 +23,24 @@ export const fetchFinanceAllNumbers = createAsyncThunk(
   }
 )
 
+export const getExpenseCategories = createAsyncThunk('getExpenseCategories', async (params: any = '') => {
+  return (await api.get('common/finance/expense-category/list/', { params })).data
+})
+
+export const getGroupsFinance = createAsyncThunk('getGroupsFinance', async (params: any = '') => {
+  const response = await api.get(`/common/finance/group-payments/?`, { params })
+  return { ...response.data }
+})
+
 const initialState: IFinanceState = {
   isPending: false,
+  isGettingGroupsFinance: false,
   moderation_salaries: [],
+  categoriesData: [],
+  groupsFinance: [],
   all_numbers: undefined,
   numbersLoad: false,
+  isGettingExpenseCategories: false,
   allNumbersParams: {
     date_year: `${new Date().getFullYear()}-01-01`,
     date_month: today.split('-')[1],
@@ -93,6 +106,20 @@ export const financeSlice = createSlice({
       .addCase(fetchFinanceAllNumbers.fulfilled, (state, action) => {
         state.all_numbers = action.payload
         state.numbersLoad = false
+      })
+      .addCase(getExpenseCategories.pending, state => {
+        state.isGettingExpenseCategories = true
+      })
+      .addCase(getExpenseCategories.fulfilled, (state, action) => {
+        state.categoriesData = action.payload
+        state.isGettingExpenseCategories = false
+      })
+      .addCase(getGroupsFinance.pending, state => {
+        state.isGettingGroupsFinance = true
+      })
+      .addCase(getGroupsFinance.fulfilled, (state, action) => {
+        state.groupsFinance = action.payload
+        state.isGettingGroupsFinance = false
       })
   }
 })

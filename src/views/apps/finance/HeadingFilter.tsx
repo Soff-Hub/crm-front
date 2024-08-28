@@ -1,9 +1,9 @@
 import { Box } from '@mui/material';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { DateRangePicker, SelectPicker } from 'rsuite';
 import { useAppDispatch, useAppSelector } from 'src/store';
 import { useTranslation } from 'react-i18next';
-import { fetchFinanceAllNumbers, updateNumberParams } from 'src/store/apps/finance';
+import { fetchFinanceAllNumbers, getExpenseCategories, getGroupsFinance, updateNumberParams } from 'src/store/apps/finance';
 import { formatDateString } from 'src/pages/finance';
 import { AuthContext } from 'src/context/AuthContext';
 
@@ -22,11 +22,19 @@ export default function HeadingFilter() {
         if (e) {
             dispatch(updateNumberParams({ date_year: '', date_month: '' }))
             dispatch(updateNumberParams({ start_date: `${formatDateString(e[0])}`, end_date: `${formatDateString(e[1])}`, date_year: '', date_month: '' }))
-            await dispatch(fetchFinanceAllNumbers({ ...allNumbersParams, start_date: `${formatDateString(e[0])}`, end_date: `${formatDateString(e[1])}`, date_year: '', date_month: '' }))
+            await Promise.all([
+                dispatch(fetchFinanceAllNumbers({ ...allNumbersParams, start_date: `${formatDateString(e[0])}`, end_date: `${formatDateString(e[1])}`, date_year: '', date_month: '' })),
+                dispatch(getExpenseCategories({ ...allNumbersParams, start_date: `${formatDateString(e[0])}`, end_date: `${formatDateString(e[1])}`, date_year: '', date_month: '' })),
+                dispatch(getGroupsFinance({ ...allNumbersParams, start_date: `${formatDateString(e[0])}`, end_date: `${formatDateString(e[1])}`, date_year: '', date_month: '' }))
+            ])
             dispatch(updateNumberParams({ date_month: '' }))
         } else {
             dispatch(updateNumberParams({ date_year: `${new Date().getFullYear()}-01-01`, start_date: ``, end_date: `` }))
-            await dispatch(fetchFinanceAllNumbers({ ...allNumbersParams, date_year: `${new Date().getFullYear()}-01-01`, start_date: ``, end_date: `` }))
+            await Promise.all([
+                dispatch(fetchFinanceAllNumbers({ ...allNumbersParams, date_year: `${new Date().getFullYear()}-01-01`, start_date: ``, end_date: `` })),
+                dispatch(getExpenseCategories({ ...allNumbersParams, date_year: `${new Date().getFullYear()}-01-01`, start_date: ``, end_date: `` })),
+                dispatch(getGroupsFinance({ ...allNumbersParams, date_year: `${new Date().getFullYear()}-01-01`, start_date: ``, end_date: `` }))
+            ])
         }
         setDate(e)
     }
@@ -37,19 +45,35 @@ export default function HeadingFilter() {
         if (!value) {
             if (t === 'm') {
                 dispatch(updateNumberParams({ date_month: '' }))
-                await dispatch(fetchFinanceAllNumbers({ ...allNumbersParams, date_month: '', start_date: ``, end_date: `` }))
+                await Promise.all([
+                    dispatch(fetchFinanceAllNumbers({ ...allNumbersParams, date_month: '', start_date: ``, end_date: `` })),
+                    dispatch(getExpenseCategories({ ...allNumbersParams, date_month: '', start_date: ``, end_date: `` })),
+                    dispatch(getGroupsFinance({ ...allNumbersParams, date_month: '', start_date: ``, end_date: `` }))
+                ])
             } else {
                 dispatch(updateNumberParams({ date_year: `${new Date().getFullYear()}-01-01` }))
-                await dispatch(fetchFinanceAllNumbers({ ...allNumbersParams, date_month: '', start_date: ``, end_date: `` }))
+                await Promise.all([
+                    dispatch(fetchFinanceAllNumbers({ ...allNumbersParams, date_month: '', start_date: ``, end_date: `` })),
+                    dispatch(getExpenseCategories({ ...allNumbersParams, date_month: '', start_date: ``, end_date: `` })),
+                    dispatch(getGroupsFinance({ ...allNumbersParams, date_month: '', start_date: ``, end_date: `` }))
+                ])
             }
             return
         }
         if (Number(value) > 100) {
             dispatch(updateNumberParams({ date_year: `${value}-01-01` }))
-            await dispatch(fetchFinanceAllNumbers({ ...allNumbersParams, date_year: `${value}-01-01`, start_date: ``, end_date: `` }))
+            await Promise.all([
+                dispatch(fetchFinanceAllNumbers({ ...allNumbersParams, date_year: `${value}-01-01`, start_date: ``, end_date: `` })),
+                dispatch(getExpenseCategories({ ...allNumbersParams, date_year: `${value}-01-01`, start_date: ``, end_date: `` })),
+                dispatch(getGroupsFinance({ ...allNumbersParams, date_year: `${value}-01-01`, start_date: ``, end_date: `` }))
+            ])
         } else {
             dispatch(updateNumberParams({ date_month: value }))
-            await dispatch(fetchFinanceAllNumbers({ ...allNumbersParams, date_year: allNumbersParams.date_year || `${new Date().getFullYear()}-01-01`, date_month: value, start_date: ``, end_date: `` }))
+            await Promise.all([
+                dispatch(fetchFinanceAllNumbers({ ...allNumbersParams, date_year: allNumbersParams.date_year || `${new Date().getFullYear()}-01-01`, date_month: value, start_date: ``, end_date: `` })),
+                dispatch(getExpenseCategories({ ...allNumbersParams, date_year: allNumbersParams.date_year || `${new Date().getFullYear()}-01-01`, date_month: value, start_date: ``, end_date: `` })),
+                dispatch(getGroupsFinance({ ...allNumbersParams, date_year: allNumbersParams.date_year || `${new Date().getFullYear()}-01-01`, date_month: value, start_date: ``, end_date: `` })),
+            ])
         }
     }
 
@@ -57,13 +81,32 @@ export default function HeadingFilter() {
         if (branch) {
             setActiveBranch(branch)
             dispatch(updateNumberParams({ branch }))
-            await dispatch(fetchFinanceAllNumbers({ ...allNumbersParams, branch }))
+            await Promise.all([
+                dispatch(fetchFinanceAllNumbers({ ...allNumbersParams, branch })),
+                dispatch(getExpenseCategories({ ...allNumbersParams, branch })),
+                dispatch(getGroupsFinance({ ...allNumbersParams, branch })),
+            ])
         } else {
             setActiveBranch('')
             dispatch(updateNumberParams({ branch: '' }))
-            await dispatch(fetchFinanceAllNumbers({ ...allNumbersParams, branch: '' }))
+            await Promise.all([
+                dispatch(fetchFinanceAllNumbers({ ...allNumbersParams, branch: '' })),
+                dispatch(getExpenseCategories({ ...allNumbersParams, branch: '' })),
+                dispatch(getGroupsFinance({ ...allNumbersParams, branch: '' })),
+            ])
         }
     }
+
+    useEffect(() => {
+        (async function () {
+            await Promise.all([
+                dispatch(fetchFinanceAllNumbers({ ...allNumbersParams, branch: activeBranch })),
+                dispatch(getExpenseCategories({ ...allNumbersParams, branch: activeBranch })),
+                dispatch(getGroupsFinance({ ...allNumbersParams, branch: activeBranch })),
+            ])
+        })()
+    }, [])
+
     return (
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: "10px" }}>
             <SelectPicker
@@ -82,6 +125,7 @@ export default function HeadingFilter() {
                 style={{ width: 224 }}
                 value={Number(allNumbersParams.date_year.split('-')[0])}
                 searchable={false}
+                cleanable={false}
                 placeholder={t("Yilni tanlang")}
             />
             <SelectPicker

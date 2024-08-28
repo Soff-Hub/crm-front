@@ -27,6 +27,8 @@ import StatsPaymentMethods from 'src/views/apps/finance/StatsPaymentMethods'
 import FinanceAllNumber from 'src/views/apps/finance/FinanceAllNumber'
 import VideoHeader, { videoUrls } from 'src/@core/components/video-header/video-header'
 import HeadingFilter from 'src/views/apps/finance/HeadingFilter'
+import { useAppDispatch, useAppSelector } from 'src/store'
+import { getExpenseCategories, getGroupsFinance } from 'src/store/apps/finance'
 
 
 export function formatDateString(date: Date) {
@@ -38,18 +40,12 @@ export function formatDateString(date: Date) {
 }
 
 const CardStatistics = () => {
-
     const { t } = useTranslation()
-
     const [nameVal, setNameVal] = useState<string>('');
     const [open, setOpen] = useState<'create' | null>(null);
-
-
+    const { categoriesData, groupsFinance, allNumbersParams, isGettingGroupsFinance } = useAppSelector(state => state.finance)
+    const dispatch = useAppDispatch()
     const [loading, setLoading] = useState<boolean>(false);
-    const [categryData, setCategryData] = useState<any>([]);
-
-    const [groupPays, setGropPays] = useState<any>(null);
-
     const [deleteCategory, setDeleteCategory] = useState<any>(null)
     const [salaries, setSalaries] = useState<any>([])
 
@@ -135,29 +131,17 @@ const CardStatistics = () => {
         },
     ]
 
-    const getExpenseCategroy = async () => {
-        const resp = await api.get(`common/finance/expense-category/list/`)
-        setCategryData(resp.data)
-    }
-
     const createExpenseCategroy = async () => {
         setLoading(true)
         try {
             await api.post(`common/finance/expense-category/create/`, { name: nameVal })
             setOpen(null)
-            getExpenseCategroy()
+            dispatch(getExpenseCategories(""))
         } catch (err) {
             console.log(err)
         } finally {
             setLoading(false)
         }
-    }
-
-    const getGroupPays = async (date: string) => {
-        setLoading(true)
-        const resp = await api.get(`/common/finance/group-payments/?date=${date}-01`)
-        setGropPays({ ...resp.data, date })
-        setLoading(false)
     }
 
     const getSalaries = async () => {
@@ -170,7 +154,7 @@ const CardStatistics = () => {
         try {
             await api.patch(`/common/finance/expense-category/update/${deleteCategory}/`, { is_active: false })
             setDeleteCategory(null)
-            getExpenseCategroy()
+            dispatch(getExpenseCategories(""))
         } catch (err) {
             console.log(err)
         } finally {
@@ -180,16 +164,15 @@ const CardStatistics = () => {
 
     const clickSalaryDetail = (id: number) => {
         const date = salaries.find((el: any) => el.id === id)
-
         Router.push(`/finance/salary-detail/${date.date}`)
     }
 
 
     useEffect(() => {
         Promise.all([
-            getExpenseCategroy(),
-            getSalaries(),
-            getGroupPays(`${new Date().getFullYear()}-${Number(new Date().getMonth()) + 1 < 10 ? "0" + (1 + new Date().getMonth()) : new Date().getMonth() + 1}`)
+            // dispatch(getExpenseCategories({ ...allNumbersParams, branch: activeBranch })),
+            // dispatch(getGroupsFinance({ ...allNumbersParams, branch: activeBranch })),
+            getSalaries()
         ])
     }, [])
 
@@ -218,8 +201,8 @@ const CardStatistics = () => {
                     </Grid>
 
                     <Grid item xs={12} md={12} mb={10} sx={{ position: "relative" }}>
-                        {loading && <Box sx={{ position: "absolute", borderRadius: "10px", bgcolor: "rgba(0,0,0,0.1)", top: "16px", left: "24px", right: 0, bottom: 0 }}><SubLoader /></Box>}
-                        {groupPays ? <GroupFinanceTable data={groupPays} updateData={getGroupPays} /> : <EmptyContent />}
+                        {isGettingGroupsFinance && <Box sx={{ position: "absolute", borderRadius: "10px", bgcolor: "rgba(0,0,0,0.1)", top: "16px", left: "24px", right: 0, bottom: 0 }}><SubLoader /></Box>}
+                        {groupsFinance ? <GroupFinanceTable data={groupsFinance} /> : <EmptyContent />}
                     </Grid>
 
                     <Grid item xs={12}>
@@ -231,7 +214,7 @@ const CardStatistics = () => {
                     <div id='chiqimlar'></div>
 
                     <Grid item xs={12} md={12} >
-                        {categryData?.length ? <FinanceCategories deleteCategory={deleteCategory} categryData={categryData} confirmDeleteCategory={confirmDeleteCategory} loading={loading} setDeleteCategory={setDeleteCategory} /> : <EmptyContent />}
+                        {categoriesData?.length ? <FinanceCategories deleteCategory={deleteCategory} categryData={categoriesData} confirmDeleteCategory={confirmDeleteCategory} loading={loading} setDeleteCategory={setDeleteCategory} /> : <EmptyContent />}
                     </Grid>
 
                     <div id='chiqimlar'></div>

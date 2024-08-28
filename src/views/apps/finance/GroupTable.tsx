@@ -1,11 +1,8 @@
 import { Box, Card, Paper, Typography } from '@mui/material';
-import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { formatCurrency } from 'src/@core/utils/format-currency';
 import { hexToRGBA } from 'src/@core/utils/hex-to-rgba';
-import { DatePicker, CustomProvider } from 'rsuite';
 import 'rsuite/dist/rsuite.min.css';
-import locale from './uz_UZ';
 import { styled } from '@mui/material/styles';
 
 interface GroupStatsType {
@@ -54,16 +51,8 @@ export function formatDateToMMYYYY(dateString: any) {
     return `${year}-${month}`;
 }
 
-function parseMMYYYYToDate(mmYYYY: any) {
-    const [month, year] = mmYYYY.split('-').map(Number);
-    const date = new Date(year, month - 1, 1, 11, 10, 35);
-    return date;
-}
-
-export default function GroupFinanceTable({ data, updateData }: any) {
-
+export default function GroupFinanceTable({ data }: any) {
     const { t } = useTranslation()
-    const [selectedDate, setSelectedDate] = useState<any>(parseMMYYYYToDate(data.date.split('-').reverse().join('-')));
 
     return (
         <Card sx={{ display: 'flex', p: '15px', gap: '5px' }}>
@@ -85,29 +74,15 @@ export default function GroupFinanceTable({ data, updateData }: any) {
                     <Box sx={{ border: '1px solid #c3cccc', p: '5px', fontSize: 13 }}>{formatCurrency(data.total_payments)}</Box>
                     {/* <Box sx={{ border: '1px solid #c3cccc', p: '5px', fontSize: 13 }}>{formatCurrency(data?.result.reduce((acc: number, curr: any) => acc + curr.planed_payment, 0))}</Box> */}
                     <Box sx={{ border: '1px solid #c3cccc', p: '5px', fontSize: 13 }}>{
-                        formatCurrency(data?.result.map((el: any) => el?.payment_difference > 0 ? el.payment_difference : el.payment_difference * -1).reduce((acc: number, curr: any) => acc + curr, 0))
+                        formatCurrency(data?.result?.map((el: any) => el?.payment_difference > 0 ? el.payment_difference : el.payment_difference * -1).reduce((acc: number, curr: any) => acc + curr, 0))
                     }</Box>
                 </Box>
             </Box>
             <Box className='body' sx={{ width: "calc(100% - 320px)" }}>
-                <Div sx={{ textAlign: 'end', mb: '5px', padding: '4px', borderRadius: '0' }}>
-                    {/* <TextField defaultValue={`${new Date().getFullYear()}-${Number(new Date().getMonth()) + 1 < 10 ? "0" + (1 + new Date().getMonth()) : new Date().getMonth() + 1}`} style={{ border: 'none' }} size='small' type='month' onChange={(e) => updateData(e.target.value)} /> */}
-                    <CustomProvider locale={locale}>
-                        <DatePicker
-                            placeholder="Oy tanlang"
-                            value={selectedDate}
-                            onChange={async (newValue) => {
-                                await updateData(formatDateToMMYYYY(newValue))
-                                setSelectedDate(newValue);
-                            }}
-                            placement="bottomEnd"
-                            format="MM-yyyy"
-                        />
-                    </CustomProvider>
-                </Div>
+                <Div sx={{ textAlign: 'end', mb: '5px', padding: '4px', borderRadius: '0', height: "44px" }}></Div>
                 <NavigationMenu sx={{ display: 'flex', width: '100%', overflowX: 'auto' }}>
                     {
-                        data?.result.map((group: any, i: number) => (
+                        data?.result?.map((group: any, i: number) => (
                             <Box sx={{ minWidth: '160px' }} key={i}>
                                 <Box sx={{ border: '1px solid #c3cccc', p: '5px' }}>
                                     <Typography fontSize={13}>

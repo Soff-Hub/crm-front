@@ -27,6 +27,7 @@ import EditStudent from './EditStudent';
 import EmptyContent from 'src/@core/components/empty-content';
 import ExportStudent from './ExportStudent';
 import MergeToDepartment from './MergeForm';
+import { Icon } from '@iconify/react';
 
 
 interface StudentType {
@@ -184,13 +185,13 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, }: ItemTyp
                 onClose={() => handleClose('none')}
                 TransitionComponent={Fade}
             >
-                <MenuItem onClick={() => handleClose('payment')}>{t("To'lov")}</MenuItem>
-                <MenuItem onClick={() => handleClose('export')}>{t("Boshqa guruhga ko'chirish")}</MenuItem>
-                <MenuItem onClick={() => handleClose('left')}>{t('Guruhdan chiqarish')}</MenuItem>
-                <MenuItem onClick={() => (dispatch(setOpenLeadModal(studentStatusId)), handleClose('none'))}>{t('Lidlarga qaytarish')}</MenuItem>
-                <MenuItem onClick={() => handleClose('notes')}>{t('Eslatma')} +</MenuItem>
-                <MenuItem onClick={() => (handleClose('sms'), getSMSTemps())}>{t('Xabar (sms)')} +</MenuItem>
-                <MenuItem onClick={() => (setActivate(true), handleClose('none'))}>{t('Tahrirlash')}</MenuItem>
+                <MenuItem sx={{ display: "flex", alignItems: "center", gap: "7px" }} onClick={() => handleClose('payment')}><Icon fontSize={"20px"} icon={"ic:baseline-payments"} />{t("To'lov")}</MenuItem>
+                <MenuItem sx={{ display: "flex", alignItems: "center", gap: "7px" }} onClick={() => handleClose('export')}><Icon fontSize={"20px"} icon={"tabler:status-change"} />{t("Boshqa guruhga ko'chirish")}</MenuItem>
+                <MenuItem sx={{ display: "flex", alignItems: "center", gap: "7px" }} onClick={() => handleClose('left')}><Icon fontSize={"20px"} icon={"material-symbols:group-remove"} />{t('Guruhdan chiqarish')}</MenuItem>
+                <MenuItem sx={{ display: "flex", alignItems: "center", gap: "7px" }} onClick={() => (dispatch(setOpenLeadModal(studentStatusId)), handleClose('none'))}><Icon fontSize={"20px"} icon={"mdi:leads"} />{t('Lidlarga qaytarish')}</MenuItem>
+                <MenuItem sx={{ display: "flex", alignItems: "center", gap: "7px" }} onClick={() => handleClose('notes')}><Icon fontSize={"20px"} icon={"material-symbols:note-alt"} />{t('Eslatma')} +</MenuItem>
+                <MenuItem sx={{ display: "flex", alignItems: "center", gap: "7px" }} onClick={() => (handleClose('sms'), getSMSTemps())}><Icon fontSize={"20px"} icon={"ic:baseline-message"} />{t('Xabar (sms)')} +</MenuItem>
+                <MenuItem sx={{ display: "flex", alignItems: "center", gap: "7px" }} onClick={() => (setActivate(true), handleClose('none'))}><Icon fontSize={"20px"} icon={"ri:file-edit-fill"} />{t('Tahrirlash')}</MenuItem>
             </Menu>
 
             <Dialog open={openLeft} onClose={() => setOpenLeft(false)}>
