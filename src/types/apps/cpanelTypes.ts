@@ -36,6 +36,7 @@ export type ClientPaymentType = {
   expiration_date: string | null
   is_demo: boolean
   next: string | null
+  sms_data: string | null
   previous: string | null
   results: {
     id: number

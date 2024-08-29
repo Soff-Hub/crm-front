@@ -106,7 +106,7 @@ export default function CompanyList() {
         {
             xs: 0.2,
             title: t("SMS soni"),
-            dataIndex: 'sms_limit'
+            dataIndex: 'sms_data'
         },
         {
             xs: 0.2,

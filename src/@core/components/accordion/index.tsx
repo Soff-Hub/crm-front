@@ -14,7 +14,7 @@ import showResponseError from 'src/@core/utils/show-response-error'
 import useSMS from 'src/hooks/useSMS'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch, useAppSelector } from 'src/store'
-import { fetchDepartmentList } from 'src/store/apps/leads'
+import { fetchDepartmentList, setOpenLid, setSectionId } from 'src/store/apps/leads'
 import DepartmentSendSmsForm from 'src/views/apps/lids/departmentItem/DepartmentSendSmsForm'
 import EditDepartmentItemForm from 'src/views/apps/lids/departmentItem/EditDepartmentItemForm'
 
@@ -22,6 +22,7 @@ interface AccordionProps {
     title?: string
     onView: () => void
     item: any
+    parentId: any
 }
 
 const Menu = styled(MuiMenu)<MenuProps>(({ theme }) => ({
@@ -31,7 +32,7 @@ const Menu = styled(MuiMenu)<MenuProps>(({ theme }) => ({
 }))
 
 
-export default function AccordionCustom({ onView, item }: AccordionProps) {
+export default function AccordionCustom({ onView, parentId, item }: AccordionProps) {
     const [open, setOpen] = useState<boolean>(false)
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
     const [loading, setLoading] = useState<boolean>(false)
@@ -134,6 +135,12 @@ export default function AccordionCustom({ onView, item }: AccordionProps) {
         setCount(item.student_count)
     }, [item.student_count])
 
+    const newLids = () => {
+        dispatch(setOpenLid(parentId))
+        dispatch(setSectionId(item?.id))
+        setAnchorEl(null)
+    }
+
     return (
         <Card sx={{ width: '100%', boxShadow: 'rgba(148, 163, 184, 0.1) 0px 3px 12px' }} id={item.id}>
             <Box sx={{ width: '100%', display: 'flex', alignItems: 'center' }}>
@@ -202,6 +209,10 @@ export default function AccordionCustom({ onView, item }: AccordionProps) {
                             <MenuItem onClick={() => (setOpenDialog('edit'), setAnchorEl(null))} sx={{ '& svg': { mr: 2 } }}>
                                 <IconifyIcon icon='mdi:edit' fontSize={20} />
                                 {t("Tahrirlash")}
+                            </MenuItem>
+                            <MenuItem onClick={() => newLids()} sx={{ '& svg': { mr: 2 } }}>
+                                <IconifyIcon icon='mdi:leads' fontSize={20} />
+                                {t("Yangi lid qo'shish")}
                             </MenuItem>
                             <MenuItem onClick={() => setOpenDialog('delete')} sx={{ '& svg': { mr: 2 } }}>
                                 <IconifyIcon icon='mdi:delete' fontSize={20} />

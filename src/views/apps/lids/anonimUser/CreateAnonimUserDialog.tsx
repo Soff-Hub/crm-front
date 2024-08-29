@@ -1,10 +1,9 @@
 
 import { Dialog, DialogContent, DialogTitle, IconButton, Typography } from '@mui/material'
-import React from 'react'
 import { useTranslation } from 'react-i18next'
 import IconifyIcon from 'src/@core/components/icon'
 import { useAppDispatch, useAppSelector } from 'src/store'
-import { setAddSource, setOpenLid } from 'src/store/apps/leads'
+import { setAddSource, setOpenLid, setSectionId } from 'src/store/apps/leads'
 import CreateAnonimUserForm from './CreateAnonimUserForm'
 
 
@@ -19,9 +18,8 @@ export default function CreateAnonimDialogDialog({ }: Props) {
     const closeCreateLid = () => {
         dispatch(setOpenLid(null))
         dispatch(setAddSource(false))
+        dispatch(setSectionId(null))
     }
-
-
 
     return (
         <div>

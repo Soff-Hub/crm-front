@@ -66,7 +66,7 @@ export default function HomeKanban({ title, items, id }: Props) {
                 }
                 {
                     items.map(lead => (
-                        <AccordionCustom item={lead} key={lead.id} onView={() => null} />
+                        <AccordionCustom parentId={id} item={lead} key={lead.id} onView={() => null} />
                     ))
                 }
             </Box>

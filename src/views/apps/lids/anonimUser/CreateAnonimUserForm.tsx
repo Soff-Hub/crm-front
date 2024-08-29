@@ -5,7 +5,7 @@ import { FormControl, FormHelperText, InputLabel, MenuItem, Select, TextField } 
 import LoadingButton from '@mui/lab/LoadingButton';
 import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from 'src/store';
-import { createDepartmentStudent, fetchDepartmentList, setAddSource } from 'src/store/apps/leads';
+import { createDepartmentStudent, fetchDepartmentList, setAddSource, setOpenItem, setSectionId } from 'src/store/apps/leads';
 import IconifyIcon from 'src/@core/components/icon';
 import PhoneInput from 'src/@core/components/phone-input';
 import { reversePhone } from 'src/@core/components/phone-input/format-phone-number';
@@ -19,7 +19,7 @@ export default function CreateAnonimUserForm({ }: Props) {
 
     const { t } = useTranslation()
     const dispatch = useAppDispatch()
-    const { loading, leadData, openLid, sourceData } = useAppSelector((state) => state.leads)
+    const { sectionId, loading, leadData, openLid, sourceData } = useAppSelector((state) => state.leads)
 
     const validationSchema = Yup.object({
         department: Yup.string().required("Bo'lim tanlang"),
@@ -43,7 +43,7 @@ export default function CreateAnonimUserForm({ }: Props) {
             is_active: boolean
         } | null
     } = {
-        department: '',
+        department: sectionId || '',
         source: '',
         first_name: '',
         phone: '',
@@ -59,8 +59,9 @@ export default function CreateAnonimUserForm({ }: Props) {
             if (resp.meta.requestStatus === 'rejected') {
                 formik.setErrors(resp.payload)
             } else {
-                await dispatch(fetchDepartmentList())
                 formik.resetForm()
+                dispatch(setSectionId(null))
+                await dispatch(fetchDepartmentList())
             }
         }
     });
@@ -95,6 +96,10 @@ export default function CreateAnonimUserForm({ }: Props) {
                     {
                         leadData.some((el: any) => el.id === openLid) ? leadData?.find((el: any) => el.id === openLid)?.children?.map((lead: any) => <MenuItem key={lead.id} value={Number(lead.id)}>{lead.name}</MenuItem>) : <></>
                     }
+                    <MenuItem sx={{ fontWeight: 600 }} onClick={() => dispatch(setOpenItem(openLid))}>
+                        {t("Yangi yaratish")}
+                        <IconifyIcon icon={'ion:add-sharp'} />
+                    </MenuItem>
                 </Select>
                 {!!errors.department && touched.department && <FormHelperText error={true}>{formik.errors.department}</FormHelperText>}
             </FormControl>
