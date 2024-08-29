@@ -1,14 +1,15 @@
 import { Grid } from '@mui/material';
-import React from 'react';
 import ApexChartWrapper from 'src/@core/styles/libs/react-apexcharts';
 import FinanceAllNumber from '../finance/FinanceAllNumber';
 import StatsPaymentMethods from '../finance/StatsPaymentMethods';
-import CardStatisticsLiveVisitors from 'src/views/ui/cards/statistics/CardStatisticsLiveVisitors'
+import CardStatisticsLiveVisitors from 'src/views/ui/cards/statistics/CardStatisticsLiveVisitors';
+import HeadingFilter from '../finance/HeadingFilter';
 
 const DashboardNumbers = () => {
     return (
         <div style={{ marginTop: '50px' }}>
             <ApexChartWrapper>
+                <HeadingFilter />
                 <Grid container spacing={4} columnSpacing={6}>
                     <Grid item xs={12}>
                         <FinanceAllNumber />
