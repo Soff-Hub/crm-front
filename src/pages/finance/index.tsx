@@ -28,7 +28,7 @@ import FinanceAllNumber from 'src/views/apps/finance/FinanceAllNumber'
 import VideoHeader, { videoUrls } from 'src/@core/components/video-header/video-header'
 import HeadingFilter from 'src/views/apps/finance/HeadingFilter'
 import { useAppDispatch, useAppSelector } from 'src/store'
-import { getExpenseCategories, getGroupsFinance } from 'src/store/apps/finance'
+import { getExpenseCategories } from 'src/store/apps/finance'
 
 
 export function formatDateString(date: Date) {
@@ -125,7 +125,7 @@ const CardStatistics = () => {
         },
         {
             xs: 0.2,
-            title: t("Tasdiqlangan sana"),
+            title: t("Tahrirlangan sana"),
             dataIndex: 'checked_date',
             render: (date) => date?.split('-').reverse().join('/')
         },

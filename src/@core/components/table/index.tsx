@@ -84,7 +84,7 @@ export default function DataTable({ columns, loading = false, data, minWidth, ma
                   </Box>
                 </Box>
               ))}
-              {rowClick && <Box sx={{ width: '75%', height: '36px', position: 'absolute' }} onClick={() => handleClick(item.id)}></Box>}
+              {rowClick && <Box sx={{ width: '75%', zIndex: 1, height: '36px', position: 'absolute' }} onClick={() => handleClick(item.id)}></Box>}
             </Box>
           )
         }) : <EmptyContent />
