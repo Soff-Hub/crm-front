@@ -11,7 +11,7 @@ import { Box, Button, Chip, Dialog, DialogContent, DialogTitle, TextField, Typog
 import GroupFinanceTable from 'src/views/apps/finance/GroupTable'
 import IconifyIcon from 'src/@core/components/icon'
 import 'react-datepicker/dist/react-datepicker.css'
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { customTableDataProps } from 'src/@core/components/lid-table'
 import DataTable from 'src/@core/components/table'
@@ -29,6 +29,8 @@ import VideoHeader, { videoUrls } from 'src/@core/components/video-header/video-
 import HeadingFilter from 'src/views/apps/finance/HeadingFilter'
 import { useAppDispatch, useAppSelector } from 'src/store'
 import { getExpenseCategories } from 'src/store/apps/finance'
+import getMonthName from 'src/@core/utils/getMonthName'
+import { AuthContext } from 'src/context/AuthContext'
 
 
 export function formatDateString(date: Date) {
@@ -44,6 +46,7 @@ const CardStatistics = () => {
     const [nameVal, setNameVal] = useState<string>('');
     const [open, setOpen] = useState<'create' | null>(null);
     const { categoriesData, groupsFinance, allNumbersParams, isGettingGroupsFinance } = useAppSelector(state => state.finance)
+    const { user } = useContext(AuthContext)
     const dispatch = useAppDispatch()
     const [loading, setLoading] = useState<boolean>(false);
     const [deleteCategory, setDeleteCategory] = useState<any>(null)
@@ -170,11 +173,11 @@ const CardStatistics = () => {
 
     useEffect(() => {
         Promise.all([
-            // dispatch(getExpenseCategories({ ...allNumbersParams, branch: activeBranch })),
-            // dispatch(getGroupsFinance({ ...allNumbersParams, branch: activeBranch })),
             getSalaries()
         ])
     }, [])
+
+    const groupsFilterTitle = user?.branches?.find(item => item.id == allNumbersParams.branch)
 
     return (
         <ApexChartWrapper>
@@ -197,7 +200,15 @@ const CardStatistics = () => {
 
                     <div id='tushumlar'></div>
                     <Grid item xs={12}>
-                        <Typography sx={{ fontSize: '20px' }}>{t("Guruh to'lovlari")}</Typography>
+                        <Typography sx={{ fontSize: '20px' }}>
+                            {t("Guruh to'lovlari")}{"  "}
+                            {allNumbersParams.start_date ? (
+                                (`(${allNumbersParams?.start_date}/${allNumbersParams.end_date}  ${groupsFilterTitle?.name || t("Barcha filiallar")})`)
+                            ) : (
+                                `(${allNumbersParams?.date_year.slice(0, 4)}-yil ${getMonthName(allNumbersParams?.date_month)} ${groupsFilterTitle?.name || t("Barcha filiallar")})`
+                            )}
+                        </Typography>
+
                     </Grid>
 
                     <Grid item xs={12} md={12} mb={10} sx={{ position: "relative" }}>

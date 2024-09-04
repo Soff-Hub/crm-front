@@ -195,7 +195,7 @@ const UserViewSecurity = ({ groupData }: any) => {
                           <Typography sx={{ fontSize: '12px' }}>{group.teacher.first_name}</Typography>
                         </Box>
                         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: ' flex-end', gap: '5px' }}>
-                          <Typography sx={{ fontSize: '12px' }}>{group.date}</Typography>
+                          <Typography sx={{ fontSize: '12px' }}>{group.added_at} / {group.deleted_at}</Typography>
                           <Typography sx={{ fontSize: '12px' }}>Juft kunlar - {group.start_at}</Typography>
                         </Box>
                       </CardContent>

@@ -37,6 +37,8 @@ interface StudentType {
         phone: string
         balance: number
         added_at: string
+        lesson_count: null | number
+        deleted_at: string
         activated_at: string
         created_at: string
         comment: {
@@ -76,7 +78,7 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, }: ItemTyp
     const dispatch = useAppDispatch()
 
     const { student, id: studentStatusId } = item
-    const { first_name, phone, added_at, balance, comment, id } = student
+    const { first_name, phone, lesson_count, added_at, deleted_at, balance, comment, id } = student
     const { push, query } = useRouter()
     const { user } = useContext(AuthContext)
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -147,10 +149,18 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, }: ItemTyp
                         <Typography variant='body2' fontSize={12}>{t('Balans')}</Typography>
                         <Typography fontSize={12}>{`${balance} so'm`}</Typography>
                     </Box>
-                    <Box py={1} borderTop={'1px solid #c3cccc'}>
-                        <Typography variant='body2' fontSize={12}>{t("Talaba qo'shilgan sana")}</Typography>
-                        <Typography fontSize={12}>{formatDateTime(added_at)}</Typography>
-                    </Box>
+                    {lesson_count && <Box py={1} borderTop={'1px solid #c3cccc'}>
+                        <Typography variant='body2' fontSize={12}>{t("To'lovgacha qolgan darslar")}</Typography>
+                        <Typography fontSize={12}>{`${lesson_count} ta`}</Typography>
+                    </Box>}
+                    {studentsQueryParams.status == "archive" ? <Box py={1} borderTop={'1px solid #c3cccc'}>
+                        <Typography variant='body2' fontSize={12}>{t("Talaba qo'shilgan va o'chirilgan sana")}</Typography>
+                        <Typography fontSize={12}>{added_at} / {deleted_at}</Typography>
+                    </Box> :
+                        <Box py={1} borderTop={'1px solid #c3cccc'}>
+                            <Typography variant='body2' fontSize={12}>{t("Talaba qo'shilgan sana")}</Typography>
+                            <Typography fontSize={12}>{added_at}</Typography>
+                        </Box>}
                     {comment && <Box py={1} borderTop={'1px solid #c3cccc'}>
                         <Typography variant='body2' fontSize={12}>{t('Eslatma')}</Typography>
                         <Typography fontSize={12} fontStyle={'italic'}>{comment.comment}</Typography>

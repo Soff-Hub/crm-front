@@ -24,9 +24,9 @@ export default function ExportStudent({ id, modalRef, setModalRef }: { id: any, 
     const { query } = useRouter()
 
     const formik = useFormik({
-        initialValues: { added_at: today, new_group: '', status: "new" },
+        initialValues: { new_group: '' },
         validationSchema: () => Yup.object({
-            added_at: Yup.string().required(t("Maydonni to'ldiring") as string),
+            // added_at: Yup.string().required(t("Maydonni to'ldiring") as string),
             new_group: Yup.string().required(t("Maydonni to'ldiring") as string)
         }),
         onSubmit: async (values) => {
@@ -96,7 +96,7 @@ export default function ExportStudent({ id, modalRef, setModalRef }: { id: any, 
                         <FormHelperText error>{!!formik.errors.new_group && formik.touched.new_group && formik.errors.new_group}</FormHelperText>
                     </FormControl>
 
-                    <FormControl sx={{ maxWidth: '100%', mb: 3 }} fullWidth>
+                    {/* <FormControl sx={{ maxWidth: '100%', mb: 3 }} fullWidth>
                         <InputLabel error={!!formik.errors.status && formik.touched.status} size='small' id='demo-simple-select-outlined-label'>Guruhdagi holati</InputLabel>
                         <Select
                             error={!!formik.errors.status && formik.touched.status}
@@ -133,7 +133,7 @@ export default function ExportStudent({ id, modalRef, setModalRef }: { id: any, 
                             type='date'
                         />
                         <FormHelperText error>{!!formik.errors.added_at && formik.touched.added_at && formik.errors.added_at}</FormHelperText>
-                    </FormControl>
+                    </FormControl> */}
 
 
                     <DialogActions sx={{ justifyContent: 'center' }}>

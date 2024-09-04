@@ -5,7 +5,6 @@ import { useState, useEffect, ReactNode } from 'react'
 import { useRouter } from 'next/router'
 import { useAppDispatch } from 'src/store'
 import { useAuth } from 'src/hooks/useAuth'
-import { fetchNotification } from 'src/store/apps/user'
 
 interface Props {
   children: ReactNode
@@ -23,9 +22,9 @@ const WindowWrapper = ({ children }: Props) => {
       if (typeof window !== 'undefined') {
         setWindowReadyFlag(true)
       }
-      if (auth.user && auth.user.role && !window.location.hostname.split('.').includes('c-panel')) {
-        (async function () { await dispatch(fetchNotification()) })()
-      }
+      // if (auth.user && auth.user.role && !window.location.hostname.split('.').includes('c-panel')) {
+      // (async function () { await dispatch(fetchNotification()) })()
+      // }
     },
 
     // eslint-disable-next-line react-hooks/exhaustive-deps

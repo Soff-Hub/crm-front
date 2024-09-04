@@ -105,6 +105,7 @@ export default function HeadingFilter() {
                 dispatch(getGroupsFinance({ ...allNumbersParams, branch: activeBranch })),
             ])
         })()
+        dispatch(updateNumberParams({ branch: activeBranch }))
     }, [])
 
     return (

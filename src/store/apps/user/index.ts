@@ -87,6 +87,9 @@ export const appUsersSlice = createSlice({
     addUserData: (state, action) => {
       state.data = action.payload
     },
+    setNotifications: (state, action) => {
+      state.notifications = action.payload
+    },
     addOpenedUser: (state, action) => {
       state.total = action.payload
     },
@@ -116,5 +119,6 @@ export const appUsersSlice = createSlice({
   }
 })
 
-export const { addUserData, addOpenedUser, setCompanyInfo, setDepartmentsState } = appUsersSlice.actions
+export const { setNotifications, addUserData, addOpenedUser, setCompanyInfo, setDepartmentsState } =
+  appUsersSlice.actions
 export default appUsersSlice.reducer
