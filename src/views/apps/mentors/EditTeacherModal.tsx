@@ -1,7 +1,6 @@
 // @ts-nocheck
 import {
     Box,
-    Checkbox,
     FormControlLabel,
     FormHelperText,
     FormLabel,
@@ -60,7 +59,7 @@ export default function EditTeacherModal() {
         activated_at: teacherData?.activated_at,
         gender: teacherData?.gender,
         image: teacherData?.image,
-        is_fixed_salary: teacherData?.is_fixed_salary,
+        // is_fixed_salary: teacherData?.is_fixed_salary,
         password: "",
         percentage: teacherData?.percentage,
         amount: teacherData?.amount
@@ -74,7 +73,7 @@ export default function EditTeacherModal() {
                 birth_date: Yup.string().nullable(),
                 activated_at: Yup.string().required("Ishga olingan sanani kiriting"),
                 gender: Yup.string().required("Jinsini tanlang"),
-                is_fixed_salary: Yup.string().required("Jinsini tanlang"),
+                // is_fixed_salary: Yup.string().required("Jinsini tanlang"),
                 // image: Yup.string(),
                 password: Yup.string(),
                 amount: Yup.string().when("percentage", {
@@ -217,21 +216,21 @@ export default function EditTeacherModal() {
                         {(!!formik.errors.activated_at && formik.touched.activated_at) && formik.errors.activated_at}
                     </FormHelperText>
                 </FormControl>
-                <FormControlLabel
+                {/* <FormControlLabel
                     name="is_fixed_salary"
                     checked={formik.values.is_fixed_salary}
                     onChange={handleCheckboxChange}
                     onBlur={formik.handleBlur}
                     control={<Checkbox />}
                     label={t("O'zgarmas oylik sifatida")}
-                />
+                /> */}
                 <Box sx={{ display: "flex", gap: "20px" }}>
                     <FormControl sx={{ width: '100%' }}>
                         <TextField
                             type='number'
                             label={t("Foiz ulushi")}
                             name='percentage'
-                            disabled={formik.values.is_fixed_salary}
+                            // disabled={formik.values.is_fixed_salary}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
                             value={formik.values.percentage}
@@ -247,7 +246,7 @@ export default function EditTeacherModal() {
                             name='amount'
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
-                            disabled={!formik.values.is_fixed_salary}
+                            // disabled={!formik.values.is_fixed_salary}
                             value={formik.values.amount}
                             error={!!formik.errors.amount && formik.touched.amount} />
                         <FormHelperText error>

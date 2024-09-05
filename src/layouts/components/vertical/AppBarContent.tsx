@@ -2,7 +2,6 @@
 import Box from '@mui/material/Box'
 import IconButton from '@mui/material/IconButton'
 import Stomp from "stompjs"
-import SockJS from "sockjs-client"
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
 
@@ -49,26 +48,20 @@ const AppBarContent = (props: Props) => {
   const [stompClient, setStompClient] = useState<Stomp.Client | null>(null)
 
   useEffect(() => {
-    const socket = new SockJS('ws://192.168.1.42:8002/ws/')
-    const client = Stomp.over(socket)
-
-    client.connect({}, () => {
-      client.subscribe(`notifications/${user?.id}/`, (message) => {
-        const data = JSON.parse(message.body)
-        dispatch(setNotifications(data))
-      })
-    })
-
-    setStompClient(client)
-
-    return () => {
-      client.disconnect(() => {
-        console.log('Disconnected successfully')
-      })
+    const socket = new WebSocket(`wss://test.api-soffcrm.uz/ws/notifications/${user?.id}/`)
+    socket.onopen = () => {
+      console.log('WebSocket connection established')
+      socket.send(JSON.stringify({ subscribe: `notifications/${user?.id}/` }))
     }
-  }, [])
+    socket.onmessage = (event) => {
+      const data = JSON.parse(event.data)
+      dispatch(setNotifications(data?.notifications?.length || 0))
+    }
+    return () => {
+      socket.close()
+    }
+  }, [user?.id])
 
-  console.log(notifications);
 
   return (
     <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -94,7 +87,7 @@ const AppBarContent = (props: Props) => {
       <Box className='actions-right' sx={{ display: 'flex', alignItems: 'center' }}>
         <LanguageDropdown settings={settings} saveSettings={saveSettings} />
         <ModeToggler settings={settings} saveSettings={saveSettings} />
-        <NotificationDropdown settings={settings} notifications={notifications} />
+        <NotificationDropdown settings={settings} />
         <UserDropdown settings={settings} />
       </Box>
     </Box>

@@ -63,6 +63,8 @@ export const appUsersSlice = createSlice({
   initialState: {
     data: [],
     notifications: [],
+    isGettingNotification: false,
+    notificationsCount: 0,
     total: null,
     params: {},
     allData: [],
@@ -88,7 +90,7 @@ export const appUsersSlice = createSlice({
       state.data = action.payload
     },
     setNotifications: (state, action) => {
-      state.notifications = action.payload
+      state.notificationsCount = action.payload
     },
     addOpenedUser: (state, action) => {
       state.total = action.payload
@@ -113,8 +115,15 @@ export const appUsersSlice = createSlice({
       state.params = action.payload.params
       state.allData = action.payload.allData
     })
+    builder.addCase(fetchNotification.pending, (state, action) => {
+      state.isGettingNotification = true
+    })
     builder.addCase(fetchNotification.fulfilled, (state, action) => {
       state.notifications = action.payload
+      state.isGettingNotification = false
+    })
+    builder.addCase(fetchNotification.rejected, (state, action) => {
+      state.isGettingNotification = false
     })
   }
 })

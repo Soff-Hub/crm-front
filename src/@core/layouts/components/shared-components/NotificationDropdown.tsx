@@ -27,16 +27,21 @@ import CustomAvatar from 'src/@core/components/mui/avatar'
 
 import { useRouter } from 'next/router'
 import { useTranslation } from 'react-i18next'
+import { useAppDispatch, useAppSelector } from 'src/store'
+import { fetchNotification } from 'src/store/apps/user'
+import SubLoader from 'src/views/apps/loaders/SubLoader'
+import EmptyContent from 'src/@core/components/empty-content'
 
 export type NotificationsType = {
-  created_at: string
-  title: string
-  body: string
+  date: string
+  notification_data: {
+    title: string
+    body: string
+  }
 }
 
 interface Props {
   settings: Settings
-  notifications: NotificationsType[]
 }
 
 // ** Styled Menu component
@@ -104,11 +109,12 @@ const ScrollWrapper = ({ children, hidden }: { children: ReactNode; hidden: bool
 
 const NotificationDropdown = (props: Props) => {
   // ** Props
-  const { settings, notifications } = props
+  const { settings } = props
   const { t } = useTranslation()
-
+  const { notifications, notificationsCount, isGettingNotification } = useAppSelector(state => state.user)
   // ** States
   const [anchorEl, setAnchorEl] = useState<(EventTarget & Element) | null>(null)
+  const dispatch = useAppDispatch()
 
   // ** Hook
   const hidden = useMediaQuery((theme: Theme) => theme.breakpoints.down('lg'))
@@ -117,15 +123,14 @@ const NotificationDropdown = (props: Props) => {
   const { direction } = settings
   const router = useRouter()
 
-  const handleDropdownOpen = (event: SyntheticEvent) => {
+  const handleDropdownOpen = async (event: SyntheticEvent) => {
     setAnchorEl(event.currentTarget)
+    await dispatch(fetchNotification())
   }
 
   const handleDropdownClose = () => {
     setAnchorEl(null)
   }
-
-  if (!notifications.length) { return null }
 
   return (
     <Fragment>
@@ -133,8 +138,8 @@ const NotificationDropdown = (props: Props) => {
         <Badge
           color='error'
           variant='standard'
-          badgeContent={notifications.length}
-          invisible={!notifications.length}
+          badgeContent={notificationsCount}
+          invisible={!notificationsCount}
           sx={{
             '& .MuiBadge-badge': { top: 4, right: 4, boxShadow: theme => `0 0 0 2px ${theme.palette.background.paper}` }
           }}
@@ -166,20 +171,21 @@ const NotificationDropdown = (props: Props) => {
           </Box>
         </MenuItem>
         <ScrollWrapper hidden={hidden}>
-          {notifications.map((notification: NotificationsType, index: number) => (
-            <MenuItem key={index} onClick={handleDropdownClose}>
-              <Box sx={{ width: '100%', display: 'flex', alignItems: 'center' }}>
-                {/* <RenderAvatar notification={notification} /> */}
-                <Box sx={{ mx: 4, flex: '1 1', display: 'flex', overflow: 'hidden', flexDirection: 'column' }}>
-                  <MenuItemTitle>{notification.title}</MenuItemTitle>
-                  <MenuItemSubtitle variant='body2'>{notification?.body}</MenuItemSubtitle>
+          {isGettingNotification ? <SubLoader /> :
+            notifications.length ? notifications.map((notification: NotificationsType, index: number) => (
+              <MenuItem key={index} onClick={handleDropdownClose}>
+                <Box sx={{ width: '100%', display: 'flex', alignItems: 'center' }}>
+                  {/* <RenderAvatar notification={notification} /> */}
+                  <Box sx={{ mx: 4, flex: '1 1', display: 'flex', overflow: 'hidden', flexDirection: 'column' }}>
+                    <MenuItemTitle>{notification?.notification_data.title}</MenuItemTitle>
+                    <MenuItemSubtitle variant='body2'>{notification?.notification_data?.body}</MenuItemSubtitle>
+                  </Box>
+                  <Typography variant='caption' sx={{ color: 'text.disabled' }}>
+                    {notification?.date}
+                  </Typography>
                 </Box>
-                <Typography variant='caption' sx={{ color: 'text.disabled' }}>
-                  {notification?.created_at}
-                </Typography>
-              </Box>
-            </MenuItem>
-          ))}
+              </MenuItem>
+            )) : <EmptyContent />}
         </ScrollWrapper>
         {notifications.length > 5 &&
           <MenuItem

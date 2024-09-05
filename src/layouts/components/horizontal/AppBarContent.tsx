@@ -12,7 +12,7 @@ import LanguageDropdown from 'src/@core/layouts/components/shared-components/Lan
 //   NotificationsType
 // } from 'src/@core/layouts/components/shared-components/NotificationDropdown'
 import BranchDropdown from 'src/@core/layouts/components/shared-components/BranchDropdown'
-import { useContext } from 'react'
+import { useContext, useEffect } from 'react'
 import { AuthContext } from 'src/context/AuthContext'
 import IconifyIcon from 'src/@core/components/icon'
 import { Button } from '@mui/material'
@@ -22,6 +22,15 @@ import GlobalPaymentModal from 'src/views/apps/students/GlobalPaymentModal'
 import VideoModal from 'src/@core/components/video-header'
 import { useTranslation } from 'react-i18next'
 import NotificationDropdown from 'src/@core/layouts/components/shared-components/NotificationDropdown'
+// ** Icon Imports
+
+// ** Type Import
+
+// ** Components
+// import NotificationDropdown, {
+//   NotificationsType
+// } from 'src/@core/layouts/components/shared-components/NotificationDropdown'
+import { setNotifications } from 'src/store/apps/user'
 
 
 interface Props {
@@ -35,12 +44,29 @@ const AppBarContent = (props: Props) => {
   const { settings, saveSettings } = props
   const { user } = useContext(AuthContext)
   const dispatch = useAppDispatch()
-  const { notifications } = useAppSelector(state => state.user)
+  const { notifications, notificationsCount } = useAppSelector(state => state.user)
   const { t } = useTranslation()
 
   function clickGlobalPay() {
     dispatch(setGlobalPay(true))
   }
+
+  useEffect(() => {
+    const socket = new WebSocket(`wss://test.api-soffcrm.uz/ws/notifications/${user?.id}/`)
+    socket.onopen = () => {
+      console.log('WebSocket connection established')
+      socket.send(JSON.stringify({ subscribe: `notifications/${user?.id}/` }))
+    }
+    socket.onmessage = (event) => {
+      const data = JSON.parse(event.data)
+      dispatch(setNotifications(data?.notifications.length || 0))
+    }
+    return () => {
+      socket.close()
+    }
+  }, [user?.id])
+
+  console.log(notificationsCount)
 
 
   return (
@@ -61,7 +87,7 @@ const AppBarContent = (props: Props) => {
       <LanguageDropdown settings={settings} saveSettings={saveSettings} />
 
       <ModeToggler settings={settings} saveSettings={saveSettings} />
-      <NotificationDropdown settings={settings} notifications={notifications} />
+      <NotificationDropdown settings={settings} />
       <UserDropdown settings={settings} />
       <GlobalPaymentModal />
     </Box >

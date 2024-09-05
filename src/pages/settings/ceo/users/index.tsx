@@ -39,7 +39,6 @@ export default function GroupsPage() {
     const { getEmployeeById } = useEmployee()
     const { employees, is_pending, employees_count, queryParams, roles } = useAppSelector(state => state.settings)
     const dispatch = useAppDispatch()
-    console.log(employees);
 
 
     const RowOptions = ({ id }: { id: number | string }) => {
@@ -67,7 +66,7 @@ export default function GroupsPage() {
             dispatch(disablePage(true))
             try {
                 await api.delete(`auth/delete/employee/${id}/`)
-                toast.success("Hodim muvaffaqiyatli o'chirildi")
+                toast.success("Xodim muvaffaqiyatli o'chirildi")
                 dispatch(fetchEmployees(queryParams))
             } catch (err: any) {
                 if (err?.response?.data) {

@@ -61,8 +61,8 @@ export default function Notifications() {
                 sx={{ display: 'flex', justifyContent: 'space-between', marginBottom: '5px' }}
             >
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    <IconButton color='primary'>
-                        <IconifyIcon icon={'ep:back'} style={{ cursor: 'pointer' }} onClick={back} />
+                    <IconButton onClick={back} color='primary'>
+                        <IconifyIcon icon={'ep:back'} style={{ cursor: 'pointer' }} />
                     </IconButton>
                     <Typography variant='h5'>{t("Xabarnomalar")}</Typography>
                 </Box>
@@ -71,9 +71,12 @@ export default function Notifications() {
                 {notifications?.map((element: NotificationsType) => (
                     <Box sx={{ bgcolor: "#F8EFE0", p: 3, borderRadius: "10px" }}>
                         <Box sx={{ flex: '1 1', display: 'flex', fontSize: "12px", overflow: 'hidden', flexDirection: 'column' }}>
-                            <MenuItemTitle>{element.title}</MenuItemTitle>
-                            <MenuItemSubtitle variant='body2'>{element.body}</MenuItemSubtitle>
+                            <MenuItemTitle>{element.notification_data.title}</MenuItemTitle>
+                            <MenuItemSubtitle variant='body2'>{element.notification_data.body}</MenuItemSubtitle>
                         </Box>
+                        <Typography variant='caption' sx={{ color: 'text.disabled' }}>
+                            {element.date}
+                        </Typography>
                     </Box>
                 ))}
             </NotificationContainer >
