@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react';
 import * as Yup from "yup";
 import { useFormik } from 'formik';
 import { FormControl, FormHelperText, InputLabel, MenuItem, Select, TextField } from '@mui/material';
@@ -51,7 +51,7 @@ export default function AddToGroupForm({ item, reRender, groups, setLoading }: P
                 reRender(false)
             } catch (err: any) {
                 setLoading(false)
-                toast.error(JSON.stringify(err.response.data), { position: 'bottom-center' })
+                toast.error(JSON.stringify(err.response.data.msg), { position: 'bottom-center' })
                 // showResponseError(err.response.data, setError)
             }
         }

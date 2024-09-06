@@ -102,9 +102,9 @@ const CardStatistics = () => {
         },
         {
             xs: 0.2,
-            title: t("Jami foiz (%)"),
+            title: t("Jami foizda (%)"),
             dataIndex: 'kpi_salaries',
-            render: (kpi_salaries) => `${formatCurrency(kpi_salaries)} %`
+            render: (kpi_salaries) => `${formatCurrency(kpi_salaries)}  so'm`
         },
         {
             xs: 0.2,

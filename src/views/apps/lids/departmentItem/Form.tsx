@@ -1,12 +1,12 @@
-import React, { useEffect } from 'react'
-import { CreatesDepartmentState } from 'src/types/apps/leadsTypes'
+import { useEffect } from 'react';
+import { CreatesDepartmentState } from 'src/types/apps/leadsTypes';
 import * as Yup from "yup";
 import { useFormik } from 'formik';
 import { FormControl, FormHelperText, TextField } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from 'src/store';
-import { createDepartment, createDepartmentItem, fetchDepartmentList } from 'src/store/apps/leads';
+import { createDepartmentItem, fetchDepartmentList } from 'src/store/apps/leads';
 
 
 type Props = {}

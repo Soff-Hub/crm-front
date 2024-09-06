@@ -141,6 +141,11 @@ const UserViewSecurity = ({ groupData }: any) => {
       dataIndex: 'description',
     },
     {
+      xs: 0.8,
+      title: t("To'lov turi"),
+      dataIndex: 'payment_type_name',
+    },
+    {
       xs: 1,
       title: t("Qabul qildi"),
       dataIndex: 'admin',
@@ -208,7 +213,12 @@ const UserViewSecurity = ({ groupData }: any) => {
       }
 
       <Typography sx={{ my: 3, fontSize: '20px' }}>{t("To'lov tarixi")}</Typography>
-      <DataTable color loading={isLoading} maxWidth="100%" minWidth="450px" data={payments.map(el => ({ ...el, color: Number(el.amount) >= 0 ? 'transparent' : 'rgba(227, 18, 18, 0.1)', is_debtor: Number(el.amount) >= 0 }))} columns={columns} />
+      <DataTable color
+        loading={isLoading}
+        maxWidth="100%"
+        minWidth="450px"
+        data={payments.map(el => ({ ...el, color: Number(el.amount) >= 0 ? 'transparent' : 'rgba(227, 18, 18, 0.1)', is_debtor: Number(el.amount) >= 0 }))}
+        columns={columns} />
 
       <iframe src="" id="printFrame" style={{ height: 0 }}></iframe>
 

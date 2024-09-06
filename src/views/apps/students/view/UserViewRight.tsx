@@ -36,12 +36,10 @@ const Tab = styled(MuiTab)<TabProps>(({ theme }) => ({
 }))
 
 const UserViewRight = ({ tab, invoiceData, groupData, rerender }: any) => {
-  // ** State
   const [activeTab, setActiveTab] = useState<string>(tab)
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const { t } = useTranslation()
 
-  // ** Hooks
   const router = useRouter()
 
   const handleChange = (event: SyntheticEvent, value: string) => {
@@ -53,16 +51,13 @@ const UserViewRight = ({ tab, invoiceData, groupData, rerender }: any) => {
       .push({
         pathname: path,
         query: { student: groupData.id }
-      })
-      .then(() => setIsLoading(false))
+      }).finally(() => setIsLoading(false))
   }
 
   useEffect(() => {
     if (tab && tab !== activeTab) {
       setActiveTab(tab)
     }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tab])
 
   useEffect(() => {

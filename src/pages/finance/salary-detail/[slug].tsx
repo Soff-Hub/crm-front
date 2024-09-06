@@ -5,6 +5,7 @@ import { GetServerSidePropsContext, InferGetStaticPropsType } from "next/types";
 import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import { useTranslation } from "react-i18next";
+import { formatAmount, revereAmount } from "src/@core/components/amount-input";
 import IconifyIcon from "src/@core/components/icon";
 import DataTable, { customTableDataProps } from "src/@core/components/table";
 import api from "src/@core/utils/api";
@@ -74,13 +75,16 @@ const UserView = ({ slug }: InferGetStaticPropsType<typeof getServerSideProps>) 
             xs: 0.13,
             title: `${t("Bonuslar")} (so'm)`,
             dataIndex: 'bonus_amount',
-            renderId: (id, bonus_amount) => <input className="salary-table__input" disabled={!is_update} style={{ width: '80px', zIndex: 999 }} type='string' value={+bonus_amount} onChange={(e) => (e.stopPropagation(), dispatch(updateSalaryBonus({ id, bonus_amount: Number(e.target.value) || 0 })))} />
+            renderId: (id, bonus_amount) => (
+                console.log(bonus_amount),
+                <input className="salary-table__input" disabled={!is_update} style={{ width: '80px', zIndex: 999 }} type='string' value={formatAmount(String(bonus_amount))} onChange={(e) => (e.stopPropagation(), dispatch(updateSalaryBonus({ id, bonus_amount: revereAmount(e.target.value) || 0 })))} />
+            )
         },
         {
             xs: 0.13,
             title: `${t("Jarimalar")} (so'm)`,
             dataIndex: 'fine_amount',
-            renderId: (id, fine_amount) => <input className="salary-table__input" disabled={!is_update} style={{ width: '80px' }} type='string' value={+fine_amount} onChange={(e) => (e.stopPropagation(), dispatch(updateSalaryFine({ id, fine_amount: Number(e.target.value) || 0 })))} />
+            renderId: (id, fine_amount) => <input className="salary-table__input" disabled={!is_update} style={{ width: '80px' }} type='string' value={formatAmount(String(fine_amount))} onChange={(e) => (e.stopPropagation(), dispatch(updateSalaryFine({ id, fine_amount: revereAmount(e.target.value) || 0 })))} />
         },
         {
             xs: 0.18,

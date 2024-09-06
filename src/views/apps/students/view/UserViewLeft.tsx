@@ -46,9 +46,10 @@ import StudentPaymentForm from './StudentPaymentForm'
 import { useRouter } from 'next/router'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
+import StudentParentList from './StudentParentList'
 
 
-type ModalTypes = 'group' | 'payment' | 'sms' | 'delete' | 'edit' | 'notes'
+export type ModalTypes = 'group' | 'payment' | 'sms' | 'delete' | 'edit' | 'notes' | 'parent'
 
 
 const UserViewLeft = ({ userData }: { userData: any }) => {
@@ -173,6 +174,11 @@ const UserViewLeft = ({ userData }: { userData: any }) => {
               <Button color='warning' size='small' startIcon={<IconifyIcon icon={'mdi:cash-plus'} />} variant='outlined' onClick={async () => (handleEditClickOpen('payment'))}>{t("To'lov")}</Button>
             </CardContent>
             <Box sx={{ display: 'flex', justifyContent: 'center', pb: 3 }}>
+              {/* <Tooltip title={t("Ota-ona ma'lumotini kiritish")} placement='bottom'>
+                <Button size='small' color="secondary" onClick={() => (handleEditClickOpen('parent'))}>
+                  <IconifyIcon icon='ri:parent-line' />
+                </Button>
+              </Tooltip> */}
               <Tooltip title={t('Xabar (sms)')} placement='bottom'>
                 <Button size='small' color="warning" onClick={() => (getSMSTemps(), handleEditClickOpen('sms'))}>
                   <IconifyIcon icon='material-symbols-light:sms-outline' />
@@ -186,18 +192,16 @@ const UserViewLeft = ({ userData }: { userData: any }) => {
             </Box>
           </Card>
         </Grid>
-        <Grid item xs={12}>
+        <Grid item gap={2} xs={12}>
           {userData && userData?.comments?.length > 0 ? (
             <Card>
               <CardContent>
                 <UserViewStudentsList setOpenEdit={setOpenEdit} comment={userData?.comments[0]} />
               </CardContent>
             </Card>
-          ) : ''
-          }
-
+          ) : ""}
+          <StudentParentList />
         </Grid>
-
         {/*   Merge to Group Modal  */}
         <Dialog
           open={openEdit === "group"}
@@ -287,10 +291,8 @@ const UserViewLeft = ({ userData }: { userData: any }) => {
             </Form>
           </DialogContent>
         </Dialog>
-
         {/*   Payment  */}
         <StudentPaymentForm openEdit={openEdit} setOpenEdit={setOpenEdit} />
-
         {/*   Edit Student  */}
         <Dialog
           open={openEdit === "edit"}
@@ -339,7 +341,6 @@ const UserViewLeft = ({ userData }: { userData: any }) => {
               </Form>}
           </DialogContent>
         </Dialog>
-
         {/*   Delete  */}
         <Dialog
           open={openEdit === "delete"}
@@ -355,7 +356,6 @@ const UserViewLeft = ({ userData }: { userData: any }) => {
             Delete
           </DialogContent>
         </Dialog>
-
         {/*   New Note  */}
         <Dialog
           open={openEdit === "notes"}
@@ -391,7 +391,6 @@ const UserViewLeft = ({ userData }: { userData: any }) => {
             </Form>
           </DialogContent>
         </Dialog>
-
         {/*   SMS  */}
         <SendSMSModal
           handleEditClose={handleEditClose}

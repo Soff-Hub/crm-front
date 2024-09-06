@@ -1,19 +1,22 @@
-import { Box, Button, Switch, TextField } from '@mui/material'
-import { useRouter } from 'next/router'
-import React, { FormEvent, useEffect, useState } from 'react'
-import { useTranslation } from 'react-i18next'
-import useDebounce from 'src/hooks/useDebounce'
-import { useAppDispatch, useAppSelector } from 'src/store'
-import { fetchDepartmentList, updateLeadParams } from 'src/store/apps/leads'
+import { Box, Button, TextField } from '@mui/material';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import IconifyIcon from 'src/@core/components/icon';
+import useResponsive from 'src/@core/hooks/useResponsive';
+import useDebounce from 'src/hooks/useDebounce';
+import { useAppDispatch, useAppSelector } from 'src/store';
+import { fetchDepartmentList, setOpen, updateLeadParams } from 'src/store/apps/leads';
+import { Toggle } from 'rsuite';
 
 type Props = {}
 
 export default function LidsHeader({ }: Props) {
-
     const { queryParams } = useAppSelector(state => state.leads)
     const dispatch = useAppDispatch()
     const { push } = useRouter()
     const { t } = useTranslation()
+    const { isMobile } = useResponsive()
 
     const [search, setSearch] = useState<string>('')
     const searchVal = useDebounce(search, 800)
@@ -29,7 +32,7 @@ export default function LidsHeader({ }: Props) {
     }, [searchVal])
 
     return (
-        <Box sx={{ width: '100%', p: '10px 0' }}>
+        <Box sx={{ width: '100%', p: '10px 0', display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             <form style={{ display: 'flex', alignItems: 'center', gap: '5px' }} onSubmit={e => e.preventDefault()}>
                 <TextField
                     defaultValue={''}
@@ -38,12 +41,20 @@ export default function LidsHeader({ }: Props) {
                     sx={{ maxWidth: '300px', width: '100%' }} color='primary' placeholder={`${t("Qidirish")}...`} onChange={(e) => {
                         setSearch(e.target.value)
                     }} />
-                <label>
-                    <Switch checked={!queryParams.is_active} onChange={(e, v) => viewArchive(!v)} />
-                    {t("Arxiv")}
-                </label>
+                <Toggle
+                    checked={!queryParams.is_active}
+                    color="red"
+                    checkedChildren="Faol"
+                    unCheckedChildren="Arxiv"
+                    onChange={(e) => viewArchive(!e)}
+                />
+
                 <Button variant='outlined' onClick={() => push('/lids/stats')}>{t("Hisobot")}</Button>
             </form>
+            {!isMobile &&
+                <Button onClick={() => dispatch(setOpen('add-department'))} sx={{ minWidth: '300px' }} size='small' variant='contained'
+                    startIcon={<IconifyIcon icon={'material-symbols:add'} />}>{t("Bo'lim yaratish")}
+                </Button>}
         </Box>
     )
 }

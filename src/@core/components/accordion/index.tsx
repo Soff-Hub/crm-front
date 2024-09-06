@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { styled } from '@mui/material/styles'
 import MuiMenu, { MenuProps } from '@mui/material/Menu'
 
-import { Box, Card, CircularProgress, Dialog, DialogContent, DialogTitle, FormControl, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material'
+import { Box, Card, CircularProgress, Dialog, DialogContent, DialogTitle, FormControl, IconButton, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material'
 import IconifyIcon from '../icon'
 import api from 'src/@core/utils/api'
 import KanbanItem from '../card-statistics/kanban-item'
@@ -154,17 +154,22 @@ export default function AccordionCustom({ onView, parentId, item }: AccordionPro
                     fontWeight={'700'}
                     sx={{ marginLeft: 'auto', marginRight: 2 }}
                 >{count}</Typography>
-                <IconifyIcon
-                    style={{ cursor: 'pointer', transform: open ? 'rotateZ(180deg)' : '', minWidth: '20px', fontSize: '26px' }}
-                    onClick={() => !open ? handleGetLeads(true) : setOpen(!open)} icon={'iconamoon:arrow-down-2-light'}
-                />
-                <IconifyIcon
-                    icon="system-uicons:circle-menu"
-                    style={{ marginLeft: 1, cursor: 'pointer', minWidth: '40px', fontSize: '26px' }}
-                    aria-haspopup='true'
-                    aria-controls='customized-menu'
-                    onClick={handleClick}
-                />
+                <IconButton onClick={handleClick} size="small">
+                    <IconifyIcon
+                        icon="humbleicons:dots-horizontal"
+                        style={{ cursor: 'pointer' }}
+                        aria-haspopup='true'
+                        aria-controls='customized-menu'
+                    />
+                </IconButton>
+                <IconButton
+                    onClick={() => !open ? handleGetLeads(true) : setOpen(!open)}
+                    sx={{ marginRight: 1, }} size="small">
+                    <IconifyIcon
+                        style={{ cursor: 'pointer', transform: open ? 'rotateZ(180deg)' : '', }}
+                        icon={'iconamoon:arrow-down-2-light'}
+                    />
+                </IconButton>
             </Box>
             <Box sx={{ display: 'flex', flexDirection: 'column', px: 2, gap: 2, marginY: open ? 2 : 0 }}>
                 {

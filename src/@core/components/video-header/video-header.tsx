@@ -76,7 +76,7 @@ export const videoUrls: {
     },
     students: {
         title: "O'quvchilar sahifasidan qanday foydalaniladi?",
-        url: "https://www.youtube.com/embed/cMSDphU-VYE?si=4SUwW6ekT_YArqaz"
+        url: "https://www.youtube.com/embed/1wp9s9-JfcE?si=1VWCZdslGr8uFy4B"
     },
     finance: {
         title: "Moliya sahifasidan qanday foydalaniladi?",
