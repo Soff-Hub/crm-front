@@ -1,75 +1,78 @@
-import { genderTypes } from "./userTypes"
+import { genderTypes } from './userTypes'
 
 export interface SmsItemType {
-    id: number
-    description: string
+  id: number
+  description: string
 }
 
 export interface RoomType {
+  id: number
+  name: string
+  branch: {
     id: number
     name: string
-    branch: {
-        id: number
-        name: string
-    },
-    is_delete: boolean
+  }
+  is_delete: boolean
 }
 
 export interface CourseItemType {
-    id: number,
-    name: string,
-    image: string | null,
-    price: number,
-    month_duration: number,
-    description: string,
-    lesson_duration: string,
-    lesson_duration_seconds: number,
-    color: string,
-    is_delete: boolean,
-    branch: {
-        name: string,
-        id: number
-    }[],
+  id: number
+  name: string
+  image: string | null
+  price: number
+  month_duration: number
+  description: string
+  lesson_duration: string
+  lesson_duration_seconds: number
+  color: string
+  is_delete: boolean
+  branch: {
+    name: string
+    id: number
+  }[]
 }
 
-
 export interface WekendItemType {
-    id: number
-    date: string
-    description: string
+  id: number
+  date: string
+  description: string
 }
 
 export interface EmployeeItemType {
-    id: number
-    first_name: string
-    phone: string
-    gender: genderTypes
-    roles_list: string[]
-    birth_date: string | null
-    employee_salary: number
+  id: number
+  first_name: string
+  phone: string
+  gender: genderTypes
+  roles_list: string[]
+  birth_date: string | null
+  employee_salary: number
 }
 
 export interface SettingsState {
-    is_pending: boolean
-    sms_list: SmsItemType[]
-    openCreateSms: boolean
-    openEditSms: null | SmsItemType
-    openEditCourse: null | CourseItemType
-    course_list: CourseItemType[]
-    rooms: RoomType[]
-    openEditRoom: null | RoomType,
-    room_count: number
-    active_page: number
-    wekends: WekendItemType[]
-    wekendData: WekendItemType | null
-    employees: EmployeeItemType[]
-    employees_count: number
-    employeeData: any
-    queryParams: { search: string, page: number, role: number | string }
-    roles: { name: string, id: number, count: number }[],
-    videoAnchor: {
-        open: boolean,
-        title: string,
-        url: string
-    }
+  is_pending: boolean
+  sms_list: SmsItemType[]
+  openCreateSms: boolean
+  openEditSms: null | SmsItemType
+  openEditCourse: null | CourseItemType
+  course_list: {
+    count: number
+    results: CourseItemType[]
+  }
+  rooms: RoomType[]
+  openEditRoom: null | RoomType
+  room_count: number
+  active_page: number
+  wekends: WekendItemType[]
+  wekendData: WekendItemType | null
+  employees: EmployeeItemType[]
+  employees_count: number
+  employeeData: any
+  queryParams: { search: string; page: number; role: number | string }
+  courseQueryParams: { page: number }
+  roles: { name: string; id: number; count: number }[]
+  videoAnchor: {
+    open: boolean
+    title: string
+    url: string
+  }
 }

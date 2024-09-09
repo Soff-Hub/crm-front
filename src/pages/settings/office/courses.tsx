@@ -1,20 +1,22 @@
+//@ts-nocheck
 import {
   Box,
   Button,
+  Pagination,
   Typography
-} from '@mui/material'
-import React, { ReactNode, useEffect } from 'react'
-import IconifyIcon from 'src/@core/components/icon'
-import DataTable from 'src/@core/components/table'
-import MuiDrawer, { DrawerProps } from '@mui/material/Drawer'
-import { styled } from '@mui/material/styles'
-import { useTranslation } from 'react-i18next'
-import { useAppDispatch, useAppSelector } from 'src/store'
-import { fetchCoursesList, setOpenCreateSms } from 'src/store/apps/settings'
-import CourseListRowOptions from 'src/views/apps/settings/courses/CourseListRowOptions'
-import CreateCourseDialog from 'src/views/apps/settings/courses/CreateCourseDialog'
-import EditCourseDialog from 'src/views/apps/settings/courses/EditCourseDialog'
-import VideoHeader, { videoUrls } from 'src/@core/components/video-header/video-header'
+} from '@mui/material';
+import { ReactNode, useEffect } from 'react';
+import IconifyIcon from 'src/@core/components/icon';
+import DataTable from 'src/@core/components/table';
+import MuiDrawer, { DrawerProps } from '@mui/material/Drawer';
+import { styled } from '@mui/material/styles';
+import { useTranslation } from 'react-i18next';
+import { useAppDispatch, useAppSelector } from 'src/store';
+import { fetchCoursesList, setOpenCreateSms, updateParams } from 'src/store/apps/settings';
+import CourseListRowOptions from 'src/views/apps/settings/courses/CourseListRowOptions';
+import CreateCourseDialog from 'src/views/apps/settings/courses/CreateCourseDialog';
+import EditCourseDialog from 'src/views/apps/settings/courses/EditCourseDialog';
+import VideoHeader, { videoUrls } from 'src/@core/components/video-header/video-header';
 
 export interface customTableProps {
   xs: number
@@ -54,12 +56,15 @@ export default function GroupsPage() {
   const { t } = useTranslation()
 
   const dispatch = useAppDispatch()
-  const { course_list, is_pending } = useAppSelector(state => state.settings)
+  const { course_list, is_pending, courseQueryParams } = useAppSelector(state => state.settings)
 
   useEffect(() => {
-    dispatch(fetchCoursesList())
+    const queryString = new URLSearchParams(courseQueryParams).toString()
+    dispatch(fetchCoursesList(queryString))
+    return () => {
+      dispatch(updateParams({ page: 1 }))
+    }
   }, [])
-
 
   const columns: customTableProps[] = [
     {
@@ -103,7 +108,11 @@ export default function GroupsPage() {
       render: id => <CourseListRowOptions id={+id} />
     }
   ]
-
+  const handlePagination = (page: any) => {
+    const queryString = new URLSearchParams({ ...courseQueryParams, page: page }).toString()
+    dispatch(fetchCoursesList(queryString))
+    dispatch(updateParams({ page }))
+  }
   return (
     <div>
       <VideoHeader item={videoUrls.courses} />
@@ -123,8 +132,8 @@ export default function GroupsPage() {
           {t("Yangi kurs qo'shish")}
         </Button>
       </Box>
-      <DataTable loading={is_pending} columns={columns} data={course_list} color />
-
+      <DataTable loading={is_pending} columns={columns} data={course_list?.results} color />
+      {Math.ceil(course_list?.count / 10) > 1 && !is_pending && <Pagination defaultPage={courseQueryParams.page ? Number(courseQueryParams.page) : 1} count={Math.ceil(course_list?.count / 10)} variant="outlined" shape="rounded" onChange={(e: any, page) => handlePagination(page)} />}
       <CreateCourseDialog />
 
       <EditCourseDialog />

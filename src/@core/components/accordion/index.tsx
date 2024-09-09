@@ -31,6 +31,20 @@ const Menu = styled(MuiMenu)<MenuProps>(({ theme }) => ({
     }
 }))
 
+const badge = {
+    border: "1px solid #8b5cf6",
+    minWidth: "25px",
+    height: "25px",
+    color: "white",
+    padding: "5px",
+    background: "#8b5cf6",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    fontWeight: 600,
+    borderRadius: "20px",
+    marginRight: "5px"
+}
 
 export default function AccordionCustom({ onView, parentId, item }: AccordionProps) {
     const [open, setOpen] = useState<boolean>(false)
@@ -149,11 +163,7 @@ export default function AccordionCustom({ onView, parentId, item }: AccordionPro
                     sx={{ flexGrow: 1, padding: '10px', cursor: 'pointer' }}
                     onClick={() => !open ? handleGetLeads(true) : setOpen(!open)}
                 >{item.name}</Typography>
-                <Typography
-                    fontSize={16}
-                    fontWeight={'700'}
-                    sx={{ marginLeft: 'auto', marginRight: 2 }}
-                >{count}</Typography>
+                <Box sx={badge}>{count}</Box>
                 <IconButton onClick={handleClick} size="small">
                     <IconifyIcon
                         icon="humbleicons:dots-horizontal"
@@ -166,16 +176,18 @@ export default function AccordionCustom({ onView, parentId, item }: AccordionPro
                     onClick={() => !open ? handleGetLeads(true) : setOpen(!open)}
                     sx={{ marginRight: 1, }} size="small">
                     <IconifyIcon
-                        style={{ cursor: 'pointer', transform: open ? 'rotateZ(180deg)' : '', }}
+                        style={{ cursor: 'pointer', transform: open ? 'rotateZ(180deg)' : '', fontSize: "25px" }}
                         icon={'iconamoon:arrow-down-2-light'}
                     />
                 </IconButton>
             </Box>
-            <Box sx={{ display: 'flex', flexDirection: 'column', px: 2, gap: 2, marginY: open ? 2 : 0 }}>
+            <Box sx={{ maxHeight: "500px", overflow: "auto", px: 2, gap: 2, pt: open ? 2 : 0, marginY: open ? 2 : 0 }}>
                 {
                     open ? (
                         loading ? (
-                            <CircularProgress disableShrink sx={{ mt: 1, mb: 2, mx: 'auto' }} size={25} />
+                            <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+                                <CircularProgress disableShrink sx={{ mt: 1, mb: 2, mx: 'auto' }} size={25} />
+                            </Box>
                         ) : (
                             leadData.length > 0 ? (
                                 leadData.map((lead) => <KanbanItem reRender={handleGetLeads} is_view={lead.is_view} id={lead.id} handleEditLead={handleEditLead} key={lead.id} status={'success'} title={lead.first_name} phone={lead.phone} />)

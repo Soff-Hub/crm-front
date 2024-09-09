@@ -41,13 +41,15 @@ export default function LidsHeader({ }: Props) {
                     sx={{ maxWidth: '300px', width: '100%' }} color='primary' placeholder={`${t("Qidirish")}...`} onChange={(e) => {
                         setSearch(e.target.value)
                     }} />
-                <Toggle
-                    checked={!queryParams.is_active}
-                    color="red"
-                    checkedChildren="Faol"
-                    unCheckedChildren="Arxiv"
-                    onChange={(e) => viewArchive(!e)}
-                />
+                <Box sx={{ display: "flex" }}>
+                    <Toggle
+                        checked={!queryParams.is_active}
+                        color="red"
+                        checkedChildren="Faol"
+                        unCheckedChildren="Arxiv"
+                        onChange={(e) => viewArchive(!e)}
+                    />
+                </Box>
 
                 <Button variant='outlined' onClick={() => push('/lids/stats')}>{t("Hisobot")}</Button>
             </form>

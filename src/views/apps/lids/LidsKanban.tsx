@@ -61,7 +61,7 @@ export default function HomeKanban({ title, items, id }: Props) {
                             <IconifyIcon icon={'fluent:text-bullet-list-square-edit-20-filled'} color='orange' onClick={() => setOpen('edit')} />
                         </IconButton>}
                         {title?.toLowerCase() !== 'leads' && <IconButton sx={{ cursor: 'pointer', marginLeft: 'auto' }}>
-                            <IconifyIcon icon={'icon-park-solid:delete-four'} color='red' onClick={() => setOpen('delete')} />
+                            <IconifyIcon icon={'icon-park-solid:delete-four'} color='red' onClick={() => setOpen('delete')} fontSize="20px" />
                         </IconButton>}
                     </Box>
                 ) : ''}
