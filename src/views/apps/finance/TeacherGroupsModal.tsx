@@ -10,6 +10,8 @@ import {
     Paper,
     Typography,
 } from "@mui/material";
+import EmptyContent from "src/@core/components/empty-content";
+import { formatCurrency } from "src/@core/utils/format-currency";
 
 interface ITeacherGroupModalProps {
     teacherGroups: any,
@@ -37,32 +39,6 @@ export default function TeacherGroupsModal({ teacherGroups, setTeacherGroups }: 
             >
                 <TableContainer component={Paper}>
                     <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
-                        <TableHead>
-                            <TableRow>
-                                <TableCell >
-                                    <Typography variant="body1">
-                                        O'quvchilar to'lashi kerak:{" "}
-                                    </Typography>
-                                    <Typography color="orange" variant="body2">
-                                        so'm
-                                    </Typography>
-                                </TableCell>
-                                <TableCell colSpan={2}>
-                                    <Typography variant="body1">
-                                        To'lov qilgan o'quvchilardan ulushi{" "}
-                                    </Typography>
-                                    <Typography color="green" variant="body2">
-                                        so'm
-                                    </Typography>
-                                </TableCell>
-                                <TableCell colSpan={2}>
-                                    <Typography variant="body1">Hissa qo'shgan</Typography>
-                                    <Typography color="blue" variant="body2">
-                                        so'm
-                                    </Typography>
-                                </TableCell>
-                            </TableRow>
-                        </TableHead>
                         <TableHead>
                             <TableRow>
                                 <TableCell
@@ -93,27 +69,30 @@ export default function TeacherGroupsModal({ teacherGroups, setTeacherGroups }: 
                                     sx={{ color: "#000", fontWeight: "bold" }}
 
                                 >
-                                    Kutilayotgan ulush
-                                </TableCell>
-                                <TableCell
-                                    sx={{ color: "#000", fontWeight: "bold" }}
-
-                                >
                                     Jamg'arilgan ulush
                                 </TableCell>
                             </TableRow>
                         </TableHead>
-                        <TableBody>
-                            <TableRow
-                                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                            >
-                                <TableCell >{"Item"}</TableCell>
-                                <TableCell >{"Item"}</TableCell>
-                                <TableCell >{"Item"}</TableCell>
-                                <TableCell >{"Item"}</TableCell>
-                                <TableCell >{"Item"}</TableCell>
+                        {teacherGroups?.length > 0 ?
+                            <TableBody>
+                                {teacherGroups?.map((item: any) => (
+                                    <TableRow
+                                        key={item.id}
+                                        sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                                    >
+                                        <TableCell >{item.group_name} </TableCell>
+                                        <TableCell >{item.date}</TableCell>
+                                        <TableCell >{formatCurrency(item.planned_payments)} UZS</TableCell>
+                                        <TableCell >{formatCurrency(item.student_payments)} UZS</TableCell>
+                                        <TableCell >{formatCurrency(item.amount)} UZS</TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                            : <TableRow >
+                                <TableCell colSpan={5}>
+                                    <EmptyContent /></TableCell>
                             </TableRow>
-                        </TableBody>
+                        }
                     </Table>
                 </TableContainer>
             </Box>

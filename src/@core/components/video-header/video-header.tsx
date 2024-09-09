@@ -24,6 +24,7 @@ export const videoUrls: {
     group: VideoType
     students: VideoType
     finance: VideoType
+    crm_setting: VideoType
 } = {
     all_settings: {
         title: 'Umumiy sozlamalar sahifasidan qanday foydalaniladi?',
@@ -81,6 +82,10 @@ export const videoUrls: {
     finance: {
         title: "Moliya sahifasidan qanday foydalaniladi?",
         url: "https://www.youtube.com/embed/wMMjudbJXZg?si=9bCcWVcfrxlXuTjr"
+    },
+    crm_setting: {
+        title: "CRM sozlamalari sahifasidan qanday foydalaniladi?",
+        url: "https://www.youtube.com/embed/nB1n_13sNBk?si=dKIOI-kNc25hSich"
     },
 }
 

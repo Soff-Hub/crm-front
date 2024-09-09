@@ -1,4 +1,4 @@
-import { Box, Button, TextField } from '@mui/material';
+import { Box, Button, Switch, TextField } from '@mui/material';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -41,16 +41,10 @@ export default function LidsHeader({ }: Props) {
                     sx={{ maxWidth: '300px', width: '100%' }} color='primary' placeholder={`${t("Qidirish")}...`} onChange={(e) => {
                         setSearch(e.target.value)
                     }} />
-                <Box sx={{ display: "flex" }}>
-                    <Toggle
-                        checked={!queryParams.is_active}
-                        color="red"
-                        checkedChildren="Faol"
-                        unCheckedChildren="Arxiv"
-                        onChange={(e) => viewArchive(!e)}
-                    />
-                </Box>
-
+                <label>
+                    <Switch checked={!queryParams.is_active} onChange={(e, v) => viewArchive(!v)} />
+                    {t("Arxiv")}
+                </label>
                 <Button variant='outlined' onClick={() => push('/lids/stats')}>{t("Hisobot")}</Button>
             </form>
             {!isMobile &&

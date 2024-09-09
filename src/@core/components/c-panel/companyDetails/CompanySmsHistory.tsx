@@ -17,7 +17,7 @@ export default function CompanySmsHistory({ }: Props) {
                 <Skeleton animation="wave" height={100} variant="rounded" />
                 <Skeleton animation="wave" height={100} variant="rounded" />
             </Box> :
-                <Box sx={{ maxHeight: '400px', display: "flex", flexDirection: "column", gap: "10px" }}>
+                <Box sx={{ maxHeight: '400px', display: "flex", flexDirection: "column", gap: "10px", overflow: "auto" }}>
                     {sms?.length > 0 ? sms?.map((item) => (
                         <Box key={item.id} style={{ textDecoration: 'none', display: 'block', width: '100%' }}>
                             <Card sx={{ width: '100%', padding: 0 }}>

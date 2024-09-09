@@ -15,6 +15,7 @@ import RowOptions from 'src/views/apps/crm-payments/RowOptions';
 import authConfig from 'src/configs/auth';
 import CreateSMSPayment from 'src/views/apps/crm-payments/CreateSMSPayment';
 import EditSMSPaymentClientModal from 'src/views/apps/crm-payments/EditSMSPayment';
+import VideoHeader, { videoUrls } from 'src/@core/components/video-header/video-header';
 
 
 export default function PaymentsList() {
@@ -134,6 +135,7 @@ export default function PaymentsList() {
     return (
         <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
             <Box sx={{ width: "100%", display: "flex", flexDirection: "column", gap: 1 }}>
+                <VideoHeader item={videoUrls.crm_setting} />
                 <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                     <Stack direction="row" alignItems={"center"} spacing={4}>
                         <IconButton color='primary'>

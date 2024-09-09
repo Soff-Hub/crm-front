@@ -1,5 +1,6 @@
+//@ts-nocheck
 import LoadingButton from "@mui/lab/LoadingButton";
-import { Box, Dialog, DialogContent, IconButton, Typography } from "@mui/material";
+import { Box, Button, Dialog, DialogContent, IconButton, Typography } from "@mui/material";
 import { useRouter } from "next/router";
 import { GetServerSidePropsContext, InferGetStaticPropsType } from "next/types";
 import { useEffect, useState } from "react";
@@ -21,7 +22,7 @@ const UserView = ({ slug }: InferGetStaticPropsType<typeof getServerSideProps>) 
     const [loading, setLoading] = useState<'frozen' | 'approved' | null>(null)
     const { back, push } = useRouter()
     const [open, setOpen] = useState<boolean>(false)
-    const [teacherGroups, setTeacherGroups] = useState(null)
+    const [teacherGroups, setTeacherGroups] = useState<[] | null>(null)
 
     const withdrawCol: customTableDataProps[] = [
         {
@@ -91,6 +92,14 @@ const UserView = ({ slug }: InferGetStaticPropsType<typeof getServerSideProps>) 
             title: t("Yakuniy ish haqqi"),
             dataIndex: 'final_salary',
             render: (final_salary) => `${formatCurrency(final_salary)} so'm`
+        },
+        {
+            xs: 0.1,
+            title: t(""),
+            dataIndex: 'calculated_salaries',
+            render: (calculated_salaries) => (
+                <Button size="small" onClick={() => setTeacherGroups(calculated_salaries)}>{t("Batafsil")}</Button>
+            )
         },
     ]
 
