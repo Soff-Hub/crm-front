@@ -1,7 +1,7 @@
-import React, { ReactNode, useEffect } from 'react'
-import BlankLayout from 'src/@core/layouts/BlankLayout'
+import { ReactNode, useEffect } from 'react';
+import BlankLayout from 'src/@core/layouts/BlankLayout';
 import { useState } from "react";
-import { TextField, Button, Typography, Box, FormControl, FormHelperText, Input, Checkbox } from "@mui/material";
+import { TextField, Typography, Box, FormControl, FormHelperText, Checkbox } from "@mui/material";
 import Form from 'src/@core/components/form';
 import LoadingButton from '@mui/lab/LoadingButton';
 import useResponsive from 'src/@core/hooks/useResponsive';
@@ -216,17 +216,17 @@ function RequestForm({ uuid }: InferGetStaticPropsType<typeof getServerSideProps
                     marginBottom: '100px'
                 }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', flexDirection: 'column', marginBottom: '20px' }}>
-                    <img src={formData?.company?.logo} width={40} />
+                    <img src={formData?.company?.logo} width={55} />
                     <h3>{formData?.company?.training_center_name}</h3>
                 </Box>
                 <Typography align="center" mb={isMobile ? 1 : 2} sx={{ fontSize: isMobile ? '20px' : '24px' }}>
-                    {isSend ? "Ma'lumot jo'natganingiz uchun raxmat!" : formData.title}
+                    {isSend ? "Ma'lumotingiz yuborildi!" : formData.title}
                 </Typography>
                 {isSend ? (
                     <Box
                         sx={{
                             display: 'flex',
-                            minHeight: '180px',
+                            minHeight: '150px',
                             objectFit: 'cover',
                             backgroundPosition: 'center',
                             backgroundImage: `url('/images/checked.png')`,

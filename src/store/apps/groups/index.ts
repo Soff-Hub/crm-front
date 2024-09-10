@@ -11,12 +11,12 @@ export const getGroupsDetails = createAsyncThunk('groups/fetchGroupsDetails', as
 })
 
 export const getMetaData = createAsyncThunk('groups/fetchMetaData', async () => {
-  const responseCourse = await api.get(ceoConfigs.courses)
+  const responseCourse = await api.get('common/course/checklist/')
   const responseTeacher = await api.get(ceoConfigs.teachers)
   const responseRooms = await api.get(ceoConfigs.rooms)
 
   return {
-    courses: responseCourse.data.results,
+    courses: responseCourse.data,
     teachers: responseTeacher.data.results,
     rooms: responseRooms.data.results
   }

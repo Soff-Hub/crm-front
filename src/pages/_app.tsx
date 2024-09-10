@@ -104,7 +104,7 @@ const App = ({ Component, emotionCache = clientSideEmotionCache, pageProps }: Ex
 
     return <Head>
       <meta name="robots" content="noindex, nofollow" />
-      <title>{`${themeConfig.templateName} - Talim tizimini nazorat qilish platformasi`}</title>
+      <title>{`${companyInfo.training_center_name} - Taʼlim tizimini nazorat qilish platformasi`}</title>
       <link rel='shortcut icon' href={companyInfo.logo} />
     </Head>
   }

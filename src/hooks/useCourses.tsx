@@ -1,6 +1,5 @@
-import { useState } from "react"
+import { useState } from "react";
 import api from "src/@core/utils/api";
-import ceoConfigs from "src/configs/ceo"
 
 interface BranchTypes {
     id: string,
@@ -12,8 +11,8 @@ export default function useCourses() {
 
     const getCourses = async () => {
         try {
-            const resp = await api.get(ceoConfigs.courses)
-            setCourses(resp.data.results)
+            const resp = await api.get("common/course/checklist/")
+            setCourses(resp.data)
         } catch (err) {
             return err
         }

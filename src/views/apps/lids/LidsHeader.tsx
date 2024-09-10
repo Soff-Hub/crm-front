@@ -41,7 +41,7 @@ export default function LidsHeader({ }: Props) {
                     sx={{ maxWidth: '300px', width: '100%' }} color='primary' placeholder={`${t("Qidirish")}...`} onChange={(e) => {
                         setSearch(e.target.value)
                     }} />
-                <label>
+                <label style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                     <Switch checked={!queryParams.is_active} onChange={(e, v) => viewArchive(!v)} />
                     {t("Arxiv")}
                 </label>

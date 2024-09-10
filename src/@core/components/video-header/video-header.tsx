@@ -81,7 +81,7 @@ export const videoUrls: {
     },
     finance: {
         title: "Moliya sahifasidan qanday foydalaniladi?",
-        url: "https://www.youtube.com/embed/wMMjudbJXZg?si=9bCcWVcfrxlXuTjr"
+        url: "https://www.youtube.com/embed/22IF6zhwY-E?si=Sah2C8MadzC7Sxpp"
     },
     crm_setting: {
         title: "CRM sozlamalari sahifasidan qanday foydalaniladi?",
