@@ -1,5 +1,7 @@
+import dynamic from 'next/dynamic';
 import { GetServerSidePropsContext, InferGetStaticPropsType } from 'next/types';
-import UserViewPage from 'src/views/apps/groups/view/UserViewPage';
+
+const UserViewPage = dynamic(() => import('src/views/apps/groups/view/UserViewPage'));
 
 const UserView = ({ tab, month, id }: InferGetStaticPropsType<typeof getServerSideProps>) => {
 
@@ -9,7 +11,6 @@ const UserView = ({ tab, month, id }: InferGetStaticPropsType<typeof getServerSi
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { query, params } = context;
-
 
   return {
     props: {

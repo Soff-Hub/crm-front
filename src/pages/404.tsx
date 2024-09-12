@@ -3,6 +3,7 @@ import { ReactNode } from 'react'
 
 // ** Next Import
 import Link from 'next/link'
+import Image from 'next/image'; // Import Next.js Image component
 
 // ** MUI Components
 import Button from '@mui/material/Button'
@@ -23,18 +24,7 @@ const BoxWrapper = styled(Box)<BoxProps>(({ theme }) => ({
   }
 }))
 
-const Img = styled('img')(({ theme }) => ({
-  marginTop: theme.spacing(15),
-  marginBottom: theme.spacing(15),
-  [theme.breakpoints.down('lg')]: {
-    height: 450,
-    marginTop: theme.spacing(10),
-    marginBottom: theme.spacing(10)
-  },
-  [theme.breakpoints.down('md')]: {
-    height: 400
-  }
-}))
+// Remove the old styled img component
 
 const Error404 = () => {
   return (
@@ -49,7 +39,17 @@ const Error404 = () => {
           </Typography>
           <Typography variant='body2'>We couldn&prime;t find the page you are looking for.</Typography>
         </BoxWrapper>
-        <Img alt='error-illustration' src='/images/pages/404.png' />
+        {/* Optimized Image */}
+        {/* Optimized Image */}
+        <Box sx={{ position: 'relative', width: '100%', maxWidth: '500px', height: '450px' }}>
+          <Image
+            alt='error-illustration'
+            src='/images/pages/404.png'
+            width={300}
+            height={450}
+            priority // Load this image with high priority
+          />
+        </Box>
         <Button href='/' component={Link} variant='contained' sx={{ px: 5.5 }}>
           Back to Home
         </Button>

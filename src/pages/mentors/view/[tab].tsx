@@ -1,8 +1,6 @@
-// ** Next Import
-import { GetServerSidePropsContext, InferGetStaticPropsType } from 'next/types'
-
-// ** Demo Components Imports
-import UserViewPage from 'src/views/apps/mentors/view/UserViewPage'
+import dynamic from 'next/dynamic';
+import { GetServerSidePropsContext, InferGetStaticPropsType } from 'next/types';
+const UserViewPage = dynamic(() => import('src/views/apps/mentors/view/UserViewPage'));
 
 const UserView = ({ tab }: InferGetStaticPropsType<typeof getServerSideProps>) => {
   return <UserViewPage tab={tab} />

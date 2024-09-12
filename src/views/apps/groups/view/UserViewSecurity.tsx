@@ -60,8 +60,6 @@ const Item = ({ defaultValue, groupId, userId, date, opened_id, setOpenedId }: {
     }
   }
 
-  console.log(value);
-
   useEffect(() => {
     if (`${userId}-${date}` === opened_id) {
       setOpen(true)
@@ -196,7 +194,7 @@ const UserViewSecurity = () => {
   return (
     isGettingAttendance ? <SubLoader /> :
       <Box className='demo-space-y'>
-        <ul style={{ display: 'flex', listStyle: 'none', margin: 0, padding: 0, gap: '15px', marginBottom: 12 }}>
+        <ul className="hide-scrollbar" style={{ display: 'flex', listStyle: 'none', margin: 0, padding: 0, gap: '15px', marginBottom: 12, overflow: "auto" }}>
           {
             month_list.map(item => <li key={item.date} onClick={() => handleClick(item)} style={{ borderBottom: query?.month === getMontName(Number(item.date.split('-')[1])) ? '2px solid #c3cccc' : '2px solid transparent', cursor: 'pointer' }}>{item.month}</li>)
           }

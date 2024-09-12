@@ -1,5 +1,5 @@
-// @ts-nocheck
-
+//@ts-nocheck
+"use client";
 import {
   Box,
   Button,
@@ -13,16 +13,8 @@ import {
   Typography,
 } from '@mui/material';
 import { ReactNode, useEffect, useState } from 'react';
-import IconifyIcon from 'src/@core/components/icon';
-import DataTable from 'src/@core/components/table';
-import MuiDrawer, { DrawerProps } from '@mui/material/Drawer';
-import { styled } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
-import { GroupsFilter } from 'src/views/apps/groups/GroupsFilter';
 import useResponsive from 'src/@core/hooks/useResponsive';
-import getMontName from 'src/@core/utils/gwt-month-name';
-import getLessonDays from 'src/@core/utils/getLessonDays';
-import RowOptions from 'src/views/apps/groups/RowOptions';
 import { useAppDispatch, useAppSelector } from 'src/store';
 import {
   fetchGroups,
@@ -32,10 +24,21 @@ import {
   resetGroupParams,
   updateParams,
 } from 'src/store/apps/groups';
-import EditGroupModal from 'src/views/apps/groups/EditGroupModal';
-import AddGroupModal from 'src/views/apps/groups/AddGroupModal';
 import { useRouter } from 'next/router';
-import VideoHeader, { videoUrls } from 'src/@core/components/video-header/video-header';
+import { videoUrls } from 'src/@core/components/video-header/video-header';
+import { GroupsFilter } from 'src/views/apps/groups/GroupsFilter';
+import getLessonDays from 'src/@core/utils/getLessonDays';
+import dynamic from 'next/dynamic';
+import getMonthName from 'src/@core/utils/gwt-month-name';
+
+const IconifyIcon = dynamic(() => import('src/@core/components/icon'));
+const DataTable = dynamic(() => import('src/@core/components/table'));
+const MuiDrawer = dynamic(() => import('@mui/material/Drawer'));
+const RowOptions = dynamic(() => import('src/views/apps/groups/RowOptions'));
+const EditGroupModal = dynamic(() => import('src/views/apps/groups/EditGroupModal'));
+const AddGroupModal = dynamic(() => import('src/views/apps/groups/AddGroupModal'));
+const VideoHeader = dynamic(() => import('src/@core/components/video-header/video-header'));
+
 
 export interface customTableProps {
   xs: number
@@ -140,7 +143,7 @@ export default function GroupsPage() {
   }
 
   const rowClick = (id: any) => {
-    router.push(`/groups/view/security?id=${id}&month=${getMontName(null)}`)
+    router.push(`/groups/view/security?id=${id}&month=${getMonthName(null)}`)
   }
 
   const pageLoad = async () => {

@@ -1,19 +1,22 @@
+"use client"
 import { useEffect, useState } from 'react';
 import { Box, Button, ButtonGroup, DialogContent, DialogTitle, FormControl, FormHelperText, TextField, Typography, IconButton as IconButtonMui } from '@mui/material';
-import CardStatsVertical from 'src/@core/components/card-statistics/card-stats-vertical';
 import api from 'src/@core/utils/api';
 import { DateRangePicker, IconButton } from 'rsuite';
 import 'rsuite/DateRangePicker/styles/index.css';
 import Router from 'next/router';
 import format from 'date-fns/format';
 import IconifyIcon from 'src/@core/components/icon';
-import { CustomeDrawer } from '../settings/office/courses';
 import * as Yup from "yup";
 import { useFormik } from 'formik';
 import { useTranslation } from 'react-i18next';
 import LoadingButton from '@mui/lab/LoadingButton';
-import EmptyContent from 'src/@core/components/empty-content';
+import dynamic from 'next/dynamic';
 
+// Dynamically import components
+const CardStatsVertical = dynamic(() => import('src/@core/components/card-statistics/card-stats-vertical'));
+const EmptyContent = dynamic(() => import('src/@core/components/empty-content'));
+const CustomeDrawer = dynamic(() => import('../settings/office/courses').then(mod => mod.CustomeDrawer));
 
 const Stats = () => {
     const [sources, setSources] = useState<{ id: number, name: string, students_count: number }[]>([])

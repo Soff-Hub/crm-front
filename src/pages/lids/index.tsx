@@ -1,19 +1,23 @@
+"use client"
 // ** MUI Imports
 import { Box } from '@mui/material';
+import dynamic from 'next/dynamic';
 import { useContext, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import VideoHeader, { videoUrls } from 'src/@core/components/video-header/video-header';
+import { videoUrls } from 'src/@core/components/video-header/video-header';
 import useResponsive from 'src/@core/hooks/useResponsive';
 import { AuthContext } from 'src/context/AuthContext';
 import { useAppDispatch, useAppSelector } from 'src/store';
 import { fetchSources } from 'src/store/apps/leads';
-import LidsHeader from 'src/views/apps/lids/LidsHeader';
-import LidsKanban from 'src/views/apps/lids/LidsKanban';
-import CreateAnonimDialogDialog from 'src/views/apps/lids/anonimUser/CreateAnonimUserDialog';
-import CreateDepartmentDialog from 'src/views/apps/lids/department/create-dialog';
-import CreateDepartmentItemDialog from 'src/views/apps/lids/departmentItem/Dialog';
-import SubLoader from 'src/views/apps/loaders/SubLoader';
-import TeacherProfile from 'src/views/teacher-profile';
+
+const VideoHeader = dynamic(() => import('src/@core/components/video-header/video-header'));
+const LidsHeader = dynamic(() => import('src/views/apps/lids/LidsHeader'));
+const LidsKanban = dynamic(() => import('src/views/apps/lids/LidsKanban'));
+const SubLoader = dynamic(() => import('src/views/apps/loaders/SubLoader'));
+const TeacherProfile = dynamic(() => import('src/views/teacher-profile'));
+const CreateAnonimDialogDialog = dynamic(() => import('src/views/apps/lids/anonimUser/CreateAnonimUserDialog'));
+const CreateDepartmentDialog = dynamic(() => import('src/views/apps/lids/department/create-dialog'));
+const CreateDepartmentItemDialog = dynamic(() => import('src/views/apps/lids/departmentItem/Dialog'));
 
 const Lids = () => {
 

@@ -1,3 +1,4 @@
+"use client";
 import {
   Box,
   Button,
@@ -7,17 +8,20 @@ import {
 } from '@mui/material';
 import { ReactNode, useEffect, useState } from 'react';
 import IconifyIcon from 'src/@core/components/icon';
-import DataTable from 'src/@core/components/table';
 import { useTranslation } from 'react-i18next';
 import { useRouter } from 'next/router';
-import RowOptions from 'src/views/apps/mentors/RowOptions';
-import { TeacherAvatar } from 'src/views/apps/mentors/AddMentorsModal';
 import { useAppDispatch, useAppSelector } from 'src/store';
 import { fetchTeachersList, setOpenEdit } from 'src/store/apps/mentors';
-import TeacherEditDialog from 'src/views/apps/mentors/TeacherEditDialog';
-import TeacherCreateDialog from 'src/views/apps/mentors/TeacherCreateDialog';
 import { formatCurrency } from 'src/@core/utils/format-currency';
-import VideoHeader, { videoUrls } from 'src/@core/components/video-header/video-header';
+import { videoUrls } from 'src/@core/components/video-header/video-header';
+import dynamic from "next/dynamic"
+
+const RowOptions = dynamic(() => import('src/views/apps/mentors/RowOptions'));
+const TeacherAvatar = dynamic(() => import('src/views/apps/mentors/AddMentorsModal').then(mod => mod.TeacherAvatar));
+const TeacherEditDialog = dynamic(() => import('src/views/apps/mentors/TeacherEditDialog'));
+const TeacherCreateDialog = dynamic(() => import('src/views/apps/mentors/TeacherCreateDialog'));
+const VideoHeader = dynamic(() => import('src/@core/components/video-header/video-header'));
+const DataTable = dynamic(() => import('src/@core/components/table'));
 
 export interface customTableProps {
   xs: number
@@ -27,13 +31,10 @@ export interface customTableProps {
 }
 
 export default function GroupsPage() {
-
-  // ** Hooks
   const { t } = useTranslation()
   const { push } = useRouter()
   const dispatch = useAppDispatch()
 
-  // Stored Data
   const { teachers, teachersCount, isLoading } = useAppSelector(state => state.mentors)
   const [page, setPage] = useState(1)
 

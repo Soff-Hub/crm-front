@@ -69,6 +69,16 @@ code[class*='language-'] {
   background: #9ca3af;
 }
 
+.hide-scrollbar {
+  overflow: auto; /* Allows scrolling */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none; /* WebKit browsers (Chrome, Safari) */
+}
+
 /* Define the width of the scrollbar */
 /* body {
   scrollbar-width: thin; 

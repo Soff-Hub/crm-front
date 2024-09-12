@@ -1,5 +1,4 @@
 import { Box, Button, Dialog, DialogContent, IconButton, Typography } from '@mui/material';
-import AccordionCustom from 'src/@core/components/accordion';
 import IconifyIcon from 'src/@core/components/icon';
 import LoadingButton from '@mui/lab/LoadingButton';
 import toast from 'react-hot-toast';
@@ -8,7 +7,10 @@ import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { RootState, useAppDispatch } from 'src/store';
 import { editDepartment, fetchDepartmentList, setOpenActionModal, setOpenItem, setOpenLid } from 'src/store/apps/leads';
-import EditDepartmentDialog from './department/edit-dialog';
+import dynamic from 'next/dynamic';
+
+const AccordionCustom = dynamic(() => import('src/@core/components/accordion'));
+const EditDepartmentDialog = dynamic(() => import('./department/edit-dialog'));
 
 interface Props {
     title: string

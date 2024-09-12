@@ -15,8 +15,16 @@ import useSMS from 'src/hooks/useSMS'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch, useAppSelector } from 'src/store'
 import { fetchDepartmentList, setOpenLid, setSectionId } from 'src/store/apps/leads'
-import DepartmentSendSmsForm from 'src/views/apps/lids/departmentItem/DepartmentSendSmsForm'
-import EditDepartmentItemForm from 'src/views/apps/lids/departmentItem/EditDepartmentItemForm'
+import dynamic from 'next/dynamic'
+
+const DepartmentSendSmsForm = dynamic(() => import('src/views/apps/lids/departmentItem/DepartmentSendSmsForm'), {
+    ssr: false, // Disable server-side rendering if required
+})
+
+// Dynamic import for EditDepartmentItemForm
+const EditDepartmentItemForm = dynamic(() => import('src/views/apps/lids/departmentItem/EditDepartmentItemForm'), {
+    ssr: false, // Disable server-side rendering if required
+})
 
 interface AccordionProps {
     title?: string

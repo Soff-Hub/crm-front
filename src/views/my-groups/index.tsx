@@ -1,16 +1,19 @@
 import { Box, Grid, Pagination, Typography } from '@mui/material';
+import dynamic from 'next/dynamic';
 import { useContext, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import DataTable, { customTableDataProps } from 'src/@core/components/table';
+import { customTableDataProps } from 'src/@core/components/table';
 import { formatCurrency } from 'src/@core/utils/format-currency';
 import { AuthContext } from 'src/context/AuthContext';
 import { useAppDispatch, useAppSelector } from 'src/store';
 import { fetchGroups, fetchTeacherSalaries, updateMyGroupParams } from 'src/store/apps/groups';
-import GroupCard from './components/GroupCard';
-import GroupSkeleton from './components/Skeleton';
-import TeachersDetails from './components/TeachersDetails';
 
 
+// Dynamically import components
+const TeachersDetails = dynamic(() => import('./components/TeachersDetails'), { ssr: false });
+const GroupCard = dynamic(() => import('./components/GroupCard'), { ssr: false });
+const GroupSkeleton = dynamic(() => import('./components/Skeleton'), { ssr: false });
+const DataTable = dynamic(() => import('src/@core/components/table'), { ssr: false });
 
 export default function MyGroups() {
     const { user } = useContext(AuthContext)

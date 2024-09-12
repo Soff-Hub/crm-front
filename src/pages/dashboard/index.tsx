@@ -1,10 +1,12 @@
 "use client";
+import dynamic from 'next/dynamic';
 import { useContext, useEffect } from 'react';
 import { AuthContext } from 'src/context/AuthContext';
-import MyGroups from 'src/views/my-groups';
 import { useAppDispatch, useAppSelector } from 'src/store';
 import { fetchLessons, fetchStatistics } from 'src/store/apps/dashboard';
-import DashboardPage from 'src/views/apps/dashboard/DashboardPage';
+// Dynamic imports
+const MyGroups = dynamic(() => import('src/views/my-groups'), { ssr: false });
+const DashboardPage = dynamic(() => import('src/views/apps/dashboard/DashboardPage'), { ssr: false });
 
 const AppCalendar = () => {
   const { weeks } = useAppSelector((state) => state.dashboard)

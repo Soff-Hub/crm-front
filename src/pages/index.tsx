@@ -5,10 +5,12 @@ import { useEffect } from 'react'
 import { useRouter } from 'next/router'
 
 // ** Spinner Import
-import Spinner from 'src/@core/components/spinner'
+// import Spinner from 'src/@core/components/spinner'
 
+const Spinner = dynamic(() => import("src/@core/components/spinner"), { ssr: false })
 // ** Hook Imports
 import { useAuth } from 'src/hooks/useAuth'
+import dynamic from 'next/dynamic'
 
 /**
  *  Set Home URL based on User Roles

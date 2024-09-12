@@ -1,13 +1,14 @@
 // ** MUI Imports
 import Grid from '@mui/material/Grid'
+import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
-import VideoHeader, { videoUrls } from 'src/@core/components/video-header/video-header'
+import { videoUrls } from 'src/@core/components/video-header/video-header'
 import useTeachers from 'src/hooks/useTeachers'
 
-// ** Demo Components Imports
-import UserViewLeft from 'src/views/apps/mentors/view/UserViewLeft'
-import UserViewRight from 'src/views/apps/mentors/view/UserViewRight'
+const UserViewLeft = dynamic(() => import('src/views/apps/mentors/view/UserViewLeft'));
+const UserViewRight = dynamic(() => import('src/views/apps/mentors/view/UserViewRight'));
+const VideoHeader = dynamic(() => import('src/@core/components/video-header/video-header'));
 
 const UserView = ({ tab }: any) => {
   const router = useRouter()

@@ -8,9 +8,7 @@ import CalendarTabs from './CalendarTabs';
 import LessonsTable from './LessonsTable';
 import WeekDaysDialog from './WeekDaysDialog';
 import { fetchLessons, updateWeeks } from 'src/store/apps/dashboard';
-import Typography, { TypographyProps } from '@mui/material/Typography';
 import Skeleton from '@mui/material/Skeleton';
-import Grid from '@mui/material/Grid';
 
 
 export default function Calendar() {
