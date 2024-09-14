@@ -39,7 +39,6 @@ const EditGroupModal = dynamic(() => import('src/views/apps/groups/EditGroupModa
 const AddGroupModal = dynamic(() => import('src/views/apps/groups/AddGroupModal'));
 const VideoHeader = dynamic(() => import('src/@core/components/video-header/video-header'));
 
-
 export interface customTableProps {
   xs: number
   title: string

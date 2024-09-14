@@ -1,17 +1,17 @@
-import React, { useEffect, useState } from 'react'
-import { Alert, Box, Button, Dialog, DialogContent, DialogTitle, FormControl, FormHelperText, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material'
-import { customTableProps } from 'src/pages/groups'
-import DataTable from 'src/@core/components/table'
-import toast from 'react-hot-toast'
-import IconifyIcon from 'src/@core/components/icon'
-import Form from 'src/@core/components/form'
-import api from 'src/@core/utils/api'
-import LoadingButton from '@mui/lab/LoadingButton'
-import UseBgColor from 'src/@core/hooks/useBgColor'
-import { useTranslation } from 'react-i18next'
-import showResponseError from 'src/@core/utils/show-response-error'
-import { useRouter } from 'next/router'
-import VideoHeader, { videoUrls } from 'src/@core/components/video-header/video-header'
+import { useEffect, useState } from 'react';
+import { Alert, Box, Button, Dialog, DialogContent, DialogTitle, FormControl, FormHelperText, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material';
+import { customTableProps } from 'src/pages/groups';
+import DataTable from 'src/@core/components/table';
+import toast from 'react-hot-toast';
+import IconifyIcon from 'src/@core/components/icon';
+import Form from 'src/@core/components/form';
+import api from 'src/@core/utils/api';
+import LoadingButton from '@mui/lab/LoadingButton';
+import UseBgColor from 'src/@core/hooks/useBgColor';
+import { useTranslation } from 'react-i18next';
+import showResponseError from 'src/@core/utils/show-response-error';
+import { useRouter } from 'next/router';
+import VideoHeader, { videoUrls } from 'src/@core/components/video-header/video-header';
 
 export default function FormsPage() {
 
@@ -70,12 +70,16 @@ export default function FormsPage() {
     },
   ]
 
-  const BASE_URL = process.env.NEXT_PUBLIC_URL
+  const subdomain = location.hostname.split('.')
+  const baseURL = subdomain.length < 3
+    ? `test`
+    : `${subdomain[0]}`
+
 
   const handleClick = (id: string) => {
     const value = data.find(el => el.id === id)
     const textArea = document.createElement("textarea");
-    textArea.value = `https://${window.location.hostname}/forms/r/${value.uuid}`;
+    textArea.value = `https://${window.location.hostname}/forms/r/${value.uuid}/${baseURL}`;
     document.body.appendChild(textArea);
     textArea.focus();
     textArea.select();
