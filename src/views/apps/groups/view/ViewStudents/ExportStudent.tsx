@@ -8,7 +8,7 @@ import * as Yup from 'yup';
 import { useEffect, useState } from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormHelperText, InputLabel, Select, TextField } from '@mui/material';
 import { toast } from 'react-hot-toast';
-import { fetchGroups } from 'src/store/apps/groups';
+import { fetchGroupChecklist, fetchGroups } from 'src/store/apps/groups';
 import { today } from 'src/@core/components/card-statistics/kanban-item';
 import { getAttendance, getStudents, setGettingAttendance } from 'src/store/apps/groupDetails';
 import { useRouter } from 'next/router';
@@ -17,7 +17,7 @@ import { getMontNumber } from 'src/@core/utils/gwt-month-name';
 
 export default function ExportStudent({ id, modalRef, setModalRef }: { id: any, modalRef: string | null, setModalRef: any }) {
     const [isLoading, setLoading] = useState(false)
-    const { groups } = useAppSelector(state => state.groups)
+    const { groupChecklist } = useAppSelector(state => state.groups)
     const { groupData } = useAppSelector(state => state.groupDetails)
     const dispatch = useAppDispatch()
     const { t } = useTranslation()
@@ -52,8 +52,8 @@ export default function ExportStudent({ id, modalRef, setModalRef }: { id: any, 
     })
 
     useEffect(() => {
-        if (modalRef === "export" && !groups?.length) {
-            dispatch(fetchGroups(""))
+        if (modalRef === "export" && !groupChecklist?.length) {
+            dispatch(fetchGroupChecklist())
         }
     }, [modalRef])
 
@@ -84,7 +84,7 @@ export default function ExportStudent({ id, modalRef, setModalRef }: { id: any, 
                             value={formik.values.new_group}
                         >
                             {
-                                groups?.filter(el => el.id !== groupData?.id)?.map((el: any) => (
+                                groupChecklist?.filter(el => el.id !== groupData?.id)?.map((el: any) => (
                                     <MenuItem value={el.id} sx={{ wordBreak: 'break-word' }}>
                                         <span style={{ maxWidth: '250px', wordBreak: 'break-word' }}>
                                             {el.name} {`[${el.start_at?.split(':').slice(0, 2).join(':')} - ${el.end_at?.split(':').slice(0, 2).join(':')}]`}

@@ -64,6 +64,7 @@ export interface IGroupsState {
   exclude_time: any
   isOpenAddGroup: boolean
   groups: GroupType[] | null
+  groupChecklist: GroupType[] | null
   rooms: MetaTypes[] | null
   courses: MetaTypes[] | null
   teachers: TeacherType[] | null

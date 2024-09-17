@@ -65,7 +65,7 @@ const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
     [`& .${tooltipClasses.tooltip}`]: {
         backgroundColor: '#f5f5f9',
         width: '300px',
-        height: '300px',
+        minHeight: '300px',
         color: 'rgba(0, 0, 0, 0.87)',
         maxWidth: 300,
         fontSize: theme.typography.pxToRem(12),
@@ -132,7 +132,7 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, }: ItemTyp
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>
             <Typography sx={{ width: '20px' }}>{index}.</Typography>
             <Status color={status == 'active' ? 'success' : status == 'new' ? 'warning' : status == 'frozen' ? "secondary" : 'error'} />
-            {!(user?.role.length === 1 && user?.role.includes('teacher')) ? <HtmlTooltip className='' title={
+            {!(user?.role.length === 1 && user?.role.includes('teacher')) ? <HtmlTooltip title={
                 <Box sx={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', padding: '10px' }}>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', py: 1 }}>
                         <Box>

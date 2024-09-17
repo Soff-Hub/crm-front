@@ -64,7 +64,7 @@ const Navigation = (t: any): VerticalNavItemsType => {
   const items = [
     {
       title: t('Bosh sahifa'),
-      icon: 'mdi:home-outline',
+      icon: 'clarity:home-solid',
       path: '/dashboard'
     },
     {
@@ -79,7 +79,7 @@ const Navigation = (t: any): VerticalNavItemsType => {
     },
     {
       title: t('Guruhlar'),
-      icon: 'uil:layer-group',
+      icon: 'uis:layer-group',
       path: '/groups'
     },
     {
@@ -145,14 +145,24 @@ const Navigation = (t: any): VerticalNavItemsType => {
     },
     {
       title: t('Moliya'),
-      icon: 'material-symbols-light:finance-mode',
+      icon: 'material-symbols:finance-mode-rounded',
       path: '/finance'
     },
     {
-      title: t("Video qo'llanmalar"),
-      icon: 'ph:video-light',
-      path: '/video-tutorials'
+      title: t('Hisobotlar'),
+      icon: 'tabler:report',
+      children: [
+        {
+          title: "O'quvchilar to'lovi",
+          path: '/reports/student-payment'
+        }
+      ]
     }
+    // {
+    //   title: t("Video qo'llanmalar"),
+    //   icon: 'ph:video-light',
+    //   path: '/video-tutorials'
+    // }
   ]
 
   return user?.role.includes('casher') || user?.role.includes('ceo')

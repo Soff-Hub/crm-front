@@ -51,8 +51,14 @@ const AppBarContent = (props: Props) => {
     dispatch(setGlobalPay(true))
   }
 
+  const subdomain = location.hostname.split('.')
+  const baseURL = subdomain.length < 3
+    ? `test`
+    : `${subdomain[0]}`
+
+
   useEffect(() => {
-    const socket = new WebSocket(`wss://test.api-soffcrm.uz/ws/notifications/${user?.id}/`)
+    const socket = new WebSocket(`wss://${baseURL}.api-soffcrm.uz/ws/notifications/${user?.id}/`)
     socket.onopen = () => {
       console.log('WebSocket connection established')
       socket.send(JSON.stringify({ subscribe: `notifications/${user?.id}/` }))

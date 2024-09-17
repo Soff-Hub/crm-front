@@ -65,6 +65,12 @@ export const fetchGroups = createAsyncThunk('groups/fetchGroups', async (querySt
   const resp = await api.get(ceoConfigs.groups + '?' + queryString)
   return resp.data
 })
+
+export const fetchGroupChecklist = createAsyncThunk('groups/fetchGroupChecklist', async () => {
+  const resp = await api.get('common/group-check-list/')
+  return resp.data
+})
+
 export const fetchTeacherSalaries = createAsyncThunk(
   'groups/fetchTeacherSalaries',
   async (queryString: string = '') => {
@@ -82,6 +88,7 @@ const currentDay: string = `${new Date()}`.split(' ')[0].toLocaleLowerCase()
 
 const initialState: IGroupsState = {
   groups: null,
+  groupChecklist: null,
   groupData: null,
   courses: null,
   teachers: null,
@@ -224,6 +231,9 @@ export const groupsSlice = createSlice({
     })
     builder.addCase(fetchTeacherSalaries.rejected, (state, action) => {
       state.isTableLoading = false
+    })
+    builder.addCase(fetchGroupChecklist.fulfilled, (state, action) => {
+      state.groupChecklist = action.payload
     })
   }
 })

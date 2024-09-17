@@ -144,6 +144,10 @@ const UserDropdown = (props: Props) => {
           <Icon icon='material-symbols-light:payments-sharp' />
           {t("CRM sozlamalari")}
         </Button>
+        <Button color="secondary" sx={styles} onClick={() => router.push('/video-tutorials')}>
+          <Icon icon='ph:video-bold' />
+          {t("Video qo'llanmalar")}
+        </Button>
         <Divider sx={{ m: '0 !important' }} />
         <MenuItem
           onClick={handleLogout}
