@@ -1,17 +1,29 @@
-import { Box, FormControl, InputAdornment, InputLabel, MenuItem, OutlinedInput, Select, SelectChangeEvent } from "@mui/material"
-import { useEffect, useState } from "react"
-import { useTranslation } from "react-i18next"
-import { DateRangePicker } from "rsuite"
-import IconifyIcon from "src/@core/components/icon"
-import useDebounce from "src/hooks/useDebounce"
-import { formatDateString } from "src/pages/finance"
-import { useAppDispatch, useAppSelector } from "src/store"
-import { fetchStudentPaymentsList, updateParams } from "src/store/apps/reports/studentPayments"
+//@ts-nocheck
+import {
+    Box,
+    Chip,
+    FormControl,
+    InputAdornment,
+    InputLabel,
+    MenuItem,
+    OutlinedInput,
+    Select,
+    SelectChangeEvent,
+} from "@mui/material";
+import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { DateRangePicker } from "rsuite";
+import IconifyIcon from "src/@core/components/icon";
+import { formatCurrency } from "src/@core/utils/format-currency";
+import useDebounce from "src/hooks/useDebounce";
+import { formatDateString } from "src/pages/finance";
+import { useAppDispatch, useAppSelector } from "src/store";
+import { fetchStudentPaymentsList, updateParams } from "src/store/apps/reports/studentPayments";
 
 export default function FilterBlock() {
     const [search, setSearch] = useState<string>('')
     const { t } = useTranslation()
-    const { groups, queryParams } = useAppSelector(state => state.studentPayments)
+    const { groups, queryParams, total_payments } = useAppSelector(state => state.studentPayments)
     const dispatch = useAppDispatch()
     const [date, setDate] = useState<any>('')
     const searchVal = useDebounce(search, 800)
@@ -44,7 +56,8 @@ export default function FilterBlock() {
 
 
     return (
-        <Box sx={{ display: "grid", gridColumn: "2/4", alignItems: "center", gridTemplateColumns: "1fr 1fr 1fr", gap: "20px" }}>
+        <Box sx={{ display: "grid", gridColumn: "2/5", alignItems: "center", gridTemplateColumns: "0.8fr 1fr 1fr 1fr", gap: "10px" }}>
+            <Chip variant='outlined' size='medium' sx={{ fontSize: "14px", fontWeight: "bold", }} color="success" label={`${formatCurrency(total_payments)} UZS`} />
             <FormControl variant="outlined" size='small' fullWidth>
                 <InputLabel htmlFor="outlined-adornment-password">{t('Qidirish')}</InputLabel>
                 <OutlinedInput

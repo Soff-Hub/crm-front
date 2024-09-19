@@ -78,12 +78,13 @@ export default function StudentPaymentsPage() {
         dispatch(updateParams({ page: page }))
         await dispatch(fetchStudentPaymentsList(new URLSearchParams({ ...queryParams, page: String(page) }).toString()))
     }
+    console.log(studentsPayment);
 
     return (
         <div>
             <Box
                 className='groups-page-header'
-                sx={{ display: 'grid', gridTemplateColumns: "1fr 1fr 1fr", alignItems: "center", margin: '10px 0' }}
+                sx={{ display: 'grid', gridTemplateColumns: "1fr 1fr 1fr 1fr", alignItems: "center", margin: '10px 0' }}
                 py={2}
             >
                 <Box sx={{ display: "flex", alignItems: "center", gap: "10px" }}>

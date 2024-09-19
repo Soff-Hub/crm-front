@@ -26,6 +26,7 @@ type Payment = {
 interface IStudentsPaymentState {
   studentsPayment: Payment[]
   paymentsCount: number
+  total_payments: number
   isLoading: boolean
   groups: any[]
   queryParams: { is_payment: boolean; page: number; group?: string; start_date?: string; end_date?: string }
@@ -36,6 +37,7 @@ const initialState: IStudentsPaymentState = {
   groups: [],
   queryParams: { is_payment: true, page: 1 },
   paymentsCount: 0,
+  total_payments: 0,
   isLoading: false
 }
 
@@ -54,6 +56,7 @@ export const studentPaymentsSlice = createSlice({
       })
       .addCase(fetchStudentPaymentsList.fulfilled, (state, action) => {
         state.studentsPayment = action.payload.results
+        state.total_payments = action.payload.total_payments
         state.paymentsCount = action.payload.count
         state.isLoading = false
       })
