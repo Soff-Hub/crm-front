@@ -1,17 +1,26 @@
-//@ts-nocheck
-import { Box, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from "@mui/material"
-import { useState } from "react"
+import { Box, FormControl, InputAdornment, InputLabel, MenuItem, OutlinedInput, Select, SelectChangeEvent } from "@mui/material"
+import { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { DateRangePicker } from "rsuite"
+import IconifyIcon from "src/@core/components/icon"
+import useDebounce from "src/hooks/useDebounce"
 import { formatDateString } from "src/pages/finance"
 import { useAppDispatch, useAppSelector } from "src/store"
 import { fetchStudentPaymentsList, updateParams } from "src/store/apps/reports/studentPayments"
 
 export default function FilterBlock() {
+    const [search, setSearch] = useState<string>('')
     const { t } = useTranslation()
     const { groups, queryParams } = useAppSelector(state => state.studentPayments)
     const dispatch = useAppDispatch()
     const [date, setDate] = useState<any>('')
+    const searchVal = useDebounce(search, 800)
+
+    useEffect(() => {
+        dispatch(updateParams({ search: searchVal, page: "1" }))
+        const queryString = new URLSearchParams({ ...queryParams, search: searchVal, page: "1" }).toString()
+        dispatch(fetchStudentPaymentsList(queryString))
+    }, [searchVal])
 
     const handleChangeDate = async (e: any) => {
         if (e) {
@@ -35,7 +44,25 @@ export default function FilterBlock() {
 
 
     return (
-        <Box sx={{ display: "grid", alignItems: "center", gridTemplateColumns: "1fr 1fr", gap: "20px" }}>
+        <Box sx={{ display: "grid", gridColumn: "2/4", alignItems: "center", gridTemplateColumns: "1fr 1fr 1fr", gap: "20px" }}>
+            <FormControl variant="outlined" size='small' fullWidth>
+                <InputLabel htmlFor="outlined-adornment-password">{t('Qidirish')}</InputLabel>
+                <OutlinedInput
+                    fullWidth
+                    sx={{ bgcolor: "white" }}
+                    id="outlined-adornment-password"
+                    type={'text'}
+                    onChange={(e: any) => setSearch(e.target.value)}
+                    value={search}
+                    autoComplete='off'
+                    endAdornment={
+                        <InputAdornment position="end">
+                            <IconifyIcon icon={'tabler:search'} />
+                        </InputAdornment>
+                    }
+                    label={t('Qidirish')}
+                />
+            </FormControl>
             <FormControl fullWidth>
                 <InputLabel size='small' id='demo-simple-select-outlined-label'>{t('Guruhlar')}</InputLabel>
                 <Select

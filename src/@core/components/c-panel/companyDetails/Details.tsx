@@ -10,8 +10,6 @@ export default function Details() {
     const { isMobile } = useResponsive()
     const { details, isLoading } = useAppSelector(state => state.companyDetails)
 
-    console.log(details);
-
     const statsFields = {
         student_count: {
             name: "O'quvchilar soni",

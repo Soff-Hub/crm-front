@@ -83,7 +83,7 @@ export default function StudentPaymentsPage() {
         <div>
             <Box
                 className='groups-page-header'
-                sx={{ display: 'grid', gridTemplateColumns: "1fr 1fr", alignItems: "center", margin: '10px 0' }}
+                sx={{ display: 'grid', gridTemplateColumns: "1fr 1fr 1fr", alignItems: "center", margin: '10px 0' }}
                 py={2}
             >
                 <Box sx={{ display: "flex", alignItems: "center", gap: "10px" }}>

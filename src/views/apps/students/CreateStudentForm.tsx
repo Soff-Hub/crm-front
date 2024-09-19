@@ -26,8 +26,8 @@ import { today } from 'src/@core/components/card-statistics/kanban-item';
 import * as Yup from "yup";
 import { useFormik } from 'formik';
 import { CreateStudentDto } from 'src/types/apps/studentsTypes';
-import { createStudent, fetchStudentsList, setOpenEdit, updateStudentParams } from 'src/store/apps/students';
-import { useAppDispatch } from 'src/store';
+import { createStudent, fetchGroupCheckList, fetchStudentsList, setOpenEdit, updateStudentParams } from 'src/store/apps/students';
+import { useAppDispatch, useAppSelector } from 'src/store';
 import useGroups from 'src/hooks/useGroups';
 import useResponsive from 'src/@core/hooks/useResponsive';
 import PhoneInput from 'src/@core/components/phone-input';
@@ -43,13 +43,16 @@ export default function CreateStudentForm() {
     const { t } = useTranslation()
     const error: any = {}
     const dispatch = useAppDispatch()
-    const { groups, getGroups } = useGroups()
+    const { groups } = useAppSelector(state => state.students)
     const { isMobile } = useResponsive()
 
     // ** States
     const [isGroup, setIsGroup] = useState<boolean>(false)
     const [loading, setLoading] = useState<boolean>(false)
 
+    const getGroups = async () => {
+        await dispatch(fetchGroupCheckList())
+    }
 
     const validationSchema = Yup.object({
         first_name: Yup.string().required("Ismingizni kiriting"),

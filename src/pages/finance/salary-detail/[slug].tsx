@@ -1,6 +1,6 @@
 //@ts-nocheck
 import LoadingButton from "@mui/lab/LoadingButton";
-import { Box, Button, Dialog, DialogContent, IconButton, Typography } from "@mui/material";
+import { Box, Dialog, DialogContent, IconButton, Typography } from "@mui/material";
 import { useRouter } from "next/router";
 import { GetServerSidePropsContext, InferGetStaticPropsType } from "next/types";
 import { useEffect, useState } from "react";
@@ -12,17 +12,22 @@ import DataTable, { customTableDataProps } from "src/@core/components/table";
 import api from "src/@core/utils/api";
 import { formatCurrency } from "src/@core/utils/format-currency";
 import { useAppDispatch, useAppSelector } from "src/store";
-import { fetchModerationSalaries, updateSalaryBonus, updateSalaryFine } from "src/store/apps/finance";
+import { fetchCalculatedSalary, fetchModerationSalaries, updateSalaryBonus, updateSalaryFine } from "src/store/apps/finance";
 import TeacherGroupsModal from "src/views/apps/finance/TeacherGroupsModal";
 
 const UserView = ({ slug }: InferGetStaticPropsType<typeof getServerSideProps>) => {
-    const { moderation_salaries, isPending, is_update } = useAppSelector(state => state.finance)
+    const { moderation_salaries, isGettingCalculatedSalary, isPending, is_update } = useAppSelector(state => state.finance)
     const dispatch = useAppDispatch()
     const { t } = useTranslation()
     const [loading, setLoading] = useState<'frozen' | 'approved' | null>(null)
     const { back, push } = useRouter()
     const [open, setOpen] = useState<boolean>(false)
-    const [teacherGroups, setTeacherGroups] = useState<[] | null>(null)
+    const [id, setId] = useState<number | null>(null)
+
+    const handleGetSalary = async (teacherId: number) => {
+        setId(teacherId)
+        await dispatch(fetchCalculatedSalary({ id: teacherId, queryParams: `date=${slug}` }))
+    }
 
     const withdrawCol: customTableDataProps[] = [
         {
@@ -96,10 +101,18 @@ const UserView = ({ slug }: InferGetStaticPropsType<typeof getServerSideProps>) 
         {
             xs: 0.1,
             title: t(""),
-            dataIndex: 'calculated_salaries',
-            render: (calculated_salaries) => (
-                <Button size="small" onClick={() => setTeacherGroups(calculated_salaries)}>{t("Batafsil")}</Button>
-            )
+            dataIndex: 'employee_data',
+            render: (employee_data) => {
+                const teacherID = employee_data.id
+                return (
+                    <LoadingButton
+                        loading={teacherID == id && isGettingCalculatedSalary}
+                        size="small"
+                        onClick={() => handleGetSalary(teacherID)}>
+                        {t("Batafsil")}
+                    </LoadingButton>
+                )
+            }
         },
     ]
 
@@ -167,7 +180,7 @@ const UserView = ({ slug }: InferGetStaticPropsType<typeof getServerSideProps>) 
                 </DialogContent>
             </Dialog>
 
-            <TeacherGroupsModal teacherGroups={teacherGroups} setTeacherGroups={setTeacherGroups} />
+            <TeacherGroupsModal />
         </Box>)
 }
 

@@ -39,6 +39,17 @@ export interface AllNumbersParams {
   branch: string
 }
 
+export type GroupFinance = {
+  allowed_lessons: number
+  attended_lessons: number
+  calculated_date: string
+  condition: string
+  fines_count: number
+  group_name: string
+  original_amount: number
+  students_count: number
+}
+
 export interface IFinanceState {
   isPending: boolean
   isGettingGroupsFinance: boolean
@@ -47,6 +58,8 @@ export interface IFinanceState {
   moderation_salaries: SalaryitemType[]
   categoriesData: any[]
   groupsFinance: any[]
+  calculatedSalary: GroupFinance[] | null
+  isGettingCalculatedSalary: boolean
   all_numbers:
     | {
         label: {

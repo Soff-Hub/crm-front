@@ -204,9 +204,9 @@ export default function GroupsPage() {
         ))
     ]
 
-    const handlePagination = (page: string) => {
+    const handlePagination = (page: number) => {
         dispatch(updateQueryParams({ page }))
-        dispatch(fetchEmployees({ ...queryParams, page: +page }))
+        dispatch(fetchEmployees({ ...queryParams, page: page }))
     }
 
     useEffect(() => {
@@ -247,7 +247,7 @@ export default function GroupsPage() {
             </Box>
 
             <DataTable loading={is_pending} columns={columns} data={employees} />
-            {Math.ceil(employees_count / 10) > 1 && !is_pending && <Pagination defaultPage={queryParams.page ? Number(queryParams.page) : 1} count={Math.ceil(employees_count / 10)} variant="outlined" shape="rounded" onChange={(e: any, page) => handlePagination(e.target.value + page)} />}
+            {Math.ceil(employees_count / 10) > 1 && !is_pending && <Pagination defaultPage={queryParams.page ? Number(queryParams.page) : 1} count={Math.ceil(employees_count / 10)} variant="outlined" shape="rounded" onChange={(_: any, page) => handlePagination(page)} />}
 
             <EmployeeCreateDialog />
 

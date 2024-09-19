@@ -35,10 +35,9 @@ const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
 }));
 
 
-const Item = ({ defaultValue, groupId, userId, date, opened_id, setOpenedId }: { defaultValue: true | false | null | 0, groupId?: any, userId?: any, date?: any, opened_id: any, setOpenedId: any }) => {
+const Item = ({ currentDate, defaultValue, groupId, userId, date, opened_id, setOpenedId }: { currentDate: any, defaultValue: true | false | null | 0, groupId?: any, userId?: any, date?: any, opened_id: any, setOpenedId: any }) => {
   const [value, setValue] = useState<true | false | null | 0>(defaultValue)
   const [open, setOpen] = useState<boolean>(false)
-
 
   const handleClick = async (status: any) => {
     setOpenedId(null)
@@ -51,10 +50,9 @@ const Item = ({ defaultValue, groupId, userId, date, opened_id, setOpenedId }: {
         is_available: status
       }
       try {
-        const response = await api.post('common/student-attendance/', data)
-        console.log(response);
+        const response = await api.patch(`common/attendance/update/${currentDate?.id}/`, data)
       } catch (e: any) {
-        toast.error(e.response.data.msg[0])
+        toast.error(e.response.data.msg?.[0] || "Saqlab bo'lmadi qayta urinib ko'ring")
         setValue(defaultValue)
       }
     }
@@ -306,27 +304,30 @@ const UserViewSecurity = () => {
                     <tr key={student.id} style={{}}>
                       <td style={{ padding: '8px 0', textAlign: 'start', fontSize: '14px', borderRight: '1px solid #c3cccc' }}>{student.first_name}</td>
                       {
-                        days?.map((hour: any) => (
-                          student.attendance.some((el: any) => el.date === hour.date) && student.attendance.find((el: any) => el.date === hour.date) ? (
-                            <td key={student.attendance.find((el: any) => el.date === hour.date).date} style={{ padding: '8px 0', textAlign: 'center', cursor: 'pointer' }}>
-                              {
-                                student.attendance.find((el: any) => el.date === hour.date).is_available === true ? (
-                                  <Item opened_id={opened_id} setOpenedId={setOpenedId} defaultValue={true} groupId={query?.id} userId={student.id} date={hour.date} />
-                                ) :
-                                  student.attendance.find((el: any) => el.date === hour.date).is_available === false ? (
-                                    <Item opened_id={opened_id} setOpenedId={setOpenedId} defaultValue={false} groupId={query?.id} userId={student.id} date={hour.date} />
+                        days?.map((hour: any) => {
+                          const currentDate = student.attendance.find((el: any) => el.date === hour.date)
+                          return (
+                            student.attendance.some((el: any) => el.date === hour.date) && student.attendance.find((el: any) => el.date === hour.date) ? (
+                              <td key={student.attendance.find((el: any) => el.date === hour.date).date} style={{ padding: '8px 0', textAlign: 'center', cursor: 'pointer' }}>
+                                {
+                                  student.attendance.find((el: any) => el.date === hour.date).is_available === true ? (
+                                    <Item currentDate={currentDate} opened_id={opened_id} setOpenedId={setOpenedId} defaultValue={true} groupId={query?.id} userId={student.id} date={hour.date} />
                                   ) :
-                                    student.attendance.find((el: any) => el.date === hour.date).is_available === null ? (
-                                      <Item opened_id={opened_id} setOpenedId={setOpenedId} defaultValue={null} groupId={query?.id} userId={student.id} date={hour.date} />
-                                    ) : <></>
-                              }
+                                    student.attendance.find((el: any) => el.date === hour.date).is_available === false ? (
+                                      <Item currentDate={currentDate} opened_id={opened_id} setOpenedId={setOpenedId} defaultValue={false} groupId={query?.id} userId={student.id} date={hour.date} />
+                                    ) :
+                                      student.attendance.find((el: any) => el.date === hour.date).is_available === null ? (
+                                        <Item currentDate={currentDate} opened_id={opened_id} setOpenedId={setOpenedId} defaultValue={null} groupId={query?.id} userId={student.id} date={hour.date} />
+                                      ) : <></>
+                                }
+                              </td>
+                            ) : <td key={hour.date} style={{ padding: '8px 0', textAlign: 'center', cursor: 'not-allowed' }}>
+                              <span>
+                                <Item currentDate={currentDate} opened_id={opened_id} setOpenedId={setOpenedId} defaultValue={0} />
+                              </span>
                             </td>
-                          ) : <td key={hour.date} style={{ padding: '8px 0', textAlign: 'center', cursor: 'not-allowed' }}>
-                            <span>
-                              <Item opened_id={opened_id} setOpenedId={setOpenedId} defaultValue={0} />
-                            </span>
-                          </td>
-                        )
+                          )
+                        }
                         )
                       }
                     </tr>

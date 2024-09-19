@@ -2,6 +2,7 @@ import { Box, BoxProps, IconButton, styled, Typography, TypographyProps } from "
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import EmptyContent from "src/@core/components/empty-content";
 import IconifyIcon from "src/@core/components/icon";
 import { NotificationsType } from "src/@core/layouts/components/shared-components/NotificationDropdown";
 import { useAppDispatch, useAppSelector } from "src/store";
@@ -67,7 +68,7 @@ export default function Notifications() {
                     <Typography variant='h5'>{t("Xabarnomalar")}</Typography>
                 </Box>
             </Box>
-            <NotificationContainer sx={{ display: "flex", flexDirection: "column", gap: "10px" }} >
+            {notifications.length ? <NotificationContainer sx={{ display: "flex", flexDirection: "column", gap: "10px" }} >
                 {notifications?.map((element: NotificationsType) => (
                     <Box sx={{ bgcolor: "#F8EFE0", p: 3, borderRadius: "10px" }}>
                         <Box sx={{ flex: '1 1', display: 'flex', fontSize: "12px", overflow: 'hidden', flexDirection: 'column' }}>
@@ -79,7 +80,7 @@ export default function Notifications() {
                         </Typography>
                     </Box>
                 ))}
-            </NotificationContainer >
+            </NotificationContainer > : <EmptyContent />}
         </Box >
     )
 }

@@ -11,6 +11,7 @@ import * as Yup from 'yup';
 import PhoneInput from '../../phone-input';
 import { fetchCompanyDetails, updateClient } from 'src/store/apps/c-panel/companySlice';
 import { toast } from 'react-hot-toast';
+import { reversePhone } from '../../phone-input/format-phone-number';
 
 export default function EditDetails() {
     const [loading, setLoading] = useState<boolean>(false)
@@ -19,7 +20,6 @@ export default function EditDetails() {
     const { details } = useAppSelector(state => state.companyDetails)
     const dispatch = useAppDispatch()
     const { query } = useRouter()
-    console.log(query);
 
     const validationSchema = Yup.object({
         name: Yup.string().required(t("Markaz nomi kiritilishi kerak") as string),
@@ -104,7 +104,7 @@ export default function EditDetails() {
                     <PhoneInput
                         name="reference_phone"
                         label={t('Masul shaxs raqami')}
-                        onChange={formik.handleChange}
+                        onChange={(e) => formik.setFieldValue("reference_phone", reversePhone(e.target.value))}
                         onBlur={formik.handleBlur}
                         value={formik.values.reference_phone}
                         error={!!formik.errors.reference_phone && !!formik.touched.reference_phone}

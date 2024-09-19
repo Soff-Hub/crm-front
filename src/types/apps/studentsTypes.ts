@@ -61,6 +61,7 @@ export interface IStudentState {
   studentData: StudentDetailType | UpdateStudentDto | null
   isLoading: boolean
   queryParams: StudentsQueryParamsTypes
+  groups: any[]
   payments: any[]
   global_pay: boolean
 }

@@ -3,12 +3,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 
 // ** Axios Imports
 import api from 'src/@core/utils/api'
-import {
-  CreateDepartmentUser,
-  CreatesDepartmentState,
-  ILeadsState,
-  LeadsQueryParamsTypes
-} from 'src/types/apps/leadsTypes'
+import { CreatesDepartmentState, ILeadsState, LeadsQueryParamsTypes } from 'src/types/apps/leadsTypes'
 
 // ** Fetch All Departments
 export const fetchDepartmentList = createAsyncThunk(
@@ -27,6 +22,9 @@ export const fetchDepartmentList = createAsyncThunk(
 // ** Fetch All Sources
 export const fetchSources = createAsyncThunk('appChat/fetchSources', async () => {
   return (await api.get(`leads/source/`)).data.results
+})
+export const fetchGroupCheckList = createAsyncThunk('fetchGroupCheckList', async () => {
+  return (await api.get(`common/group-check-list/`)).data
 })
 
 // ** Create Departments
@@ -88,7 +86,8 @@ export const updateDepartmentStudent = createAsyncThunk(
   'appChat/updateDepartmentStudent',
   async (data: any, { rejectWithValue }) => {
     try {
-      const response = await api.patch(`leads/department-user-list/${data.id}/`, data)
+      // const response = await api.patch(`leads/department-user-list/${data.id}/`, data)
+      const response = await api.patch(`leads/anonim-user/update/${data.id}/`, data)
       return response.data
     } catch (err: any) {
       if (err.response) {
@@ -101,6 +100,7 @@ export const updateDepartmentStudent = createAsyncThunk(
 
 const initialState: ILeadsState = {
   sourceData: [],
+  groups: [],
   leadData: [],
   open: null,
   openItem: null,
@@ -176,6 +176,9 @@ export const appLeadsSlice = createSlice({
       })
       .addCase(fetchSources.fulfilled, (state, action) => {
         state.sourceData = action.payload
+      })
+      .addCase(fetchGroupCheckList.fulfilled, (state, action) => {
+        state.groups = action.payload
       })
       .addCase(createDepartmentItem.pending, state => {
         state.loading = true

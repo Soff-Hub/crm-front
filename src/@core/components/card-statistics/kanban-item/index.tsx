@@ -27,7 +27,6 @@ import { addOpenedUser } from 'src/store/apps/user'
 import Status from '../../status'
 import useSMS from 'src/hooks/useSMS'
 import useBranches from 'src/hooks/useBranch'
-import useGroups from 'src/hooks/useGroups'
 import { useAppDispatch, useAppSelector } from 'src/store'
 import KanbanItemMenu from './KanbanItemMenu'
 import EditAnonimDialogDialog from 'src/views/apps/lids/anonimUser/EditAnonimUserDialog'
@@ -35,6 +34,7 @@ import AddToGroupForm from 'src/views/apps/lids/anonimUser/AddToGroupForm'
 import MergeToDepartment from 'src/views/apps/lids/anonimUser/MergeForm'
 import SendSmsAnonimUserForm from 'src/views/apps/lids/anonimUser/SendSmsAnonimUserForm'
 import AddNoteAnonimUser from 'src/views/apps/lids/anonimUser/AddNoteAnonimUser'
+import { fetchGroupCheckList } from 'src/store/apps/leads'
 
 // ** Styled Avatar component
 const Avatar = styled(CustomAvatar)<AvatarProps>(({ theme }) => ({
@@ -63,10 +63,9 @@ const KanbanItem = (props: KanbarItemProps) => {
     const [leadDetail, setLeadDetail] = useState([])
 
     const { total } = useAppSelector((state) => state.user)
-    const { queryParams } = useAppSelector((state) => state.leads)
+    const { queryParams, groups } = useAppSelector((state) => state.leads)
     const { smsTemps, getSMSTemps } = useSMS()
     const { branches, getBranches } = useBranches()
-    const { getGroups, groups } = useGroups()
 
     const [selectBranch, setSelectBranch] = useState<any>(null)
     const [selectDepartment, setSelectDepartment] = useState<any>([])
@@ -78,6 +77,9 @@ const KanbanItem = (props: KanbarItemProps) => {
 
     const handleClick = (event: any) => {
         setAnchorEl(event.currentTarget)
+    }
+    const getGroups = async () => {
+        await dispatch(fetchGroupCheckList())
     }
 
 

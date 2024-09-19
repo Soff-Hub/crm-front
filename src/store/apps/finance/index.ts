@@ -7,6 +7,12 @@ import { AllNumbersParams, IFinanceState } from 'src/types/apps/finance'
 export const fetchModerationSalaries = createAsyncThunk('finance/fetchModerationSalaries', async (params?: string) => {
   return (await api.get('/common/finance/employee-salaries/?' + params)).data
 })
+export const fetchCalculatedSalary = createAsyncThunk(
+  'finance/fetchCalculatedSalary',
+  async (data: { id: number; queryParams?: string }) => {
+    return (await api.get(`/common/finance/calculated-salary/${data.id}/?` + data.queryParams)).data
+  }
+)
 
 export const createSms = createAsyncThunk('finance/createSms', async (data: { description: string }) => {
   return (await api.post('common/sms-form/create/', data)).data
@@ -38,6 +44,8 @@ const initialState: IFinanceState = {
   moderation_salaries: [],
   categoriesData: [],
   groupsFinance: [],
+  calculatedSalary: null,
+  isGettingCalculatedSalary: false,
   all_numbers: undefined,
   numbersLoad: false,
   isGettingExpenseCategories: false,
@@ -84,6 +92,9 @@ export const financeSlice = createSlice({
     updateNumberParams: (state, action) => {
       const newParams = { ...state.allNumbersParams, ...action.payload }
       state.allNumbersParams = newParams
+    },
+    setCalculatedSalary: (state, action) => {
+      state.calculatedSalary = action.payload
     }
   },
   extraReducers: builder => {
@@ -121,9 +132,19 @@ export const financeSlice = createSlice({
         state.groupsFinance = action.payload
         state.isGettingGroupsFinance = false
       })
+      .addCase(fetchCalculatedSalary.pending, state => {
+        state.isGettingCalculatedSalary = true
+      })
+      .addCase(fetchCalculatedSalary.fulfilled, (state, action) => {
+        state.calculatedSalary = action.payload
+        state.isGettingCalculatedSalary = false
+      })
+      .addCase(fetchCalculatedSalary.rejected, state => {
+        state.isGettingCalculatedSalary = false
+      })
   }
 })
 
-export const { updateSalaryBonus, updateSalaryFine, updateNumberParams } = financeSlice.actions
+export const { setCalculatedSalary, updateSalaryBonus, updateSalaryFine, updateNumberParams } = financeSlice.actions
 
 export default financeSlice.reducer

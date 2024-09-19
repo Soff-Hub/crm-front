@@ -129,8 +129,10 @@ const NotificationDropdown = (props: Props) => {
   }
 
   const handleDropdownClose = () => {
+    router.push("/notifications")
     setAnchorEl(null)
   }
+
 
   return (
     <Fragment>
@@ -150,7 +152,7 @@ const NotificationDropdown = (props: Props) => {
       <Menu
         anchorEl={anchorEl}
         open={Boolean(anchorEl)}
-        onClose={handleDropdownClose}
+        onClose={() => setAnchorEl(null)}
         anchorOrigin={{ vertical: 'bottom', horizontal: direction === 'ltr' ? 'right' : 'left' }}
         transformOrigin={{ vertical: 'top', horizontal: direction === 'ltr' ? 'right' : 'left' }}
       >

@@ -2,6 +2,7 @@ import LoadingButton from "@mui/lab/LoadingButton";
 import { Button, Drawer, FormControl, FormHelperText, IconButton, InputLabel, MenuItem, Select, styled, TextField, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { useFormik } from "formik";
+import * as Yup from "yup";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { toast } from "react-hot-toast";
@@ -14,7 +15,6 @@ import UserIcon from "src/layouts/components/UserIcon";
 import { useAppDispatch, useAppSelector } from "src/store";
 import { createClientPayment, handleOpenClientModal } from "src/store/apps/c-panel";
 import { TariffResponseType } from "src/types/apps/cpanelTypes";
-import * as Yup from "yup";
 import { fetchClientPayments } from "src/store/apps/c-panel/companySlice";
 
 const VisuallyHiddenInput = styled('input')({
@@ -79,8 +79,6 @@ export default function CreatePayment() {
         setFile(null)
         dispatch(handleOpenClientModal(false))
     }
-
-    console.log(tariffs);
 
     return (
         <Drawer open={isOpenClientModal} hideBackdrop anchor='right' variant='temporary' >
