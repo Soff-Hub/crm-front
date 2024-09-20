@@ -15,6 +15,7 @@ export interface IMentorsState {
   teachersCount: number
   teacherData: UpdateTeacherDto | null
   isLoading: boolean
+  queryParams: { page: number; status: string }
 }
 
 export interface CreateTeacherDto extends TacherItemType {

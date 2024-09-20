@@ -1,5 +1,6 @@
+//@ts-nocheck
 import {
-    IconButton, Menu
+    IconButton, Menu, Typography
 } from '@mui/material'
 import { MouseEvent, useState } from 'react'
 import IconifyIcon from 'src/@core/components/icon'
@@ -9,17 +10,24 @@ import UserSuspendDialog from 'src/views/apps/mentors/view/UserSuspendDialog'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-hot-toast'
 import { useAppDispatch, useAppSelector } from 'src/store'
-import { deleteTeacher, fetchTeacherdetail, fetchTeachersList, setOpenEdit } from 'src/store/apps/mentors'
+import {
+    deleteTeacher,
+    fetchTeacherdetail,
+    fetchTeachersList,
+    setOpenEdit,
+    updateParams,
+} from 'src/store/apps/mentors'
 import { disablePage } from 'src/store/apps/page'
+import { editEmployeeStatus } from 'src/store/apps/settings'
 
-const RowOptions = ({ id }: { id: number | string }) => {
+const RowOptions = ({ id, status }: { id: number | string, status: string }) => {
     const { t } = useTranslation()
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
     const [suspendDialogOpen, setSuspendDialogOpen] = useState<boolean>(false)
-    const { } = useAppSelector(state => state.mentors)
+    const { queryParams } = useAppSelector(state => state.mentors)
     const dispatch = useAppDispatch()
 
-    const [loading, setLoaading] = useState<boolean>(false)
+    const [loading, setLoading] = useState<boolean>(false)
     const rowOptionsOpen = Boolean(anchorEl)
 
     const handleRowOptionsClick = (event: MouseEvent<HTMLElement>) => {
@@ -35,7 +43,7 @@ const RowOptions = ({ id }: { id: number | string }) => {
     }
 
     const handleDeleteTeacher = async (id: string | number) => {
-        setLoaading(true)
+        setLoading(true)
         dispatch(disablePage(true))
         const resp = await dispatch(deleteTeacher(id))
         if (resp.meta.requestStatus === 'rejected') {
@@ -44,7 +52,25 @@ const RowOptions = ({ id }: { id: number | string }) => {
             await dispatch(fetchTeachersList(""))
             toast.success(`${t("O'qituvchilar ro'yxatidan o'chirildi")}`, { position: 'top-center' })
         }
-        setLoaading(false)
+        setLoading(false)
+        dispatch(disablePage(false))
+    }
+    const handleChange = async (id: string | number) => {
+        setLoading(true)
+        const resp = await dispatch(editEmployeeStatus({
+            data: { status: "active" },
+            id: id
+        }))
+
+        if (resp.meta.requestStatus === 'rejected') {
+            toast.error("Tiklab bo'lmadi")
+        } else {
+            dispatch(updateParams({ page: "1", status: "active" }))
+            const queryString = new URLSearchParams({ ...queryParams, page: "1", status: "active" }).toString()
+            await dispatch(fetchTeachersList(queryString))
+            toast.success("O'qituvchi qaytarildi")
+        }
+        setLoading(false)
         dispatch(disablePage(false))
     }
 
@@ -75,23 +101,35 @@ const RowOptions = ({ id }: { id: number | string }) => {
                 }}
                 PaperProps={{ style: { minWidth: '8rem' } }}
             >
-                <MenuItem
-                    component={Link}
-                    sx={{ '& svg': { mr: 2 } }}
-                    onClick={handleRowOptionsClose}
-                    href={`/mentors/view/security?id=${id}`}
-                >
-                    <IconifyIcon icon='mdi:eye-outline' fontSize={20} />
-                    {t("Ko'rish")}
-                </MenuItem>
-                <MenuItem onClick={() => handleEdit(id)} sx={{ '& svg': { mr: 2 } }}>
-                    <IconifyIcon icon='mdi:pencil-outline' fontSize={20} />
-                    {t("Tahrirlash")}
-                </MenuItem>
-                <MenuItem onClick={handleDelete} sx={{ '& svg': { mr: 2 } }}>
-                    <IconifyIcon icon='mdi:delete-outline' fontSize={20} />
-                    {t("O'chirish")}
-                </MenuItem>
+                {status == "archive" ?
+                    <MenuItem disabled={loading} onClick={() => handleChange(id)} sx={{ '& svg': { mr: 2 } }}>
+                        {loading ? <Typography>Tiklanmoqda...</Typography> :
+                            <>
+                                <IconifyIcon icon='icon-park-outline:return' fontSize={20} />
+                                {t("Tiklash")}
+                            </>}
+                    </MenuItem> :
+                    <>
+                        <MenuItem
+                            component={Link}
+                            sx={{ '& svg': { mr: 2 } }}
+                            onClick={handleRowOptionsClose}
+                            href={`/mentors/view/security?id=${id}`}
+                        >
+                            <IconifyIcon icon='mdi:eye-outline' fontSize={20} />
+                            {t("Ko'rish")}
+                        </MenuItem>
+                        <MenuItem onClick={() => handleEdit(id)} sx={{ '& svg': { mr: 2 } }}>
+                            <IconifyIcon icon='mdi:pencil-outline' fontSize={20} />
+                            {t("Tahrirlash")}
+                        </MenuItem>
+                        <MenuItem onClick={handleDelete} sx={{ '& svg': { mr: 2 } }}>
+                            <IconifyIcon icon='mdi:delete-outline' fontSize={20} />
+                            {t("O'chirish")}
+                        </MenuItem>
+                    </>
+
+                }
             </Menu>
             <UserSuspendDialog loading={loading} handleOk={() => handleDeleteTeacher(id)} open={suspendDialogOpen} setOpen={setSuspendDialogOpen} />
         </>

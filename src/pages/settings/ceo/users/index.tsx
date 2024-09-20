@@ -1,11 +1,12 @@
 import {
     Box,
     Button,
-    CircularProgress,
+    FormControlLabel,
     IconButton,
     Menu,
     Pagination,
-    Typography
+    Switch,
+    Typography,
 } from '@mui/material';
 import { MouseEvent, ReactNode, useEffect, useState } from 'react';
 import IconifyIcon from 'src/@core/components/icon';
@@ -16,7 +17,7 @@ import { useTranslation } from 'react-i18next';
 import useEmployee from 'src/hooks/useEmployee';
 import EmployeeCreateDialog from 'src/views/apps/settings/employees/TeacherCreateDialog';
 import { useAppDispatch, useAppSelector } from 'src/store';
-import { fetchEmployees, setEmployeeData, setOpenCreateSms, updateQueryParams } from 'src/store/apps/settings';
+import { editEmployee, editEmployeeStatus, fetchEmployees, setEmployeeData, setOpenCreateSms, updateQueryParams } from 'src/store/apps/settings';
 import EditEmployeeModal from 'src/views/apps/settings/employees/TeacherEditDialog';
 import api from 'src/@core/utils/api';
 import ButtonGroup from '@mui/material/ButtonGroup';
@@ -46,6 +47,7 @@ export default function GroupsPage() {
         const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
         const [suspendDialogOpen, setSuspendDialogOpen] = useState<boolean>(false)
         const [smallLoading, setSmallLoading] = useState<boolean>(false)
+        const [loading, setLoading] = useState<boolean>(false)
 
         const rowOptionsOpen = Boolean(anchorEl)
 
@@ -84,6 +86,24 @@ export default function GroupsPage() {
             setSmallLoading(false)
         }
 
+        const handleChange = async () => {
+            setLoading(true)
+            const resp = await dispatch(editEmployeeStatus({
+                data: { status: "active" },
+                id: id
+            }))
+
+            if (resp.meta.requestStatus === 'rejected') {
+                toast.error("Tiklab bo'lmadi")
+            } else {
+                dispatch(updateQueryParams({ page: 1, status: "active" }))
+                dispatch(fetchEmployees({ ...queryParams, page: 1, status: "active" }))
+                toast.success("Xodim qaytarildi")
+            }
+            setLoading(false)
+            dispatch(disablePage(false))
+        }
+
         return (
             <>
                 <IconButton size='small' onClick={handleRowOptionsClick}>
@@ -104,22 +124,32 @@ export default function GroupsPage() {
                     }}
                     PaperProps={{ style: { minWidth: '8rem' } }}
                 >
-                    <MenuItem
-                        onClick={getUserById}
-                    >
-                        {
-                            smallLoading ?
-                                <CircularProgress sx={{ mx: 'auto' }} size={28} /> :
+                    {queryParams.status == "archive" ?
+                        <MenuItem disabled={loading} onClick={() => handleChange()} sx={{ '& svg': { mr: 2 } }}>
+                            {loading ?
+                                <Typography>Tiklanmoqda...</Typography> :
+                                <>
+                                    <IconifyIcon icon='icon-park-outline:return' fontSize={20} />
+                                    {t("Tiklash")}
+                                </>}
+                        </MenuItem> :
+                        <> <MenuItem
+                            disabled={smallLoading}
+                            onClick={getUserById}>
+                            {smallLoading
+                                ?
+                                <Typography>Bajarilmoqda...</Typography> :
                                 <>
                                     <IconifyIcon icon='mdi:pencil-outline' fontSize={20} style={{ marginRight: '4px' }} />
                                     {t('Tahrirlash')}
                                 </>
-                        }
-                    </MenuItem>
-                    <MenuItem onClick={handleDelete} sx={{ '& svg': { mr: 2 } }}>
-                        <IconifyIcon icon='mdi:delete-outline' fontSize={20} />
-                        {t("O'chirish")}
-                    </MenuItem>
+                            }
+                        </MenuItem>
+                            <MenuItem onClick={handleDelete} sx={{ '& svg': { mr: 2 } }}>
+                                <IconifyIcon icon='mdi:delete-outline' fontSize={20} />
+                                {t("O'chirish")}
+                            </MenuItem>
+                        </>}
                 </Menu>
                 <UserSuspendDialog loading={smallLoading} open={suspendDialogOpen} setOpen={setSuspendDialogOpen} handleOk={handleDeleteSubmit} />
             </>
@@ -184,6 +214,10 @@ export default function GroupsPage() {
         dispatch(updateQueryParams({ role: value }))
         await dispatch(fetchEmployees({ ...queryParams, role: value }))
     }
+    const handleChangeStatus = async (_: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
+        dispatch(updateQueryParams({ status: checked ? "archive" : "active", page: "1" }))
+        await dispatch(fetchEmployees({ ...queryParams, status: checked ? "archive" : "active", page: 1 }))
+    }
 
     const buttons = [
         <Button
@@ -216,7 +250,6 @@ export default function GroupsPage() {
     return (
         <div>
             <VideoHeader item={videoUrls.employees} />
-
             <Box
                 className='groups-page-header'
                 sx={{ display: 'flex', justifyContent: 'space-between', margin: '10px 0' }}
@@ -236,6 +269,7 @@ export default function GroupsPage() {
             <Box
                 sx={{
                     display: 'flex',
+                    gap: "10px",
                     '& > *': {
                         m: 1,
                     },
@@ -244,6 +278,7 @@ export default function GroupsPage() {
                 <ButtonGroup size="small" aria-label="Small button group">
                     {buttons}
                 </ButtonGroup>
+                <FormControlLabel control={<Switch checked={queryParams.status == "archive"} onChange={handleChangeStatus} />} label="Arxiv" />
             </Box>
 
             <DataTable loading={is_pending} columns={columns} data={employees} />

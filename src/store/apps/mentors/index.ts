@@ -57,6 +57,7 @@ const initialState: IMentorsState = {
   openEdit: null,
   teachers: [],
   teachersCount: 0,
+  queryParams: { page: 1, status: 'active' },
   teacherData: null,
   isLoading: false
 }
@@ -67,6 +68,9 @@ export const mentorsSlice = createSlice({
   reducers: {
     setOpenEdit: (state, action) => {
       state.openEdit = action.payload
+    },
+    updateParams: (state, action) => {
+      state.queryParams = { ...state.queryParams, ...action.payload }
     },
     setTeacherData: (state, action) => {
       state.teacherData = action.payload
@@ -93,6 +97,6 @@ export const mentorsSlice = createSlice({
   }
 })
 
-export const { setOpenEdit, setTeacherData } = mentorsSlice.actions
+export const { setOpenEdit, setTeacherData, updateParams } = mentorsSlice.actions
 
 export default mentorsSlice.reducer

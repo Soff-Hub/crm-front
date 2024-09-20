@@ -67,7 +67,7 @@ export interface SettingsState {
   employees: EmployeeItemType[]
   employees_count: number
   employeeData: any
-  queryParams: { search: string; page: number; role: number | string }
+  queryParams: { search: string; page: number; role: number | string; status: string }
   courseQueryParams: { page: number }
   roles: { name: string; id: number; count: number }[]
   videoAnchor: {

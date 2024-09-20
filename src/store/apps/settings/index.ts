@@ -52,6 +52,20 @@ export const editCourse = createAsyncThunk('settings/editCourse', async (data: a
     return rejectWithValue(err.message)
   }
 })
+export const editEmployeeStatus = createAsyncThunk(
+  'settings/editEmployeeStatus',
+  async (data: any, { rejectWithValue }) => {
+    try {
+      const response = await api.patch(`auth/update/employee/status/${data.id}`, data.data)
+      return response.data
+    } catch (err: any) {
+      if (err.response) {
+        return rejectWithValue(err.response.data)
+      }
+      return rejectWithValue(err.message)
+    }
+  }
+)
 
 export const fetchRoomList = createAsyncThunk('settings/fetchRoomList', async (params?: any) => {
   return (await api.get('common/rooms/', { params })).data
@@ -111,7 +125,7 @@ export const updateWekend = createAsyncThunk('settings/updateWekend', async (dat
 
 export const fetchEmployees = createAsyncThunk(
   'settings/fetchEmployees',
-  async (params: { search: string; page: number; role: number | string }) => {
+  async (params: { search: string; page: number; role: number | string; status: string }) => {
     return (await api.get('auth/employees/', { params })).data
   }
 )
@@ -159,7 +173,8 @@ const initialState: SettingsState = {
   queryParams: {
     search: '',
     page: 1,
-    role: ''
+    role: '',
+    status: 'active'
   },
   courseQueryParams: {
     page: 1

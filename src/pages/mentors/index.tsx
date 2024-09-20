@@ -3,18 +3,20 @@ import {
   Box,
   Button,
   Chip,
+  FormControlLabel,
   Pagination,
+  Switch,
   Typography,
 } from '@mui/material';
-import { ReactNode, useEffect, useState } from 'react';
+import { ReactNode, useEffect } from 'react';
 import IconifyIcon from 'src/@core/components/icon';
 import { useTranslation } from 'react-i18next';
 import { useRouter } from 'next/router';
 import { useAppDispatch, useAppSelector } from 'src/store';
-import { fetchTeachersList, setOpenEdit } from 'src/store/apps/mentors';
+import { fetchTeachersList, setOpenEdit, updateParams } from 'src/store/apps/mentors';
 import { formatCurrency } from 'src/@core/utils/format-currency';
 import { videoUrls } from 'src/@core/components/video-header/video-header';
-import dynamic from "next/dynamic"
+import dynamic from "next/dynamic";
 
 const RowOptions = dynamic(() => import('src/views/apps/mentors/RowOptions'));
 const TeacherAvatar = dynamic(() => import('src/views/apps/mentors/AddMentorsModal').then(mod => mod.TeacherAvatar));
@@ -35,8 +37,7 @@ export default function GroupsPage() {
   const { push } = useRouter()
   const dispatch = useAppDispatch()
 
-  const { teachers, teachersCount, isLoading } = useAppSelector(state => state.mentors)
-  const [page, setPage] = useState(1)
+  const { teachers, teachersCount, queryParams, isLoading } = useAppSelector(state => state.mentors)
 
   const columns: customTableProps[] = [
     {
@@ -98,7 +99,7 @@ export default function GroupsPage() {
       xs: 0.4,
       dataIndex: 'id',
       title: t(""),
-      render: actions => <RowOptions id={actions} />
+      render: actions => <RowOptions id={actions} status={queryParams?.status} />
     }
   ]
 
@@ -107,7 +108,8 @@ export default function GroupsPage() {
   }
 
   useEffect(() => {
-    dispatch(fetchTeachersList(""))
+    const queryString = new URLSearchParams({ ...queryParams, page: String(queryParams.page), status: String(queryParams.status) }).toString()
+    dispatch(fetchTeachersList(queryString))
 
     return () => {
       dispatch(setOpenEdit(null))
@@ -115,9 +117,17 @@ export default function GroupsPage() {
   }, [])
 
   const handlePagination = async (page: number) => {
-    setPage(page)
-    await dispatch(fetchTeachersList(new URLSearchParams({ page: String(page) }).toString()))
+    dispatch(updateParams({ page }))
+    const queryString = new URLSearchParams({ ...queryParams, page: String(page) }).toString()
+    await dispatch(fetchTeachersList(queryString))
   }
+
+  const handleChangeStatus = async (_: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
+    dispatch(updateParams({ status: checked ? "archive" : "active", page: 1 }))
+    const queryString = new URLSearchParams({ status: checked ? "archive" : "active", page: "1" }).toString()
+    await dispatch(fetchTeachersList(queryString))
+  }
+
 
   return (
     <div>
@@ -129,7 +139,8 @@ export default function GroupsPage() {
       >
         <Box sx={{ display: "flex", alignItems: "center", gap: "10px" }}>
           <Typography variant='h5'>{t("Mentorlar")}</Typography>
-          {!isLoading && <Chip label={`${teachersCount}`} variant='outlined' color="primary" size="medium" />}
+          <Chip label={`${teachersCount || 0}`} variant='outlined' color="primary" size="medium" />
+          <FormControlLabel control={<Switch onChange={handleChangeStatus} />} checked={queryParams.status == "archive"} label="Arxiv" />
         </Box>
         <Button
           onClick={() => dispatch(setOpenEdit('create'))}
@@ -142,11 +153,11 @@ export default function GroupsPage() {
       </Box>
       <DataTable loading={isLoading} columns={columns} data={teachers} rowClick={rowClick} />
       {Math.ceil(teachersCount / 10) > 1 && !isLoading && <Pagination
-        defaultPage={Number(page)}
+        defaultPage={Number(queryParams.page)}
         count={Math.ceil(teachersCount / 10)}
         variant="outlined"
         shape="rounded"
-        onChange={(e: any, page) => handlePagination(e.target.value + page)}
+        onChange={(e: any, page) => handlePagination(page)}
       />}
       <TeacherCreateDialog />
       <TeacherEditDialog />
