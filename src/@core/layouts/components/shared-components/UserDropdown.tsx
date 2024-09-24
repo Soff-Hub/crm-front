@@ -140,14 +140,18 @@ const UserDropdown = (props: Props) => {
           {user?.username}
         </Typography>
         <Divider sx={{ mb: '0 !important', mt: "1 !important" }} />
-        <Button color="success" sx={styles} onClick={() => router.push('/crm-payments')}>
-          <Icon icon='material-symbols-light:payments-sharp' />
-          {t("CRM sozlamalari")}
-        </Button>
-        <Button color="secondary" sx={styles} onClick={() => router.push('/video-tutorials')}>
-          <Icon icon='ph:video-bold' />
-          {t("Video qo'llanmalar")}
-        </Button>
+        {(user?.role.includes('ceo')) && !window.location.hostname.split('.').includes('c-panel') && <>
+          <Button color="success" sx={styles} onClick={() => router.push('/crm-payments')}>
+            <Icon icon='material-symbols-light:payments-sharp' />
+            {t("CRM sozlamalari")}
+          </Button>
+        </>}
+        {(user?.role.includes('admin') || user?.role.includes('ceo')) && !window.location.hostname.split('.').includes('c-panel') && <>
+          <Button color="secondary" sx={styles} onClick={() => router.push('/video-tutorials')}>
+            <Icon icon='ph:video-bold' />
+            {t("Video qo'llanmalar")}
+          </Button>
+        </>}
         <Divider sx={{ m: '0 !important' }} />
         <MenuItem
           onClick={handleLogout}

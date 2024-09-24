@@ -14,9 +14,12 @@ import { Box, Skeleton, Typography } from '@mui/material'
 import { useTranslation } from 'react-i18next'
 import EmptyContent from 'src/@core/components/empty-content'
 import { useAppSelector } from 'src/store'
+import useResponsive from 'src/@core/hooks/useResponsive'
 
 const CardWidgetsWeeklyOverview = () => {
   // ** Hook
+  const { isMobile } = useResponsive()
+
   const theme = useTheme()
   const { t } = useTranslation()
 
@@ -102,7 +105,6 @@ const CardWidgetsWeeklyOverview = () => {
         show: true,
         style: {
           fontFamily: "Inter,Verdana",
-          fontWeight: "bold",
           fontSize: "12px",
           colors: "#9ca3af"
         }
@@ -113,9 +115,9 @@ const CardWidgetsWeeklyOverview = () => {
       tickAmount: 5,
       labels: {
         formatter: (value) => `${formatCurrency(value)}`,
+        rotate: isMobile ? -45 : 0,
         style: {
           fontFamily: "Inter,Verdana",
-          fontWeight: "bold",
           fontSize: "12px",
           colors: "#9ca3af"
         }

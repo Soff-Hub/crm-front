@@ -1,6 +1,5 @@
 import { Box, Grid, Skeleton, Typography } from '@mui/material';
-import { useContext, useEffect, useState } from 'react';
-import { DateRangePicker, SelectPicker } from 'rsuite';
+import { useContext, useState } from 'react';
 import CardStatisticsHorizontal from 'src/views/ui/cards/statistics/CardStatisticsHorizontal';
 import { useAppDispatch, useAppSelector } from 'src/store';
 import { useTranslation } from 'react-i18next';
@@ -8,6 +7,7 @@ import EmptyContent from 'src/@core/components/empty-content';
 import { fetchFinanceAllNumbers, updateNumberParams } from 'src/store/apps/finance';
 import { formatDateString } from 'src/pages/finance';
 import { AuthContext } from 'src/context/AuthContext';
+import useResponsive from 'src/@core/hooks/useResponsive';
 
 
 
@@ -22,6 +22,7 @@ const FinanceAllNumber = () => {
     const { t } = useTranslation()
     const [date, setDate] = useState<any>('')
     const [activeBranch, setActiveBranch] = useState<any>(user?.active_branch)
+    const { isMobile } = useResponsive()
 
     const statsHorizontal = all_numbers ? [
         {
@@ -109,7 +110,7 @@ const FinanceAllNumber = () => {
                     <Typography sx={{ flexGrow: 1 }} variant="h5">{t('Umumiy raqamlar')}</Typography>
                 </Box>
                 {
-                    numbersLoad ? <Grid container spacing={7}>
+                    numbersLoad ? <Grid container spacing={isMobile ? 4 : 7}>
                         {
                             [1, 2, 3].map((_, index) => (
                                 <Grid item xs={12} md={4} key={index}>

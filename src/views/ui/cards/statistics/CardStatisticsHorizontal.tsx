@@ -9,15 +9,17 @@ import { CardStatsHorizontalProps } from 'src/@core/components/card-statistics/t
 
 // ** Custom Components Imports
 import CardStatisticsHorizontal from 'src/@core/components/card-statistics/card-stats-horizontal'
+import useResponsive from 'src/@core/hooks/useResponsive'
 
 interface Props {
   data: any[]
 }
 
 const CardStatsHorizontal = ({ data }: Props) => {
+  const { isMobile } = useResponsive()
   if (data) {
     return (
-      <Grid container spacing={7}>
+      <Grid container spacing={isMobile ? 4 : 7}>
         {data.map((item: CardStatsHorizontalProps, index: number) => {
           return (
             <Grid item xs={12} md={4} sm={4} key={index}>

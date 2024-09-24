@@ -6,12 +6,14 @@ import { useTranslation } from 'react-i18next';
 import { fetchFinanceAllNumbers, getExpenseCategories, getGroupsFinance, updateNumberParams } from 'src/store/apps/finance';
 import { formatDateString } from 'src/pages/finance';
 import { AuthContext } from 'src/context/AuthContext';
+import useResponsive from 'src/@core/hooks/useResponsive';
 
 export const yearItems = [{ label: 2021, value: 2021 }, ...Array(new Date().getFullYear() - 2021).fill(1).map((item, index) => ({ label: 2021 + index + 1, value: 2021 + index + 1 }))]
 export const monthItems = ['Yanvar', 'Fevral', 'Mart', 'Aprel', 'May', 'Iyun', 'Iyul', 'Avgust', 'Sentabr', 'Oktabr', 'Noyabr', 'Dekabr'].map((el, i) => ({ label: el, value: (i + 1) < 10 ? `0${i + 1}` : `${i + 1}` }))
 
 export default function HeadingFilter() {
-    const { all_numbers, numbersLoad, allNumbersParams } = useAppSelector(state => state.finance)
+    const { allNumbersParams } = useAppSelector(state => state.finance)
+    const { isMobile } = useResponsive()
     const { user } = useContext(AuthContext)
     const dispatch = useAppDispatch()
     const { t } = useTranslation()
@@ -109,12 +111,12 @@ export default function HeadingFilter() {
     }, [])
 
     return (
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: "10px" }}>
+        <Box sx={{ display: isMobile ? "grid" : 'flex', gridTemplateColumns: "1fr 1fr", alignItems: 'center', gap: 1, mb: "10px" }}>
             <SelectPicker
                 onChange={handleChangeBranch}
                 size='md'
                 data={user?.branches ? [...user?.branches?.map(el => ({ label: el.name, value: el.id })), { label: t('Barcha filiallar'), value: '' }] : []}
-                style={{ width: 224 }}
+                style={{ width: isMobile ? "auto" : 224 }}
                 searchable={false}
                 placeholder={t("Filialni tanlang")}
                 value={activeBranch}
@@ -123,7 +125,7 @@ export default function HeadingFilter() {
                 onChange={(v) => handleYearDate(v, 'y')}
                 size='md'
                 data={yearItems}
-                style={{ width: 224 }}
+                style={{ width: isMobile ? "auto" : 224 }}
                 value={Number(allNumbersParams.date_year.split('-')[0])}
                 searchable={false}
                 cleanable={false}
@@ -133,7 +135,7 @@ export default function HeadingFilter() {
                 onChange={(v) => handleYearDate(v, 'm')}
                 size='md'
                 data={monthItems}
-                style={{ width: 224 }}
+                style={{ width: isMobile ? "auto" : 224 }}
                 value={allNumbersParams.date_month}
                 searchable={false}
                 placeholder={t("Oyni tanlang")}

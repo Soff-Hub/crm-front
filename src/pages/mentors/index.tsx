@@ -1,3 +1,4 @@
+//@ts-nocheck
 "use client";
 import {
   Box,
@@ -38,6 +39,8 @@ export default function GroupsPage() {
   const dispatch = useAppDispatch()
 
   const { teachers, teachersCount, queryParams, isLoading } = useAppSelector(state => state.mentors)
+
+  const date = new Date().toLocaleDateString()
 
   const columns: customTableProps[] = [
     {
@@ -96,9 +99,10 @@ export default function GroupsPage() {
       dataIndex: 'activated_at'
     },
     {
-      xs: 0.4,
+      xs: 1,
       dataIndex: 'id',
-      title: t(""),
+      title: "",
+      // title: <Button onClick={() => push("/employee-attendance")} variant='outlined'>{t("Davomat")}</Button>,
       render: actions => <RowOptions id={actions} status={queryParams?.status} />
     }
   ]

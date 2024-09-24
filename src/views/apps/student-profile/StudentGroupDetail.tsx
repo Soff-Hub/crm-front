@@ -169,7 +169,7 @@ const StudentGroupDetail = ({ slug, month }: any) => {
             <Card sx={{ maxWidth: '600px', minWidth: '600px' }}>
                 <CardContent>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px', mb: 5 }} >
-                        <Typography variant='h6'>{t("Davomat")} |</Typography>
+                        <Typography variant='h6'>{t("Davomat")}</Typography>
 
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
                             <Item defaultValue />
@@ -183,7 +183,7 @@ const StudentGroupDetail = ({ slug, month }: any) => {
 
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
                             <Item defaultValue={null} />
-                            <Typography variant="body2">{t("Yoqlama qilinmagan")},</Typography>
+                            <Typography variant="body2">{t("Yo'qlama qilinmagan")},</Typography>
                         </Box>
 
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: '5px' }}>

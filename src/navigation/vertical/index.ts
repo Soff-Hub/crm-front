@@ -90,6 +90,7 @@ const Navigation = (t: any): VerticalNavItemsType => {
     {
       title: t('Sozlamalar'),
       icon: 'mdi:settings',
+      slug: 'settings',
       children: [
         {
           title: 'SMS Sozlamalari',
@@ -165,8 +166,10 @@ const Navigation = (t: any): VerticalNavItemsType => {
     // }
   ]
 
-  return user?.role.includes('casher') || user?.role.includes('ceo')
+  return user?.role.includes('ceo')
     ? items
+    : user?.role.includes('casher')
+    ? items.filter(el => el.slug !== 'settings')
     : items.filter(el => el.path !== '/finance')
 }
 

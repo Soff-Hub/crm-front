@@ -5,6 +5,7 @@ import { AuthContext } from 'src/context/AuthContext'
 const Navigation = (t: any): HorizontalNavItemsType => {
   // const { t } = useTranslation()
   const { user } = useContext(AuthContext)
+  console.log(user)
 
   const items = [
     {
@@ -35,6 +36,7 @@ const Navigation = (t: any): HorizontalNavItemsType => {
     {
       title: t('Sozlamalar'),
       icon: 'mdi:settings',
+      slug: 'settings',
       children: [
         {
           title: 'SMS Sozlamalari',
@@ -110,8 +112,10 @@ const Navigation = (t: any): HorizontalNavItemsType => {
     // }
   ]
 
-  return user?.role.includes('casher') || user?.role.includes('ceo')
+  return user?.role.includes('ceo')
     ? items
+    : user?.role.includes('casher')
+    ? items.filter(el => el.slug !== 'settings')
     : items.filter(el => el.path !== '/finance')
 }
 

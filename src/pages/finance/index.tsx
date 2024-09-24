@@ -31,6 +31,7 @@ import { useAppDispatch, useAppSelector } from 'src/store'
 import { getExpenseCategories } from 'src/store/apps/finance'
 import getMonthName from 'src/@core/utils/getMonthName'
 import { AuthContext } from 'src/context/AuthContext'
+import useResponsive from 'src/@core/hooks/useResponsive'
 
 
 export function formatDateString(date: Date) {
@@ -51,6 +52,7 @@ const CardStatistics = () => {
     const [loading, setLoading] = useState<boolean>(false);
     const [deleteCategory, setDeleteCategory] = useState<any>(null)
     const [salaries, setSalaries] = useState<any>([])
+    const { isMobile } = useResponsive()
 
     const withdrawCol: customTableDataProps[] = [
         {
@@ -181,7 +183,7 @@ const CardStatistics = () => {
 
     return (
         <ApexChartWrapper>
-            <Box sx={{ display: "flex", mb: 1, alignItems: "center", justifyContent: "space-between" }}>
+            <Box sx={{ display: "flex", mb: 1, alignItems: "center", justifyContent: "space-between", flexDirection: isMobile ? "column" : "row" }}>
                 <HeadingFilter />
                 <VideoHeader item={videoUrls.finance} />
             </Box>

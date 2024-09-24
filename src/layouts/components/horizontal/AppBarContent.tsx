@@ -77,7 +77,7 @@ const AppBarContent = (props: Props) => {
 
   return (
     <Box sx={{ display: 'flex', alignItems: 'center' }}>
-      {(user?.role.includes('admin') || user?.role.includes('ceo')) && !window.location.hostname.split('.').includes('c-panel') && <Button
+      {(user?.role.includes('admin') || user?.role.includes('ceo') || user?.role.includes('casher')) && !window.location.hostname.split('.').includes('c-panel') && <Button
         variant='contained'
         size='small'
         sx={{ margin: '0 7px' }}

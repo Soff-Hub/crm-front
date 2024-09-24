@@ -6,7 +6,7 @@ import EmptyContent from '../empty-content';
 
 export interface customTableDataProps {
   xs: number
-  title: string
+  title: string | React.ReactNode
   dataIndex?: string | ReactNode
   render?: (source: string) => any | undefined
   renderId?: (id: any, source: any) => any | undefined

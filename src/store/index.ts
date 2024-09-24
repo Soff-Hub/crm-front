@@ -19,6 +19,7 @@ import companyDetails from 'src/store/apps/c-panel/companySlice'
 import settings from 'src/store/apps/settings'
 import studentPayments from 'src/store/apps/reports/studentPayments'
 import advanceSlice from './apps/finance/advanceSlice'
+import employeeAttendance from 'src/store/apps/employee-attendance'
 import groupDetails from 'src/store/apps/groupDetails'
 import finance from './apps/finance'
 import page from './apps/page'
@@ -43,7 +44,8 @@ export const store = configureStore({
     advanceSlice,
     cPanelSlice,
     companyDetails,
-    studentPayments
+    studentPayments,
+    employeeAttendance
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({

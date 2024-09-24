@@ -1,16 +1,16 @@
-import React, { useContext, useEffect, useState } from 'react'
-import { Box, Card, CardContent, Skeleton, Typography } from '@mui/material'
-import CustomAvatar from 'src/@core/components/mui/avatar'
-import { getInitials } from 'src/@core/utils/get-initials'
-import { addPeriodToThousands } from '../settings/office/courses'
-import IconifyIcon from 'src/@core/components/icon'
-import { useTranslation } from 'react-i18next'
-import Link from 'next/link'
-import getLessonDays from 'src/@core/utils/getLessonDays'
-import useResponsive from 'src/@core/hooks/useResponsive'
-import api from 'src/@core/utils/api'
-import { datatimeFormatCustome } from 'src/@core/utils/time-formatter'
-import { AuthContext } from 'src/context/AuthContext'
+import { useContext, useEffect, useState } from 'react';
+import { Box, Card, CardContent, Skeleton, Typography } from '@mui/material';
+import CustomAvatar from 'src/@core/components/mui/avatar';
+import { getInitials } from 'src/@core/utils/get-initials';
+import { addPeriodToThousands } from '../settings/office/courses';
+import IconifyIcon from 'src/@core/components/icon';
+import { useTranslation } from 'react-i18next';
+import Link from 'next/link';
+import getLessonDays from 'src/@core/utils/getLessonDays';
+import useResponsive from 'src/@core/hooks/useResponsive';
+import api from 'src/@core/utils/api';
+import { datatimeFormatCustome } from 'src/@core/utils/time-formatter';
+import { AuthContext } from 'src/context/AuthContext';
 
 
 export default function StudentProfile() {
@@ -74,7 +74,7 @@ export default function StudentProfile() {
             </Card>
             <Box sx={{ display: 'flex', gap: '15px', flexDirection: isMobile ? 'column' : 'row' }}>
                 <Box sx={{ display: 'flex', gap: '15px', mt: 3, flexWrap: 'wrap', justifyContent: isMobile ? 'center' : 'flex-start', flexDirection: 'column' }}>
-                    <Typography sx={{ fontSize: '20px' }}>{"Guruhlar"}</Typography>
+                    <Typography sx={{ fontSize: '20px' }}>{t("Guruhlar")}</Typography>
                     {
                         isLoading ?
                             [1].map(() => (
@@ -121,7 +121,7 @@ export default function StudentProfile() {
                     }
                 </Box>
                 <Box sx={{ display: 'flex', gap: '15px', mt: 3, flexWrap: 'wrap', justifyContent: isMobile ? 'center' : 'flex-start', flexDirection: 'column' }}>
-                    <Typography sx={{ fontSize: '20px' }}>{"Xabarlar tarixi"}</Typography>
+                    <Typography sx={{ fontSize: '20px' }}>{t("Xabarlar tarixi")}</Typography>
                     {
                         isLoading ?
                             [1].map(() => (
