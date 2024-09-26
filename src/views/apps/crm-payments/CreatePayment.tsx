@@ -8,6 +8,7 @@ import { useTranslation } from "react-i18next";
 import AmountInput from "src/@core/components/amount-input";
 import { revereAmount } from "src/@core/components/amount-input";
 import IconifyIcon from "src/@core/components/icon";
+import useResponsive from "src/@core/hooks/useResponsive";
 import { formatCurrency } from "src/@core/utils/format-currency";
 import UserIcon from "src/layouts/components/UserIcon";
 import { useAppDispatch, useAppSelector } from "src/store";
@@ -76,9 +77,11 @@ export default function CreatePayment() {
         dispatch(handleOpenClientModal(false))
     }
 
+    const { isMobile } = useResponsive()
+
     return (
         <Drawer open={isOpenClientModal} hideBackdrop anchor='right' variant='temporary' >
-            <Box sx={{ display: "flex", flexDirection: "column", minWidth: "400px" }}>
+            <Box sx={{ display: "flex", flexDirection: "column", minWidth: isMobile ? "100%" : "400px" }}>
                 <Box
                     className='customizer-header'
                     sx={{

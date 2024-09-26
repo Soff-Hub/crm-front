@@ -239,7 +239,7 @@ const CardStatistics = () => {
                                 <Button variant='contained'>{t("Oylik ishlash")}</Button>
                             </Link> */}
                         </Box>
-                        <DataTable maxWidth='100%' minWidth='800px' columns={withdrawCol} data={salaries} rowClick={clickSalaryDetail} />
+                        <DataTable maxWidth='100%' minWidth={'800px'} columns={withdrawCol} data={salaries} rowClick={clickSalaryDetail} />
                     </Grid>
                 </Grid>
             </KeenSliderWrapper>

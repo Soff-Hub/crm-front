@@ -1,25 +1,26 @@
-import React, { useEffect, useState } from 'react'
-import Dialog from '@mui/material/Dialog'
-import Button from '@mui/material/Button'
-import Select from '@mui/material/Select'
-import MenuItem from '@mui/material/MenuItem'
-import TextField from '@mui/material/TextField'
-import InputLabel from '@mui/material/InputLabel'
-import DialogTitle from '@mui/material/DialogTitle'
-import FormControl from '@mui/material/FormControl'
-import DialogContent from '@mui/material/DialogContent'
-import DialogActions from '@mui/material/DialogActions'
-import { useTranslation } from 'react-i18next'
-import { FormHelperText } from '@mui/material'
-import LoadingButton from '@mui/lab/LoadingButton'
-import { today } from 'src/@core/components/card-statistics/kanban-item'
-import { useAppDispatch, useAppSelector } from 'src/store'
-import { useFormik } from 'formik'
-import * as Yup from 'yup'
-import usePayment from 'src/hooks/usePayment'
-import { useRouter } from 'next/router'
-import { fetchStudentDetail, fetchStudentPayment } from 'src/store/apps/students'
-import AmountInput, { revereAmount } from 'src/@core/components/amount-input'
+import { useEffect, useState } from 'react';
+import Dialog from '@mui/material/Dialog';
+import Button from '@mui/material/Button';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import TextField from '@mui/material/TextField';
+import InputLabel from '@mui/material/InputLabel';
+import DialogTitle from '@mui/material/DialogTitle';
+import FormControl from '@mui/material/FormControl';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+import { useTranslation } from 'react-i18next';
+import { FormHelperText } from '@mui/material';
+import LoadingButton from '@mui/lab/LoadingButton';
+import { today } from 'src/@core/components/card-statistics/kanban-item';
+import { useAppDispatch, useAppSelector } from 'src/store';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
+import usePayment from 'src/hooks/usePayment';
+import Router, { useRouter } from 'next/router';
+import { fetchStudentDetail, fetchStudentPayment } from 'src/store/apps/students';
+import AmountInput, { revereAmount } from 'src/@core/components/amount-input';
+import IconifyIcon from 'src/@core/components/icon';
 
 
 
@@ -123,6 +124,10 @@ export default function StudentPaymentForm({ openEdit, setOpenEdit }: Props) {
                                 {
                                     paymentMethods.map((branch: any) => <MenuItem key={branch.id} value={branch.id}>{branch.name}</MenuItem>)
                                 }
+                                <MenuItem sx={{ fontWeight: 600 }} onClick={() => Router.push('/settings/ceo/all-settings')}>
+                                    {t("Yangi yaratish")}
+                                    <IconifyIcon icon={'ion:add-sharp'} />
+                                </MenuItem>
                             </Select>
                             {!!errors.payment_type && touched.payment_type && <FormHelperText error>{errors.payment_type}</FormHelperText>}
                         </FormControl>

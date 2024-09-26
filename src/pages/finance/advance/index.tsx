@@ -13,6 +13,7 @@ import { monthItems, yearItems } from 'src/views/apps/finance/FinanceAllNumber';
 import { today } from 'src/@core/components/card-statistics/kanban-item';
 import IconifyIcon from 'src/@core/components/icon';
 import Router from 'next/router';
+import useResponsive from 'src/@core/hooks/useResponsive';
 
 
 function Slug() {
@@ -23,6 +24,7 @@ function Slug() {
     const [month, setMonth] = useState<string>(today.split('-')[1])
 
     const { t } = useTranslation()
+    const { isMobile } = useResponsive()
 
     useEffect(() => {
         const queryString = new URLSearchParams({ ...queryParams, page: `1` }).toString()
@@ -67,8 +69,8 @@ function Slug() {
     return (
         <Box>
             <Box className='header'>
-                <Box sx={{ display: 'flex', alignItems: 'center', mb: 4, px: 2 }}>
-                    <Box sx={{ display: 'flex', gap: '10px', flexGrow: 1, alignItems: 'center' }}>
+                <Box sx={{ display: isMobile ? "grid" : 'flex', gridTemplateColumns: "1fr 1fr", gap: 2, alignItems: 'center', mb: 4, px: 2 }}>
+                    <Box sx={{ display: 'flex', gap: '10px', flexGrow: 1, alignItems: 'center', order: 1 }}>
                         <IconButton color='primary'>
                             <IconifyIcon icon={'ep:back'} style={{ cursor: 'pointer' }} onClick={() => Router.back()} />
                         </IconButton>
@@ -78,7 +80,7 @@ function Slug() {
                         onChange={(v) => handleYearDate(v, 'y')}
                         size='sm'
                         data={yearItems}
-                        style={{ width: 224, margin: '0 10px 0 auto' }}
+                        style={{ width: isMobile ? "auto" : 224, margin: isMobile ? "0" : '0 10px 0 auto', order: 3 }}
                         value={year}
                         searchable={false}
                         placeholder="Yilni tanlang"
@@ -87,15 +89,15 @@ function Slug() {
                         onChange={(v) => handleYearDate(v, 'm')}
                         size='sm'
                         data={monthItems}
-                        style={{ width: 224 }}
+                        style={{ width: isMobile ? "auto" : 224, order: 4 }}
                         value={month}
                         searchable={false}
                         placeholder="Oyni tanlang"
                     />
-                    <Typography sx={{ fontSize: '14px', color: 'error.main', ml: 4, display: 'flex', alignItems: 'center', mr: 4, gap: '5px' }} >
+                    <Typography sx={{ fontSize: '14px', order: 2, color: 'error.main', ml: 4, display: 'flex', alignItems: 'center', mr: 4, gap: '5px' }} >
                         <Chip variant='outlined' size='medium' sx={{ fontSize: "14px", fontWeight: "bold" }} color="success" label={`${formatCurrency(advanceList?.total_prepayments)} UZS`} />
                     </Typography>
-                    <Button variant='contained' size='small' onClick={() => dispatch(setOpenCreateModal(true))}>{t("Avans berish")}</Button>
+                    <Button variant='contained' size='small' sx={{ order: 5, gridColumn: "1/3" }} onClick={() => dispatch(setOpenCreateModal(true))}>{t("Avans berish")}</Button>
                 </Box>
             </Box>
             <DataTable loading={isLoading} columns={columns} data={advanceList?.results as []} />

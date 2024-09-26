@@ -182,7 +182,7 @@ export default function GroupsPage() {
         </Button>
       </Box>
       {isMobile && (
-        <Button size='small' sx={{ marginLeft: 'auto' }} variant='outlined' onClick={() => setOpen(true)}>
+        <Button size='small' sx={{ marginLeft: 'auto', width: "100%" }} variant='outlined' onClick={() => setOpen(true)}>
           {t('Filterlash')}
         </Button>
       )}

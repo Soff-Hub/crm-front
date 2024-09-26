@@ -40,12 +40,12 @@ const Menu = styled(MuiMenu)<MenuProps>(({ theme }) => ({
 }))
 
 const badge = {
-    border: "1px solid #8b5cf6",
+    border: "1px solid #8D8E9C",
     minWidth: "25px",
     height: "25px",
-    color: "white",
+    color: "#8D8E9C",
     padding: "5px",
-    background: "#8b5cf6",
+    background: "white",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
@@ -175,7 +175,7 @@ export default function AccordionCustom({ onView, parentId, item }: AccordionPro
                 <IconButton onClick={handleClick} size="small">
                     <IconifyIcon
                         icon="humbleicons:dots-horizontal"
-                        style={{ cursor: 'pointer' }}
+                        style={{ cursor: 'pointer', color: "#8D8E9C" }}
                         aria-haspopup='true'
                         aria-controls='customized-menu'
                     />
@@ -184,7 +184,7 @@ export default function AccordionCustom({ onView, parentId, item }: AccordionPro
                     onClick={() => !open ? handleGetLeads(true) : setOpen(!open)}
                     sx={{ marginRight: 1, }} size="small">
                     <IconifyIcon
-                        style={{ cursor: 'pointer', transform: open ? 'rotateZ(180deg)' : '', fontSize: "25px" }}
+                        style={{ cursor: 'pointer', color: "#8D8E9C", transform: open ? 'rotateZ(180deg)' : '', fontSize: "25px" }}
                         icon={'iconamoon:arrow-down-2-light'}
                     />
                 </IconButton>
@@ -198,7 +198,7 @@ export default function AccordionCustom({ onView, parentId, item }: AccordionPro
                             </Box>
                         ) : (
                             leadData.length > 0 ? (
-                                leadData.map((lead) => <KanbanItem reRender={handleGetLeads} is_view={lead.is_view} id={lead.id} handleEditLead={handleEditLead} key={lead.id} status={'success'} title={lead.first_name} phone={lead.phone} />)
+                                leadData.map((lead) => <KanbanItem reRender={handleGetLeads} is_view={lead.is_view} last_activity={lead.last_activity} id={lead.id} handleEditLead={handleEditLead} key={lead.id} status={'success'} title={lead.first_name} phone={lead.phone} />)
                             ) : <Typography variant='body2' sx={{ fontStyle: 'italic', textAlign: 'center' }}>{t("Bo'sh")}</Typography>
                         )
                     ) : ''

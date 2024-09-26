@@ -11,7 +11,7 @@ export type CardStatsHorizontalProps = {
   icon: ReactNode
   color?: ThemeColor
   trendNumber?: string
-  trend?: 'positive' | 'negative',
+  trend?: 'positive' | 'negative'
   id?: string
 }
 
@@ -21,9 +21,9 @@ export type CardStatsVerticalProps = {
   icon?: ReactNode
   chipText?: string
   color?: ThemeColor
-  trendNumber?: string;
+  trendNumber?: string
   trend?: 'positive' | 'negative'
-  optionsMenuProps?: OptionsMenuType,
+  optionsMenuProps?: OptionsMenuType
   id?: string
 }
 
@@ -37,14 +37,14 @@ export type CardStatsCharacterProps = {
   trend?: 'positive' | 'negative'
 }
 
-
 export type KanbarItemProps = {
   title: string
   id: any
   phone: string
-  status: "pending" | "new" | "success"
+  status: 'pending' | 'new' | 'success'
   is_view: boolean
   trend?: 'positive' | 'negative'
-  handleEditLead?: any,
+  handleEditLead?: any
   reRender?: any
+  last_activity: string
 }

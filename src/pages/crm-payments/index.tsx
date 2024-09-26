@@ -16,6 +16,7 @@ import authConfig from 'src/configs/auth';
 import CreateSMSPayment from 'src/views/apps/crm-payments/CreateSMSPayment';
 import EditSMSPaymentClientModal from 'src/views/apps/crm-payments/EditSMSPayment';
 import VideoHeader, { videoUrls } from 'src/@core/components/video-header/video-header';
+import useResponsive from 'src/@core/hooks/useResponsive';
 
 
 export default function PaymentsList() {
@@ -23,6 +24,7 @@ export default function PaymentsList() {
     const { clientOwnPayments, isGettingOwnPayments, clientQueryParams } = useAppSelector(state => state.cPanelSlice)
     const dispatch = useAppDispatch()
     const router = useRouter()
+    const { isMobile } = useResponsive()
 
     const column: customTableDataProps[] = [
         {
@@ -136,8 +138,8 @@ export default function PaymentsList() {
         <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
             <Box sx={{ width: "100%", display: "flex", flexDirection: "column", gap: 1 }}>
                 <VideoHeader item={videoUrls.crm_setting} />
-                <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                    <Stack direction="row" alignItems={"center"} spacing={4}>
+                <Box sx={{ display: isMobile ? "grid" : 'flex', gridTemplateColumns: "1fr", gap: 2, justifyContent: "space-between", alignItems: "center" }}>
+                    <Stack direction="row" alignItems={"center"} spacing={isMobile ? 2 : 4}>
                         <IconButton color='primary'>
                             <IconifyIcon icon={'ep:back'} style={{ cursor: 'pointer' }} onClick={() => handleLogout()} />
                         </IconButton>
@@ -147,7 +149,7 @@ export default function PaymentsList() {
                             {clientOwnPayments?.sms_data}
                         </Box>
                     </Stack>
-                    <Stack direction={"row"} alignItems={"center"} gap="15px">
+                    <Stack display={isMobile ? "grid" : "flex"} direction={"row"} alignItems={"center"} gap="15px">
                         <Chip sx={{ borderRadius: "8px", height: "30px" }} size='small' label={clientOwnPayments?.is_demo ? `${t("Demo tugash vaqti")} : ${clientOwnPayments?.expiration_date}` : `${t("Keyingi to'lov vaqti")} : ${clientOwnPayments?.expiration_date}`} color="error" variant="outlined" />
                         <Chip size='small' sx={{ borderRadius: "8px", height: "30px" }} icon={
                             <Tooltip arrow title="Platforma uchun to'lov hamda qo'shimcha SMS paket olish  uchun to'lovlarni o'ng tomonda joylashgan To'lov qilish yoki SMS paket olish tugmasini bosish orqali markazga mos tushuvchi tariflardan birini tanlab ushbu karta raqamga qilingan to'lov chekini yuboring (Axmadaliyeva Roxatoy)">

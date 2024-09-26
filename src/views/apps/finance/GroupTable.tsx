@@ -4,6 +4,7 @@ import { formatCurrency } from 'src/@core/utils/format-currency';
 import { hexToRGBA } from 'src/@core/utils/hex-to-rgba';
 import 'rsuite/dist/rsuite.min.css';
 import { styled } from '@mui/material/styles';
+import useResponsive from 'src/@core/hooks/useResponsive';
 
 interface GroupStatsType {
     id: number
@@ -53,10 +54,11 @@ export function formatDateToMMYYYY(dateString: any) {
 
 export default function GroupFinanceTable({ data }: any) {
     const { t } = useTranslation()
+    const { isMobile } = useResponsive()
 
     return (
         <Card sx={{ display: 'flex', p: '15px', gap: '5px' }}>
-            <Box className='header' sx={{ width: '170px' }}>
+            <Box className='header' sx={{ width: isMobile ? "30%" : '170px' }}>
                 <Div sx={{ mb: '5px' }}>{t('Nomi')}</Div>
                 <Box>
                     <Box sx={{ border: '1px solid #c3cccc', p: '5px', fontSize: 13 }} >{t('Guruhlar')}</Box>
@@ -66,7 +68,7 @@ export default function GroupFinanceTable({ data }: any) {
                     <Box sx={{ border: '1px solid #c3cccc', p: '5px', fontSize: 13 }} >{t("To'lanishi kerak")}</Box>
                 </Box>
             </Box>
-            <Box className='header' sx={{ width: '150px' }}>
+            <Box className='header' sx={{ width: isMobile ? "20%" : '150px' }}>
                 <Div sx={{ mb: '5px' }}>{t('Umumiy')}</Div>
                 <Box>
                     <Box sx={{ border: '1px solid #c3cccc', p: '5px', fontSize: 13 }}>{data?.result?.length}</Box>
@@ -78,7 +80,7 @@ export default function GroupFinanceTable({ data }: any) {
                     }</Box>
                 </Box>
             </Box>
-            <Box className='body' sx={{ width: "calc(100% - 320px)" }}>
+            <Box className='body' sx={{ minWidth: isMobile ? "47%" : "calc(100% - 320px)", maxWidth: isMobile ? "47%" : "calc(100% - 320px)" }}>
                 <Div sx={{ textAlign: 'end', mb: '5px', padding: '4px', borderRadius: '0', height: "44px" }}></Div>
                 <NavigationMenu sx={{ display: 'flex', width: '100%', overflowX: 'auto' }}>
                     {

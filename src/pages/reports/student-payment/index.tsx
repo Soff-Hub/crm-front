@@ -9,6 +9,7 @@ import { formatCurrency } from 'src/@core/utils/format-currency';
 import dynamic from "next/dynamic";
 import { fetchGroupsList, fetchStudentPaymentsList, updateParams } from 'src/store/apps/reports/studentPayments';
 import FilterBlock from 'src/views/apps/reports/student-payments/FilterBlock';
+import useResponsive from 'src/@core/hooks/useResponsive';
 
 const DataTable = dynamic(() => import('src/@core/components/table'));
 
@@ -24,7 +25,7 @@ export default function StudentPaymentsPage() {
     const { push } = useRouter()
     const dispatch = useAppDispatch()
 
-    const { studentsPayment, paymentsCount, isLoading, queryParams } = useAppSelector(state => state.studentPayments)
+    const { studentsPayment, paymentsCount, total_payments, isLoading, queryParams } = useAppSelector(state => state.studentPayments)
 
     const columns: customTableProps[] = [
         {
@@ -78,18 +79,19 @@ export default function StudentPaymentsPage() {
         dispatch(updateParams({ page: page }))
         await dispatch(fetchStudentPaymentsList(new URLSearchParams({ ...queryParams, page: String(page) }).toString()))
     }
-    console.log(studentsPayment);
+    const { isMobile } = useResponsive()
 
     return (
         <div>
             <Box
                 className='groups-page-header'
-                sx={{ display: 'grid', gridTemplateColumns: "1fr 1fr 1fr 1fr", alignItems: "center", margin: '10px 0' }}
+                sx={{ display: 'grid', gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr 1fr 1fr", gap: 2, alignItems: "center", margin: '10px 0' }}
                 py={2}
             >
                 <Box sx={{ display: "flex", alignItems: "center", gap: "10px" }}>
                     <Typography variant='h5'>{t("O'quvchilar to'lovi")}</Typography>
                     {!isLoading && <Chip label={`${paymentsCount}`} variant='outlined' color="primary" size="medium" />}
+                    <Chip variant='outlined' size='medium' sx={{ fontSize: "14px", display: isMobile ? "flex" : "none", fontWeight: "bold", }} color="success" label={`${formatCurrency(total_payments)} UZS`} />
                 </Box>
                 <FilterBlock />
             </Box>

@@ -27,7 +27,6 @@ export interface customTableProps {
 }
 
 export default function GroupsPage() {
-
   const { t } = useTranslation()
   const router = useRouter()
   const dispatch = useAppDispatch()

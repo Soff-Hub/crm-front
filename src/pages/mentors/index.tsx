@@ -18,6 +18,7 @@ import { fetchTeachersList, setOpenEdit, updateParams } from 'src/store/apps/men
 import { formatCurrency } from 'src/@core/utils/format-currency';
 import { videoUrls } from 'src/@core/components/video-header/video-header';
 import dynamic from "next/dynamic";
+import useResponsive from 'src/@core/hooks/useResponsive';
 
 const RowOptions = dynamic(() => import('src/views/apps/mentors/RowOptions'));
 const TeacherAvatar = dynamic(() => import('src/views/apps/mentors/AddMentorsModal').then(mod => mod.TeacherAvatar));
@@ -37,6 +38,7 @@ export default function GroupsPage() {
   const { t } = useTranslation()
   const { push } = useRouter()
   const dispatch = useAppDispatch()
+  const { isMobile } = useResponsive()
 
   const { teachers, teachersCount, queryParams, isLoading } = useAppSelector(state => state.mentors)
 
@@ -138,7 +140,7 @@ export default function GroupsPage() {
       <VideoHeader item={videoUrls.teachers} />
       <Box
         className='groups-page-header'
-        sx={{ display: 'flex', justifyContent: 'space-between', margin: '10px 0' }}
+        sx={{ display: isMobile ? "grid" : 'flex', gridTemplateColumns: "1fr", gap: "10px", justifyContent: 'space-between', margin: '10px 0' }}
         py={2}
       >
         <Box sx={{ display: "flex", alignItems: "center", gap: "10px" }}>

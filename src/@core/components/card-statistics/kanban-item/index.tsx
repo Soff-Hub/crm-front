@@ -51,7 +51,7 @@ export const today = `${new Date().getFullYear()}-${(new Date().getMonth() + 1) 
 const KanbanItem = (props: KanbarItemProps) => {
 
     // ** Props
-    const { title, phone, status, handleEditLead, id, is_view, reRender } = props
+    const { title, phone, status, handleEditLead, last_activity, id, is_view, reRender } = props
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
     const [error, setError] = useState<any>({})
     const { t } = useTranslation()
@@ -215,7 +215,11 @@ const KanbanItem = (props: KanbarItemProps) => {
                         />
                     </Avatar>
                     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                        <Typography sx={{ display: 'flex', alignItems: 'center', gap: '10px' }} fontSize={12}>{title} {!is_view && <Status color='success' />}</Typography>
+                        <Typography sx={{ display: 'flex', alignItems: 'center', gap: '10px' }} fontSize={12}>
+                            {title}
+                            {!is_view && <Status color='success' />}
+                            <Typography variant='caption' fontSize={9}>{last_activity}</Typography>
+                        </Typography>
                         <Typography fontSize={12}>{phone}</Typography>
                     </Box>
                     <IconifyIcon

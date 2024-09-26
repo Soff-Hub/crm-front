@@ -14,6 +14,7 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { DateRangePicker } from "rsuite";
 import IconifyIcon from "src/@core/components/icon";
+import useResponsive from "src/@core/hooks/useResponsive";
 import { formatCurrency } from "src/@core/utils/format-currency";
 import useDebounce from "src/hooks/useDebounce";
 import { formatDateString } from "src/pages/finance";
@@ -52,12 +53,18 @@ export default function FilterBlock() {
         const queryString = new URLSearchParams({ ...queryParams, group: e.target.value, page: "1" }).toString()
         await dispatch(fetchStudentPaymentsList(queryString))
     }
-    console.log(queryParams);
 
+    const { isMobile } = useResponsive()
 
     return (
-        <Box sx={{ display: "grid", gridColumn: "2/5", alignItems: "center", gridTemplateColumns: "0.8fr 1fr 1fr 1fr", gap: "10px" }}>
-            <Chip variant='outlined' size='medium' sx={{ fontSize: "14px", fontWeight: "bold", }} color="success" label={`${formatCurrency(total_payments)} UZS`} />
+        <Box sx={{ display: "grid", gridColumn: isMobile ? "1/5" : "2/5", alignItems: "center", gridTemplateColumns: isMobile ? "1fr 1fr" : "0.8fr 1fr 1fr 1fr", gap: "10px" }}>
+            <Chip
+                variant='outlined'
+                size='medium'
+                sx={{ fontSize: "14px", display: isMobile ? "none" : "flex", fontWeight: "bold", }}
+                color="success"
+                label={`${formatCurrency(total_payments)} UZS`}
+            />
             <FormControl variant="outlined" size='small' fullWidth>
                 <InputLabel htmlFor="outlined-adornment-password">{t('Qidirish')}</InputLabel>
                 <OutlinedInput
@@ -97,7 +104,7 @@ export default function FilterBlock() {
                     }
                 </Select>
             </FormControl>
-            <DateRangePicker style={{ minWidth: "auto" }} showOneCalendar placement="bottomEnd"
+            <DateRangePicker style={{ minWidth: "auto", gridColumn: isMobile ? "1/3" : "" }} showOneCalendar placement="bottomEnd"
                 locale={{
                     last7Days: t("Oxirgi hafta"),
                     sunday: t("Yak"),

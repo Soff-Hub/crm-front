@@ -19,8 +19,6 @@ interface Props {
     id: any,
 }
 
-
-
 export default function HomeKanban({ title, items, id }: Props) {
 
     //** Hooks
@@ -50,9 +48,9 @@ export default function HomeKanban({ title, items, id }: Props) {
     return (
         <Box sx={{ width: "100%", display: 'flex', flexDirection: 'column', maxWidth: 350, minWidth: '300px' }}>
             <Box display={"flex"} alignItems={"center"} justifyContent="space-between" marginBottom={5} >
-                <Typography fontSize={22}>{title}</Typography>
+                <Typography style={{ width: "50%", overflow: "hidden", textOverflow: "ellipsis" }} fontSize={22}>{title}</Typography>
                 {queryParams.is_active ? (
-                    <Box sx={{ display: "flex", gap: "5px" }}>
+                    <Box sx={{ display: "flex", gap: "5px", alignItems: "center" }}>
                         <IconButton sx={{ cursor: 'pointer', marginLeft: 'auto' }}>
                             <IconifyIcon icon={'fluent:person-add-24-filled'} color='#84cc16' onClick={() => dispatch(setOpenLid(id))} />
                         </IconButton>
@@ -62,8 +60,8 @@ export default function HomeKanban({ title, items, id }: Props) {
                         {title?.toLowerCase() !== 'leads' && <IconButton sx={{ cursor: 'pointer', marginLeft: 'auto' }}>
                             <IconifyIcon icon={'fluent:text-bullet-list-square-edit-20-filled'} color='orange' onClick={() => setOpen('edit')} />
                         </IconButton>}
-                        {title?.toLowerCase() !== 'leads' && <IconButton sx={{ cursor: 'pointer', marginLeft: 'auto' }}>
-                            <IconifyIcon icon={'icon-park-solid:delete-four'} color='red' onClick={() => setOpen('delete')} fontSize="20px" />
+                        {title?.toLowerCase() !== 'leads' && <IconButton sx={{ cursor: 'pointer', marginLeft: 'auto', }}>
+                            <IconifyIcon icon={'icon-park-solid:delete-four'} color='red' onClick={() => setOpen('delete')} style={{ padding: 1 }} />
                         </IconButton>}
                     </Box>
                 ) : ''}

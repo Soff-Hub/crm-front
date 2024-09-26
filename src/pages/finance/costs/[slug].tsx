@@ -14,6 +14,7 @@ import { DateRangePicker } from 'rsuite';
 import { formatDateString } from '..';
 import EditCostForm from 'src/views/apps/finance/EditCostForm';
 import CostRowActions from 'src/views/apps/finance/CostRowOptions';
+import useResponsive from 'src/@core/hooks/useResponsive';
 
 
 function Slug(props: { slug: string }) {
@@ -28,6 +29,7 @@ function Slug(props: { slug: string }) {
     const [editable, setEditable] = useState<boolean>(false)
     const [loading, setLoading] = useState<boolean>(false)
     const [date, setDate] = useState<any>('')
+    const { isMobile } = useResponsive()
 
     const updateCategory = async () => {
         try {
@@ -102,7 +104,7 @@ function Slug(props: { slug: string }) {
     return (
         <Box>
             <Box className='header'>
-                <Box sx={{ display: 'flex', alignItems: 'center', mb: 4, px: 2 }}>
+                <Box sx={{ display: isMobile ? "grid" : 'flex', gridTemplateColumns: "1fr 1fr", gap: 2, alignItems: 'center', mb: 4, px: 2 }}>
                     <Box sx={{ display: 'flex', gap: '10px', flexGrow: 1, alignItems: 'center' }}>
                         <IconButton color='primary'>
                             <IconifyIcon icon={'ep:back'} style={{ cursor: 'pointer' }} onClick={() => Router.back()} />
@@ -127,7 +129,7 @@ function Slug(props: { slug: string }) {
                         minutes: t("Minut"),
                         seconds: t("Sekund"),
                     }}
-                        style={{ marginLeft: 'auto' }}
+                        style={{ marginLeft: isMobile ? "0" : 'auto', order: 3, gridColumn: "1/3" }}
                         format="yyyy-MM-dd"
                         onChange={handleChangeDate}
                         translate={'yes'}
@@ -135,11 +137,11 @@ function Slug(props: { slug: string }) {
                         value={date}
                     />
 
-                    <Typography sx={{ fontSize: '14px', color: 'error.main', ml: 4, display: 'flex', alignItems: 'center', mr: 4, gap: '5px' }} >
+                    <Typography sx={{ fontSize: '14px', order: 2, color: 'error.main', ml: 4, display: 'flex', alignItems: 'center', mr: 4, gap: '5px' }} >
                         <Chip variant='outlined' size='medium' sx={{ fontSize: "14px", fontWeight: "bold" }} color="error" label={`${formatCurrency(allAmount)} so'm`} />
                     </Typography>
 
-                    <Button variant='contained' size='small' onClick={() => setOpen('create')}>{t("Yangi qo'shish")}</Button>
+                    <Button variant='contained' size='small' style={{ order: 4, gridColumn: "1/3" }} onClick={() => setOpen('create')}>{t("Yangi qo'shish")}</Button>
                 </Box>
             </Box>
 
