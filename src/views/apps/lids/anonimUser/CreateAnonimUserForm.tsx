@@ -160,7 +160,7 @@ export default function CreateAnonimUserForm({ }: Props) {
             </FormControl>
 
             {
-                errors?.user && <KanbanItem id={newErrors.user.id} phone={newErrors.user.phone} status='new' title={newErrors.user.first_name} is_view />
+                errors?.user && <KanbanItem id={newErrors.user.id} phone={newErrors.user.phone} last_activity={newErrors.last_activity} status='new' title={newErrors.user.first_name} is_view />
             }
 
             <FormControl fullWidth>
