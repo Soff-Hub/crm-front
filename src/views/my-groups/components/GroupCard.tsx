@@ -23,6 +23,7 @@ export default function GroupCard({ group }: { group: any }) {
                             <Typography sx={{ fontSize: '12px' }}>{t("Yakunlanadi")}: {group.end_date}</Typography>
                         </Box>
                     </CardContent>
+
                 </Card>
             </Box>
         </Link>

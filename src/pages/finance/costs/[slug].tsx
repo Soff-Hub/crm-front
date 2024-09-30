@@ -2,7 +2,7 @@ import { Box, Button, Chip, Dialog, DialogContent, DialogTitle, IconButton, Text
 import 'react-datepicker/dist/react-datepicker.css';
 import Router, { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import api from 'src/@core/utils/api';
 import { formatCurrency } from 'src/@core/utils/format-currency';
@@ -15,10 +15,11 @@ import { formatDateString } from '..';
 import EditCostForm from 'src/views/apps/finance/EditCostForm';
 import CostRowActions from 'src/views/apps/finance/CostRowOptions';
 import useResponsive from 'src/@core/hooks/useResponsive';
+import { AuthContext } from 'src/context/AuthContext';
 
 
 function Slug(props: { slug: string }) {
-    const { query } = useRouter()
+    const { query, push } = useRouter()
 
     const { t } = useTranslation()
 
@@ -30,6 +31,8 @@ function Slug(props: { slug: string }) {
     const [loading, setLoading] = useState<boolean>(false)
     const [date, setDate] = useState<any>('')
     const { isMobile } = useResponsive()
+    const { user } = useContext(AuthContext)
+
 
     const updateCategory = async () => {
         try {
@@ -98,6 +101,11 @@ function Slug(props: { slug: string }) {
     }
 
     useEffect(() => {
+        if (user?.role.includes('student') ||
+            (user?.role.includes('teacher') && !user?.role.includes('ceo')) ||
+            user?.role.includes('admin')) {
+            push("/")
+        }
         getExpense(``)
     }, [])
 

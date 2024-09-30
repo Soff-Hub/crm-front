@@ -12,7 +12,7 @@ import {
   Pagination,
   Typography,
 } from '@mui/material';
-import { ReactNode, useEffect, useState } from 'react';
+import { ReactNode, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import useResponsive from 'src/@core/hooks/useResponsive';
 import { useAppDispatch, useAppSelector } from 'src/store';
@@ -30,6 +30,7 @@ import { GroupsFilter } from 'src/views/apps/groups/GroupsFilter';
 import getLessonDays from 'src/@core/utils/getLessonDays';
 import dynamic from 'next/dynamic';
 import getMonthName from 'src/@core/utils/gwt-month-name';
+import { AuthContext } from 'src/context/AuthContext';
 
 const IconifyIcon = dynamic(() => import('src/@core/components/icon'));
 const DataTable = dynamic(() => import('src/@core/components/table'));
@@ -61,8 +62,8 @@ export const TranslateWeekName: any = {
 export default function GroupsPage() {
   const { groups, isLoading, queryParams, groupCount } = useAppSelector(state => state.groups)
   const dispatch = useAppDispatch()
-
   const router = useRouter()
+  const { user } = useContext(AuthContext)
   const { t } = useTranslation()
   const [open, setOpen] = useState<boolean>(false)
   const { isMobile } = useResponsive()
@@ -146,15 +147,16 @@ export default function GroupsPage() {
   }
 
   const pageLoad = async () => {
-    const queryString = new URLSearchParams({ ...queryParams }).toString()
     await Promise.all([
       dispatch(getMetaData())
     ])
   }
 
   useEffect(() => {
+    if (user?.role.includes('student')) {
+      router.push("/")
+    }
     pageLoad()
-
     return () => {
       dispatch(resetGroupParams())
     }

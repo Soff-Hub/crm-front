@@ -189,16 +189,16 @@ const KanbanItem = (props: KanbarItemProps) => {
         setDepartmentsState(resp.data)
     }
 
-    useEffect(() => {
-        getLeadData()
-        if (activeTab === 'tab-1') {
-            getDepartmentItem('anonim-user')
-        } else if (activeTab === 'tab-2') {
-            getDepartmentItem('lead-user-description')
-        } else {
-            getDepartmentItem('sms-history')
-        }
-    }, [])
+    // useEffect(() => {
+    //     getLeadData()
+    //     if (activeTab === 'tab-1') {
+    //         getDepartmentItem('anonim-user')
+    //     } else if (activeTab === 'tab-2') {
+    //         getDepartmentItem('lead-user-description')
+    //     } else {
+    //         getDepartmentItem('sms-history')
+    //     }
+    // }, [])
 
 
     return (

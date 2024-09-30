@@ -2,9 +2,10 @@ import { Box, Typography, Table, TableBody, TableCell, TableContainer, TableHead
 import { format } from 'date-fns';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import IconifyIcon from 'src/@core/components/icon';
+import { AuthContext } from 'src/context/AuthContext';
 import { useAppDispatch, useAppSelector } from 'src/store';
 import { fetchEmployeeAttendance } from 'src/store/apps/employee-attendance';
 
@@ -53,13 +54,15 @@ const attendanceCellStyles = {
 
 const EmployeeList = () => {
     const { t } = useTranslation();
-    const { back } = useRouter();
+    const { back, push } = useRouter();
     const { attendanceList } = useAppSelector(state => state.employeeAttendance)
     const dispatch = useAppDispatch()
-
-    console.log(attendanceList);
+    const { user } = useContext(AuthContext)
 
     useEffect(() => {
+        if (user?.role.includes('student')) {
+            push("/")
+        }
         dispatch(fetchEmployeeAttendance(""))
     }, [])
 

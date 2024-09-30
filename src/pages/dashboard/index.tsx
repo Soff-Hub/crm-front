@@ -1,10 +1,11 @@
 "use client";
 import dynamic from 'next/dynamic';
+import { useRouter } from 'next/router';
 import { useContext, useEffect } from 'react';
 import { AuthContext } from 'src/context/AuthContext';
 import { useAppDispatch, useAppSelector } from 'src/store';
 import { fetchLessons, fetchStatistics } from 'src/store/apps/dashboard';
-// Dynamic imports
+
 const MyGroups = dynamic(() => import('src/views/my-groups'), { ssr: false });
 const DashboardPage = dynamic(() => import('src/views/apps/dashboard/DashboardPage'), { ssr: false });
 
@@ -12,8 +13,12 @@ const AppCalendar = () => {
   const { weeks } = useAppSelector((state) => state.dashboard)
   const dispatch = useAppDispatch()
   const { user } = useContext(AuthContext)
+  const router = useRouter()
 
   const pageLoad = async () => {
+    if (user?.role.includes('student')) {
+      router.push("/")
+    }
     await Promise.all([
       dispatch(fetchStatistics()),
       dispatch(fetchLessons(weeks))

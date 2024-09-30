@@ -1,7 +1,7 @@
 import { Box, Button, Chip, IconButton, Pagination, Stack, Tooltip, Typography } from '@mui/material';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import IconifyIcon from 'src/@core/components/icon';
 import DataTable, { customTableDataProps } from 'src/@core/components/table';
@@ -17,6 +17,7 @@ import CreateSMSPayment from 'src/views/apps/crm-payments/CreateSMSPayment';
 import EditSMSPaymentClientModal from 'src/views/apps/crm-payments/EditSMSPayment';
 import VideoHeader, { videoUrls } from 'src/@core/components/video-header/video-header';
 import useResponsive from 'src/@core/hooks/useResponsive';
+import { AuthContext } from 'src/context/AuthContext';
 
 
 export default function PaymentsList() {
@@ -24,6 +25,7 @@ export default function PaymentsList() {
     const { clientOwnPayments, isGettingOwnPayments, clientQueryParams } = useAppSelector(state => state.cPanelSlice)
     const dispatch = useAppDispatch()
     const router = useRouter()
+    const { user } = useContext(AuthContext)
     const { isMobile } = useResponsive()
 
     const column: customTableDataProps[] = [
@@ -109,6 +111,9 @@ export default function PaymentsList() {
     ]
 
     useEffect(() => {
+        if (user?.role.includes('student')) {
+            router.push("/")
+        }
         (async function () {
             await Promise.all([
                 dispatch(fetchCRMPayments()),

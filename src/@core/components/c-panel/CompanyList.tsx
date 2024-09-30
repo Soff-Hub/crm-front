@@ -154,7 +154,7 @@ export default function CompanyList() {
     }
 
     useEffect(() => {
-        getData()
+        getData(queryString)
     }, [])
 
 

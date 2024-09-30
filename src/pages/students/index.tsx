@@ -4,7 +4,7 @@ import {
   Pagination,
   Typography
 } from '@mui/material';
-import { ReactNode, useEffect } from 'react';
+import { ReactNode, useContext, useEffect } from 'react';
 import DataTable from 'src/@core/components/table';
 import { useTranslation } from 'react-i18next';
 import { useRouter } from 'next/router';
@@ -18,6 +18,7 @@ import { clearStudentParams, fetchStudentsList, updateStudentParams } from 'src/
 import { formatCurrency } from 'src/@core/utils/format-currency';
 import { setOpenEdit } from 'src/store/apps/mentors';
 import VideoHeader, { videoUrls } from 'src/@core/components/video-header/video-header';
+import { AuthContext } from 'src/context/AuthContext';
 
 export interface customTableProps {
   xs: number
@@ -29,10 +30,9 @@ export interface customTableProps {
 export default function GroupsPage() {
   const { t } = useTranslation()
   const router = useRouter()
+  const { user } = useContext(AuthContext)
   const dispatch = useAppDispatch()
   const { students, isLoading, studentsCount, queryParams } = useAppSelector(state => state.students)
-
-
 
   const columns: customTableProps[] = [
     {
@@ -108,6 +108,9 @@ export default function GroupsPage() {
   }
 
   useEffect(() => {
+    if (user?.role.includes('student')) {
+      router.push("/")
+    }
     return () => {
       dispatch(setOpenEdit(null))
       dispatch(clearStudentParams())

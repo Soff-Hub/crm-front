@@ -1,10 +1,10 @@
 "use client"
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Box, Button, ButtonGroup, DialogContent, DialogTitle, FormControl, FormHelperText, TextField, Typography, IconButton as IconButtonMui } from '@mui/material';
 import api from 'src/@core/utils/api';
 import { DateRangePicker, IconButton } from 'rsuite';
 import 'rsuite/DateRangePicker/styles/index.css';
-import Router from 'next/router';
+import Router, { useRouter } from 'next/router';
 import format from 'date-fns/format';
 import IconifyIcon from 'src/@core/components/icon';
 import * as Yup from "yup";
@@ -12,6 +12,7 @@ import { useFormik } from 'formik';
 import { useTranslation } from 'react-i18next';
 import LoadingButton from '@mui/lab/LoadingButton';
 import dynamic from 'next/dynamic';
+import { AuthContext } from 'src/context/AuthContext';
 
 // Dynamically import components
 const CardStatsVertical = dynamic(() => import('src/@core/components/card-statistics/card-stats-vertical'));
@@ -25,6 +26,8 @@ const Stats = () => {
     const { t } = useTranslation()
     const [loading, setLoading] = useState<boolean>(false)
     const [open, setOpen] = useState<boolean>(false)
+    const router = useRouter()
+    const { user } = useContext(AuthContext)
 
     const getSources = async () => {
         const start_date = date?.[0] ? format(date?.[0], 'yyyy-MM-dd') : ''
@@ -72,6 +75,9 @@ const Stats = () => {
 
 
     useEffect(() => {
+        if (user?.role.includes('student')) {
+            router.push("/")
+        }
         getSources()
     }, [date])
 

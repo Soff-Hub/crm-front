@@ -1,5 +1,5 @@
 import { Box, Button, Chip, IconButton, Pagination, Typography } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { formatCurrency } from 'src/@core/utils/format-currency';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -12,8 +12,9 @@ import { SelectPicker } from 'rsuite';
 import { monthItems, yearItems } from 'src/views/apps/finance/FinanceAllNumber';
 import { today } from 'src/@core/components/card-statistics/kanban-item';
 import IconifyIcon from 'src/@core/components/icon';
-import Router from 'next/router';
+import Router, { useRouter } from 'next/router';
 import useResponsive from 'src/@core/hooks/useResponsive';
+import { AuthContext } from 'src/context/AuthContext';
 
 
 function Slug() {
@@ -23,10 +24,18 @@ function Slug() {
     const [year, setYear] = useState<number>(new Date().getFullYear())
     const [month, setMonth] = useState<string>(today.split('-')[1])
 
+    const { user } = useContext(AuthContext)
+    const router = useRouter()
+
     const { t } = useTranslation()
     const { isMobile } = useResponsive()
 
     useEffect(() => {
+        if (user?.role.includes('student') ||
+            (user?.role.includes('teacher') && !user?.role.includes('ceo')) ||
+            user?.role.includes('admin')) {
+            router.push("/")
+        }
         const queryString = new URLSearchParams({ ...queryParams, page: `1` }).toString()
         dispatch(getAdvanceList(queryString))
         dispatch(getStaffs())

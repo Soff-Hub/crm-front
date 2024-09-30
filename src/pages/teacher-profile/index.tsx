@@ -20,8 +20,7 @@ import IconifyIcon from 'src/@core/components/icon'
 
 // ** Actions
 import { Button, Checkbox, Dialog, DialogContent, DialogTitle, FormControl, Typography } from '@mui/material'
-import { useContext, useEffect, useState } from 'react'
-import { AuthContext } from 'src/context/AuthContext'
+import { useEffect, useState } from 'react'
 import MyGroups from 'src/views/my-groups'
 import api from 'src/@core/utils/api'
 import { useRouter } from 'next/router'
@@ -33,18 +32,13 @@ import { useTranslation } from 'react-i18next'
 import getMonthName from 'src/@core/utils/gwt-month-name'
 import { useAppSelector } from 'src/store'
 
-
-
-
-
 const AppCalendar = () => {
     const currentWeek: string = `${new Date()}`.split(' ')[0].toLocaleLowerCase()
 
     // ** Hooks
     const { settings } = useSettings()
-    const { user } = useContext(AuthContext)
     const { push, pathname, query } = useRouter()
-    const { isMobile, isTablet } = useResponsive()
+    const { isMobile } = useResponsive()
     const [tabValue, setTabValue] = useState<string>(currentWeek === 'mon' || currentWeek === 'wed' || currentWeek === 'fri' ? '2' : '1')
     const [open, setOpen] = useState<null | 'week'>(null)
     const [weeks, setWeeks] = useState<any>(query?.weeks ? (typeof query.weeks === 'string' ? query.weeks.split(',') : query.weeks) : currentWeek === 'mon' || currentWeek === 'wed' || currentWeek === 'fri' ? ['monday', 'wednesday', 'friday'] : ['tuesday', 'thursday', 'saturday']);
@@ -52,9 +46,7 @@ const AppCalendar = () => {
     const { companyInfo } = useAppSelector((state: any) => state.user)
     const startTime = companyInfo?.work_start_time
     const endTime = companyInfo?.work_end_time
-
     const { t } = useTranslation()
-
 
     // ** Vars
     const { skin } = settings

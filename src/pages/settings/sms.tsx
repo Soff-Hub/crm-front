@@ -55,6 +55,7 @@ export default function RoomsPage() {
 
 
     useEffect(() => {
+
         dispatch(fetchSmsList())
     }, [])
 

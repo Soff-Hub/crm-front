@@ -1,7 +1,7 @@
 //@ts-nocheck
 "use client";
 import { Box, Chip, Pagination, Typography } from '@mui/material';
-import { ReactNode, useEffect } from 'react';
+import { ReactNode, useContext, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useRouter } from 'next/router';
 import { useAppDispatch, useAppSelector } from 'src/store';
@@ -10,6 +10,7 @@ import dynamic from "next/dynamic";
 import { fetchGroupsList, fetchStudentPaymentsList, updateParams } from 'src/store/apps/reports/studentPayments';
 import FilterBlock from 'src/views/apps/reports/student-payments/FilterBlock';
 import useResponsive from 'src/@core/hooks/useResponsive';
+import { AuthContext } from 'src/context/AuthContext';
 
 const DataTable = dynamic(() => import('src/@core/components/table'));
 
@@ -24,6 +25,7 @@ export default function StudentPaymentsPage() {
     const { t } = useTranslation()
     const { push } = useRouter()
     const dispatch = useAppDispatch()
+    const { user } = useContext(AuthContext)
 
     const { studentsPayment, paymentsCount, total_payments, isLoading, queryParams } = useAppSelector(state => state.studentPayments)
 
@@ -69,6 +71,9 @@ export default function StudentPaymentsPage() {
 
 
     useEffect(() => {
+        if (user?.role.includes('student')) {
+            push("/")
+        }
         Promise.all([
             dispatch(fetchStudentPaymentsList(new URLSearchParams(queryParams).toString())),
             dispatch(fetchGroupsList())

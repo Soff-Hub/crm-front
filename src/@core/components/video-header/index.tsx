@@ -24,7 +24,7 @@ export default function VideoModal({ }: Props) {
                 </IconButton>
             </DialogTitle>
             <DialogContent sx={{ width: '100%', }}>
-                <iframe style={{ minHeight: isMobile ? '320px' : isTablet ? '420px' : '500px', minWidth: isMobile ? '320px' : isTablet ? '600px' : '1024px' }} src={videoAnchor.url} title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen></iframe>
+                <iframe style={{ minHeight: isMobile ? '320px' : isTablet ? '420px' : '500px', minWidth: isMobile ? '100%' : isTablet ? '600px' : '1024px' }} src={videoAnchor.url} title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen></iframe>
             </DialogContent>
         </Dialog >
     )

@@ -2,6 +2,7 @@
 // ** MUI Imports
 import { Box } from '@mui/material';
 import dynamic from 'next/dynamic';
+import { useRouter } from 'next/router';
 import { useContext, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { videoUrls } from 'src/@core/components/video-header/video-header';
@@ -27,9 +28,12 @@ const Lids = () => {
   const { user } = useContext(AuthContext)
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
-
+  const router = useRouter()
 
   useEffect(() => {
+    if (user?.role.includes('student')) {
+      router.push("/")
+    }
     dispatch(fetchSources())
   }, [])
 

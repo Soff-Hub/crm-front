@@ -22,7 +22,7 @@ import Navigation from './components/vertical/navigation'
 import Footer from './components/shared-components/footer'
 import ScrollToTop from 'src/@core/components/scroll-to-top'
 
-const VerticalLayoutWrapper = styled('div')({
+const VerticalLayoutWrapper = styled(Box)({
   height: '100%',
   display: 'flex'
 })
@@ -35,7 +35,7 @@ const MainContentWrapper = styled(Box)<BoxProps>({
   flexDirection: 'column'
 })
 
-const ContentWrapper = styled('main')(({ theme }) => ({
+const ContentWrapper = styled(Box)(({ theme }) => ({
   flexGrow: 1,
   width: '100%',
   padding: theme.spacing(6),

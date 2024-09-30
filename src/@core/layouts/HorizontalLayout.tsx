@@ -24,7 +24,7 @@ import AppBarContent from './components/horizontal/app-bar-content'
 // ** Util Import
 import { hexToRGBA } from 'src/@core/utils/hex-to-rgba'
 
-const HorizontalLayoutWrapper = styled('div')({
+const HorizontalLayoutWrapper = styled(Box)({
   height: '100%',
   display: 'flex',
   ...(themeConfig.horizontalMenuAnimation && { overflow: 'clip' })
@@ -51,7 +51,7 @@ const Toolbar = styled(MuiToolbar)<ToolbarProps>(({ theme }) => ({
   }
 }))
 
-const ContentWrapper = styled('main')(({ theme }) => ({
+const ContentWrapper = styled(Box)(({ theme }) => ({
   flexGrow: 1,
   width: '100%',
   padding: theme.spacing(6),

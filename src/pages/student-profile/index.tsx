@@ -11,10 +11,10 @@ import useResponsive from 'src/@core/hooks/useResponsive';
 import api from 'src/@core/utils/api';
 import { datatimeFormatCustome } from 'src/@core/utils/time-formatter';
 import { AuthContext } from 'src/context/AuthContext';
+import EmptyContent from 'src/@core/components/empty-content';
 
 
 export default function StudentProfile() {
-
     const { t } = useTranslation()
     const { isMobile } = useResponsive()
     const [groups, setGroups] = useState<any[]>([])
@@ -99,7 +99,7 @@ export default function StudentProfile() {
                             )) : ''
                     }
                     {
-                        groups.map((group: any) => (
+                        groups.length ? groups?.map((group: any) => (
                             <Link key={group.id} href={`/student-profile/group/${group.id}?month=${group.start_date}&month_duration=${group.month_duration}&start_date=${group?.start_date}`} style={{ textDecoration: 'none', display: 'block', maxWidth: '400px', width: '100%', minWidth: '290px' }}>
                                 <Box sx={{ display: 'flex', gap: '20px', width: '100%' }} >
                                     <Card sx={{ width: '100%' }}>
@@ -117,7 +117,7 @@ export default function StudentProfile() {
                                     </Card>
                                 </Box>
                             </Link>
-                        ))
+                        )) : <EmptyContent />
                     }
                 </Box>
                 <Box sx={{ display: 'flex', gap: '15px', mt: 3, flexWrap: 'wrap', justifyContent: isMobile ? 'center' : 'flex-start', flexDirection: 'column' }}>

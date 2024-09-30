@@ -21,7 +21,7 @@ import FinanceCategories from 'src/views/apps/finance/FinanceCategories'
 import { formatCurrency } from 'src/@core/utils/format-currency'
 import EmptyContent from 'src/@core/components/empty-content'
 import { getMonthFullName } from 'src/@core/utils/gwt-month-name'
-import Router from 'next/router'
+import Router, { useRouter } from 'next/router'
 import SubLoader from 'src/views/apps/loaders/SubLoader'
 import StatsPaymentMethods from 'src/views/apps/finance/StatsPaymentMethods'
 import FinanceAllNumber from 'src/views/apps/finance/FinanceAllNumber'
@@ -48,11 +48,13 @@ const CardStatistics = () => {
     const [open, setOpen] = useState<'create' | null>(null);
     const { categoriesData, groupsFinance, allNumbersParams, isGettingGroupsFinance } = useAppSelector(state => state.finance)
     const { user } = useContext(AuthContext)
+    const router = useRouter()
     const dispatch = useAppDispatch()
     const [loading, setLoading] = useState<boolean>(false);
     const [deleteCategory, setDeleteCategory] = useState<any>(null)
     const [salaries, setSalaries] = useState<any>([])
     const { isMobile } = useResponsive()
+
 
     const withdrawCol: customTableDataProps[] = [
         {
@@ -174,6 +176,11 @@ const CardStatistics = () => {
 
 
     useEffect(() => {
+        if (user?.role.includes('student') ||
+            (user?.role.includes('teacher') && !user?.role.includes('ceo')) ||
+            user?.role.includes('admin')) {
+            router.push("/")
+        }
         Promise.all([
             getSalaries()
         ])

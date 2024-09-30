@@ -9,7 +9,7 @@ import {
   Switch,
   Typography,
 } from '@mui/material';
-import { ReactNode, useEffect } from 'react';
+import { ReactNode, useContext, useEffect } from 'react';
 import IconifyIcon from 'src/@core/components/icon';
 import { useTranslation } from 'react-i18next';
 import { useRouter } from 'next/router';
@@ -19,6 +19,7 @@ import { formatCurrency } from 'src/@core/utils/format-currency';
 import { videoUrls } from 'src/@core/components/video-header/video-header';
 import dynamic from "next/dynamic";
 import useResponsive from 'src/@core/hooks/useResponsive';
+import { AuthContext } from 'src/context/AuthContext';
 
 const RowOptions = dynamic(() => import('src/views/apps/mentors/RowOptions'));
 const TeacherAvatar = dynamic(() => import('src/views/apps/mentors/AddMentorsModal').then(mod => mod.TeacherAvatar));
@@ -39,6 +40,7 @@ export default function GroupsPage() {
   const { push } = useRouter()
   const dispatch = useAppDispatch()
   const { isMobile } = useResponsive()
+  const { user } = useContext(AuthContext)
 
   const { teachers, teachersCount, queryParams, isLoading } = useAppSelector(state => state.mentors)
 
@@ -103,8 +105,8 @@ export default function GroupsPage() {
     {
       xs: 1,
       dataIndex: 'id',
-      title: "",
-      // title: <Button onClick={() => push("/employee-attendance")} variant='outlined'>{t("Davomat")}</Button>,
+      // title: "",
+      title: <Button onClick={() => push("/employee-attendance")} variant='outlined'>{t("Davomat")}</Button>,
       render: actions => <RowOptions id={actions} status={queryParams?.status} />
     }
   ]
@@ -114,6 +116,9 @@ export default function GroupsPage() {
   }
 
   useEffect(() => {
+    if (user?.role.includes('student')) {
+      push("/")
+    }
     const queryString = new URLSearchParams({ ...queryParams, page: String(queryParams.page), status: String(queryParams.status) }).toString()
     dispatch(fetchTeachersList(queryString))
 
@@ -133,7 +138,6 @@ export default function GroupsPage() {
     const queryString = new URLSearchParams({ status: checked ? "archive" : "active", page: "1" }).toString()
     await dispatch(fetchTeachersList(queryString))
   }
-
 
   return (
     <div>

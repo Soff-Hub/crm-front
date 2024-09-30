@@ -1,7 +1,9 @@
 // ** MUI Imports
 import Grid from '@mui/material/Grid'
-import { useEffect } from 'react'
+import { useRouter } from 'next/router'
+import { useContext, useEffect } from 'react'
 import VideoHeader, { videoUrls } from 'src/@core/components/video-header/video-header'
+import { AuthContext } from 'src/context/AuthContext'
 import { useAppDispatch, useAppSelector } from 'src/store'
 import { fetchStudentDetail } from 'src/store/apps/students'
 
@@ -15,8 +17,13 @@ const UserView = ({ tab, student }: any) => {
   // hooks
   const { studentData } = useAppSelector(state => state.students)
   const dispatch = useAppDispatch()
+  const router = useRouter()
+  const { user } = useContext(AuthContext)
 
   useEffect(() => {
+    if (user?.role.includes('student')) {
+      router.push("/")
+    }
     dispatch(fetchStudentDetail(student))
   }, [])
 

@@ -17,6 +17,9 @@ const UserView = () => {
   const dispatch = useAppDispatch()
 
   useEffect(() => {
+    if (user?.role.includes('student')) {
+      router.push("/")
+    }
     (async function () {
       const queryString = new URLSearchParams(queryParams).toString()
       dispatch(setGettingAttendance(true))

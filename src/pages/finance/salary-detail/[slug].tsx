@@ -11,6 +11,7 @@ import IconifyIcon from "src/@core/components/icon";
 import DataTable, { customTableDataProps } from "src/@core/components/table";
 import api from "src/@core/utils/api";
 import { formatCurrency } from "src/@core/utils/format-currency";
+import { AuthContext } from "src/context/AuthContext";
 import { useAppDispatch, useAppSelector } from "src/store";
 import { fetchCalculatedSalary, fetchModerationSalaries, updateSalaryBonus, updateSalaryFine } from "src/store/apps/finance";
 import TeacherGroupsModal from "src/views/apps/finance/TeacherGroupsModal";
@@ -23,6 +24,8 @@ const UserView = ({ slug }: InferGetStaticPropsType<typeof getServerSideProps>) 
     const { back, push } = useRouter()
     const [open, setOpen] = useState<boolean>(false)
     const [id, setId] = useState<number | null>(null)
+    const { user } = useContext(AuthContext)
+
 
     const handleGetSalary = async (teacherId: number) => {
         setId(teacherId)
@@ -118,6 +121,11 @@ const UserView = ({ slug }: InferGetStaticPropsType<typeof getServerSideProps>) 
 
 
     useEffect(() => {
+        if (user?.role.includes('student') ||
+            (user?.role.includes('teacher') && !user?.role.includes('ceo')) ||
+            user?.role.includes('admin')) {
+            router.push("/")
+        }
         dispatch(fetchModerationSalaries(`date=${slug}`))
     }, [])
 

@@ -1,10 +1,13 @@
-import { Box, Card, CardContent, Grid, Typography } from "@mui/material"
+import { Box, Button, Card, CardContent, Grid, Tooltip, Typography } from "@mui/material"
 import { useTranslation } from "react-i18next"
 import CustomAvatar from 'src/@core/components/mui/avatar'
 import { getInitials } from "src/@core/utils/get-initials"
 import CustomChip from 'src/@core/components/mui/chip'
 import { ThemeColor } from "src/@core/layouts/types"
 import { useAppSelector } from "src/store"
+import IconifyIcon from "src/@core/components/icon"
+import { useState } from "react"
+import EditProfile from "./EditProfile"
 
 interface ColorsType {
     [key: string]: ThemeColor
@@ -27,8 +30,10 @@ const branchColors: ColorsType = {
 export default function TeachersDetails() {
     const { t } = useTranslation()
     const { groups } = useAppSelector(state => state.groups)
+    const [isEdit, setEdit] = useState(false)
 
     const user = JSON.parse(localStorage.getItem("userData") as string)
+    console.log(isEdit);
 
     return (
         <Grid container spacing={6}>
@@ -56,12 +61,19 @@ export default function TeachersDetails() {
                             <Typography variant='h6'>
                                 {user.first_name}
                             </Typography>
-                            <div style={{ display: 'flex', alignItems: 'center', marginTop: '10px', gap: 10 }}>
+                            <div style={{ display: 'flex', alignItems: 'center', margin: '10px 0px', gap: 10 }}>
                                 <Typography variant='body2'>{t("Faol Guruhlari")}:  </Typography>
                                 <Typography variant='body1' sx={{ lineHeight: 1.3 }}>
                                     {groups?.length || 0} ta
                                 </Typography>
                             </div>
+                            <Box style={{ width: "100%", display: "flex", justifyContent: "start", }}>
+                                <Tooltip title={t("Tahrirlash")} placement='bottom'>
+                                    <Button size='small' onClick={() => setEdit(true)}>
+                                        <IconifyIcon icon='iconamoon:edit-thin' />
+                                    </Button>
+                                </Tooltip>
+                            </Box>
                         </Box>
                     </CardContent>
 
@@ -120,7 +132,7 @@ export default function TeachersDetails() {
                                 </Box>
                             </Box>
                         </Box>
-
+                        <EditProfile isOpen={isEdit} setEdit={setEdit} />
                     </CardContent>
                 </Card>
             </Grid>
