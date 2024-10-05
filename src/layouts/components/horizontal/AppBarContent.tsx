@@ -92,7 +92,7 @@ const AppBarContent = (props: Props) => {
 
       <LanguageDropdown settings={settings} saveSettings={saveSettings} />
 
-      <ModeToggler settings={settings} saveSettings={saveSettings} />
+      {/* <ModeToggler settings={settings} saveSettings={saveSettings} /> */}
       <NotificationDropdown settings={settings} />
       <UserDropdown settings={settings} />
       <GlobalPaymentModal />

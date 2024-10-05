@@ -1,21 +1,26 @@
+import * as Yup from 'yup';
 import { useEffect, useState } from 'react';
 import { Alert, Box, Button, Dialog, DialogContent, DialogTitle, FormControl, FormHelperText, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material';
 import { customTableProps } from 'src/pages/groups';
 import DataTable from 'src/@core/components/table';
-import toast from 'react-hot-toast';
 import IconifyIcon from 'src/@core/components/icon';
 import Form from 'src/@core/components/form';
 import api from 'src/@core/utils/api';
 import LoadingButton from '@mui/lab/LoadingButton';
 import UseBgColor from 'src/@core/hooks/useBgColor';
 import { useTranslation } from 'react-i18next';
-import showResponseError from 'src/@core/utils/show-response-error';
 import { useRouter } from 'next/router';
 import VideoHeader, { videoUrls } from 'src/@core/components/video-header/video-header';
+import { toast } from 'react-hot-toast';
+import showResponseError from 'src/@core/utils/show-response-error';
+import CustomDialog from 'src/views/apps/settings/form/CustomDialog';
+import { useFormik } from 'formik';
+
+
 
 export default function FormsPage() {
-
-  const [open, setOpen] = useState<null | 'new' | 'delete'>(null)
+  const [scriptCode, setScriptCode] = useState<string>("");
+  const [open, setOpen] = useState<null | 'new' | 'integration' | 'delete'>(null)
   const [departments, setDepartments] = useState<any[]>([])
   const [selectedDepartment, setSelectedDepartment] = useState<any>(null)
   const [error, setError] = useState<any>({})
@@ -28,6 +33,7 @@ export default function FormsPage() {
   const bgColors = UseBgColor()
   const { t } = useTranslation()
   const { push } = useRouter()
+
   const columns: customTableProps[] = [
     {
       xs: 0.1,
@@ -63,10 +69,22 @@ export default function FormsPage() {
       render: (link: string) => `${link}`
     },
     {
+      xs: 1,
+      title: t("Integratsiya"),
+      dataIndex: "id",
+      render: (id) =>
+        <Button size="small" onClick={() => (setDeleteId(id), setOpen('integration'))}  >
+          <IconifyIcon icon={'oui:integration-general'} />
+        </Button>
+    },
+    {
       xs: 0.5,
       title: t("Amallar"),
       dataIndex: "id",
-      render: (id) => <IconifyIcon onClick={() => (setDeleteId(id), setOpen('delete'))} icon={'material-symbols-light:delete-outline'} />
+      render: (id) =>
+        <Button size="small" color='error' onClick={() => (setDeleteId(id), setOpen('delete'))}>
+          <IconifyIcon style={{ color: "red" }} icon={'material-symbols-light:delete-outline'} />
+        </Button>
     },
   ]
 
@@ -124,7 +142,6 @@ export default function FormsPage() {
       setLoading(false)
       getForms()
     } catch (err: any) {
-      console.log(err)
       showResponseError(err?.response.data, setError)
       setLoading(false)
     }
@@ -147,10 +164,34 @@ export default function FormsPage() {
     getForms()
   }, [])
 
+  const formik = useFormik({
+    initialValues: {
+      pixel_code: '',
+    },
+    validationSchema: Yup.object({
+      pixel_code: Yup.string().required('Script kod majburiy'),
+    }),
+    onSubmit: async (values) => {
+      setLoading(true)
+      try {
+        const response = await api.patch(`leads/application-form/update/${deleteId}/`, values)
+        if (response.status == 200) {
+          setOpen(null)
+          toast.success("Kod saqlandi", { position: 'top-center' })
+        }
+      } catch (error: any) {
+        formik.setErrors(error.response.data)
+      } finally {
+        setLoading(false)
+      }
+    },
+  });
+
+
+
   return (
     <Box>
       <VideoHeader item={videoUrls.forms} />
-
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <Typography fontSize={'18px'}>{t('Formalar')}</Typography>
         {/* <Button size='small' variant='contained' startIcon={<IconifyIcon icon={'ic:baseline-add'} />} onClick={openDialog}>Yangi</Button> */}
@@ -255,15 +296,43 @@ export default function FormsPage() {
         </DialogContent>
       </Dialog>
 
-      <Dialog open={open === 'delete'} onClose={() => setOpen(null)}>
-        <DialogContent>
-          <Typography sx={{ fontSize: '20px', margin: '30px 20px' }}>{t("Formani o'chirmoqchimisiz")}?</Typography>
-          <Box sx={{ display: 'flex', justifyContent: 'center', gap: '12px' }}>
-            <LoadingButton variant='outlined' color='error' onClick={() => setOpen(null)}>{t("Bekor qilish")}</LoadingButton>
-            <LoadingButton loading={loading} variant='contained' onClick={onDelete}>{t("O'chirish")}</LoadingButton>
-          </Box>
-        </DialogContent>
-      </Dialog>
+      {/* Delete Confirmation Dialog */}
+      <CustomDialog
+        open={open === 'delete'}
+        onClose={() => setOpen(null)}
+        title={t("Formani o'chirmoqchimisiz")}
+        content={<Typography sx={{ fontSize: '20px', margin: '30px 20px' }}>{t("Formani o'chirmoqchimisiz")}?</Typography>}
+        loading={loading}
+        onConfirm={onDelete}
+        confirmText={t("O'chirish")}
+        cancelText={t("Bekor qilish")}
+      />
+
+      <CustomDialog
+        open={open === 'integration'}
+        onClose={() => setOpen(null)}
+        title={t("Facebook Pixel Script")}
+        content={
+          <div>
+            <TextField
+              label="Script kod"
+              name="pixel_code"
+              multiline
+              sx={{ width: "100%", mb: 2 }}
+              rows={4}
+              value={formik.values.pixel_code}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={formik.touched.pixel_code && Boolean(formik.errors.pixel_code)}
+              helperText={formik.touched.pixel_code && formik.errors.pixel_code}
+            />
+          </div>
+        }
+        loading={loading}
+        onConfirm={formik.handleSubmit}
+        confirmText={t("Saqlash")}
+        cancelText={t("Bekor qilish")}
+      />
     </Box>
   )
 }

@@ -44,6 +44,7 @@ export type GroupFinance = {
   attended_lessons: number
   calculated_date: string
   condition: string
+  course_price: number
   fines_count: number
   group_name: string
   original_amount: number

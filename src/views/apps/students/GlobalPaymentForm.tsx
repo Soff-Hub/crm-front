@@ -1,4 +1,4 @@
-import { Alert, Box, CircularProgress, FormControl, FormHelperText, InputLabel, MenuItem, OutlinedInput, Select, TextField, Typography } from '@mui/material';
+import { Alert, Box, Chip, CircularProgress, FormControl, FormHelperText, InputLabel, MenuItem, OutlinedInput, Select, TextField, Typography } from '@mui/material';
 import { useFormik } from 'formik';
 import { useEffect, useState } from 'react';
 import useDebounce from 'src/hooks/useDebounce';
@@ -7,7 +7,7 @@ import { fetchStudentDetail, searchStudent, setGlobalPay, setStudentData } from 
 import * as Yup from 'yup';
 import IconifyIcon from 'src/@core/components/icon';
 import { today } from 'src/@core/components/card-statistics/kanban-item';
-import AmountInput, { revereAmount } from 'src/@core/components/amount-input';
+import AmountInput, { formatAmount, revereAmount } from 'src/@core/components/amount-input';
 import LoadingButton from '@mui/lab/LoadingButton';
 import usePayment from 'src/hooks/usePayment';
 import toast from 'react-hot-toast';
@@ -153,6 +153,7 @@ export default function GlobalPaymentForm({ }: Props) {
             handleSearch()
         }
     }, [search])
+    console.log(userData.groups);
 
     return (
         <Box>
@@ -205,7 +206,17 @@ export default function GlobalPaymentForm({ }: Props) {
                         onBlur={payform.handleBlur}
                     >
                         {
-                            userData?.groups && userData?.groups.map((branch: any) => <MenuItem key={branch.id} value={branch.group_data.id}>{branch.group_data.name}</MenuItem>)
+                            userData?.groups && userData?.groups.map((branch: any) => <MenuItem key={branch.id} value={branch.group_data.id}>
+                                <Box sx={{ display: "flex", alignItems: "center", gap: "5px" }} >
+                                    <Typography variant='subtitle1'>{branch.group_data.name}</Typography>
+                                    <Box fontSize={12} sx={{ display: 'inline', margin: "0 5px" }}>
+                                        <Chip label={`${formatAmount(String(branch.group_data?.balance))} UZS`} size="small" variant='outlined' color={branch.group_data?.balance > 0 ? 'success' : branch.group_data?.balance < 0 ? 'error' : 'success'} />
+                                    </Box>
+                                    <Box fontSize={12} sx={{ display: 'inline' }}>
+                                        <Chip label={t(branch.status)} size="small" variant='outlined' color={branch.status === 'active' ? 'success' : branch.status === 'archive' ? 'error' : branch.status === 'frozen' ? 'secondary' : 'warning'} />
+                                    </Box>
+                                </Box>
+                            </MenuItem>)
                         }
                     </Select>
                     {!!payform.errors.group && payform.touched.group && <FormHelperText error>{payform.errors.group}</FormHelperText>}

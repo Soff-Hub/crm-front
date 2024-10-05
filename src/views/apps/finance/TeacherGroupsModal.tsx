@@ -49,6 +49,7 @@ export default function TeacherGroupsModal() {
                                 <TableCell sx={headerStyle}>Darslar soni</TableCell>
                                 <TableCell sx={headerStyle}>O'tilgan darslar soni</TableCell>
                                 <TableCell sx={headerStyle}>Jarimalar soni</TableCell>
+                                <TableCell sx={headerStyle}>Kurs narxi</TableCell>
                                 <TableCell sx={headerStyle}>O'quvchilardan to'lov</TableCell>
                                 <TableCell sx={headerStyle}>O'qituvchi ulushi</TableCell>
                                 <TableCell sx={headerStyle}>Hisoblangan sana</TableCell>
@@ -66,6 +67,7 @@ export default function TeacherGroupsModal() {
                                         <TableCell sx={bodyStyle} >{item.allowed_lessons} </TableCell>
                                         <TableCell sx={bodyStyle} >{item.attended_lessons} </TableCell>
                                         <TableCell sx={bodyStyle} >{item.fines_count}</TableCell>
+                                        <TableCell sx={bodyStyle} >{formatCurrency(item.course_price)} UZS</TableCell>
                                         <TableCell sx={bodyStyle} >{formatCurrency(item.original_amount)} UZS</TableCell>
                                         <TableCell sx={bodyStyle} >{formatCurrency(item.condition)} UZS</TableCell>
                                         <TableCell sx={bodyStyle} >{item.calculated_date}</TableCell>

@@ -1,5 +1,4 @@
 import { Box, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, IconButton, Button } from '@mui/material';
-import { format } from 'date-fns';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useContext, useEffect } from 'react';
@@ -7,7 +6,8 @@ import { useTranslation } from 'react-i18next';
 import IconifyIcon from 'src/@core/components/icon';
 import { AuthContext } from 'src/context/AuthContext';
 import { useAppDispatch, useAppSelector } from 'src/store';
-import { fetchEmployeeAttendance } from 'src/store/apps/employee-attendance';
+import { Employee, fetchEmployeeAttendance } from 'src/store/apps/employee-attendance';
+import SubLoader from 'src/views/apps/loaders/SubLoader';
 
 const generateDaysInMonth = (year: number, month: number) => {
     const daysInMonth = new Date(year, month + 1, 0).getDate();
@@ -19,12 +19,6 @@ interface AttendanceRecord {
         checkIn: string;
         checkOut: string;
     };
-}
-
-interface Employee {
-    id: number;
-    name: string;
-    attendance: AttendanceRecord;
 }
 
 const stickyColumnStyles = {
@@ -55,7 +49,7 @@ const attendanceCellStyles = {
 const EmployeeList = () => {
     const { t } = useTranslation();
     const { back, push } = useRouter();
-    const { attendanceList } = useAppSelector(state => state.employeeAttendance)
+    const { attendanceList, isLoading } = useAppSelector(state => state.employeeAttendance)
     const dispatch = useAppDispatch()
     const { user } = useContext(AuthContext)
 
@@ -66,41 +60,33 @@ const EmployeeList = () => {
         dispatch(fetchEmployeeAttendance(""))
     }, [])
 
+    console.log(new Date().toLocaleDateString());
 
-    const employees: Employee[] = [
-        { id: 1, name: 'John Doe', attendance: { '2024-12-01': { checkIn: '09:00 AM', checkOut: '06:00 PM' } } },
-        { id: 2, name: 'Jane Smith', attendance: { '2024-12-01': { checkIn: '09:15 AM', checkOut: '06:10 PM' } } },
-        { id: 3, name: 'David Brown', attendance: { '2024-12-01': { checkIn: '09:05 AM', checkOut: '05:55 PM' } } },
-    ];
+    const today = new Date();
+    const formattedDate = today.toISOString().split('T')[0];
 
-    const currentYear = 2024;
-    const currentMonth = 11;
-    const daysInMonth = generateDaysInMonth(currentYear, currentMonth);
-
-    const renderHeaderCell = (day: Date, index: number) => (
+    const renderHeaderCell = (day: string, index: number) => (
         <TableCell key={day.toString()} sx={headerCellStyles}>
-            <Link href={`/employee-attendance/view/${format(day, 'yyyy-MM-dd')}`} passHref>
+            <Link href={`/employee-attendance/view/${day}`} passHref>
                 <Button
                     color={index === 1 ? 'success' : 'primary'}
                     fullWidth
                     sx={{ borderRadius: 0, padding: '20px 10px', width: "100%", height: "100%" }}
                 >
-                    {index === 1 ? <IconifyIcon icon="flat-color-icons:plus" /> : <span style={{ transform: 'rotate(-25deg)' }}>{format(day, 'yyyy-MM-dd')}</span>}
+                    {day == formattedDate ? <IconifyIcon icon="flat-color-icons:plus" /> : <span style={{ transform: 'rotate(-25deg)' }}>{day}</span>}
                 </Button>
             </Link>
         </TableCell>
     );
 
-    const renderEmployeeAttendanceCell = (day: Date, employee: Employee) => {
-        const formattedDate = format(day, 'yyyy-MM-dd');
-        const attendance = employee.attendance[formattedDate];
+    const renderEmployeeAttendanceCell = (day: string, employee: Employee) => {
 
         return (
-            <TableCell key={formattedDate} sx={attendanceCellStyles}>
-                {attendance ? (
+            <TableCell key={day} sx={attendanceCellStyles}>
+                {employee.attendance ? (
                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
-                        <span>{attendance.checkIn}</span>
-                        <span>{attendance.checkOut}</span>
+                        {/* <span>{attendance.checkIn}</span> */}
+                        {/* <span>{attendance.checkOut}</span> */}
                     </Box>
                 ) : (
                     <IconifyIcon fontSize="20px" icon="tabler:lock" />
@@ -118,7 +104,7 @@ const EmployeeList = () => {
                 <Typography variant="h4">{t('Xodimlar davomati')}</Typography>
             </Box>
             <TableContainer>
-                <Table>
+                {isLoading ? <SubLoader /> : <Table>
                     <TableHead>
                         <TableRow>
                             <TableCell sx={stickyColumnStyles}>
@@ -126,22 +112,22 @@ const EmployeeList = () => {
                                 <div style={{ height: "100%", width: "1px", background: "#ccc", zIndex: 2, position: "absolute", top: 0, right: -1, bottom: 0 }}></div>
                                 <div style={{ height: "100%", width: "1px", background: "#ccc", zIndex: 2, position: "absolute", top: 0, left: -1, bottom: 0 }}></div>
                             </TableCell>
-                            {daysInMonth.map(renderHeaderCell)}
+                            {attendanceList?.dates?.map(renderHeaderCell)}
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {employees.map((employee) => (
+                        {attendanceList?.employees.map((employee) => (
                             <TableRow key={employee.id}>
                                 <TableCell sx={stickyColumnStyles}>
-                                    {employee.name}
+                                    {employee.first_name}
                                     <div style={{ height: "100%", width: "1px", background: "#ccc", zIndex: 2, position: "absolute", top: 0, right: -1, bottom: 0 }}></div>
                                     <div style={{ height: "100%", width: "1px", background: "#ccc", zIndex: 2, position: "absolute", top: 0, left: -1, bottom: 0 }}></div>
                                 </TableCell>
-                                {daysInMonth.map((day) => renderEmployeeAttendanceCell(day, employee))}
+                                {attendanceList?.dates.map((day) => renderEmployeeAttendanceCell(day, employee))}
                             </TableRow>
                         ))}
                     </TableBody>
-                </Table>
+                </Table>}
             </TableContainer>
         </Box>
     );

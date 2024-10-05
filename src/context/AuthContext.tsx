@@ -16,6 +16,7 @@ import api from 'src/@core/utils/api'
 import { setCompanyInfo } from 'src/store/apps/user'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch } from 'src/store'
+import { useSettings } from 'src/@core/hooks/useSettings'
 
 // ** Defaults
 const defaultProvider: AuthValuesType = {
@@ -40,6 +41,7 @@ const AuthProvider = ({ children }: Props) => {
   const [user, setUser] = useState<UserDataType | null>(defaultProvider.user)
   const [loading, setLoading] = useState<boolean>(defaultProvider.loading)
   const { i18n } = useTranslation()
+  const { settings, saveSettings } = useSettings()
   const router = useRouter()
   const { locales, locale: activeLocale, pathname, query, asPath } = router;
 
