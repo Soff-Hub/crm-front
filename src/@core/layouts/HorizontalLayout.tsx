@@ -23,6 +23,7 @@ import AppBarContent from './components/horizontal/app-bar-content'
 
 // ** Util Import
 import { hexToRGBA } from 'src/@core/utils/hex-to-rgba'
+import { useAuth } from 'src/hooks/useAuth'
 
 const HorizontalLayoutWrapper = styled(Box)({
   height: '100%',
@@ -79,6 +80,7 @@ const HorizontalLayout = (props: LayoutProps) => {
   const { skin, appBar, navHidden, appBarBlur, contentWidth } = settings
   const appBarProps = horizontalLayoutProps?.appBar?.componentProps
   const userNavMenuContent = horizontalLayoutProps?.navMenu?.content
+  const auth = useAuth()
 
   let userAppBarStyle = {}
   if (appBarProps && appBarProps.sx) {
@@ -87,13 +89,11 @@ const HorizontalLayout = (props: LayoutProps) => {
   const userAppBarProps = Object.assign({}, appBarProps)
   delete userAppBarProps.sx
 
-  const userData = JSON.parse(localStorage.getItem("userData") as string)
-
   return (
     <HorizontalLayoutWrapper className='layout-wrapper'>
       <MainContentWrapper className='layout-content-wrapper' sx={{ ...(contentHeightFixed && { maxHeight: '100vh' }) }}>
         {/* Navbar (or AppBar) and Navigation Menu Wrapper */}
-        {!userData.payment_page && <AppBar
+        {!auth?.user?.payment_page && <AppBar
           color='default'
           elevation={skin === 'bordered' ? 0 : 3}
           className='layout-navbar-and-nav-container'

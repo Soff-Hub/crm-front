@@ -21,6 +21,7 @@ import Customizer from 'src/@core/components/customizer'
 import Navigation from './components/vertical/navigation'
 import Footer from './components/shared-components/footer'
 import ScrollToTop from 'src/@core/components/scroll-to-top'
+import { useAuth } from 'src/hooks/useAuth'
 
 const VerticalLayoutWrapper = styled(Box)({
   height: '100%',
@@ -56,20 +57,20 @@ const VerticalLayout = (props: LayoutProps) => {
   const navWidth = navigationSize
   const navigationBorderWidth = skin === 'bordered' ? 1 : 0
   const collapsedNavWidth = collapsedNavigationSize
+  const auth = useAuth()
 
   // ** States
   const [navVisible, setNavVisible] = useState<boolean>(false)
 
   // ** Toggle Functions
   const toggleNavVisibility = () => setNavVisible(!navVisible)
-  const userData = JSON.parse(localStorage.getItem("userData") as string)
 
   return (
     <>
       <VerticalLayoutWrapper className='layout-wrapper'>
         {/* Navigation Menu */}
         {navHidden && !(navHidden && settings.lastLayout === 'horizontal') ? null : (
-          !userData?.payment_page && <Navigation
+          !auth.user?.payment_page && <Navigation
             navWidth={navWidth}
             navVisible={navVisible}
             setNavVisible={setNavVisible}
@@ -92,7 +93,7 @@ const VerticalLayout = (props: LayoutProps) => {
           sx={{ ...(contentHeightFixed && { maxHeight: '100vh' }) }}
         >
           {/* AppBar Component */}
-          {!userData.payment_page && <AppBar
+          {!auth?.user?.payment_page && <AppBar
             toggleNavVisibility={toggleNavVisibility}
             appBarContent={verticalLayoutProps?.appBar?.content}
             appBarProps={verticalLayoutProps?.appBar?.componentProps}
