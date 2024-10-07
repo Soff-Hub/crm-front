@@ -22,6 +22,9 @@ export const getHomeRoute = (role: string[]) => {
   if (role.includes('student')) {
     return '/student-profile'
   }
+  if (role.includes('casher') && (!role.includes('ceo') || !role.includes('admin'))) {
+    return '/finance'
+  }
 
   return '/dashboard'
 }

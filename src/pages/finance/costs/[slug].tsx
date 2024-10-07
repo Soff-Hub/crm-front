@@ -102,7 +102,7 @@ function Slug(props: { slug: string }) {
     }
 
     useEffect(() => {
-        if (!user?.role.includes('ceo')) {
+        if (!user?.role.includes('ceo') && !user?.role.includes('casher')) {
             push("/")
             toast.error('Sahifaga kirish huquqingiz yoq!')
         }

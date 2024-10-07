@@ -3,9 +3,7 @@ import { HorizontalNavItemsType } from 'src/@core/layouts/types'
 import { AuthContext } from 'src/context/AuthContext'
 
 const Navigation = (t: any): HorizontalNavItemsType => {
-  // const { t } = useTranslation()
   const { user } = useContext(AuthContext)
-  console.log(user)
 
   const items = [
     {
@@ -115,7 +113,7 @@ const Navigation = (t: any): HorizontalNavItemsType => {
   return user?.role.includes('ceo')
     ? items
     : user?.role.includes('casher')
-    ? items.filter(el => el.slug !== 'settings')
+    ? items.filter(el => el.path == '/finance')
     : items.filter(el => el.path !== '/finance')
 }
 

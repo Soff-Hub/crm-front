@@ -18,6 +18,7 @@ import EditSMSPaymentClientModal from 'src/views/apps/crm-payments/EditSMSPaymen
 import VideoHeader, { videoUrls } from 'src/@core/components/video-header/video-header';
 import useResponsive from 'src/@core/hooks/useResponsive';
 import { AuthContext } from 'src/context/AuthContext';
+import { toast } from 'react-hot-toast';
 
 
 export default function PaymentsList() {
@@ -111,8 +112,9 @@ export default function PaymentsList() {
     ]
 
     useEffect(() => {
-        if (user?.role.includes('student')) {
+        if (!user?.role.includes('ceo') && !user?.role.includes('admin') && !user?.role.includes('casher')) {
             router.push("/")
+            toast.error("Sizda bu sahifaga kirish huquqi yo'q!")
         }
         (async function () {
             await Promise.all([

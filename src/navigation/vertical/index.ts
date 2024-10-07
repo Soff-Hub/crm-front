@@ -169,7 +169,7 @@ const Navigation = (t: any): VerticalNavItemsType => {
   return user?.role.includes('ceo')
     ? items
     : user?.role.includes('casher')
-    ? items.filter(el => el.slug !== 'settings')
+    ? items.filter(el => el.path == '/finance')
     : items.filter(el => el.path !== '/finance')
 }
 
