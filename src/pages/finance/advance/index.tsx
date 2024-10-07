@@ -15,6 +15,7 @@ import IconifyIcon from 'src/@core/components/icon';
 import Router, { useRouter } from 'next/router';
 import useResponsive from 'src/@core/hooks/useResponsive';
 import { AuthContext } from 'src/context/AuthContext';
+import { toast } from 'react-hot-toast';
 
 
 function Slug() {
@@ -31,9 +32,8 @@ function Slug() {
     const { isMobile } = useResponsive()
 
     useEffect(() => {
-        if (user?.role.includes('student') ||
-            (user?.role.includes('teacher') && !user?.role.includes('ceo')) ||
-            user?.role.includes('admin')) {
+        if (!user?.role.includes('ceo')) {
+            toast.error('Sahifaga kirish huquqingiz yoq!')
             router.push("/")
         }
         const queryString = new URLSearchParams({ ...queryParams, page: `1` }).toString()

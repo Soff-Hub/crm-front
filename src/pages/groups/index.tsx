@@ -31,6 +31,7 @@ import getLessonDays from 'src/@core/utils/getLessonDays';
 import dynamic from 'next/dynamic';
 import getMonthName from 'src/@core/utils/gwt-month-name';
 import { AuthContext } from 'src/context/AuthContext';
+import { toast } from 'react-hot-toast';
 
 const IconifyIcon = dynamic(() => import('src/@core/components/icon'));
 const DataTable = dynamic(() => import('src/@core/components/table'));
@@ -153,8 +154,9 @@ export default function GroupsPage() {
   }
 
   useEffect(() => {
-    if (user?.role.includes('student')) {
+    if (!user?.role.includes('ceo') && !user?.role.includes('admin')) {
       router.push("/")
+      toast.error('Sahifaga kirish huquqingiz yoq!')
     }
     pageLoad()
     return () => {

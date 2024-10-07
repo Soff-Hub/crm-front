@@ -2,7 +2,7 @@ import { Box, Card, CardContent, Typography } from "@mui/material";
 import { useRouter } from "next/router";
 import IconifyIcon from "src/@core/components/icon";
 import { useTranslation } from "react-i18next";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import api from "src/@core/utils/api";
 import DataTable from "src/@core/components/table";
 import { formatCurrency } from "src/@core/utils/format-currency";
@@ -10,6 +10,8 @@ import { formatDateTime } from "src/@core/utils/date-formatter";
 import { customTableProps } from "src/pages/groups";
 import useResponsive from "src/@core/hooks/useResponsive";
 import SubLoader from "../loaders/SubLoader";
+import { toast } from "react-hot-toast";
+import { AuthContext } from "src/context/AuthContext";
 
 
 const Item = ({ defaultValue }: { defaultValue: true | false | null | 0 }) => {
@@ -50,6 +52,7 @@ const StudentGroupDetail = ({ slug, month }: any) => {
     const [payLoading, setPayLoading] = useState<any>(null)
     const [pays, setPays] = useState<any[]>([])
     const { isMobile } = useResponsive()
+    const { user } = useContext(AuthContext)
 
     const handleClick = (value: any) => {
 
@@ -153,6 +156,10 @@ const StudentGroupDetail = ({ slug, month }: any) => {
     ]
 
     useEffect(() => {
+        if (!user?.role.includes('student')) {
+            push("/")
+            toast.error("Sizda bu sahifaga kirish huquqi yo'q!")
+        }
         Promise.all([
             getDays(),
             getAttendence()

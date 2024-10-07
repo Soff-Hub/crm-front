@@ -11,6 +11,7 @@ import { fetchGroupsList, fetchStudentPaymentsList, updateParams } from 'src/sto
 import FilterBlock from 'src/views/apps/reports/student-payments/FilterBlock';
 import useResponsive from 'src/@core/hooks/useResponsive';
 import { AuthContext } from 'src/context/AuthContext';
+import { toast } from 'react-hot-toast';
 
 const DataTable = dynamic(() => import('src/@core/components/table'));
 
@@ -23,8 +24,8 @@ export interface customTableProps {
 
 export default function StudentPaymentsPage() {
     const { t } = useTranslation()
-    const { push } = useRouter()
     const dispatch = useAppDispatch()
+    const { push } = useRouter()
     const { user } = useContext(AuthContext)
 
     const { studentsPayment, paymentsCount, total_payments, isLoading, queryParams } = useAppSelector(state => state.studentPayments)
@@ -71,8 +72,9 @@ export default function StudentPaymentsPage() {
 
 
     useEffect(() => {
-        if (user?.role.includes('student')) {
+        if (!user?.role.includes('ceo') && !user?.role.includes('admin')) {
             push("/")
+            toast.error("Sizda bu sahifaga kirish huquqi yo'q!")
         }
         Promise.all([
             dispatch(fetchStudentPaymentsList(new URLSearchParams(queryParams).toString())),

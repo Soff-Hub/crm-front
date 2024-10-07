@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Alert, Box, Button, Dialog, DialogContent, DialogTitle, FormControl, FormHelperText, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material';
 import { customTableProps } from 'src/pages/groups';
 import DataTable from 'src/@core/components/table';
@@ -15,11 +15,11 @@ import { toast } from 'react-hot-toast';
 import showResponseError from 'src/@core/utils/show-response-error';
 import CustomDialog from 'src/views/apps/settings/form/CustomDialog';
 import { useFormik } from 'formik';
+import { AuthContext } from 'src/context/AuthContext';
 
 
 
 export default function FormsPage() {
-  const [scriptCode, setScriptCode] = useState<string>("");
   const [open, setOpen] = useState<null | 'new' | 'integration' | 'delete'>(null)
   const [departments, setDepartments] = useState<any[]>([])
   const [selectedDepartment, setSelectedDepartment] = useState<any>(null)
@@ -33,6 +33,7 @@ export default function FormsPage() {
   const bgColors = UseBgColor()
   const { t } = useTranslation()
   const { push } = useRouter()
+  const { user } = useContext(AuthContext)
 
   const columns: customTableProps[] = [
     {
@@ -161,6 +162,10 @@ export default function FormsPage() {
   }
 
   useEffect(() => {
+    if (!user?.role.includes('ceo') && !user?.role.includes('admin')) {
+      push("/")
+      toast.error("Sizda bu sahifaga kirish huquqi yo'q!")
+    }
     getForms()
   }, [])
 
@@ -178,6 +183,7 @@ export default function FormsPage() {
         if (response.status == 200) {
           setOpen(null)
           toast.success("Kod saqlandi", { position: 'top-center' })
+          formik.resetForm()
         }
       } catch (error: any) {
         formik.setErrors(error.response.data)

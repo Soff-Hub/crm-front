@@ -19,6 +19,7 @@ import { formatCurrency } from 'src/@core/utils/format-currency';
 import { setOpenEdit } from 'src/store/apps/mentors';
 import VideoHeader, { videoUrls } from 'src/@core/components/video-header/video-header';
 import { AuthContext } from 'src/context/AuthContext';
+import { toast } from 'react-hot-toast';
 
 export interface customTableProps {
   xs: number
@@ -108,9 +109,11 @@ export default function GroupsPage() {
   }
 
   useEffect(() => {
-    if (user?.role.includes('student')) {
+    if (!user?.role.includes('ceo') && !user?.role.includes('admin')) {
       router.push("/")
+      toast.error("Sizda bu sahifaga kirish huquqi yo'q!")
     }
+
     return () => {
       dispatch(setOpenEdit(null))
       dispatch(clearStudentParams())

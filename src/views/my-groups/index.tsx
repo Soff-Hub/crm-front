@@ -1,6 +1,8 @@
 import { Box, Grid, Pagination, Typography } from '@mui/material';
 import dynamic from 'next/dynamic';
+import { useRouter } from 'next/router';
 import { useContext, useEffect } from 'react';
+import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import { customTableDataProps } from 'src/@core/components/table';
 import { formatCurrency } from 'src/@core/utils/format-currency';
@@ -20,6 +22,7 @@ export default function MyGroups() {
     const { t } = useTranslation()
     const { groups, isTableLoading, myGroupParams, isLoading, teacherSalaries } = useAppSelector(state => state.groups)
     const dispatch = useAppDispatch()
+    const { push } = useRouter()
 
     const column: customTableDataProps[] = [
         {
@@ -70,6 +73,10 @@ export default function MyGroups() {
     ]
 
     useEffect(() => {
+        if (!user?.role.includes('teacher')) {
+            push("/")
+            toast.error("Sizda bu sahifaga kirish huquqi yo'q!")
+        }
         (async function () {
             await Promise.all([
                 dispatch(fetchGroups(`page=1&status=active&teacher=${user?.id}`)),

@@ -32,6 +32,7 @@ import { getExpenseCategories } from 'src/store/apps/finance'
 import getMonthName from 'src/@core/utils/getMonthName'
 import { AuthContext } from 'src/context/AuthContext'
 import useResponsive from 'src/@core/hooks/useResponsive'
+import { toast } from 'react-hot-toast'
 
 
 export function formatDateString(date: Date) {
@@ -176,10 +177,9 @@ const CardStatistics = () => {
 
 
     useEffect(() => {
-        if (user?.role.includes('student') ||
-            (user?.role.includes('teacher') && !user?.role.includes('ceo')) ||
-            user?.role.includes('admin')) {
+        if (!user?.role.includes('ceo')) {
             router.push("/")
+            toast.error('Sahifaga kirish huquqingiz yoq!')
         }
         Promise.all([
             getSalaries()

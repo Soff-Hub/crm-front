@@ -4,6 +4,7 @@ import { Box } from '@mui/material';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { useContext, useEffect } from 'react';
+import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import { videoUrls } from 'src/@core/components/video-header/video-header';
 import useResponsive from 'src/@core/hooks/useResponsive';
@@ -31,8 +32,10 @@ const Lids = () => {
   const router = useRouter()
 
   useEffect(() => {
-    if (user?.role.includes('student')) {
+    if (!user?.role.includes('ceo') && !user?.role.includes('admin')) {
       router.push("/")
+      toast.error('Sahifaga kirish huquqingiz yoq!')
+
     }
     dispatch(fetchSources())
   }, [])

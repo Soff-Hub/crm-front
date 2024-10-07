@@ -16,6 +16,7 @@ import EditCostForm from 'src/views/apps/finance/EditCostForm';
 import CostRowActions from 'src/views/apps/finance/CostRowOptions';
 import useResponsive from 'src/@core/hooks/useResponsive';
 import { AuthContext } from 'src/context/AuthContext';
+import { toast } from 'react-hot-toast';
 
 
 function Slug(props: { slug: string }) {
@@ -101,10 +102,9 @@ function Slug(props: { slug: string }) {
     }
 
     useEffect(() => {
-        if (user?.role.includes('student') ||
-            (user?.role.includes('teacher') && !user?.role.includes('ceo')) ||
-            user?.role.includes('admin')) {
+        if (!user?.role.includes('ceo')) {
             push("/")
+            toast.error('Sahifaga kirish huquqingiz yoq!')
         }
         getExpense(``)
     }, [])

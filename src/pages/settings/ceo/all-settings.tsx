@@ -13,6 +13,8 @@ import showResponseError from 'src/@core/utils/show-response-error'
 import { useAppDispatch, useAppSelector } from 'src/store'
 import { AuthContext } from 'src/context/AuthContext'
 import VideoHeader, { videoUrls } from 'src/@core/components/video-header/video-header'
+import { toast } from 'react-hot-toast'
+import { useRouter } from 'next/router'
 
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
@@ -37,12 +39,14 @@ export default function AllSettings() {
     const [loading, setLoading] = useState<'name' | 'branch' | 'paytype' | 'start-time' | 'end-time' | 'birthdate' | 'absend' | 'delete' | null>(null)
     const [error, setError] = useState<any>({})
 
+    const { push } = useRouter()
+
     const { getPaymentMethod, paymentMethods, createPaymentMethod, updatePaymentMethod } = usePayment()
     const { getBranches, branches } = useBranches()
     const dispatch = useAppDispatch()
     const { companyInfo } = useAppSelector((state: any) => state.user)
     const { t } = useTranslation()
-    const { setUser } = useContext(AuthContext)
+    const { setUser, user } = useContext(AuthContext)
 
     const reloadProfile = async () => {
         await api
@@ -171,6 +175,10 @@ export default function AllSettings() {
     }
 
     useEffect(() => {
+        if (!user?.role.includes('ceo') && !user?.role.includes('admin')) {
+            push("/")
+            toast.error("Sizda bu sahifaga kirish huquqi yo'q!")
+        }
         Promise.all([
             getPaymentMethod(),
             getBranches()

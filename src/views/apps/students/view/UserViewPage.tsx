@@ -2,6 +2,7 @@
 import Grid from '@mui/material/Grid'
 import { useRouter } from 'next/router'
 import { useContext, useEffect } from 'react'
+import { toast } from 'react-hot-toast'
 import VideoHeader, { videoUrls } from 'src/@core/components/video-header/video-header'
 import { AuthContext } from 'src/context/AuthContext'
 import { useAppDispatch, useAppSelector } from 'src/store'
@@ -21,8 +22,9 @@ const UserView = ({ tab, student }: any) => {
   const { user } = useContext(AuthContext)
 
   useEffect(() => {
-    if (user?.role.includes('student')) {
+    if (!user?.role.includes('ceo') && !user?.role.includes('admin')) {
       router.push("/")
+      toast.error("Sizda bu sahifaga kirish huquqi yo'q!")
     }
     dispatch(fetchStudentDetail(student))
   }, [])

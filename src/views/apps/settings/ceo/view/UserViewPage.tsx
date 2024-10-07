@@ -1,8 +1,10 @@
 // ** MUI Imports
 import Grid from '@mui/material/Grid'
 import { useRouter } from 'next/router'
-import { useEffect } from 'react'
+import { useContext, useEffect } from 'react'
+import { toast } from 'react-hot-toast'
 import VideoHeader, { videoUrls } from 'src/@core/components/video-header/video-header'
+import { AuthContext } from 'src/context/AuthContext'
 import useEmployee from 'src/hooks/useEmployee'
 
 // ** Types
@@ -18,11 +20,16 @@ type Props = {
 
 const UserView = ({ }: Props) => {
   const router = useRouter()
-
+  const { push } = useRouter()
+  const { user } = useContext(AuthContext)
   // hooks
   const { getEmployeeById, employeeData } = useEmployee()
 
   useEffect(() => {
+    if (!user?.role.includes('ceo') && !user?.role.includes('admin')) {
+      push("/")
+      toast.error("Sizda bu sahifaga kirish huquqi yo'q!")
+    }
     getEmployeeById(router.query.id)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])

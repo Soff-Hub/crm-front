@@ -5,7 +5,7 @@ import {
     Menu,
     Typography
 } from '@mui/material'
-import React, { MouseEvent, ReactNode, useEffect, useState } from 'react'
+import React, { MouseEvent, ReactNode, useContext, useEffect, useState } from 'react'
 import IconifyIcon from 'src/@core/components/icon'
 import DataTable from 'src/@core/components/table'
 import MenuItem from '@mui/material/MenuItem'
@@ -18,6 +18,8 @@ import { fetchWekends, setOpenCreateSms, setWekendData } from 'src/store/apps/se
 import EditWekendDialog from 'src/views/apps/settings/wekends/EditWekendDialog'
 import CreateWekendDialog from 'src/views/apps/settings/wekends/CreateWekendDialog'
 import VideoHeader, { videoUrls } from 'src/@core/components/video-header/video-header'
+import { AuthContext } from 'src/context/AuthContext'
+import { useRouter } from 'next/router'
 
 export interface customTableProps {
     xs: number
@@ -31,6 +33,8 @@ export default function RoomsPage() {
     const { t } = useTranslation()
     const dispatch = useAppDispatch()
     const { wekends, is_pending } = useAppSelector(state => state.settings)
+    const { push } = useRouter()
+    const { user } = useContext(AuthContext)
 
     const RowOptions = ({ id }: any) => {
         // ** State
@@ -116,6 +120,10 @@ export default function RoomsPage() {
     }
 
     useEffect(() => {
+        if (!user?.role.includes('ceo') && !user?.role.includes('admin')) {
+            push("/")
+            toast.error("Sizda bu sahifaga kirish huquqi yo'q!")
+        }
         dispatch(fetchWekends())
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])

@@ -4,7 +4,7 @@ import {
   Pagination,
   Typography
 } from '@mui/material'
-import React, { ReactNode, useEffect } from 'react'
+import React, { ReactNode, useContext, useEffect } from 'react'
 import IconifyIcon from 'src/@core/components/icon'
 import DataTable from 'src/@core/components/table'
 import { useTranslation } from 'react-i18next'
@@ -14,6 +14,9 @@ import CreateRoomDialog from 'src/views/apps/settings/rooms/CreateRoomDialog'
 import EditRoomDialog from 'src/views/apps/settings/rooms/EditRoomDialog'
 import RoomListRowOptions from 'src/views/apps/settings/rooms/RoomsRowOptions'
 import VideoHeader, { videoUrls } from 'src/@core/components/video-header/video-header'
+import { toast } from 'react-hot-toast'
+import { AuthContext } from 'src/context/AuthContext'
+import { useRouter } from 'next/router'
 
 export interface customTableProps {
   xs: number
@@ -28,6 +31,9 @@ export default function RoomsPage() {
   const { rooms, is_pending, active_page, room_count } = useAppSelector(state => state.settings)
   const dispatch = useAppDispatch()
 
+  const { push } = useRouter()
+  const { user } = useContext(AuthContext)
+
   const handlePagination = async (page: number) => {
     await dispatch(fetchRoomList({ page }))
     dispatch(updatePage(page))
@@ -38,7 +44,10 @@ export default function RoomsPage() {
   }, [])
 
   useEffect(() => {
-
+    if (!user?.role.includes('ceo') && !user?.role.includes('admin')) {
+      push("/")
+      toast.error("Sizda bu sahifaga kirish huquqi yo'q!")
+    }
     return () => {
       dispatch(updatePage(1))
     }

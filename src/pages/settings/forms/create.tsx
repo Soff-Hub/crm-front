@@ -1,13 +1,15 @@
 import LoadingButton from '@mui/lab/LoadingButton'
 import { Box, Button, ButtonGroup, Checkbox, Dialog, DialogContent, FormControl, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material'
 import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
+import { toast } from 'react-hot-toast'
 import { useTranslation } from 'react-i18next'
 import Form from 'src/@core/components/form'
 import IconifyIcon from 'src/@core/components/icon'
 import VideoHeader, { videoUrls } from 'src/@core/components/video-header/video-header'
 import useResponsive from 'src/@core/hooks/useResponsive'
 import api from 'src/@core/utils/api'
+import { AuthContext } from 'src/context/AuthContext'
 import { useAppSelector } from 'src/store'
 
 type Props = {}
@@ -56,7 +58,6 @@ export default function CreateForm({ }: Props) {
 
     const { isMobile } = useResponsive()
     const { t } = useTranslation()
-    const { push } = useRouter()
 
     const [open, setOpen] = useState<any>(null)
     const [fields, setFields] = useState<any>(t("Aloqa uchun kontakt qoldiring"))
@@ -72,6 +73,8 @@ export default function CreateForm({ }: Props) {
     const [loading, setLoading] = useState(false)
     const [selectType, setSelectType] = useState<'single' | 'multiple'>('single')
     const { companyInfo } = useAppSelector((state: any) => state.user)
+    const { push } = useRouter()
+    const { user } = useContext(AuthContext)
 
 
     const handleClose = () => {
@@ -119,6 +122,10 @@ export default function CreateForm({ }: Props) {
     }
 
     useEffect(() => {
+        if (!user?.role.includes('ceo') && !user?.role.includes('admin')) {
+            push("/")
+            toast.error("Sizda bu sahifaga kirish huquqi yo'q!")
+        }
         getDepartments()
         getSources()
     }, [])

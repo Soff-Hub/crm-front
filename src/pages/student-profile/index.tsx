@@ -12,6 +12,8 @@ import api from 'src/@core/utils/api';
 import { datatimeFormatCustome } from 'src/@core/utils/time-formatter';
 import { AuthContext } from 'src/context/AuthContext';
 import EmptyContent from 'src/@core/components/empty-content';
+import { useRouter } from 'next/router';
+import { toast } from 'react-hot-toast';
 
 
 export default function StudentProfile() {
@@ -20,6 +22,7 @@ export default function StudentProfile() {
     const [groups, setGroups] = useState<any[]>([])
     const [sms, setSms] = useState<any[]>([])
     const { user } = useContext(AuthContext)
+    const { push } = useRouter()
     const [isLoading, setIsLoading] = useState<boolean>(false)
 
     const getGroups = async () => {
@@ -36,6 +39,10 @@ export default function StudentProfile() {
 
 
     useEffect(() => {
+        if (!user?.role.includes('student')) {
+            push("/")
+            toast.error("Sizda bu sahifaga kirish huquqi yo'q!")
+        }
         Promise.all([
             getGroups(),
             getSmsHistory()

@@ -20,6 +20,7 @@ import { videoUrls } from 'src/@core/components/video-header/video-header';
 import dynamic from "next/dynamic";
 import useResponsive from 'src/@core/hooks/useResponsive';
 import { AuthContext } from 'src/context/AuthContext';
+import { toast } from 'react-hot-toast';
 
 const RowOptions = dynamic(() => import('src/views/apps/mentors/RowOptions'));
 const TeacherAvatar = dynamic(() => import('src/views/apps/mentors/AddMentorsModal').then(mod => mod.TeacherAvatar));
@@ -105,8 +106,8 @@ export default function GroupsPage() {
     {
       xs: 1,
       dataIndex: 'id',
-      // title: "",
-      title: <Button onClick={() => push("/employee-attendance")} variant='outlined'>{t("Davomat")}</Button>,
+      title: "",
+      // title: <Button onClick={() => push("/employee-attendance")} variant='outlined'>{t("Davomat")}</Button>,
       render: actions => <RowOptions id={actions} status={queryParams?.status} />
     }
   ]
@@ -116,8 +117,9 @@ export default function GroupsPage() {
   }
 
   useEffect(() => {
-    if (user?.role.includes('student')) {
-      push("/")
+    if (!user?.role.includes('ceo') && !user?.role.includes('admin')) {
+      router.push("/")
+      toast.error('Sahifaga kirish huquqingiz yoq!')
     }
     const queryString = new URLSearchParams({ ...queryParams, page: String(queryParams.page), status: String(queryParams.status) }).toString()
     dispatch(fetchTeachersList(queryString))

@@ -13,6 +13,7 @@ import { useTranslation } from 'react-i18next';
 import LoadingButton from '@mui/lab/LoadingButton';
 import dynamic from 'next/dynamic';
 import { AuthContext } from 'src/context/AuthContext';
+import { toast } from 'react-hot-toast';
 
 // Dynamically import components
 const CardStatsVertical = dynamic(() => import('src/@core/components/card-statistics/card-stats-vertical'));
@@ -75,8 +76,9 @@ const Stats = () => {
 
 
     useEffect(() => {
-        if (user?.role.includes('student')) {
+        if (!user?.role.includes('ceo') && !user?.role.includes('admin')) {
             router.push("/")
+            toast.error('Sahifaga kirish huquqingiz yoq!')
         }
         getSources()
     }, [date])

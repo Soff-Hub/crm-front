@@ -1,6 +1,7 @@
 import Grid from '@mui/material/Grid'
 import { useRouter } from 'next/router'
 import { useContext, useEffect } from 'react'
+import { toast } from 'react-hot-toast'
 import VideoHeader, { videoUrls } from 'src/@core/components/video-header/video-header'
 import { getMontNumber } from 'src/@core/utils/gwt-month-name'
 import { AuthContext } from 'src/context/AuthContext'
@@ -19,6 +20,7 @@ const UserView = () => {
   useEffect(() => {
     if (user?.role.includes('student')) {
       router.push("/")
+      toast.error('Sahifaga kirish huquqingiz yoq!')
     }
     (async function () {
       const queryString = new URLSearchParams(queryParams).toString()

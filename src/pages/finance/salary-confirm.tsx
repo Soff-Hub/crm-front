@@ -110,10 +110,9 @@ export default function SalaryConfirm({ }: Props) {
     }
 
     useEffect(() => {
-        if (user?.role.includes('student') ||
-            (user?.role.includes('teacher') && !user?.role.includes('ceo')) ||
-            user?.role.includes('admin')) {
+        if (!user?.role.includes('ceo')) {
             push("/")
+            toast.error('Sahifaga kirish huquqingiz yoq!')
         }
         dispatch(fetchModerationSalaries(''))
     }, [])

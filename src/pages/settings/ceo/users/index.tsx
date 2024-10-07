@@ -8,7 +8,7 @@ import {
     Switch,
     Typography,
 } from '@mui/material';
-import { MouseEvent, ReactNode, useEffect, useState } from 'react';
+import { MouseEvent, ReactNode, useContext, useEffect, useState } from 'react';
 import IconifyIcon from 'src/@core/components/icon';
 import DataTable from 'src/@core/components/table';
 import MenuItem from '@mui/material/MenuItem';
@@ -17,7 +17,13 @@ import { useTranslation } from 'react-i18next';
 import useEmployee from 'src/hooks/useEmployee';
 import EmployeeCreateDialog from 'src/views/apps/settings/employees/TeacherCreateDialog';
 import { useAppDispatch, useAppSelector } from 'src/store';
-import { editEmployee, editEmployeeStatus, fetchEmployees, setEmployeeData, setOpenCreateSms, updateQueryParams } from 'src/store/apps/settings';
+import {
+    editEmployeeStatus,
+    fetchEmployees,
+    setEmployeeData,
+    setOpenCreateSms,
+    updateQueryParams,
+} from 'src/store/apps/settings';
 import EditEmployeeModal from 'src/views/apps/settings/employees/TeacherEditDialog';
 import api from 'src/@core/utils/api';
 import ButtonGroup from '@mui/material/ButtonGroup';
@@ -25,6 +31,8 @@ import { disablePage } from 'src/store/apps/page';
 import toast from 'react-hot-toast';
 import VideoHeader, { videoUrls } from 'src/@core/components/video-header/video-header';
 import { formatCurrency } from 'src/@core/utils/format-currency';
+import { AuthContext } from 'src/context/AuthContext';
+import { useRouter } from 'next/router';
 
 export interface customTableProps {
     xs: number
@@ -41,6 +49,8 @@ export default function GroupsPage() {
     const { employees, is_pending, employees_count, queryParams, roles } = useAppSelector(state => state.settings)
     const dispatch = useAppDispatch()
 
+    const { push } = useRouter()
+    const { user } = useContext(AuthContext)
 
     const RowOptions = ({ id }: { id: number | string }) => {
         // ** State
@@ -244,6 +254,10 @@ export default function GroupsPage() {
     }
 
     useEffect(() => {
+        if (!user?.role.includes('ceo') && !user?.role.includes('admin')) {
+            push("/")
+            toast.error("Sizda bu sahifaga kirish huquqi yo'q!")
+        }
         dispatch(fetchEmployees(queryParams))
     }, [])
 

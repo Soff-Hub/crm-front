@@ -121,10 +121,9 @@ const UserView = ({ slug }: InferGetStaticPropsType<typeof getServerSideProps>) 
 
 
     useEffect(() => {
-        if (user?.role.includes('student') ||
-            (user?.role.includes('teacher') && !user?.role.includes('ceo')) ||
-            user?.role.includes('admin')) {
+        if (!user?.role.includes('ceo')) {
             router.push("/")
+            toast.error('Sahifaga kirish huquqingiz yoq!')
         }
         dispatch(fetchModerationSalaries(`date=${slug}`))
     }, [])

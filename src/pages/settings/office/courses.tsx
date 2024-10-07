@@ -5,7 +5,7 @@ import {
   Pagination,
   Typography
 } from '@mui/material';
-import { ReactNode, useEffect } from 'react';
+import { ReactNode, useContext, useEffect } from 'react';
 import IconifyIcon from 'src/@core/components/icon';
 import DataTable from 'src/@core/components/table';
 import MuiDrawer, { DrawerProps } from '@mui/material/Drawer';
@@ -17,6 +17,9 @@ import CourseListRowOptions from 'src/views/apps/settings/courses/CourseListRowO
 import CreateCourseDialog from 'src/views/apps/settings/courses/CreateCourseDialog';
 import EditCourseDialog from 'src/views/apps/settings/courses/EditCourseDialog';
 import VideoHeader, { videoUrls } from 'src/@core/components/video-header/video-header';
+import { toast } from 'react-hot-toast';
+import { AuthContext } from 'src/context/AuthContext';
+import { useRouter } from 'next/router';
 
 export interface customTableProps {
   xs: number
@@ -54,11 +57,17 @@ export function addPeriodToThousands(number: any) {
 
 export default function GroupsPage() {
   const { t } = useTranslation()
+  const { push } = useRouter()
+  const { user } = useContext(AuthContext)
 
   const dispatch = useAppDispatch()
   const { course_list, is_pending, courseQueryParams } = useAppSelector(state => state.settings)
 
   useEffect(() => {
+    if (!user?.role.includes('ceo') && !user?.role.includes('admin')) {
+      push("/")
+      toast.error("Sizda bu sahifaga kirish huquqi yo'q!")
+    }
     const queryString = new URLSearchParams(courseQueryParams).toString()
     dispatch(fetchCoursesList(queryString))
     return () => {
