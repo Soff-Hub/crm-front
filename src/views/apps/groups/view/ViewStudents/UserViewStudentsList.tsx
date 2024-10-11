@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Box, Button, Dialog, DialogContent, DialogTitle, TextField, Typography } from '@mui/material';
+import { Box, Button, Chip, Dialog, DialogContent, DialogTitle, TextField, Typography } from '@mui/material';
 import Status from 'src/@core/components/status';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
@@ -28,6 +28,7 @@ import EmptyContent from 'src/@core/components/empty-content';
 import ExportStudent from './ExportStudent';
 import MergeToDepartment from './MergeForm';
 import { Icon } from '@iconify/react';
+import { formatCurrency } from 'src/@core/utils/format-currency';
 
 
 interface StudentType {
@@ -129,7 +130,7 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, }: ItemTyp
     }
 
     return (
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>
+        <Box sx={{ display: 'grid', gridTemplateColumns: "10px 10px 0.5fr 1fr 20px", alignItems: 'center', gap: 3 }}>
             <Typography sx={{ width: '20px' }}>{index}.</Typography>
             <Status color={status == 'active' ? 'success' : status == 'new' ? 'warning' : status == 'frozen' ? "secondary" : 'error'} />
             {!(user?.role.length === 1 && user?.role.includes('teacher')) ? <HtmlTooltip title={
@@ -172,7 +173,12 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, }: ItemTyp
                     <Typography sx={{ cursor: 'pointer' }} fontSize={10}>{first_name}</Typography>
                 </Link>
             </HtmlTooltip> : <Typography sx={{ cursor: 'pointer' }} fontSize={10}>{first_name}</Typography>}
-            <Typography fontSize={10} flexGrow={1} textAlign={'end'} mr={5}>{phone}</Typography>
+            <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", minWidth: "100%" }}>
+                <Typography fontSize={10} flexGrow={1} textAlign={'start'} mr={5}>{phone}</Typography>
+                {Number(balance) < 0 ?
+                    <Chip label={`${formatCurrency(+balance)} so'm`} color="error" variant='outlined' size='small' sx={{ fontWeight: 500, fontSize: "9px", padding: 0 }} />
+                    : <Chip label={`${formatCurrency(+balance)} so'm`} color="success" variant='outlined' size='small' sx={{ fontWeight: 500, fontSize: "9px", padding: 0 }} />}
+            </Box>
             <Typography
                 fontSize={11}
                 id="fade-button"
