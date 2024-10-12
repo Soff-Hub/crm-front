@@ -22,16 +22,16 @@ export default function Logs() {
 
   const { isMobile } = useResponsive()
 
-  const getHistory = async (p: number) => {
+  const getHistory = async () => {
     try {
-      const resp = await api.get(`auth/student/logs/?page=${p}`)
+      const resp = await api.get(`auth/student/logs/`)
       setData(resp.data?.results)
       setCount(resp.data?.count)
     } catch (err: any) {}
   }
 
   useEffect(() => {
-    // getHistory(page)
+    getHistory()
   }, [])
 
   return (
