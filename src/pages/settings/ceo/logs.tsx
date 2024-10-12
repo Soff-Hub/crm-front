@@ -31,7 +31,7 @@ export default function Logs() {
   }
 
   useEffect(() => {
-    getHistory(page)
+    // getHistory(page)
   }, [])
 
   return (
