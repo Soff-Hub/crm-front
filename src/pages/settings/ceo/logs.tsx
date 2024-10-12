@@ -17,14 +17,13 @@ export default function Logs() {
       date: string
     }[]
   >([])
-  const [page, setPage] = useState(0)
+  const [page, setPage] = useState(1)
   const [count, setCount] = useState(0)
 
   const { isMobile } = useResponsive()
 
   const getHistory = async (p: number) => {
     scrollTo(0, 0)
-    setPage(p)
     try {
       const resp = await api.get(`auth/student/logs/?page=${p}`)
       setData(resp.data?.results)
@@ -33,7 +32,7 @@ export default function Logs() {
   }
 
   useEffect(() => {
-    getHistory(1)
+    getHistory(page)
   }, [])
 
   return (
@@ -96,15 +95,15 @@ export default function Logs() {
           </div>
         ))}
       </div>
-      {Math.ceil(count / 10) > 1 && data?.length && (
+      {Math.ceil(count / 15) > 1 && data?.length && (
         <Pagination
           style={{ marginTop: '30px' }}
           defaultPage={page || 1}
-          count={Math.ceil(count / 10)}
+          count={Math.ceil(count / 15)}
           variant='outlined'
           shape='rounded'
           page={page}
-          onChange={(_: any, page) => getHistory(page)}
+          onChange={(_: any, page) => setPage(page)}
         />
       )}
     </div>
