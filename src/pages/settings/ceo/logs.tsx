@@ -22,17 +22,17 @@ export default function Logs() {
 
   const { isMobile } = useResponsive()
 
-  const getHistory = async () => {
+  const getHistory = async (page: number) => {
     try {
-      const resp = await api.get(`auth/student/logs/`)
+      const resp = await api.get(`auth/student/logs/?page=${page}`)
       setData(resp.data?.results)
       setCount(resp.data?.count)
     } catch (err: any) {}
   }
 
   useEffect(() => {
-    getHistory()
-  }, [])
+    getHistory(page) // sahifa o'zgarganda ma'lumotlarni qayta yuklaydi
+  }, [page]) // dependensiya sifatida `page` qo'shildi
 
   return (
     <div>
@@ -59,6 +59,7 @@ export default function Logs() {
               maxWidth: '600px',
               width: '100%'
             }}
+            key={el.date + el.user_phone} // Har bir element uchun `key` qo'shildi
           >
             <p
               style={{
@@ -78,9 +79,7 @@ export default function Logs() {
 
             <div>
               <p style={{ fontSize: '14px', margin: '0 0 4px' }}>{el.user_name}</p>
-
               <p style={{ fontSize: '14px', margin: '0 0 4px' }}>{el.user_phone}</p>
-
               <p style={{ fontSize: '14px', margin: '0 0 4px' }}>{el.date}</p>
             </div>
 
@@ -94,7 +93,7 @@ export default function Logs() {
           </div>
         ))}
       </div>
-      {/* {Math.ceil(count / 15) > 1 && data?.length && (
+      {Math.ceil(count / 15) > 1 && data?.length > 0 && (
         <Pagination
           style={{ marginTop: '30px' }}
           defaultPage={page || 1}
@@ -102,9 +101,9 @@ export default function Logs() {
           variant='outlined'
           shape='rounded'
           page={page}
-          onChange={(_: any, page) => setPage(page)}
+          onChange={(_, page) => setPage(page)} // faqat `setPage` chaqiriladi
         />
-      )} */}
+      )}
     </div>
   )
 }
