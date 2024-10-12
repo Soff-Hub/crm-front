@@ -75,6 +75,10 @@ const Navigation = (t: any): HorizontalNavItemsType => {
             {
               title: 'Xodimlar',
               path: '/settings/ceo/users'
+            },
+            {
+              title: 'Harakatlar tarixi',
+              path: '/settings/ceo/logs'
             }
             // {
             //   title: 'Billing',
@@ -113,8 +117,8 @@ const Navigation = (t: any): HorizontalNavItemsType => {
   return user?.role.includes('ceo')
     ? items
     : user?.role.includes('casher')
-    ? items.filter(el => el.path == '/finance')
-    : items.filter(el => el.path !== '/finance')
+      ? items.filter(el => el.path == '/finance')
+      : items.filter(el => el.path !== '/finance')
 }
 
 export default Navigation

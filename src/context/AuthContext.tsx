@@ -27,7 +27,7 @@ const defaultProvider: AuthValuesType = {
   login: () => Promise.resolve(),
   logout: () => Promise.resolve(),
   register: () => Promise.resolve(),
-  initAuth: () => Promise.resolve(),
+  initAuth: () => Promise.resolve()
 }
 
 const AuthContext = createContext(defaultProvider)
@@ -43,7 +43,7 @@ const AuthProvider = ({ children }: Props) => {
   const { i18n } = useTranslation()
   const { settings, saveSettings } = useSettings()
   const router = useRouter()
-  const { locales, locale: activeLocale, pathname, query, asPath } = router;
+  const { locales, locale: activeLocale, pathname, query, asPath } = router
 
   // ** Hooks
   const dispatch = useAppDispatch()
@@ -89,9 +89,10 @@ const AuthProvider = ({ children }: Props) => {
           }
         })
 
-
-
-      if (!window.location.hostname.split('.').includes('c-panel') && !window.location.hostname.split('.').includes('localhost')) {
+      if (
+        !window.location.hostname.split('.').includes('c-panel') &&
+        !window.location.hostname.split('.').includes('localhost')
+      ) {
         const resp = await api.get('common/settings/list/')
         dispatch(setCompanyInfo(resp.data[0]))
       }
@@ -118,19 +119,24 @@ const AuthProvider = ({ children }: Props) => {
           : null
         const returnUrl = router.query.returnUrl
 
-        !params.rememberMe ? window.localStorage.setItem('userData', JSON.stringify({ ...response.data, role: 'admin', tokens: null })) : null
+        !params.rememberMe
+          ? window.localStorage.setItem('userData', JSON.stringify({ ...response.data, role: 'admin', tokens: null }))
+          : null
 
         const settings: any = window.localStorage.getItem('settings')
         i18n.changeLanguage(JSON.parse(settings)?.locale || 'uz')
         if (!response.data.payment_page) {
-          if (!window.location.hostname.split('.').includes('c-panel') && !window.location.hostname.split('.').includes('localhost')) {
+          if (
+            !window.location.hostname.split('.').includes('c-panel') &&
+            !window.location.hostname.split('.').includes('localhost')
+          ) {
             const resp = await api.get('common/settings/list/')
             dispatch(setCompanyInfo(resp.data[0]))
           }
           const redirectURL = returnUrl && returnUrl !== '/' ? returnUrl : '/'
           router.replace(redirectURL as string)
         } else {
-          router.replace("/crm-payments")
+          router.replace('/crm-payments')
         }
 
         setUser({

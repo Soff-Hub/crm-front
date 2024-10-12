@@ -131,6 +131,10 @@ const Navigation = (t: any): VerticalNavItemsType => {
             {
               title: 'Xodimlar',
               path: '/settings/ceo/users'
+            },
+            {
+              title: 'Harakatlar tarixi',
+              path: '/settings/ceo/logs'
             }
             // {
             //   title: 'Billing',
