@@ -23,7 +23,6 @@ export default function Logs() {
   const { isMobile } = useResponsive()
 
   const getHistory = async (p: number) => {
-    scrollTo(0, 0)
     try {
       const resp = await api.get(`auth/student/logs/?page=${p}`)
       setData(resp.data?.results)
@@ -95,7 +94,7 @@ export default function Logs() {
           </div>
         ))}
       </div>
-      {Math.ceil(count / 15) > 1 && data?.length && (
+      {/* {Math.ceil(count / 15) > 1 && data?.length && (
         <Pagination
           style={{ marginTop: '30px' }}
           defaultPage={page || 1}
@@ -105,7 +104,7 @@ export default function Logs() {
           page={page}
           onChange={(_: any, page) => setPage(page)}
         />
-      )}
+      )} */}
     </div>
   )
 }
