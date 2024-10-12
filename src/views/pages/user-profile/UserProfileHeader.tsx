@@ -38,7 +38,6 @@ const UserProfileHeader = () => {
       setData(response.data)
     })
   }, [])
-  
 
   const designationIcon = data?.designationIcon || 'mdi:briefcase-outline'
 
