@@ -5,7 +5,7 @@ import { formatPhoneNumber } from 'src/@core/components/phone-input/format-phone
 import useResponsive from 'src/@core/hooks/useResponsive'
 import api from 'src/@core/utils/api'
 
-export default function Logs() {
+export default function PaymentHistory() {
   const [data, setData] = useState<
     {
       title: string

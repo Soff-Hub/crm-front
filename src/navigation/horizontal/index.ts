@@ -78,7 +78,7 @@ const Navigation = (t: any): HorizontalNavItemsType => {
             },
             {
               title: 'Harakatlar tarixi',
-              path: '/settings/ceo/logs'
+              path: '/settings/ceo/payment-history'
             }
             // {
             //   title: 'Billing',

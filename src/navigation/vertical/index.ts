@@ -134,7 +134,7 @@ const Navigation = (t: any): VerticalNavItemsType => {
             },
             {
               title: 'Harakatlar tarixi',
-              path: '/settings/ceo/logs'
+              path: '/settings/ceo/payment-history'
             }
             // {
             //   title: 'Billing',
