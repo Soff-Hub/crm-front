@@ -132,10 +132,10 @@ const Navigation = (t: any): VerticalNavItemsType => {
               title: 'Xodimlar',
               path: '/settings/ceo/users'
             },
-            // {
-            //   title: 'Harakatlar tarixi',
-            //   path: '/settings/ceo/payment-history'
-            // }
+            {
+              title: 'Harakatlar tarixi',
+              path: '/settings/ceo/payment-history'
+            }
             // {
             //   title: 'Billing',
             //   path: '/settings/ceo/billing'
