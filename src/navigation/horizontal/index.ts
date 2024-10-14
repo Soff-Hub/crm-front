@@ -85,10 +85,10 @@ const Navigation = (t: any): HorizontalNavItemsType => {
               title: t("To'lovlar"),
               path: '/settings/logs/payment-history'
             },
-            {
-              title: t('Bot xabarnoma'),
-              path: '/settings/logs/bot-notification'
-            }
+            // {
+            //   title: t('Bot xabarnoma'),
+            //   path: '/settings/logs/bot-notification'
+            // }
           ]
         },
         {

@@ -133,10 +133,10 @@ const Navigation = (t: any): VerticalNavItemsType => {
               title: t("To'lovlar"),
               path: '/settings/logs/payment-history'
             },
-            {
-              title: t('Bot xabarnoma'),
-              path: '/settings/logs/bot-notification'
-            }
+            // {
+            //   title: t('Bot xabarnoma'),
+            //   path: '/settings/logs/bot-notification'
+            // }
           ]
         },
         {

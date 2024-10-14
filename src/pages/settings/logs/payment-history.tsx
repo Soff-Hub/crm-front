@@ -44,6 +44,7 @@ export default function PaymentHistory() {
         >
           {paymentLogs.map(el => (
             <div
+              className='payment-history-card'
               style={{
                 backgroundColor: 'white',
                 padding: '20px',
