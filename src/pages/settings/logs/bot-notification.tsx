@@ -57,8 +57,8 @@ export default function BotNotification() {
   ]
 
   useEffect(() => {
-    dispatch(fetBotOwners(`page=${page}`))
-  }, [page])
+    dispatch(fetBotOwners())
+  }, [])
 
   let alerts: any = {
     uz: (

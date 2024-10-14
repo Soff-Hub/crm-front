@@ -4,7 +4,7 @@ import EmptyContent from 'src/@core/components/empty-content'
 import { formatPhoneNumber } from 'src/@core/components/phone-input/format-phone-number'
 import useResponsive from 'src/@core/hooks/useResponsive'
 import { useAppDispatch, useAppSelector } from 'src/store'
-import { fetchPaymetLogs } from 'src/store/apps/logs'
+import { fetchPaymetLogs, updateQueryParams } from 'src/store/apps/logs'
 import SubLoader from 'src/views/apps/loaders/SubLoader'
 
 export default function PaymentHistory() {
@@ -14,6 +14,14 @@ export default function PaymentHistory() {
   const { isMobile } = useResponsive()
 
   const { paymentCount, paymentLogs, isLoading } = useAppSelector(state => state.logs)
+  console.log(paymentCount)
+
+  console.log(paymentLogs)
+
+  const handlePaginate = (p: number) => {
+    setPage(p)
+    dispatch(updateQueryParams(p))
+  }
 
   useEffect(() => {
     dispatch(fetchPaymetLogs(`page=${page}`))
@@ -47,7 +55,7 @@ export default function PaymentHistory() {
                 maxWidth: '600px',
                 width: '100%'
               }}
-              key={el.date + el.user_phone} // Har bir element uchun `key` qo'shildi
+              key={el.id} // Har bir element uchun `key` qo'shildi
             >
               <p
                 style={{
@@ -83,15 +91,15 @@ export default function PaymentHistory() {
         </div>
       )}
 
-      {Math.ceil(paymentCount / 15) > 1 && paymentLogs?.length > 0 && (
+      {Math.ceil(paymentCount / 5) > 1 && paymentLogs?.length > 0 && (
         <Pagination
           style={{ marginTop: '30px' }}
           defaultPage={page || 1}
-          count={Math.ceil(paymentCount / 15)}
+          count={Math.ceil(paymentCount / 5)}
           variant='outlined'
           shape='rounded'
           page={page}
-          onChange={(_, page) => setPage(page)} // faqat `setPage` chaqiriladi
+          onChange={(_, page) => handlePaginate(page)} // faqat `setPage` chaqiriladi
         />
       )}
     </div>

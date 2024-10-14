@@ -7,8 +7,8 @@ export const fetchPaymetLogs = createAsyncThunk('logs/fetchPaymetLogs', async (q
     return (await api.get(`auth/student/logs/?` + queryString)).data
 })
 
-export const fetBotOwners = createAsyncThunk('logs/fetBotOwners', async (queryString?: any) => {
-    return (await api.get(`common/bot-notification/list/?` + queryString)).data
+export const fetBotOwners = createAsyncThunk('logs/fetBotOwners', async () => {
+    return (await api.get(`common/bot-notification/list/`)).data
 })
 
 export const createBotNotification = createAsyncThunk('mentors/createBotNotification', async (values: any, { rejectWithValue }) => {
@@ -48,6 +48,9 @@ export const logsSlice = createSlice({
         },
         setBotData: (state, action) => {
             state.botData = action.payload
+        },
+        updateQueryParams: (state, action) => {
+            state.queryParams = { page: action.payload }
         }
     },
     extraReducers: builder => {
@@ -65,8 +68,6 @@ export const logsSlice = createSlice({
             })
             .addCase(fetBotOwners.fulfilled, (state, action) => {
                 state.isLoading = false
-                state.botNotifications = action.payload?.results
-                state.botNotificationsCount = action.payload?.count
             })
             .addCase(createBotNotification.pending, state => {
                 state.createLoading = true
@@ -83,6 +84,6 @@ export const logsSlice = createSlice({
     }
 })
 
-export const { setOpenCreate, setBotData } = logsSlice.actions
+export const { setOpenCreate, setBotData, updateQueryParams } = logsSlice.actions
 
 export default logsSlice.reducer
