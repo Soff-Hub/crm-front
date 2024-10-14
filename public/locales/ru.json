@@ -515,5 +515,11 @@
   "frozen": "заморожен",
   "TEACHER": "Учитель",
   "CASHER": "Бухгалтер",
-  "ADMIN": "Админ"
+  "ADMIN": "Админ",
+  "Harakatlar tarixi": "История действий",
+  "To'lovlar": "Платежи",
+  "Bot xabarnoma": "Уведомление бота",
+  "Mahsus ID": "Индентификатор",
+  "Muvaffaqiyatli o'chirib tashlandi": "Удален успешно",
+  "bot_success_msg": "теперь начнет получать уведомления от ботов об активности системы."
 }

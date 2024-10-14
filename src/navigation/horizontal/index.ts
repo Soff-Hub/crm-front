@@ -69,7 +69,7 @@ const Navigation = (t: any): HorizontalNavItemsType => {
           title: 'CEO',
           children: [
             {
-              title: 'Umumiy sozlamalar',
+              title: t('Umumiy sozlamalar'),
               path: '/settings/ceo/all-settings'
             },
             {
@@ -79,14 +79,14 @@ const Navigation = (t: any): HorizontalNavItemsType => {
           ]
         },
         {
-          title: 'Harakatlar tarixi',
+          title: t('Harakatlar tarixi'),
           children: [
             {
-              title: "To'lovlar",
+              title: t("To'lovlar"),
               path: '/settings/logs/payment-history'
             },
             {
-              title: "Bot xabarnoma",
+              title: t('Bot xabarnoma'),
               path: '/settings/logs/bot-notification'
             }
           ]

@@ -127,14 +127,14 @@ const Navigation = (t: any): VerticalNavItemsType => {
           ]
         },
         {
-          title: 'Harakatlar tarixi',
+          title: t('Harakatlar tarixi'),
           children: [
             {
-              title: "To'lovlar",
+              title: t("To'lovlar"),
               path: '/settings/logs/payment-history'
             },
             {
-              title: "Bot xabarnoma",
+              title: t('Bot xabarnoma'),
               path: '/settings/logs/bot-notification'
             }
           ]

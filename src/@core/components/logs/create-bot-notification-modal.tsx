@@ -20,6 +20,7 @@ import { useAppDispatch, useAppSelector } from 'src/store'
 import { createBotNotification, fetBotOwners, setOpenCreate } from 'src/store/apps/logs'
 import toast from 'react-hot-toast'
 import Link from 'next/link'
+import i18n from 'src/configs/i18n'
 
 export default function CreateBotNotificationModal() {
   const { t } = useTranslation()
@@ -30,6 +31,51 @@ export default function CreateBotNotificationModal() {
 
   const handleClose = () => {
     dispatch(setOpenCreate(false))
+  }
+
+  let alerts: any = {
+    uz: (
+      <Alert severity='warning' className='mb-3'>
+        <AlertTitle>{t('Eslatma')}</AlertTitle>
+        Xodim o'z mahsus idsini{' '}
+        <Link
+          href={'https://t.me/soffcrm_support_bot'}
+          target='_blank'
+          style={{ color: 'green', textDecoration: 'none' }}
+        >
+          @soffcrm_support_bot
+        </Link>{' '}
+        <br />
+        dan olishi kerak
+      </Alert>
+    ),
+    en: (
+      <Alert severity='warning' className='mb-3'>
+        <AlertTitle>{t('Eslatma')}</AlertTitle>
+        The employee should <br /> get their unique id from{' '}
+        <Link
+          href={'https://t.me/soffcrm_support_bot'}
+          target='_blank'
+          style={{ color: 'green', textDecoration: 'none' }}
+        >
+          @soffcrm_support_bot
+        </Link>{' '}
+      </Alert>
+    ),
+    ru: (
+      <Alert severity='warning' className='mb-3'>
+        <AlertTitle>{t('Eslatma')}</AlertTitle>
+        Сотрудник должен получить свой <br /> уникальный идентификатор от{' '}
+        <Link
+          href={'https://t.me/soffcrm_support_bot'}
+          target='_blank'
+          style={{ color: 'green', textDecoration: 'none' }}
+        >
+          @soffcrm_support_bot
+        </Link>{' '}
+        .
+      </Alert>
+    )
   }
 
   const formik = useFormik({
@@ -55,7 +101,7 @@ export default function CreateBotNotificationModal() {
       }
 
       await dispatch(fetBotOwners(new URLSearchParams({ page: queryParams.page.toString() }).toString()))
-      toast.success(`Endi ${values.full_name} tizimdagi harakatlar haqida botda bildirishnoma olishni boshlaydi`)
+      toast.success(`${values.full_name} ${t('bot_success_msg')}`)
       handleClose()
       formik.resetForm()
     }
@@ -65,19 +111,7 @@ export default function CreateBotNotificationModal() {
     <Dialog open={openCreate} onClose={handleClose}>
       <DialogContent>
         <div style={{ minWidth: '300px' }}>
-          <Alert severity='warning' className='mb-3'>
-            <AlertTitle>Elatma</AlertTitle>
-            Xodim o'z mahsus idsini{' '}
-            <Link
-              href={'https://t.me/soffcrm_support_bot'}
-              target='_blank'
-              style={{ color: 'green', textDecoration: 'none' }}
-            >
-              @soffcrm_support_bot
-            </Link>{' '}
-            <br />
-            dan olishi kerak
-          </Alert>
+          {alerts[i18n.language]}
 
           <form onSubmit={formik.handleSubmit}>
             <div className='mb-3'>

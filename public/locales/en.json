@@ -504,5 +504,11 @@
   "Vertikal": "Vertical",
   "Gorizontal": "Horizontal",
   "Menu ni yashirish": "Hide menu",
-  "archived": "archived"
+  "archived": "archived",
+  "Harakatlar tarixi": "History of actions",
+  "To'lovlar": "Payments",
+  "Bot xabarnoma": "Bot notification",
+  "Mahsus ID": "Special ID",
+  "Muvaffaqiyatli o'chirib tashlandi": "Deleted successfully",
+  "bot_success_msg": "will now start receiving bot notifications about system activity"
 }

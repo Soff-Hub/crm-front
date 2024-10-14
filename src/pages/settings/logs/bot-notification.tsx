@@ -10,6 +10,7 @@ import CreateBotNotificationModal from 'src/@core/components/logs/create-bot-not
 import { Alert, AlertTitle, Button } from '@mui/material'
 import Link from 'next/link'
 import DeleteBotNotificationModal from 'src/@core/components/logs/delete-bot-notification-modal'
+import i18n from 'src/configs/i18n'
 
 export default function BotNotification() {
   const [page, setPage] = useState(1)
@@ -59,21 +60,53 @@ export default function BotNotification() {
     dispatch(fetBotOwners(`page=${page}`))
   }, [page])
 
+  let alerts: any = {
+    uz: (
+      <Alert severity='info'>
+        <AlertTitle>{t('Eslatma')}</AlertTitle>
+        Bu ro'yxatga qo'shilgan xodimlar{' '}
+        <Link
+          href={'https://t.me/soffcrm_support_bot'}
+          target='_blank'
+          style={{ color: 'blue', textDecoration: 'none' }}
+        >
+          @soffcrm_support_bot
+        </Link>{' '}
+        da tizimdagi xarakatlar haqida bildirishnoma olishadi
+      </Alert>
+    ),
+    en: (
+      <Alert severity='info'>
+        <AlertTitle>{t('Eslatma')}</AlertTitle>
+        Employees added to this list will receive notification of system activity at{' '}
+        <Link
+          href={'https://t.me/soffcrm_support_bot'}
+          target='_blank'
+          style={{ color: 'blue', textDecoration: 'none' }}
+        >
+          @soffcrm_support_bot
+        </Link>{' '}
+      </Alert>
+    ),
+    ru: (
+      <Alert severity='info'>
+        <AlertTitle>{t('Eslatma')}</AlertTitle>
+        Сотрудники, добавленные в этот список, получат уведомление об активности системы на{' '}
+        <Link
+          href={'https://t.me/soffcrm_support_bot'}
+          target='_blank'
+          style={{ color: 'blue', textDecoration: 'none' }}
+        >
+          @soffcrm_support_bot
+        </Link>{' '}
+      </Alert>
+    )
+  }
+
   return (
     <div>
       <div className='d-flex align-items-start justify-content-between'>
-        <Alert severity='info'>
-          <AlertTitle>Elatma</AlertTitle>
-          Bu ro'yxatga qo'shilgan xodimlar{' '}
-          <Link
-            href={'https://t.me/soffcrm_support_bot'}
-            target='_blank'
-            style={{ color: 'blue', textDecoration: 'none' }}
-          >
-            @soffcrm_support_bot
-          </Link>{' '}
-          da tizimdagi xarakatlar haqida bildirishnoma olishadi
-        </Alert>
+        {alerts[`${i18n.language}`]}
         <Button variant='contained' size='small' onClick={() => dispatch(setOpenCreate(true))}>
           {t('Yaratish')}
         </Button>
