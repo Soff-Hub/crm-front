@@ -91,11 +91,11 @@ export default function PaymentHistory() {
         </div>
       )}
 
-      {Math.ceil(paymentCount / 5) > 1 && paymentLogs?.length > 0 && (
+      {Math.ceil(paymentCount / 15) > 1 && paymentLogs?.length > 0 && (
         <Pagination
           style={{ marginTop: '30px' }}
           defaultPage={page || 1}
-          count={Math.ceil(paymentCount / 5)}
+          count={Math.ceil(paymentCount / 15)}
           variant='outlined'
           shape='rounded'
           page={page}
