@@ -75,15 +75,20 @@ const Navigation = (t: any): HorizontalNavItemsType => {
             {
               title: 'Xodimlar',
               path: '/settings/ceo/users'
+            }
+          ]
+        },
+        {
+          title: 'Harakatlar tarixi',
+          children: [
+            {
+              title: "To'lovlar",
+              path: '/settings/logs/payment-history'
             },
             {
-              title: 'Harakatlar tarixi',
-              path: '/settings/ceo/payment-history'
+              title: "Bot xabarnoma",
+              path: '/settings/logs/bot-notification'
             }
-            // {
-            //   title: 'Billing',
-            //   path: '/settings/ceo/billing'
-            // },
           ]
         },
         {

@@ -23,6 +23,7 @@ import employeeAttendance from 'src/store/apps/employee-attendance'
 import groupDetails from 'src/store/apps/groupDetails'
 import finance from './apps/finance'
 import page from './apps/page'
+import logs from './apps/logs'
 
 export const store = configureStore({
   reducer: {
@@ -45,7 +46,8 @@ export const store = configureStore({
     cPanelSlice,
     companyDetails,
     studentPayments,
-    employeeAttendance
+    employeeAttendance,
+    logs
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({

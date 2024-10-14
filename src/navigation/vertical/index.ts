@@ -111,14 +111,6 @@ const Navigation = (t: any): VerticalNavItemsType => {
               title: 'Dam olish kunlari',
               path: '/settings/office/free-days'
             }
-            // {
-            //   title: 'Arxiv',
-            //   path: '/settings/office/archive'
-            // },
-            // {
-            //   title: 'Tark etgan talabalar',
-            //   path: '/settings/office/lefted-students'
-            // }
           ]
         },
         {
@@ -131,15 +123,20 @@ const Navigation = (t: any): VerticalNavItemsType => {
             {
               title: 'Xodimlar',
               path: '/settings/ceo/users'
+            }
+          ]
+        },
+        {
+          title: 'Harakatlar tarixi',
+          children: [
+            {
+              title: "To'lovlar",
+              path: '/settings/logs/payment-history'
             },
             {
-              title: 'Harakatlar tarixi',
-              path: '/settings/ceo/payment-history'
+              title: "Bot xabarnoma",
+              path: '/settings/logs/bot-notification'
             }
-            // {
-            //   title: 'Billing',
-            //   path: '/settings/ceo/billing'
-            // },
           ]
         },
         {
@@ -173,8 +170,8 @@ const Navigation = (t: any): VerticalNavItemsType => {
   return user?.role.includes('ceo')
     ? items
     : user?.role.includes('casher')
-    ? items.filter(el => el.path == '/finance')
-    : items.filter(el => el.path !== '/finance')
+      ? items.filter(el => el.path == '/finance')
+      : items.filter(el => el.path !== '/finance')
 }
 
 export default Navigation
