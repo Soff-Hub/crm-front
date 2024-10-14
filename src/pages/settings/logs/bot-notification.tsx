@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch, useAppSelector } from 'src/store'
-import { fetBotOwners, setOpenCreate } from 'src/store/apps/logs'
+import { fetBotOwners, setBotData, setOpenCreate } from 'src/store/apps/logs'
 import SubLoader from 'src/views/apps/loaders/SubLoader'
 import { customTableProps } from '../sms'
 import DataTable from 'src/@core/components/table'
@@ -9,6 +9,7 @@ import IconifyIcon from 'src/@core/components/icon'
 import CreateBotNotificationModal from 'src/@core/components/logs/create-bot-notification-modal'
 import { Alert, AlertTitle, Button } from '@mui/material'
 import Link from 'next/link'
+import DeleteBotNotificationModal from 'src/@core/components/logs/delete-bot-notification-modal'
 
 export default function BotNotification() {
   const [page, setPage] = useState(1)
@@ -47,7 +48,7 @@ export default function BotNotification() {
       title: t('Amallar'),
       dataIndex: 'id',
       render: id => (
-        <div style={{ color: 'red' }}>
+        <div style={{ color: 'red' }} onClick={() => dispatch(setBotData(id))}>
           <IconifyIcon icon={'fluent:delete-20-regular'} />
         </div>
       )
@@ -84,6 +85,7 @@ export default function BotNotification() {
       )}
 
       <CreateBotNotificationModal />
+      <DeleteBotNotificationModal />
     </div>
   )
 }

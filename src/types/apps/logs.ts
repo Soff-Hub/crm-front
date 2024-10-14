@@ -35,4 +35,5 @@ export interface ILogsState {
     botNotificationsCount: number
     createLoading: boolean
     openCreate: boolean
+    botData: null | number
 }

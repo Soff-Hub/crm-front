@@ -23,6 +23,10 @@ export const createBotNotification = createAsyncThunk('mentors/createBotNotifica
     }
 })
 
+export const deleteBotOwner = createAsyncThunk('logs/deleteBotOwner', async (id: number | null) => {
+    return (await api.delete(`common/bot-notification/${id}/`)).data
+})
+
 const initialState: ILogsState = {
     queryParams: { page: 1 },
     isLoading: false,
@@ -31,7 +35,8 @@ const initialState: ILogsState = {
     botNotifications: [],
     botNotificationsCount: 0,
     createLoading: false,
-    openCreate: false
+    openCreate: false,
+    botData: null
 }
 
 export const logsSlice = createSlice({
@@ -40,6 +45,9 @@ export const logsSlice = createSlice({
     reducers: {
         setOpenCreate: (state, action) => {
             state.openCreate = action.payload
+        },
+        setBotData: (state, action) => {
+            state.botData = action.payload
         }
     },
     extraReducers: builder => {
@@ -66,9 +74,15 @@ export const logsSlice = createSlice({
             .addCase(createBotNotification.fulfilled, state => {
                 state.createLoading = false
             })
+            .addCase(deleteBotOwner.pending, state => {
+                state.createLoading = true
+            })
+            .addCase(deleteBotOwner.fulfilled, state => {
+                state.createLoading = false
+            })
     }
 })
 
-export const { setOpenCreate } = logsSlice.actions
+export const { setOpenCreate, setBotData } = logsSlice.actions
 
 export default logsSlice.reducer
