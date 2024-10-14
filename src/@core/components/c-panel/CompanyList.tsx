@@ -252,11 +252,11 @@ export default function CompanyList() {
             <Box>
                 <DataTable loading={isLoading} columns={column} data={data?.results || []} rowClick={(id: number) => rowClick(id)} />
                 {data &&
-                    data?.count > 10 &&
+                    data?.count > 50 &&
                     !isLoading &&
                     <Pagination
                         defaultPage={Number(queryParams?.page) || 1}
-                        count={Math.ceil(data?.count / 10)}
+                        count={Math.ceil(data?.count / 50)}
                         variant="outlined"
                         shape="rounded"
                         onChange={(e: any, page) => handlePagination(page)}

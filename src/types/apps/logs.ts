@@ -9,9 +9,30 @@ export interface PaymentLogItem {
     date: string
 }
 
+export interface BotNotificationItem {
+    id: number,
+    chat_id: number,
+    full_name: string,
+    branches: number[],
+    branches_data: [
+        {
+            name: string,
+            id: number
+        },
+        {
+            name: string,
+            id: number
+        }
+    ]
+}
+
 export interface ILogsState {
     paymentLogs: PaymentLogItem[]
     paymentCount: number
-    isLoading: boolean
     queryParams: { page: number }
+    isLoading: boolean
+    botNotifications: BotNotificationItem[]
+    botNotificationsCount: number
+    createLoading: boolean
+    openCreate: boolean
 }
