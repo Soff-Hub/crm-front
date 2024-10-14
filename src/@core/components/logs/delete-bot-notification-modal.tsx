@@ -10,7 +10,7 @@ export default function DeleteBotNotificationModal() {
   const { t } = useTranslation()
 
   const dispatch = useAppDispatch()
-  const { queryParams, botData } = useAppSelector(state => state.logs)
+  const { botData } = useAppSelector(state => state.logs)
 
   const handleClose = () => {
     dispatch(setBotData(null))
@@ -18,7 +18,7 @@ export default function DeleteBotNotificationModal() {
 
   const onSubmit = async () => {
     await dispatch(deleteBotOwner(botData))
-    await dispatch(fetBotOwners(new URLSearchParams({ page: queryParams.page.toString() }).toString()))
+    await dispatch(fetBotOwners())
     dispatch(setBotData(null))
     toast.success(`${t("Muvaffaqiyatli o'chirib tashlandi")}`)
     handleClose()

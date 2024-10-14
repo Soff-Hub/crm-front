@@ -27,7 +27,7 @@ export default function CreateBotNotificationModal() {
   const { user } = useContext(AuthContext)
 
   const dispatch = useAppDispatch()
-  const { openCreate, queryParams } = useAppSelector(state => state.logs)
+  const { openCreate } = useAppSelector(state => state.logs)
 
   const handleClose = () => {
     dispatch(setOpenCreate(false))
@@ -100,7 +100,7 @@ export default function CreateBotNotificationModal() {
         return errorCallback(resp.payload)
       }
 
-      await dispatch(fetBotOwners(new URLSearchParams({ page: queryParams.page.toString() }).toString()))
+      await dispatch(fetBotOwners())
       toast.success(`${values.full_name} ${t('bot_success_msg')}`)
       handleClose()
       formik.resetForm()
