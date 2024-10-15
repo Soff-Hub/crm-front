@@ -1,6 +1,7 @@
 import MenuItem from '@mui/material/MenuItem';
 import LoadingButton from '@mui/lab/LoadingButton';
 import {
+    Alert,
     Box,
     Button,
     Dialog,
@@ -21,6 +22,7 @@ import { getAttendance, getDays, getStudents, setGettingAttendance } from 'src/s
 import { useRouter } from 'next/router';
 import { useAppDispatch, useAppSelector } from 'src/store';
 import { getMontNumber } from 'src/@core/utils/gwt-month-name';
+import { useTranslation } from 'react-i18next';
 
 
 export default function EditStudent({ student, id, activate, setActivate, status }: { student: any, id: string, activate: boolean, setActivate: (status: boolean) => void, status: string }) {
@@ -28,7 +30,7 @@ export default function EditStudent({ student, id, activate, setActivate, status
     const dispatch = useAppDispatch()
     const [isLoading, setLoading] = useState(false)
     const { query } = useRouter()
-
+     const {t} = useTranslation()
     const formik = useFormik({
         initialValues: { added_at: student.added_at, status },
         validationSchema: () => Yup.object({
@@ -64,6 +66,7 @@ export default function EditStudent({ student, id, activate, setActivate, status
             <DialogContent sx={{ minWidth: '350px' }}>
                 <Typography sx={{ fontSize: '20px', textAlign: 'center', mb: 3 }}>O'quvchini tahrirlash</Typography>
                 <form onSubmit={formik.handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                <Alert severity="warning">{t('Eslatma')}</Alert>
                     <FormControl>
                         <TextField
                             error={!!formik.errors.added_at && !!formik.touched.added_at}

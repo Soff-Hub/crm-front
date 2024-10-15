@@ -120,7 +120,6 @@ const AddEventSidebar = (props: AddEventSidebarType) => {
       dispatch(deleteEvent(store.selectedEvent.id))
     }
 
-    // calendarApi.getEventById(store.selectedEvent.id).remove()
     handleSidebarClose()
   }
 
