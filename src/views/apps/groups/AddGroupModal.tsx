@@ -26,7 +26,7 @@ import Router from 'next/router'
 import api from 'src/@core/utils/api'
 
 export default function AddGroupModal() {
-  const { isOpenAddGroup, courses, teachers, formParams, queryParams, rooms, initialValues } = useAppSelector(
+  const { isOpenAddGroup, courses, formParams, queryParams, initialValues } = useAppSelector(
     state => state.groups
   )
   const dispatch = useAppDispatch()
@@ -34,6 +34,19 @@ export default function AddGroupModal() {
   const [loading, setLoading] = useState(false)
   const [customWeekdays, setCustomWeekDays] = useState<string[]>([])
   const [roomsData, setRoomsData] = useState<any[] | null>(null)
+
+  const [teachersData, setTeachersData] = useState<TacherItemType[] | null>(null)
+
+  const getTeachers = async () => {
+    await api
+       .get('auth/employees-check-list/?role=teacher')
+       .then(data => {
+         setTeachersData(data.data)
+       })
+       .catch(error => {
+         console.log(error)
+       })
+   }
 
   const getRooms = async () => {
     await api
@@ -46,7 +59,8 @@ export default function AddGroupModal() {
 
   useEffect(() => {
     getRooms()
-  }, [])
+    getTeachers()
+  }, [isOpenAddGroup])
 
   const options = roomsData?.map(item => ({
     label: item?.name,
@@ -311,7 +325,7 @@ export default function AddGroupModal() {
                   value={formik.values.teacher}
                   error={!!formik.errors.teacher && !!formik.touched.teacher}
                 >
-                  {teachers?.map(teacher => (
+                  {teachersData?.map(teacher => (
                     <MenuItem key={teacher.id} value={+teacher.id}>
                       {teacher.first_name}
                     </MenuItem>

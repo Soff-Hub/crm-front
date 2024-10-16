@@ -31,7 +31,7 @@ type GroupsFilterProps = {
 }
 
 export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
-  const { teachers, queryParams, courses } = useAppSelector(state => state.groups)
+  const { queryParams, courses } = useAppSelector(state => state.groups)
   const dispatch = useAppDispatch()
   const [search, setSearch] = useState<string>('')
   const searchVal = useDebounce(search, 600)

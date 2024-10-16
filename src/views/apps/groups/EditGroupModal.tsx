@@ -45,8 +45,6 @@ export default function EditGroupModal() {
     initialValues,
     formParams,
     queryParams,
-    teachers,
-    rooms,
     isGettingGroupDetails
   } = useAppSelector(state => state.groups)
   const dispatch = useAppDispatch()
@@ -55,6 +53,20 @@ export default function EditGroupModal() {
   const [customWeekdays, setCustomWeekDays] = useState<string[]>([])
   const { query } = useRouter()
   const [roomsData, setRoomsData] = useState<any[] | null>(null)
+  const [teachersData, setTeachersData] = useState<TacherItemType[] | null>(null)
+
+  const getTeachers = async () => {
+    await api
+       .get('auth/employees-check-list/?role=teacher')
+       .then(data => {
+         setTeachersData(data.data)
+       })
+       .catch(error => {
+         console.log(error)
+       })
+   }
+ 
+
 
   const getRooms = async () => {
     await api
@@ -67,7 +79,8 @@ export default function EditGroupModal() {
 
   useEffect(() => {
     getRooms()
-  }, [])
+    getTeachers()
+  }, [groupData])
 
   const options = roomsData?.map(item => ({
     label: item?.name,
@@ -388,7 +401,7 @@ export default function EditGroupModal() {
                     onBlur={formik.handleBlur}
                     disablePortal
                     onChange={(e,v) => handleChangeField('room', v?.value)}
-                    value={options.find(option => option.value === formik.values.room) || null}
+                    value={options?.length > 0 && options.find(option => option.value === formik.values.room) || null}
                     options={options}
                     renderInput={params => <TextField {...params} label='Xonalar' />}
                   />
@@ -413,7 +426,7 @@ export default function EditGroupModal() {
                     value={formik.values.teacher}
                     error={!!formik.errors.teacher && formik.touched.teacher}
                   >
-                    {teachers?.map(teacher => (
+                    {teachersData?.map(teacher => (
                       <MenuItem key={teacher.id} value={+teacher.id}>
                         {teacher.first_name}
                       </MenuItem>

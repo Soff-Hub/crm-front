@@ -62,7 +62,6 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
     useEffect(() => {
         getTeachers()
         getCourses()
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     if (isMobile) {
