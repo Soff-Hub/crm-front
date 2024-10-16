@@ -171,10 +171,10 @@ export default function FormsPage() {
 
   const formik = useFormik({
     initialValues: {
-      pixel_code: '',
+      pixel_script: '',
     },
     validationSchema: Yup.object({
-      pixel_code: Yup.string().required('Script kod majburiy'),
+      pixel_script: Yup.string().required('Script kod majburiy'),
     }),
     onSubmit: async (values) => {
       setLoading(true)
@@ -322,15 +322,15 @@ export default function FormsPage() {
           <div>
             <TextField
               label="Script kod"
-              name="pixel_code"
+              name="pixel_script"
               multiline
               sx={{ width: "100%", mb: 2 }}
               rows={4}
-              value={formik.values.pixel_code}
+              value={formik.values.pixel_script}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              error={formik.touched.pixel_code && Boolean(formik.errors.pixel_code)}
-              helperText={formik.touched.pixel_code && formik.errors.pixel_code}
+              error={formik.touched.pixel_script && Boolean(formik.errors.pixel_script)}
+              helperText={formik.touched.pixel_script && formik.errors.pixel_script}
             />
           </div>
         }
