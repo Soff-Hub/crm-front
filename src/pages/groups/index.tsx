@@ -191,7 +191,7 @@ export default function GroupsPage() {
         </Button>
       )}
       {!isMobile && <GroupsFilter isMobile={isMobile} />}
-      <DataTable columns={columns} loading={isLoading} data={groups || []} rowClick={rowClick} color />
+      <DataTable columns={columns} loading={isLoading} data={groups || []} rowClick={rowClick} color text_color/>
       {Math.ceil(groupCount / 10) > 1 && !isLoading && <Pagination defaultPage={queryParams.page ? Number(queryParams.page) : 1} count={Math.ceil(groupCount / 10)} variant="outlined" shape="rounded" onChange={(e: any, page) => handlePagination(page)} />}
 
       <AddGroupModal />
