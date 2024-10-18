@@ -39,4 +39,5 @@ export interface IGroupDetailsState {
     month: string
     date: string
   }[]
+  isLesson: boolean
 }
