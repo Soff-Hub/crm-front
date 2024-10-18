@@ -24,7 +24,8 @@ export interface CourseItemType {
   description: string
   lesson_duration: string
   lesson_duration_seconds: number
-  color: string
+  color: string,
+  text_color?:string
   is_delete: boolean
   branch: {
     name: string

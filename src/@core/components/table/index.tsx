@@ -18,11 +18,12 @@ interface DataTableProps {
   minWidth?: string | undefined
   maxWidth?: string | undefined
   rowClick?: any,
-  color?: boolean | undefined
+  color?: boolean | undefined,
+  text_color?:boolean|undefined
   loading?: boolean
 }
 
-export default function DataTable({ columns, loading = false, data, minWidth, maxWidth, rowClick, color }: DataTableProps) {
+export default function DataTable({ columns, loading = false, data, minWidth, maxWidth, rowClick, color,text_color }: DataTableProps) {
   const { query } = useRouter()
 
   const handleClick = (id: any) => {
@@ -74,7 +75,8 @@ export default function DataTable({ columns, loading = false, data, minWidth, ma
                   boxShadow: 'rgba(0, 0, 0, 0.16) 0px 0px 0px, rgba(0, 0, 0, 0.23) 0px 0px 5px'
                 },
                 position: 'relative',
-                backgroundColor: color ? item.color : 'transparent'
+                backgroundColor: color ? item.color : 'transparent',
+                color:text_color ? item.text_color : "#000000"
               }}
             >
               {columns.map((el: any, i) => (

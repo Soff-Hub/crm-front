@@ -22,7 +22,7 @@ export interface customTableProps {
   xs: number
   title: string
   dataIndex?: string | ReactNode
-  render?: (source: string) => any | undefined
+  render?: (value: any, record?: any, index?: number) => React.ReactNode;
 }
 
 
@@ -38,6 +38,10 @@ export default function RoomsPage() {
     await dispatch(fetchRoomList({ page }))
     dispatch(updatePage(page))
   }
+  const dataSourceWithIndex = rooms?.map((item, index) => ({
+    ...item,
+    index: index + 1
+  }));
 
   useEffect(() => {
     dispatch(fetchRoomList({ page: active_page }))
@@ -58,7 +62,7 @@ export default function RoomsPage() {
     {
       xs: 0.2,
       title: t('ID'),
-      dataIndex: 'id'
+      dataIndex: 'index',
     },
     {
       xs: 1.4,
@@ -98,7 +102,7 @@ export default function RoomsPage() {
           {t("Yangi xona qo'shish")}
         </Button>
       </Box>
-      <DataTable loading={is_pending} columns={columns} data={rooms} />
+      <DataTable loading={is_pending} columns={columns} data={dataSourceWithIndex} />
       {room_count > 1 && !is_pending && <Pagination page={active_page} count={room_count} variant="outlined" shape="rounded" onChange={(e: any, page) => handlePagination(page)} />}
 
       <CreateRoomDialog />

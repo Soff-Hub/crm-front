@@ -51,6 +51,8 @@ export default function SendSmsAnonimUserForm({
                 closeModal()
                 formik.resetForm()
             } catch {
+                 formik.setErrors({message:"Xabar matni belgilangan miqdordan oshib ketdi, maksimal belgilar soni 555ta"})
+                
                 setLoading(false)
             }
         }
