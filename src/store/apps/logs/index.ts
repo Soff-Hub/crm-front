@@ -68,7 +68,7 @@ export const logsSlice = createSlice({
             })
             .addCase(fetBotOwners.fulfilled, (state, action) => {
                 state.isLoading = false
-                state.botNotifications = action.payload?.results
+                state.botNotifications = action.payload
             })
             .addCase(createBotNotification.pending, state => {
                 state.createLoading = true
