@@ -95,7 +95,13 @@ export default function CreateBotNotificationModal() {
       const errorCallback = (err: any) => {
         formik.setErrors(err)
       }
-      const resp = await dispatch(createBotNotification(values))
+      const branches = values.branches.map(el => user?.branches?.find(itm => itm.id === el))
+      const resp = await dispatch(
+        createBotNotification({
+          ...values,
+          branches: branches.map(el => ({ id: el.id, name: el.name }))
+        })
+      )
       if (resp.meta.requestStatus === 'rejected') {
         return errorCallback(resp.payload)
       }
