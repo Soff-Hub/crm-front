@@ -93,15 +93,10 @@ export default function EditStudent({
       <DialogContent sx={{ minWidth: '350px' }}>
         <Typography sx={{ fontSize: '20px', textAlign: 'center', mb: 3 }}>O'quvchini tahrirlash</Typography>
         <form onSubmit={formik.handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-          {isLesson ? (
-            <Alert severity='error'>
-              <AlertTitle>{t('Eslatma')}</AlertTitle>
-              O'quvchi qoshilgan sana tahrirlansa, o'quvchining barcha <br /> qarzdorliklari o'chirilib qayta yaratiladi
-              va to'lovgacha qolgan darslar soni ham o'zgaradi
-            </Alert>
-          ) : (
-            ''
-          )}
+          <Alert severity='error'>
+            <AlertTitle>{t('Eslatma')}</AlertTitle>
+            O'quvchi qoshilgan sana tahrirlansa, o'quvchining barcha <br /> qarzdorliklari o'chirilib qayta yaratiladi{isLesson ? " va to'lovgacha qolgan darslar soni ham o'zgaradi" : ''}
+          </Alert>
           {isLesson && (
             <FormControl>
               <TextField
