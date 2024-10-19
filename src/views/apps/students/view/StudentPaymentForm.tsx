@@ -43,7 +43,7 @@ export default function StudentPaymentForm({ openEdit, setOpenEdit }: Props) {
         payment_type: Yup.string().required("Tanlash majburiy"),
         group: Yup.string().required("Tanlash majburiy"),
         amount: Yup.string().required("Tanlash majburiy"),
-        description: Yup.string().required("Kiritish majburiy"),
+        description: Yup.string(),
         payment_date: Yup.string().required("Tanlash majburiy")
     })
 
