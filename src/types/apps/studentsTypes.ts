@@ -58,7 +58,7 @@ export interface IStudentState {
   openEdit: 'edit' | 'create' | 'delete' | null
   students: StudentsListType
   studentsCount: number
-  studentData: StudentDetailType | UpdateStudentDto | null
+  studentData: (StudentDetailType | null) | StudentDetailType
   isLoading: boolean
   queryParams: StudentsQueryParamsTypes
   groups: any[]
