@@ -135,7 +135,7 @@ const Navigation = (t: any): VerticalNavItemsType => {
             },
             {
               title: t('Bot xabarnoma'),
-              path: '#'
+              path: '/settings/logs/bot-notification'
             }
           ]
         },

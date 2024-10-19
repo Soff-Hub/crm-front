@@ -87,7 +87,7 @@ const Navigation = (t: any): HorizontalNavItemsType => {
             },
             {
               title: t('Bot xabarnoma'),
-              path: '#'
+              path: '/settings/logs/bot-notification'
             }
           ]
         },
