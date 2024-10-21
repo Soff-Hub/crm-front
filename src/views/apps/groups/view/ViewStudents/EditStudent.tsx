@@ -39,18 +39,19 @@ export default function EditStudent({
   setActivate: (status: boolean) => void
   status: string
 }) {
-  const { studentsQueryParams, queryParams } = useAppSelector(state => state.groupDetails)
+  const { studentsQueryParams, queryParams, isLesson } = useAppSelector(state => state.groupDetails)
   const dispatch = useAppDispatch()
   const [isLoading, setLoading] = useState(false)
   const { query } = useRouter()
   const { t } = useTranslation()
+
   const formik = useFormik({
-    initialValues: { added_at: student.added_at, status, lessons: 5 },
+    initialValues: { added_at: student.added_at, status, lesson_count: student.lesson_count },
     validationSchema: () =>
       Yup.object({
         added_at: Yup.string(),
         status: Yup.string(),
-        lessons: Yup.string().nullable()
+        lesson_count: Yup.string()
       }),
     onSubmit: async values => {
       setLoading(true)
@@ -92,21 +93,22 @@ export default function EditStudent({
       <DialogContent sx={{ minWidth: '350px' }}>
         <Typography sx={{ fontSize: '20px', textAlign: 'center', mb: 3 }}>O'quvchini tahrirlash</Typography>
         <form onSubmit={formik.handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-          <Alert severity='warning'>
+          <Alert severity='error'>
             <AlertTitle>{t('Eslatma')}</AlertTitle>
-            O'quvchi qoshilgan sana tahrirlansa, o'quvchining barcha qarzdorliklari o'chirilib qayta yaratiladi
+            O'quvchi qoshilgan sana tahrirlansa, o'quvchining barcha <br /> qarzdorliklari o'chirilib qayta yaratiladi{isLesson ? " va to'lovgacha qolgan darslar soni ham o'zgaradi" : ''}
           </Alert>
-          <FormControl>
-            <TextField
-              size='small'
-              value={formik.values.lessons}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              name='lessons'
-              defaultValue={'12 ta'}
-              label={'Qolgan darslar'}
-            />
-          </FormControl>
+          {isLesson && (
+            <FormControl>
+              <TextField
+                size='small'
+                name='lesson_count'
+                value={formik.values.lesson_count}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                label={'Qolgan darslar'}
+              />
+            </FormControl>
+          )}
           <FormControl>
             <TextField
               error={!!formik.errors.added_at && !!formik.touched.added_at}

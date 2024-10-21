@@ -132,6 +132,11 @@ const HorizontalNavLink = (props: Props) => {
               </ListItemIcon>
               <Typography {...(menuTextTruncate && { noWrap: true })}>
                 <Translations text={item.title} />
+                {/* {item.title === 'Bot xabarnoma' ? (
+                  <Chip label='Tez kunda' size='small' color='info'  style={{ marginLeft: '5px' }} />
+                ) : (
+                  ''
+                )} */}
               </Typography>
             </Box>
             {item.badgeContent ? (

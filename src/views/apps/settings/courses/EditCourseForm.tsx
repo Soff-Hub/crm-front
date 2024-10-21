@@ -31,16 +31,26 @@ export default function EditCourseForm({}: Props) {
     month_duration: Yup.number().required('Nechi oy davom etadi?').max(12, "12 oydan ko'p bo'lmasligi kerak"),
     description: Yup.string(),
     color: Yup.string(),
-    text_color: Yup.string()
+    text_color: Yup.string().nullable()
   })
 
   const formik = useFormik({
-    initialValues: { ...openEditCourse },
+    initialValues: {
+      ...openEditCourse,
+      color: openEditCourse?.color?.split(',')?.[0],
+      text_color: openEditCourse?.color?.split(',')?.[1]
+    },
     validationSchema,
     onSubmit: async values => {
       setLoading(true)
       dispatch(disablePage(true))
-      const resp = await dispatch(editCourse({ ...values, price: revereAmount(`${values?.price}`) }))
+      const resp = await dispatch(
+        editCourse({
+          ...values,
+          price: revereAmount(`${values?.price}`),
+          color: `${values.color},${values.text_color}`
+        })
+      )
       if (resp.meta.requestStatus === 'rejected') {
         formik.setErrors(resp.payload)
         setLoading(false)

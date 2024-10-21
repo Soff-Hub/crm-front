@@ -1,8 +1,8 @@
-import { Box } from '@mui/material';
-import { useRouter } from 'next/router';
-import { ReactNode } from 'react';
-import SubLoader from 'src/views/apps/loaders/SubLoader';
-import EmptyContent from '../empty-content';
+import { Box } from '@mui/material'
+import { useRouter } from 'next/router'
+import { ReactNode } from 'react'
+import SubLoader from 'src/views/apps/loaders/SubLoader'
+import EmptyContent from '../empty-content'
 
 export interface customTableDataProps {
   xs: number
@@ -17,13 +17,22 @@ interface DataTableProps {
   data: any[]
   minWidth?: string | undefined
   maxWidth?: string | undefined
-  rowClick?: any,
-  color?: boolean | undefined,
-  text_color?:boolean|undefined
+  rowClick?: any
+  color?: boolean | undefined
+  text_color?: boolean | undefined
   loading?: boolean
 }
 
-export default function DataTable({ columns, loading = false, data, minWidth, maxWidth, rowClick, color,text_color }: DataTableProps) {
+export default function DataTable({
+  columns,
+  loading = false,
+  data,
+  minWidth,
+  maxWidth,
+  rowClick,
+  color,
+  text_color
+}: DataTableProps) {
   const { query } = useRouter()
 
   const handleClick = (id: any) => {
@@ -53,8 +62,10 @@ export default function DataTable({ columns, loading = false, data, minWidth, ma
           </Box>
         ))}
       </Box>
-      {loading ? <SubLoader /> :
-        data?.length > 0 ? data?.map((item, index) => {
+      {loading ? (
+        <SubLoader />
+      ) : data?.length > 0 ? (
+        data?.map((item, index) => {
           return (
             <Box
               minWidth={minWidth || '1200px'}
@@ -75,22 +86,42 @@ export default function DataTable({ columns, loading = false, data, minWidth, ma
                   boxShadow: 'rgba(0, 0, 0, 0.16) 0px 0px 0px, rgba(0, 0, 0, 0.23) 0px 0px 5px'
                 },
                 position: 'relative',
-                backgroundColor: color ? item.color : 'transparent',
-                color:text_color ? item.text_color : "#000000"
+                backgroundColor: color ? item.color?.split?.(',')?.[0] : 'transparent',
+                color: text_color ? item.color?.split?.(',')?.[1] : ''
               }}
             >
               {columns.map((el: any, i) => (
-                <Box key={i} sx={{ textAlign: 'start', flex: el.xs, pb: '5px' }} pt={'5px !important'} pl={'0 !important'}>
+                <Box
+                  key={i}
+                  sx={{ textAlign: 'start', flex: el.xs, pb: '5px' }}
+                  pt={'5px !important'}
+                  pl={'0 !important'}
+                >
                   <Box sx={{ fontSize: 12, fontWeight: 500 }}>
-                    {el.render ? el.render(item[`${el.dataIndex}`]) : el.renderId ? el.renderId(item.id, item[`${el.dataIndex}`]) : el.dataIndex === 'index' ? `${query.page && Number(query.page) > 1 ? ((Number(query?.page) - 1) * 10 + index + 1) : 1 + index}.` : item[`${el.dataIndex}`]}
+                    {el.render
+                      ? el.render(item[`${el.dataIndex}`])
+                      : el.renderId
+                      ? el.renderId(item.id, item[`${el.dataIndex}`])
+                      : el.dataIndex === 'index'
+                      ? `${
+                          query.page && Number(query.page) > 1 ? (Number(query?.page) - 1) * 10 + index + 1 : 1 + index
+                        }.`
+                      : item[`${el.dataIndex}`]}
                   </Box>
                 </Box>
               ))}
-              {rowClick && <Box sx={{ width: '75%', zIndex: 1, height: '36px', position: 'absolute' }} onClick={() => handleClick(item.id)}></Box>}
+              {rowClick && (
+                <Box
+                  sx={{ width: '75%', zIndex: 1, height: '36px', position: 'absolute' }}
+                  onClick={() => handleClick(item.id)}
+                ></Box>
+              )}
             </Box>
           )
-        }) : <EmptyContent />
-      }
+        })
+      ) : (
+        <EmptyContent />
+      )}
     </div>
   )
 }

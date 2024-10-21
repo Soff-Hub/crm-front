@@ -32,7 +32,7 @@ export default function CreateCourseForm({}: Props) {
     month_duration: Yup.number().required('Nechi oy davom etadi?').max(12, "12 oydan ko'p bo'lmasligi kerak"),
     description: Yup.string(),
     color: Yup.string(),
-    text_color: Yup.string()
+    text_color: Yup.string().nullable()
   })
 
   const formik = useFormik({
@@ -42,13 +42,15 @@ export default function CreateCourseForm({}: Props) {
       month_duration: '',
       description: '',
       color: '#ffffff',
-      text_color: '#ffffff'
+      text_color: null
     },
     validationSchema,
     onSubmit: async values => {
       setLoading(true)
       dispatch(disablePage(true))
-      const resp = await dispatch(createGroup({ ...values, price: revereAmount(values.price) }))
+      const resp = await dispatch(
+        createGroup({ ...values, price: revereAmount(values.price), color: `${values.color},${values.text_color}` })
+      )
       if (resp.meta.requestStatus === 'rejected') {
         formik.setErrors(resp.payload)
         setLoading(false)
