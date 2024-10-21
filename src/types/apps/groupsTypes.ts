@@ -1,7 +1,7 @@
 import { GroupType } from 'src/@fake-db/types'
 import { ILessonResponse } from './dashboardTypes'
 
-interface MetaTypes {
+export interface MetaTypes {
   id: string
   name: string
 }

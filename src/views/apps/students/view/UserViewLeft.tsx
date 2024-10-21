@@ -47,9 +47,10 @@ import { useRouter } from 'next/router'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import StudentParentList from './StudentParentList'
+import StudentWithDrawForm from './StudentWithdrawForm'
 
 
-export type ModalTypes = 'group' | 'payment' | 'sms' | 'delete' | 'edit' | 'notes' | 'parent'
+export type ModalTypes = 'group' | 'withdraw'| 'payment' | 'sms' | 'delete' | 'edit' | 'notes' | 'parent'
 
 
 const UserViewLeft = ({ userData }: { userData: any }) => {
@@ -169,8 +170,9 @@ const UserViewLeft = ({ userData }: { userData: any }) => {
                 <Typography fontSize={13}>{addPeriodToThousands(+data.balance) + " so'm"}</Typography>
               </Box>
             </CardContent>
-            <CardContent sx={{ display: 'flex', justifyContent: 'space-between' }}>
+            <CardContent sx={{ display: 'flex', gap:4, justifyContent: 'space-between' }}>
               <Button size='small' variant='outlined' startIcon={<IconifyIcon icon={'mdi:table-add'} />} onClick={() => handleEditClickOpen('group')}>{t("Guruhga qo'shish")}</Button>
+              <Button color='info' size='small' startIcon={<IconifyIcon icon={'mdi:cash-minus'} />} variant='outlined' onClick={async () => (handleEditClickOpen('withdraw'))}>{t("Pul yechish")}</Button>
               <Button color='warning' size='small' startIcon={<IconifyIcon icon={'mdi:cash-plus'} />} variant='outlined' onClick={async () => (handleEditClickOpen('payment'))}>{t("To'lov")}</Button>
             </CardContent>
             <Box sx={{ display: 'flex', justifyContent: 'center', pb: 3 }}>
@@ -293,6 +295,7 @@ const UserViewLeft = ({ userData }: { userData: any }) => {
         </Dialog>
         {/*   Payment  */}
         <StudentPaymentForm openEdit={openEdit} setOpenEdit={setOpenEdit} />
+        <StudentWithDrawForm openEdit={openEdit} setOpenEdit={setOpenEdit} />
         {/*   Edit Student  */}
         <Dialog
           open={openEdit === "edit"}

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Box, FormControl, InputAdornment, InputLabel, MenuItem, OutlinedInput, Select } from '@mui/material'
+import { Autocomplete, Box, FormControl, InputAdornment, InputLabel, MenuItem, OutlinedInput, Select, TextField } from '@mui/material'
 import { useTranslation } from 'react-i18next'
 import useResponsive from 'src/@core/hooks/useResponsive'
 import IconifyIcon from 'src/@core/components/icon'
@@ -10,16 +10,36 @@ import useDebounce from 'src/hooks/useDebounce'
 import { Toggle } from 'rsuite'
 import 'rsuite/Toggle/styles/index.css'
 import Excel from 'src/@core/components/excelButton/Excel'
+import api from 'src/@core/utils/api'
+import { GroupFormInitialValue, MetaTypes } from 'src/types/apps/groupsTypes'
 
 const StudentsFilter = () => {
   const [search, setSearch] = useState<string>('')
   const dispatch = useAppDispatch()
   const { queryParams } = useAppSelector(state => state.students)
   const { getCourses, courses } = useCourses()
+  const [groups, setGroups] = useState<any>()
+  const [teachers, setTeachers] = useState<any>()
 
   const { t } = useTranslation()
   const { isMobile } = useResponsive()
   const searchVal = useDebounce(search, 800)
+
+  async function getGroups() {
+    await api
+      .get('common/group-check-list/')
+      .then(res => setGroups(res.data))
+      .catch(error => console.log(error))
+  }
+  async function getTeachers() {
+    await api
+      .get('auth/employees-check-list/?role=teacher')
+      .then(res => setTeachers(res.data))
+      .catch(error => console.log(error))
+  }
+
+  console.log(teachers);
+  
 
   async function handleFilter(key: string, value: string | number | null) {
     dispatch(updateStudentParams({ [key]: value }))
@@ -47,8 +67,18 @@ const StudentsFilter = () => {
 
   useEffect(() => {
     getCourses()
+    getGroups()
+    getTeachers()
   }, [])
 
+  const groupOptions = groups?.map((item:MetaTypes) => ({
+    label: item?.name,
+    value: item?.id
+  }))
+  const teacherOptions = teachers?.map((item:any) => ({
+    label: item?.first_name,
+    value: item?.id
+  }))
   useEffect(() => {
     dispatch(fetchStudentsList({ ...queryParams, search: searchVal }))
   }, [searchVal])
@@ -157,6 +187,26 @@ const StudentsFilter = () => {
           </Select>
         </FormControl>
       </Box>
+
+      <Box sx={{ width: '100%' }}>
+        <Autocomplete
+          disablePortal
+          options={groupOptions}
+          onChange={(e: any,v:any) => handleFilter('group', v?.value)}
+          size='small'
+          renderInput={params => <TextField {...params} label='Guruh' />}
+        />
+      </Box>
+      <Box sx={{ width: '100%' }}>
+        <Autocomplete
+          disablePortal
+          options={teacherOptions}
+          onChange={(e: any,v:any) => handleFilter('teacher', v?.value)}
+          size='small'
+          renderInput={params => <TextField {...params} label='Ustoz' />}
+        />
+      </Box>
+
       <Box sx={{ display: 'flex', alignItems: 'center' }}>
         <Toggle
           checked={queryParams.status === 'archive'}

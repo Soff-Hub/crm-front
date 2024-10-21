@@ -10,6 +10,10 @@ export const formatAmount = (value: string) => {
 export const revereAmount = (value: string) => {
     return `${value}`.replace(/\s+/g, '');
 };
+export const convertToNegative = (value: string) => {
+    const numberWithoutSpaces = `${value}`.replace(/\s+/g, '');
+    return `-${numberWithoutSpaces.replace(/^-/, '')}`;
+};
 
 export default function AmountInput(props: TextFieldProps) {
     const [value, setValue] = useState<string>(`${Number(props?.value) >= 0 ? props?.value : ""}`);
