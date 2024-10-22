@@ -353,7 +353,7 @@ export default function EditGroupModal() {
                     <MenuItem value={`tuesday,thursday,saturday`}>Juft kunlari</MenuItem>
                     <MenuItem value={`monday,wednesday,friday`}>Toq kunlari</MenuItem>
                     <MenuItem value={`tuesday,thursday,saturday,monday,wednesday,friday`}>Har kuni</MenuItem>
-                    <MenuItem value={0}>Boshqa</MenuItem>
+                    <MenuItem value={'0'}>Boshqa</MenuItem>
                   </Select>
                   <FormHelperText error={!!formik.errors.day_of_week && formik.touched.day_of_week}>
                     {!!formik.errors.day_of_week && formik.touched.day_of_week && formik.errors.day_of_week}
