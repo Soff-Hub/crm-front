@@ -27,7 +27,8 @@ export interface TeacherType {
 }
 
 export interface IQueryParams {
-  page: number
+  page: number,
+  limit?:number,
   status?: string
   teacher?: string
   course?: string
@@ -72,7 +73,7 @@ export interface IGroupsState {
   groupData: GroupType | null
   groupCount: number
   queryParams: IQueryParams
-  myGroupParams: Pick<IQueryParams, 'page'>
+  myGroupParams:IQueryParams
   formParams: IFormParams
   isDeleting: boolean
   isGettingGroupDetails: boolean

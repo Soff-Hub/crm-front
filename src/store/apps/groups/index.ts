@@ -106,7 +106,8 @@ const initialState: IGroupsState = {
   isGettingGroupDetails: false,
   isLoading: false,
   myGroupParams: {
-    page: 1
+    page: 1,
+    limit:10,
   },
   queryParams: {
     page: 1,
