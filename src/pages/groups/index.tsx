@@ -1,5 +1,5 @@
 //@ts-nocheck
-"use client";
+'use client'
 import {
   Box,
   Button,
@@ -10,36 +10,37 @@ import {
   DialogTitle,
   IconButton,
   Pagination,
-  Typography,
-} from '@mui/material';
-import { ReactNode, useContext, useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import useResponsive from 'src/@core/hooks/useResponsive';
-import { useAppDispatch, useAppSelector } from 'src/store';
+  TablePagination,
+  Typography
+} from '@mui/material'
+import { ReactNode, useContext, useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import useResponsive from 'src/@core/hooks/useResponsive'
+import { useAppDispatch, useAppSelector } from 'src/store'
 import {
   fetchGroups,
   getDashboardLessons,
   getMetaData,
   handleOpenAddModal,
   resetGroupParams,
-  updateParams,
-} from 'src/store/apps/groups';
-import { useRouter } from 'next/router';
-import { videoUrls } from 'src/@core/components/video-header/video-header';
-import { GroupsFilter } from 'src/views/apps/groups/GroupsFilter';
-import getLessonDays from 'src/@core/utils/getLessonDays';
-import dynamic from 'next/dynamic';
-import getMonthName from 'src/@core/utils/gwt-month-name';
-import { AuthContext } from 'src/context/AuthContext';
-import { toast } from 'react-hot-toast';
+  updateParams
+} from 'src/store/apps/groups'
+import { useRouter } from 'next/router'
+import { videoUrls } from 'src/@core/components/video-header/video-header'
+import { GroupsFilter } from 'src/views/apps/groups/GroupsFilter'
+import getLessonDays from 'src/@core/utils/getLessonDays'
+import dynamic from 'next/dynamic'
+import getMonthName from 'src/@core/utils/gwt-month-name'
+import { AuthContext } from 'src/context/AuthContext'
+import { toast } from 'react-hot-toast'
 
-const IconifyIcon = dynamic(() => import('src/@core/components/icon'));
-const DataTable = dynamic(() => import('src/@core/components/table'));
-const MuiDrawer = dynamic(() => import('@mui/material/Drawer'));
-const RowOptions = dynamic(() => import('src/views/apps/groups/RowOptions'));
-const EditGroupModal = dynamic(() => import('src/views/apps/groups/EditGroupModal'));
-const AddGroupModal = dynamic(() => import('src/views/apps/groups/AddGroupModal'));
-const VideoHeader = dynamic(() => import('src/@core/components/video-header/video-header'));
+const IconifyIcon = dynamic(() => import('src/@core/components/icon'))
+const DataTable = dynamic(() => import('src/@core/components/table'))
+const MuiDrawer = dynamic(() => import('@mui/material/Drawer'))
+const RowOptions = dynamic(() => import('src/views/apps/groups/RowOptions'))
+const EditGroupModal = dynamic(() => import('src/views/apps/groups/EditGroupModal'))
+const AddGroupModal = dynamic(() => import('src/views/apps/groups/AddGroupModal'))
+const VideoHeader = dynamic(() => import('src/@core/components/video-header/video-header'))
 
 export interface customTableProps {
   xs: number
@@ -50,15 +51,14 @@ export interface customTableProps {
 }
 
 export const TranslateWeekName: any = {
-  monday: "Dushanba",
-  tuesday: "Seshanba",
-  wednesday: "Chorshanba",
-  thursday: "Payshanba",
-  friday: "Juma",
-  saturday: "Shanba",
-  sunday: "Yakshanba"
+  monday: 'Dushanba',
+  tuesday: 'Seshanba',
+  wednesday: 'Chorshanba',
+  thursday: 'Payshanba',
+  friday: 'Juma',
+  saturday: 'Shanba',
+  sunday: 'Yakshanba'
 }
-
 
 export default function GroupsPage() {
   const { groups, isLoading, queryParams, groupCount } = useAppSelector(state => state.groups)
@@ -68,21 +68,22 @@ export default function GroupsPage() {
   const { t } = useTranslation()
   const [open, setOpen] = useState<boolean>(false)
   const { isMobile } = useResponsive()
-
+  const [page, setPage] = useState<number>(queryParams.page ? Number(queryParams.page) - 1 : 0)
+  const [rowsPerPage, setRowsPerPage] = useState<number>(() => Number(localStorage.getItem('rowsPerPage')) || 10)
   const columns: customTableProps[] = [
     {
       xs: 0.3,
-      title: t("ID"),
+      title: t('ID'),
       dataIndex: 'index'
     },
     {
       xs: 1,
-      title: t("Guruh nomi"),
+      title: t('Guruh nomi'),
       dataIndex: 'name'
     },
     {
       xs: 1,
-      title: t("Kurs"),
+      title: t('Kurs'),
       dataIndex: 'course_name'
     },
     {
@@ -92,14 +93,14 @@ export default function GroupsPage() {
     },
     {
       xs: 1,
-      title: t("Dars Kunlari"),
+      title: t('Dars Kunlari'),
       dataIndex: 'week_days',
       render: (week_days: any) => getLessonDays(week_days)
     },
     {
       xs: 1,
-      title: t("Dars vaqti"),
-      dataIndex: 'start_end_at',
+      title: t('Dars vaqti'),
+      dataIndex: 'start_end_at'
     },
     {
       xs: 1,
@@ -108,31 +109,50 @@ export default function GroupsPage() {
     },
     {
       xs: 0.8,
-      title: t("Ochilgan"),
+      title: t('Ochilgan'),
       dataIndex: 'start_date',
       render: (date: string) => date.split('-').reverse().join('/')
     },
     {
       xs: 0.8,
-      title: t("Yakunlanadi"),
+      title: t('Yakunlanadi'),
       dataIndex: 'end_date',
       render: (date: string) => date.split('-').reverse().join('/')
     },
     {
       xs: 0.7,
-      title: t("Status"),
+      title: t('Status'),
       dataIndex: 'status',
-      render: (status: string) => <Chip label={t(status)} size="small" variant='filled' color={status === 'active' ? 'success' : status === 'archived' ? 'error' : 'warning'} />
+      render: (status: string) => (
+        <Chip
+          label={t(status)}
+          size='small'
+          variant='filled'
+          color={status === 'active' ? 'success' : status === 'archived' ? 'error' : 'warning'}
+        />
+      )
     },
     {
       xs: 0.4,
       dataIndex: 'id',
-      title: t(""),
+      title: t(''),
       render: actions => <RowOptions id={actions} />
     }
   ]
 
+  const handleRowsPerPageChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newLimit = event.target.value
+    setRowsPerPage(event.target.value)
+    localStorage.setItem('rowsPerPage', newLimit)
+
+    dispatch(updateParams(event.target.value))
+    const queryString = new URLSearchParams({ ...queryParams, limit: event.target.value }).toString()
+    await dispatch(fetchGroups(queryString))
+    setPage(0)
+  }
+
   const handlePagination = async (page: string) => {
+    setPage(page)
     dispatch(updateParams({ page }))
     const queryString = new URLSearchParams({ ...queryParams, page }).toString()
     await dispatch(fetchGroups(queryString))
@@ -148,14 +168,20 @@ export default function GroupsPage() {
   }
 
   const pageLoad = async () => {
-    await Promise.all([
-      dispatch(getMetaData())
-    ])
+    if (!queryParams.limit) {
+      dispatch(updateParams({ limit: rowsPerPage }))
+      const queryString = new URLSearchParams({ ...queryParams, limit: rowsPerPage }).toString()
+      await dispatch(fetchGroups(queryString))
+    } else {
+      await dispatch(fetchGroups(new URLSearchParams(queryParams).toString()))
+    }
+
+    await dispatch(getMetaData())
   }
 
   useEffect(() => {
     if (!user?.role.includes('ceo') && !user?.role.includes('admin')) {
-      router.push("/")
+      router.push('/')
       toast.error('Sahifaga kirish huquqingiz yoq!')
     }
     pageLoad()
@@ -173,8 +199,8 @@ export default function GroupsPage() {
         py={2}
       >
         <Box sx={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-          <Typography variant='h5'>{t("Guruhlar")}</Typography>
-          {!isLoading && <Chip label={`${groupCount}`} variant='outlined' color="primary" />}
+          <Typography variant='h5'>{t('Guruhlar')}</Typography>
+          {!isLoading && <Chip label={`${groupCount}`} variant='outlined' color='primary' />}
         </Box>
         <Button
           onClick={handleOpenModal}
@@ -186,13 +212,35 @@ export default function GroupsPage() {
         </Button>
       </Box>
       {isMobile && (
-        <Button size='small' sx={{ marginLeft: 'auto', width: "100%" }} variant='outlined' onClick={() => setOpen(true)}>
+        <Button
+          size='small'
+          sx={{ marginLeft: 'auto', width: '100%' }}
+          variant='outlined'
+          onClick={() => setOpen(true)}
+        >
           {t('Filterlash')}
         </Button>
       )}
       {!isMobile && <GroupsFilter isMobile={isMobile} />}
-      <DataTable columns={columns} loading={isLoading} data={groups || []} rowClick={rowClick} color text_color/>
-      {Math.ceil(groupCount / 10) > 1 && !isLoading && <Pagination defaultPage={queryParams.page ? Number(queryParams.page) : 1} count={Math.ceil(groupCount / 10)} variant="outlined" shape="rounded" onChange={(e: any, page) => handlePagination(page)} />}
+      <DataTable columns={columns} loading={isLoading} data={groups || []} rowClick={rowClick} color text_color />
+      {Math.ceil(groupCount / 10) > 1 && !isLoading && (
+        // <Pagination
+        //   defaultPage={queryParams.page ? Number(queryParams.page) : 1}
+        //   count={Math.ceil(groupCount / 10)}
+        //   variant='outlined'
+        //   shape='rounded'
+        //   onChange={(e: any, page) => handlePagination(page)}
+        // />
+        <TablePagination
+          component='div'
+          count={groupCount}
+          page={page}
+          onPageChange={(e: any, page) => handlePagination(page)}
+          rowsPerPage={rowsPerPage}
+          onRowsPerPageChange={(e: any, limit) => handleRowsPerPageChange(e)}
+          rowsPerPageOptions={[5, 10, 25, 50]}
+        />
+      )}
 
       <AddGroupModal />
       <EditGroupModal />

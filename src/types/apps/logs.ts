@@ -29,7 +29,7 @@ export interface BotNotificationItem {
 export interface ILogsState {
     paymentLogs: PaymentLogItem[]
     paymentCount: number
-    queryParams: { page: number }
+    queryParams: { page: number,search:string }
     isLoading: boolean
     botNotifications: BotNotificationItem[]
     botNotificationsCount: number

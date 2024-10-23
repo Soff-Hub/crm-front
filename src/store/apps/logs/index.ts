@@ -28,7 +28,7 @@ export const deleteBotOwner = createAsyncThunk('logs/deleteBotOwner', async (id:
 })
 
 const initialState: ILogsState = {
-    queryParams: { page: 1 },
+    queryParams: { page: 1 ,search:""},
     isLoading: false,
     paymentLogs: [],
     paymentCount: 0,
@@ -50,7 +50,7 @@ export const logsSlice = createSlice({
             state.botData = action.payload
         },
         updateQueryParams: (state, action) => {
-            state.queryParams = { page: action.payload }
+            state.queryParams = { ...state.queryParams, ...action.payload}
         }
     },
     extraReducers: builder => {

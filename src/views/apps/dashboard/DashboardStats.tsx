@@ -17,7 +17,11 @@ export default function DashboardStats() {
     const { t } = useTranslation()
 
     function click(link: string) {
-        if (link === 'debtor_users') {
+        if (link === "debtors_amount") {
+            dispatch(updateStudentParams({ is_debtor: true, last_payment: '' }))
+            return push('/students')
+        }
+        else if (link === 'debtor_users') {
             dispatch(updateStudentParams({ is_debtor: true, last_payment: '' }))
             return push('/students')
         } else if (link === 'last_payment') {
@@ -41,6 +45,7 @@ export default function DashboardStats() {
         active_groups: "Ayni vaqtda faol guruhlar soni",
         active_students: "Ayni vaqtda faol o'quvchilar soni",
         debtor_users: "Qarzdor o'quvchilar soni",
+        debtors_amount:"Kelishi kerak bo'lgan qarzlar",
         leads_count: "Kurslarga ro'yxatdan o'tgan faol lidlar soni",
         not_activated_students: "Sinov darsiga kelib ketgan o'quvchilar soni",
         payment_approaching: "To'lov qilishiga 7 kundan kam qolgan o'quvchilar soni",
@@ -49,7 +54,7 @@ export default function DashboardStats() {
     }
 
     return (
-        <Box sx={{ display: 'grid', gap: '10px', mb: 5, gridTemplateColumns: `repeat(${isMobile ? 3 : isTablet ? 4 : 8}, 1fr)` }} >
+        <Box sx={{ display: 'grid', gap: '10px', mb: 5, gridTemplateColumns: `repeat(${isMobile ? 3 : isTablet ? 4 : 9}, 1fr)` }} >
             {
                 isStatsLoading ? statsData.map((_, index) => (
                     <Box key={index} className='' sx={{ cursor: 'pointer' }} onClick={() => click(_.link)}>
