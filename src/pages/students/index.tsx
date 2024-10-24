@@ -139,22 +139,23 @@ export default function GroupsPage() {
     setPage(0)
   }
 
-  const handlePagination = async(page:string) => {
+  const handlePagination = async (page: string) => {
+    const adjustedPage = Number(page) + 1
     setPage(Number(page))
-    await dispatch(fetchStudentsList({ ...queryParams,page }))
-    dispatch(updateStudentParams({ page }))
+
+    await dispatch(fetchStudentsList({ ...queryParams, page: String(adjustedPage) }))
+    dispatch(updateStudentParams({ page: adjustedPage }))
   }
+
   const pageLoad = async () => {
     if (!queryParams.limit) {
-      dispatch(updateStudentParams({ limit: rowsPerPage }));
-      
-      // Dispatch fetchStudentsList with the queryParams object directly
-      await dispatch(fetchStudentsList({ ...queryParams, limit: String(rowsPerPage) }));
+      dispatch(updateStudentParams({ limit: rowsPerPage }))
+
+      await dispatch(fetchStudentsList({ ...queryParams, limit: String(rowsPerPage) }))
     } else {
-      // Dispatch fetchStudentsList with the existing queryParams object
-      await dispatch(fetchStudentsList(queryParams));
+      await dispatch(fetchStudentsList(queryParams))
     }
-  };
+  }
 
   const rowClick = (id: any) => {
     router.push(`/students/view/security?student=${id}`)
@@ -210,6 +211,12 @@ export default function GroupsPage() {
           rowsPerPage={rowsPerPage}
           onRowsPerPageChange={(e: any) => handleRowsPerPageChange(e)}
           rowsPerPageOptions={[5, 10, 25, 50]}
+          labelDisplayedRows={({ from, to, count }) => {
+            const adjustedFrom = from === 0 ? 1 : from
+            const adjustedTo = to === 0 ? 1 : to
+
+            return `${adjustedFrom} - ${adjustedTo} of ${count !== -1 ? count : `more than ${adjustedTo}`}`
+          }}
         />
       )}
       <CreateStudentModal />
