@@ -159,6 +159,11 @@ const Navigation = (t: any): VerticalNavItemsType => {
           path: '/reports/student-payment'
         }
       ]
+    },
+    {
+      title: t('Davomatlar'),
+      icon: 'tabler:clipboard-check',
+      path: '/attendances'
     }
     // {
     //   title: t("Video qo'llanmalar"),
@@ -242,15 +247,19 @@ const Navigation = (t: any): VerticalNavItemsType => {
           path: '/reports/student-payment'
         }
       ]
+    },
+    {
+      title: t('Davomatlar'),
+      icon: 'tabler:clipboard-check',
+      path: '/attendances'
     }
   ]
-
 
   return user?.role.includes('ceo')
     ? items
     : user?.role.includes('casher')
-      ? items.filter(el => el.path == '/finance')
-      : adminItems
+    ? items.filter(el => el.path == '/finance')
+    : adminItems
 }
 
 export default Navigation

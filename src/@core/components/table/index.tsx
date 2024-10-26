@@ -8,6 +8,7 @@ export interface customTableDataProps {
   xs: number
   title: string | React.ReactNode
   dataIndex?: string | ReactNode
+  renderItem?: (source: any) => any | undefined
   render?: (source: string) => any | undefined
   renderId?: (id: any, source: any) => any | undefined
 }
@@ -100,6 +101,8 @@ export default function DataTable({
                   <Box sx={{ fontSize: 12, fontWeight: 500 }}>
                     {el.render
                       ? el.render(item[`${el.dataIndex}`])
+                      : el.renderItem
+                      ? el.renderItem(item)
                       : el.renderId
                       ? el.renderId(item.id, item[`${el.dataIndex}`])
                       : el.dataIndex === 'index'

@@ -45,6 +45,7 @@ export interface customTableProps {
   xs: number
   title: string
   dataIndex?: string | ReactNode
+  renderItem?: (source: any) => any | undefined
   render?: (source: string) => any | undefined
   renderId?: (id: any, source: any) => any | undefined
 }

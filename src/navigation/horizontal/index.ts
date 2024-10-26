@@ -111,6 +111,16 @@ const Navigation = (t: any): HorizontalNavItemsType => {
           path: '/reports/student-payment'
         }
       ]
+    },
+    {
+      title: t("O'quvchilar"),
+      icon: 'mdi:account-student',
+      path: '/students'
+    },
+    {
+      title: t('Davomatlar'),
+      icon: 'tabler:clipboard-check',
+      path: '/attendances'
     }
     // {
     //   title: t("Video qo'llanmalar"),
@@ -118,7 +128,6 @@ const Navigation = (t: any): HorizontalNavItemsType => {
     //   path: '/video-tutorials'
     // }
   ]
-
 
   const adminItems = [
     {
@@ -195,14 +204,19 @@ const Navigation = (t: any): HorizontalNavItemsType => {
           path: '/reports/student-payment'
         }
       ]
+    },
+    {
+      title: t('Davomatlar'),
+      icon: 'tabler:clipboard-check',
+      path: '/attendances'
     }
   ]
 
   return user?.role.includes('ceo')
     ? items
     : user?.role.includes('casher')
-      ? items.filter(el => el.path == '/finance')
-      : adminItems
+    ? items.filter(el => el.path == '/finance')
+    : adminItems
 }
 
 export default Navigation
