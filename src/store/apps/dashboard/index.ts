@@ -33,13 +33,13 @@ const statsData: StatsDataType[] = [
     key: 'debtor_users',
     link: 'debtor_users'
   },
-  // {
-  //   icon: 'material-symbols-light:warning-outline',
-  //   title: "To'lovi yaqin",
-  //   color: 'warning',
-  //   key: 'payment_approaching',
-  //   link: 'last_payment'
-  // },
+  {
+    icon: 'material-symbols-light:warning-outline',
+    title: "To'lovi yaqin",
+    color: 'warning',
+    key: 'payment_approaching',
+    link: 'last_payment'
+  },
   {
     icon: 'arcticons:studentid',
     title: 'Faol talabalar',

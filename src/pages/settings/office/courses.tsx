@@ -141,7 +141,13 @@ export default function GroupsPage() {
           {t("Yangi kurs qo'shish")}
         </Button>
       </Box>
-      <DataTable loading={is_pending} columns={columns} data={course_list?.results} color text_color />
+      <DataTable
+        loading={is_pending}
+        columns={course_list.is_lesson_count ? columns : columns.filter(el => el.dataIndex !== 'lesson_count')}
+        data={course_list?.results}
+        color
+        text_color
+      />
       {Math.ceil(course_list?.count / 10) > 1 && !is_pending && (
         <Pagination
           defaultPage={courseQueryParams.page ? Number(courseQueryParams.page) : 1}
