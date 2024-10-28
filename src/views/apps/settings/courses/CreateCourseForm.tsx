@@ -2,7 +2,7 @@ import LoadingButton from '@mui/lab/LoadingButton'
 import { FormControl, FormHelperText, InputLabel, MenuItem, Select, TextField } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useAppDispatch } from 'src/store'
+import { useAppDispatch, useAppSelector } from 'src/store'
 import { createGroup, fetchCoursesList, setOpenCreateSms } from 'src/store/apps/settings'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
@@ -18,7 +18,8 @@ type Props = {}
 export default function CreateCourseForm({}: Props) {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
-  const { branches, getBranches } = useBranches()
+  const { getBranches } = useBranches()
+  const { course_list } = useAppSelector(state => state.settings)
 
   const [loading, setLoading] = useState<boolean>(false)
 
@@ -42,7 +43,8 @@ export default function CreateCourseForm({}: Props) {
       month_duration: '',
       description: '',
       color: '#ffffff',
-      text_color: null
+      text_color: null,
+      lesson_count: 0
     },
     validationSchema,
     onSubmit: async values => {
@@ -129,6 +131,24 @@ export default function CreateCourseForm({}: Props) {
           <FormHelperText error>{errors.month_duration}</FormHelperText>
         )}
       </FormControl>
+
+      {course_list.is_lesson_count ? (
+        <FormControl fullWidth>
+          <TextField
+            type='number'
+            label={t("To'lov uchun darslar soni")}
+            size='small'
+            name='lesson_count'
+            error={!!errors.lesson_count && touched.lesson_count}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            value={values.lesson_count}
+          />
+          {errors.lesson_count && touched.lesson_count && <FormHelperText error>{errors.lesson_count}</FormHelperText>}
+        </FormControl>
+      ) : (
+        ''
+      )}
 
       <FormControl fullWidth>
         <TextField

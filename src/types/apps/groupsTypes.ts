@@ -28,12 +28,13 @@ export interface TeacherType {
 
 export interface IQueryParams {
   page: number,
-  limit?:number,
+  limit?: number,
   status?: string
   teacher?: string
   course?: string
   day_of_week?: string
-  is_recovery?: boolean
+  is_recovery?: boolean,
+  search?: string
 }
 
 export interface IFormParams {
@@ -73,7 +74,7 @@ export interface IGroupsState {
   groupData: GroupType | null
   groupCount: number
   queryParams: IQueryParams
-  myGroupParams:IQueryParams
+  myGroupParams: IQueryParams
   formParams: IFormParams
   isDeleting: boolean
   isGettingGroupDetails: boolean

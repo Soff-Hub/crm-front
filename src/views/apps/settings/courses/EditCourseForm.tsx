@@ -17,7 +17,7 @@ export default function EditCourseForm({}: Props) {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
   const { branches, getBranches } = useBranches()
-  const { openEditCourse } = useAppSelector(state => state.settings)
+  const { openEditCourse, course_list } = useAppSelector(state => state.settings)
 
   const [loading, setLoading] = useState<boolean>(false)
 
@@ -38,7 +38,8 @@ export default function EditCourseForm({}: Props) {
     initialValues: {
       ...openEditCourse,
       color: openEditCourse?.color?.split(',')?.[0],
-      text_color: openEditCourse?.color?.split(',')?.[1]
+      text_color: openEditCourse?.color?.split(',')?.[1],
+      lesson_count: openEditCourse?.lesson_count
     },
     validationSchema,
     onSubmit: async values => {
@@ -129,6 +130,24 @@ export default function EditCourseForm({}: Props) {
           <FormHelperText error>{errors.month_duration}</FormHelperText>
         )}
       </FormControl>
+
+      {course_list.is_lesson_count ? (
+        <FormControl fullWidth>
+          <TextField
+            type='number'
+            label={t("To'lov uchun darslar soni")}
+            size='small'
+            name='lesson_count'
+            error={!!errors.lesson_count && touched.lesson_count}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            value={values.lesson_count}
+          />
+          {errors.lesson_count && touched.lesson_count && <FormHelperText error>{errors.lesson_count}</FormHelperText>}
+        </FormControl>
+      ) : (
+        ''
+      )}
 
       <FormControl fullWidth>
         <TextField

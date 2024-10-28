@@ -159,7 +159,7 @@ const initialState: SettingsState = {
   sms_list: [],
   openCreateSms: false,
   openEditSms: null,
-  course_list: { count: 0, results: [] },
+  course_list: { count: 0, results: [], is_lesson_count: false },
   openEditCourse: null,
   rooms: [],
   openEditRoom: null,
