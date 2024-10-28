@@ -109,19 +109,15 @@ const Navigation = (t: any): HorizontalNavItemsType => {
         {
           title: "O'quvchilar to'lovi",
           path: '/reports/student-payment'
+        },
+        {
+          title: t('Davomatlar'),
+          icon: 'tabler:clipboard-check',
+          path: '/reports/attendances'
         }
       ]
     },
-    {
-      title: t("O'quvchilar"),
-      icon: 'mdi:account-student',
-      path: '/students'
-    },
-    {
-      title: t('Davomatlar'),
-      icon: 'tabler:clipboard-check',
-      path: '/attendances'
-    }
+   
     // {
     //   title: t("Video qo'llanmalar"),
     //   icon: 'ph:video-light',
@@ -202,14 +198,15 @@ const Navigation = (t: any): HorizontalNavItemsType => {
         {
           title: "O'quvchilar to'lovi",
           path: '/reports/student-payment'
+        },
+        {
+          title: t('Davomatlar'),
+          icon: 'tabler:clipboard-check',
+          path: '/reports/attendances'
         }
       ]
     },
-    {
-      title: t('Davomatlar'),
-      icon: 'tabler:clipboard-check',
-      path: '/attendances'
-    }
+  
   ]
 
   return user?.role.includes('ceo')

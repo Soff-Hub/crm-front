@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import VideoHeader, { videoUrls } from 'src/@core/components/video-header/video-header'
 import api from 'src/@core/utils/api'
-import { customTableProps } from '../groups'
+import { customTableProps } from '../../groups'
 import RowOptions from 'src/views/apps/groups/RowOptions'
 import { useRouter } from 'next/router'
 import getMonthName from 'src/@core/utils/gwt-month-name'
@@ -60,8 +60,9 @@ export default function Attandences() {
     const rowClick = (id: any) => {
         router.push(`/groups/view/security?id=${id}&month=${getMonthName(null)}`)
       }
-    useEffect(() => {
-     dispatch(fetchAttendances(""))
+  useEffect(() => {
+    const queryString = new URLSearchParams({ ...queryParams }).toString()
+     dispatch(fetchAttendances(queryString))
     }, []) 
     
     
