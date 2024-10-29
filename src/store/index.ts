@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux'
 import { TypedUseSelectorHook, useSelector } from 'react-redux'
 // ** Reducers
 import chat from 'src/store/apps/chat'
+import attendance from 'src/store/apps/attandance'
 import user from 'src/store/apps/user'
 import email from 'src/store/apps/email'
 import invoice from 'src/store/apps/invoice'
@@ -47,7 +48,9 @@ export const store = configureStore({
     companyDetails,
     studentPayments,
     employeeAttendance,
-    logs
+    logs,
+    attendance
+    
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({

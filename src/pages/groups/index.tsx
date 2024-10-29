@@ -1,4 +1,3 @@
-//@ts-nocheck
 'use client'
 import {
   Box,
@@ -46,6 +45,7 @@ export interface customTableProps {
   xs: number
   title: string
   dataIndex?: string | ReactNode
+  renderItem?: (source: any) => any | undefined
   render?: (source: string) => any | undefined
   renderId?: (id: any, source: any) => any | undefined
 }
@@ -141,26 +141,48 @@ export default function GroupsPage() {
   ]
 
   const handleRowsPerPageChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newLimit = event.target.value
-    setRowsPerPage(event.target.value)
-    localStorage.setItem('rowsPerPage', newLimit)
+    const limit = event.target.value;
+    
+    setRowsPerPage(Number(limit));
+    localStorage.setItem('rowsPerPage', limit);
+  
+    const updatedParams = { ...queryParams, limit: String(limit) };
+  
+    const stringParams = Object.fromEntries(
+      Object.entries(updatedParams).map(([key, value]) => [key, String(value)])
+    );
+  
+    const queryString = new URLSearchParams(stringParams).toString();
+  
+    dispatch(updateParams({ limit: Number(limit) }));
+  
+    await dispatch(fetchGroups(queryString));
+  
+    setPage(0);
+  };
+  
 
-    dispatch(updateParams(event.target.value))
-    const queryString = new URLSearchParams({ ...queryParams, limit: event.target.value }).toString()
-    await dispatch(fetchGroups(queryString))
-    setPage(0)
-  }
 
   const handlePagination = async (page: string) => {
-    setPage(page)
-    dispatch(updateParams({ page }))
-    const queryString = new URLSearchParams({ ...queryParams, page }).toString()
-    await dispatch(fetchGroups(queryString))
-  }
+    const adjustedPage = Number(page) + 1;
+    setPage(Number(page));
+  
+    const updatedParams = { ...queryParams, page: String(adjustedPage) };
+  
+    const stringParams = Object.fromEntries(
+      Object.entries(updatedParams).map(([key, value]) => [key, String(value)])
+    );
+  
+    const queryString = new URLSearchParams(stringParams).toString();
+  
+    dispatch(updateParams({ page: adjustedPage }));
+  
+    await dispatch(fetchGroups(queryString));
+  };
 
   const handleOpenModal = async () => {
     dispatch(handleOpenAddModal(true))
-    await dispatch(getDashboardLessons())
+    await dispatch(getDashboardLessons(""))
   }
 
   const rowClick = (id: any) => {
@@ -170,10 +192,9 @@ export default function GroupsPage() {
   const pageLoad = async () => {
     if (!queryParams.limit) {
       dispatch(updateParams({ limit: rowsPerPage }))
-      const queryString = new URLSearchParams({ ...queryParams, limit: rowsPerPage }).toString()
-      await dispatch(fetchGroups(queryString))
+      await dispatch(fetchGroups(String(queryParams.limit)))
     } else {
-      await dispatch(fetchGroups(new URLSearchParams(queryParams).toString()))
+      await dispatch(fetchGroups(new URLSearchParams(String(queryParams)).toString()))
     }
 
     await dispatch(getMetaData())
@@ -235,9 +256,9 @@ export default function GroupsPage() {
           component='div'
           count={groupCount}
           page={page}
-          onPageChange={(e: any, page) => handlePagination(page)}
+          onPageChange={(e: any, page) => handlePagination(String(page))}
           rowsPerPage={rowsPerPage}
-          onRowsPerPageChange={(e: any, limit) => handleRowsPerPageChange(e)}
+          onRowsPerPageChange={(e: any) => handleRowsPerPageChange(e)}
           rowsPerPageOptions={[5, 10, 25, 50]}
         />
       )}

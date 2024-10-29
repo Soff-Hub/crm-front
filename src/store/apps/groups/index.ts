@@ -61,7 +61,7 @@ export const deleteGroups = createAsyncThunk(
   }
 )
 
-export const fetchGroups = createAsyncThunk('groups/fetchGroups', async (queryString: string = '') => {
+export const fetchGroups = createAsyncThunk('groups/fetchGroups', async (queryString: any) => {
   const resp = await api.get(ceoConfigs.groups + '?' + queryString)
   return resp.data
 })

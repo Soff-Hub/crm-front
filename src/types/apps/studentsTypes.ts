@@ -106,10 +106,11 @@ export interface StudentDetailType {
 }
 
 export interface StudentsQueryParamsTypes {
-  search?: string
+  search?: string,
+  limit?:string,
   course?: number | null
   status?: string | any
-  page?: number
+  page?: string
   is_debtor?: any
   last_payment?: any
   group_status?: '' | 'new' | 'frozen' | 'active' | 'archive'

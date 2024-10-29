@@ -157,9 +157,15 @@ const Navigation = (t: any): VerticalNavItemsType => {
         {
           title: "O'quvchilar to'lovi",
           path: '/reports/student-payment'
+        },
+        {
+          title: t('Davomatlar'),
+          icon: 'tabler:clipboard-check',
+          path: '/reports/attendances'
         }
       ]
-    }
+    },
+  
     // {
     //   title: t("Video qo'llanmalar"),
     //   icon: 'ph:video-light',
@@ -240,17 +246,22 @@ const Navigation = (t: any): VerticalNavItemsType => {
         {
           title: "O'quvchilar to'lovi",
           path: '/reports/student-payment'
+        },
+        {
+          title: t('Davomatlar'),
+          icon: 'tabler:clipboard-check',
+          path: '/reports/attendances'
         }
       ]
-    }
+    },
+   
   ]
-
 
   return user?.role.includes('ceo')
     ? items
     : user?.role.includes('casher')
-      ? items.filter(el => el.path == '/finance')
-      : adminItems
+    ? items.filter(el => el.path == '/finance')
+    : adminItems
 }
 
 export default Navigation
