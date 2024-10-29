@@ -8,7 +8,6 @@ import {
   DialogContent,
   DialogTitle,
   IconButton,
-  Pagination,
   TablePagination,
   Typography
 } from '@mui/material'
@@ -141,48 +140,42 @@ export default function GroupsPage() {
   ]
 
   const handleRowsPerPageChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const limit = event.target.value;
-    
-    setRowsPerPage(Number(limit));
-    localStorage.setItem('rowsPerPage', limit);
-  
-    const updatedParams = { ...queryParams, limit: String(limit) };
-  
-    const stringParams = Object.fromEntries(
-      Object.entries(updatedParams).map(([key, value]) => [key, String(value)])
-    );
-  
-    const queryString = new URLSearchParams(stringParams).toString();
-  
-    dispatch(updateParams({ limit: Number(limit) }));
-  
-    await dispatch(fetchGroups(queryString));
-  
-    setPage(0);
-  };
-  
+    const limit = event.target.value
 
+    setRowsPerPage(Number(limit))
+    localStorage.setItem('rowsPerPage', limit)
+
+    const updatedParams = { ...queryParams, limit: String(limit) }
+
+    const stringParams = Object.fromEntries(Object.entries(updatedParams).map(([key, value]) => [key, String(value)]))
+
+    const queryString = new URLSearchParams(stringParams).toString()
+
+    dispatch(updateParams({ limit: Number(limit) }))
+
+    await dispatch(fetchGroups(queryString))
+
+    setPage(0)
+  }
 
   const handlePagination = async (page: string) => {
-    const adjustedPage = Number(page) + 1;
-    setPage(Number(page));
-  
-    const updatedParams = { ...queryParams, page: String(adjustedPage) };
-  
-    const stringParams = Object.fromEntries(
-      Object.entries(updatedParams).map(([key, value]) => [key, String(value)])
-    );
-  
-    const queryString = new URLSearchParams(stringParams).toString();
-  
-    dispatch(updateParams({ page: adjustedPage }));
-  
-    await dispatch(fetchGroups(queryString));
-  };
+    const adjustedPage = Number(page) + 1
+    setPage(Number(page))
+
+    const updatedParams = { ...queryParams, page: String(adjustedPage) }
+
+    const stringParams = Object.fromEntries(Object.entries(updatedParams).map(([key, value]) => [key, String(value)]))
+
+    const queryString = new URLSearchParams(stringParams).toString()
+
+    dispatch(updateParams({ page: adjustedPage }))
+
+    await dispatch(fetchGroups(queryString))
+  }
 
   const handleOpenModal = async () => {
     dispatch(handleOpenAddModal(true))
-    await dispatch(getDashboardLessons(""))
+    await dispatch(getDashboardLessons(''))
   }
 
   const rowClick = (id: any) => {
@@ -190,22 +183,32 @@ export default function GroupsPage() {
   }
 
   const pageLoad = async () => {
-    if (!queryParams.limit) {
-      dispatch(updateParams({ limit: rowsPerPage }))
-      await dispatch(fetchGroups(String(queryParams.limit)))
-    } else {
-      await dispatch(fetchGroups(new URLSearchParams(String(queryParams)).toString()))
+    const queryString = new URLSearchParams(
+      Object.fromEntries(Object.entries(queryParams).map(([key, value]) => [key, String(value)]))
+    ).toString()
+
+    if (queryString) {
+      await dispatch(fetchGroups(queryString))
     }
 
     await dispatch(getMetaData())
   }
 
   useEffect(() => {
-    if (!user?.role.includes('ceo') && !user?.role.includes('admin')) {
-      router.push('/')
-      toast.error('Sahifaga kirish huquqingiz yoq!')
+    const initializePage = async () => {
+      if (!user?.role.includes('ceo') && !user?.role.includes('admin')) {
+        router.push('/')
+        toast.error('Sahifaga kirish huquqingiz yoq!')
+      } else {
+        if (!queryParams.limit) {
+          dispatch(updateParams({ limit: rowsPerPage }))
+        }
+        await pageLoad()
+      }
     }
-    pageLoad()
+
+    initializePage()
+
     return () => {
       dispatch(resetGroupParams())
     }
