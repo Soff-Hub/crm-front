@@ -58,8 +58,8 @@ const StudentsFilter = () => {
       return
     }
     if (key === 'status') {
-      dispatch(updateStudentParams({ group_status: '' }))
-      await dispatch(fetchStudentsList({ status: value, group_status: '' }))
+      dispatch(updateStudentParams({ group_status: '',status:value }))
+      await dispatch(fetchStudentsList({...queryParams, [key]: value }))
     } else {
       await dispatch(fetchStudentsList({ ...queryParams, [key]: value }))
     }
