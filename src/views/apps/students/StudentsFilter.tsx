@@ -222,7 +222,7 @@ const StudentsFilter = () => {
           }}
         />
       </Box>
-      <Excel url='/common/students/export/' queryString={queryString} />
+      {/* <Excel url='/common/students/export/' queryString={queryString} /> */}
     </Box>
   )
 }
