@@ -6,7 +6,7 @@ import { IStudentState, StudentsQueryParamsTypes } from 'src/types/apps/students
 export const fetchStudentsList = createAsyncThunk(
   'students/fetchStudentsList',
   async (params?: StudentsQueryParamsTypes | undefined) => {
-    return (await api.get(`auth/student/list/`, { params })).data
+    return (await api.get(`auth/students-list/`, { params })).data
   }
 )
 
@@ -61,7 +61,7 @@ const initialState: IStudentState = {
   studentsCount: 0,
   studentData: null,
   isLoading: false,
-  queryParams: { status: 'active', is_debtor: '', group_status: '' },
+  queryParams: { status: 'active', is_debtor: '', group_status: '', offset: '0', },
   payments: [],
   global_pay: false
 }

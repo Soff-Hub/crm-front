@@ -100,7 +100,7 @@ export default function DataTable({
                 >
                   <Box sx={{ fontSize: 12, fontWeight: 500 }}>
                     {el.render
-                      ? el.render(item[`${el.dataIndex}`])
+                      ? el.render(el.dataIndex === 'index' ? index + 1 : item[`${el.dataIndex}`])
                       : el.renderItem
                       ? el.renderItem(item)
                       : el.renderId
