@@ -79,7 +79,9 @@ export const appUsersSlice = createSlice({
         on_absent: true,
         birthday_text: 'Text',
         on_birthday: true,
-        absent_text: 'Text'
+        absent_text: 'Text',
+        payment_warning: true,
+        payment_text:"Text"
       },
       sms_limit: '0/0'
     },
