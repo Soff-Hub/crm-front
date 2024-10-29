@@ -112,7 +112,6 @@ const Navigation = (t: any): HorizontalNavItemsType => {
         },
         {
           title: t('Davomatlar'),
-          icon: 'tabler:clipboard-check',
           path: '/reports/attendances'
         }
       ]
@@ -201,7 +200,6 @@ const Navigation = (t: any): HorizontalNavItemsType => {
         },
         {
           title: t('Davomatlar'),
-          icon: 'tabler:clipboard-check',
           path: '/reports/attendances'
         }
       ]
