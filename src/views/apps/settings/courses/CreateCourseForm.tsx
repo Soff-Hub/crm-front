@@ -51,7 +51,7 @@ export default function CreateCourseForm({}: Props) {
       setLoading(true)
       dispatch(disablePage(true))
       const resp = await dispatch(
-        createGroup({ ...values, price: revereAmount(values.price), color: `${values.color},${values.text_color}` })
+        createGroup({ ...values, price: revereAmount(values.price), color: `${values.color}`,text_color:`${values.text_color}` })
       )
       if (resp.meta.requestStatus === 'rejected') {
         formik.setErrors(resp.payload)

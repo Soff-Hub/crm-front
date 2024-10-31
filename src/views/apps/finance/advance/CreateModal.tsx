@@ -1,13 +1,15 @@
 import LoadingButton from '@mui/lab/LoadingButton';
 import { Dialog, DialogContent, DialogTitle, FormControl, FormHelperText, InputLabel, MenuItem, Select, TextField } from '@mui/material';
 import { useFormik } from 'formik';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import AmountInput, { revereAmount } from 'src/@core/components/amount-input';
+import api from 'src/@core/utils/api';
 import { useAppDispatch, useAppSelector } from 'src/store';
 import { createAdvance, getAdvanceList, setOpenCreateModal } from 'src/store/apps/finance/advanceSlice';
 import { IAdvanceFormState } from 'src/types/apps/finance';
+import { EmployeeItemType } from 'src/types/apps/settings';
 import * as Yup from 'yup';
 
 export default function CreateModal() {
@@ -15,6 +17,17 @@ export default function CreateModal() {
     const { isOpenCreateModal, formikState, employee } = useAppSelector(state => state.advanceSlice)
     const dispatch = useAppDispatch()
     const { t } = useTranslation()
+    const [employees,setEmployes] = useState<EmployeeItemType[]|null>(null)
+
+    async function getEmployee() {
+        await api.get("auth/employees-check-list/").then((res) => {
+            console.log(res.data)
+            setEmployes(res.data)
+        }).catch((err) => {
+            console.log(err)
+            
+        })
+    }
 
     const validationSchema = Yup.object({
         employee: Yup.string().required("Xodimni tanlang"),
@@ -45,6 +58,9 @@ export default function CreateModal() {
         dispatch(setOpenCreateModal(false))
         formik.resetForm()
     }
+    useEffect(() => {
+       getEmployee() 
+    },[])
 
     return (
         <Dialog open={isOpenCreateModal} onClose={onClose}>
@@ -64,7 +80,7 @@ export default function CreateModal() {
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
                         >
-                            {employee?.map((item) => <MenuItem key={item.id} value={item.id}>{item.first_name}</MenuItem>)}
+                            {employees?.map((item) => <MenuItem key={item.id} value={item.id}>{item.first_name}</MenuItem>)}
                         </Select>
                         {!!formik.errors.employee && formik.touched.employee && <FormHelperText error>{formik.errors.employee}</FormHelperText>}
                     </FormControl>
