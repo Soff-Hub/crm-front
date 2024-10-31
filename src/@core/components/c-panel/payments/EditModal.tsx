@@ -50,7 +50,7 @@ export default function TransitionsModal({ id }: { id: string }) {
             } else {
                 toast.success(t("To'lov yuborildi") as string)
                 handleClose()
-                await dispatch(fetchCRMPayments())
+                await dispatch(fetchCRMPayments(""))
             }
             setLoading(false)
         }
