@@ -1,7 +1,6 @@
-//@ts-nocheck
 'use client'
-import { Box, Chip, Pagination, Tooltip, Typography } from '@mui/material'
-import { ReactNode, useContext, useEffect } from 'react'
+import { Box, Chip, MenuItem, Pagination, Select, Tooltip, Typography } from '@mui/material'
+import { ReactNode, useContext, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useRouter } from 'next/router'
 import { useAppDispatch, useAppSelector } from 'src/store'
@@ -27,11 +26,31 @@ export default function StudentPaymentsPage() {
   const dispatch = useAppDispatch()
   const { push } = useRouter()
   const { user } = useContext(AuthContext)
-
+  const [rowsPerPage, setRowsPerPage] = useState<number>(() => Number(localStorage.getItem('rowsPerPage')) || 10)
   const { studentsPayment, paymentsCount, total_payments, isLoading, queryParams } = useAppSelector(
     state => state.studentPayments
   )
+  const [page, setPage] = useState<number>(queryParams.page ? Number(queryParams.page) - 1 : 1)
+  const { limit, offset, is_payment, page: paramPage, group, start_date, end_date } = queryParams
 
+  const handleRowsPerPageChange = async (value: string) => {
+    const limit = value
+    setRowsPerPage(Number(value))
+    localStorage.setItem('rowsPerPage', `${value}`)
+
+    dispatch(updateParams({ limit: value }))
+    const urlParams = new URLSearchParams({
+      limit: limit ?? '',
+      offset: offset ?? '0',
+      is_payment: String(is_payment),
+      page: String(page),
+      group: group ?? '',
+      start_date: start_date ?? '',
+      end_date: end_date ?? ''
+    }).toString()
+    await dispatch(fetchStudentPaymentsList(urlParams))
+    setPage(0)
+  }
   const columns: customTableProps[] = [
     {
       xs: 0.2,
@@ -127,13 +146,27 @@ export default function StudentPaymentsPage() {
       </Box>
       <DataTable loading={isLoading} columns={columns} data={studentsPayment} />
       {Math.ceil(paymentsCount / 10) > 1 && !isLoading && (
-        <Pagination
-          defaultPage={Number(queryParams.page) || 1}
-          count={Math.ceil(paymentsCount / 10)}
-          variant='outlined'
-          shape='rounded'
-          onChange={(_: any, page) => handlePagination(page)}
-        />
+        <div className='d-flex'>
+          <Pagination
+            defaultPage={Number(queryParams.page) || 1}
+            count={Math.ceil(paymentsCount / 10)}
+            variant='outlined'
+            shape='rounded'
+            onChange={(_: any, page) => handlePagination(page)}
+          />
+          <Select
+            size='small'
+            onChange={e => handleRowsPerPageChange(String(e.target.value))}
+            value={rowsPerPage}
+            className='page-resize'
+          >
+            <MenuItem value={10}>10</MenuItem>
+            <MenuItem value={20}>20</MenuItem>
+            <MenuItem value={50}>50</MenuItem>
+            <MenuItem value={100}>100</MenuItem>
+            <MenuItem value={200}>200</MenuItem>
+          </Select>
+        </div>
       )}
     </div>
   )
