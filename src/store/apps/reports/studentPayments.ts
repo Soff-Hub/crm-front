@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import api from 'src/@core/utils/api'
 
 export const fetchStudentPaymentsList = createAsyncThunk('studentsPayment', async (queryString?: string) => {
-  const { data } = await api.get(`common/student-payments/?${queryString || ''}`)
+  const { data } = await api.get(`common/student/payments/?${queryString || ''}`)
   return data
 })
 export const fetchGroupsList = createAsyncThunk('fetchGroupsList', async () => {
@@ -29,13 +29,21 @@ interface IStudentsPaymentState {
   total_payments: number
   isLoading: boolean
   groups: any[]
-  queryParams: { is_payment: boolean; page: number; group?: string; start_date?: string; end_date?: string }
+  queryParams: {
+    limit?: string
+    offset?: string
+    is_payment: any
+    page: string
+    group?: string
+    start_date?: string
+    end_date?: string
+  }
 }
 
 const initialState: IStudentsPaymentState = {
   studentsPayment: [],
   groups: [],
-  queryParams: { is_payment: true, page: 1 },
+  queryParams: { is_payment: true, page: '1' },
   paymentsCount: 0,
   total_payments: 0,
   isLoading: false
