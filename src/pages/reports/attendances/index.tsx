@@ -45,17 +45,6 @@ export default function Attandences() {
       title: t('Qilingan davomadlar'),
       renderItem: (record: any) => (
         <div>
-          {/* <p>
-            {t('Davomatlar soni')}:{' '}
-            <Chip
-              size='medium'
-              color='success'
-              label={`${record?.attended_attendances} / ${record?.allowed_attendances}`}
-            />
-          </p>
-          <p>
-            {t('Qilingan davomatlar soni')}: {record?.attended_attendances}
-          </p> */}
           <Chip
             variant='outlined'
             size='medium'
@@ -69,7 +58,7 @@ export default function Attandences() {
       xs: 1,
       title: t('Qilinmagan davomatlar soni'),
       dataIndex: 'not_attended_attendances',
-      render: recors => <Chip size='medium' color='error' label={`${recors}`} />
+      render: recors => (Number(recors) > 0 ? <Chip size='medium' color='error' label={`${recors}`} /> : recors)
     }
   ]
   const rowClick = (id: any) => {

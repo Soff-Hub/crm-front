@@ -1,4 +1,4 @@
-import { Box, Chip, Pagination, TablePagination, Typography } from '@mui/material'
+import { Box, Chip, MenuItem, Pagination, Select, Typography } from '@mui/material'
 import { ReactNode, useContext, useEffect, useState } from 'react'
 import DataTable from 'src/@core/components/table'
 import { useTranslation } from 'react-i18next'
@@ -36,7 +36,8 @@ export default function GroupsPage() {
     {
       xs: 0.2,
       title: t('ID'),
-      dataIndex: 'index'
+      dataIndex: 'index',
+      render: index => `${Number(queryParams?.offset) + Number(index)}`
     },
     {
       xs: 1.4,
@@ -129,22 +130,22 @@ export default function GroupsPage() {
       render: actions => <StudentRowOptions id={actions} />
     }
   ]
-  const handleRowsPerPageChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const limit = event.target.value
-    setRowsPerPage(Number(event.target.value))
-    localStorage.setItem('rowsPerPage', limit)
+  const handleRowsPerPageChange = async (value: number) => {
+    const limit = value
+    setRowsPerPage(Number(value))
+    localStorage.setItem('rowsPerPage', `${value}`)
 
-    dispatch(updateStudentParams({ limit: event.target.value }))
-    await dispatch(fetchStudentsList({ ...queryParams, limit }))
+    dispatch(updateStudentParams({ limit: value }))
+    await dispatch(fetchStudentsList({ ...queryParams, limit: `${value}`, offset: `0` }))
     setPage(0)
   }
 
-  const handlePagination = async (page: string) => {
-    const adjustedPage = Number(page) + 1
+  const handlePagination = async (page: string | number) => {
+    const adjustedPage: any = (Number(page) - 1) * rowsPerPage
     setPage(Number(page))
 
-    await dispatch(fetchStudentsList({ ...queryParams, page: String(adjustedPage) }))
-    dispatch(updateStudentParams({ page: adjustedPage }))
+    await dispatch(fetchStudentsList({ ...queryParams, limit: String(rowsPerPage), offset: adjustedPage }))
+    dispatch(updateStudentParams({ offset: adjustedPage }))
   }
 
   const pageLoad = async () => {
@@ -196,28 +197,42 @@ export default function GroupsPage() {
         rowClick={rowClick}
       />
       {studentsCount > 10 && !isLoading && (
-        // <Pagination
-        //   defaultPage={queryParams?.page || 1}
-        //   count={Math.ceil(studentsCount / 10)}
-        //   variant='outlined'
-        //   shape='rounded'
-        //   onChange={(e: any, page) => handlePagination(page)}
-        // />
-        <TablePagination
-          component='div'
-          count={studentsCount}
-          page={page}
-          onPageChange={(e: any, page) => handlePagination(String(page))}
-          rowsPerPage={rowsPerPage}
-          onRowsPerPageChange={(e: any) => handleRowsPerPageChange(e)}
-          rowsPerPageOptions={[5, 10, 25, 50]}
-          labelDisplayedRows={({ from, to, count }) => {
-            const adjustedFrom = from === 0 ? 1 : from
-            const adjustedTo = to === 0 ? 1 : to
+        <div className='d-flex'>
+          <Pagination
+            page={Number(queryParams.offset) ? Number(queryParams.offset) / rowsPerPage + 1 : 1}
+            count={Math.ceil(studentsCount / rowsPerPage)}
+            variant='outlined'
+            shape='rounded'
+            onChange={(e: any, page) => handlePagination(page)}
+          />
+          <Select
+            size='small'
+            onChange={e => handleRowsPerPageChange(Number(e.target.value))}
+            value={rowsPerPage}
+            className='page-resize'
+          >
+            <MenuItem value={10}>10</MenuItem>
+            <MenuItem value={20}>20</MenuItem>
+            <MenuItem value={50}>50</MenuItem>
+            <MenuItem value={100}>100</MenuItem>
+            <MenuItem value={200}>200</MenuItem>
+          </Select>
+        </div>
+        // <TablePagination
+        //   component='div'
+        //   count={studentsCount}
+        //   page={page}
+        //   onPageChange={(e: any, page) => handlePagination(String(page))}
+        //   rowsPerPage={rowsPerPage}
+        //   onRowsPerPageChange={(e: any) => handleRowsPerPageChange(e)}
+        //   rowsPerPageOptions={[5, 10, 25, 50]}
+        //   labelDisplayedRows={({ from, to, count }) => {
+        //     const adjustedFrom = from === 0 ? 1 : from
+        //     const adjustedTo = to === 0 ? 1 : to
 
-            return `${adjustedFrom} - ${adjustedTo} of ${count !== -1 ? count : `more than ${adjustedTo}`}`
-          }}
-        />
+        //     return `${adjustedFrom} - ${adjustedTo} of ${count !== -1 ? count : `more than ${adjustedTo}`}`
+        //   }}
+        // />
       )}
       <CreateStudentModal />
       <EditStudentModal />
