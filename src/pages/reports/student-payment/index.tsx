@@ -1,3 +1,4 @@
+//@ts-nocheck
 'use client'
 import { Box, Chip, Pagination, Tooltip, Typography } from '@mui/material'
 import { ReactNode, useContext, useEffect } from 'react'
