@@ -55,7 +55,10 @@ export default function StudentPaymentsPage() {
     {
       xs: 0.2,
       title: t('ID'),
-      dataIndex: 'index'
+      dataIndex: 'index',
+      render: index => {
+        return `${Number(queryParams?.offset || 0) + Number(index)}`
+      }
     },
     {
       xs: 1.7,
@@ -106,15 +109,23 @@ export default function StudentPaymentsPage() {
       push('/')
       toast.error("Sizda bu sahifaga kirish huquqi yo'q!")
     }
-    Promise.all([
-      dispatch(fetchStudentPaymentsList(new URLSearchParams(String(queryParams)).toString())),
-      dispatch(fetchGroupsList())
-    ])
-  }, [])
+    if (rowsPerPage) {
+      const params = new URLSearchParams({ ...queryParams, limit: `${rowsPerPage}` }).toString()
+      Promise.all([dispatch(fetchStudentPaymentsList(params)), dispatch(fetchGroupsList())])
+    }
+  }, [rowsPerPage])
 
   const handlePagination = async (page: number) => {
     dispatch(updateParams({ page: page }))
-    await dispatch(fetchStudentPaymentsList(new URLSearchParams({ ...queryParams, page: String(page) }).toString()))
+    await dispatch(
+      fetchStudentPaymentsList(
+        new URLSearchParams({
+          ...queryParams,
+          offset: `${(page - 1) * rowsPerPage}`,
+          limit: `${rowsPerPage}`
+        }).toString()
+      )
+    )
   }
   const { isMobile } = useResponsive()
 
@@ -149,7 +160,7 @@ export default function StudentPaymentsPage() {
         <div className='d-flex'>
           <Pagination
             defaultPage={Number(queryParams.page) || 1}
-            count={Math.ceil(paymentsCount / 10)}
+            count={Math.ceil(paymentsCount / rowsPerPage)}
             variant='outlined'
             shape='rounded'
             onChange={(_: any, page) => handlePagination(page)}
