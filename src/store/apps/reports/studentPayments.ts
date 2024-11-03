@@ -43,7 +43,7 @@ interface IStudentsPaymentState {
 const initialState: IStudentsPaymentState = {
   studentsPayment: [],
   groups: [],
-  queryParams: { is_payment: true, page: '1' },
+  queryParams: { is_payment: true, page: '1', offset: '0', limit: '10' },
   paymentsCount: 0,
   total_payments: 0,
   isLoading: false

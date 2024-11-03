@@ -37,7 +37,9 @@ export default function GroupsPage() {
       xs: 0.2,
       title: t('ID'),
       dataIndex: 'index',
-      render: index => `${Number(queryParams?.offset) + Number(index)}`
+      render: index => {
+        return `${Number(queryParams?.offset || 0) + Number(index)}`
+      }
     },
     {
       xs: 1.4,
