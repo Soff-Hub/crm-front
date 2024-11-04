@@ -57,6 +57,10 @@ const CardStatistics = () => {
     const { isMobile } = useResponsive()
 
 
+    console.log(isMobile);
+    
+
+
     const withdrawCol: customTableDataProps[] = [
         {
             xs: 0.03,
