@@ -118,7 +118,7 @@ export default function PaymentsList() {
         }
         (async function () {
             await Promise.all([
-                dispatch(fetchCRMPayments()),
+                dispatch(fetchCRMPayments(``)),
                 dispatch(fetchClientSideTariffs()),
                 dispatch(fetchSMSTariffs())
             ])
@@ -163,7 +163,7 @@ export default function PaymentsList() {
                                 <IconButton size='small'>
                                     <UserIcon fontSize={20} icon={"bitcoin-icons:question-circle-filled"} />
                                 </IconButton>
-                            </Tooltip>} label="5614 6816 0913 8700" color="warning" variant="outlined" />
+                            </Tooltip>} label="9860 0201 1188 1916" color="warning" variant="outlined" />
                         <Button size="small" onClick={() => dispatch(handleOpenClientSMSModal(true))} color='primary' variant="outlined">{t("SMS paket uchun to'lov")}</Button>
                         <Button size="small" onClick={() => dispatch(handleOpenClientModal(true))} color='primary' variant="contained">{t("Tarif uchun to'lov")}</Button>
                     </Stack>
