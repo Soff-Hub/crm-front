@@ -1,9 +1,23 @@
-import { Box, Chip, MenuItem, Pagination, Select, Typography } from '@mui/material'
+import {
+  Box,
+  Button,
+  Chip,
+  MenuItem,
+  Pagination,
+  Select,
+  Typography,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  IconButton
+} from '@mui/material'
+
+
 import { ReactNode, useContext, useEffect, useState } from 'react'
 import DataTable from 'src/@core/components/table'
 import { useTranslation } from 'react-i18next'
 import { useRouter } from 'next/router'
-import StudentsPageHeader from 'src/views/apps/students/StudentsPageHeader'
 import StudentsFilter from 'src/views/apps/students/StudentsFilter'
 import CreateStudentModal from 'src/views/apps/students/CreateStudentModal'
 import EditStudentModal from 'src/views/apps/students/EditStudentModal'
@@ -11,10 +25,12 @@ import StudentRowOptions from 'src/views/apps/students/StudentRowOptions'
 import { useAppDispatch, useAppSelector } from 'src/store'
 import { clearStudentParams, fetchStudentsList, updateStudentParams } from 'src/store/apps/students'
 import { formatCurrency } from 'src/@core/utils/format-currency'
-import { setOpenEdit } from 'src/store/apps/mentors'
+import { setOpenEdit } from 'src/store/apps/students';
 import VideoHeader, { videoUrls } from 'src/@core/components/video-header/video-header'
 import { AuthContext } from 'src/context/AuthContext'
 import { toast } from 'react-hot-toast'
+import useResponsive from 'src/@core/hooks/useResponsive'
+import IconifyIcon from 'src/@core/components/icon'
 
 export interface customTableProps {
   xs: number
@@ -26,11 +42,17 @@ export interface customTableProps {
 export default function GroupsPage() {
   const { t } = useTranslation()
   const router = useRouter()
+  const { isMobile } = useResponsive()
   const { user } = useContext(AuthContext)
+  const [open, setOpen] = useState<boolean>(false)
   const dispatch = useAppDispatch()
   const { students, isLoading, studentsCount, queryParams } = useAppSelector(state => state.students)
   const [page, setPage] = useState<number>(queryParams.page ? Number(queryParams.page) - 1 : 1)
   const [rowsPerPage, setRowsPerPage] = useState<number>(() => Number(localStorage.getItem('rowsPerPage')) || 10)
+
+ console.log(isMobile)
+ 
+
 
   const columns: customTableProps[] = [
     {
@@ -176,11 +198,41 @@ export default function GroupsPage() {
     }
   }, [])
 
+
+  
+
   return (
     <div>
       <VideoHeader item={videoUrls.students} />
-      <StudentsPageHeader />
-      <StudentsFilter />
+      <Box
+        className='students-page-header'
+        sx={{ display: 'flex', justifyContent: 'space-between', margin: '10px 0' }}
+        py={2}
+      >
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+          <Typography variant='h5'>{t("O'quvchilar")}</Typography>
+          {!isLoading && <Chip label={`${studentsCount}`} variant='outlined' color='primary' />}
+        </Box>
+        <Button
+          onClick={()=>dispatch(setOpenEdit('create'))}
+          variant='contained'
+          size='small'
+          startIcon={<IconifyIcon icon='ic:baseline-plus' />}
+        >
+          {t("Yangi qo'shish")}
+        </Button>
+      </Box>
+      {isMobile && (
+        <Button
+          size='small'
+          sx={{ marginLeft: 'auto', width: '100%' }}
+          variant='outlined'
+          onClick={() => setOpen(true)}
+        >
+          {t('Filterlash')}
+        </Button>
+      )}
+      {!isMobile && <StudentsFilter isMobile={isMobile} />}
       <DataTable
         color
         loading={isLoading}
@@ -238,6 +290,26 @@ export default function GroupsPage() {
       )}
       <CreateStudentModal />
       <EditStudentModal />
+      <Dialog fullScreen onClose={() => setOpen(false)} aria-labelledby='full-screen-dialog-title' open={open}>
+        <DialogTitle id='full-screen-dialog-title'>
+          <Typography variant='h6' component='span'>
+            {t('Modal title')}
+          </Typography>
+          <IconButton
+            aria-label='close'
+            onClick={() => setOpen(false)}
+            sx={{ top: 8, right: 10, position: 'absolute', color: 'grey.500' }}
+          >
+            <IconifyIcon icon='mdi:close' />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent>
+          <StudentsFilter isMobile={isMobile} />
+        </DialogContent>
+        <DialogActions className='dialog-actions-dense'>
+          <Button onClick={() => setOpen(false)}>{t('Davom etish')}</Button>
+        </DialogActions>
+      </Dialog>
     </div>
   )
 }
