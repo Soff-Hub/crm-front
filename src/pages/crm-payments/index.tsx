@@ -159,7 +159,7 @@ export default function PaymentsList() {
                     <Stack display={isMobile ? "grid" : "flex"} direction={"row"} alignItems={"center"} gap="15px">
                         <Chip sx={{ borderRadius: "8px", height: "30px" }} size='small' label={clientOwnPayments?.is_demo ? `${t("Demo tugash vaqti")} : ${clientOwnPayments?.expiration_date}` : `${t("Keyingi to'lov vaqti")} : ${clientOwnPayments?.expiration_date}`} color="error" variant="outlined" />
                         <Chip size='small' sx={{ borderRadius: "8px", height: "30px" }} icon={
-                            <Tooltip arrow title="Platforma uchun to'lov hamda qo'shimcha SMS paket olish  uchun to'lovlarni o'ng tomonda joylashgan To'lov qilish yoki SMS paket olish tugmasini bosish orqali markazga mos tushuvchi tariflardan birini tanlab ushbu karta raqamga qilingan to'lov chekini yuboring (Axmadaliyeva Roxatoy)">
+                            <Tooltip arrow title="Platforma uchun to'lov hamda qo'shimcha SMS paket olish  uchun to'lovlarni o'ng tomonda joylashgan To'lov qilish yoki SMS paket olish tugmasini bosish orqali markazga mos tushuvchi tariflardan birini tanlab ushbu karta raqamga qilingan to'lov chekini yuboring (Zufarbek Abdurahmonov)">
                                 <IconButton size='small'>
                                     <UserIcon fontSize={20} icon={"bitcoin-icons:question-circle-filled"} />
                                 </IconButton>
