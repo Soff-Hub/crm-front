@@ -2,7 +2,6 @@ import MenuItem from '@mui/material/MenuItem'
 import LoadingButton from '@mui/lab/LoadingButton'
 import api from 'src/@core/utils/api'
 import { useTranslation } from 'react-i18next'
-import { useAppSelector } from 'src/store'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import { useState } from 'react'
@@ -23,14 +22,15 @@ import { toast } from 'react-hot-toast'
 export default function SentSMS({
   id,
   modalRef,
-  setModalRef
+  setModalRef,
+  smsTemps
 }: {
   id: string
   modalRef: string | null
   setModalRef: any
+  smsTemps: null | any[]
 }) {
   const [isLoading, setLoading] = useState(false)
-  const { smsTemps } = useAppSelector(state => state.groupDetails)
   const { t } = useTranslation()
 
   const formik = useFormik({
@@ -53,6 +53,7 @@ export default function SentSMS({
       }
     }
   })
+  console.log(smsTemps)
 
   return (
     <Dialog
