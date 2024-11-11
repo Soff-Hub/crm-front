@@ -50,10 +50,6 @@ export default function GroupsPage() {
   const [page, setPage] = useState<number>(queryParams.page ? Number(queryParams.page) - 1 : 1)
   const [rowsPerPage, setRowsPerPage] = useState<number>(() => Number(localStorage.getItem('rowsPerPage')) || 10)
 
- console.log(isMobile)
- 
-
-
   const columns: customTableProps[] = [
     {
       xs: 0.2,
