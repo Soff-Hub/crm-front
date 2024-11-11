@@ -11,6 +11,7 @@ import { Box, Button, Chip, Dialog, DialogContent, DialogTitle, TextField, Typog
 import GroupFinanceTable from 'src/views/apps/finance/GroupTable'
 import IconifyIcon from 'src/@core/components/icon'
 import 'react-datepicker/dist/react-datepicker.css'
+import 'rsuite/DateRangePicker/styles/index.css';
 import { useContext, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { customTableDataProps } from 'src/@core/components/lid-table'
@@ -47,7 +48,7 @@ const CardStatistics = () => {
     const { t } = useTranslation()
     const [nameVal, setNameVal] = useState<string>('');
     const [open, setOpen] = useState<'create' | null>(null);
-    const { categoriesData, groupsFinance, allNumbersParams, isGettingGroupsFinance } = useAppSelector(state => state.finance)
+    const { categoriesData, allNumbersParams } = useAppSelector(state => state.finance)
     const { user } = useContext(AuthContext)
     const router = useRouter()
     const dispatch = useAppDispatch()
@@ -55,10 +56,6 @@ const CardStatistics = () => {
     const [deleteCategory, setDeleteCategory] = useState<any>(null)
     const [salaries, setSalaries] = useState<any>([])
     const { isMobile } = useResponsive()
-
-
-    console.log(isMobile);
-    
 
 
     const withdrawCol: customTableDataProps[] = [
@@ -212,7 +209,7 @@ const CardStatistics = () => {
                     </Grid>
 
                     <div id='tushumlar'></div>
-                    <Grid item xs={12}>
+                    {/* <Grid item xs={12}>
                         <Typography sx={{ fontSize: '20px' }}>
                             {t("Guruh to'lovlari")}{"  "}
                             {allNumbersParams.start_date ? (
@@ -222,12 +219,12 @@ const CardStatistics = () => {
                             )}
                         </Typography>
 
-                    </Grid>
+                    </Grid> */}
 
-                    <Grid item xs={12} md={12} mb={10} sx={{ position: "relative" }}>
+                    {/* <Grid item xs={12} md={12} mb={10} sx={{ position: "relative" }}>
                         {isGettingGroupsFinance && <Box sx={{ position: "absolute", borderRadius: "10px", bgcolor: "rgba(0,0,0,0.1)", top: "16px", left: "24px", right: 0, bottom: 0 }}><SubLoader /></Box>}
                         {groupsFinance ? <GroupFinanceTable data={groupsFinance} /> : <EmptyContent />}
-                    </Grid>
+                    </Grid> */}
 
                     <Grid item xs={12}>
                         <Box sx={{ display: 'flex', gap: '10px' }}>

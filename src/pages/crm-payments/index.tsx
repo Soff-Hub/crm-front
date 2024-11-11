@@ -118,7 +118,7 @@ export default function PaymentsList() {
         }
         (async function () {
             await Promise.all([
-                dispatch(fetchCRMPayments()),
+                dispatch(fetchCRMPayments(``)),
                 dispatch(fetchClientSideTariffs()),
                 dispatch(fetchSMSTariffs())
             ])
@@ -159,11 +159,11 @@ export default function PaymentsList() {
                     <Stack display={isMobile ? "grid" : "flex"} direction={"row"} alignItems={"center"} gap="15px">
                         <Chip sx={{ borderRadius: "8px", height: "30px" }} size='small' label={clientOwnPayments?.is_demo ? `${t("Demo tugash vaqti")} : ${clientOwnPayments?.expiration_date}` : `${t("Keyingi to'lov vaqti")} : ${clientOwnPayments?.expiration_date}`} color="error" variant="outlined" />
                         <Chip size='small' sx={{ borderRadius: "8px", height: "30px" }} icon={
-                            <Tooltip arrow title="Platforma uchun to'lov hamda qo'shimcha SMS paket olish  uchun to'lovlarni o'ng tomonda joylashgan To'lov qilish yoki SMS paket olish tugmasini bosish orqali markazga mos tushuvchi tariflardan birini tanlab ushbu karta raqamga qilingan to'lov chekini yuboring (Axmadaliyeva Roxatoy)">
+                            <Tooltip arrow title="Platforma uchun to'lov hamda qo'shimcha SMS paket olish  uchun to'lovlarni o'ng tomonda joylashgan To'lov qilish yoki SMS paket olish tugmasini bosish orqali markazga mos tushuvchi tariflardan birini tanlab ushbu karta raqamga qilingan to'lov chekini yuboring (Zufarbek Abdurahmonov)">
                                 <IconButton size='small'>
                                     <UserIcon fontSize={20} icon={"bitcoin-icons:question-circle-filled"} />
                                 </IconButton>
-                            </Tooltip>} label="5614 6816 0913 8700" color="warning" variant="outlined" />
+                            </Tooltip>} label="9860 0201 1188 1916" color="warning" variant="outlined" />
                         <Button size="small" onClick={() => dispatch(handleOpenClientSMSModal(true))} color='primary' variant="outlined">{t("SMS paket uchun to'lov")}</Button>
                         <Button size="small" onClick={() => dispatch(handleOpenClientModal(true))} color='primary' variant="contained">{t("Tarif uchun to'lov")}</Button>
                     </Stack>
