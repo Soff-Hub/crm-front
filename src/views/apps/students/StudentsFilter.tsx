@@ -164,6 +164,8 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
               <MenuItem value={'new'}>{t('test')}</MenuItem>
               <MenuItem value={'frozen'}>{t('Muzlatilgan')}</MenuItem>
               <MenuItem value={'not_activated'}>{t('Sinov darsidan ketganlar')}</MenuItem>
+              <MenuItem value={'without_group'}>{t('Guruhsiz')}</MenuItem>
+
             </Select>
           </FormControl>
           <FormControl fullWidth>
@@ -300,6 +302,7 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
               <MenuItem value={'new'}>{t('test')}</MenuItem>
               <MenuItem value={'frozen'}>{t('Muzlatilgan')}</MenuItem>
               <MenuItem value={'not_activated'}>{t('Sinov darsidan ketganlar')}</MenuItem>
+              <MenuItem value={'without_group'}>{t('Guruhsiz')}</MenuItem>
             </Select>
           </FormControl>
 

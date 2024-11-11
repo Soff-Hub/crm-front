@@ -3,7 +3,7 @@ import { toast } from 'react-hot-toast'
 import { today } from 'src/@core/components/card-statistics/kanban-item'
 import api from 'src/@core/utils/api'
 import ceoConfigs from 'src/configs/ceo'
-import { IGroupsState } from 'src/types/apps/groupsTypes'
+import { IGroupsState, IQueryParams } from 'src/types/apps/groupsTypes'
 
 export const getGroupsDetails = createAsyncThunk('groups/fetchGroupsDetails', async (id: any) => {
   const resp = await api.get(ceoConfigs.groups_detail + id)
@@ -61,10 +61,10 @@ export const deleteGroups = createAsyncThunk(
   }
 )
 
-export const fetchGroups = createAsyncThunk('groups/fetchGroups', async (queryString: any) => {
-  const resp = await api.get(ceoConfigs.groups + '?' + queryString)
-  return resp.data
-})
+export const fetchGroups = createAsyncThunk('groups/fetchGroups',  async (params?: IQueryParams | undefined) => {
+  return (await api.get(ceoConfigs.groups, { params })).data
+}
+)
 
 export const fetchGroupChecklist = createAsyncThunk('groups/fetchGroupChecklist', async () => {
   const resp = await api.get('common/group-check-list/')
@@ -107,12 +107,12 @@ const initialState: IGroupsState = {
   isLoading: false,
   myGroupParams: {
     page: 1,
-    limit:10,
+    limit: 10
   },
   queryParams: {
-    page: 1,
     status: 'active',
-    is_recovery: false
+    is_recovery: false,
+    limit: 10
   },
   formParams: {
     day_of_week:

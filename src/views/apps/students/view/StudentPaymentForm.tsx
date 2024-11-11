@@ -25,9 +25,10 @@ import IconifyIcon from 'src/@core/components/icon'
 type Props = {
   openEdit: any
   setOpenEdit: any
+  student_id?: any
 }
 
-export default function StudentPaymentForm({ openEdit, setOpenEdit }: Props) {
+export default function StudentPaymentForm({ openEdit, setOpenEdit, student_id }: Props) {
   const [loading, setLoading] = useState<boolean>(false)
 
   const { t } = useTranslation()
@@ -60,7 +61,7 @@ export default function StudentPaymentForm({ openEdit, setOpenEdit }: Props) {
       setLoading(true)
       const data = {
         ...values,
-        student: query?.student,
+        student: query?.student || student_id,
         amount: revereAmount(values.amount)
       }
 
@@ -69,8 +70,8 @@ export default function StudentPaymentForm({ openEdit, setOpenEdit }: Props) {
         setLoading(false)
         setOpenEdit(null)
 
-        await dispatch(fetchStudentDetail(userData.id))
-        await dispatch(fetchStudentPayment(userData.id))
+        await dispatch(fetchStudentDetail(userData?.id || student_id))
+        await dispatch(fetchStudentPayment(userData?.id || student_id))
       } catch (err: any) {
         // showResponseError(err.response.data, setError)
         setLoading(false)
@@ -85,10 +86,14 @@ export default function StudentPaymentForm({ openEdit, setOpenEdit }: Props) {
   }
 
   useEffect(() => {
-    formik.setFieldValue('group', studentData ?  `${studentData.groups?.[0]?.group_data?.id}` : '')
+    formik.setFieldValue('group', studentData ? `${studentData.groups?.[0]?.group_data?.id}` : '')
   }, [studentData])
 
   useEffect(() => {
+    if (student_id) {
+      dispatch(fetchStudentDetail(student_id))
+      dispatch(fetchStudentPayment(student_id))
+    }
     getPaymentMethod()
   }, [])
 
@@ -158,7 +163,7 @@ export default function StudentPaymentForm({ openEdit, setOpenEdit }: Props) {
                 onChange={handleChange}
                 onBlur={handleBlur}
               >
-                {userData?.groups.map((branch: any) => (
+                {userData?.groups?.map((branch: any) => (
                   <MenuItem key={branch.id} value={branch.group_data.id}>
                     {branch.group_data.name}
                   </MenuItem>
