@@ -1,5 +1,18 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { Box, Button, Chip, Dialog, DialogContent, DialogTitle, FormControl, FormHelperText, InputLabel, Select, TextField, Typography } from '@mui/material'
+import {
+  Box,
+  Button,
+  Chip,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  FormControl,
+  FormHelperText,
+  InputLabel,
+  Select,
+  TextField,
+  Typography
+} from '@mui/material'
 import Status from 'src/@core/components/status'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
@@ -41,6 +54,7 @@ import { formatCurrency } from 'src/@core/utils/format-currency'
 import StudentPaymentForm from 'src/views/apps/students/view/StudentPaymentForm'
 import useBranches from 'src/hooks/useBranch'
 import { useFormik } from 'formik'
+import useResponsive from 'src/@core/hooks/useResponsive'
 
 interface StudentType {
   id: number | string
@@ -102,11 +116,12 @@ export const UserViewStudentsItem = ({ item, index, status, activeId }: ItemType
     id
   } = student
   const { push, query } = useRouter()
+  const { isMobile } = useResponsive()
   const { user } = useContext(AuthContext)
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
   const [openLeft, setOpenLeft] = useState<boolean>(false)
   const [activate, setActivate] = useState<boolean>(false)
-  const [updateStatusModal,setUpdateStatusModal] = useState<boolean>(false)
+  const [updateStatusModal, setUpdateStatusModal] = useState<boolean>(false)
   const [loading, setLoading] = useState<boolean>(false)
   const [modalRef, setModalRef] = useState<'sms' | 'note' | 'export' | null>(null)
   const { smsTemps, getSMSTemps } = useSMS()
@@ -137,17 +152,19 @@ export const UserViewStudentsItem = ({ item, index, status, activeId }: ItemType
       setOpenLeft(true)
     }
   }
-  
+
   const formik = useFormik({
-    initialValues: {status:student_status},
+    initialValues: { status: student_status },
     validationSchema: () =>
       Yup.object({
-        status: Yup.string(),
+        status: Yup.string()
       }),
     onSubmit: async values => {
+      console.log(values)
+
       setLoading(true)
       try {
-        await api.patch(`common/group-student-update/${id}`, values)
+        await api.patch(`common/group-student-update/status/${studentStatusId}/`, { status: values.status })
         toast.success("O'quvchi malumotlari o'zgartirildi", { position: 'top-center' })
         setLoading(false)
         setActivate(false)
@@ -299,72 +316,73 @@ export const UserViewStudentsItem = ({ item, index, status, activeId }: ItemType
           {phone}
         </Typography>
 
-        <div className='cursor:pointer' onClick={()=>setUpdateStatusModal(true)}>
-        <Box  sx={{textAlign:"start",mr:3}}>
-        {student_status === 'active' ? (
-            <Chip
-            
-            label={student_status}
-            color='success'
-            variant='outlined'
-            size='small'
-            sx={{ fontWeight: 500, fontSize: '9px', padding: 0 }}
-          />
-          ) : student_status === "archive" ?
-          (
-            <Chip
-            label={student_status}
-            color='error'
-            variant='outlined'
-            size='small'
-            sx={{ fontWeight: 500, fontSize: '9px', padding: 0 }}
-          />
-        ):student_status === "in_progress" ?
-        (
-          <Chip
-          label={student_status}
-          color='info'
-          variant='outlined'
-          size='small'
-          sx={{ fontWeight: 500, fontSize: '9px', padding: 0 }}
-        />
-      ):  <Chip
-      label={student_status}
-      color='warning'
-      variant='outlined'
-      size='small'
-      sx={{ fontWeight: 500, fontSize: '9px', padding: 0 }}
-    />
-        }
-        </Box>
+        <div className='cursor:pointer' onClick={() => setUpdateStatusModal(true)}>
+          <Box sx={{ textAlign: 'start', mr: 3 }}>
+            {student_status === 'active' ? (
+              <Chip
+                label={student_status}
+                color='success'
+                variant='outlined'
+                size='small'
+                sx={{ fontWeight: 500, fontSize: '9px', padding: 0 }}
+              />
+            ) : student_status === 'archive' ? (
+              <Chip
+                label={student_status}
+                color='error'
+                variant='outlined'
+                size='small'
+                sx={{ fontWeight: 500, fontSize: '9px', padding: 0 }}
+              />
+            ) : student_status === 'in_progress' ? (
+              <Chip
+                label={student_status}
+                color='info'
+                variant='outlined'
+                size='small'
+                sx={{ fontWeight: 500, fontSize: '9px', padding: 0 }}
+              />
+            ) : (
+              <Chip
+                label={student_status}
+                color='warning'
+                variant='outlined'
+                size='small'
+                sx={{ fontWeight: 500, fontSize: '9px', padding: 0 }}
+              />
+            )}
+          </Box>
         </div>
-        <Box>
-        {Number(balance) < 0 ? (
-          <Chip
-            label={`${formatCurrency(+balance)} so'm`}
-            color='error'
-            variant='outlined'
-            size='small'
-            sx={{ fontWeight: 500, fontSize: '9px', padding: 0 }}
-          />
-        ) : (
-          <Chip
-            label={`${formatCurrency(+balance)} so'm`}
-            color='success'
-            variant='outlined'
-            size='small'
-            sx={{ fontWeight: 500, fontSize: '9px', padding: 0 }}
-          />
+        {!isMobile && (
+          <Box sx={{ textAlign: 'start',mr:8 }}>
+            {Number(balance) < 0 ? (
+              <Chip
+                label={`${formatCurrency(+balance)} so'm`}
+                color='error'
+                variant='outlined'
+                size='small'
+                sx={{ fontWeight: 500, fontSize: '9px', padding: 0 }}
+              />
+            ) : (
+              <Chip
+                label={`${formatCurrency(+balance)} so'm`}
+                color='success'
+                variant='outlined'
+                size='small'
+                sx={{ fontWeight: 500, fontSize: '9px', padding: 0 }}
+              />
+            )}
+          </Box>
         )}
       </Box>
-      </Box>
       <Typography
+        sx={{ ml:3}}
         fontSize={11}
         id='fade-button'
         aria-controls={open ? 'fade-menu' : undefined}
         aria-haspopup='true'
         aria-expanded={open ? 'true' : undefined}
-        style={{ cursor: 'pointer'}}
+        style={{ cursor: 'pointer' }}
         onClick={!(user?.role.length === 1 && user?.role.includes('teacher')) ? handleClick : undefined}
       >
         <IconifyIcon icon={'charm:menu-kebab'} fontSize={11} />
@@ -454,43 +472,43 @@ export const UserViewStudentsItem = ({ item, index, status, activeId }: ItemType
         </DialogContent>
       </Dialog>
       <Dialog open={updateStatusModal} onClose={() => setUpdateStatusModal(false)}>
-          <form onSubmit={formik.handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-        <DialogContent sx={{ maxWidth: '350px' }}>
-          <Typography sx={{ fontSize: '20px', textAlign: 'center', mb: 3 }}>
-            {t("O'quvchini statusini ozgartirish")}
-          </Typography>
-          <FormControl sx={{ maxWidth: '100%', marginBottom: 3 }} fullWidth>
-            <InputLabel size='small' id='demo-simple-select-outlined-label'>
-              Status (holati)
-            </InputLabel>
-            <Select
-              size='small'
-              label='Status (holati)'
-              value={formik.values.status}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              id='demo-simple-select-outlined'
-              labelId='demo-simple-select-outlined-label'
-              name='status'
-              error={!!formik.errors.status && formik.touched.status}
-            >
-              <MenuItem value={'active'}>Aktiv</MenuItem>
-              <MenuItem value={'new'}>Sinov darsi</MenuItem>
-              <MenuItem value={'archive'}>Arxiv</MenuItem>
-              <MenuItem value={'frozen'}>Muzlatish</MenuItem>
-            </Select>
-            <FormHelperText error>{formik.errors.status}</FormHelperText>
+        <form onSubmit={formik.handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+          <DialogContent sx={{ maxWidth: '350px' }}>
+            <Typography sx={{ fontSize: '20px', textAlign: 'center', mb: 3 }}>
+              {t("O'quvchini statusini ozgartirish")}
+            </Typography>
+            <FormControl sx={{ maxWidth: '100%', marginBottom: 3 }} fullWidth>
+              <InputLabel size='small' id='demo-simple-select-outlined-label'>
+                Status (holati)
+              </InputLabel>
+              <Select
+                size='small'
+                label='Status (holati)'
+                value={formik.values.status}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                id='demo-simple-select-outlined'
+                labelId='demo-simple-select-outlined-label'
+                name='status'
+                error={!!formik.errors.status && formik.touched.status}
+              >
+                <MenuItem value={'active'}>Aktiv</MenuItem>
+                <MenuItem value={'new'}>Sinov darsi</MenuItem>
+                {/* <MenuItem value={'archive'}>Arxiv</MenuItem> */}
+                <MenuItem value={'frozen'}>Muzlatish</MenuItem>
+              </Select>
+              <FormHelperText error>{formik.errors.status}</FormHelperText>
             </FormControl>
-          <Box sx={{ display: 'flex', justifyContent: 'center', gap: 4 }}>
-            <Button onClick={() => setUpdateStatusModal(false)} size='small' variant='outlined' color='error'>
-              {t('Bekor qilish')}
-            </Button>
-            <LoadingButton loading={loading} type='submit' size='small' variant='contained'>
-              {t('Tasdiqlash')}
-            </LoadingButton>
-          </Box>
-        </DialogContent>
-            </form>
+            <Box sx={{ display: 'flex', justifyContent: 'center', gap: 4 }}>
+              <Button onClick={() => setUpdateStatusModal(false)} size='small' variant='outlined' color='error'>
+                {t('Bekor qilish')}
+              </Button>
+              <LoadingButton loading={loading} type='submit' size='small' variant='contained'>
+                {t('Tasdiqlash')}
+              </LoadingButton>
+            </Box>
+          </DialogContent>
+        </form>
       </Dialog>
       <EditStudent status={status} student={student} id={activeId} activate={activate} setActivate={setActivate} />
       <AddNote id={id} modalRef={modalRef} setModalRef={setModalRef} />
