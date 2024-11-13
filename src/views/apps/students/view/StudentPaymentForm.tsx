@@ -10,7 +10,7 @@ import FormControl from '@mui/material/FormControl'
 import DialogContent from '@mui/material/DialogContent'
 import DialogActions from '@mui/material/DialogActions'
 import { useTranslation } from 'react-i18next'
-import { FormHelperText } from '@mui/material'
+import { FormHelperText, Typography } from '@mui/material'
 import LoadingButton from '@mui/lab/LoadingButton'
 import { today } from 'src/@core/components/card-statistics/kanban-item'
 import { useAppDispatch, useAppSelector } from 'src/store'
@@ -30,6 +30,7 @@ type Props = {
 
 export default function StudentPaymentForm({ openEdit, setOpenEdit, student_id }: Props) {
   const [loading, setLoading] = useState<boolean>(false)
+  const [showWarning, setShowWarning] = useState<boolean>(false)
 
   const { t } = useTranslation()
   const { studentData } = useAppSelector(state => state.students)
@@ -83,7 +84,17 @@ export default function StudentPaymentForm({ openEdit, setOpenEdit, student_id }
 
   const handleEditClose = () => {
     setOpenEdit(null)
+    setShowWarning(true); 
+
   }
+  const handleConfirmCancel = () => {
+    setShowWarning(false); 
+  }
+
+  const handleDismissWarning = () => {
+    setShowWarning(false); 
+  }
+
 
   useEffect(() => {
     formik.setFieldValue('group', studentData ? `${studentData.groups?.[0]?.group_data?.id}` : '')
@@ -101,7 +112,12 @@ export default function StudentPaymentForm({ openEdit, setOpenEdit, student_id }
     <div>
       <Dialog
         open={openEdit === 'payment'}
-        onClose={handleEditClose}
+        // onClose={handleEditClose}
+        onClose={(event, reason) => {
+          if (reason !== 'backdropClick') {
+            handleEditClose();
+          }
+        }}
         aria-labelledby='user-view-edit'
         sx={{ '& .MuiPaper-root': { width: '100%', maxWidth: 450, p: [1, 3] } }}
         aria-describedby='user-view-edit-description'
@@ -233,6 +249,27 @@ export default function StudentPaymentForm({ openEdit, setOpenEdit, student_id }
             </DialogActions>
           </form>
         </DialogContent>
+      </Dialog>
+      <Dialog
+        open={showWarning}
+        onClose={handleDismissWarning}
+        aria-labelledby='warning-dialog-title'
+        aria-describedby='warning-dialog-description'
+      >
+        <DialogTitle id='warning-dialog-title' sx={{ textAlign: 'center' }}>
+          {t('Eslatma')}
+        </DialogTitle>
+        <DialogContent>
+          <Typography  id='warning-dialog-description' sx={{ mt: 2, textAlign: 'center' }}>
+            {t('Are you sure you want to cancel? Unsaved changes will be lost.')}
+          </Typography>
+        </DialogContent>
+        <DialogActions sx={{ justifyContent: 'center' }}>
+          <Button variant='contained' color='error' onClick={handleConfirmCancel}>
+            {t('Bekor qilish')}
+          </Button>
+        
+        </DialogActions>
       </Dialog>
     </div>
   )
