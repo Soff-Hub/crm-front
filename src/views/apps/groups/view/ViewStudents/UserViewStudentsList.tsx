@@ -512,7 +512,7 @@ export const UserViewStudentsItem = ({ item, index, status, activeId }: ItemType
       </Dialog>
       <EditStudent status={status} student={student} id={activeId} activate={activate} setActivate={setActivate} />
       <AddNote id={id} modalRef={modalRef} setModalRef={setModalRef} />
-      <SentSMS id={id} modalRef={modalRef} setModalRef={setModalRef} />
+      <SentSMS smsTemps={smsTemps} id={id} modalRef={modalRef} setModalRef={setModalRef} />
       <ExportStudent id={studentStatusId} modalRef={modalRef} setModalRef={setModalRef} />
     </Box>
   )
