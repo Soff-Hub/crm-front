@@ -370,10 +370,10 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
               }}
             />
           </Box>
-          {/* <Excel url='/common/students/export/' queryString={queryString} /> */}
+          <Excel url='/common/students/export/' queryString={queryString} />
         </Box>
       </Box>
     )
 }
 
-export default StudentsFilter
+export default StudentsFilter 
