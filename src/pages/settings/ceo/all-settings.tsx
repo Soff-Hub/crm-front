@@ -52,7 +52,7 @@ export default function AllSettings() {
     'name' | 'branch' | 'paytype' | 'start-time' | 'end-time' | 'birthdate' | 'absend' | 'delete' | 'payment' | null
   >(null)
   const [error, setError] = useState<any>({})
-
+  const [errorMessage, setErrorMessage] = useState<null|string>(null)
   const { push } = useRouter()
 
   const { getPaymentMethod, paymentMethods, createPaymentMethod, updatePaymentMethod } = usePayment()
@@ -61,9 +61,6 @@ export default function AllSettings() {
   const { companyInfo } = useAppSelector((state: any) => state.user)
   const { t } = useTranslation()
   const { setUser, user } = useContext(AuthContext)
-
-
-  
 
   const reloadProfile = async () => {
     await api.get('auth/profile/').then(async response => {
@@ -163,23 +160,21 @@ export default function AllSettings() {
           formData.append('absent_text', companyInfo?.auto_sms?.absent_text)
           formData.append('payment_warning', companyInfo?.auto_sms?.payment_warning)
           formData.append('payment_text', companyInfo?.auto_sms?.payment_text)
-        } else if (key === "payment_warning") {
-          setLoading("payment")
-          formData.append("payment_text", 'Text')
+        } else if (key === 'payment_warning') {
+          setLoading('payment')
+          formData.append('payment_text', 'Text')
           formData.append('on_absent', companyInfo?.auto_sms?.on_absent)
           formData.append('absent_text', companyInfo?.auto_sms?.absent_text)
           formData.append('on_birthday', companyInfo?.auto_sms?.on_birthday)
           formData.append('birthday_text', companyInfo?.auto_sms?.birthday_text)
-        } else if (key === "payment_text") {
-          setLoading("payment")
-          formData.append("payment_warning", true)
+        } else if (key === 'payment_text') {
+          setLoading('payment')
+          formData.append('payment_warning', true)
           formData.append('on_absent', companyInfo?.auto_sms?.on_absent)
           formData.append('absent_text', companyInfo?.auto_sms?.absent_text)
           formData.append('on_birthday', companyInfo?.auto_sms?.on_birthday)
           formData.append('birthday_text', companyInfo?.auto_sms?.birthday_text)
-       }
-        
-        else if (key === 'on_absent') {
+        } else if (key === 'on_absent') {
           setLoading('absend')
           formData.append(
             'absent_text',
@@ -205,8 +200,8 @@ export default function AllSettings() {
       }
 
       const getresp = await api.get('common/settings/list/')
-      console.log(getresp);
-      
+      console.log(getresp)
+
       dispatch(setCompanyInfo(getresp.data[0]))
       setEditable(null)
       setId(null)
@@ -217,6 +212,11 @@ export default function AllSettings() {
     } finally {
       setLoading(null)
     }
+  }
+
+  function handleClose() {
+    setDeleteId(null)
+    setErrorMessage(null)
   }
 
   useEffect(() => {
@@ -771,11 +771,14 @@ export default function AllSettings() {
           </DialogContent>
         </Dialog>
 
-        <Dialog open={deleteId?.open === 'branch'} onClose={() => setDeleteId(null)}>
+        <Dialog open={deleteId?.open === 'branch'} onClose={handleClose}>
           <DialogContent>
             <Typography sx={{ fontSize: '20px', margin: '10px 10px 20px' }}>{t("O'chirishni tasdiqlang")}</Typography>
+            {errorMessage && (
+              <Typography sx={{ color: "red", fontSize: '15px', marginBottom: '20px', marginX:'10px' }}>{errorMessage}</Typography>
+            )}
             <Box sx={{ display: 'flex', gap: 1 }}>
-              <Button variant='outlined' onClick={() => setDeleteId(null)}>
+              <Button variant='outlined' onClick={handleClose}>
                 {t('Bekor qilish')}
               </Button>
               <LoadingButton
@@ -785,11 +788,19 @@ export default function AllSettings() {
                 onClick={async () => {
                   setLoading('delete')
                   try {
-                    await api.delete(`common/branch/delete/${deleteId?.id}`)
-                    await reloadProfile()
-                    setDeleteId(null)
-                    getBranches()
-                    setLoading(null)
+                    await api
+                      .delete(`common/branch/delete/${deleteId?.id}`)
+                      .then(res => {
+                        reloadProfile()
+                        setDeleteId(null)
+                        getBranches()
+                        setLoading(null)
+                      })
+                      .catch(error => {
+                        console.log(error)
+                        setErrorMessage(error.response.data.msg)
+                        setLoading(null)
+                      })
                   } catch {
                     setLoading(null)
                   }

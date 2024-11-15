@@ -14,6 +14,7 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import dynamic from 'next/dynamic';
 import { AuthContext } from 'src/context/AuthContext';
 import { toast } from 'react-hot-toast';
+import SourceStatsVertical from 'src/@core/components/card-statistics/card-source-vertical';
 
 // Dynamically import components
 const CardStatsVertical = dynamic(() => import('src/@core/components/card-statistics/card-stats-vertical'));
@@ -104,7 +105,7 @@ const Stats = () => {
                 {
                     sources.length ? sources.map((el, i) => (
                         <Box key={i} className='' sx={{ cursor: 'pointer', minHeight: '100px', minWidth: '180px' }}>
-                            <CardStatsVertical title={el.name} stats={`${el.students_count}`} color={'success'} />
+                            <SourceStatsVertical title={el.name} stats={`${el.students_count}`} color={'success'} />
                         </Box>
                     )) : <EmptyContent />
                 }

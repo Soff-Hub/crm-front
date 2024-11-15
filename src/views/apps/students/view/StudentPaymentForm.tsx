@@ -10,7 +10,7 @@ import FormControl from '@mui/material/FormControl'
 import DialogContent from '@mui/material/DialogContent'
 import DialogActions from '@mui/material/DialogActions'
 import { useTranslation } from 'react-i18next'
-import { FormHelperText } from '@mui/material'
+import { FormHelperText, Typography } from '@mui/material'
 import LoadingButton from '@mui/lab/LoadingButton'
 import { today } from 'src/@core/components/card-statistics/kanban-item'
 import { useAppDispatch, useAppSelector } from 'src/store'
@@ -25,10 +25,12 @@ import IconifyIcon from 'src/@core/components/icon'
 type Props = {
   openEdit: any
   setOpenEdit: any
+  student_id?: any
 }
 
-export default function StudentPaymentForm({ openEdit, setOpenEdit }: Props) {
+export default function StudentPaymentForm({ openEdit, setOpenEdit, student_id }: Props) {
   const [loading, setLoading] = useState<boolean>(false)
+  const [showWarning, setShowWarning] = useState<boolean>(false)
 
   const { t } = useTranslation()
   const { studentData } = useAppSelector(state => state.students)
@@ -60,7 +62,7 @@ export default function StudentPaymentForm({ openEdit, setOpenEdit }: Props) {
       setLoading(true)
       const data = {
         ...values,
-        student: query?.student,
+        student: query?.student || student_id,
         amount: revereAmount(values.amount)
       }
 
@@ -69,8 +71,8 @@ export default function StudentPaymentForm({ openEdit, setOpenEdit }: Props) {
         setLoading(false)
         setOpenEdit(null)
 
-        await dispatch(fetchStudentDetail(userData.id))
-        await dispatch(fetchStudentPayment(userData.id))
+        await dispatch(fetchStudentDetail(userData?.id || student_id))
+        await dispatch(fetchStudentPayment(userData?.id || student_id))
       } catch (err: any) {
         // showResponseError(err.response.data, setError)
         setLoading(false)
@@ -82,13 +84,27 @@ export default function StudentPaymentForm({ openEdit, setOpenEdit }: Props) {
 
   const handleEditClose = () => {
     setOpenEdit(null)
+    setShowWarning(true); 
+
+  }
+  const handleConfirmCancel = () => {
+    setShowWarning(false); 
   }
 
+  const handleDismissWarning = () => {
+    setShowWarning(false); 
+  }
+
+
   useEffect(() => {
-    formik.setFieldValue('group', studentData ?  `${studentData.groups?.[0]?.group_data?.id}` : '')
+    formik.setFieldValue('group', studentData ? `${studentData.groups?.[0]?.group_data?.id}` : '')
   }, [studentData])
 
   useEffect(() => {
+    if (student_id) {
+      dispatch(fetchStudentDetail(student_id))
+      dispatch(fetchStudentPayment(student_id))
+    }
     getPaymentMethod()
   }, [])
 
@@ -96,7 +112,12 @@ export default function StudentPaymentForm({ openEdit, setOpenEdit }: Props) {
     <div>
       <Dialog
         open={openEdit === 'payment'}
-        onClose={handleEditClose}
+        // onClose={handleEditClose}
+        onClose={(event, reason) => {
+          if (reason !== 'backdropClick') {
+            handleEditClose();
+          }
+        }}
         aria-labelledby='user-view-edit'
         sx={{ '& .MuiPaper-root': { width: '100%', maxWidth: 450, p: [1, 3] } }}
         aria-describedby='user-view-edit-description'
@@ -158,7 +179,7 @@ export default function StudentPaymentForm({ openEdit, setOpenEdit }: Props) {
                 onChange={handleChange}
                 onBlur={handleBlur}
               >
-                {userData?.groups.map((branch: any) => (
+                {userData?.groups?.map((branch: any) => (
                   <MenuItem key={branch.id} value={branch.group_data.id}>
                     {branch.group_data.name}
                   </MenuItem>
@@ -228,6 +249,27 @@ export default function StudentPaymentForm({ openEdit, setOpenEdit }: Props) {
             </DialogActions>
           </form>
         </DialogContent>
+      </Dialog>
+      <Dialog
+        open={showWarning}
+        onClose={handleDismissWarning}
+        aria-labelledby='warning-dialog-title'
+        aria-describedby='warning-dialog-description'
+      >
+        <DialogTitle id='warning-dialog-title' sx={{ textAlign: 'center' }}>
+          {t('Eslatma')}
+        </DialogTitle>
+        <DialogContent>
+          <Typography  id='warning-dialog-description' sx={{ mt: 2, textAlign: 'center' }}>
+            {t('Are you sure you want to cancel? Unsaved changes will be lost.')}
+          </Typography>
+        </DialogContent>
+        <DialogActions sx={{ justifyContent: 'center' }}>
+          <Button variant='contained' color='error' onClick={handleConfirmCancel}>
+            {t('Bekor qilish')}
+          </Button>
+        
+        </DialogActions>
       </Dialog>
     </div>
   )

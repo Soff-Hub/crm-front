@@ -55,32 +55,28 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
 
   const { t } = useTranslation()
 
-  const handleChangeStatus = (e: SelectChangeEvent<string>) => {
+  const handleChangeStatus = async(e: SelectChangeEvent<string>) => {
     dispatch(updateParams({ status: e.target.value }))
-    const queryString = new URLSearchParams({ ...queryParams, status: e.target.value }).toString()
-    dispatch(fetchGroups(queryString))
+    // const queryString = new URLSearchParams({ ...queryParams, status: e.target.value }).toString()
+   await  dispatch(fetchGroups({ ...queryParams, status: e.target.value }))
   }
-  const handleChangeTeacher = (e: SelectChangeEvent<string>) => {
-    dispatch(updateParams({ teacher: e.target.value }))
-    const queryString = new URLSearchParams({ ...queryParams, teacher: e.target.value }).toString()
-    dispatch(fetchGroups(queryString))
+  const handleChangeTeacher = async(e: SelectChangeEvent<string>) => {
+    dispatch(updateParams({ teacher: e.target.value }))    
+    await dispatch(fetchGroups({ ...queryParams, teacher: e.target.value }))
   }
-  const handleChangeCourse = (e: SelectChangeEvent<string>) => {
+  const handleChangeCourse = async(e: SelectChangeEvent<string>) => {
     dispatch(updateParams({ course: e.target.value }))
-    const queryString = new URLSearchParams({ ...queryParams, course: e.target.value }).toString()
-    dispatch(fetchGroups(queryString))
+    await dispatch(fetchGroups({ ...queryParams, course: e.target.value }))
   }
   const handleChangeDateOfWeek = (e: SelectChangeEvent<string>) => {
     dispatch(updateParams({ day_of_week: e.target.value }))
-    const queryString = new URLSearchParams({ ...queryParams, day_of_week: e.target.value }).toString()
-    dispatch(fetchGroups(queryString))
+    dispatch(fetchGroups({ ...queryParams, day_of_week: e.target.value }))
   }
 
   const handleSearch = async () => {
     setLoading(true)
     dispatch(updateParams({ search: searchVal }))
-    const queryString = new URLSearchParams({ ...queryParams, search: searchVal }).toString()
-    await dispatch(fetchGroups(queryString))
+    await dispatch(fetchGroups({ ...queryParams, search: searchVal }))
     setLoading(false)
   }
 

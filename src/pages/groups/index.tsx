@@ -8,6 +8,9 @@ import {
   DialogContent,
   DialogTitle,
   IconButton,
+  MenuItem,
+  Pagination,
+  Select,
   TablePagination,
   Typography
 } from '@mui/material'
@@ -139,38 +142,24 @@ export default function GroupsPage() {
     }
   ]
 
-  const handleRowsPerPageChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const limit = event.target.value
-
-    setRowsPerPage(Number(limit))
-    localStorage.setItem('rowsPerPage', limit)
-
-    const updatedParams = { ...queryParams, limit: String(limit) }
-
-    const stringParams = Object.fromEntries(Object.entries(updatedParams).map(([key, value]) => [key, String(value)]))
-
-    const queryString = new URLSearchParams(stringParams).toString()
-
-    dispatch(updateParams({ limit: Number(limit) }))
-
-    await dispatch(fetchGroups(queryString))
-
+  const handleRowsPerPageChange = async (value: number) => {
+    const limit = value
+    
+    setRowsPerPage(Number(value))
+    localStorage.setItem('rowsPerPage', `${value}`)
+    console.log({ ...queryParams, limit: `${value}`, offset: `0` });
+    
+    await dispatch(fetchGroups({ ...queryParams, limit: value, offset: `0` }))
+    dispatch(updateParams({ limit: value }))
     setPage(0)
   }
 
-  const handlePagination = async (page: string) => {
-    const adjustedPage = Number(page) + 1
+  const handlePagination = async (page: string | number) => {
+    const adjustedPage: any = (Number(page) - 1) * rowsPerPage
     setPage(Number(page))
 
-    const updatedParams = { ...queryParams, page: String(adjustedPage) }
-
-    const stringParams = Object.fromEntries(Object.entries(updatedParams).map(([key, value]) => [key, String(value)]))
-
-    const queryString = new URLSearchParams(stringParams).toString()
-
-    dispatch(updateParams({ page: adjustedPage }))
-
-    await dispatch(fetchGroups(queryString))
+    await dispatch(fetchGroups({ ...queryParams, limit: rowsPerPage, offset: adjustedPage }))
+     dispatch(updateParams({ offset: adjustedPage }))
   }
 
   const handleOpenModal = async () => {
@@ -183,28 +172,25 @@ export default function GroupsPage() {
   }
 
   const pageLoad = async () => {
-    const queryString = new URLSearchParams(
-      Object.fromEntries(Object.entries(queryParams).map(([key, value]) => [key, String(value)]))
-    ).toString()
+    if (!queryParams.limit) {
+      dispatch(updateParams({ limit: rowsPerPage }))
 
-    if (queryString) {
-      await dispatch(fetchGroups(queryString))
+      await dispatch(fetchGroups({ ...queryParams}))
+    } else {
+      await dispatch(fetchGroups({...queryParams}))
     }
-
     await dispatch(getMetaData())
   }
+
 
   useEffect(() => {
     const initializePage = async () => {
       if (!user?.role.includes('ceo') && !user?.role.includes('admin')) {
         router.push('/')
         toast.error('Sahifaga kirish huquqingiz yoq!')
-      } else {
-        if (!queryParams.limit) {
-          dispatch(updateParams({ limit: rowsPerPage }))
-        }
+      } 
         await pageLoad()
-      }
+      
     }
 
     initializePage()
@@ -248,22 +234,27 @@ export default function GroupsPage() {
       {!isMobile && <GroupsFilter isMobile={isMobile} />}
       <DataTable columns={columns} loading={isLoading} data={groups || []} rowClick={rowClick} color text_color />
       {Math.ceil(groupCount / 10) > 1 && !isLoading && (
-        // <Pagination
-        //   defaultPage={queryParams.page ? Number(queryParams.page) : 1}
-        //   count={Math.ceil(groupCount / 10)}
-        //   variant='outlined'
-        //   shape='rounded'
-        //   onChange={(e: any, page) => handlePagination(page)}
-        // />
-        <TablePagination
-          component='div'
-          count={groupCount}
-          page={page}
-          onPageChange={(e: any, page) => handlePagination(String(page))}
-          rowsPerPage={rowsPerPage}
-          onRowsPerPageChange={(e: any) => handleRowsPerPageChange(e)}
-          rowsPerPageOptions={[5, 10, 25, 50]}
-        />
+        <div className='d-flex'>
+          <Pagination
+            page={Number(queryParams.offset) ? Number(queryParams.offset) / rowsPerPage + 1 : 1}
+            count={Math.ceil(groupCount / 10)}
+            variant='outlined'
+            shape='rounded'
+            onChange={(e: any, page) => handlePagination(String(page))}
+          />
+          <Select
+            size='small'
+            onChange={(e) => handleRowsPerPageChange(Number(e.target.value))}
+            value={rowsPerPage}
+            className='page-resize'
+          >
+            <MenuItem value={10}>10</MenuItem>
+            <MenuItem value={20}>20</MenuItem>
+            <MenuItem value={50}>50</MenuItem>
+            <MenuItem value={100}>100</MenuItem>
+            <MenuItem value={200}>200</MenuItem>
+          </Select>
+        </div>
       )}
 
       <AddGroupModal />

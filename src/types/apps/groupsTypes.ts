@@ -27,8 +27,9 @@ export interface TeacherType {
 }
 
 export interface IQueryParams {
-  page: number,
+  page?: number,
   limit?: number,
+  offset?:string
   status?: string
   teacher?: string
   course?: string

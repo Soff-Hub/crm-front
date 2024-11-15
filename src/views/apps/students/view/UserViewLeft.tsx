@@ -230,13 +230,16 @@ const UserViewLeft = ({ userData }: { userData: any }) => {
           )}
           <StudentParentList />
         </Grid>
-        {/*   Merge to Group Modal  */}
         <Dialog
+          
           open={openEdit === 'group'}
           onClose={handleEditClose}
           aria-labelledby='user-view-edit'
           sx={{ '& .MuiPaper-root': { width: '100%', maxWidth: 450, p: [1, 3] } }}
           aria-describedby='user-view-edit-description'
+          BackdropProps={{
+            onClick: (e) => e.stopPropagation() 
+          }}
         >
           <DialogTitle id='user-view-edit' sx={{ textAlign: 'center', fontSize: '1.5rem !important' }}>
             {t('Guruhga biriktirish')}
