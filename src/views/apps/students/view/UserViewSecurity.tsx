@@ -149,9 +149,13 @@ const UserViewSecurity = ({ groupData }: any) => {
     {
       xs: 0.6,
       title: t('Turi'),
-      dataIndex: 'is_debtor',
-      render: debtor => (
-        <Chip size='small' label={debtor ? "To'landi" : 'Qarzdorlik'} color={debtor ? 'success' : 'error'} />
+      dataIndex: 'condition',
+      renderItem: (item) => (
+        <Chip
+          size='small'
+          label={item?.condition !== 'debt' ? "To'landi" : 'Qarzdorlik'}
+          color={item?.condition !== 'debt' ? 'success' : Number(item?.amount) === 0 ? 'secondary' : 'error'}
+        />
       )
     },
     {
@@ -188,7 +192,11 @@ const UserViewSecurity = ({ groupData }: any) => {
       renderId: (id, src) => (
         <Box sx={{ display: 'flex', gap: '10px' }}>
           <IconifyIcon onClick={() => handleEdit(id)} icon='mdi:pencil-outline' fontSize={20} />
-          {Number(src) < 0 ? '' : <IconifyIcon onClick={() => setDelete(id)} icon='mdi:delete-outline' fontSize={20} />}
+          {Number(src) <= 0 ? (
+            ''
+          ) : (
+            <IconifyIcon onClick={() => setDelete(id)} icon='mdi:delete-outline' fontSize={20} />
+          )}
           {Number(src) < 0 ? (
             ''
           ) : loading === id ? (
