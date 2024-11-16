@@ -83,6 +83,7 @@ interface ItemTypes {
   status?: any
   activeId?: any
   reRender: any
+  choices?: string[]
 }
 
 const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
@@ -100,7 +101,7 @@ const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
 }))
 export type ModalTypes = 'group' | 'withdraw' | 'payment' | 'sms' | 'delete' | 'edit' | 'notes' | 'parent'
 
-export const UserViewStudentsItem = ({ item, index, status, activeId }: ItemTypes) => {
+export const UserViewStudentsItem = ({ item, index, status, activeId, choices }: ItemTypes) => {
   const { studentsQueryParams, queryParams, openLeadModal } = useAppSelector(state => state.groupDetails)
   const dispatch = useAppDispatch()
   const { student, id: studentStatusId } = item
@@ -109,12 +110,13 @@ export const UserViewStudentsItem = ({ item, index, status, activeId }: ItemType
     phone,
     lesson_count,
     added_at,
-    status: student_status,
+    // status: student_status,
     deleted_at,
     balance,
     comment,
     id
   } = student
+  const student_status = status
   const { push, query } = useRouter()
   const { isMobile } = useResponsive()
   const { user } = useContext(AuthContext)
@@ -354,7 +356,7 @@ export const UserViewStudentsItem = ({ item, index, status, activeId }: ItemType
           </Box>
         </div>
         {!isMobile && (
-          <Box sx={{ textAlign: 'start',mr:8 }}>
+          <Box sx={{ textAlign: 'start', mr: 8 }}>
             {Number(balance) < 0 ? (
               <Chip
                 label={`${formatCurrency(+balance)} so'm`}
@@ -376,7 +378,7 @@ export const UserViewStudentsItem = ({ item, index, status, activeId }: ItemType
         )}
       </Box>
       <Typography
-        sx={{ ml:3}}
+        sx={{ ml: 3 }}
         fontSize={11}
         id='fade-button'
         aria-controls={open ? 'fade-menu' : undefined}
@@ -490,14 +492,18 @@ export const UserViewStudentsItem = ({ item, index, status, activeId }: ItemType
                 id='demo-simple-select-outlined'
                 labelId='demo-simple-select-outlined-label'
                 name='status'
-                error={!!formik.errors.status && formik.touched.status}
+                error={!!formik.errors.status && !!formik.touched.status}
               >
-                <MenuItem value={'active'}>Aktiv</MenuItem>
-                <MenuItem value={'new'}>Sinov darsi</MenuItem>
+                {choices?.map(el => (
+                  <MenuItem value={el} key={el}>
+                    {t(el)}
+                  </MenuItem>
+                ))}
+                {/* <MenuItem value={'new'}>Sinov darsi</MenuItem> */}
                 {/* <MenuItem value={'archive'}>Arxiv</MenuItem> */}
-                <MenuItem value={'frozen'}>Muzlatish</MenuItem>
+                {/* <MenuItem value={'frozen'}>Muzlatish</MenuItem> */}
               </Select>
-              <FormHelperText error>{formik.errors.status}</FormHelperText>
+              <FormHelperText error>{!!formik.errors.status ? `${formik.errors.status}` : ''}</FormHelperText>
             </FormControl>
             <Box sx={{ display: 'flex', justifyContent: 'center', gap: 4 }}>
               <Button onClick={() => setUpdateStatusModal(false)} size='small' variant='outlined' color='error'>
@@ -553,6 +559,7 @@ export default function UserViewStudentsList() {
               key={el.id}
               activeId={el.id}
               item={el}
+              choices={el?.choices}
               index={index + 1}
               status={el.status}
             />
