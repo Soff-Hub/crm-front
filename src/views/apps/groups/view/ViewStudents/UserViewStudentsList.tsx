@@ -479,6 +479,7 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, choices }:
             <Typography sx={{ fontSize: '20px', textAlign: 'center', mb: 3 }}>
               {t("O'quvchini statusini ozgartirish")}
             </Typography>
+            
             <FormControl sx={{ maxWidth: '100%', marginBottom: 3 }} fullWidth>
               <InputLabel size='small' id='demo-simple-select-outlined-label'>
                 Status (holati)
