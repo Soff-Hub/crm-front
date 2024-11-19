@@ -66,12 +66,15 @@ export interface IFinanceState {
         label: {
           benefit: string
           expense: string
-          difference: string
+        difference: string,
+          active_balance:string
         }
         year: number
         expense: YearlyStats
         benefit: YearlyStats
-        difference: YearlyStats
+    difference: YearlyStats
+    active_balance:YearlyStats
+
         payment_types: {
           id: number
           name: string

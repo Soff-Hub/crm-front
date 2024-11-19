@@ -225,7 +225,7 @@ export const UserViewStudentsItem = ({ item, index, status, activeId }: ItemType
   }
 
   return (
-    <Box sx={{ display: 'grid', gridTemplateColumns: '10px 10px 0.5fr 1fr 20px', alignItems: 'center', gap: 3 }}>
+    <Box sx={{ display: 'grid', gridTemplateColumns: '10px 10px 0.5fr 1fr 20px', alignItems: 'center', gap: 2 }}>
       <Typography sx={{ width: '20px' }}>{index}.</Typography>
       <Status
         color={
@@ -307,12 +307,12 @@ export const UserViewStudentsItem = ({ item, index, status, activeId }: ItemType
           </Link>
         </HtmlTooltip>
       ) : (
-        <Typography sx={{ cursor: 'pointer' }} fontSize={10}>
+        <Typography sx={{ cursor: 'pointer' }} fontSize={7}>
           {first_name}
         </Typography>
       )}
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', minWidth: '100%' }}>
-        <Typography fontSize={10} flexGrow={1} textAlign={'start'} mr={5}>
+        <Typography fontSize={8} flexGrow={1} textAlign={'start'} mr={3}>
           {phone}
         </Typography>
 
@@ -411,7 +411,10 @@ export const UserViewStudentsItem = ({ item, index, status, activeId }: ItemType
         </MenuItem>
         <MenuItem sx={{ display: 'flex', alignItems: 'center', gap: '7px' }} onClick={() => handleClose('left')}>
           <Icon fontSize={'20px'} icon={'material-symbols:group-remove'} />
-          {t('Guruhdan chiqarish')}
+          {student_status == 'archive' ?
+            t("Ba'zadan chiqarish"):
+             t('Guruhdan chiqarish')  
+          }
         </MenuItem>
         <MenuItem
           sx={{ display: 'flex', alignItems: 'center', gap: '7px' }}
@@ -533,6 +536,8 @@ export default function UserViewStudentsList() {
       dispatch(studentsUpdateParams({ search: debounce }))
     })()
   }, [debounce])
+  console.log(students);
+  
 
   return (
     <Box>

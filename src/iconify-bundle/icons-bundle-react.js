@@ -20112,6 +20112,9 @@ addCollection({
     'trending-down': {
       body: '<path fill="currentColor" d="m16 18l2.29-2.29l-4.88-4.88l-4 4L2 7.41L3.41 6l6 6l4-4l6.3 6.29L22 12v6h-6Z"/>'
     },
+    wallet: {
+      body: '<path fill="currentColor" d="M20 6H4c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2Zm-6 8H4v-2h10v2Zm4-4H4V8h14v2Z"/>'
+    },
     'trending-neutral': { body: '<path fill="currentColor" d="m22 12l-4-4v3H3v2h15v3l4-4Z"/>' },
     'trending-up': {
       body: '<path fill="currentColor" d="m16 6l2.29 2.29l-4.88 4.88l-4-4L2 16.59L3.41 18l6-6l4 4l6.3-6.29L22 12V6h-6Z"/>'

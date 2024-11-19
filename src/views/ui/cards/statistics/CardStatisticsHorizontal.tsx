@@ -22,13 +22,21 @@ const CardStatsHorizontal = ({ data }: Props) => {
       <Grid container spacing={isMobile ? 4 : 7}>
         {data.map((item: CardStatsHorizontalProps, index: number) => {
           return (
-            <Grid item xs={12} md={4} sm={4} key={index}>
+            <Grid
+              item
+              xs={12}
+              md={3}
+              sm={3}
+              key={index}
+             
+            >
               {item.id ? (
                 <a href={item.id} style={{ textDecoration: 'none', cursor: 'pointer' }}>
-                  <CardStatisticsHorizontal {...item} icon={<Icon icon={item.icon as string} />} />
+                  <CardStatisticsHorizontal {...item} bgColor={item.bgColor} icon={<Icon icon={item.icon as string} />} />
                 </a>
-              ) : <CardStatisticsHorizontal {...item} icon={<Icon icon={item.icon as string} />} />
-              }
+              ) : (
+                <CardStatisticsHorizontal {...item} bgColor={item.bgColor} icon={<Icon icon={item.icon as string} />} />
+              )}
             </Grid>
           )
         })}

@@ -22,10 +22,10 @@ const Avatar = styled(CustomAvatar)<AvatarProps>(({ theme }) => ({
 
 const CardStatsHorizontal = (props: CardStatsHorizontalProps) => {
   // ** Props
-  const { title, icon, stats, trendNumber, color = 'primary', trend = 'positive' } = props
+  const { title, icon, stats,bgColor, trendNumber, color = 'primary', trend = 'positive' } = props
 
   return (
-    <Card>
+    <Card className={bgColor}>
       <CardContent sx={{ py: theme => `${theme.spacing(4.125)} !important` }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: '30px' }}>
           <Avatar skin='light' color={color} variant='rounded' sx={{ margin: '0' }}>
