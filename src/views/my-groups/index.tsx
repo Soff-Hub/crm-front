@@ -76,9 +76,16 @@ export default function MyGroups() {
       push('/')
       toast.error("Sizda bu sahifaga kirish huquqi yo'q!")
     }
+    // page=1&status=active&teacher=${user?.id}
     ;(async function () {
       await Promise.all([
-        dispatch(fetchGroups(`page=1&status=active&teacher=${user?.id}`)),
+        dispatch(
+          fetchGroups({
+            page: 1,
+            status: 'active',
+            teacher: `${user?.id}`
+          })
+        ),
         dispatch(fetchTeacherSalaries(``))
       ])
     })()
