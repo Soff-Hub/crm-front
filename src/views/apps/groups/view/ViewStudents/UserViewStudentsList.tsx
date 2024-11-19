@@ -322,7 +322,7 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, choices }:
           <Box sx={{ textAlign: 'start', mr: 3 }}>
             {student_status === 'active' ? (
               <Chip
-                label={student_status}
+                label={t('active')}
                 color='success'
                 variant='outlined'
                 size='small'
@@ -330,15 +330,32 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, choices }:
               />
             ) : student_status === 'archive' ? (
               <Chip
-                label={student_status}
+                label={t('archive')}
                 color='error'
                 variant='outlined'
                 size='small'
                 sx={{ fontWeight: 500, fontSize: '9px', padding: 0 }}
               />
-            ) : student_status === 'in_progress' ? (
+              ) : student_status === 'frozen' ? (
+                <Chip
+                  label={t('frozen')}
+                  color='error'
+                  variant='outlined'
+                  size='small'
+                  sx={{ fontWeight: 500, fontSize: '9px', padding: 0 }}
+                />
+              )  : student_status === 'new' ? (
+                <Chip
+                  label={t('new')}
+                  color='error'
+                  variant='outlined'
+                  size='small'
+                  sx={{ fontWeight: 500, fontSize: '9px', padding: 0 }}
+                />
+              ) 
+                : student_status === 'in_progress' ? (
               <Chip
-                label={student_status}
+                label={t('in_progess')}
                 color='info'
                 variant='outlined'
                 size='small'
