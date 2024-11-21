@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next'
 import {
   fetchFinanceAllNumbers,
   getExpenseCategories,
-  getGroupsFinance,
+  // getGroupsFinance,
   updateNumberParams
 } from 'src/store/apps/finance'
 import { formatDateString } from 'src/pages/finance'
@@ -73,15 +73,15 @@ export default function HeadingFilter() {
             date_month: ''
           })
         ),
-        dispatch(
-          getGroupsFinance({
-            ...allNumbersParams,
-            start_date: `${formatDateString(e[0])}`,
-            end_date: `${formatDateString(e[1])}`,
-            date_year: '',
-            date_month: ''
-          })
-        )
+        // dispatch(
+        //   getGroupsFinance({
+        //     ...allNumbersParams,
+        //     start_date: `${formatDateString(e[0])}`,
+        //     end_date: `${formatDateString(e[1])}`,
+        //     date_year: '',
+        //     date_month: ''
+        //   })
+        // )
       ])
       dispatch(updateNumberParams({ date_month: '' }))
     } else {
@@ -103,14 +103,14 @@ export default function HeadingFilter() {
             end_date: ``
           })
         ),
-        dispatch(
-          getGroupsFinance({
-            ...allNumbersParams,
-            date_year: `${new Date().getFullYear()}-01-01`,
-            start_date: ``,
-            end_date: ``
-          })
-        )
+        // dispatch(
+        //   getGroupsFinance({
+        //     ...allNumbersParams,
+        //     date_year: `${new Date().getFullYear()}-01-01`,
+        //     start_date: ``,
+        //     end_date: ``
+        //   })
+        // )
       ])
     }
     setDate(e)
@@ -125,14 +125,14 @@ export default function HeadingFilter() {
         await Promise.all([
           dispatch(fetchFinanceAllNumbers({ ...allNumbersParams, date_month: '', start_date: ``, end_date: `` })),
           dispatch(getExpenseCategories({ ...allNumbersParams, date_month: '', start_date: ``, end_date: `` })),
-          dispatch(getGroupsFinance({ ...allNumbersParams, date_month: '', start_date: ``, end_date: `` }))
+          // dispatch(getGroupsFinance({ ...allNumbersParams, date_month: '', start_date: ``, end_date: `` }))
         ])
       } else {
         dispatch(updateNumberParams({ date_year: `${new Date().getFullYear()}-01-01` }))
         await Promise.all([
           dispatch(fetchFinanceAllNumbers({ ...allNumbersParams, date_month: '', start_date: ``, end_date: `` })),
           dispatch(getExpenseCategories({ ...allNumbersParams, date_month: '', start_date: ``, end_date: `` })),
-          dispatch(getGroupsFinance({ ...allNumbersParams, date_month: '', start_date: ``, end_date: `` }))
+          // dispatch(getGroupsFinance({ ...allNumbersParams, date_month: '', start_date: ``, end_date: `` }))
         ])
       }
       return
@@ -146,7 +146,7 @@ export default function HeadingFilter() {
         dispatch(
           getExpenseCategories({ ...allNumbersParams, date_year: `${value}-01-01`, start_date: ``, end_date: `` })
         ),
-        dispatch(getGroupsFinance({ ...allNumbersParams, date_year: `${value}-01-01`, start_date: ``, end_date: `` }))
+        // dispatch(getGroupsFinance({ ...allNumbersParams, date_year: `${value}-01-01`, start_date: ``, end_date: `` }))
       ])
     } else {
       dispatch(updateNumberParams({ date_month: value }))
@@ -169,15 +169,15 @@ export default function HeadingFilter() {
             end_date: ``
           })
         ),
-        dispatch(
-          getGroupsFinance({
-            ...allNumbersParams,
-            date_year: allNumbersParams.date_year || `${new Date().getFullYear()}-01-01`,
-            date_month: value,
-            start_date: ``,
-            end_date: ``
-          })
-        )
+        // dispatch(
+        //   getGroupsFinance({
+        //     ...allNumbersParams,
+        //     date_year: allNumbersParams.date_year || `${new Date().getFullYear()}-01-01`,
+        //     date_month: value,
+        //     start_date: ``,
+        //     end_date: ``
+        //   })
+        // )
       ])
     }
   }
@@ -189,7 +189,7 @@ export default function HeadingFilter() {
       await Promise.all([
         dispatch(fetchFinanceAllNumbers({ ...allNumbersParams, branch })),
         dispatch(getExpenseCategories({ ...allNumbersParams, branch })),
-        dispatch(getGroupsFinance({ ...allNumbersParams, branch }))
+        // dispatch(getGroupsFinance({ ...allNumbersParams, branch }))
       ])
     } else {
       setActiveBranch('')
@@ -197,7 +197,7 @@ export default function HeadingFilter() {
       await Promise.all([
         dispatch(fetchFinanceAllNumbers({ ...allNumbersParams, branch: '' })),
         dispatch(getExpenseCategories({ ...allNumbersParams, branch: '' })),
-        dispatch(getGroupsFinance({ ...allNumbersParams, branch: '' }))
+        // dispatch(getGroupsFinance({ ...allNumbersParams, branch: '' }))
       ])
     }
   }
@@ -207,7 +207,7 @@ export default function HeadingFilter() {
       await Promise.all([
         dispatch(fetchFinanceAllNumbers({ ...allNumbersParams, branch: activeBranch })),
         dispatch(getExpenseCategories({ ...allNumbersParams, branch: activeBranch })),
-        dispatch(getGroupsFinance({ ...allNumbersParams, branch: activeBranch }))
+        // dispatch(getGroupsFinance({ ...allNumbersParams, branch: activeBranch }))
       ])
     })()
     dispatch(updateNumberParams({ branch: activeBranch }))
