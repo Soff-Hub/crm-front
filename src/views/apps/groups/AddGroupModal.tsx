@@ -98,7 +98,7 @@ export default function AddGroupModal() {
       } else {
         handleClose()
         toast.success(t('Guruh muvaffaqiyatli yaratildi'))
-        await dispatch(fetchGroups(queryString))
+        await dispatch(fetchGroups({ ...queryParams }))
       }
       setLoading(false)
       dispatch(disablePage(false))

@@ -227,7 +227,7 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, choices }:
   }
 
   return (
-    <Box sx={{ display: 'grid', gridTemplateColumns: '10px 10px 0.5fr 1fr 20px', alignItems: 'center', gap: 3 }}>
+    <Box sx={{ display: 'grid', gridTemplateColumns: '10px 10px 0.5fr 1fr 20px', alignItems: 'center', gap: 2 }}>
       <Typography sx={{ width: '20px' }}>{index}.</Typography>
       <Status
         color={
@@ -309,12 +309,12 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, choices }:
           </Link>
         </HtmlTooltip>
       ) : (
-        <Typography sx={{ cursor: 'pointer' }} fontSize={10}>
+        <Typography sx={{ cursor: 'pointer' }} fontSize={7}>
           {first_name}
         </Typography>
       )}
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', minWidth: '100%' }}>
-        <Typography fontSize={10} flexGrow={1} textAlign={'start'} mr={5}>
+        <Typography fontSize={8} flexGrow={1} textAlign={'start'} mr={3}>
           {phone}
         </Typography>
 
@@ -322,7 +322,7 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, choices }:
           <Box sx={{ textAlign: 'start', mr: 3 }}>
             {student_status === 'active' ? (
               <Chip
-                label={student_status}
+                label={t('active')}
                 color='success'
                 variant='outlined'
                 size='small'
@@ -330,15 +330,32 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, choices }:
               />
             ) : student_status === 'archive' ? (
               <Chip
-                label={student_status}
+                label={t('archive')}
                 color='error'
                 variant='outlined'
                 size='small'
                 sx={{ fontWeight: 500, fontSize: '9px', padding: 0 }}
               />
-            ) : student_status === 'in_progress' ? (
+              ) : student_status === 'frozen' ? (
+                <Chip
+                  label={t('frozen')}
+                  color='error'
+                  variant='outlined'
+                  size='small'
+                  sx={{ fontWeight: 500, fontSize: '9px', padding: 0 }}
+                />
+              )  : student_status === 'new' ? (
+                <Chip
+                  label={t('new')}
+                  color='error'
+                  variant='outlined'
+                  size='small'
+                  sx={{ fontWeight: 500, fontSize: '9px', padding: 0 }}
+                />
+              ) 
+                : student_status === 'in_progress' ? (
               <Chip
-                label={student_status}
+                label={t('in_progess')}
                 color='info'
                 variant='outlined'
                 size='small'
@@ -413,7 +430,10 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, choices }:
         </MenuItem>
         <MenuItem sx={{ display: 'flex', alignItems: 'center', gap: '7px' }} onClick={() => handleClose('left')}>
           <Icon fontSize={'20px'} icon={'material-symbols:group-remove'} />
-          {t('Guruhdan chiqarish')}
+          {student_status == 'archive' ?
+            t("Ba'zadan chiqarish"):
+             t('Guruhdan chiqarish')  
+          }
         </MenuItem>
         <MenuItem
           sx={{ display: 'flex', alignItems: 'center', gap: '7px' }}
@@ -540,6 +560,8 @@ export default function UserViewStudentsList() {
       dispatch(studentsUpdateParams({ search: debounce }))
     })()
   }, [debounce])
+  console.log(students);
+  
 
   return (
     <Box>

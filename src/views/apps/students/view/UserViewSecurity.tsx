@@ -1,8 +1,21 @@
 import LoadingButton from '@mui/lab/LoadingButton'
-import { Box, Button, Card, CardContent, Chip, Dialog, DialogContent, DialogTitle, Typography } from '@mui/material'
+import {
+  Box,
+  Button,
+  Card,
+  CardContent,
+  Chip,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  Fade,
+  Menu,
+  MenuItem,
+  Typography
+} from '@mui/material'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import EmptyContent from 'src/@core/components/empty-content'
 import IconifyIcon from 'src/@core/components/icon'
@@ -13,8 +26,19 @@ import getMontName from 'src/@core/utils/gwt-month-name'
 import usePayment from 'src/hooks/usePayment'
 import { customTableProps } from 'src/pages/groups'
 import { useAppDispatch, useAppSelector } from 'src/store'
-import { fetchStudentDetail, fetchStudentPayment } from 'src/store/apps/students'
+import { fetchStudentDetail, fetchStudentPayment ,} from 'src/store/apps/students'
 import StudentPaymentEditForm from './StudentPaymentEdit'
+import { AuthContext } from 'src/context/AuthContext'
+import { Icon } from '@iconify/react'
+import { setOpenLeadModal } from 'src/store/apps/groupDetails'
+import useBranches from 'src/hooks/useBranch'
+import { ModalTypes } from './UserViewLeft'
+import useSMS from 'src/hooks/useSMS'
+import StudentPaymentForm from './StudentPaymentForm'
+import EditStudent from '../../groups/view/ViewStudents/EditStudent'
+import AddNote from '../../groups/view/GroupViewLeft/AddNote'
+import SentSMS from '../../groups/view/ViewStudents/SentSMS'
+import ExportStudent from '../../groups/view/ViewStudents/ExportStudent'
 
 // Rasm yuklab olish misoli
 export async function downloadImage(filename: string, url: string) {
@@ -40,20 +64,54 @@ export async function downloadImage(filename: string, url: string) {
 
 const UserViewSecurity = ({ groupData }: any) => {
   const { t } = useTranslation()
-  const { query } = useRouter()
+  const { query, push } = useRouter()
   const { isMobile } = useResponsive()
   const [edit, setEdit] = useState<any>(null)
   const [deleteId, setDelete] = useState<any>(null)
   const [loading, setLoading] = useState<any>(null)
   const [amount, setAmount] = useState<any>('')
   const dispatch = useAppDispatch()
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+  const { user } = useContext(AuthContext)
   const { payments, isLoading } = useAppSelector(state => state.students)
+  const [modalRef, setModalRef] = useState<'sms' | 'note' | 'export' | null>(null)
+  const [openLeft, setOpenLeft] = useState<boolean>(false)
+  const [openEdit, setOpenEdit] = useState<ModalTypes | null>(null)
+  const [activate, setActivate] = useState<boolean>(false)
+  const { smsTemps, getSMSTemps } = useSMS()
+  const { studentData } = useAppSelector(state => state.students)
+  console.log(studentData);
+  
 
   const { getPaymentMethod, deletePayment } = usePayment()
 
+  const { getBranches, branches } = useBranches()
+
+  const handleEditClickOpen = (value: ModalTypes) => {
+    if (value === 'payment') {
+      getBranches()
+    }
+    setOpenEdit(value)
+  }
+
+  const open = Boolean(anchorEl)
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget)
+  }
   const handleEdit = (id: any) => {
     setAmount(payments.find((el: any) => el.id === id)?.amount)
     setEdit(payments.find((el: any) => el.id === id))
+  }
+
+  const handleClose = (value: 'none' | 'left' | 'payment' | 'notes' | 'sms' | 'export') => {
+    setAnchorEl(null)
+    if (value === 'notes') setModalRef('note')
+    else if (value === 'sms') setModalRef('sms')
+    else if (value === 'export') setModalRef('export')
+    else if (value === 'payment') push(`/students/view/security/?student=${query.id}`)
+    else if (value === 'left') {
+      setOpenLeft(true)
+    }
   }
 
   const handleDownload = async (id: number | string) => {
@@ -225,57 +283,142 @@ const UserViewSecurity = ({ groupData }: any) => {
     getPaymentMethod()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+  console.log(groupData);
+  
 
   return (
     <Box className='demo-space-y'>
       {groupData && groupData.length > 0 ? (
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-          {groupData.map((group: any) => (
-            <Link
-              key={group.id}
-              href={`/groups/view/security/?id=${group.group_data.id}&month=${getMontName(null)}`}
-              style={{ textDecoration: 'none' }}
-            >
-              <Box sx={{ display: 'flex', gap: '20px' }}>
-                <Card sx={{ width: isMobile ? '100%' : '50%' }}>
-                  <CardContent sx={{ display: 'flex', justifyContent: 'space-between', margin: '0', py: '10px' }}>
-                    <Chip
-                      label={`${formatCurrency(group.group_data.balance)} so'm`}
-                      size='small'
-                      variant='outlined'
-                      color={group.group_data.balance >= 0 ? 'success' : 'error'}
-                    />
-                    <Chip
-                      label={`${t(group.status)}`}
-                      size='small'
-                      variant='outlined'
-                      color={
-                        group.status === 'active'
-                          ? 'success'
-                          : group.status === 'new'
-                          ? 'warning'
-                          : group.status === 'frozen'
-                          ? 'secondary'
-                          : 'error'
-                      }
-                    />
-                  </CardContent>
-                  <CardContent sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
-                      <Typography sx={{ fontSize: '12px' }}>{group.group_data.name}</Typography>
-                      <Typography sx={{ fontSize: '12px' }}>{group.course.name}</Typography>
-                      <Typography sx={{ fontSize: '12px' }}>{group.teacher.first_name}</Typography>
-                    </Box>
-                    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: ' flex-end', gap: '5px' }}>
-                      <Typography sx={{ fontSize: '12px' }}>
-                        {group.added_at} / {group.deleted_at}
-                      </Typography>
-                      <Typography sx={{ fontSize: '12px' }}>Juft kunlar - {group.start_at}</Typography>
-                    </Box>
-                  </CardContent>
-                </Card>
-              </Box>
-            </Link>
+          {groupData.filter((group: any) => group.status !== 'archive').map((group: any) => (
+            <Box key={group.id} sx={{ position: 'relative' }}>
+              <Typography
+                id='fade-button'
+                aria-controls={open ? 'fade-menu' : undefined}
+                aria-haspopup='true'
+                aria-expanded={open ? 'true' : undefined}
+                sx={{
+                  position: 'absolute',
+                  top: 15,
+                  right: 410,
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center'
+                }}
+                onClick={!(user?.role.length === 1 && user?.role.includes('teacher')) ? handleClick : undefined}
+              >
+                <IconifyIcon icon={'charm:menu-kebab'} fontSize={11} />
+              </Typography>
+
+              <Menu
+                id='fade-menu'
+                MenuListProps={{
+                  'aria-labelledby': 'fade-button'
+                }}
+                anchorEl={anchorEl}
+                open={open}
+                onClose={() => handleClose('none')}
+                TransitionComponent={Fade}
+              >
+                <MenuItem
+                  sx={{ display: 'flex', alignItems: 'center', gap: '7px' }}
+                  onClick={async () => handleEditClickOpen('payment')}
+                >
+                  <Icon fontSize={'20px'} icon={'ic:baseline-payments'} />
+                  {t("To'lov")}
+                </MenuItem>
+                <MenuItem
+                  sx={{ display: 'flex', alignItems: 'center', gap: '7px' }}
+                  onClick={() => handleClose('export')}
+                >
+                  <Icon fontSize={'20px'} icon={'tabler:status-change'} />
+                  {t("Boshqa guruhga ko'chirishsh")}
+                </MenuItem>
+                <MenuItem
+                  sx={{ display: 'flex', alignItems: 'center', gap: '7px' }}
+                  onClick={() => handleClose('left')}
+                >
+                  <Icon fontSize={'20px'} icon={'material-symbols:group-remove'} />
+                  {t('Guruhdan chiqarish')}
+                </MenuItem>
+                {/* <MenuItem
+          sx={{ display: 'flex', alignItems: 'center', gap: '7px' }}
+          onClick={() => (dispatch(setOpenLeadModal(studentStatusId)), handleClose('none'))}
+        >
+          <Icon fontSize={'20px'} icon={'mdi:leads'} />
+          {t('Lidlarga qaytarish')}
+        </MenuItem> */}
+                <MenuItem
+                  sx={{ display: 'flex', alignItems: 'center', gap: '7px' }}
+                  onClick={() => handleClose('notes')}
+                >
+                  <Icon fontSize={'20px'} icon={'material-symbols:note-alt'} />
+                  {t('Eslatma')} +
+                </MenuItem>
+                <MenuItem
+                  sx={{ display: 'flex', alignItems: 'center', gap: '7px' }}
+                  onClick={() => (handleClose('sms'), getSMSTemps())}
+                >
+                  <Icon fontSize={'20px'} icon={'ic:baseline-message'} />
+                  {t('Xabar (sms)')} +
+                </MenuItem>
+                <MenuItem
+                  sx={{ display: 'flex', alignItems: 'center', gap: '7px' }}
+                  onClick={() => (setActivate(true), handleClose('none'))}
+                >
+                  <Icon fontSize={'20px'} icon={'ri:file-edit-fill'} />
+                  {t('Tahrirlash')}
+                </MenuItem>
+              </Menu>
+              <StudentPaymentForm student_id={query.id} openEdit={openEdit} setOpenEdit={setOpenEdit} />
+
+              <Link
+                href={`/groups/view/security/?id=${group.group_data.id}&month=${getMontName(null)}`}
+                style={{ textDecoration: 'none' }}
+              >
+                <Box sx={{ display: 'flex', gap: '20px' }}>
+                  <Card sx={{ width: isMobile ? '100%' : '50%' }}>
+                    <CardContent sx={{ display: 'flex', justifyContent: 'space-between', margin: '0', py: '10px' }}>
+                      <Chip
+                        label={`${formatCurrency(group.group_data.balance)} so'm`}
+                        size='small'
+                        variant='outlined'
+                        color={group.group_data.balance >= 0 ? 'success' : 'error'}
+                      />
+                      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                        <Chip
+                          label={`${t(group.status)}`}
+                          size='small'
+                          variant='outlined'
+                          color={
+                            group.status === 'active'
+                              ? 'success'
+                              : group.status === 'new'
+                              ? 'warning'
+                              : group.status === 'frozen'
+                              ? 'secondary'
+                              : 'error'
+                          }
+                        />
+                      </Box>
+                    </CardContent>
+                    <CardContent sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <Box sx={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                        <Typography sx={{ fontSize: '12px' }}>{group.group_data.name}</Typography>
+                        <Typography sx={{ fontSize: '12px' }}>{group.course.name}</Typography>
+                        <Typography sx={{ fontSize: '12px' }}>{group.teacher.first_name}</Typography>
+                      </Box>
+                      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '5px' }}>
+                        <Typography sx={{ fontSize: '12px' }}>
+                          {group.added_at} / {group.deleted_at}
+                        </Typography>
+                        <Typography sx={{ fontSize: '12px' }}>Juft kunlar - {group.start_at}</Typography>
+                      </Box>
+                    </CardContent>
+                  </Card>
+                </Box>
+              </Link>
+            </Box>
           ))}
         </Box>
       ) : (
@@ -319,6 +462,10 @@ const UserViewSecurity = ({ groupData }: any) => {
           </Box>
         </DialogContent>
       </Dialog>
+      {/* <EditStudent status={status} student={student} id={activeId} activate={activate} setActivate={setActivate} />
+      <AddNote id={query.id} modalRef={modalRef} setModalRef={setModalRef} />
+      <SentSMS smsTemps={smsTemps} id={query.id} modalRef={modalRef} setModalRef={setModalRef} />
+      <ExportStudent id={studentStatusId} modalRef={modalRef} setModalRef={setModalRef} /> */}
     </Box>
   )
 }

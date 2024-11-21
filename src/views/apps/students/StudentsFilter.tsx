@@ -34,7 +34,7 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
   const { getCourses, courses } = useCourses()
   const [groups, setGroups] = useState<any>()
   const [teachers, setTeachers] = useState<any>()
-
+  const [isActive, setIsActive] = useState<boolean>(true)
   const { t } = useTranslation()
   const searchVal = useDebounce(search, 800)
 
@@ -55,13 +55,16 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
     dispatch(updateStudentParams({ [key]: value }))
     if (key === 'amount') {
       if (value === 'is_debtor') {
+        setIsActive(false)
         dispatch(updateStudentParams({ is_debtor: true, last_payment: '' }))
         await dispatch(fetchStudentsList({ ...queryParams, is_debtor: true, last_payment: '' }))
       }
       if (value === 'last_payment') {
+        setIsActive(true)
         dispatch(updateStudentParams({ last_payment: true, is_debtor: '' }))
         await dispatch(fetchStudentsList({ ...queryParams, last_payment: true, is_debtor: '' }))
       } else if (value === 'all') {
+        setIsActive(true)
         dispatch(updateStudentParams({ is_debtor: '', last_payment: '' }))
         await dispatch(fetchStudentsList({ ...queryParams, is_debtor: '', last_payment: '' }))
       }
@@ -165,7 +168,6 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
               <MenuItem value={'frozen'}>{t('Muzlatilgan')}</MenuItem>
               <MenuItem value={'not_activated'}>{t('Sinov darsidan ketganlar')}</MenuItem>
               <MenuItem value={'without_group'}>{t('Guruhsiz')}</MenuItem>
-
             </Select>
           </FormControl>
           <FormControl fullWidth>
@@ -355,25 +357,27 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
             />
           </Box>
 
-          <Box sx={{ display: 'flex', alignItems: 'center', width: 180 }}>
-            <Toggle
-              checked={queryParams.status === 'archive'}
-              color='red'
-              checkedChildren='Arxiv'
-              unCheckedChildren='Arxiv'
-              onChange={e => {
-                if (e) {
-                  handleFilter('status', 'archive')
-                } else {
-                  handleFilter('status', 'active')
-                }
-              }}
-            />
-          </Box>
+          {isActive && (
+            <Box sx={{ display: 'flex', alignItems: 'center', width: 180 }}>
+              <Toggle
+                checked={queryParams.status === 'archive'}
+                color='red'
+                checkedChildren='Arxiv'
+                unCheckedChildren='Arxiv'
+                onChange={e => {
+                  if (e) {
+                    handleFilter('status', 'archive')
+                  } else {
+                    handleFilter('status', 'active')
+                  }
+                }}
+              />
+            </Box>
+          )}
           <Excel url='/common/students/export/' queryString={queryString} />
         </Box>
       </Box>
     )
 }
 
-export default StudentsFilter 
+export default StudentsFilter

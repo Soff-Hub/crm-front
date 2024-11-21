@@ -5,6 +5,7 @@ import {
   DialogActions,
   DialogContent,
   Drawer,
+  Fade,
   FormControl,
   FormHelperText,
   IconButton,
@@ -16,7 +17,7 @@ import {
 } from '@mui/material'
 import { useFormik } from 'formik'
 import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import IconifyIcon from 'src/@core/components/icon'
 import DataTable from 'src/@core/components/table'
@@ -27,6 +28,12 @@ import { formatCurrency } from 'src/@core/utils/format-currency'
 import showResponseError from 'src/@core/utils/show-response-error'
 import { customTableProps } from 'src/pages/groups'
 import * as Yup from 'yup'
+import { getStudents, studentsUpdateParams } from 'src/store/apps/groupDetails';
+import { useAppDispatch, useAppSelector } from 'src/store'
+import { ModalTypes } from './ViewStudents/UserViewStudentsList'
+import useBranches from 'src/hooks/useBranch'
+
+
 
 export const getFormattedDate = () => {
   const today = new Date()
@@ -54,15 +61,21 @@ export interface ExamType {
 }
 
 const UserViewBilling = () => {
-  const { query } = useRouter()
+  const { push,query } = useRouter()
   const { t } = useTranslation()
   const { isMobile } = useResponsive()
   const [error, setError] = useState<any>({})
   const [open, setOpen] = useState<'add' | 'edit' | 'delete' | null>(null)
   const [loading, setLoading] = useState<boolean>(false)
   const [editData, setEditData] = useState<any>()
-
   const [exams, setExams] = useState<ExamType[]>([])
+  const dispatch = useAppDispatch()
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
+  const [openLeft, setOpenLeft] = useState<boolean>(false)
+  const { groupData, studentsQueryParams, isGettingStudents } = useAppSelector(state => state.groupDetails)
+  const { getBranches, branches } = useBranches()
+  const [openEdit, setOpenEdit] = useState<ModalTypes | null>(null)
+  const [modalRef, setModalRef] = useState<'sms' | 'note' | 'export' | null>(null)
 
   const getExams = async () => {
     try {
@@ -72,6 +85,8 @@ const UserViewBilling = () => {
       console.log(err)
     }
   }
+
+
 
   const handleEditOpen = async (id: any) => {
     const findedItem: any = await exams.find((el: any) => el.student.id === id)
@@ -89,12 +104,16 @@ const UserViewBilling = () => {
     setEditData(null)
     setOpen(null)
   }
+ 
 
   const handleDelete = async () => {
     setLoading(true)
     try {
       await api.delete(`common/personal-payment/${editData}`)
       await getExams()
+      await dispatch(studentsUpdateParams({ status: 'active,new' }))
+      const queryString = new URLSearchParams(studentsQueryParams).toString()
+      await dispatch(getStudents({ id: query.id, queryString: queryString }))
       handleClose()
     } catch (err: any) {
       setLoading(false)
@@ -188,7 +207,11 @@ const UserViewBilling = () => {
       setLoading(true)
       try {
         await api.post('common/personal-payment/', { ...values, group: query.id, student: Number(editData.id) })
+        await dispatch(studentsUpdateParams({ status: 'active,new' }))
+        const queryString = new URLSearchParams(studentsQueryParams).toString()
+        await dispatch(getStudents({ id: query.id, queryString: queryString }))
         await getExams()
+        
         handleClose()
       } catch (err: any) {
         showResponseError(err.response.data, setError)
@@ -239,6 +262,7 @@ const UserViewBilling = () => {
             <IconifyIcon icon='mdi:close' fontSize={20} />
           </IconButton>
         </Box>
+     
         {editData && (
           <form
             onSubmit={formik.handleSubmit}
