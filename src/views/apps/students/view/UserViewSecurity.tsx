@@ -290,7 +290,7 @@ const UserViewSecurity = ({ groupData }: any) => {
     <Box className='demo-space-y'>
       {groupData && groupData.length > 0 ? (
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-          {groupData.filter((group: any) => group.status !== 'archive').map((group: any) => (
+          {groupData.map((group: any) => (
             <Box key={group.id} sx={{ position: 'relative' }}>
               <Typography
                 id='fade-button'
