@@ -87,6 +87,7 @@ const VerticalLayout = (props: LayoutProps) => {
             beforeNavMenuContent={verticalLayoutProps?.navMenu.beforeContent}
             {...props}
           />
+          
         )}
         <MainContentWrapper
           className='layout-content-wrapper'

@@ -298,7 +298,7 @@ const UserViewSecurity = () => {
                   }
                 </tr>
               </thead>
-              {attendance?.students.length > 0 ?
+              {attendance?.students?.length > 0 ?
                 <tbody>
                   {attendance && attendance.students.map((student: any) => (
                     <tr key={student.id} style={{}}>

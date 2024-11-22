@@ -24,6 +24,8 @@ import AppBarContent from './components/horizontal/app-bar-content'
 // ** Util Import
 import { hexToRGBA } from 'src/@core/utils/hex-to-rgba'
 import { useAuth } from 'src/hooks/useAuth'
+import StaticsModal from 'src/pages/statics-modal'
+import DraggableIcon from 'src/pages/soffBotIcon'
 
 const HorizontalLayoutWrapper = styled(Box)({
   height: '100%',
@@ -62,6 +64,15 @@ const ContentWrapper = styled(Box)(({ theme }) => ({
     paddingRight: theme.spacing(4)
   }
 }))
+const FixedIcon = styled('img')(({ top, left, bottom, right }: { top?: string; left?: string; bottom?: string; right?: string }) => ({
+  position: 'fixed',
+  top: top || 'unset',
+  left: left || 'unset',
+  bottom: bottom || 'unset',
+  right: right || 'unset',
+  zIndex: 1000, 
+  cursor: 'pointer',
+}));
 
 const HorizontalLayout = (props: LayoutProps) => {
   // ** Props
@@ -93,81 +104,86 @@ const HorizontalLayout = (props: LayoutProps) => {
     <HorizontalLayoutWrapper className='layout-wrapper'>
       <MainContentWrapper className='layout-content-wrapper' sx={{ ...(contentHeightFixed && { maxHeight: '100vh' }) }}>
         {/* Navbar (or AppBar) and Navigation Menu Wrapper */}
-        {!auth?.user?.payment_page && <AppBar
-          color='default'
-          elevation={skin === 'bordered' ? 0 : 3}
-          className='layout-navbar-and-nav-container'
-          position={appBar === 'fixed' ? 'sticky' : 'static'}
-          sx={{
-            alignItems: 'center',
-            color: 'text.primary',
-            justifyContent: 'center',
-            backgroundColor: 'background.paper',
-            ...(appBar === 'static' && { zIndex: 13 }),
-            ...(skin === 'bordered' && { borderBottom: theme => `1px solid ${theme.palette.divider}` }),
-            transition: 'border-bottom 0.2s ease-in-out, backdrop-filter .25s ease-in-out, box-shadow .25s ease-in-out',
-            ...(appBar === 'fixed'
-              ? appBarBlur && {
-                backdropFilter: 'blur(8px)',
-                backgroundColor: theme => hexToRGBA(theme.palette.background.paper, 0.9)
-              }
-              : {}),
-            ...userAppBarStyle
-          }}
-          {...userAppBarProps}
-        >
-          {/* Navbar / AppBar */}
-          <Box
-            className='layout-navbar'
+        {!auth?.user?.payment_page && (
+          <AppBar
+            color='default'
+            elevation={skin === 'bordered' ? 0 : 3}
+            className='layout-navbar-and-nav-container'
+            position={appBar === 'fixed' ? 'sticky' : 'static'}
             sx={{
-              width: '100%',
-              ...(navHidden ? {} : { borderBottom: theme => `1px solid ${theme.palette.divider}` })
+              alignItems: 'center',
+              color: 'text.primary',
+              justifyContent: 'center',
+              backgroundColor: 'background.paper',
+              ...(appBar === 'static' && { zIndex: 13 }),
+              ...(skin === 'bordered' && { borderBottom: theme => `1px solid ${theme.palette.divider}` }),
+              transition:
+                'border-bottom 0.2s ease-in-out, backdrop-filter .25s ease-in-out, box-shadow .25s ease-in-out',
+              ...(appBar === 'fixed'
+                ? appBarBlur && {
+                    backdropFilter: 'blur(8px)',
+                    backgroundColor: theme => hexToRGBA(theme.palette.background.paper, 0.9)
+                  }
+                : {}),
+              ...userAppBarStyle
             }}
+            {...userAppBarProps}
           >
-            <Toolbar
-              className='navbar-content-container'
+            {/* Navbar / AppBar */}
+            <Box
+              className='layout-navbar'
               sx={{
-                mx: 'auto',
-                ...(contentWidth === 'boxed' && { '@media (min-width:1440px)': { maxWidth: 1440 } }),
-                minHeight: theme => `${(theme.mixins.toolbar.minHeight as number) - 1}px !important`
+                width: '100%',
+                ...(navHidden ? {} : { borderBottom: theme => `1px solid ${theme.palette.divider}` })
               }}
             >
-              <AppBarContent
-                {...props}
-                hidden={hidden}
-                settings={settings}
-                saveSettings={saveSettings}
-                appBarContent={horizontalLayoutProps?.appBar?.content}
-                appBarBranding={horizontalLayoutProps?.appBar?.branding}
-              />
-            </Toolbar>
-          </Box>
-
-          {/* Navigation Menu */}
-          {navHidden ? null : (
-            <Box className='layout-horizontal-nav' sx={{ width: '100%', ...horizontalLayoutProps?.navMenu?.sx }}>
               <Toolbar
-                className='horizontal-nav-content-container'
+                className='navbar-content-container'
                 sx={{
                   mx: 'auto',
                   ...(contentWidth === 'boxed' && { '@media (min-width:1440px)': { maxWidth: 1440 } }),
-                  minHeight: theme =>
-                    `${(theme.mixins.toolbar.minHeight as number) - (skin === 'bordered' ? 1 : 0)}px !important`
+                  minHeight: theme => `${(theme.mixins.toolbar.minHeight as number) - 1}px !important`
                 }}
               >
-                {(userNavMenuContent && userNavMenuContent(props)) || (
-                  <Navigation
-                    {...props}
-                    horizontalNavItems={
-                      (horizontalLayoutProps as NonNullable<LayoutProps['horizontalLayoutProps']>).navMenu?.navItems
-                    }
-                  />
-                )}
+                <AppBarContent
+                  {...props}
+                  hidden={hidden}
+                  settings={settings}
+                  saveSettings={saveSettings}
+                  appBarContent={horizontalLayoutProps?.appBar?.content}
+                  appBarBranding={horizontalLayoutProps?.appBar?.branding}
+                />
               </Toolbar>
             </Box>
-          )}
-        </AppBar>}
 
+            {/* Navigation Menu */}
+            {navHidden ? null : (
+              <Box className='layout-horizontal-nav' sx={{ width: '100%', ...horizontalLayoutProps?.navMenu?.sx }}>
+                <Toolbar
+                  className='horizontal-nav-content-container'
+                  sx={{
+                    mx: 'auto',
+                    ...(contentWidth === 'boxed' && { '@media (min-width:1440px)': { maxWidth: 1440 } }),
+                    minHeight: theme =>
+                      `${(theme.mixins.toolbar.minHeight as number) - (skin === 'bordered' ? 1 : 0)}px !important`
+                  }}
+                >
+                  {(userNavMenuContent && userNavMenuContent(props)) || (
+                    <>
+                      <Navigation
+                        {...props}
+                        horizontalNavItems={
+                          (horizontalLayoutProps as NonNullable<LayoutProps['horizontalLayoutProps']>).navMenu?.navItems
+                        }
+                      />
+                      <StaticsModal />
+                    </>
+                  )}
+                </Toolbar>
+              </Box>
+            )}
+          </AppBar>
+        )}
         {/* Content */}
         <ContentWrapper
           className='layout-page-content'
@@ -181,14 +197,19 @@ const HorizontalLayout = (props: LayoutProps) => {
           }}
         >
           {children}
+          {/* <DraggableIcon/> */}
+          
         </ContentWrapper>
-
         {/* Footer */}
         <Footer {...props} footerStyles={footerProps?.sx} footerContent={footerProps?.content} />
-
         {/* Customizer */}
+        {/* <img
+          src='/images/avatars/happybot.png'
+          width='50'
+          height='50'
+          alt='Happy Bot'
+        />{' '} */}
         {themeConfig.disableCustomizer || hidden ? null : <Customizer />}
-
         {/* Scroll to top button */}
         {scrollToTop ? (
           scrollToTop(props)
@@ -199,6 +220,8 @@ const HorizontalLayout = (props: LayoutProps) => {
             </Fab>
           </ScrollToTop>
         )}
+            <DraggableIcon/>
+
       </MainContentWrapper>
     </HorizontalLayoutWrapper>
   )

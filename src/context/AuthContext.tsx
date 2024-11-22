@@ -98,7 +98,8 @@ const AuthProvider = ({ children }: Props) => {
       }
     } else {
       setLoading(false)
-      window.localStorage.clear()
+      window.localStorage.removeItem("accessToken")
+      window.localStorage.removeItem("userData")
     }
   }
 

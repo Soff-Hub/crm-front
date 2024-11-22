@@ -46,6 +46,7 @@ const Sidebar = (props: BoxProps & SidebarType) => {
       >
         {children}
       </Box>
+      
       {hideBackdrop ? null : (
         <Backdrop
           open={show}

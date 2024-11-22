@@ -21,6 +21,7 @@ import VerticalNavHeader from './VerticalNavHeader'
 
 // ** Util Import
 import { hexToRGBA } from 'src/@core/utils/hex-to-rgba'
+import StaticsModal from 'src/pages/statics-modal'
 
 interface Props {
   navWidth: number
@@ -172,6 +173,7 @@ const Navigation = (props: Props) => {
           {afterNavMenuContent && afterVerticalNavMenuContentPosition === 'static' ? afterNavMenuContent(props) : null}
         </ScrollWrapper>
       </Box>
+          {/* <StaticsModal/> */}
       {afterNavMenuContent && afterVerticalNavMenuContentPosition === 'fixed' ? afterNavMenuContent(props) : null}
     </Drawer>
   )
