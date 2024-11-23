@@ -13,7 +13,6 @@ const DraggableIcon = () => {
   const dispatch = useDispatch()
   const { soffBotStatus } = useAppSelector(state => state.page)
   const { roles } = useRoles()
-  let last_login = localStorage.getItem('last_login')
   let clickTimeout: NodeJS.Timeout | null = null
   let startPosition = { top: 0, left: 0 }
   let isMoving = false

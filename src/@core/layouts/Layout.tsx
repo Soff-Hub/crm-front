@@ -10,7 +10,7 @@ import HorizontalLayout from './HorizontalLayout'
 import api from '../utils/api'
 import { useAppDispatch } from 'src/store'
 import { toggleBotStatus, setSoffBotText, toggleModal } from 'src/store/apps/page'
-import useRoles from 'src/hooks/useRoles'
+import { AuthContext } from 'src/context/AuthContext'
 
 const Layout = (props: LayoutProps) => {
   // ** Props
@@ -18,14 +18,11 @@ const Layout = (props: LayoutProps) => {
   const dispatch = useAppDispatch()
   let currentDate = new Date().toISOString()
   let last_login = localStorage.getItem('last_login')
-  const { roles } = useRoles()
-  const is_ceo = roles.find((item: any) => item.name === 'CEO' && item.is_active)
-  const is_teacher = roles.find((item: any) => item.name === 'TEACHER' && item.is_active)
-
+  let userRole = localStorage.getItem('userRole')
+  const { user } = useContext(AuthContext)
   // ** Ref
   const isCollapsed = useRef(settings.navCollapsed)
 
-  // console.log(currentDate,last_login);
 
   function getYearMonthDay(timestamp: any) {
     if (timestamp) {
@@ -38,7 +35,7 @@ const Layout = (props: LayoutProps) => {
   const formattedLastLogin = getYearMonthDay(last_login)
 
   useEffect(() => {
-    if (formattedCurrentDate != formattedLastLogin) {
+    if (formattedCurrentDate != formattedLastLogin || userRole != user?.role.join(', ')) {
       dispatch(toggleModal(true))
     }
 
@@ -61,7 +58,7 @@ const Layout = (props: LayoutProps) => {
       .get('auth/analytics/')
       .then(res => {
         dispatch(toggleBotStatus(res.data.robot_mood))
-        if (res.data.role == 'ceo') {
+        if (user?.role.join(', ').includes('ceo')) {
           dispatch(
             setSoffBotText({
               absent_students: res.data.absent_students,
@@ -75,7 +72,7 @@ const Layout = (props: LayoutProps) => {
               summary: res.data?.summary
             })
           )
-        } else if (res.data.role == 'teacher') {
+        } else if (user?.role.join(', ') == 'teacher') {
           dispatch(
             setSoffBotText({
               missed_attendance: res.data.missed_attendance,
@@ -90,7 +87,7 @@ const Layout = (props: LayoutProps) => {
         console.log(err)
       })
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+   
   }, [hidden])
 
   if (settings.layout === 'horizontal') {
