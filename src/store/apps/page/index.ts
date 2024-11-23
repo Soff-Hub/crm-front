@@ -1,14 +1,14 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-const initialState: { isPageDisabled: boolean ,isModalOpen:boolean,soffBotStatus:number,currentDate: string
-soffBotText:any} = {
+const initialState: {
+  isPageDisabled: boolean, isModalOpen: boolean, soffBotStatus: number, currentDate: string
+  soffBotText: any
+} = {
   isPageDisabled: false,
   isModalOpen: false,
   soffBotStatus: 0,
   currentDate: '',
-  soffBotText:{}
-   
-
+  soffBotText: {}
 }
 
 export const pageSlice = createSlice({
@@ -31,7 +31,7 @@ export const pageSlice = createSlice({
     toggleBotStatus: (state, action) => {
       state.soffBotStatus = action.payload
     },
-    setCurrentDate: (state,action) => {
+    setCurrentDate: (state, action) => {
       state.currentDate = action.payload
     }, setSoffBotText: (state, action) => {
       state.soffBotText = action.payload
@@ -39,6 +39,6 @@ export const pageSlice = createSlice({
   }
 })
 
-export const { disablePage ,toggleModal,toggleBotStatus,setCurrentDate,setSoffBotText} = pageSlice.actions
+export const { disablePage, toggleModal, toggleBotStatus, setCurrentDate, setSoffBotText } = pageSlice.actions
 
 export default pageSlice.reducer
