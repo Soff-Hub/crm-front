@@ -1,7 +1,5 @@
-import { useState, useEffect, useContext } from 'react'
-import { Dialog, DialogTitle, DialogContent, Button, CircularProgress } from '@mui/material'
-import { mdiRobot } from '@mdi/js'
-import Icon from '@mdi/react'
+import { useState, useContext } from 'react'
+import { Dialog, DialogTitle, DialogContent, Button } from '@mui/material'
 import { useDispatch, useSelector } from 'react-redux'
 import { toggleModal } from 'src/store/apps/page'
 import Typewriter from 'typewriter-effect'
@@ -19,14 +17,6 @@ const StaticsModal = () => {
   const soffBotText = useSelector((state: any) => state.page.soffBotText)
   const soffBotStatus = useSelector((state: any) => state.page.soffBotStatus)
 
-  const { roles } = useRoles()
-
-  const is_ceo = roles.find((item: any) => item.name === 'CEO' && item.is_active)
-  const is_teacher = roles.find((item: any) => item.name === 'TEACHER' && item.is_active)
-
-  console.log(is_ceo);
-  
-
   const handleClose = () => {
     const last_login = localStorage.getItem('last_login')
     if (last_login !== currentDate) {
@@ -37,9 +27,6 @@ const StaticsModal = () => {
     dispatch(toggleModal(false))
     setTypingComplete(false)
   }
-
-  console.log(soffBotText)
-
   return (
     <Dialog
       // onClick={e => e.stopPropagation()}
@@ -62,11 +49,12 @@ const StaticsModal = () => {
           style={{ color: 'black', position: 'absolute', top: 8, right: 8 }}
         />
       </DialogTitle>
-      {is_ceo ? (
+      {soffBotText?.role === 'ceo' ? (
         <DialogContent sx={{ textAlign: 'justify', padding: '20px' }}>
-          <Typewriter
-            onInit={typewriter => {
-              const message = `
+          {soffBotText?.role && (
+            <Typewriter
+              onInit={typewriter => {
+                const message = `
          <div style="font-family: Arial, sans-serif; color: #333; line-height: 1.6;">
   <h3 style="color: #333; font-size: 20px; margin-top: 10px; margin-bottom: 20px;">📊 O'quv markazingizning kechagi statistikasi</h3>
   
@@ -102,13 +90,7 @@ const StaticsModal = () => {
       } ta</span>
     </p>
       <h3 style="color: #333; font-size: 18px; margin-top: 10px; margin-bottom: 20px;">Xulosa : <br/>
-      <span style="color:gray; font-size:15px;">${
-        soffBotStatus == -1
-          ? 'Jamo yomon ishladi 😡'
-          : soffBotStatus == 0
-          ? 'Jamoa normal ishladi 😐'
-          : 'Jamo yaxshi ishladi 😊'
-      }</span>
+      <span style="color:gray; font-size:15px;">${soffBotText?.summary}</span>
       </h3>
 
 
@@ -117,52 +99,63 @@ const StaticsModal = () => {
 
             `
 
-              typewriter
-                .typeString(message)
-                .callFunction(() => setTypingComplete(true))
-                .pauseFor(5000)
-                .start()
-            }}
-            options={{
-              loop: false,
-              delay: 20
-            }}
-          />
+                typewriter
+                  .typeString(message)
+                  .callFunction(() => setTypingComplete(true))
+                  .pauseFor(5000)
+                  .start()
+              }}
+              options={{
+                loop: false,
+                delay: 20
+              }}
+            />
+          )}
         </DialogContent>
       ) : (
         <DialogContent sx={{ textAlign: 'justify', padding: '20px' }}>
-          <Typewriter
-            onInit={typewriter => {
-              const goodWorkText = soffBotText.missed_attendance === 0 ? 'Barakalla siz zor ishladizngiz🥳' : ''
+          {soffBotText?.role && (
+            <Typewriter
+              onInit={typewriter => {
+                const goodWorkText = soffBotText.missed_attendance === 0 ? 'Barakalla siz zor ishladizngiz🥳' : ''
 
-              const missedStudentsText =
-                Array.isArray(soffBotText?.groups) && soffBotText.groups.length > 0
-                  ? soffBotText.groups
-                      .map(
-                        (group: { group: string; count: number; group_id: number }) =>
-                          `- <a href="/groups/view/security/?id=${group.group_id}" style="color: #0077FF; text-decoration: none;">${group.group}</a>: ${group.count} ta o'quvchi`
-                      )
-                      .join('<br>')
-                  : "Hozircha hech qanday guruh ma'lumotlari mavjud emas."
+                const missedStudentsText =
+                  Array.isArray(soffBotText?.groups) && soffBotText.groups.length > 0
+                    ? soffBotText.groups
+                        .map(
+                          (group: { group: string; count: number; group_id: number }) =>
+                            `- <a href="/groups/view/security/?id=${group.group_id}" style="color: #0077FF; text-decoration: none;">${group.group}</a>: ${group.count} ta o'quvchi`
+                        )
+                        .join('<br>')
+                    : "Hozircha hech qanday guruh ma'lumotlari mavjud emas."
 
-              const message =
-                soffBotText.missed_attendance === 0
-                  ? goodWorkText
-                  : `Siz kecha ${
-                      soffBotText?.missed_attendance || 0
-                    } ta talabaning yo'qlamasini o'tkazb yubordingiz:<br>${missedStudentsText}`
+                const message =
+                  soffBotText.missed_attendance === 0
+                    ? goodWorkText
+                    : `Siz kecha ${
+                        soffBotText?.missed_attendance || 0
+                      } ta talabaning yo'qlamasini o'tkazb yubordingiz:<br>${missedStudentsText} \n` +
+                      `${
+                        soffBotText?.summary
+                          ? `<h3 style='color: #333; font-size: 18px; margin-top: 10px; margin-bottom: 20px;'>
+                            Xulosa : <br />
+                            <span style='color:gray; font-size:15px;'>${soffBotText?.summary}</span>
+                          </h3>`
+                          : ''
+                      }`
 
-              typewriter
-                .typeString(message)
-                .callFunction(() => setTypingComplete(true))
-                .pauseFor(5000)
-                .start()
-            }}
-            options={{
-              loop: false,
-              delay: 40
-            }}
-          />
+                typewriter
+                  .typeString(message)
+                  .callFunction(() => setTypingComplete(true))
+                  .pauseFor(5000)
+                  .start()
+              }}
+              options={{
+                loop: false,
+                delay: 40
+              }}
+            />
+          )}
         </DialogContent>
       )}
 

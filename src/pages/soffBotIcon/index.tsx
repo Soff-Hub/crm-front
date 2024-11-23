@@ -18,8 +18,6 @@ const DraggableIcon = () => {
   let startPosition = { top: 0, left: 0 }
   let isMoving = false
 
-    
-
   const is_ceo = roles.find((item: any) => item.name == 'CEO' && item.is_active)
   const is_teacher = roles.find((item: any) => item.name == 'TEACHER' && item.is_active)
 
@@ -61,18 +59,22 @@ const DraggableIcon = () => {
     isMoving = false
   }
 
-  
-
   const handleSingleClick = async () => {
     if (!isMoving) {
       dispatch(toggleModal(true))
       await api
         .get('auth/analytics/')
         .then(res => {
-         if (res.data.role == "teacher") {
-            dispatch(setSoffBotText({ missed_attendance: res.data.missed_attendance, groups: res.data.detail }))
-          } 
-        else if (res.data.role == "ceo") {
+          if (res.data.role == 'teacher') {
+            dispatch(
+              setSoffBotText({
+                missed_attendance: res.data.missed_attendance,
+                groups: res.data.detail,
+                summary: res.data?.summary,
+                role: res?.data?.role
+              })
+            )
+          } else if (res.data.role == 'ceo') {
             dispatch(
               setSoffBotText({
                 absent_students: res.data.absent_students,
@@ -81,7 +83,9 @@ const DraggableIcon = () => {
                 new_leads: res.data.new_leads,
                 robot_mood: res.data.robot_mood,
                 sms_limit: res.data.sms_limit,
-                unconnected_leads: res.data.unconnected_leads
+                unconnected_leads: res.data.unconnected_leads,
+                summary: res.data?.summary,
+                role: res?.data?.role
               })
             )
           }
