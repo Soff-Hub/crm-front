@@ -134,19 +134,19 @@ export default function CreatePayment() {
                                     )
                                 }
                             </Select>
-                            <FormHelperText error={!!formik.errors.tariff && !!formik.touched.tariff}>{!!formik.errors.tariff && !!formik.touched.tariff && formik.errors.tariff}</FormHelperText>
+                            <FormHelperText error={!!formik.errors.tariff && !!formik.touched.tariff}>{!!formik.errors.tariff && !!formik.touched.tariff && Boolean(formik.errors.tariff)}</FormHelperText>
                         </FormControl>
                         <FormControl sx={{ width: '100%' }}>
                             <AmountInput
                                 name='amount'
                                 size='small'
                                 label={t("Tarif summasi")}
-                                error={!!formik.errors.amount && formik.touched.amount}
+                                error={!!formik.errors.amount && Boolean(formik.touched.amount)}
                                 value={formik.values.amount || ""}
                                 onChange={(e) => formik.setFieldValue("amount", revereAmount(e.target.value))}
                                 onBlur={formik.handleBlur}
                             />
-                            <FormHelperText error={!!formik.errors.amount && !!formik.touched.amount}>{!!formik.errors.amount && !!formik.touched.amount && formik.errors.amount}</FormHelperText>
+                            <FormHelperText error={!!formik.errors.amount && !!formik.touched.amount}>{!!formik.errors.amount && !!formik.touched.amount && Boolean(formik.errors.amount)}</FormHelperText>
                         </FormControl>
                         <Button
                             fullWidth
@@ -178,7 +178,7 @@ export default function CreatePayment() {
                                 onChange={formik.handleChange}
                                 onBlur={formik.handleBlur}
                             />
-                            <FormHelperText error={!!formik.errors.description && !!formik.touched.description}>{!!formik.errors.description && !!formik.touched.description && formik.errors.description}</FormHelperText>
+                            <FormHelperText error={!!formik.errors.description && !!formik.touched.description}>{!!formik.errors.description && !!formik.touched.description && Boolean(formik.errors.description)}</FormHelperText>
                         </FormControl>
                         <LoadingButton loading={isLoading} variant='contained' type='submit' fullWidth>{t("Yuborish")}</LoadingButton>
                     </form>
