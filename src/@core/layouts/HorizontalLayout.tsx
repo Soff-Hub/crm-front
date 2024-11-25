@@ -24,7 +24,7 @@ import AppBarContent from './components/horizontal/app-bar-content'
 // ** Util Import
 import { hexToRGBA } from 'src/@core/utils/hex-to-rgba'
 import { useAuth } from 'src/hooks/useAuth'
-import StaticsModal from 'src/pages/statics-modal'
+import StaticsModal from 'src/@core/components/statics-modal'
 
 const HorizontalLayoutWrapper = styled(Box)({
   height: '100%',
