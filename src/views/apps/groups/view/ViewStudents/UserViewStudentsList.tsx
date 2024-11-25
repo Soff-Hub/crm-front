@@ -319,7 +319,7 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, choices }:
         </Typography>
 
         <div className='cursor:pointer' onClick={() => setUpdateStatusModal(true)}>
-          <Box sx={{ textAlign: 'start', mr: 3 }}>
+          <Box sx={{ textAlign: 'end', mr: 3 }}>
             {student_status === 'active' ? (
               <Chip
                 label={t('active')}

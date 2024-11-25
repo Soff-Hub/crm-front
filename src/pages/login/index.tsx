@@ -37,6 +37,8 @@ import PhoneInput from 'src/@core/components/phone-input'
 import { useTranslation } from 'react-i18next'
 import { reversePhone } from 'src/@core/components/phone-input/format-phone-number'
 import api from 'src/@core/utils/api'
+import { toggleModal } from 'src/store/apps/page'
+import { useAppDispatch } from 'src/store'
 
 // ** Styled Components
 const LoginIllustrationWrapper = styled(Box)<BoxProps>(({ theme }) => ({
@@ -75,11 +77,12 @@ const LoginPage = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false)
   const [loading, setLoading] = useState<boolean>(false)
   const [data, setData] = useState<any>(null)
-
+  const dispatch = useAppDispatch()
   // ** Hooks
   const auth = useAuth()
   const { isMobile } = useResponsive()
   const { t } = useTranslation()
+  let currentDate = new Date().toISOString()
 
   const pageLoad = async () => {
     try {
@@ -113,6 +116,7 @@ const LoginPage = () => {
     const { phone, password } = data
     await auth.login({ phone: reversePhone(phone), password }, (resp: any) => {
       console.log(resp.response);
+   
       if (resp?.response) {
         setLoading(false)
         Object.keys(resp?.response?.data).map((el: any) => {
@@ -121,6 +125,7 @@ const LoginPage = () => {
             message: resp?.response?.data[el]
           })
         })
+      
       } else {
         setLoading(false)
         toast.error("Network Error!", { position: 'top-center' })

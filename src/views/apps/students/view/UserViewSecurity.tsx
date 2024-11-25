@@ -290,7 +290,7 @@ const UserViewSecurity = ({ groupData }: any) => {
     <Box className='demo-space-y'>
       {groupData && groupData.length > 0 ? (
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-          {groupData.map((group: any) => (
+          {groupData.map(( group: any) => (
             <Box key={group.id} sx={{ position: 'relative' }}>
               <Typography
                 id='fade-button'
@@ -300,14 +300,14 @@ const UserViewSecurity = ({ groupData }: any) => {
                 sx={{
                   position: 'absolute',
                   top: 15,
-                  right: 410,
+                  right: 465,
                   cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center'
                 }}
                 onClick={!(user?.role.length === 1 && user?.role.includes('teacher')) ? handleClick : undefined}
               >
-                <IconifyIcon icon={'charm:menu-kebab'} fontSize={11} />
+                <IconifyIcon  icon={'charm:menu-kebab'} fontSize={11} />
               </Typography>
 
               <Menu
