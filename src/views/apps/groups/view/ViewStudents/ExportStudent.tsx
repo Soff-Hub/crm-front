@@ -23,7 +23,7 @@ export default function ExportStudent({ id, modalRef, setModalRef }: { id: any, 
     const { t } = useTranslation()
     const { query } = useRouter()
 
-    const formik = useFormik({
+    const formik: any = useFormik({
         initialValues: { new_group: '' },
         validationSchema: () => Yup.object({
             // added_at: Yup.string().required(t("Maydonni to'ldiring") as string),

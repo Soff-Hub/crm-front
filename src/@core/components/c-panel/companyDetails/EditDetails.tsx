@@ -27,7 +27,7 @@ export default function EditDetails() {
         reference_phone: Yup.string().required(t("Masul shaxs raqami kiritilishi kerak") as string),
     });
 
-    const formik = useFormik({
+    const formik: any = useFormik({
         initialValues: {
             name: details?.name,
             reference_name: details?.reference_name,

@@ -78,7 +78,7 @@ export default function AddGroupModal() {
     end_at: Yup.string().required(t('Tugash vaqtini tanlang'))
   })
 
-  const formik = useFormik({
+  const formik: any = useFormik({
     initialValues,
     validationSchema,
     onSubmit: async values => {

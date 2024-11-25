@@ -43,7 +43,7 @@ export default function CreateSMSPayment() {
         amount: Yup.string().nullable().required(t("Tarif summasini kiriting") as string),
     });
 
-    const formik = useFormik({
+    const formik: any = useFormik({
         initialValues: {
             description: null,
             receipt: null,
@@ -66,7 +66,7 @@ export default function CreateSMSPayment() {
             } else {
                 toast.success("To'lov yuborildi")
                 handleClose()
-                await dispatch(fetchCRMPayments())
+                await dispatch(fetchCRMPayments(''))
             }
             setLoading(false)
         }

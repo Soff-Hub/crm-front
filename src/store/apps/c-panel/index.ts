@@ -17,7 +17,7 @@ export const fetchSMSTariffs = createAsyncThunk('dashboard/fetchSMSTariffs', asy
   return response.data
 })
 
-export const fetchCRMPayments = createAsyncThunk('dashboard/fetchCRMPayments', async (queryString: string = '') => {
+export const fetchCRMPayments = createAsyncThunk('dashboard/fetchCRMPayments', async (queryString?: any) => {
   const response = await api.get('owner/orders/?' + queryString)
   return response.data
 })

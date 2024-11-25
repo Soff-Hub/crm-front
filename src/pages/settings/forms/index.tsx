@@ -169,7 +169,7 @@ export default function FormsPage() {
     getForms()
   }, [])
 
-  const formik = useFormik({
+  const formik: any = useFormik({
     initialValues: {
       pixel_script: '',
     },

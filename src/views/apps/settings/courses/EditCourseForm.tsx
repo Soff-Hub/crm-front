@@ -34,7 +34,7 @@ export default function EditCourseForm({}: Props) {
     text_color: Yup.string().nullable()
   })
 
-  const formik = useFormik({
+  const formik: any = useFormik({
     initialValues: {
       ...openEditCourse,
       color: openEditCourse?.color?.split(',')?.[0],

@@ -22,7 +22,7 @@ import Navigation from './components/vertical/navigation'
 import Footer from './components/shared-components/footer'
 import ScrollToTop from 'src/@core/components/scroll-to-top'
 import { useAuth } from 'src/hooks/useAuth'
-import StaticsModal from 'src/pages/statics-modal'
+import StaticsModal from 'src/@core/components/statics-modal'
 
 const VerticalLayoutWrapper = styled(Box)({
   height: '100%',

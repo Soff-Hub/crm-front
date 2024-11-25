@@ -155,7 +155,7 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, choices }:
     }
   }
 
-  const formik = useFormik({
+  const formik: any = useFormik({
     initialValues: { status: student_status },
     validationSchema: () =>
       Yup.object({

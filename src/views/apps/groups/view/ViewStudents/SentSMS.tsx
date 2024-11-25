@@ -33,7 +33,7 @@ export default function SentSMS({
   const [isLoading, setLoading] = useState(false)
   const { t } = useTranslation()
 
-  const formik = useFormik({
+  const formik: any = useFormik({
     initialValues: { message: '' },
     validationSchema: () =>
       Yup.object({

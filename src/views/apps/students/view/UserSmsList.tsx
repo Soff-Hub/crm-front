@@ -28,7 +28,7 @@ const UserSmsList = () => {
     const [loading, setLoading] = useState(false)
 
 
-    const formik = useFormik({
+    const formik: any = useFormik({
         initialValues: {
             message: ""
         },

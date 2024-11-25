@@ -91,7 +91,7 @@ export default function EditTeacherModal() {
     };
 
 
-    const formik = useFormik({
+    const formik: any = useFormik({
         initialValues,
         validationSchema,
         onSubmit: async (values: UpdateTeacherDto) => {

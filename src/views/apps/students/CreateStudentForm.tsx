@@ -70,7 +70,7 @@ export default function CreateStudentForm() {
         start_at: today
     }
 
-    const formik = useFormik({
+    const formik: any = useFormik({
         initialValues,
         validationSchema,
         onSubmit: async (valuess: CreateStudentDto) => {

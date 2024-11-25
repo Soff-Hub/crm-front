@@ -54,7 +54,7 @@ export default function EditStudentForm() {
         birth_date: studentData?.birth_date || null
     }
 
-    const formik = useFormik({
+    const formik: any = useFormik({
         initialValues,
         validationSchema,
         onSubmit: async (valuess: UpdateStudentDto) => {

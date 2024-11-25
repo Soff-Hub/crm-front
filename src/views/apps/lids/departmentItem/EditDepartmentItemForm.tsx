@@ -29,7 +29,7 @@ export default function EditDepartmentItemForm({ setLoading, setOpenDialog, load
 
     const initialValues: CreatesDepartmentState = { name: defaultName }
 
-    const formik = useFormik({
+    const formik: any = useFormik({
         initialValues,
         validationSchema,
         onSubmit: async (values) => {

@@ -29,7 +29,7 @@ export default function EditMonthlyPlan() {
         sms_count: Yup.string().nullable().required(t("SMS sonini kiriting") as string),
     });
 
-    const formik = useFormik({
+    const formik: any = useFormik({
         initialValues: {
             amount: null,
             sms_count: null,

@@ -196,7 +196,7 @@ const UserViewBilling = () => {
     description: Yup.string().required(t("To'ldirish majburiy") as string)
   })
 
-  const formik = useFormik({
+  const formik: any = useFormik({
     initialValues: {
       amount: 0,
       discount_count: '0',

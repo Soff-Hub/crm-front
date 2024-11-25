@@ -31,7 +31,7 @@ export default function CreateRoomForm({ }: Props) {
         name: Yup.string().required("Nom kiriting"),
     });
 
-    const formik = useFormik({
+    const formik: any = useFormik({
         initialValues: {
             name: '',
         },

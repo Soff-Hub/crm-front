@@ -29,7 +29,7 @@ export default function EditSmsform({ initialValues }: Props) {
         description: Yup.string().required("Xabarni kiriting")
     });
 
-    const formik = useFormik({
+    const formik: any = useFormik({
         initialValues,
         validationSchema,
         onSubmit: async (values) => {
