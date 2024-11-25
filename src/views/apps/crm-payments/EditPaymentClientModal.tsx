@@ -56,7 +56,7 @@ export default function EditPaymentClientModal() {
         amount: Yup.string().nullable().required(t("Tarif summasini kiriting") as string),
     });
 
-    const formik = useFormik({
+    const formik: any = useFormik({
         initialValues: {
             description: "",
             receipt: "",
@@ -82,7 +82,7 @@ export default function EditPaymentClientModal() {
             } else {
                 toast.success(t("To'lov yangilandi") as string)
                 handleClose()
-                await dispatch(fetchCRMPayments())
+                await dispatch(fetchCRMPayments(''))
             }
             setLoading(false)
         }

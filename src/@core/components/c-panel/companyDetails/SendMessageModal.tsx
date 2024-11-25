@@ -26,7 +26,7 @@ export default function SendMessageModal({ open, setOpen }: Props) {
         message: Yup.string().required("Xabar kiriting"),
     });
 
-    const formik = useFormik({
+    const formik: any = useFormik({
         initialValues: {
             message: "",
         },

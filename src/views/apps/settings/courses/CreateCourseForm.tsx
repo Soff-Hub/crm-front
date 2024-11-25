@@ -36,7 +36,7 @@ export default function CreateCourseForm({}: Props) {
     text_color: Yup.string().nullable()
   })
 
-  const formik = useFormik({
+  const formik: any = useFormik({
     initialValues: {
       name: '',
       price: '',

@@ -35,7 +35,7 @@ export default function TransitionsModal({ id }: { id: string }) {
         status: Yup.string().nullable().required(t("To'lovni holatini tanlang") as string),
     });
 
-    const formik = useFormik({
+    const formik: any = useFormik({
         initialValues: {
             status: null,
         },
@@ -50,7 +50,7 @@ export default function TransitionsModal({ id }: { id: string }) {
             } else {
                 toast.success(t("To'lov yuborildi") as string)
                 handleClose()
-                await dispatch(fetchCRMPayments())
+                await dispatch(fetchCRMPayments(''))
             }
             setLoading(false)
         }

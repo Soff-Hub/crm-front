@@ -82,7 +82,7 @@ export default function GlobalPaymentForm({ }: Props) {
         payment_type: ''
     }
 
-    const formik = useFormik({
+    const formik: any = useFormik({
         initialValues,
         validationSchema,
         onSubmit: async () => {

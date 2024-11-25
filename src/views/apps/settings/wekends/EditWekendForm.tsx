@@ -26,7 +26,7 @@ export default function EditWekendForm({ }: Props) {
         description: Yup.string().required("Sabab yozing"),
     });
 
-    const formik = useFormik({
+    const formik: any = useFormik({
         initialValues: {
             date: wekendData?.date,
             description: wekendData?.description

@@ -57,7 +57,7 @@ const Stats = () => {
 
     const initialValues = { name: '' }
 
-    const formik = useFormik({
+    const formik: any = useFormik({
         initialValues,
         validationSchema,
         onSubmit: async (valuess) => {

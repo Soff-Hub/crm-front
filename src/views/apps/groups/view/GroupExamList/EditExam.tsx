@@ -55,7 +55,7 @@ export default function EditExam() {
         }
     }
 
-    const formik = useFormik({
+    const formik: any = useFormik({
         initialValues: {
             title: "",
             date: "",

@@ -36,7 +36,7 @@ export default function AddToGroupForm({ item, reRender, groups, setLoading }: P
         added_at: today,
     }
 
-    const formik = useFormik({
+    const formik: any = useFormik({
         initialValues,
         validationSchema,
         onSubmit: async (values) => {

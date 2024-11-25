@@ -50,7 +50,7 @@ export default function CreateAnonimUserForm({ }: Props) {
         user: null
     }
 
-    const formik = useFormik({
+    const formik: any = useFormik({
         initialValues,
         validationSchema,
         onSubmit: async (values) => {

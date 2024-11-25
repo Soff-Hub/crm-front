@@ -27,7 +27,7 @@ export default function EditDepartmentForm({ id, name }: Props) {
 
     const initialValues: CreatesDepartmentState = { name }
 
-    const formik = useFormik({
+    const formik: any = useFormik({
         initialValues,
         validationSchema,
         onSubmit: async (valuess) => {

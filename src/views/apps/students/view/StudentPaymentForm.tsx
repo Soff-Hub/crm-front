@@ -55,7 +55,7 @@ export default function StudentPaymentForm({ openEdit, setOpenEdit, student_id }
     payment_date: today
   }
 
-  const formik = useFormik({
+  const formik: any = useFormik({
     initialValues,
     validationSchema,
     onSubmit: async values => {

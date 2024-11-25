@@ -31,7 +31,7 @@ export default function EditMonthlyPlan() {
         max_count: Yup.string().nullable().required(t("Maximal o'quvchilar sonini kiriting") as string),
     });
 
-    const formik = useFormik({
+    const formik: any = useFormik({
         initialValues: {
             amount: null,
             month_count: null,

@@ -30,7 +30,7 @@ export default function MergeToDepartment({ item, reRender }: Props) {
         department: null
     }
 
-    const formik = useFormik({
+    const formik: any = useFormik({
         initialValues,
         validationSchema,
         onSubmit: async (values) => {

@@ -29,7 +29,7 @@ export default function EditRoomForm({ }: Props) {
         name: Yup.string().required("Nom kiriting"),
     });
 
-    const formik = useFormik({
+    const formik: any = useFormik({
         initialValues: {
             name: openEditRoom?.name,
         },

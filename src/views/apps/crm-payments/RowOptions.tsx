@@ -40,7 +40,7 @@ const RowOptions = ({ id }: { id: number | string }) => {
             toast.error(`${resp.payload?.msg}`, { position: 'top-center' })
         } else {
             toast.success(`${t("To'lov ro'yxatidan o'chirildi")}`, { position: 'top-center' })
-            await dispatch(fetchCRMPayments())
+            await dispatch(fetchCRMPayments(''))
         }
         setLoaading(false)
         dispatch(disablePage(false))

@@ -34,7 +34,7 @@ export default function EditProfile({ isOpen, setEdit }: PropsType) {
         date: today
     }
 
-    const formik = useFormik({
+    const formik: any = useFormik({
         initialValues,
         validationSchema,
         onSubmit: async (values) => {

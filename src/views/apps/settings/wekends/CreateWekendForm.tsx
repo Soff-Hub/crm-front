@@ -26,7 +26,7 @@ export default function CreateWekendForm({ }: Props) {
         description: Yup.string().required("Sabab yozing"),
     });
 
-    const formik = useFormik({
+    const formik: any = useFormik({
         initialValues: {
             date: today,
             description: ''

@@ -33,7 +33,7 @@ export default function DepartmentSendSmsForm({
 
     const initialValues: { message: string } = { message: '' }
 
-    const formik = useFormik({
+    const formik: any = useFormik({
         initialValues,
         validationSchema,
         onSubmit: async (values) => {

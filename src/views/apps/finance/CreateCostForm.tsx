@@ -23,7 +23,7 @@ export default function CreateCostForm({ slug, setOpen, reRender }: any) {
         date: today
     }
 
-    const formik = useFormik({
+    const formik: any = useFormik({
         initialValues,
         validationSchema,
         onSubmit: async (values) => {

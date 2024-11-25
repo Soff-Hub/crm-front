@@ -96,7 +96,7 @@ export default function AddMentorsModal() {
         amount: 0
     }
 
-    const formik = useFormik({
+    const formik: any = useFormik({
         initialValues,
         validationSchema,
         onSubmit: async (values: CreateTeacherDto) => {

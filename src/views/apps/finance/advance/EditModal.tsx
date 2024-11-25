@@ -35,7 +35,7 @@ export default function EditModal() {
         date: Yup.string().required("Sanani kiriting")
     });
 
-    const formik = useFormik({
+    const formik: any = useFormik({
         initialValues: formikState,
         validationSchema,
         onSubmit: async (values: Partial<IAdvanceFormState>) => {

@@ -24,7 +24,7 @@ export default function SendSMS() {
     const dispatch = useAppDispatch()
     const { t } = useTranslation()
 
-    const formik = useFormik({
+    const formik: any = useFormik({
         initialValues: {
             message: ""
         },

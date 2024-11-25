@@ -92,7 +92,7 @@ const AddStudentParent = ({ open, setOpen }: IAddParentProps) => {
         }
     };
 
-    const formik = useFormik<IParentData>({
+    const formik: any = useFormik<IParentData>({
         initialValues,
         validationSchema,
         onSubmit: async (values, helpers) => {
