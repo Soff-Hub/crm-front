@@ -5,7 +5,6 @@ import { useContext } from 'react'
 import { AuthContext } from 'src/context/AuthContext'
 import VideoHeader, { videoUrls } from 'src/@core/components/video-header/video-header'
 import dynamic from 'next/dynamic'
-import DraggableIcon from 'src/pages/soffBotIcon'
 
 // Dynamic imports
 const Calendar = dynamic(() => import('./Calendar'), { ssr: false })

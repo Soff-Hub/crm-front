@@ -22,6 +22,7 @@ import Navigation from './components/vertical/navigation'
 import Footer from './components/shared-components/footer'
 import ScrollToTop from 'src/@core/components/scroll-to-top'
 import { useAuth } from 'src/hooks/useAuth'
+import StaticsModal from 'src/pages/statics-modal'
 
 const VerticalLayoutWrapper = styled(Box)({
   height: '100%',
@@ -69,37 +70,40 @@ const VerticalLayout = (props: LayoutProps) => {
     <>
       <VerticalLayoutWrapper className='layout-wrapper'>
         {/* Navigation Menu */}
-        {navHidden && !(navHidden && settings.lastLayout === 'horizontal') ? null : (
-          !auth.user?.payment_page && <Navigation
-            navWidth={navWidth}
-            navVisible={navVisible}
-            setNavVisible={setNavVisible}
-            collapsedNavWidth={collapsedNavWidth}
-            toggleNavVisibility={toggleNavVisibility}
-            navigationBorderWidth={navigationBorderWidth}
-            navMenuContent={verticalLayoutProps?.navMenu.content}
-            navMenuBranding={verticalLayoutProps?.navMenu.branding}
-            menuLockedIcon={verticalLayoutProps?.navMenu.lockedIcon}
-            verticalNavItems={verticalLayoutProps?.navMenu.navItems}
-            navMenuProps={verticalLayoutProps?.navMenu.componentProps}
-            menuUnlockedIcon={verticalLayoutProps?.navMenu.unlockedIcon}
-            afterNavMenuContent={verticalLayoutProps?.navMenu.afterContent}
-            beforeNavMenuContent={verticalLayoutProps?.navMenu.beforeContent}
-            {...props}
-          />
-          
-        )}
+        {navHidden && !(navHidden && settings.lastLayout === 'horizontal')
+          ? null
+          : !auth.user?.payment_page && (
+              <Navigation
+                navWidth={navWidth}
+                navVisible={navVisible}
+                setNavVisible={setNavVisible}
+                collapsedNavWidth={collapsedNavWidth}
+                toggleNavVisibility={toggleNavVisibility}
+                navigationBorderWidth={navigationBorderWidth}
+                navMenuContent={verticalLayoutProps?.navMenu.content}
+                navMenuBranding={verticalLayoutProps?.navMenu.branding}
+                menuLockedIcon={verticalLayoutProps?.navMenu.lockedIcon}
+                verticalNavItems={verticalLayoutProps?.navMenu.navItems}
+                navMenuProps={verticalLayoutProps?.navMenu.componentProps}
+                menuUnlockedIcon={verticalLayoutProps?.navMenu.unlockedIcon}
+                afterNavMenuContent={verticalLayoutProps?.navMenu.afterContent}
+                beforeNavMenuContent={verticalLayoutProps?.navMenu.beforeContent}
+                {...props}
+              />
+            )}
         <MainContentWrapper
           className='layout-content-wrapper'
           sx={{ ...(contentHeightFixed && { maxHeight: '100vh' }) }}
         >
           {/* AppBar Component */}
-          {!auth?.user?.payment_page && <AppBar
-            toggleNavVisibility={toggleNavVisibility}
-            appBarContent={verticalLayoutProps?.appBar?.content}
-            appBarProps={verticalLayoutProps?.appBar?.componentProps}
-            {...props}
-          />}
+          {!auth?.user?.payment_page && (
+            <AppBar
+              toggleNavVisibility={toggleNavVisibility}
+              appBarContent={verticalLayoutProps?.appBar?.content}
+              appBarProps={verticalLayoutProps?.appBar?.componentProps}
+              {...props}
+            />
+          )}
 
           {/* Content */}
           <ContentWrapper
@@ -123,6 +127,7 @@ const VerticalLayout = (props: LayoutProps) => {
 
           {/* Footer Component */}
           <Footer footerStyles={footerProps?.sx} footerContent={footerProps?.content} {...props} />
+          {/* <DraggableIcon/> */}
         </MainContentWrapper>
       </VerticalLayoutWrapper>
 
@@ -139,6 +144,8 @@ const VerticalLayout = (props: LayoutProps) => {
           </Fab>
         </ScrollToTop>
       )}
+
+      <StaticsModal />
     </>
   )
 }

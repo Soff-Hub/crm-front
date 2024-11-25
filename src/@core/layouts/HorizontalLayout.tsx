@@ -25,7 +25,6 @@ import AppBarContent from './components/horizontal/app-bar-content'
 import { hexToRGBA } from 'src/@core/utils/hex-to-rgba'
 import { useAuth } from 'src/hooks/useAuth'
 import StaticsModal from 'src/pages/statics-modal'
-import DraggableIcon from 'src/pages/soffBotIcon'
 
 const HorizontalLayoutWrapper = styled(Box)({
   height: '100%',
@@ -197,7 +196,6 @@ const HorizontalLayout = (props: LayoutProps) => {
           }}
         >
           {children}
-          {/* <DraggableIcon/> */}
           
         </ContentWrapper>
         {/* Footer */}
@@ -220,7 +218,7 @@ const HorizontalLayout = (props: LayoutProps) => {
             </Fab>
           </ScrollToTop>
         )}
-            <DraggableIcon/>
+            {/* <DraggableIcon/> */}
 
       </MainContentWrapper>
     </HorizontalLayoutWrapper>

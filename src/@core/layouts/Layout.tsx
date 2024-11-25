@@ -11,6 +11,7 @@ import api from '../utils/api'
 import { useAppDispatch } from 'src/store'
 import { toggleBotStatus, setSoffBotText, toggleModal } from 'src/store/apps/page'
 import { AuthContext } from 'src/context/AuthContext'
+import DraggableIcon from 'src/pages/soffBotIcon'
 
 const Layout = (props: LayoutProps) => {
   // ** Props
@@ -22,7 +23,6 @@ const Layout = (props: LayoutProps) => {
   const { user } = useContext(AuthContext)
   // ** Ref
   const isCollapsed = useRef(settings.navCollapsed)
-
 
   function getYearMonthDay(timestamp: any) {
     if (timestamp) {
@@ -58,7 +58,7 @@ const Layout = (props: LayoutProps) => {
       .get('auth/analytics/')
       .then(res => {
         dispatch(toggleBotStatus(res.data.robot_mood))
-        if (user?.role.join(', ').includes('ceo')) {
+        if (user?.role.join(', ').includes('admin')) {
           dispatch(
             setSoffBotText({
               absent_students: res.data.absent_students,
@@ -69,9 +69,32 @@ const Layout = (props: LayoutProps) => {
               sms_limit: res.data.sms_limit,
               unconnected_leads: res.data.unconnected_leads,
               role: res.data.role,
-              summary: res.data?.summary
+              summary: res.data?.summary,
+              added_students: res.data?.added_students,
+              left_students: res.data?.left_students
             })
           )
+        } else if (user?.role.join(', ').includes('ceo')) {
+          if (res.data.not_using_platform == false) {
+            dispatch(
+              setSoffBotText({
+                absent_students: res.data.absent_students,
+                attending_the_class: res.data.attending_the_class,
+                income: res.data.income,
+                new_leads: res.data.new_leads,
+                robot_mood: res.data.robot_mood,
+                sms_limit: res.data.sms_limit,
+                unconnected_leads: res.data.unconnected_leads,
+                role: res.data.role,
+                summary: res.data?.summary,
+                added_students: res.data?.added_students,
+                left_students: res.data?.left_students,
+                not_using_platform: res.data.not_using_platform 
+              })
+            )
+          } else {
+            dispatch(setSoffBotText({ not_using_platform: res.data.not_using_platform }))
+          }
         } else if (user?.role.join(', ') == 'teacher') {
           dispatch(
             setSoffBotText({
@@ -86,15 +109,23 @@ const Layout = (props: LayoutProps) => {
       .catch(err => {
         console.log(err)
       })
-
-   
   }, [hidden])
 
   if (settings.layout === 'horizontal') {
-    return <HorizontalLayout {...props}>{children}</HorizontalLayout>
+    return (
+      <>
+        <DraggableIcon />
+        <HorizontalLayout {...props}>{children}</HorizontalLayout>
+      </>
+    )
   }
 
-  return <VerticalLayout {...props}>{children}</VerticalLayout>
+  return (
+    <>
+      <DraggableIcon />
+      <VerticalLayout {...props}> {children}</VerticalLayout>
+    </>
+  )
 }
 
 export default Layout

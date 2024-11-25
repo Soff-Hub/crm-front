@@ -300,14 +300,14 @@ const UserViewSecurity = ({ groupData }: any) => {
                 sx={{
                   position: 'absolute',
                   top: 15,
-                  right: 410,
+                  right: 465,
                   cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center'
                 }}
                 onClick={!(user?.role.length === 1 && user?.role.includes('teacher')) ? handleClick : undefined}
               >
-                <IconifyIcon icon={'charm:menu-kebab'} fontSize={11} />
+                <IconifyIcon  icon={'charm:menu-kebab'} fontSize={11} />
               </Typography>
 
               <Menu

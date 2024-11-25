@@ -1,12 +1,12 @@
 import { DialogContent } from '@mui/material'
 import Typewriter from 'typewriter-effect'
 
-interface CeoContentProps {
+interface AdminContentProps {
   soffBotText: any
   setTypingComplete: (status: boolean) => void
 }
 
-export const CeoContent = ({ soffBotText, setTypingComplete }: CeoContentProps) => {
+export const AdminContent = ({ soffBotText, setTypingComplete }: AdminContentProps) => {
   return (
     <DialogContent sx={{ textAlign: 'justify', padding: '20px', fontFamily: 'Inter, sans-serif' }}>
       {soffBotText?.role && (
@@ -14,7 +14,7 @@ export const CeoContent = ({ soffBotText, setTypingComplete }: CeoContentProps) 
           onInit={typewriter => {
             const message = `
        <div style="font-family: 'Inter', sans-serif; color: #333; line-height: 1.6;">
-<h3 style="color: #333; font-size: 20px; margin-top: 10px; margin-bottom: 20px;">📊 O'quv markazingizning kechagi statistikasi</h3>
+<h3 style="color: #333; font-size: 20px; margin-top: 10px; margin-bottom: 20px;">📊Kechagi tizimda ishlash bo'yicha ko'rsatkichlaringiz statistikasi</h3>
 
 <div class="space-y-2">
   <p style="font-size: 16px;">
@@ -46,7 +46,7 @@ export const CeoContent = ({ soffBotText, setTypingComplete }: CeoContentProps) 
       soffBotText.attending_the_class
     } ta</span>
   </p>
-  <p style="font-size: 16px;">
+   <p style="font-size: 16px;">
     <strong style="color: #555;font-family: 'Inter', sans-serif;">🧑‍🎓Kelgan o'quvchilar:</strong> <span style="color: #0077FF;">${
       soffBotText.added_students
     } ta</span>
@@ -56,6 +56,7 @@ export const CeoContent = ({ soffBotText, setTypingComplete }: CeoContentProps) 
       soffBotText.left_students
     } ta</span>
   </p>
+  
   
   <div style="border: 1px solid #ccc; border-radius: 8px; padding: 15px; margin-top: 15px; background-color: #EAF6FF; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); font-family: 'Inter', sans-serif;">
     <h3 style="color: #6c757d; font-size: 1rem; margin-top: 5px; margin-bottom: 5px; font-weight: normal; opacity: 0.7;">
