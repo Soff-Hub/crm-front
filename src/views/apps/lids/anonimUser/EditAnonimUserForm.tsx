@@ -34,7 +34,7 @@ export default function EditAnonimUserForm({ item, reRender }: Props) {
         phone: item.phone,
     }
 
-    const formik = useFormik({
+    const formik: any = useFormik({
         initialValues,
         validationSchema,
         onSubmit: async (values) => {

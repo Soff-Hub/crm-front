@@ -483,7 +483,7 @@ const SendSMSModal = ({ handleEditClose, openEdit, setOpenEdit, smsTemps, userDa
   const dispatch = useAppDispatch()
   const [loading, setLoading] = useState(false)
 
-  const formik = useFormik({
+  const formik: any = useFormik({
     initialValues: {
       message: ''
     },

@@ -48,7 +48,7 @@ export default function CourseListRowOptions({ id }: Props) {
             await api.delete(`${ceoConfigs.courses_delete}/${id}`)
             setSuspendDialogOpen(false)
             toast.success("Muvaffaqiyatli! o'chirildi", { position: 'top-center' })
-            dispatch(fetchCoursesList())
+            dispatch(fetchCoursesList(''))
         } catch (error: any) {
             toast.error('Xatolik yuz berdi!', { position: 'top-center' })
         }

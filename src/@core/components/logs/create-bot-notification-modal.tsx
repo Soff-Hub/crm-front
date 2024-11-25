@@ -78,7 +78,7 @@ export default function CreateBotNotificationModal() {
     )
   }
 
-  const formik = useFormik({
+  const formik: any = useFormik({
     initialValues: {
       full_name: '',
       chat_id: null,

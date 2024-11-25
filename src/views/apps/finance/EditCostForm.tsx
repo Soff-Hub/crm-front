@@ -23,7 +23,7 @@ export default function EditCostForm({ slug, setOpen, reRender, initials }: any)
         date: `${initials?.date}`
     }
 
-    const formik = useFormik({
+    const formik: any = useFormik({
         initialValues,
         validationSchema,
         onSubmit: async (values) => {

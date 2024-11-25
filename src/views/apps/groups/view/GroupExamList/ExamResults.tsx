@@ -96,7 +96,7 @@ export default function ExamResults() {
     ]
 
 
-    const formik = useFormik({
+    const formik: any = useFormik({
         initialValues: {
             score: "",
             description: "",

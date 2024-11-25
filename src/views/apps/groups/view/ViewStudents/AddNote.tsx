@@ -20,7 +20,7 @@ import { useTranslation } from 'react-i18next';
 export default function AddNote({ id, modalRef, setModalRef }: { id: string, modalRef: string | null, setModalRef: any }) {
     const [isLoading, setLoading] = useState(false)
     const { t } = useTranslation()
-    const formik = useFormik({
+    const formik: any = useFormik({
         initialValues: { description: "" },
         validationSchema: () => Yup.object({
             description: Yup.string().required(t("Maydonni to'ldiring") as string)

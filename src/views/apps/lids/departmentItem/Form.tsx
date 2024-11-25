@@ -23,7 +23,7 @@ export default function CreateDepartmentItemForm({ }: Props) {
 
     const initialValues: CreatesDepartmentState = { name: '', order: leadData.length + 1 }
 
-    const formik = useFormik({
+    const formik: any = useFormik({
         initialValues,
         validationSchema,
         onSubmit: async (values) => {

@@ -29,7 +29,7 @@ export default function AddStudents() {
     const { t } = useTranslation()
 
 
-    const formik = useFormik({
+    const formik: any = useFormik({
         initialValues: {
             body: "",
             start_date: "",

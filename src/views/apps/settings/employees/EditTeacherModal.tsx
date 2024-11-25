@@ -101,7 +101,7 @@ export default function EditEmployeeForm() {
     };
 
 
-    const formik = useFormik({
+    const formik: any = useFormik({
         initialValues,
         validationSchema,
         onSubmit: async (values: UpdateTeacherDto) => {

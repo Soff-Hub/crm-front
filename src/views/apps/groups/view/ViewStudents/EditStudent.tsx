@@ -45,7 +45,7 @@ export default function EditStudent({
   const { query } = useRouter()
   const { t } = useTranslation()
 
-  const formik = useFormik({
+  const formik: any = useFormik({
     initialValues: { added_at: student.added_at, status, lesson_count: student.lesson_count },
     validationSchema: () =>
       Yup.object({

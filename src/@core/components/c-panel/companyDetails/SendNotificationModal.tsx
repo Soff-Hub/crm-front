@@ -38,7 +38,7 @@ export default function SendNotificationModal({ open, setOpen }: Props) {
         role: Yup.string().nullable().required(t("Xodim lavozimin tanlang") as string),
     });
 
-    const formik = useFormik({
+    const formik: any = useFormik({
         initialValues: {
             body: "",
             role: null,

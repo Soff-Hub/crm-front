@@ -24,7 +24,7 @@ export default function AddNote() {
     const dispatch = useAppDispatch()
     const { t } = useTranslation()
 
-    const formik = useFormik({
+    const formik: any = useFormik({
         initialValues: {
             description: ""
         },

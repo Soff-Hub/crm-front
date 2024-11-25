@@ -26,7 +26,7 @@ export default function AddNoteAnonimUser({
 
     const initialValues: { body: string } = { body: '' }
 
-    const formik = useFormik({
+    const formik: any = useFormik({
         initialValues,
         validationSchema,
         onSubmit: async (values) => {

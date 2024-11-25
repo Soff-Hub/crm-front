@@ -27,7 +27,7 @@ export default function MergeToDepartment({ studentId }: { studentId: string }) 
         department: null
     }
 
-    const formik = useFormik({
+    const formik: any = useFormik({
         initialValues,
         validationSchema,
         onSubmit: async (values) => {

@@ -48,7 +48,7 @@ export default function CreateSmsDialog({ }: Props) {
         description: ""
     }
 
-    const formik = useFormik({
+    const formik: any = useFormik({
         initialValues,
         validationSchema,
         onSubmit: async (values) => {
