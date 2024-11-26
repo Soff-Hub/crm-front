@@ -314,19 +314,20 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, choices }:
         </Typography>
       )}
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', minWidth: '100%' }}>
-        <Typography fontSize={8} flexGrow={1} textAlign={'start'} mr={3}>
+        <Typography fontSize={10} flexGrow={1} textAlign={'start'}>
           {phone}
         </Typography>
 
         <div className='cursor:pointer' onClick={() => setUpdateStatusModal(true)}>
-          <Box sx={{ textAlign: 'end', mr: 3 }}>
+          <Box sx={{ textAlign: 'start'}}>
             {student_status === 'active' ? (
               <Chip
+                
                 label={t('active')}
                 color='success'
                 variant='outlined'
                 size='small'
-                sx={{ fontWeight: 500, fontSize: '9px', padding: 0 }}
+                sx={{ fontWeight: 500, fontSize: '9px', padding: 0,textAlign:"start" }}
               />
             ) : student_status === 'archive' ? (
               <Chip
@@ -347,7 +348,7 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, choices }:
               )  : student_status === 'new' ? (
                 <Chip
                   label={t('new')}
-                  color='error'
+                  color='warning'
                   variant='outlined'
                   size='small'
                   sx={{ fontWeight: 500, fontSize: '9px', padding: 0 }}
@@ -372,7 +373,7 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, choices }:
             )}
           </Box>
         </div>
-        {!isMobile && (
+        {/* {!isMobile && (
           <Box sx={{ textAlign: 'start', mr: 8 }}>
             {Number(balance) < 0 ? (
               <Chip
@@ -392,10 +393,10 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, choices }:
               />
             )}
           </Box>
-        )}
+        )} */}
       </Box>
       <Typography
-        sx={{ ml: 3 }}
+        // sx={{ ml: 3 }}
         fontSize={11}
         id='fade-button'
         aria-controls={open ? 'fade-menu' : undefined}

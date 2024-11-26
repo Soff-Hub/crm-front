@@ -24,7 +24,8 @@ import AppBarContent from './components/horizontal/app-bar-content'
 // ** Util Import
 import { hexToRGBA } from 'src/@core/utils/hex-to-rgba'
 import { useAuth } from 'src/hooks/useAuth'
-import StaticsModal from 'src/@core/components/statics-modal'
+import DraggableIcon from '../components/soffBotIcon'
+import StaticsModal from '../components/statics-modal'
 
 const HorizontalLayoutWrapper = styled(Box)({
   height: '100%',
@@ -63,15 +64,17 @@ const ContentWrapper = styled(Box)(({ theme }) => ({
     paddingRight: theme.spacing(4)
   }
 }))
-const FixedIcon = styled('img')(({ top, left, bottom, right }: { top?: string; left?: string; bottom?: string; right?: string }) => ({
-  position: 'fixed',
-  top: top || 'unset',
-  left: left || 'unset',
-  bottom: bottom || 'unset',
-  right: right || 'unset',
-  zIndex: 1000, 
-  cursor: 'pointer',
-}));
+const FixedIcon = styled('img')(
+  ({ top, left, bottom, right }: { top?: string; left?: string; bottom?: string; right?: string }) => ({
+    position: 'fixed',
+    top: top || 'unset',
+    left: left || 'unset',
+    bottom: bottom || 'unset',
+    right: right || 'unset',
+    zIndex: 1000,
+    cursor: 'pointer'
+  })
+)
 
 const HorizontalLayout = (props: LayoutProps) => {
   // ** Props
@@ -196,13 +199,12 @@ const HorizontalLayout = (props: LayoutProps) => {
           }}
         >
           {children}
-          
         </ContentWrapper>
         {/* Footer */}
         <Footer {...props} footerStyles={footerProps?.sx} footerContent={footerProps?.content} />
         {/* Customizer */}
         {/* <img
-          src='/images/avatars/happybot.png'
+          src='/images/avatars/happybot.webp'
           width='50'
           height='50'
           alt='Happy Bot'
@@ -218,8 +220,7 @@ const HorizontalLayout = (props: LayoutProps) => {
             </Fab>
           </ScrollToTop>
         )}
-            {/* <DraggableIcon/> */}
-
+        <DraggableIcon />
       </MainContentWrapper>
     </HorizontalLayoutWrapper>
   )

@@ -22,8 +22,6 @@ export default function MyGroups() {
   const { groups, isTableLoading, myGroupParams, isLoading, teacherSalaries } = useAppSelector(state => state.groups)
   const dispatch = useAppDispatch()
   const { push } = useRouter()
-  const {soffBotStatus} = useAppSelector(state => state.page)
-  console.log(soffBotStatus);
   
   const column: customTableDataProps[] = [
     {

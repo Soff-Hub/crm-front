@@ -8,12 +8,11 @@ import useRoles from 'src/hooks/useRoles'
 import { CeoContent } from './components/ceo-content/ceo-content'
 import { TeacherContent } from './components/teacher-content/teacher-content'
 import { AdminContent } from './components/admin-content/admin-content'
-import confetti from 'canvas-confetti';
+import confetti from 'canvas-confetti'
 
 function randomInRange(min: number, max: number): number {
-  return Math.random() * (max - min) + min;
+  return Math.random() * (max - min) + min
 }
-
 
 const StaticsModal = () => {
   const [displayedMessage, setDisplayedMessage] = useState('')
@@ -26,8 +25,7 @@ const StaticsModal = () => {
   const soffBotText = useSelector((state: any) => state.page.soffBotText)
   const soffBotStatus = useSelector((state: any) => state.page.soffBotStatus)
   const userRole = localStorage.getItem('userRole')
-  const [triggerConfetti, setTriggerConfetti] = useState(false);
-
+  const [triggerConfetti, setTriggerConfetti] = useState(false)
 
   useEffect(() => {
     if (triggerConfetti) {
@@ -36,18 +34,16 @@ const StaticsModal = () => {
           angle: randomInRange(55, 125),
           spread: randomInRange(50, 70),
           particleCount: randomInRange(50, 100),
-          origin: { x: 0.5, y: 0.5 }, 
-          zIndex:99999
-        });
-      };
+          origin: { x: 0.5, y: 0.5 },
+          zIndex: 99999
+        })
+      }
 
-      launchConfetti();
+      launchConfetti()
 
-      setTriggerConfetti(false);
+      setTriggerConfetti(false)
     }
   }, [triggerConfetti])
-
-
 
   const handleClose = () => {
     const last_login = localStorage.getItem('last_login')
@@ -63,14 +59,62 @@ const StaticsModal = () => {
   const handleTypingComplete = () => {
     setTypingComplete(true)
     setShowFireworks(true)
-    setTriggerConfetti(true); 
+    setTriggerConfetti(true)
     setTimeout(() => setShowFireworks(false), 3000) // Fireworks animation lasts for 3 seconds
   }
 
+  return soffBotStatus.not_using_platform && soffBotText.not_using_platform == true ? (
+    <Dialog fullWidth maxWidth='xs' open={isModalOpen} onClose={handleClose}>
+      <DialogContent>
+        <div className='d-flex mb-4 justify-content-center align-items-center'>
+          <img src='/images/avatars/happybot.webp' width='100' height='100' />
+        </div>
 
-  return soffBotText.not_using_platform == false ? (
+        <div style={{ textAlign: 'center' }}>
+          <Typewriter
+            onInit={typewriter => {
+              const message =
+                "Salom! Men sizning SoffCRM tizimidan foydalanishingizda sodiq yordamchingizman! 🚀 Sizga tizimning qulayliklari,yangi qo'shimchalar haqida muntazam xabar berib turaman. 📊 Bundan tashqari, har kuni tizimdan foydalanish bo'yicha statistik ma'lumotlarni ham taqdim etaman."
+              typewriter.typeString(message).callFunction(handleTypingComplete).pauseFor(5000).start()
+            }}
+            options={{
+              loop: false,
+              delay: 10,
+              cursor: ''
+            }}
+          />
+        </div>
+      </DialogContent>
+      {typingComplete && (
+        <>
+          <Button
+            onClick={handleClose}
+            variant='contained'
+            sx={{
+              m: 2,
+              alignSelf: 'flex-end',
+              borderRadius: '8px', // Match the border-radius in the CSS
+              padding: '5px 10px', // Adjust padding to match the CSS
+              backgroundColor: '#f0f0f0', // Light gray background
+              color: 'blue',
+              fontSize: '0.8rem', // Font size from CSS
+              fontWeight: 'bold', // Font weight from CSS
+              textDecoration: 'none', // Make sure the text decoration is removed
+              transition: 'background-color 0.3s ease', // Transition effect from CSS
+              '&:hover': {
+                backgroundColor: '#e0e0e0' // Darker blue on hover
+              },
+              margin: '15px' // Top margin from CSS
+            }}
+          >
+            Tushunarli
+          </Button>
+        </>
+      )}
+    </Dialog>
+  ) : (
     <Dialog
-      // onClick={e => e.stopPropagation()}
+      onClick={e => e.stopPropagation()}
       open={isModalOpen}
       onClose={handleClose}
       maxWidth={'md'}
@@ -81,10 +125,10 @@ const StaticsModal = () => {
         <img
           src={
             soffBotStatus === -1
-              ? '/images/avatars/sadbot.png'
+              ? '/images/avatars/sadbot.webp'
               : soffBotStatus === 0
-              ? '/images/avatars/normalbot.png'
-              : '/images/avatars/happybot.png'
+              ? '/images/avatars/normalbot.webp'
+              : '/images/avatars/happybot.webp'
           }
           width={55}
           height={55}
@@ -122,59 +166,6 @@ const StaticsModal = () => {
         >
           Tushunarli
         </Button>
-      )}
-    </Dialog>
-  ) : (
-    <Dialog fullWidth maxWidth='xs' open={isModalOpen} onClose={handleClose}>
-      <DialogContent>
-        <div className='d-flex mb-4 justify-content-center align-items-center'>
-          <img src='/images/avatars/happybot.png' width='100' height='100' />
-        </div>
-
-        <div style={{textAlign:'center'}}>
-          <Typewriter
-            onInit={typewriter => {
-              const message =
-                "Salom! Men sizning SoffCRM tizimidan foydalanishingizda sodiq yordamchingizman! 🚀 Sizga tizimning qulayliklari,yangi qo'shimchalar haqida muntazam xabar berib turaman. 📊 Bundan tashqari, har kuni tizimdan foydalanish bo'yicha statistik ma'lumotlarni ham taqdim etaman."
-              typewriter
-                .typeString(message)
-                .callFunction(handleTypingComplete)
-                .pauseFor(5000)
-                .start()
-            }}
-            options={{
-              loop: false,
-              delay: 10,
-              cursor: ''
-            }}
-          />
-        </div>
-      </DialogContent>
-        {typingComplete && (
-          <>
-        <Button
-          onClick={handleClose}
-          variant='contained'
-          sx={{
-            m: 2,
-            alignSelf: 'flex-end',
-            borderRadius: '8px', // Match the border-radius in the CSS
-            padding: '5px 10px', // Adjust padding to match the CSS
-            backgroundColor: '#f0f0f0', // Light gray background
-            color: 'blue',
-            fontSize: '0.8rem', // Font size from CSS
-            fontWeight: 'bold', // Font weight from CSS
-            textDecoration: 'none', // Make sure the text decoration is removed
-            transition: 'background-color 0.3s ease', // Transition effect from CSS
-            '&:hover': {
-              backgroundColor: '#e0e0e0' // Darker blue on hover
-            },
-            margin: '15px' // Top margin from CSS
-          }}
-        >
-          Tushunarli
-            </Button>
-            </>
       )}
     </Dialog>
   )
