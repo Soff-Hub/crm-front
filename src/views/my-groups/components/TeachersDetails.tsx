@@ -33,6 +33,7 @@ export default function TeachersDetails() {
     const [isEdit, setEdit] = useState(false)
 
     const user = JSON.parse(localStorage.getItem("userData") as string)
+    console.log(isEdit);
 
     return (
         <Grid container spacing={6}>

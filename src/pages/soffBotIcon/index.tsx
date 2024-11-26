@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import Modal from '@mui/material/Modal'
 import { useDispatch } from 'react-redux'
 import { setSoffBotText, toggleModal } from 'src/store/apps/page'
 import { useAppSelector } from 'src/store'
@@ -7,6 +8,7 @@ import api from 'src/@core/utils/api'
 const DraggableIcon = () => {
   const [position, setPosition] = useState({ top: 250, left: 250 })
   const [isDragging, setIsDragging] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false)
   const [dragStart, setDragStart] = useState({ top: 0, left: 0 })
   const [clickTimeout, setClickTimeout] = useState<NodeJS.Timeout | null>(null)
   const dispatch = useDispatch()
@@ -49,24 +51,16 @@ const DraggableIcon = () => {
     const timeout = setTimeout(async () => {
       try {
         const res = await api.get('auth/analytics/')
-        if (res.data.role === 'admin') {
+        if (res.data.role === 'teacher') {
           dispatch(
             setSoffBotText({
-              absent_students: res.data.absent_students,
-              attending_the_class: res.data.attending_the_class,
-              income: res.data.income,
-              new_leads: res.data.new_leads,
-              robot_mood: res.data.robot_mood,
-              sms_limit: res.data.sms_limit,
-              unconnected_leads: res.data.unconnected_leads,
+              missed_attendance: res.data.missed_attendance,
+              groups: res.data.detail,
               summary: res.data?.summary,
-              role: res?.data?.role,
-              added_students: res.data?.added_students,
-              left_students: res.data?.left_students
+              role: res?.data?.role
             })
           )
-        }
-       else if (res.data.role === 'ceo') {
+        } else if (res.data.role === 'ceo') {
           if (res.data.not_using_platform == false) {
             dispatch(
               setSoffBotText({
@@ -81,23 +75,28 @@ const DraggableIcon = () => {
                 role: res?.data?.role,
                 added_students: res.data?.added_students,
                 left_students: res.data?.left_students,
-                not_using_platform: res.data.not_using_platform
+                not_using_platform: res.data.not_using_platform 
               })
             )
           } else {
             dispatch(setSoffBotText({ not_using_platform: res.data.not_using_platform }))
           }
-        }  else if (res.data.role === 'teacher') {
+        } else if (res.data.role === 'admin') {
           dispatch(
             setSoffBotText({
-              missed_attendance: res.data.missed_attendance,
-              groups: res.data.detail,
+              absent_students: res.data.absent_students,
+              attending_the_class: res.data.attending_the_class,
+              income: res.data.income,
+              new_leads: res.data.new_leads,
+              robot_mood: res.data.robot_mood,
+              sms_limit: res.data.sms_limit,
+              unconnected_leads: res.data.unconnected_leads,
               summary: res.data?.summary,
-              role: res?.data?.role
+              role: res?.data?.role,
+              added_students: res.data?.added_students,
+              left_students: res.data?.left_students,
             })
-            
           )
-        
         }
       } catch (error) {
         console.error(error)
@@ -129,10 +128,10 @@ const DraggableIcon = () => {
       <img
         src={
           soffBotStatus === -1
-            ? '/images/avatars/sadbot.webp'
+            ? '/images/avatars/sadbot.png'
             : soffBotStatus === 0
-            ? '/images/avatars/normalbot.webp'
-            : '/images/avatars/happybot.webp'
+            ? '/images/avatars/normalbot.png'
+            : '/images/avatars/happybot.png'
         }
         width='70'
         height='70'
