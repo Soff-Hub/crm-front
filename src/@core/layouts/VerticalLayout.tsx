@@ -23,6 +23,7 @@ import Footer from './components/shared-components/footer'
 import ScrollToTop from 'src/@core/components/scroll-to-top'
 import { useAuth } from 'src/hooks/useAuth'
 import StaticsModal from 'src/@core/components/statics-modal'
+import DraggableIcon from '../components/soffBotIcon'
 
 const VerticalLayoutWrapper = styled(Box)({
   height: '100%',
@@ -127,7 +128,7 @@ const VerticalLayout = (props: LayoutProps) => {
 
           {/* Footer Component */}
           <Footer footerStyles={footerProps?.sx} footerContent={footerProps?.content} {...props} />
-          {/* <DraggableIcon/> */}
+          <DraggableIcon/>
         </MainContentWrapper>
       </VerticalLayoutWrapper>
 

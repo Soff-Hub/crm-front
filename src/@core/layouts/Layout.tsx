@@ -11,7 +11,7 @@ import api from '../utils/api'
 import { useAppDispatch } from 'src/store'
 import { toggleBotStatus, setSoffBotText, toggleModal } from 'src/store/apps/page'
 import { AuthContext } from 'src/context/AuthContext'
-import DraggableIcon from 'src/pages/soffBotIcon'
+import DraggableIcon from 'src/@core/components/soffBotIcon'
 
 const Layout = (props: LayoutProps) => {
   // ** Props
@@ -114,7 +114,7 @@ const Layout = (props: LayoutProps) => {
   if (settings.layout === 'horizontal') {
     return (
       <>
-        <DraggableIcon />
+        {/* <DraggableIcon /> */}
         <HorizontalLayout {...props}>{children}</HorizontalLayout>
       </>
     )
@@ -122,7 +122,7 @@ const Layout = (props: LayoutProps) => {
 
   return (
     <>
-      <DraggableIcon />
+      {/* <DraggableIcon /> */}
       <VerticalLayout {...props}> {children}</VerticalLayout>
     </>
   )
