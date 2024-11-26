@@ -106,7 +106,7 @@ export default function AccordionCustom({ onView, parentId, item }: AccordionPro
             }
         }
         try {
-            const resp = await api.patch(`leads/department-user-list/${id}/`, newValues)
+            const resp = await api.patch(`leads/anonim-user/update/${id}/`, newValues)
             await handleGetLeads(false)
             return Promise.resolve(resp)
         } catch (err: any) {
