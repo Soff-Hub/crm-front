@@ -62,7 +62,8 @@ const DraggableIcon = () => {
               summary: res.data?.summary,
               role: res?.data?.role,
               added_students: res.data?.added_students,
-              left_students: res.data?.left_students
+              left_students: res.data?.left_students,
+              not_using_platform: res.data.not_using_platform
             })
           )
         }
@@ -93,7 +94,8 @@ const DraggableIcon = () => {
               missed_attendance: res.data.missed_attendance,
               groups: res.data.detail,
               summary: res.data?.summary,
-              role: res?.data?.role
+              role: res?.data?.role,
+              not_using_platform: res.data.not_using_platform
             })
             
           )
