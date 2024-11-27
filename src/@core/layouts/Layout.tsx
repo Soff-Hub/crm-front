@@ -38,22 +38,6 @@ const Layout = (props: LayoutProps) => {
     if (formattedCurrentDate != formattedLastLogin || userRole != user?.role.join(', ')) {
       dispatch(toggleModal(true))
     }
-
-    if (hidden) {
-      if (settings.navCollapsed) {
-        saveSettings({ ...settings, navCollapsed: false, layout: 'vertical' })
-        isCollapsed.current = true
-      }
-    } else {
-      if (isCollapsed.current) {
-        saveSettings({ ...settings, navCollapsed: true, layout: settings.lastLayout })
-        isCollapsed.current = false
-      } else {
-        if (settings.lastLayout !== settings.layout) {
-          saveSettings({ ...settings, layout: settings.lastLayout })
-        }
-      }
-    }
     api
       .get('auth/analytics/')
       .then(res => {
@@ -72,26 +56,26 @@ const Layout = (props: LayoutProps) => {
               summary: res.data?.summary,
               added_students: res.data?.added_students,
               left_students: res.data?.left_students,
-              not_using_platform: res.data.not_using_platform 
+              not_using_platform: res.data.not_using_platform
             })
           )
         } else if (user?.role.join(', ').includes('ceo')) {
-            dispatch(
-              setSoffBotText({
-                absent_students: res.data.absent_students,
-                attending_the_class: res.data.attending_the_class,
-                income: res.data.income,
-                new_leads: res.data.new_leads,
-                robot_mood: res.data.robot_mood,
-                sms_limit: res.data.sms_limit,
-                unconnected_leads: res.data.unconnected_leads,
-                role: res.data.role,
-                summary: res.data?.summary,
-                added_students: res.data?.added_students,
-                left_students: res.data?.left_students,
-                not_using_platform: res.data.not_using_platform 
-              })
-            )
+          dispatch(
+            setSoffBotText({
+              absent_students: res.data.absent_students,
+              attending_the_class: res.data.attending_the_class,
+              income: res.data.income,
+              new_leads: res.data.new_leads,
+              robot_mood: res.data.robot_mood,
+              sms_limit: res.data.sms_limit,
+              unconnected_leads: res.data.unconnected_leads,
+              role: res.data.role,
+              summary: res.data?.summary,
+              added_students: res.data?.added_students,
+              left_students: res.data?.left_students,
+              not_using_platform: res.data.not_using_platform
+            })
+          )
         } else if (user?.role.join(', ') == 'teacher') {
           dispatch(
             setSoffBotText({
@@ -107,6 +91,24 @@ const Layout = (props: LayoutProps) => {
       .catch(err => {
         console.log(err)
       })
+  }, [])
+
+  useEffect(() => {
+    if (hidden) {
+      if (settings.navCollapsed) {
+        saveSettings({ ...settings, navCollapsed: false, layout: 'vertical' })
+        isCollapsed.current = true
+      }
+    } else {
+      if (isCollapsed.current) {
+        saveSettings({ ...settings, navCollapsed: true, layout: settings.lastLayout })
+        isCollapsed.current = false
+      } else {
+        if (settings.lastLayout !== settings.layout) {
+          saveSettings({ ...settings, layout: settings.lastLayout })
+        }
+      }
+    }
   }, [hidden])
 
   if (settings.layout === 'horizontal') {
