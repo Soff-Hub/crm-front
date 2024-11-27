@@ -309,25 +309,24 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, choices }:
           </Link>
         </HtmlTooltip>
       ) : (
-        <Typography sx={{ cursor: 'pointer' }} fontSize={7}>
+        <Typography sx={{ cursor: 'pointer' }} fontSize={5}>
           {first_name}
         </Typography>
       )}
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', minWidth: '100%' }}>
-        <Typography fontSize={10} flexGrow={1} textAlign={'start'}>
+        <Typography marginRight={3} fontSize={8} flexGrow={1} textAlign={'start'}>
           {phone}
         </Typography>
 
         <div className='cursor:pointer' onClick={() => setUpdateStatusModal(true)}>
-          <Box sx={{ textAlign: 'start'}}>
+          <Box sx={{width:75,textAlign:'start'}}>
             {student_status === 'active' ? (
               <Chip
-                
                 label={t('active')}
                 color='success'
                 variant='outlined'
                 size='small'
-                sx={{ fontWeight: 500, fontSize: '9px', padding: 0,textAlign:"start" }}
+                sx={{fontWeight: 500, fontSize: '9px', padding: 0 }}
               />
             ) : student_status === 'archive' ? (
               <Chip
@@ -337,24 +336,23 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, choices }:
                 size='small'
                 sx={{ fontWeight: 500, fontSize: '9px', padding: 0 }}
               />
-              ) : student_status === 'frozen' ? (
-                <Chip
-                  label={t('frozen')}
-                  color='error'
-                  variant='outlined'
-                  size='small'
-                  sx={{ fontWeight: 500, fontSize: '9px', padding: 0 }}
-                />
-              )  : student_status === 'new' ? (
-                <Chip
-                  label={t('new')}
-                  color='warning'
-                  variant='outlined'
-                  size='small'
-                  sx={{ fontWeight: 500, fontSize: '9px', padding: 0 }}
-                />
-              ) 
-                : student_status === 'in_progress' ? (
+            ) : student_status === 'frozen' ? (
+              <Chip
+                label={t('frozen')}
+                color='error'
+                variant='outlined'
+                size='small'
+                sx={{ fontWeight: 500, fontSize: '9px', padding: 0 }}
+              />
+            ) : student_status === 'new' ? (
+              <Chip
+                label={t('new')}
+                color='warning'
+                variant='outlined'
+                size='small'
+                sx={{ fontWeight: 500, fontSize: '9px', padding: 0 }}
+              />
+            ) : student_status === 'in_progress' ? (
               <Chip
                 label={t('in_progess')}
                 color='info'
@@ -373,11 +371,15 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, choices }:
             )}
           </Box>
         </div>
-        {/* {!isMobile && (
-          <Box sx={{ textAlign: 'start', mr: 8 }}>
+          <Box
+            sx={{
+              width:80,
+              textAlign: 'start', 
+            }}
+          >
             {Number(balance) < 0 ? (
               <Chip
-                label={`${formatCurrency(+balance)} so'm`}
+                label={`${formatCurrency(+balance)}`}
                 color='error'
                 variant='outlined'
                 size='small'
@@ -385,7 +387,7 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, choices }:
               />
             ) : (
               <Chip
-                label={`${formatCurrency(+balance)} so'm`}
+                label={`${formatCurrency(+balance)}`}
                 color='success'
                 variant='outlined'
                 size='small'
@@ -393,10 +395,9 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, choices }:
               />
             )}
           </Box>
-        )} */}
       </Box>
       <Typography
-        // sx={{ ml: 3 }}
+        sx={{ ml: 3 }}
         fontSize={11}
         id='fade-button'
         aria-controls={open ? 'fade-menu' : undefined}
@@ -431,10 +432,7 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, choices }:
         </MenuItem>
         <MenuItem sx={{ display: 'flex', alignItems: 'center', gap: '7px' }} onClick={() => handleClose('left')}>
           <Icon fontSize={'20px'} icon={'material-symbols:group-remove'} />
-          {student_status == 'archive' ?
-            t("Ba'zadan chiqarish"):
-             t('Guruhdan chiqarish')  
-          }
+          {student_status == 'archive' ? t("Ba'zadan chiqarish") : t('Guruhdan chiqarish')}
         </MenuItem>
         <MenuItem
           sx={{ display: 'flex', alignItems: 'center', gap: '7px' }}
@@ -500,7 +498,7 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, choices }:
             <Typography sx={{ fontSize: '20px', textAlign: 'center', mb: 3 }}>
               {t("O'quvchini statusini ozgartirish")}
             </Typography>
-            
+
             <FormControl sx={{ maxWidth: '100%', marginBottom: 3 }} fullWidth>
               <InputLabel size='small' id='demo-simple-select-outlined-label'>
                 Status (holati)
@@ -561,8 +559,7 @@ export default function UserViewStudentsList() {
       dispatch(studentsUpdateParams({ search: debounce }))
     })()
   }, [debounce])
-  console.log(students);
-  
+  console.log(students)
 
   return (
     <Box>

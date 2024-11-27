@@ -62,7 +62,7 @@ const StaticsModal = () => {
     setTriggerConfetti(true)
     setTimeout(() => setShowFireworks(false), 3000) // Fireworks animation lasts for 3 seconds
   }
-  console.log(soffBotText);
+  
   
 
   return  soffBotText.not_using_platform == true ? (
