@@ -3,20 +3,22 @@ import { useDispatch } from 'react-redux'
 import { setSoffBotText, toggleModal } from 'src/store/apps/page'
 import { useAppSelector } from 'src/store'
 import api from 'src/@core/utils/api'
+import useResponsive from 'src/@core/hooks/useResponsive'
 
-const DraggableIcon = () => {
+const DraggableIcon = ({ style, ...props }: { style?: React.CSSProperties }) => {
   const [position, setPosition] = useState({ top: 250, left: 250 })
   const [isDragging, setIsDragging] = useState(false)
   const [dragStart, setDragStart] = useState({ top: 0, left: 0 })
   const [clickTimeout, setClickTimeout] = useState<NodeJS.Timeout | null>(null)
   const dispatch = useDispatch()
   const { soffBotStatus, isModalOpen: isBotModalOpen } = useAppSelector(state => state.page)
-
+  const {isMobile} = useResponsive()
   const handleMouseDown = (e: React.MouseEvent<HTMLImageElement>) => {
     setDragStart({ top: e.clientY, left: e.clientX })
     setIsDragging(true)
     e.preventDefault()
   }
+
 
   const handleMouseMove = (e: MouseEvent) => {
     if (isDragging) {
@@ -132,16 +134,18 @@ const DraggableIcon = () => {
             ? '/images/avatars/normalbot.webp'
             : '/images/avatars/happybot.webp'
         }
-        width='70'
-        height='70'
+        width={isMobile ? '40':'70'}
+        height={isMobile ? '40':'70'}
         alt='Happy Bot'
         style={{
           position: 'fixed',
           top: `${position.top}px`,
           left: `${position.left}px`,
           zIndex: isBotModalOpen == true ? 100 : 9999,
-          cursor: 'pointer'
+          cursor: 'pointer',
+          ...style
         }}
+        {...props}
         onMouseDown={handleMouseDown}
       />
     </>

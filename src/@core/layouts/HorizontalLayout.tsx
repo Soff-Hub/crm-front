@@ -220,7 +220,15 @@ const HorizontalLayout = (props: LayoutProps) => {
             </Fab>
           </ScrollToTop>
         )}
-        <DraggableIcon />
+        <DraggableIcon
+          style={{
+            position: 'fixed',
+            bottom: '20px',
+            left: '20px',
+            zIndex: 1000,
+            cursor: 'pointer'
+          }}
+        />
       </MainContentWrapper>
     </HorizontalLayoutWrapper>
   )
