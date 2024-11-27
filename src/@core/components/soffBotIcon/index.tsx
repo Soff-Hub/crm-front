@@ -68,7 +68,6 @@ const DraggableIcon = () => {
           )
         }
        else if (res.data.role === 'ceo') {
-          if (res.data.not_using_platform == false) {
             dispatch(
               setSoffBotText({
                 absent_students: res.data.absent_students,
@@ -85,9 +84,6 @@ const DraggableIcon = () => {
                 not_using_platform: res.data.not_using_platform
               })
             )
-          } else {
-            dispatch(setSoffBotText({ not_using_platform: res.data.not_using_platform }))
-          }
         }  else if (res.data.role === 'teacher') {
           dispatch(
             setSoffBotText({

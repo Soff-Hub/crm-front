@@ -76,7 +76,6 @@ const Layout = (props: LayoutProps) => {
             })
           )
         } else if (user?.role.join(', ').includes('ceo')) {
-          if (res.data.not_using_platform == false) {
             dispatch(
               setSoffBotText({
                 absent_students: res.data.absent_students,
@@ -93,9 +92,6 @@ const Layout = (props: LayoutProps) => {
                 not_using_platform: res.data.not_using_platform 
               })
             )
-          } else {
-            dispatch(setSoffBotText({ not_using_platform: res.data.not_using_platform }))
-          }
         } else if (user?.role.join(', ') == 'teacher') {
           dispatch(
             setSoffBotText({
