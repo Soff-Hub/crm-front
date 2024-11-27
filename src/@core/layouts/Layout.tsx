@@ -71,7 +71,8 @@ const Layout = (props: LayoutProps) => {
               role: res.data.role,
               summary: res.data?.summary,
               added_students: res.data?.added_students,
-              left_students: res.data?.left_students
+              left_students: res.data?.left_students,
+              not_using_platform: res.data.not_using_platform 
             })
           )
         } else if (user?.role.join(', ').includes('ceo')) {
@@ -101,7 +102,8 @@ const Layout = (props: LayoutProps) => {
               missed_attendance: res.data.missed_attendance,
               groups: res.data.detail,
               role: res.data.role,
-              summary: res.data?.summary
+              summary: res.data?.summary,
+              not_using_platform: res.data.not_using_platform
             })
           )
         }

@@ -62,8 +62,10 @@ const StaticsModal = () => {
     setTriggerConfetti(true)
     setTimeout(() => setShowFireworks(false), 3000) // Fireworks animation lasts for 3 seconds
   }
+  console.log(soffBotText);
+  
 
-  return soffBotStatus.not_using_platform && soffBotText.not_using_platform == true ? (
+  return  soffBotText.not_using_platform == true ? (
     <Dialog fullWidth maxWidth='xs' open={isModalOpen} onClose={handleClose}>
       <DialogContent>
         <div className='d-flex mb-4 justify-content-center align-items-center'>
