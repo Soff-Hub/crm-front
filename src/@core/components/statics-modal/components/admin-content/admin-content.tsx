@@ -47,7 +47,7 @@ export const AdminContent = ({ soffBotText, setTypingComplete }: AdminContentPro
     } ta</span>
   </p>
    <p style="font-size: 16px;">
-    <strong style="color: #555;font-family: 'Inter', sans-serif;">🧑‍🎓Kelgan o'quvchilar:</strong> <span style="color: #0077FF;">${
+    <strong style="color: #555;font-family: 'Inter', sans-serif;">🧑‍🎓Yangi kelgan o'quvchilar:</strong> <span style="color: #0077FF;">${
       soffBotText.added_students
     } ta</span>
   </p>
