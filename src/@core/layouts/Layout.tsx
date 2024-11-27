@@ -1,6 +1,5 @@
 // ** React Import
 import { useContext, useEffect, useRef } from 'react'
-
 // ** Type Import
 import { LayoutProps } from 'src/@core/layouts/types'
 
@@ -35,8 +34,13 @@ const Layout = (props: LayoutProps) => {
   const formattedLastLogin = getYearMonthDay(last_login)
 
   useEffect(() => {
-    if (formattedCurrentDate != formattedLastLogin || userRole != user?.role.join(', ')) {
-      dispatch(toggleModal(true))
+    if (
+      formattedCurrentDate !== formattedLastLogin || 
+      userRole !== user?.role.join(', ')
+    ) {
+      if (window.location.pathname !== '/c-panel') {
+        dispatch(toggleModal(true));
+      }
     }
     api
       .get('auth/analytics/')

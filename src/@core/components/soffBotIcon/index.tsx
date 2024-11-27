@@ -102,8 +102,11 @@ const DraggableIcon = ({ style, ...props }: { style?: React.CSSProperties }) => 
       } catch (error) {
         console.error(error)
       } finally {
-        dispatch(toggleModal(true))
-        setClickTimeout(null)
+         if (window.location.pathname !== '/c-panel') {
+           dispatch(toggleModal(true))
+           setClickTimeout(null)
+          }
+        
       }
     }, 300)
     setClickTimeout(timeout)
