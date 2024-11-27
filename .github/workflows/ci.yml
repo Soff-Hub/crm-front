@@ -4,10 +4,14 @@ on:
   push:
     branches:
       - main
+      - otabek_branch
+      - bot-changes
 
   pull_request:
     branches:
       - main
+      - otabek_branch
+      - bot-changes
 
 jobs:
   install-lint-build:
