@@ -47,7 +47,7 @@ export default function DashboardStats() {
     active_groups: 'Ayni vaqtda faol guruhlar soni',
     active_students: "Ayni vaqtda faol o'quvchilar soni",
     debtor_users: "Qarzdor o'quvchilar soni",
-    debtors_amount: `Faol o'quvchilar qarzdorligi : ${formatCurrency(stats?.debtors_amount) + " so'm"}    
+    debtors_amount: `Faol o'quvchilar qarzdorligi : ${formatCurrency(stats?.active_debts_amount) + " so'm"}    
     ${
       stats?.archive_debts_amount < 0 &&
       `Arxivdagi o'quvchilar qarzdorligi : ${formatCurrency(stats.archive_debts_amount) + " so'm"}`

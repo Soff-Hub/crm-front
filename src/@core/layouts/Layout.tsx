@@ -49,8 +49,9 @@ const Layout = (props: LayoutProps) => {
         if (user?.role.join(', ').includes('admin')) {
           dispatch(
             setSoffBotText({
+              missed_attendance: res.data.missed_attendance,
+              groups: res.data.detail,
               absent_students: res.data.absent_students,
-              attending_the_class: res.data.attending_the_class,
               income: res.data.income,
               new_leads: res.data.new_leads,
               robot_mood: res.data.robot_mood,
@@ -66,8 +67,9 @@ const Layout = (props: LayoutProps) => {
         } else if (user?.role.join(', ').includes('ceo')) {
           dispatch(
             setSoffBotText({
+              missed_attendance: res.data.missed_attendance,
+              groups: res.data.detail,
               absent_students: res.data.absent_students,
-              attending_the_class: res.data.attending_the_class,
               income: res.data.income,
               new_leads: res.data.new_leads,
               robot_mood: res.data.robot_mood,

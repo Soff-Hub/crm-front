@@ -116,7 +116,7 @@ const StaticsModal = () => {
     </Dialog>
   ) : (
     <Dialog
-      onClick={e => e.stopPropagation()}
+      // onClick={e => e.stopPropagation()}
       open={isModalOpen}
       onClose={handleClose}
       maxWidth={'md'}
