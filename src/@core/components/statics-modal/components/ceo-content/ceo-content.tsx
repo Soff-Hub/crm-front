@@ -12,6 +12,15 @@ export const CeoContent = ({ soffBotText, setTypingComplete }: CeoContentProps) 
       {soffBotText?.role && (
         <Typewriter
           onInit={typewriter => {
+            const missedStudentsText =
+            Array.isArray(soffBotText?.groups) && soffBotText.groups.length > 0
+              ? soffBotText.groups
+                  .map(
+                    (group: { group: string; count: number; group_id: number }) =>
+                      `. <a href="/groups/view/security/?id=${group.group_id}" style="color: #0077FF; text-decoration: none;">${group.group}</a>: ${group.count} ta o'quvchi`
+                  )
+                  .join('<br>')
+              : "Hozircha hech qanday guruh ma'lumotlari mavjud emas."
             const message = `
        <div style="font-family: 'Inter', sans-serif; color: #333; line-height: 1.6;">
 <h3 style="color: #333; font-size: 20px; margin-top: 10px; margin-bottom: 20px;">📊 O'quv markazingizning kechagi statistikasi</h3>
@@ -28,6 +37,12 @@ export const CeoContent = ({ soffBotText, setTypingComplete }: CeoContentProps) 
       soffBotText.absent_students
     } ta</span>
   </p>
+  <p style="font-size: 16px;">
+    <strong style="color: #555;font-family: 'Inter', sans-serif;">👥 Davomat qilinmagan o'quvchilar soni:</strong> <span style="color: #dc3545;">${
+      soffBotText.missed_attendance || 0
+    } ta</span> <br/>
+     ${soffBotText.missed_attendance > 0 ? missedStudentsText:''}
+  </p>
   
   <p style="font-size: 16px;">
     <strong style="color: #555;font-family: 'Inter', sans-serif;">✨ Yangi qo'shilgan lidlar:</strong> <span style="color: #17a2b8;">${
@@ -41,13 +56,9 @@ export const CeoContent = ({ soffBotText, setTypingComplete }: CeoContentProps) 
     } ta</span>
   </p>
   
+ 
   <p style="font-size: 16px;">
-    <strong style="color: #555;font-family: 'Inter', sans-serif;">⚡️Faol lidlar:</strong> <span style="color: #0077FF;">${
-      soffBotText.attending_the_class
-    } ta</span>
-  </p>
-  <p style="font-size: 16px;">
-    <strong style="color: #555;font-family: 'Inter', sans-serif;">🧑‍🎓Kelgan o'quvchilar:</strong> <span style="color: #0077FF;">${
+    <strong style="color: #555;font-family: 'Inter', sans-serif;">🧑‍🎓Yangi kelgan o'quvchilar:</strong> <span style="color: #0077FF;">${
       soffBotText.added_students
     } ta</span>
   </p>

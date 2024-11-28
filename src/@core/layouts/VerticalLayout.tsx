@@ -132,7 +132,6 @@ const VerticalLayout = (props: LayoutProps) => {
             position: 'fixed',
             bottom: '50px',
             right: '20px',
-            zIndex: 1000,
             cursor: 'pointer'
           }}/>
         </MainContentWrapper>

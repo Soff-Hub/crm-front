@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import {
   Autocomplete,
   Box,
+  Button,
   FormControl,
   InputAdornment,
   InputLabel,
@@ -22,6 +23,8 @@ import 'rsuite/Toggle/styles/index.css'
 import Excel from 'src/@core/components/excelButton/Excel'
 import api from 'src/@core/utils/api'
 import { GroupFormInitialValue, MetaTypes } from 'src/types/apps/groupsTypes'
+import { ModalTypes, SendSMSModal } from './view/UserViewLeft'
+import useSMS from 'src/hooks/useSMS'
 
 type StudentsFilterProps = {
   isMobile: boolean
@@ -30,13 +33,27 @@ type StudentsFilterProps = {
 const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
   const [search, setSearch] = useState<string>('')
   const dispatch = useAppDispatch()
-  const { queryParams } = useAppSelector(state => state.students)
+  const { students, queryParams } = useAppSelector(state => state.students)
   const { getCourses, courses } = useCourses()
   const [groups, setGroups] = useState<any>()
   const [teachers, setTeachers] = useState<any>()
   const [isActive, setIsActive] = useState<boolean>(true)
   const { t } = useTranslation()
   const searchVal = useDebounce(search, 800)
+  const [openEdit, setOpenEdit] = useState<ModalTypes | null>(null)
+  const { smsTemps, getSMSTemps } = useSMS()
+  const [error, setError] = useState<any>({})
+
+  const studentIds = students.map(student => student.id)
+
+  const handleEditClickOpen = (value: ModalTypes) => {
+    setOpenEdit(value)
+  }
+
+  const handleEditClose = () => {
+    setError({})
+    setOpenEdit(null)
+  }
 
   async function getGroups() {
     await api
@@ -231,13 +248,30 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
               }}
             />
           </Box>
+          <Button
+            onClick={() => (getSMSTemps(), handleEditClickOpen('sms'))}
+            variant='outlined'
+            color='warning'
+            fullWidth
+            size='small'
+            startIcon={<IconifyIcon icon='material-symbols-light:sms-outline' />}
+          >
+            {t('Sms yuborish')}
+          </Button>
         </Box>
+        <SendSMSModal
+          handleEditClose={handleEditClose}
+          openEdit={openEdit}
+          smsTemps={smsTemps}
+          setOpenEdit={setOpenEdit}
+          usersData={studentIds}
+        />
       </form>
     )
   } else
     return (
       <Box display={'flex'} gap={2} alignItems='center' flexWrap={'wrap'} justifyContent='space-between' width='100%'>
-        <Box display={'flex'} width='90%' gap={2} flexWrap={'nowrap'}>
+        <Box display={'flex'} width='100%' gap={2} flexWrap={'nowrap'}>
           <FormControl variant='outlined' size='small' sx={{ maxWidth: 180, width: '100%' }}>
             <InputLabel htmlFor='outlined-adornment-password'>{t('Qidirish')}</InputLabel>
             <OutlinedInput
@@ -375,7 +409,24 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
             </Box>
           )}
           <Excel url='/common/students/export/' queryString={queryString} />
+          <Button
+            onClick={() => (getSMSTemps(), handleEditClickOpen('sms'))}
+            variant='outlined'
+            color='warning'
+            fullWidth
+            size='small'
+            startIcon={<IconifyIcon icon='material-symbols-light:sms-outline' />}
+          >
+            {t('Sms yuborish')}
+          </Button>
         </Box>
+        <SendSMSModal
+          handleEditClose={handleEditClose}
+          openEdit={openEdit}
+          smsTemps={smsTemps}
+          setOpenEdit={setOpenEdit}
+          usersData={studentIds}
+        />
       </Box>
     )
 }
