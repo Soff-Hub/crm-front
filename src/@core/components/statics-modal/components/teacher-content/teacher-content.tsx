@@ -1,4 +1,5 @@
 import { DialogContent } from '@mui/material'
+import getMonthName from 'src/@core/utils/gwt-month-name'
 import Typewriter from 'typewriter-effect'
 
 interface TeacherContentProps {
@@ -20,7 +21,7 @@ export const TeacherContent = ({ soffBotText, setTypingComplete }: TeacherConten
                 ? soffBotText.groups
                     .map(
                       (group: { group: string; count: number; group_id: number }) =>
-                        `- <a href="/groups/view/security/?id=${group.group_id}" style="color: #0077FF; text-decoration: none;">${group.group}</a>: ${group.count} ta o'quvchi`
+                        `- <a href="/groups/view/security/?id=${group.group_id}&month=${getMonthName(null)}" style="color: #0077FF; text-decoration: none;">${group.group}</a>: ${group.count} ta o'quvchi`
                     )
                     .join('<br>')
                 : "Hozircha hech qanday guruh ma'lumotlari mavjud emas."
