@@ -49,8 +49,8 @@ export default function DashboardStats() {
     debtor_users: "Qarzdor o'quvchilar soni",
     debtors_amount: `Faol o'quvchilar qarzdorligi : ${formatCurrency(stats?.debtors_amount) + " so'm"}    
     ${
-      stats.archive_debts_amount < 0 &&
-      `Arxivdagi o'quvchilar qarzdorligi : ${formatCurrency(stats?.archive_debts_amount) + " so'm"}`
+      stats?.archive_debts_amount < 0 &&
+      `Arxivdagi o'quvchilar qarzdorligi : ${formatCurrency(stats.archive_debts_amount) + " so'm"}`
     } 
       
     `,
