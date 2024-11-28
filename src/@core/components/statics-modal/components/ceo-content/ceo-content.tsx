@@ -39,9 +39,9 @@ export const CeoContent = ({ soffBotText, setTypingComplete }: CeoContentProps) 
   </p>
   <p style="font-size: 16px;">
     <strong style="color: #555;font-family: 'Inter', sans-serif;">👥 Davomat qilinmagan o'quvchilar soni:</strong> <span style="color: #dc3545;">${
-      soffBotText.missed_attendance 
+      soffBotText.missed_attendance || 0
     } ta</span> <br/>
-     ${soffBotText.missed_attendance > 0 && missedStudentsText}
+     ${soffBotText.missed_attendance > 0 ? missedStudentsText:''}
   </p>
   
   <p style="font-size: 16px;">
