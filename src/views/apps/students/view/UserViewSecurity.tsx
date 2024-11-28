@@ -80,7 +80,6 @@ const UserViewSecurity = ({ groupData }: any) => {
   const [activate, setActivate] = useState<boolean>(false)
   const { smsTemps, getSMSTemps } = useSMS()
   const { studentData } = useAppSelector(state => state.students)
-  console.log(studentData);
   
 
   const { getPaymentMethod, deletePayment } = usePayment()
@@ -283,7 +282,6 @@ const UserViewSecurity = ({ groupData }: any) => {
     getPaymentMethod()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-  console.log(groupData);
   
 
   return (

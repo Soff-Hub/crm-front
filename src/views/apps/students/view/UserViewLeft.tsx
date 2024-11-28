@@ -47,6 +47,7 @@ import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import StudentParentList from './StudentParentList'
 import StudentWithDrawForm from './StudentWithdrawForm'
+import toast from 'react-hot-toast'
 
 export type ModalTypes = 'group' | 'withdraw' | 'payment' | 'sms' | 'delete' | 'edit' | 'notes' | 'parent'
 
@@ -478,10 +479,13 @@ const UserViewLeft = ({ userData }: { userData: any }) => {
 
 export default UserViewLeft
 
-const SendSMSModal = ({ handleEditClose, openEdit, setOpenEdit, smsTemps, userData }: any) => {
+export  const SendSMSModal = ({ handleEditClose, openEdit, setOpenEdit, smsTemps, userData,usersData }: any) => {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
   const [loading, setLoading] = useState(false)
+ 
+  
+  
 
   const formik: any = useFormik({
     initialValues: {
@@ -499,13 +503,17 @@ const SendSMSModal = ({ handleEditClose, openEdit, setOpenEdit, smsTemps, userDa
     setLoading(true)
     const data = {
       ...value,
-      users: [userData?.id]
+      users:userData ? [userData.id] : usersData
     }
+
+    
 
     try {
       await api.post(`common/send-message-user/`, data)
+      toast.success("Sms yuborildi")
       setLoading(false)
       setOpenEdit(null)
+      
       await dispatch(userData.id)
     } catch (err: any) {
       setLoading(false)
@@ -567,7 +575,7 @@ const SendSMSModal = ({ handleEditClose, openEdit, setOpenEdit, smsTemps, userDa
               variant='outlined'
               type='button'
               color='secondary'
-              onClick={() => (handleEditClose(), formik.resetForm())}
+              onClick={() => (handleEditClose(), formik.resetForm(),setLoading(false))}
             >
               {t('Bekor qilish')}
             </Button>

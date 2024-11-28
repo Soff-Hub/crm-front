@@ -19,7 +19,7 @@ export const AdminContent = ({ soffBotText, setTypingComplete }: AdminContentPro
 <div class="space-y-2">
   <p style="font-size: 16px;">
     <strong style="color: #555;font-family: 'Inter', sans-serif;">💰 Kirimlar:</strong> <span style="color: #28a745;">${
-      soffBotText.income && soffBotText.income.toLocaleString()
+      soffBotText.income
     } so'm</span>
   </p>
   

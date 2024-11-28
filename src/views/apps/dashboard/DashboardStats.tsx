@@ -8,6 +8,7 @@ import { useRouter } from 'next/router'
 import { useTranslation } from 'react-i18next'
 import { Skeleton, Tooltip } from '@mui/material'
 import { updateStudentParams } from 'src/store/apps/students'
+import { formatCurrency } from 'src/@core/utils/format-currency'
 
 export default function DashboardStats() {
   const { stats, statsData, isStatsLoading } = useAppSelector(state => state.dashboard)
@@ -15,6 +16,8 @@ export default function DashboardStats() {
   const { isMobile, isTablet } = useResponsive()
   const { push } = useRouter()
   const { t } = useTranslation()
+
+  console.log(stats)
 
   function click(link: string) {
     if (link === 'debtors_amount') {
@@ -44,7 +47,13 @@ export default function DashboardStats() {
     active_groups: 'Ayni vaqtda faol guruhlar soni',
     active_students: "Ayni vaqtda faol o'quvchilar soni",
     debtor_users: "Qarzdor o'quvchilar soni",
-    debtors_amount: "Kelishi kerak bo'lgan qarzlar",
+    debtors_amount: `Faol o'quvchilar qarzdorligi : ${formatCurrency(stats?.debtors_amount) + " so'm"}    
+    ${
+      stats.archive_debts_amount < 0 &&
+      `Arxivdagi o'quvchilar qarzdorligi : ${formatCurrency(stats?.archive_debts_amount) + " so'm"}`
+    } 
+      
+    `,
     leads_count: "Kurslarga ro'yxatdan o'tgan faol lidlar soni",
     not_activated_students: "Sinov darsiga kelib ketgan o'quvchilar soni",
     payment_approaching: "To'lov qilishiga 7 kundan kam qolgan o'quvchilar soni",
