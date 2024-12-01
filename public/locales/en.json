@@ -10,7 +10,6 @@
   "Tugatilgan": "Completed",
   "Davom etish": "Continue",
   "Modal title": "Continue",
-
   "Yopiq": "Closed",
   "Yo'qlama qilinmagan": "Not marked",
   "Kelmagan": "Absent",
@@ -60,7 +59,6 @@
   "To'lov yangilandi": "Payment updated",
   "To'lovni tahrirlash": "Edit payment",
   "Platforma uchun to'lov hamda qo'shimcha SMS paket olish  uchun to'lovlarni o'ng tomonda joylashgan To'lov qilish yoki SMS paket olish tugmasini bosish orqali markazga mos tushuvchi tariflardan birini tanlab ushbu karta raqamga qilingan to'lov chekini yuboring (Zufarbek Abdurahmonov)": "To make a payment for the platform or to purchase an additional SMS package, please click on the 'Make Payment' or 'Purchase SMS Package' button on the right side. Then, select one of the suitable tariffs and send the payment receipt to this card number (Ahmadaliyeva Roxatoy).",
-
   "Mening guruhlarim": "My groups",
   "Oylik to'lovlar tarixi": "Monthly payment history",
   "Oylik berilgan sana": "Salary issuance date",
@@ -201,7 +199,6 @@
   "O'zgarishlarni butunlay saqlamoqchimisiz?": "Do you want to save the changes completely?",
   "Bu amaliyotni ortga qaytarib bo'lmaydi": "This action cannot be undone",
   "O'zgarmas oylik": "Fixed salary",
-
   "Ism yoki telefon raqam orqali qidirish": "Search by name or phone number",
   "Dars qo'shi": "Add lesson",
   "Bo'lim": "Section",
@@ -519,5 +516,23 @@
   "Kelib ketganlar": "Arrivals and Departures",
   "Aktiv balans": "Active balance",
   "O'quvchilar to'lovi": "Student Payments",
-  "Davomatlar": "Attendance"
+  "Davomatlar": "Attendance",
+  "Guruh davomiyligi": "Group Duration",
+  "Qilingan davomadlar": "Completed Attendances",
+  "Qilinmagan davomatlar soni": "Number of Missed Attendances",
+  "To'lov sanasi": "Payment Date",
+  "To'lov miqdori": "Payment Amount",
+  "Guruhi": "Group",
+  "O'quvchi": "Student",
+  "Jami foizda (%)": "Total Percentage (%)",
+  "Tahrirlangan sana": "Edited Date",
+  "To'lovi yaqin qolganlarni ogohlantirish": "Notify Those with Upcoming Payments",
+  "TEACHER": "TEACHER",
+  "CASHER": "CASHER",
+  "Qidiruv": "Search",
+  "Xodim": "Employee",
+  "Ustoz": "Mentor",
+  "Sms yuborish": "Send SMS",
+  "Xodim qo'shish": "Add Employee",
+  "XODIM": "EMPLOYEE"
 }

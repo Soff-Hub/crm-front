@@ -201,7 +201,7 @@ export default function EditEmployeeForm() {
                 <FormControl sx={{ width: '100%' }}>
                     <TextField
                         type='date'
-                        label={"Ishga olingan sana"}
+                        label={t("Ishga olingan sana")}
                         name='activated_at'
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
@@ -224,7 +224,7 @@ export default function EditEmployeeForm() {
                     <FormControl sx={{ width: '100%' }}>
                         <TextField
                             type='number'
-                            label={"Foiz ulushi"}
+                            label={t("Foiz ulushi")}
                             name='percentage'
                             // disabled={formik.values.is_fixed_salary}
                             onChange={formik.handleChange}
@@ -238,7 +238,7 @@ export default function EditEmployeeForm() {
                     </FormControl>
                     <FormControl sx={{ width: '100%' }}>
                         <AmountInput
-                            label={"Oylik ish haqi"}
+                            label={t("Oylik ish haqi")}
                             name='amount'
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}

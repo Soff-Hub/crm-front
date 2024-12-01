@@ -139,7 +139,7 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
                 placeholder={"O'qituvchi"}
                 disablePortal
                 options={options}
-                renderInput={params => <TextField {...params} label='Oqituvchi' />}
+                renderInput={params => <TextField {...params} label={t("O'qituvchi")} />}
               />
           </FormControl>
           <FormControl sx={{ width: '100%' }}>
@@ -236,7 +236,7 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
                 placeholder={"O'qituvchi"}
                 disablePortal
                 options={options}
-                renderInput={params => <TextField {...params} label='Oqituvchi' />}
+                renderInput={params => <TextField {...params} label={t("O'qituvchi")} />}
               />
             </FormControl>
           )}

@@ -255,7 +255,7 @@ export const AttandanceFilters = ({ isMobile }: AttandanceFiltersProps) => {
               placeholder={"O'qituvchi"}
               disablePortal
               options={options}
-              renderInput={params => <TextField {...params} label='Oqituvchi' />}
+              renderInput={params => <TextField {...params} label={t("O'qituvchi")} />}
             />
           </FormControl>
         </Box>

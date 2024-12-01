@@ -220,7 +220,7 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
               options={groupOptions}
               onChange={(e: any, v: any) => handleFilter('group', v?.value)}
               size='small'
-              renderInput={params => <TextField {...params} label='Guruh' />}
+              renderInput={params => <TextField {...params} label={t('Guruh')} />}
             />
           </Box>
           <Box sx={{ width: '100%' }}>
@@ -229,7 +229,7 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
               options={teacherOptions}
               onChange={(e: any, v: any) => handleFilter('teacher', v?.value)}
               size='small'
-              renderInput={params => <TextField {...params} label='Ustoz' />}
+              renderInput={params => <TextField {...params} label={t('Ustoz')} />}
             />
           </Box>
 
@@ -237,8 +237,8 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
             <Toggle
               checked={queryParams.status === 'archive'}
               color='red'
-              checkedChildren='Arxiv'
-              unCheckedChildren='Arxiv'
+              checkedChildren={t('Arxiv')}
+              unCheckedChildren={t('Arxiv')}
               onChange={e => {
                 if (e) {
                   handleFilter('status', 'archive')
@@ -256,7 +256,7 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
             size='small'
             startIcon={<IconifyIcon icon='material-symbols-light:sms-outline' />}
           >
-            {t('Sms yuborish')}
+            {t('Sms yuborish')}  
           </Button>
         </Box>
         <SendSMSModal
@@ -377,7 +377,7 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
               options={groupOptions}
               onChange={(e: any, v: any) => handleFilter('group', v?.value)}
               size='small'
-              renderInput={params => <TextField {...params} label='Guruh' />}
+              renderInput={params => <TextField {...params} label={t('Guruh')} />}
             />
           </Box>
           <Box sx={{ width: '100%' }}>
@@ -387,7 +387,7 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
               options={teacherOptions}
               onChange={(e: any, v: any) => handleFilter('teacher', v?.value)}
               size='small'
-              renderInput={params => <TextField {...params} label='Ustoz' />}
+              renderInput={params => <TextField {...params} label={t('Ustoz')} />}
             />
           </Box>
 
@@ -396,8 +396,8 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
               <Toggle
                 checked={queryParams.status === 'archive'}
                 color='red'
-                checkedChildren='Arxiv'
-                unCheckedChildren='Arxiv'
+                checkedChildren={t('Arxiv')}
+                unCheckedChildren={t('Arxiv')}
                 onChange={e => {
                   if (e) {
                     handleFilter('status', 'archive')
