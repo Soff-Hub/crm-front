@@ -251,7 +251,7 @@ export default function AddGroupModal() {
                 </InputLabel>
                 <Select
                   size='small'
-                  label='Hafta kunlari'
+                  label={t('Hafta kunlari')}
                   id='demo-simple-select-outlined'
                   name='day_of_week'
                   labelId='demo-simple-select-outlined-label'
@@ -260,10 +260,10 @@ export default function AddGroupModal() {
                   error={!!formik.errors.day_of_week && !!formik.touched.day_of_week}
                   value={formik.values.day_of_week}
                 >
-                  <MenuItem value={`tuesday,thursday,saturday`}>Juft kunlari</MenuItem>
-                  <MenuItem value={`monday,wednesday,friday`}>Toq kunlari</MenuItem>
-                  <MenuItem value={`tuesday,thursday,saturday,monday,wednesday,friday`}>Har kuni</MenuItem>
-                  <MenuItem value={'0'}>Boshqa</MenuItem>
+                  <MenuItem value={`tuesday,thursday,saturday`}>{t('Juft kunlari')}</MenuItem>
+                  <MenuItem value={`monday,wednesday,friday`}>{t('Toq kunlari')}</MenuItem>
+                  <MenuItem value={`tuesday,thursday,saturday,monday,wednesday,friday`}>{t('Har kuni')}</MenuItem>
+                  <MenuItem value={'0'}>{t('Boshqa')}</MenuItem>
                 </Select>
                 <FormHelperText error={!!formik.errors.day_of_week && !!formik.touched.day_of_week}>
                   {!!formik.errors.day_of_week && !!formik.touched.day_of_week && formik.errors.day_of_week}

@@ -341,7 +341,7 @@ export default function EditGroupModal() {
                   </InputLabel>
                   <Select
                     size='small'
-                    label='Hafta kunlari'
+                    label={t('Hafta kunlari')}
                     id='demo-simple-select-outlined'
                     name='day_of_week'
                     labelId='demo-simple-select-outlined-label'
@@ -350,10 +350,10 @@ export default function EditGroupModal() {
                     error={!!formik.errors.day_of_week && formik.touched.day_of_week}
                     value={formik.values.day_of_week}
                   >
-                    <MenuItem value={`tuesday,thursday,saturday`}>Juft kunlari</MenuItem>
-                    <MenuItem value={`monday,wednesday,friday`}>Toq kunlari</MenuItem>
-                    <MenuItem value={`tuesday,thursday,saturday,monday,wednesday,friday`}>Har kuni</MenuItem>
-                    <MenuItem value={'0'}>Boshqa</MenuItem>
+                    <MenuItem value={`tuesday,thursday,saturday`}>{t('Juft kunlari')}</MenuItem>
+                    <MenuItem value={`monday,wednesday,friday`}>{t('Toq kunlari')}</MenuItem>
+                    <MenuItem value={`tuesday,thursday,saturday,monday,wednesday,friday`}>{t('Har kuni')}</MenuItem>
+                    <MenuItem value={'0'}>{t('Boshqa')}</MenuItem>
                   </Select>
                   <FormHelperText error={!!formik.errors.day_of_week && formik.touched.day_of_week}>
                     {!!formik.errors.day_of_week && formik.touched.day_of_week && formik.errors.day_of_week}
@@ -395,14 +395,14 @@ export default function EditGroupModal() {
 
                 <FormControl fullWidth>
                   <Autocomplete
-                    placeholder={'Xonalar'}
+                    placeholder={t('Xonalar')}
                     size='small'
                     onBlur={formik.handleBlur}
                     disablePortal
                     onChange={(e,v) => handleChangeField('room', v?.value)}
                     value={options?.length > 0 && options.find(option => option.value === formik.values.room) || null}
                     options={options}
-                    renderInput={params => <TextField {...params} label='Xonalar' />}
+                    renderInput={params => <TextField {...params} label={t('Xonalar')} />}
                   />
                   <FormHelperText error={!!formik.errors.room && formik.touched.room}>
                     {!!formik.errors.room && formik.touched.room && formik.errors.room}

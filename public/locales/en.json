@@ -71,8 +71,8 @@
   "Mart": "Mar",
   "Apr": "Apr",
   "May": "May",
-  "Iyun": "Jun",
-  "Iyul": "Jul",
+  "Iyun": "June",
+  "Iyul": "July",
   "Avg": "Aug",
   "Sen": "Sep",
   "Okt": "Oct",
@@ -534,5 +534,15 @@
   "Ustoz": "Mentor",
   "Sms yuborish": "Send SMS",
   "Xodim qo'shish": "Add Employee",
-  "XODIM": "EMPLOYEE"
+  "XODIM": "EMPLOYEE",
+  "Yanvar": "January",
+  "Fevral": "February",
+  "Avgust": "August",
+  "Sentabr": "September",
+  "Oktabr": "October",
+  "Noyabr": "November",
+  "Dekabr": "December",
+  "Guruh ma'lumotlarini tahrirlash": "Edit group information",
+  "Guruhsiz": "No Group",
+  "frozen": "frozen"
 }

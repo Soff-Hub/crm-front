@@ -28,6 +28,7 @@ import DatePickerWrapper from 'src/@core/styles/libs/react-datepicker'
 
 // ** Types
 import { EventDateType, AddEventSidebarType } from 'src/types/apps/calendarTypes'
+import { useTranslation } from 'react-i18next'
 
 interface PickerProps {
   label?: string
@@ -76,6 +77,7 @@ const AddEventSidebar = (props: AddEventSidebarType) => {
 
   // ** States
   const [values, setValues] = useState<DefaultStateType>(defaultState)
+  const { t } = useTranslation()
 
   const {
     control,
@@ -259,9 +261,9 @@ const AddEventSidebar = (props: AddEventSidebarType) => {
                 labelId='event-calendar'
                 onChange={e => setValues({ ...values, calendar: e.target.value })}
               >
-                <MenuItem value='Juft kunlar'>Toq kunlar</MenuItem>
-                <MenuItem value='Toq kunlar'>Juft kunlar</MenuItem>
-                <MenuItem value='Boshqa'>Boshqa</MenuItem>
+                <MenuItem value='Juft kunlar'>{t('Toq kunlar')}</MenuItem>
+                <MenuItem value='Toq kunlar'>{t('Juft kunlar')}</MenuItem>
+                <MenuItem value='Boshqa'>{t('Boshqa')}</MenuItem>
               </Select>
             </FormControl>
             <Box sx={{ mb: 6 }}>

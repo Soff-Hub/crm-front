@@ -39,7 +39,7 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
   const [teachersData, setTeachersData] = useState<TacherItemType[] | null>(null)
 
   const getTeachers = async () => {
-   await api
+    await api
       .get('auth/employees-check-list/?role=teacher')
       .then(data => {
         setTeachersData(data.data)
@@ -55,16 +55,16 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
 
   const { t } = useTranslation()
 
-  const handleChangeStatus = async(e: SelectChangeEvent<string>) => {
+  const handleChangeStatus = async (e: SelectChangeEvent<string>) => {
     dispatch(updateParams({ status: e.target.value }))
     // const queryString = new URLSearchParams({ ...queryParams, status: e.target.value }).toString()
-   await  dispatch(fetchGroups({ ...queryParams, status: e.target.value }))
+    await dispatch(fetchGroups({ ...queryParams, status: e.target.value }))
   }
-  const handleChangeTeacher = async(e: SelectChangeEvent<string>) => {
-    dispatch(updateParams({ teacher: e.target.value }))    
+  const handleChangeTeacher = async (e: SelectChangeEvent<string>) => {
+    dispatch(updateParams({ teacher: e.target.value }))
     await dispatch(fetchGroups({ ...queryParams, teacher: e.target.value }))
   }
-  const handleChangeCourse = async(e: SelectChangeEvent<string>) => {
+  const handleChangeCourse = async (e: SelectChangeEvent<string>) => {
     dispatch(updateParams({ course: e.target.value }))
     await dispatch(fetchGroups({ ...queryParams, course: e.target.value }))
   }
@@ -125,11 +125,11 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
               onChange={handleChangeStatus}
             >
               <MenuItem value=''>
-                <b>Barchasi</b>
+                <b>{t('Barchasi')}</b>
               </MenuItem>
-              <MenuItem value={'active'}>{'Aktiv'}</MenuItem>
-              <MenuItem value={'archive'}>{'arxiv'}</MenuItem>
-              <MenuItem value={'new'}>{'Sinov darsida'}</MenuItem>
+              <MenuItem value={'active'}>{t('Aktiv')}</MenuItem>
+              <MenuItem value={'archive'}>{t('arxiv')}</MenuItem>
+              <MenuItem value={'new'}>{t('Sinov darsida')}</MenuItem>
             </Select>
           </FormControl>
           <FormControl sx={{ width: '100%' }}>
@@ -155,7 +155,7 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
               onChange={handleChangeCourse}
             >
               <MenuItem value=''>
-                <b>Barchasi</b>
+                <b>{t('Barchasi')}</b>
               </MenuItem>
               {courses?.map(course => (
                 <MenuItem key={course.id} value={course.id}>
@@ -177,11 +177,11 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
               onChange={handleChangeDateOfWeek}
             >
               <MenuItem value=''>
-                <b>Barchasi</b>
+                <b>{t('Barchasi')}</b>
               </MenuItem>
-              <MenuItem value={'tuesday,thursday,saturday'}>Juft kunlari</MenuItem>
-              <MenuItem value={'monday,wednesday,friday'}>Toq kunlari</MenuItem>
-              <MenuItem value={'monday,tuesday,wednesday,thursday,friday,saturday,sunday'}>Har kuni</MenuItem>
+              <MenuItem value={'tuesday,thursday,saturday'}>{t('Juft kunlari')}</MenuItem>
+              <MenuItem value={'monday,wednesday,friday'}>{t('Toq kunlari')}</MenuItem>
+              <MenuItem value={'monday,tuesday,wednesday,thursday,friday,saturday,sunday'}>{t('Har kuni')}</MenuItem>
             </Select>
           </FormControl>
         </Box>
@@ -221,11 +221,11 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
               onChange={handleChangeStatus}
             >
               <MenuItem value=''>
-                <b>Barchasi</b>
+                <b>{t('Barchasi')}</b>
               </MenuItem>
-              <MenuItem value={'active'}>{'Aktiv'}</MenuItem>
-              <MenuItem value={'archived'}>{'Arxivlangan'}</MenuItem>
-              <MenuItem value={'new'}>{'Yangi'}</MenuItem>
+              <MenuItem value={'active'}>{t('active')}</MenuItem>
+              <MenuItem value={'archived'}>{t('archive')}</MenuItem>
+              <MenuItem value={'new'}>{t('new')}</MenuItem>
             </Select>
           </FormControl>
           {options?.length > 0 && (
@@ -275,11 +275,11 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
               onChange={handleChangeDateOfWeek}
             >
               <MenuItem value=''>
-                <b>Barchasi</b>
+                <b>{t('Barchasi')}</b>
               </MenuItem>
-              <MenuItem value={'tuesday,thursday,saturday'}>Juft kunlari</MenuItem>
-              <MenuItem value={'monday,wednesday,friday'}>Toq kunlari</MenuItem>
-              <MenuItem value={'monday,tuesday,wednesday,thursday,friday,saturday,sunday'}>Har kuni</MenuItem>
+              <MenuItem value={'tuesday,thursday,saturday'}>{t('Juft kunlari')}</MenuItem>
+              <MenuItem value={'monday,wednesday,friday'}>{t('Toq kunlari')}</MenuItem>
+              <MenuItem value={'monday,tuesday,wednesday,thursday,friday,saturday,sunday'}>{t('Har kuni')}</MenuItem>
             </Select>
           </FormControl>
         </Box>
