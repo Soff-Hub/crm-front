@@ -16,6 +16,7 @@ import {
     fetchTeachersList,
     setOpenEdit,
     updateParams,
+    
 } from 'src/store/apps/mentors'
 import { disablePage } from 'src/store/apps/page'
 import { editEmployeeStatus } from 'src/store/apps/settings'
@@ -49,7 +50,8 @@ const RowOptions = ({ id, status }: { id: number | string, status: string }) => 
         if (resp.meta.requestStatus === 'rejected') {
             toast.error(`${resp.payload?.msg}`, { position: 'top-center' })
         } else {
-            await dispatch(fetchTeachersList(""))
+            const queryString = new URLSearchParams({ ...queryParams,status: 'active' }).toString()
+            await dispatch(fetchTeachersList(queryString))
             toast.success(`${t("O'qituvchilar ro'yxatidan o'chirildi")}`, { position: 'top-center' })
         }
         setLoading(false)

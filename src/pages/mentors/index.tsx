@@ -110,6 +110,9 @@ export default function GroupsPage() {
     push(`/mentors/view/security?id=${id}`)
   }
 
+  console.log(queryParams);
+  
+
   useEffect(() => {
     if (!user?.role.includes('ceo') && !user?.role.includes('admin')) {
       router.push('/')
