@@ -25,6 +25,8 @@ import { Settings } from 'src/@core/context/settingsContext'
 import { AuthContext } from 'src/context/AuthContext'
 import { useTranslation } from 'react-i18next'
 import { Button } from '@mui/material'
+import UserIcon from 'src/layouts/components/UserIcon'
+import StudentEditProfileModal from 'src/pages/student-profile/studentEditModal'
 
 interface Props {
   settings: Settings
@@ -45,7 +47,7 @@ const UserDropdown = (props: Props) => {
   const { t } = useTranslation()
   // ** States
   const [anchorEl, setAnchorEl] = useState<Element | null>(null)
-
+  const [isModalOpen,setIsModalOpen] = useState(false)
   // ** Hooks
   const router = useRouter()
   const { logout } = useAuth()
@@ -71,15 +73,15 @@ const UserDropdown = (props: Props) => {
     py: 2,
     px: 4,
     m: 0,
-    borderRadius: "0",
+    borderRadius: '0',
     width: '100%',
     display: 'flex',
-    justifyContent: "flex-start",
+    justifyContent: 'flex-start',
     alignItems: 'center',
     // color: 'text.primary',
     // textDecoration: 'none',
     '& svg': {
-      mr: 2,
+      mr: 2
       // fontSize: '1.375rem',
       // color: 'text.primary'
     }
@@ -101,12 +103,7 @@ const UserDropdown = (props: Props) => {
           horizontal: 'right'
         }}
       >
-        <Avatar
-          alt={user?.fullName}
-          onClick={handleDropdownOpen}
-          sx={{ width: 40, height: 40 }}
-          src={user?.avatar}
-        />
+        <Avatar alt={user?.fullName} onClick={handleDropdownOpen} sx={{ width: 40, height: 40 }} src={user?.avatar} />
       </Badge>
       <Menu
         anchorEl={anchorEl}
@@ -117,50 +114,61 @@ const UserDropdown = (props: Props) => {
         transformOrigin={{ vertical: 'top', horizontal: direction === 'ltr' ? 'right' : 'left' }}
       >
         <Box sx={{ pt: 2, pb: 3, px: 4 }}>
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Badge
-              overlap='circular'
-              badgeContent={<BadgeContentSpan />}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'right'
-              }}
-            >
-              <Avatar alt={user?.fullName} src={user?.avatar} sx={{ width: '2.5rem', height: '2.5rem' }} />
-            </Badge>
-            <Box sx={{ display: 'flex', ml: 3, alignItems: 'flex-start', flexDirection: 'column' }}>
-              <Typography sx={{ fontWeight: 600 }}>{user?.fullName}</Typography>
-              <Typography variant='body2' sx={{ fontSize: '0.8rem', color: 'text.disabled' }}>
-                {user?.role.join(', ')}
-              </Typography>
+          <Box sx={{ display: 'flex', alignItems: 'start', justifyContent: 'space-between' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Badge
+                overlap='circular'
+                badgeContent={<BadgeContentSpan />}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'right'
+                }}
+              >
+                <Avatar alt={user?.fullName} src={user?.avatar} sx={{ width: '2.5rem', height: '2.5rem' }} />
+              </Badge>
+              <Box sx={{ display: 'flex', ml: 3, alignItems: 'flex-start', flexDirection: 'column' }}>
+                <Typography sx={{ fontWeight: 600 }}>{user?.fullName}</Typography>
+                <Typography variant='body2' sx={{ fontSize: '0.8rem', color: 'text.disabled' }}>
+                  {user?.role.join(', ')}
+                </Typography>
+              </Box>
             </Box>
+            <button className='border-0 bg-transparent cursor-pointer'>
+              <UserIcon onClick={()=>setIsModalOpen(true)} icon='lucide:edit' />
+            </button>
           </Box>
         </Box>
         <Typography variant='body2' sx={{ fontSize: '0.8rem', color: 'black', paddingLeft: '20px' }}>
           {user?.username}
         </Typography>
-        <Divider sx={{ mb: '0 !important', mt: "1 !important" }} />
-        {(user?.role.includes('ceo')) && !window.location.hostname.split('.').includes('c-panel') && <>
-          <Button color="success" sx={styles} onClick={() => router.push('/crm-payments')}>
-            <Icon icon='material-symbols-light:payments-sharp' />
-            {t("CRM sozlamalari")}
-          </Button>
-        </>}
-        {(user?.role.includes('admin') || user?.role.includes('ceo')) && !window.location.hostname.split('.').includes('c-panel') && <>
-          <Button color="secondary" sx={styles} onClick={() => router.push('/video-tutorials')}>
-            <Icon icon='ph:video-bold' />
-            {t("Video qo'llanmalar")}
-          </Button>
-        </>}
+        <Divider sx={{ mb: '0 !important', mt: '1 !important' }} />
+        {user?.role.includes('ceo') && !window.location.hostname.split('.').includes('c-panel') && (
+          <>
+            <Button color='success' sx={styles} onClick={() => router.push('/crm-payments')}>
+              <Icon icon='material-symbols-light:payments-sharp' />
+              {t('CRM sozlamalari')}
+            </Button>
+          </>
+        )}
+        {(user?.role.includes('admin') || user?.role.includes('ceo')) &&
+          !window.location.hostname.split('.').includes('c-panel') && (
+            <>
+              <Button color='secondary' sx={styles} onClick={() => router.push('/video-tutorials')}>
+                <Icon icon='ph:video-bold' />
+                {t("Video qo'llanmalar")}
+              </Button>
+            </>
+          )}
         <Divider sx={{ m: '0 !important' }} />
         <MenuItem
           onClick={handleLogout}
           sx={{ py: 2, '& svg': { mr: 2, fontSize: '1.375rem', color: 'text.primary' } }}
         >
           <Icon icon='mdi:logout-variant' />
-          {t("Logout")}
+          {t('Logout')}
         </MenuItem>
       </Menu>
+      <StudentEditProfileModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
     </Fragment>
   )
 }

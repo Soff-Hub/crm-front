@@ -41,7 +41,7 @@ export default function StudentEditProfileModal({ isModalOpen, setIsModalOpen }:
   const [loading,setLoading] = React.useState(false)
   return (
     <div>
-      <Button onClick={() => setIsModalOpen(true)}>Open modal</Button>
+      {/* <Button onClick={() => setIsModalOpen(true)}>Open modal</Button> */}
       <Modal
         open={isModalOpen}
         onClose={handleClose}

@@ -25,7 +25,7 @@ import CustomAvatar from 'src/@core/components/mui/avatar'
 import { useTranslation } from 'react-i18next'
 import IconifyIcon from 'src/@core/components/icon'
 
-import { FormHelperText, Tooltip } from '@mui/material'
+import { ButtonGroup, Checkbox, FormHelperText, Radio, RadioGroup, Tooltip } from '@mui/material'
 import Form from 'src/@core/components/form'
 import { addPeriodToThousands } from 'src/pages/settings/office/courses'
 import UserViewStudentsList from './UserViewStudentsList'
@@ -232,14 +232,13 @@ const UserViewLeft = ({ userData }: { userData: any }) => {
           <StudentParentList />
         </Grid>
         <Dialog
-          
           open={openEdit === 'group'}
           onClose={handleEditClose}
           aria-labelledby='user-view-edit'
           sx={{ '& .MuiPaper-root': { width: '100%', maxWidth: 450, p: [1, 3] } }}
           aria-describedby='user-view-edit-description'
           BackdropProps={{
-            onClick: (e) => e.stopPropagation() 
+            onClick: e => e.stopPropagation()
           }}
         >
           <DialogTitle id='user-view-edit' sx={{ textAlign: 'center', fontSize: '1.5rem !important' }}>
@@ -479,13 +478,12 @@ const UserViewLeft = ({ userData }: { userData: any }) => {
 
 export default UserViewLeft
 
-export  const SendSMSModal = ({ handleEditClose, openEdit, setOpenEdit, smsTemps, userData,usersData }: any) => {
+export const SendSMSModal = ({ handleEditClose, openEdit, setOpenEdit, smsTemps, userData, usersData }: any) => {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
   const [loading, setLoading] = useState(false)
- 
-  
-  
+  const [isErrorText, setIsErrorText] = useState<null | string>(null)
+  const [isActive, setIsActive] = useState(false)
 
   const formik: any = useFormik({
     initialValues: {
@@ -499,31 +497,45 @@ export  const SendSMSModal = ({ handleEditClose, openEdit, setOpenEdit, smsTemps
     }
   })
 
+  const handleChangeActive = () => {
+    setIsActive(!isActive)
+  }
+
   const handleSendSms = async (value: any) => {
     setLoading(true)
     const data = {
       ...value,
-      users:userData ? [userData.id] : usersData
+      users: userData ? [userData.id] : usersData,
+      is_partly: isActive
     }
-
-    
 
     try {
       await api.post(`common/send-message-user/`, data)
-      toast.success("Sms yuborildi")
+      toast.success('Sms yuborildi')
       setLoading(false)
       setOpenEdit(null)
-      
+      formik.resetForm()
+      setIsErrorText(null)
+      setIsActive(false)
       await dispatch(userData.id)
     } catch (err: any) {
-      setLoading(false)
+      console.log(err)
+
+      if (err.response.status) {
+        setIsErrorText(err.response.data.message)
+        setLoading(false)
+      } else {
+        console.log(err)
+        setLoading(false)
+      }
     }
   }
+  console.log(isErrorText)
 
   return (
     <Dialog
       open={openEdit === 'sms'}
-      onClose={() => (handleEditClose(), formik.resetForm())}
+      onClose={() => (handleEditClose(), formik.resetForm(), setIsErrorText(null), setIsActive(false))}
       aria-labelledby='user-view-edit'
       sx={{ '& .MuiPaper-root': { width: '100%', maxWidth: 450, p: [1, 3] } }}
       aria-describedby='user-view-edit-description'
@@ -533,7 +545,7 @@ export  const SendSMSModal = ({ handleEditClose, openEdit, setOpenEdit, smsTemps
       </DialogTitle>
       <DialogContent>
         <form style={{ marginTop: 10 }} onSubmit={formik.handleSubmit}>
-          <FormControl sx={{ maxWidth: '100%', mb: 3 }} fullWidth>
+          <FormControl sx={{ maxWidth: '100%'}} fullWidth>
             <InputLabel size='small' id='demo-simple-select-outlined-label'>
               {t('Shablonlar')}
             </InputLabel>
@@ -552,14 +564,16 @@ export  const SendSMSModal = ({ handleEditClose, openEdit, setOpenEdit, smsTemps
               ))}
             </Select>
           </FormControl>
-
+          <p style={{ fontSize: 12, marginTop:15,marginBottom:3}}>
+          {"Xabar matniga talaba ismini qo'shish uchun ${first_name} kalit so'zi qoldiring"}
+          </p>
           <FormControl fullWidth>
             <TextField
               size='small'
               name='message'
               multiline
               rows={4}
-              label={t('SMS matni')}
+              label={t('SMS matni ')}
               onBlur={formik.handleBlur}
               value={formik.values.message}
               onChange={formik.handleChange}
@@ -569,13 +583,21 @@ export  const SendSMSModal = ({ handleEditClose, openEdit, setOpenEdit, smsTemps
               {formik.errors.message}
             </FormHelperText>
           </FormControl>
-
+          <p style={{ color: 'red', padding: 3 }}>{isErrorText}</p>
+          {isErrorText && (
+            <div className='d-flex align-items-start'>
+              <Checkbox checked={isActive} onChange={handleChangeActive} inputProps={{ 'aria-label': 'controlled' }} />
+              <p>Sms limit yetganicha habar yuborilsin (10) ta</p>
+            </div>
+          )}
           <DialogActions sx={{ justifyContent: 'center' }}>
             <Button
               variant='outlined'
               type='button'
               color='secondary'
-              onClick={() => (handleEditClose(), formik.resetForm(),setLoading(false))}
+              onClick={() => (
+                handleEditClose(), formik.resetForm(), setLoading(false), setIsErrorText(null), setIsActive(false)
+              )}
             >
               {t('Bekor qilish')}
             </Button>
