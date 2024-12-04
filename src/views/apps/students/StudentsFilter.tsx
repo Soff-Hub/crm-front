@@ -73,17 +73,21 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
     if (key === 'amount') {
       if (value === 'is_debtor') {
         setIsActive(false)
-        dispatch(updateStudentParams({ is_debtor: true, last_payment: '' }))
-        await dispatch(fetchStudentsList({ ...queryParams, is_debtor: true, last_payment: '' }))
+        dispatch(updateStudentParams({ is_debtor: true, last_payment: '', not_in_debt: '' }))
+        await dispatch(fetchStudentsList({ ...queryParams, is_debtor: true, last_payment: '', not_in_debt: '' }))
+      } else if (value === 'not_in_debt') {
+        setIsActive(false)
+        dispatch(updateStudentParams({ is_debtor: '', last_payment: '', not_in_debt: true }))
+        await dispatch(fetchStudentsList({ ...queryParams, is_debtor: '', last_payment: '', not_in_debt: true }))
       }
       if (value === 'last_payment') {
         setIsActive(true)
-        dispatch(updateStudentParams({ last_payment: true, is_debtor: '' }))
-        await dispatch(fetchStudentsList({ ...queryParams, last_payment: true, is_debtor: '' }))
+        dispatch(updateStudentParams({ last_payment: true, is_debtor: '', not_in_debt: '' }))
+        await dispatch(fetchStudentsList({ ...queryParams, last_payment: true, is_debtor: '', not_in_debt: '' }))
       } else if (value === 'all') {
         setIsActive(true)
-        dispatch(updateStudentParams({ is_debtor: '', last_payment: '' }))
-        await dispatch(fetchStudentsList({ ...queryParams, is_debtor: '', last_payment: '' }))
+        dispatch(updateStudentParams({ is_debtor: '', last_payment: '', not_in_debt: '' }))
+        await dispatch(fetchStudentsList({ ...queryParams, is_debtor: '', last_payment: '', not_in_debt: '' }))
       }
       return
     }
@@ -202,6 +206,8 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
                   handleFilter('amount', 'is_debtor')
                 } else if (e.target.value === 'last_payment') {
                   handleFilter('amount', 'last_payment')
+                } else if (e.target.value === 'not_in_debt') {
+                  handleFilter('amount', 'not_in_debt')
                 } else {
                   handleFilter('amount', 'all')
                 }
@@ -212,6 +218,7 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
               </MenuItem>
               <MenuItem value={'last_payment'}>{t("To'lov vaqti yaqinlashgan")}</MenuItem>
               <MenuItem value={'is_debtor'}>{t('Qarzdor')}</MenuItem>
+              <MenuItem value={'not_in_debt'}>{t("Qarzdor bo'lmagan")}</MenuItem>
             </Select>
           </FormControl>
           <Box sx={{ width: '100%' }}>
@@ -256,7 +263,7 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
             size='small'
             startIcon={<IconifyIcon icon='material-symbols-light:sms-outline' />}
           >
-            {t('Sms yuborish')}  
+            {t('Sms yuborish')}
           </Button>
         </Box>
         <SendSMSModal
@@ -349,7 +356,15 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
             <Select
               size='small'
               label={t("To'lov holati")}
-              value={queryParams.is_debtor ? 'is_debtor' : Boolean(queryParams.last_payment) ? 'last_payment' : ''}
+              value={
+                queryParams.is_debtor
+                  ? 'is_debtor'
+                  : queryParams.not_in_debt
+                  ? 'not_in_debt'
+                  : Boolean(queryParams.last_payment)
+                  ? 'last_payment'
+                  : ''
+              }
               id='demo-simple-select-outlined'
               labelId='demo-simple-select-outlined-label'
               onChange={(e: any) => {
@@ -357,6 +372,8 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
                   handleFilter('amount', 'is_debtor')
                 } else if (e.target.value === 'last_payment') {
                   handleFilter('amount', 'last_payment')
+                } else if (e.target.value === 'not_in_debt') {
+                  handleFilter('amount', 'not_in_debt')
                 } else {
                   handleFilter('amount', 'all')
                 }
@@ -367,6 +384,7 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
               </MenuItem>
               <MenuItem value={'last_payment'}>{t("To'lov vaqti yaqinlashgan")}</MenuItem>
               <MenuItem value={'is_debtor'}>{t('Qarzdor')}</MenuItem>
+              <MenuItem value={'not_in_debt'}>{t("Qarzdor bo'lmagan")}</MenuItem>
             </Select>
           </FormControl>
 

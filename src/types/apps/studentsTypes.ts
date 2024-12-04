@@ -106,13 +106,14 @@ export interface StudentDetailType {
 }
 
 export interface StudentsQueryParamsTypes {
-  search?: string,
-  limit?:string,
-  offset?:string,
+  search?: string
+  limit?: string
+  offset?: string
   course?: number | null
   status?: string | any
   page?: string
   is_debtor?: any
   last_payment?: any
   group_status?: '' | 'new' | 'frozen' | 'active' | 'archive'
+  not_in_debt?: string | boolean
 }
