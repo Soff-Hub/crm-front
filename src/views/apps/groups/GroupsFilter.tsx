@@ -128,7 +128,7 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
                 <b>{t('Barchasi')}</b>
               </MenuItem>
               <MenuItem value={'active'}>{t('Aktiv')}</MenuItem>
-              <MenuItem value={'archive'}>{t('arxiv')}</MenuItem>
+              <MenuItem value={'archived'}>{t('archive')}</MenuItem>
               <MenuItem value={'new'}>{t('Sinov darsida')}</MenuItem>
             </Select>
           </FormControl>

@@ -10,6 +10,7 @@ interface ItemTypes {
     created_at: string
     message?: string | undefined
     description?: string | undefined
+    admin_data?: string
 }
 
 interface ItemChildTypes {
@@ -18,10 +19,12 @@ interface ItemChildTypes {
 }
 
 
-export const UserViewStudentsItem = ({ item, setOpenEdit }: ItemChildTypes) => {
-    const { created_at, message, description } = item
+export const UserViewStudentsItem = ({ item }: ItemChildTypes) => {
+    const { created_at, message, description, admin_data } = item
 
     const { t } = useTranslation()
+    console.log(item);
+    
 
     return (
         <Box sx={{ display: 'flex', gap: 3, justifyContent: 'space-between' }}>
@@ -29,7 +32,8 @@ export const UserViewStudentsItem = ({ item, setOpenEdit }: ItemChildTypes) => {
                 <Status color='success' />
                 <Typography fontStyle={'italic'} variant='body1' fontSize={14}>{message || description}</Typography>
                 <Box sx={{ display: 'flex', gap: '15px' }}>
-                    <Typography fontSize={10}>{formatDateTime(created_at)}</Typography>
+                    {admin_data &&<Typography fontSize={10}>{admin_data}</Typography>}
+                    <Typography fontSize={10}>{created_at}</Typography>
                 </Box>
             </Box>
         </Box>

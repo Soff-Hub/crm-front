@@ -84,29 +84,32 @@ export default function StudentPaymentForm({ openEdit, setOpenEdit, student_id }
 
   const handleEditClose = () => {
     setOpenEdit(null)
-    setShowWarning(true); 
-
+    setShowWarning(true)
   }
   const handleConfirmCancel = () => {
-    setShowWarning(false); 
+    setShowWarning(false)
   }
 
   const handleDismissWarning = () => {
-    setShowWarning(false); 
+    setShowWarning(false)
   }
-
 
   useEffect(() => {
     formik.setFieldValue('group', studentData ? `${studentData.groups?.[0]?.group_data?.id}` : '')
   }, [studentData])
 
   useEffect(() => {
-    if (student_id) {
+    if (student_id && openEdit === 'payment') {
       dispatch(fetchStudentDetail(student_id))
       dispatch(fetchStudentPayment(student_id))
     }
-    getPaymentMethod()
-  }, [])
+  }, [openEdit, student_id])
+
+  useEffect(() => {
+    if (openEdit === 'payment' && paymentMethods.length === 0) {
+      getPaymentMethod()
+    }
+  }, [openEdit])
 
   return (
     <div>
@@ -115,7 +118,7 @@ export default function StudentPaymentForm({ openEdit, setOpenEdit, student_id }
         // onClose={handleEditClose}
         onClose={(event, reason) => {
           if (reason !== 'backdropClick') {
-            handleEditClose();
+            handleEditClose()
           }
         }}
         aria-labelledby='user-view-edit'
@@ -260,15 +263,15 @@ export default function StudentPaymentForm({ openEdit, setOpenEdit, student_id }
           {t('Eslatma')}
         </DialogTitle>
         <DialogContent>
-          <Typography  id='warning-dialog-description' sx={{ mt: 2, textAlign: 'center' }}>
-            {t('Are you sure you want to cancel? Unsaved changes will be lost.')}
+          <Typography id='warning-dialog-description' sx={{ mt: 2, textAlign: 'center' }}>
+            {t(`Are you sure you want to cancel?`)} <br />
+            {t('Unsaved changes will be lost')}
           </Typography>
         </DialogContent>
         <DialogActions sx={{ justifyContent: 'center' }}>
           <Button variant='contained' color='error' onClick={handleConfirmCancel}>
             {t('Bekor qilish')}
           </Button>
-        
         </DialogActions>
       </Dialog>
     </div>

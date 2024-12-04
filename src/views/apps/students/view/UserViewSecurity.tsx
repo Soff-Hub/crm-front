@@ -26,19 +26,14 @@ import getMontName from 'src/@core/utils/gwt-month-name'
 import usePayment from 'src/hooks/usePayment'
 import { customTableProps } from 'src/pages/groups'
 import { useAppDispatch, useAppSelector } from 'src/store'
-import { fetchStudentDetail, fetchStudentPayment ,} from 'src/store/apps/students'
+import { fetchStudentDetail, fetchStudentPayment } from 'src/store/apps/students'
 import StudentPaymentEditForm from './StudentPaymentEdit'
 import { AuthContext } from 'src/context/AuthContext'
 import { Icon } from '@iconify/react'
-import { setOpenLeadModal } from 'src/store/apps/groupDetails'
 import useBranches from 'src/hooks/useBranch'
 import { ModalTypes } from './UserViewLeft'
 import useSMS from 'src/hooks/useSMS'
 import StudentPaymentForm from './StudentPaymentForm'
-import EditStudent from '../../groups/view/ViewStudents/EditStudent'
-import AddNote from '../../groups/view/GroupViewLeft/AddNote'
-import SentSMS from '../../groups/view/ViewStudents/SentSMS'
-import ExportStudent from '../../groups/view/ViewStudents/ExportStudent'
 
 // Rasm yuklab olish misoli
 export async function downloadImage(filename: string, url: string) {
@@ -80,9 +75,8 @@ const UserViewSecurity = ({ groupData }: any) => {
   const [activate, setActivate] = useState<boolean>(false)
   const { smsTemps, getSMSTemps } = useSMS()
   const { studentData } = useAppSelector(state => state.students)
-  
 
-  const { getPaymentMethod, deletePayment } = usePayment()
+  const { deletePayment } = usePayment()
 
   const { getBranches, branches } = useBranches()
 
@@ -207,7 +201,7 @@ const UserViewSecurity = ({ groupData }: any) => {
       xs: 0.6,
       title: t('Turi'),
       dataIndex: 'condition',
-      renderItem: (item) => (
+      renderItem: item => (
         <Chip
           size='small'
           label={item?.condition !== 'debt' ? "To'landi" : 'Qarzdorlik'}
@@ -279,16 +273,14 @@ const UserViewSecurity = ({ groupData }: any) => {
 
   useEffect(() => {
     dispatch(fetchStudentPayment(query?.student))
-    getPaymentMethod()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-  
 
   return (
     <Box className='demo-space-y'>
       {groupData && groupData.length > 0 ? (
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-          {groupData.map(( group: any) => (
+          {groupData.map((group: any) => (
             <Box key={group.id} sx={{ position: 'relative' }}>
               <Typography
                 id='fade-button'
@@ -305,7 +297,7 @@ const UserViewSecurity = ({ groupData }: any) => {
                 }}
                 onClick={!(user?.role.length === 1 && user?.role.includes('teacher')) ? handleClick : undefined}
               >
-                <IconifyIcon  icon={'charm:menu-kebab'} fontSize={11} />
+                <IconifyIcon icon={'charm:menu-kebab'} fontSize={11} />
               </Typography>
 
               <Menu
@@ -346,7 +338,7 @@ const UserViewSecurity = ({ groupData }: any) => {
           <Icon fontSize={'20px'} icon={'mdi:leads'} />
           {t('Lidlarga qaytarish')}
         </MenuItem> */}
-                <MenuItem
+                {/* <MenuItem
                   sx={{ display: 'flex', alignItems: 'center', gap: '7px' }}
                   onClick={() => handleClose('notes')}
                 >
@@ -359,7 +351,7 @@ const UserViewSecurity = ({ groupData }: any) => {
                 >
                   <Icon fontSize={'20px'} icon={'ic:baseline-message'} />
                   {t('Xabar (sms)')} +
-                </MenuItem>
+                </MenuItem> */}
                 <MenuItem
                   sx={{ display: 'flex', alignItems: 'center', gap: '7px' }}
                   onClick={() => (setActivate(true), handleClose('none'))}

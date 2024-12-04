@@ -43,7 +43,7 @@ const UserSmsList = () => {
     const getSmsList = async () => {
         setLoading(true)
         try {
-            const resp = await api.get(`auth/sms-history/${query.student}`)
+            const resp = await api.get(`auth/sms-history/?user=${query.student}`)
             setData(resp.data)
             setLoading(false)
             setOpen(false)
@@ -83,7 +83,7 @@ const UserSmsList = () => {
                     data && data.length ? data.map((el: any) => (
                         <Card sx={{ maxWidth: '450px' }} key={el.id}>
                             <CardContent>
-                                <UserViewStudentsItem setOpenEdit={setOpen} key={el.id} item={{ ...el, created_at: el.updated_at }} />
+                                <UserViewStudentsItem setOpenEdit={setOpen} key={el.id} item={{ ...el, created_at: el.created_at }} />
                             </CardContent>
                         </Card>
                     )) : <EmptyContent />
