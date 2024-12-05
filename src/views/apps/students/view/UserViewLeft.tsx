@@ -530,7 +530,6 @@ export const SendSMSModal = ({ handleEditClose, openEdit, setOpenEdit, smsTemps,
       }
     }
   }
-  console.log(isErrorText)
 
   return (
     <Dialog
@@ -545,7 +544,7 @@ export const SendSMSModal = ({ handleEditClose, openEdit, setOpenEdit, smsTemps,
       </DialogTitle>
       <DialogContent>
         <form style={{ marginTop: 10 }} onSubmit={formik.handleSubmit}>
-          <FormControl sx={{ maxWidth: '100%'}} fullWidth>
+          <FormControl sx={{ maxWidth: '100%' }} fullWidth>
             <InputLabel size='small' id='demo-simple-select-outlined-label'>
               {t('Shablonlar')}
             </InputLabel>
@@ -564,8 +563,8 @@ export const SendSMSModal = ({ handleEditClose, openEdit, setOpenEdit, smsTemps,
               ))}
             </Select>
           </FormControl>
-          <p style={{ fontSize: 12, marginTop:15,marginBottom:3}}>
-          {"Xabar matniga talaba ismini qo'shish uchun ${first_name} kalit so'zi qoldiring"}
+          <p style={{ fontSize: 12 }} className='mb-3 mt-2'>
+            {"Xabar matniga talaba ismini qo'shish uchun ${first_name} kalit so'zi qoldiring"}
           </p>
           <FormControl fullWidth>
             <TextField

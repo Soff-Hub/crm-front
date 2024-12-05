@@ -53,7 +53,6 @@ export default function SentSMS({
       }
     }
   })
-  console.log(smsTemps)
 
   return (
     <Dialog

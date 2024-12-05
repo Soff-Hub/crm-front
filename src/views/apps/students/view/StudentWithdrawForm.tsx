@@ -81,17 +81,19 @@ export default function StudentWithDrawForm({ openEdit, setOpenEdit }: Props) {
   const { errors, values, handleSubmit, handleBlur, touched, handleChange } = formik
 
   const handleEditClose = () => {
-      setOpenEdit(null)
-      formik.resetForm()
+    setOpenEdit(null)
+    formik.resetForm()
   }
 
   useEffect(() => {
-    formik.setFieldValue('group', studentData ?  `${studentData.groups?.[0]?.group_data?.id}` : '')
+    formik.setFieldValue('group', studentData ? `${studentData.groups?.[0]?.group_data?.id}` : '')
   }, [studentData])
 
   useEffect(() => {
-    getPaymentMethod()
-  }, [])
+    if (openEdit === 'withdraw') {
+      getPaymentMethod()
+    }
+  }, [openEdit])
 
   return (
     <div>
@@ -103,7 +105,7 @@ export default function StudentWithDrawForm({ openEdit, setOpenEdit }: Props) {
         aria-describedby='user-view-edit-description'
       >
         <DialogTitle id='user-view-edit' sx={{ textAlign: 'center', fontSize: '1.5rem !important' }}>
-          {t("Pulni yechib olish")}
+          {t('Pulni yechib olish')}
         </DialogTitle>
         <DialogContent>
           <form

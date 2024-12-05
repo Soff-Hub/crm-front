@@ -73,17 +73,21 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
     if (key === 'amount') {
       if (value === 'is_debtor') {
         setIsActive(false)
-        dispatch(updateStudentParams({ is_debtor: true, last_payment: '' }))
-        await dispatch(fetchStudentsList({ ...queryParams, is_debtor: true, last_payment: '' }))
+        dispatch(updateStudentParams({ is_debtor: true, last_payment: '', not_in_debt: '' }))
+        await dispatch(fetchStudentsList({ ...queryParams, is_debtor: true, last_payment: '', not_in_debt: '' }))
+      } else if (value === 'not_in_debt') {
+        setIsActive(false)
+        dispatch(updateStudentParams({ is_debtor: '', last_payment: '', not_in_debt: true }))
+        await dispatch(fetchStudentsList({ ...queryParams, is_debtor: '', last_payment: '', not_in_debt: true }))
       }
       if (value === 'last_payment') {
         setIsActive(true)
-        dispatch(updateStudentParams({ last_payment: true, is_debtor: '' }))
-        await dispatch(fetchStudentsList({ ...queryParams, last_payment: true, is_debtor: '' }))
+        dispatch(updateStudentParams({ last_payment: true, is_debtor: '', not_in_debt: '' }))
+        await dispatch(fetchStudentsList({ ...queryParams, last_payment: true, is_debtor: '', not_in_debt: '' }))
       } else if (value === 'all') {
         setIsActive(true)
-        dispatch(updateStudentParams({ is_debtor: '', last_payment: '' }))
-        await dispatch(fetchStudentsList({ ...queryParams, is_debtor: '', last_payment: '' }))
+        dispatch(updateStudentParams({ is_debtor: '', last_payment: '', not_in_debt: '' }))
+        await dispatch(fetchStudentsList({ ...queryParams, is_debtor: '', last_payment: '', not_in_debt: '' }))
       }
       return
     }
@@ -182,7 +186,7 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
               <MenuItem value={'active'}>{t('active')}</MenuItem>
               {/* <MenuItem value={'archive'}>{t('archive')}</MenuItem> */}
               <MenuItem value={'new'}>{t('test')}</MenuItem>
-              <MenuItem value={'frozen'}>{t('Muzlatilgan')}</MenuItem>
+              <MenuItem value={'frozen'}>{t('frozen')}</MenuItem>
               <MenuItem value={'not_activated'}>{t('Sinov darsidan ketganlar')}</MenuItem>
               <MenuItem value={'without_group'}>{t('Guruhsiz')}</MenuItem>
             </Select>
@@ -202,6 +206,8 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
                   handleFilter('amount', 'is_debtor')
                 } else if (e.target.value === 'last_payment') {
                   handleFilter('amount', 'last_payment')
+                } else if (e.target.value === 'not_in_debt') {
+                  handleFilter('amount', 'not_in_debt')
                 } else {
                   handleFilter('amount', 'all')
                 }
@@ -212,6 +218,7 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
               </MenuItem>
               <MenuItem value={'last_payment'}>{t("To'lov vaqti yaqinlashgan")}</MenuItem>
               <MenuItem value={'is_debtor'}>{t('Qarzdor')}</MenuItem>
+              <MenuItem value={'not_in_debt'}>{t("Qarzdor bo'lmagan")}</MenuItem>
             </Select>
           </FormControl>
           <Box sx={{ width: '100%' }}>
@@ -220,7 +227,7 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
               options={groupOptions}
               onChange={(e: any, v: any) => handleFilter('group', v?.value)}
               size='small'
-              renderInput={params => <TextField {...params} label='Guruh' />}
+              renderInput={params => <TextField {...params} label={t('Guruh')} />}
             />
           </Box>
           <Box sx={{ width: '100%' }}>
@@ -229,7 +236,7 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
               options={teacherOptions}
               onChange={(e: any, v: any) => handleFilter('teacher', v?.value)}
               size='small'
-              renderInput={params => <TextField {...params} label='Ustoz' />}
+              renderInput={params => <TextField {...params} label={t('Ustoz')} />}
             />
           </Box>
 
@@ -237,8 +244,8 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
             <Toggle
               checked={queryParams.status === 'archive'}
               color='red'
-              checkedChildren='Arxiv'
-              unCheckedChildren='Arxiv'
+              checkedChildren={t('Arxiv')}
+              unCheckedChildren={t('Arxiv')}
               onChange={e => {
                 if (e) {
                   handleFilter('status', 'archive')
@@ -336,7 +343,7 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
               <MenuItem value={'active'}>{t('active')}</MenuItem>
               {/* <MenuItem value={'archive'}>{t('archive')}</MenuItem> */}
               <MenuItem value={'new'}>{t('test')}</MenuItem>
-              <MenuItem value={'frozen'}>{t('Muzlatilgan')}</MenuItem>
+              <MenuItem value={'frozen'}>{t('frozen')}</MenuItem>
               <MenuItem value={'not_activated'}>{t('Sinov darsidan ketganlar')}</MenuItem>
               <MenuItem value={'without_group'}>{t('Guruhsiz')}</MenuItem>
             </Select>
@@ -349,7 +356,15 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
             <Select
               size='small'
               label={t("To'lov holati")}
-              value={queryParams.is_debtor ? 'is_debtor' : Boolean(queryParams.last_payment) ? 'last_payment' : ''}
+              value={
+                queryParams.is_debtor
+                  ? 'is_debtor'
+                  : queryParams.not_in_debt
+                  ? 'not_in_debt'
+                  : Boolean(queryParams.last_payment)
+                  ? 'last_payment'
+                  : ''
+              }
               id='demo-simple-select-outlined'
               labelId='demo-simple-select-outlined-label'
               onChange={(e: any) => {
@@ -357,6 +372,8 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
                   handleFilter('amount', 'is_debtor')
                 } else if (e.target.value === 'last_payment') {
                   handleFilter('amount', 'last_payment')
+                } else if (e.target.value === 'not_in_debt') {
+                  handleFilter('amount', 'not_in_debt')
                 } else {
                   handleFilter('amount', 'all')
                 }
@@ -367,6 +384,7 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
               </MenuItem>
               <MenuItem value={'last_payment'}>{t("To'lov vaqti yaqinlashgan")}</MenuItem>
               <MenuItem value={'is_debtor'}>{t('Qarzdor')}</MenuItem>
+              <MenuItem value={'not_in_debt'}>{t("Qarzdor bo'lmagan")}</MenuItem>
             </Select>
           </FormControl>
 
@@ -377,7 +395,7 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
               options={groupOptions}
               onChange={(e: any, v: any) => handleFilter('group', v?.value)}
               size='small'
-              renderInput={params => <TextField {...params} label='Guruh' />}
+              renderInput={params => <TextField {...params} label={t('Guruh')} />}
             />
           </Box>
           <Box sx={{ width: '100%' }}>
@@ -387,7 +405,7 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
               options={teacherOptions}
               onChange={(e: any, v: any) => handleFilter('teacher', v?.value)}
               size='small'
-              renderInput={params => <TextField {...params} label='Ustoz' />}
+              renderInput={params => <TextField {...params} label={t('Ustoz')} />}
             />
           </Box>
 
@@ -396,8 +414,8 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
               <Toggle
                 checked={queryParams.status === 'archive'}
                 color='red'
-                checkedChildren='Arxiv'
-                unCheckedChildren='Arxiv'
+                checkedChildren={t('Arxiv')}
+                unCheckedChildren={t('Arxiv')}
                 onChange={e => {
                   if (e) {
                     handleFilter('status', 'archive')

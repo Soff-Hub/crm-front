@@ -105,7 +105,7 @@ export default function GroupDetails() {
                 </Box>}
                 {isGettingGroupDetails ? <Skeleton variant="rounded" height={20} animation="wave" sx={{ my: "5px" }} /> : <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', alignItems: 'center' }}>
                     <Typography>{t("Dars vaqti")}:</Typography>
-                    {groupData && <Typography>{getLessonDays(groupData?.day_of_week || "")} {groupData?.start_at}</Typography>}
+                    {groupData && <Typography>{t(getLessonDays(groupData?.day_of_week || ""))} {groupData?.start_at}</Typography>}
                 </Box>}
                 {isGettingGroupDetails ? <Skeleton variant="rounded" height={20} animation="wave" sx={{ my: "5px" }} /> : <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', alignItems: 'center' }}>
                     <Typography>{t("Dars xonasi")}:</Typography>

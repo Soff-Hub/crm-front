@@ -8,7 +8,7 @@ export const fetchCompanyDetails = createAsyncThunk('fetchClientSideTariff', asy
 })
 
 export const fetchSMSHistory = createAsyncThunk('fetchSMSHistory', async (id: number) => {
-  const response = await api.get(`owner/sms-history/${id}/`)
+  const response = await api.get(`owner/sms-history/?user=${id}`)
   return response.data
 })
 

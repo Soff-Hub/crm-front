@@ -1,9 +1,9 @@
 import { Pagination, TextField } from '@mui/material'
 import React, { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import EmptyContent from 'src/@core/components/empty-content'
 import { formatPhoneNumber } from 'src/@core/components/phone-input/format-phone-number'
 import useResponsive from 'src/@core/hooks/useResponsive'
-import api from 'src/@core/utils/api'
 import { useAppDispatch, useAppSelector } from 'src/store'
 import { fetchPaymetLogs, updateQueryParams } from 'src/store/apps/logs'
 import SubLoader from 'src/views/apps/loaders/SubLoader'
@@ -12,7 +12,8 @@ export default function PaymentHistory() {
   const [page, setPage] = useState(1)
   const [search, setSearch] = useState('')
   const dispatch = useAppDispatch()
-  const { isMobile } = useResponsive()
+  const { isMobile } = useResponsive();
+  const { t } = useTranslation()
 
   const { paymentCount, paymentLogs, isLoading } = useAppSelector(state => state.logs)
 
@@ -36,7 +37,7 @@ export default function PaymentHistory() {
         className='my-3'
         onChange={e => handleSearch(e.target.value)}
         size='small'
-        label='Qidiruv'
+        label={t('Qidiruv')}
         variant='outlined'
       />
       {isLoading ? <SubLoader /> : ''}
@@ -82,7 +83,7 @@ export default function PaymentHistory() {
                     margin: '0 0 4px'
                   }}
                 >
-                  {el.title}. XODIM: {formatPhoneNumber(el?.admin_phone)} {el?.admin_name}
+                  {el.title}. {t("XODIM")}: {formatPhoneNumber(el?.admin_phone)} {el?.admin_name}
                 </p>
 
                 <div>

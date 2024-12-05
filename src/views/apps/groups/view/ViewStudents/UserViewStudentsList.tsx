@@ -559,7 +559,6 @@ export default function UserViewStudentsList() {
       dispatch(studentsUpdateParams({ search: debounce }))
     })()
   }, [debounce])
-  console.log(students)
 
   return (
     <Box>

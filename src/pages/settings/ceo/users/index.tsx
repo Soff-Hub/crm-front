@@ -114,6 +114,9 @@ export default function GroupsPage() {
             dispatch(disablePage(false))
         }
 
+
+
+
         return (
             <>
                 <IconButton size='small' onClick={handleRowOptionsClick}>
@@ -292,7 +295,7 @@ export default function GroupsPage() {
                 <ButtonGroup size="small" aria-label="Small button group">
                     {buttons}
                 </ButtonGroup>
-                <FormControlLabel control={<Switch checked={queryParams.status == "archive"} onChange={handleChangeStatus} />} label="Arxiv" />
+                <FormControlLabel control={<Switch checked={queryParams.status == "archive"} onChange={handleChangeStatus} />} label={t("Arxiv")} />
             </Box>
 
             <DataTable loading={is_pending} columns={columns} data={employees} />

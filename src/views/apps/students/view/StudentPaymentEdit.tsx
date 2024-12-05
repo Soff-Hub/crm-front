@@ -36,7 +36,7 @@ export default function StudentPaymentEditForm({ openEdit, setOpenEdit }: Props)
     const { t } = useTranslation()
     const { studentData } = useAppSelector(state => state.students)
     const userData: any = { ...studentData }
-    const { getPaymentMethod, updatePayment } = usePayment()
+    const { updatePayment } = usePayment()
     const { query } = useRouter()
     const dispatch = useAppDispatch()
 
@@ -93,7 +93,7 @@ export default function StudentPaymentEditForm({ openEdit, setOpenEdit }: Props)
     }
 
     useEffect(() => {
-        getPaymentMethod()
+        // getPaymentMethod()
 
         return () => {
             formik.resetForm()

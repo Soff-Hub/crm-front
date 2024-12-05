@@ -23,7 +23,7 @@ export default function generateTimeSlots(startTime: string, endTime: string) {
         timeSlots.push(`${currentHour.toString().padStart(2, '0')}:${currentMinute.toString().padStart(2, '0')}`);
 
         // 30 daqiqalik soatni qo'shish
-        currentMinute += 30;
+        currentMinute += 15;
         if (currentMinute >= 60) {
             currentHour++;
             currentMinute -= 60;
