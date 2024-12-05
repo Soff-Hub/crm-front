@@ -44,7 +44,7 @@ const UserSmsList = () => {
         setLoading(true)
         try {
             const resp = await api.get(`auth/sms-history/?user=${query.student}`)
-            setData(resp.data)
+            setData(resp.data?.results)
             setLoading(false)
             setOpen(false)
         } catch (err: any) {
