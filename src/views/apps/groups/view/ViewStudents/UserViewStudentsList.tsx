@@ -318,7 +318,7 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, choices }:
           {phone}
         </Typography>
 
-        <div className='cursor:pointer' onClick={() => setUpdateStatusModal(true)}>
+        <div  onClick={() => setUpdateStatusModal(true)}>
           <Box sx={{width:75,textAlign:'start'}}>
             {student_status === 'active' ? (
               <Chip
@@ -326,7 +326,7 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, choices }:
                 color='success'
                 variant='outlined'
                 size='small'
-                sx={{fontWeight: 500, fontSize: '9px', padding: 0 }}
+                sx={{cursor:'pointer', fontWeight: 500, fontSize: '9px', padding: 0 }}
               />
             ) : student_status === 'archive' ? (
               <Chip
@@ -334,7 +334,7 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, choices }:
                 color='error'
                 variant='outlined'
                 size='small'
-                sx={{ fontWeight: 500, fontSize: '9px', padding: 0 }}
+                sx={{cursor:'pointer', fontWeight: 500, fontSize: '9px', padding: 0 }}
               />
             ) : student_status === 'frozen' ? (
               <Chip
@@ -342,7 +342,7 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, choices }:
                 color='error'
                 variant='outlined'
                 size='small'
-                sx={{ fontWeight: 500, fontSize: '9px', padding: 0 }}
+                sx={{cursor:'pointer', fontWeight: 500, fontSize: '9px', padding: 0 }}
               />
             ) : student_status === 'new' ? (
               <Chip
@@ -350,7 +350,7 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, choices }:
                 color='warning'
                 variant='outlined'
                 size='small'
-                sx={{ fontWeight: 500, fontSize: '9px', padding: 0 }}
+                sx={{cursor:'pointer', fontWeight: 500, fontSize: '9px', padding: 0 }}
               />
             ) : student_status === 'in_progress' ? (
               <Chip
@@ -358,7 +358,7 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, choices }:
                 color='info'
                 variant='outlined'
                 size='small'
-                sx={{ fontWeight: 500, fontSize: '9px', padding: 0 }}
+                sx={{cursor:'pointer', fontWeight: 500, fontSize: '9px', padding: 0 }}
               />
             ) : (
               <Chip
@@ -366,7 +366,7 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, choices }:
                 color='warning'
                 variant='outlined'
                 size='small'
-                sx={{ fontWeight: 500, fontSize: '9px', padding: 0 }}
+                sx={{cursor:'pointer', fontWeight: 500, fontSize: '9px', padding: 0 }}
               />
             )}
           </Box>

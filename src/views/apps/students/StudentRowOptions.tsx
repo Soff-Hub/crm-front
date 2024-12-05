@@ -66,7 +66,7 @@ export default function StudentRowOptions({ id }: Props) {
       toast.error("Guruhga qo'shilgan o'quvchini o'chirib bo'lmaydi")
     } else {
       toast.success("O'quvchi muvaffaqiyatli o'chirildi")
-      await dispatch(fetchStudentsList({ status: 'active' }))
+      await dispatch(fetchStudentsList({ status: queryParams.status }))
     }
     dispatch(disablePage(false))
     setLoading(false)
@@ -116,10 +116,10 @@ export default function StudentRowOptions({ id }: Props) {
             {t("O'chirish")}
           </MenuItem>
         )}
-        <MenuItem onClick={handleDelete} sx={{ '& svg': { mr: 2 } }}>
+        {queryParams.status === 'archive' && <MenuItem onClick={handleDelete} sx={{ '& svg': { mr: 2 } }}>
           <IconifyIcon icon='mdi:delete-outline' fontSize={20} />
           {t("Butunlay o'chirish")}
-        </MenuItem>
+        </MenuItem>}
       </Menu>
       <UserSuspendDialog
         loading={loading}
