@@ -23,15 +23,15 @@ const statsData: StatsDataType[] = [
     icon: 'material-symbols-light:warning-outline',
     title: 'Qolgan qarzlar',
     color: 'error',
-    key: 'debtors_amount',
+    key: 'active_debts_amount',
     link: 'debtors_amount'
   },
   {
     icon: 'material-symbols-light:warning-outline',
     title: 'Qarzdorlar',
     color: 'error',
-    key: 'debtor_users',
-    link: 'debtor_users'
+    key: 'active_debts_count',
+    link: 'active_debts_count'
   },
   {
     icon: 'material-symbols-light:warning-outline',

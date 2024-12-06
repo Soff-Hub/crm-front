@@ -202,7 +202,7 @@ const KanbanItem = (props: KanbarItemProps) => {
 
 
     return (
-        <Card sx={{ cursor: 'pointer', mb: 2 }}>
+        <Card sx={{ cursor: 'pointer', mb: 2 }} draggable>
             <CardContent sx={{ py: theme => `${theme.spacing(2)} !important`, px: 2 }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', position: 'relative' }}>
                     <Avatar skin='light' color={status === "new" ? "secondary" : status === "pending" ? "warning" : "success"} variant='rounded'>

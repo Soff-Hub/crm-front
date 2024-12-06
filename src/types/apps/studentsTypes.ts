@@ -47,6 +47,7 @@ export interface CreateStudentDto extends StudentItemType {
   password?: string | null
   group?: number | string
   start_at?: string
+  fixed_price: string
 }
 
 export interface UpdateStudentDto extends StudentItemType {

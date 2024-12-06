@@ -38,15 +38,8 @@ import { getMontNumber } from 'src/@core/utils/gwt-month-name'
 import api from 'src/@core/utils/api'
 
 export default function EditGroupModal() {
-  const {
-    isOpenEdit,
-    groupData,
-    courses,
-    initialValues,
-    formParams,
-    queryParams,
-    isGettingGroupDetails
-  } = useAppSelector(state => state.groups)
+  const { isOpenEdit, groupData, courses, initialValues, formParams, queryParams, isGettingGroupDetails } =
+    useAppSelector(state => state.groups)
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
   const [loading, setLoading] = useState(false)
@@ -57,16 +50,14 @@ export default function EditGroupModal() {
 
   const getTeachers = async () => {
     await api
-       .get('auth/employees-check-list/?role=teacher')
-       .then(data => {
-         setTeachersData(data.data)
-       })
-       .catch(error => {
-         console.log(error)
-       })
-   }
- 
-
+      .get('auth/employees-check-list/?role=teacher')
+      .then(data => {
+        setTeachersData(data.data)
+      })
+      .catch(error => {
+        console.log(error)
+      })
+  }
 
   const getRooms = async () => {
     await api
@@ -126,6 +117,7 @@ export default function EditGroupModal() {
         dispatch(updateParams({ is_recovery: false }))
         toast.success(t("O'zgrishlar muvafaqqiyati saqlandi"))
         const queryString = new URLSearchParams(queryParams).toString()
+
         if (query?.id) {
           dispatch(setGettingAttendance(true))
           dispatch(setGettingGroupDetails(true))
@@ -148,7 +140,7 @@ export default function EditGroupModal() {
           dispatch(setGettingAttendance(false))
           dispatch(setGettingGroupDetails(false))
         } else {
-          await dispatch(fetchGroups(queryString))
+          await dispatch(fetchGroups(queryParams))
         }
         formik.resetForm()
       }
@@ -399,8 +391,8 @@ export default function EditGroupModal() {
                     size='small'
                     onBlur={formik.handleBlur}
                     disablePortal
-                    onChange={(e,v) => handleChangeField('room', v?.value)}
-                    value={options?.length > 0 && options.find(option => option.value === formik.values.room) || null}
+                    onChange={(e, v) => handleChangeField('room', v?.value)}
+                    value={(options?.length > 0 && options.find(option => option.value === formik.values.room)) || null}
                     options={options}
                     renderInput={params => <TextField {...params} label={t('Xonalar')} />}
                   />
