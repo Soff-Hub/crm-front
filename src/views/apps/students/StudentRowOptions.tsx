@@ -66,7 +66,7 @@ export default function StudentRowOptions({ id }: Props) {
       toast.error("Guruhga qo'shilgan o'quvchini o'chirib bo'lmaydi")
     } else {
       toast.success("O'quvchi muvaffaqiyatli o'chirildi")
-      await dispatch(fetchStudentsList({ status: 'active' }))
+      await dispatch(fetchStudentsList({ status: queryParams.status }))
     }
     dispatch(disablePage(false))
     setLoading(false)

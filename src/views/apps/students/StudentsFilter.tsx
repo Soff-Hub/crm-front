@@ -45,7 +45,6 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
   const [openEdit, setOpenEdit] = useState<ModalTypes | null>(null)
   const { smsTemps, getSMSTemps } = useSMS()
   const [error, setError] = useState<any>({})
-
   const studentIds = students.map(student => student.id)
 
   const handleEditClickOpen = (value: ModalTypes) => {
@@ -476,7 +475,7 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
               />
             </Box>
           )}
-          <Excel url='/common/students/export/' queryString={queryString} />
+          <Excel size='medium' url='/common/students/export/' queryString={queryString} />
           <Button
             onClick={() => (getSMSTemps(), handleEditClickOpen('sms'))}
             variant='outlined'
@@ -488,6 +487,7 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
             {t('Sms yuborish')}
           </Button>
         </Box>
+
         <SendSMSModal
           handleEditClose={handleEditClose}
           openEdit={openEdit}

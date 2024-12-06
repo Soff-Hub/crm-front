@@ -19,7 +19,6 @@ const DashboardTable = ({ lesson }: { lesson: ILessonResponse }) => {
             ))}
             {Object.entries(exclude_time).map(([start, end]) => {
                 const slots = generateTimeSlots(start, end as string);
-                console.log(slots);
 
                 const width = (slots.length - 1) * 50;
                 const leftPosition = workTime.findIndex((el) => el === slots[0]) * 50;
