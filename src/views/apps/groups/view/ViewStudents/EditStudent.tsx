@@ -1,4 +1,3 @@
-import MenuItem from '@mui/material/MenuItem'
 import LoadingButton from '@mui/lab/LoadingButton'
 import {
   Alert,
@@ -9,9 +8,6 @@ import {
   DialogContent,
   FormControl,
   FormHelperText,
-  Input,
-  InputLabel,
-  Select,
   TextField,
   Typography
 } from '@mui/material'
@@ -95,7 +91,8 @@ export default function EditStudent({
         <form onSubmit={formik.handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
           <Alert severity='error'>
             <AlertTitle>{t('Eslatma')}</AlertTitle>
-            O'quvchi qoshilgan sana tahrirlansa, o'quvchining barcha <br /> qarzdorliklari o'chirilib qayta yaratiladi{isLesson ? " va to'lovgacha qolgan darslar soni ham o'zgaradi" : ''}
+            O'quvchi qoshilgan sana tahrirlansa, o'quvchining barcha <br /> qarzdorliklari o'chirilib qayta yaratiladi
+            {isLesson ? " va to'lovgacha qolgan darslar soni ham o'zgaradi" : ''}
           </Alert>
           {isLesson && (
             <FormControl>

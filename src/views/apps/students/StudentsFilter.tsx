@@ -12,7 +12,6 @@ import {
   TextField
 } from '@mui/material'
 import { useTranslation } from 'react-i18next'
-import useResponsive from 'src/@core/hooks/useResponsive'
 import IconifyIcon from 'src/@core/components/icon'
 import { useAppDispatch, useAppSelector } from 'src/store'
 import { fetchStudentsList, updateStudentParams } from 'src/store/apps/students'
@@ -22,9 +21,12 @@ import { Toggle } from 'rsuite'
 import 'rsuite/Toggle/styles/index.css'
 import Excel from 'src/@core/components/excelButton/Excel'
 import api from 'src/@core/utils/api'
-import { GroupFormInitialValue, MetaTypes } from 'src/types/apps/groupsTypes'
+import { MetaTypes } from 'src/types/apps/groupsTypes'
 import { ModalTypes, SendSMSModal } from './view/UserViewLeft'
 import useSMS from 'src/hooks/useSMS'
+import 'rsuite/DateRangePicker/styles/index.css'
+import { DatePicker } from 'rsuite'
+import { format } from 'date-fns'
 
 type StudentsFilterProps = {
   isMobile: boolean
@@ -70,7 +72,13 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
 
   async function handleFilter(key: string, value: string | number | null) {
     dispatch(updateStudentParams({ [key]: value }))
-    if (key === 'amount') {
+    if (key === 'debt_date') {
+      setIsActive(false)
+      dispatch(updateStudentParams({ is_debtor: true, last_payment: '', not_in_debt: '', debt_date: `${value}` }))
+      await dispatch(
+        fetchStudentsList({ ...queryParams, is_debtor: true, last_payment: '', not_in_debt: '', debt_date: `${value}` })
+      )
+    } else if (key === 'amount') {
       if (value === 'is_debtor') {
         setIsActive(false)
         dispatch(updateStudentParams({ is_debtor: true, last_payment: '', not_in_debt: '' }))
@@ -118,6 +126,25 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
   }, [searchVal])
 
   const queryString = new URLSearchParams({ ...queryParams } as Record<string, string>).toString()
+
+  const uzLocale = {
+    DatePicker: {
+      months: [
+        'Yanvar',
+        'Fevral',
+        'Mart',
+        'Aprel',
+        'May',
+        'Iyun',
+        'Iyul',
+        'Avgust',
+        'Sentabr',
+        'Oktabr',
+        'Noyabr',
+        'Dekabr'
+      ]
+    }
+  }
 
   if (isMobile) {
     return (
@@ -221,6 +248,18 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
               <MenuItem value={'not_in_debt'}>{t("Qarzdor bo'lmagan")}</MenuItem>
             </Select>
           </FormControl>
+
+          {queryParams.is_debtor && (
+            <DatePicker
+              size='lg'
+              label='Yil va oy'
+              format='MMM/yyyy'
+              placeholder='Select month and year'
+              onChange={value => handleFilter('debt_date', format(value || new Date(), 'yyyy-MM-dd'))}
+              style={{ width: 180 }}
+            />
+          )}
+
           <Box sx={{ width: '100%' }}>
             <Autocomplete
               disablePortal
@@ -387,6 +426,17 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
               <MenuItem value={'not_in_debt'}>{t("Qarzdor bo'lmagan")}</MenuItem>
             </Select>
           </FormControl>
+
+          {queryParams.is_debtor && (
+            <DatePicker
+              size='lg'
+              label='Yil va oy'
+              format='MMM/yyyy'
+              placeholder='Select month and year'
+              onChange={value => handleFilter('debt_date', format(value || new Date(), 'yyyy-MM-dd'))}
+              style={{ width: 180 }}
+            />
+          )}
 
           <Box sx={{ width: '100%' }}>
             <Autocomplete

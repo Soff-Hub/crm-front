@@ -117,4 +117,5 @@ export interface StudentsQueryParamsTypes {
   last_payment?: any
   group_status?: '' | 'new' | 'frozen' | 'active' | 'archive'
   not_in_debt?: string | boolean
+  debt_date?: string
 }
