@@ -164,7 +164,7 @@ export default function AccordionCustom({ onView, parentId, item }: AccordionPro
     }
 
     return (
-        <Card sx={{ width: '100%', boxShadow: 'rgba(148, 163, 184, 0.1) 0px 3px 12px' }} id={item.id}>
+        <Card sx={{ width: '100%', boxShadow: 'rgba(148, 163, 184, 0.1) 0px 3px 12px' }} id={item.id} draggable>
             <Box sx={{ width: '100%', display: 'flex', alignItems: 'center' }}>
                 <Typography
                     fontSize={16}

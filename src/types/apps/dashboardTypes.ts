@@ -5,7 +5,7 @@ export interface DashboardStats {
   test_students: number
   active_students: number
   active_groups: number
-  debtor_users: number
+  active_debts_count: number
   leads_count: number
 }
 

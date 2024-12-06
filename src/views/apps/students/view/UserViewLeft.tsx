@@ -58,6 +58,8 @@ const UserViewLeft = ({ userData }: { userData: any }) => {
   const [loading, setLoading] = useState<boolean>(false)
   const [error, setError] = useState<any>({})
   const [groupDate, setGroupDate] = useState<any>(null)
+  const [isDiscount, setIsDiscount] = useState<boolean>(false)
+  const [discountPrice, setDiscount] = useState<any>(0)
 
   // Hooks
   const { t } = useTranslation()
@@ -68,6 +70,7 @@ const UserViewLeft = ({ userData }: { userData: any }) => {
   const { smsTemps, getSMSTemps } = useSMS()
   const dispatch = useAppDispatch()
   const router = useRouter()
+  console.log(error)
 
   // Handle Edit dialog
   const handleEditClickOpen = (value: ModalTypes) => {
@@ -90,8 +93,19 @@ const UserViewLeft = ({ userData }: { userData: any }) => {
       groups: [+value.group]
     }
 
+    const discountConfig = {
+      amount: value?.fixed_price,
+      discount_count: 100,
+      description: 'kurs oxirigacha',
+      group: value?.group,
+      student: userData?.id
+    }
+
     try {
       await mergeStudentToGroup(data)
+      if (isDiscount) {
+        await api.post(`common/personal-payment/`, discountConfig)
+      }
       setLoading(false)
       setOpenEdit(null)
 
@@ -124,9 +138,9 @@ const UserViewLeft = ({ userData }: { userData: any }) => {
       setLoading(false)
       setOpenEdit(null)
       await dispatch(fetchStudentDetail(userData.id))
-    } catch (err) {
-      console.log(err)
+    } catch (err: any) {
       setLoading(false)
+      setError(err?.response?.data)
     }
   }
 
@@ -319,6 +333,35 @@ const UserViewLeft = ({ userData }: { userData: any }) => {
                 </FormControl>
               )}
 
+              {isDiscount && (
+                <div>
+                  <TextField
+                    size='small'
+                    label={t('Alohida narx')}
+                    name='fixed_price'
+                    type='number'
+                    error={!!error.fixed_price}
+                    // onChange={(e: any) => setDiscount(e.target.value)}
+                    fullWidth
+                  />
+                  <FormHelperText className='mb-2' error={true}>
+                    {error.fixed_price}
+                  </FormHelperText>
+                </div>
+              )}
+
+              {groupDate && (
+                <Button
+                  onClick={() => setIsDiscount(!isDiscount)}
+                  type='button'
+                  variant='outlined'
+                  size='small'
+                  color='warning'
+                >
+                  {isDiscount ? "Alohida narxni o'chirish" : 'Alohida narx kiritish'}
+                </Button>
+              )}
+
               {groupShort && (
                 <FormControl fullWidth>
                   <TextField error={error?.body} rows={4} multiline label='Izoh' name='body' defaultValue={''} />
@@ -355,7 +398,7 @@ const UserViewLeft = ({ userData }: { userData: any }) => {
             {data && (
               <Form
                 reqiuredFields={['group']}
-                setError={setError}
+                setError={() => undefined}
                 valueTypes='json'
                 sx={{ marginTop: 10, display: 'flex', flexDirection: 'column', gap: '15px' }}
                 onSubmit={handleEditSubmit}
@@ -366,10 +409,10 @@ const UserViewLeft = ({ userData }: { userData: any }) => {
                     size='small'
                     label={t('first_name')}
                     name='first_name'
-                    error={error.first_name?.error}
+                    error={error.first_name}
                     defaultValue={data.first_name}
                   />
-                  <FormHelperText error={error.first_name}>{error.first_name?.message}</FormHelperText>
+                  <FormHelperText error={error.first_name}>{error.first_name}</FormHelperText>
                 </FormControl>
 
                 <FormControl sx={{ width: '100%' }}>
@@ -377,10 +420,10 @@ const UserViewLeft = ({ userData }: { userData: any }) => {
                     size='small'
                     label={t('phone')}
                     name='phone'
-                    error={error.phone?.error}
+                    error={error.phone}
                     defaultValue={data.phone}
                   />
-                  <FormHelperText error={error.phone}>{error.phone?.message}</FormHelperText>
+                  <FormHelperText error={error.phone}>{error.phone}</FormHelperText>
                 </FormControl>
 
                 <FormControl sx={{ width: '100%' }}>
@@ -389,10 +432,10 @@ const UserViewLeft = ({ userData }: { userData: any }) => {
                     size='small'
                     label={t('birth_date')}
                     name='birth_date'
-                    error={error.birth_date?.error}
+                    error={error.birth_date}
                     defaultValue={data.birth_date}
                   />
-                  <FormHelperText error={error.birth_date}>{error.birth_date?.message}</FormHelperText>
+                  <FormHelperText error={error.birth_date}>{error.birth_date}</FormHelperText>
                 </FormControl>
 
                 <DialogActions sx={{ justifyContent: 'center' }}>
