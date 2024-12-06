@@ -289,7 +289,7 @@ export default function CreateStudentForm() {
             </div>
           )}
 
-          <Button
+          {/* <Button
             onClick={() => setIsDiscount(!isDiscount)}
             type='button'
             variant='outlined'
@@ -297,7 +297,7 @@ export default function CreateStudentForm() {
             color='warning'
           >
             {isDiscount ? "Alohida narxni o'chirish" : 'Alohida narx kiritish'}
-          </Button>
+          </Button> */}
         </Box>
       )}
       <LoadingButton loading={loading} variant='contained' type='submit' fullWidth>

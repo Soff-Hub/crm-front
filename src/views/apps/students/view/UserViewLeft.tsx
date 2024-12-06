@@ -350,7 +350,7 @@ const UserViewLeft = ({ userData }: { userData: any }) => {
                 </div>
               )}
 
-              {groupDate && (
+              {/* {groupDate && (
                 <Button
                   onClick={() => setIsDiscount(!isDiscount)}
                   type='button'
@@ -360,7 +360,7 @@ const UserViewLeft = ({ userData }: { userData: any }) => {
                 >
                   {isDiscount ? "Alohida narxni o'chirish" : 'Alohida narx kiritish'}
                 </Button>
-              )}
+              )} */}
 
               {groupShort && (
                 <FormControl fullWidth>

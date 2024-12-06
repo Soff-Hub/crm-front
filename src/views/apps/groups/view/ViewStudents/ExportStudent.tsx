@@ -171,7 +171,7 @@ export default function ExportStudent({
                 </div>
               )}
 
-              <Button
+              {/* <Button
                 onClick={() => setIsDiscount(!isDiscount)}
                 type='button'
                 variant='outlined'
@@ -179,7 +179,7 @@ export default function ExportStudent({
                 color='warning'
               >
                 {isDiscount ? "Alohida narxni o'chirish" : 'Alohida narx kiritish'}
-              </Button>
+              </Button> */}
             </Box>
           )}
 
