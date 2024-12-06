@@ -108,6 +108,8 @@ export interface StudentDetailType {
 
 export interface StudentsQueryParamsTypes {
   search?: string
+  start_date?: string,
+  end_date?:string,
   limit?: string
   offset?: string
   course?: number | null

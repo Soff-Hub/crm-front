@@ -18,13 +18,14 @@ import { useAppDispatch, useAppSelector } from 'src/store'
 import { fetchStudentsList, updateStudentParams } from 'src/store/apps/students'
 import useCourses from 'src/hooks/useCourses'
 import useDebounce from 'src/hooks/useDebounce'
-import { Toggle } from 'rsuite'
+import { DateRangePicker, Toggle } from 'rsuite'
 import 'rsuite/Toggle/styles/index.css'
 import Excel from 'src/@core/components/excelButton/Excel'
 import api from 'src/@core/utils/api'
 import { GroupFormInitialValue, MetaTypes } from 'src/types/apps/groupsTypes'
 import { ModalTypes, SendSMSModal } from './view/UserViewLeft'
 import useSMS from 'src/hooks/useSMS'
+import { formatDateString } from 'src/pages/finance'
 
 type StudentsFilterProps = {
   isMobile: boolean
@@ -43,7 +44,7 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
   const [openEdit, setOpenEdit] = useState<ModalTypes | null>(null)
   const { smsTemps, getSMSTemps } = useSMS()
   const [error, setError] = useState<any>({})
-
+  const [date, setDate] = useState<any>('')
   const studentIds = students.map(student => student.id)
 
   const handleEditClickOpen = (value: ModalTypes) => {
@@ -66,6 +67,34 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
       .get('auth/employees-check-list/?role=teacher')
       .then(res => setTeachers(res.data))
       .catch(error => console.log(error))
+  }
+  async function handleChangeDate(e: any) {
+    setDate(e)
+    if (e && e[0] && e[1]) {
+      await dispatch(
+        updateStudentParams({
+          start_date: `${formatDateString(e[0])}`,
+          end_date: `${formatDateString(e[1])}`
+        })
+      )
+      await dispatch(
+        fetchStudentsList({
+          ...queryParams,
+          start_date: `${formatDateString(e[0])}`,
+          end_date: `${formatDateString(e[1])}`
+        })
+      )
+    } else {
+      await dispatch(
+        updateStudentParams({
+          start_date: '',
+          end_date: ''
+        })
+      )
+      await dispatch(fetchStudentsList({ ...queryParams, start_date: '', end_date: '' }))
+    }
+
+    console.log(e)
   }
 
   async function handleFilter(key: string, value: string | number | null) {
@@ -265,6 +294,33 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
           >
             {t('Sms yuborish')}
           </Button>
+          {queryParams.is_debtor == true && (
+          <DateRangePicker
+            showOneCalendar
+            placement='bottomEnd'
+            locale={{
+              last7Days: t('Oxirgi hafta'),
+              sunday: t('Yak'),
+              monday: t('Du'),
+              tuesday: t('Se'),
+              wednesday: t('Chor'),
+              thursday: t('Pa'),
+              friday: t('Ju'),
+              saturday: t('Sha'),
+              ok: t('Saqlash'),
+              today: t('Bugun'),
+              yesterday: t('Kecha'),
+              hours: t('Soat'),
+              minutes: t('Minut'),
+              seconds: t('Sekund')
+            }}
+            format='yyyy-MM-dd'
+            onChange={handleChangeDate}
+            translate={'yes'}
+            size='md'
+            value={date}
+          />
+        )}
         </Box>
         <SendSMSModal
           handleEditClose={handleEditClose}
@@ -426,7 +482,7 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
               />
             </Box>
           )}
-          <Excel url='/common/students/export/' queryString={queryString} />
+          <Excel size='medium' url='/common/students/export/' queryString={queryString} />
           <Button
             onClick={() => (getSMSTemps(), handleEditClickOpen('sms'))}
             variant='outlined'
@@ -438,6 +494,35 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
             {t('Sms yuborish')}
           </Button>
         </Box>
+        {queryParams.is_debtor == true && (
+          <DateRangePicker
+            style={{backgroundColor:'transparent'}}
+            showOneCalendar
+            placement='bottomEnd'
+            locale={{
+              last7Days: t('Oxirgi hafta'),
+              sunday: t('Yak'),
+              monday: t('Du'),
+              tuesday: t('Se'),
+              wednesday: t('Chor'),
+              thursday: t('Pa'),
+              friday: t('Ju'),
+              saturday: t('Sha'),
+              ok: t('Saqlash'),
+              today: t('Bugun'),
+              yesterday: t('Kecha'),
+              hours: t('Soat'),
+              minutes: t('Minut'),
+              seconds: t('Sekund')
+            }}
+            format='yyyy-MM-dd'
+            onChange={handleChangeDate}
+            translate={'yes'}
+            size='md'
+            value={date}
+          />
+        )}
+
         <SendSMSModal
           handleEditClose={handleEditClose}
           openEdit={openEdit}
