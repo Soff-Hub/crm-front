@@ -7,8 +7,10 @@ import {
   CircularProgress,
   Dialog,
   DialogContent,
+  IconButton,
   Switch,
   TextField,
+  Tooltip,
   Typography
 } from '@mui/material'
 import IconifyIcon from 'src/@core/components/icon'
@@ -26,6 +28,7 @@ import { AuthContext } from 'src/context/AuthContext'
 import VideoHeader, { videoUrls } from 'src/@core/components/video-header/video-header'
 import { toast } from 'react-hot-toast'
 import { useRouter } from 'next/router'
+import { Icon } from '@iconify/react'
 
 const VisuallyHiddenInput = styled('input')({
   clip: 'rect(0 0 0 0)',
@@ -52,7 +55,7 @@ export default function AllSettings() {
     'name' | 'branch' | 'paytype' | 'start-time' | 'end-time' | 'birthdate' | 'absend' | 'delete' | 'payment' | null
   >(null)
   const [error, setError] = useState<any>({})
-  const [errorMessage, setErrorMessage] = useState<null|string>(null)
+  const [errorMessage, setErrorMessage] = useState<null | string>(null)
   const { push } = useRouter()
 
   const { getPaymentMethod, paymentMethods, createPaymentMethod, updatePaymentMethod } = usePayment()
@@ -675,7 +678,28 @@ export default function AllSettings() {
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
                 <Typography sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}>
-                  {t("To'lovi yaqin qolganlarni ogohlantirish")}:
+                  {t("To'lovi yaqin qolganlarni ogohlantirish")}:{' '}
+                  <Tooltip
+                    title={
+                      <Typography
+                        color='white'
+                        sx={{
+                          minWidth: isMobile ? '90px' : '180px',
+                          fontSize: isMobile ? '10px' : '13px'
+                        }}
+                      >
+                        {t("Xabar to'lovga 7 kun qolganda yuboriladi")}
+                      </Typography>
+                    }
+                    arrow
+                  >
+                    <span style={{ cursor: 'pointer' }}>
+                      <Icon
+                        icon='mdi:help-circle-outline'
+                        style={{ fontSize: isMobile ? '16px' : '20px', marginLeft: '5px' }}
+                      />
+                    </span>
+                  </Tooltip>
                 </Typography>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                   {loading === 'payment' ? (
@@ -775,7 +799,9 @@ export default function AllSettings() {
           <DialogContent>
             <Typography sx={{ fontSize: '20px', margin: '10px 10px 20px' }}>{t("O'chirishni tasdiqlang")}</Typography>
             {errorMessage && (
-              <Typography sx={{ color: "red", fontSize: '15px', marginBottom: '20px', marginX:'10px' }}>{errorMessage}</Typography>
+              <Typography sx={{ color: 'red', fontSize: '15px', marginBottom: '20px', marginX: '10px' }}>
+                {errorMessage}
+              </Typography>
             )}
             <Box sx={{ display: 'flex', gap: 1 }}>
               <Button variant='outlined' onClick={handleClose}>

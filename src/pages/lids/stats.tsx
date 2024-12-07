@@ -95,10 +95,10 @@ const Stats = () => {
             </Box>
             <Box sx={{ alignItems: 'center', paddingBottom: '20px', flexWrap: 'nowrap', width: '100%', display: 'flex' }}>
                 <DateRangePicker format="yyyy-MM-dd" onChange={handleChangeDate} translate={'yes'} size="sm" style={{ marginRight: 20 }} />
-                <ButtonGroup size="small">
+                {/* <ButtonGroup size="small">
                     <Button variant={filter === 'a' ? 'contained' : 'outlined'} onClick={() => handleFilter('a')}>A {">"} Z</Button>
                     <Button variant={filter === 1 ? 'contained' : 'outlined'} onClick={() => handleFilter(1)}>1 {">"} 0</Button>
-                </ButtonGroup>
+                </ButtonGroup> */}
                 <Button onClick={() => setOpen(true)} variant='contained' sx={{ marginLeft: 'auto' }} size='small' startIcon={<IconifyIcon icon={'carbon:add'} />}>{t("Yangi Manba")}</Button>
             </Box>
             <Box sx={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>

@@ -318,15 +318,15 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, choices }:
           {phone}
         </Typography>
 
-        <div  onClick={() => setUpdateStatusModal(true)}>
-          <Box sx={{width:75,textAlign:'start'}}>
+        <div onClick={() => setUpdateStatusModal(true)}>
+          <Box sx={{ width: 75, textAlign: 'start' }}>
             {student_status === 'active' ? (
               <Chip
                 label={t('active')}
                 color='success'
                 variant='outlined'
                 size='small'
-                sx={{cursor:'pointer', fontWeight: 500, fontSize: '9px', padding: 0 }}
+                sx={{ cursor: 'pointer', fontWeight: 500, fontSize: '9px', padding: 0 }}
               />
             ) : student_status === 'archive' ? (
               <Chip
@@ -334,7 +334,7 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, choices }:
                 color='error'
                 variant='outlined'
                 size='small'
-                sx={{cursor:'pointer', fontWeight: 500, fontSize: '9px', padding: 0 }}
+                sx={{ cursor: 'pointer', fontWeight: 500, fontSize: '9px', padding: 0 }}
               />
             ) : student_status === 'frozen' ? (
               <Chip
@@ -342,7 +342,12 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, choices }:
                 color='error'
                 variant='outlined'
                 size='small'
-                sx={{cursor:'pointer', fontWeight: 500, fontSize: '9px', padding: 0 }}
+                sx={{
+                  cursor: 'pointer',
+                  fontWeight: 500,
+                  fontSize: '9px',
+                  padding: 0
+                }}
               />
             ) : student_status === 'new' ? (
               <Chip
@@ -350,51 +355,54 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, choices }:
                 color='warning'
                 variant='outlined'
                 size='small'
-                sx={{cursor:'pointer', fontWeight: 500, fontSize: '9px', padding: 0 }}
+                sx={{ cursor: 'pointer', fontWeight: 500, fontSize: '9px', padding: 0 }}
               />
             ) : student_status === 'in_progress' ? (
               <Chip
-                label={t('in_progess')}
+                label={t('in_progress')}
                 color='info'
                 variant='outlined'
                 size='small'
-                sx={{cursor:'pointer', fontWeight: 500, fontSize: '9px', padding: 0 }}
+                sx={{ cursor: 'pointer', fontWeight: 500, fontSize: '9px', padding: 0 }}
               />
             ) : (
-              <Chip
-                label={student_status}
-                color='warning'
-                variant='outlined'
-                size='small'
-                sx={{cursor:'pointer', fontWeight: 500, fontSize: '9px', padding: 0 }}
-              />
+              <Tooltip title={t(`Status: ${student_status}`)} arrow>
+                <Chip
+                  label={student_status}
+                  color='warning'
+                  variant='outlined'
+                  size='small'
+                  sx={{ cursor: 'pointer', fontWeight: 500, fontSize: '9px', padding: 0 }}
+                />
+              </Tooltip>
             )}
           </Box>
         </div>
-          <Box
-            sx={{
-              width:80,
-              textAlign: 'start', 
-            }}
-          >
-            {Number(balance) < 0 ? (
-              <Chip
-                label={`${formatCurrency(+balance)}`}
-                color='error'
-                variant='outlined'
-                size='small'
-                sx={{ fontWeight: 500, fontSize: '9px', padding: 0 }}
-              />
-            ) : (
-              <Chip
-                label={`${formatCurrency(+balance)}`}
-                color='success'
-                variant='outlined'
-                size='small'
-                sx={{ fontWeight: 500, fontSize: '9px', padding: 0 }}
-              />
-            )}
-          </Box>
+
+        <Box
+          sx={{
+            width: 80,
+            textAlign: 'start'
+          }}
+        >
+          {Number(balance) < 0 ? (
+            <Chip
+              label={`${formatCurrency(+balance)}`}
+              color='error'
+              variant='outlined'
+              size='small'
+              sx={{ fontWeight: 500, fontSize: '9px', padding: 0 }}
+            />
+          ) : (
+            <Chip
+              label={`${formatCurrency(+balance)}`}
+              color='success'
+              variant='outlined'
+              size='small'
+              sx={{ fontWeight: 500, fontSize: '9px', padding: 0 }}
+            />
+          )}
+        </Box>
       </Box>
       <Typography
         sx={{ ml: 3 }}

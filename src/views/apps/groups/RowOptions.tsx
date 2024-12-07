@@ -72,25 +72,19 @@ const RowOptions = ({ id }: { id: number | string }) => {
     await Promise.all([dispatch(getDashboardLessons(queryString)), dispatch(getGroupsDetails(id))])
   }
 
-  const handleRecovery = async (id: any) => {
-    setAnchorEl(null)
-    dispatch(handleOpenEdit(true))
-    const filtered = groups?.find(item => item.id == id)
-    const queryString = new URLSearchParams({
-      day_of_week: filtered?.week_days?.toString(),
-      teacher: String(filtered?.teacher),
-      room: String(filtered?.room_id)
-    }).toString()
-    dispatch(updateParams({ is_recovery: true }))
-    await Promise.all([dispatch(getDashboardLessons(queryString)), dispatch(getGroupsDetails(id))])
-  }
-  const handleDeleteGroup = async (id: string | number) => {
-    await axios.get(`common/group/delete/${id}/`).then((res) => {
-      console.log(res);
-      
-    })
-    console.log(id)
-  }
+  // const handleRecovery = async (id: any) => {
+  //   setAnchorEl(null)
+  //   dispatch(handleOpenEdit(true))
+  //   const filtered = groups?.find(item => item.id == id)
+  //   const queryString = new URLSearchParams({
+  //     day_of_week: filtered?.week_days?.toString(),
+  //     teacher: String(filtered?.teacher),
+  //     room: String(filtered?.room_id)
+  //   }).toString()
+  //   dispatch(updateParams({ is_recovery: true }))
+  //   await Promise.all([dispatch(getDashboardLessons(queryString)), dispatch(getGroupsDetails(id))])
+  // }
+ 
 
   const handleDeleteTeacher = async (id: string | number) => {
     setDeleting(true)
@@ -162,7 +156,7 @@ const RowOptions = ({ id }: { id: number | string }) => {
         )}
         <Excel
           url={`/common/group/export/${id}`}
-          fullWidth
+          // fullWidth
           variant='text'
           sx={{ width: '100%', py: 2, px: 5, borderRadius: '0px', display: 'flex', justifyContent: 'start' }}
         />
