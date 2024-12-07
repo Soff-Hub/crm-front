@@ -12,20 +12,21 @@ import {
   TextField
 } from '@mui/material'
 import { useTranslation } from 'react-i18next'
-import useResponsive from 'src/@core/hooks/useResponsive'
 import IconifyIcon from 'src/@core/components/icon'
 import { useAppDispatch, useAppSelector } from 'src/store'
 import { fetchStudentsList, updateStudentParams } from 'src/store/apps/students'
 import useCourses from 'src/hooks/useCourses'
 import useDebounce from 'src/hooks/useDebounce'
-import { DateRangePicker, Toggle } from 'rsuite'
+import { Toggle } from 'rsuite'
 import 'rsuite/Toggle/styles/index.css'
 import Excel from 'src/@core/components/excelButton/Excel'
 import api from 'src/@core/utils/api'
-import { GroupFormInitialValue, MetaTypes } from 'src/types/apps/groupsTypes'
+import { MetaTypes } from 'src/types/apps/groupsTypes'
 import { ModalTypes, SendSMSModal } from './view/UserViewLeft'
 import useSMS from 'src/hooks/useSMS'
-import { formatDateString } from 'src/pages/finance'
+import 'rsuite/DateRangePicker/styles/index.css'
+import { DatePicker } from 'rsuite'
+import { format } from 'date-fns'
 
 type StudentsFilterProps = {
   isMobile: boolean
@@ -44,7 +45,6 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
   const [openEdit, setOpenEdit] = useState<ModalTypes | null>(null)
   const { smsTemps, getSMSTemps } = useSMS()
   const [error, setError] = useState<any>({})
-  const [date, setDate] = useState<any>('')
   const studentIds = students.map(student => student.id)
 
   const handleEditClickOpen = (value: ModalTypes) => {
@@ -68,38 +68,16 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
       .then(res => setTeachers(res.data))
       .catch(error => console.log(error))
   }
-  async function handleChangeDate(e: any) {
-    setDate(e)
-    if (e && e[0] && e[1]) {
-      await dispatch(
-        updateStudentParams({
-          start_date: `${formatDateString(e[0])}`,
-          end_date: `${formatDateString(e[1])}`
-        })
-      )
-      await dispatch(
-        fetchStudentsList({
-          ...queryParams,
-          start_date: `${formatDateString(e[0])}`,
-          end_date: `${formatDateString(e[1])}`
-        })
-      )
-    } else {
-      await dispatch(
-        updateStudentParams({
-          start_date: '',
-          end_date: ''
-        })
-      )
-      await dispatch(fetchStudentsList({ ...queryParams, start_date: '', end_date: '' }))
-    }
-
-    console.log(e)
-  }
 
   async function handleFilter(key: string, value: string | number | null) {
     dispatch(updateStudentParams({ [key]: value }))
-    if (key === 'amount') {
+    if (key === 'debt_date') {
+      setIsActive(false)
+      dispatch(updateStudentParams({ is_debtor: true, last_payment: '', not_in_debt: '', debt_date: `${value}` }))
+      await dispatch(
+        fetchStudentsList({ ...queryParams, is_debtor: true, last_payment: '', not_in_debt: '', debt_date: `${value}` })
+      )
+    } else if (key === 'amount') {
       if (value === 'is_debtor') {
         setIsActive(false)
         dispatch(updateStudentParams({ is_debtor: true, last_payment: '', not_in_debt: '' }))
@@ -147,6 +125,25 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
   }, [searchVal])
 
   const queryString = new URLSearchParams({ ...queryParams } as Record<string, string>).toString()
+
+  const uzLocale = {
+    DatePicker: {
+      months: [
+        'Yanvar',
+        'Fevral',
+        'Mart',
+        'Aprel',
+        'May',
+        'Iyun',
+        'Iyul',
+        'Avgust',
+        'Sentabr',
+        'Oktabr',
+        'Noyabr',
+        'Dekabr'
+      ]
+    }
+  }
 
   if (isMobile) {
     return (
@@ -250,6 +247,18 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
               <MenuItem value={'not_in_debt'}>{t("Qarzdor bo'lmagan")}</MenuItem>
             </Select>
           </FormControl>
+
+          {queryParams.is_debtor && (
+            <DatePicker
+              size='lg'
+              label='Yil va oy'
+              format='MMM/yyyy'
+              placeholder='Select month and year'
+              onChange={value => handleFilter('debt_date', format(value || new Date(), 'yyyy-MM-dd'))}
+              style={{ width: 180 }}
+            />
+          )}
+
           <Box sx={{ width: '100%' }}>
             <Autocomplete
               disablePortal
@@ -294,33 +303,6 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
           >
             {t('Sms yuborish')}
           </Button>
-          {queryParams.is_debtor == true && (
-          <DateRangePicker
-            showOneCalendar
-            placement='bottomEnd'
-            locale={{
-              last7Days: t('Oxirgi hafta'),
-              sunday: t('Yak'),
-              monday: t('Du'),
-              tuesday: t('Se'),
-              wednesday: t('Chor'),
-              thursday: t('Pa'),
-              friday: t('Ju'),
-              saturday: t('Sha'),
-              ok: t('Saqlash'),
-              today: t('Bugun'),
-              yesterday: t('Kecha'),
-              hours: t('Soat'),
-              minutes: t('Minut'),
-              seconds: t('Sekund')
-            }}
-            format='yyyy-MM-dd'
-            onChange={handleChangeDate}
-            translate={'yes'}
-            size='md'
-            value={date}
-          />
-        )}
         </Box>
         <SendSMSModal
           handleEditClose={handleEditClose}
@@ -444,6 +426,17 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
             </Select>
           </FormControl>
 
+          {queryParams.is_debtor && (
+            <DatePicker
+              size='lg'
+              label='Yil va oy'
+              format='MMM/yyyy'
+              placeholder='Select month and year'
+              onChange={value => handleFilter('debt_date', format(value || new Date(), 'yyyy-MM-dd'))}
+              style={{ width: 180 }}
+            />
+          )}
+
           <Box sx={{ width: '100%' }}>
             <Autocomplete
               sx={{ maxWidth: 180, width: '100%' }}
@@ -494,34 +487,6 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
             {t('Sms yuborish')}
           </Button>
         </Box>
-        {queryParams.is_debtor == true && (
-          <DateRangePicker
-            style={{backgroundColor:'transparent'}}
-            showOneCalendar
-            placement='bottomEnd'
-            locale={{
-              last7Days: t('Oxirgi hafta'),
-              sunday: t('Yak'),
-              monday: t('Du'),
-              tuesday: t('Se'),
-              wednesday: t('Chor'),
-              thursday: t('Pa'),
-              friday: t('Ju'),
-              saturday: t('Sha'),
-              ok: t('Saqlash'),
-              today: t('Bugun'),
-              yesterday: t('Kecha'),
-              hours: t('Soat'),
-              minutes: t('Minut'),
-              seconds: t('Sekund')
-            }}
-            format='yyyy-MM-dd'
-            onChange={handleChangeDate}
-            translate={'yes'}
-            size='md'
-            value={date}
-          />
-        )}
 
         <SendSMSModal
           handleEditClose={handleEditClose}

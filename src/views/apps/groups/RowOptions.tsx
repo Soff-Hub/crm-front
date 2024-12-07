@@ -94,7 +94,7 @@ const RowOptions = ({ id }: { id: number | string }) => {
       toast.error(response.payload.msg || "Guruhni o'chirib bo'lmadi")
     } else {
       const queryString = new URLSearchParams(queryParams).toString()
-      await dispatch(fetchGroups(queryString))
+      await dispatch(fetchGroups(queryParams))
     }
     setDeleting(false)
     dispatch(disablePage(false))

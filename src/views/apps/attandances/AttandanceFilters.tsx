@@ -144,6 +144,15 @@ export const AttandanceFilters = ({ isMobile }: AttandanceFiltersProps) => {
     await dispatch(fetchAttendances(queryString))
   }
 
+  const handleChangeStatus = async (e: SelectChangeEvent<string>) => {
+    setSelectedDate(null)
+    dispatch(updateQueryParam({ status: e.target.value }))
+    const updatedQueryParams = store.getState().attendance.queryParams
+
+    const queryString = new URLSearchParams({ ...updatedQueryParams }).toString()
+    await dispatch(fetchAttendances(queryString))
+  }
+
   const queryString = new URLSearchParams({ ...queryParams }).toString()
 
   const options =
@@ -185,23 +194,21 @@ export const AttandanceFilters = ({ isMobile }: AttandanceFiltersProps) => {
             </Select>
           </FormControl>
 
-          <FormControl size='small'  sx={{width: '100%' }}>
-            <LocalizationProvider  dateAdapter={AdapterDateFns}>
+          <FormControl size='small' sx={{ width: '100%' }}>
+            <LocalizationProvider dateAdapter={AdapterDateFns}>
               <DesktopDatePicker
                 sx={{
                   '& .MuiInputBase-input': {
                     padding: '8px',
                     display: 'flex',
                     alignItems: 'center',
-                    justifyContent:"center"
+                    justifyContent: 'center'
                   }
                 }}
-                
                 value={selectedDate}
                 onChange={newValue => {
                   handleChangeDate(newValue)
                 }}
-                
               />
             </LocalizationProvider>
           </FormControl>
@@ -248,6 +255,28 @@ export const AttandanceFilters = ({ isMobile }: AttandanceFiltersProps) => {
               ))}
             </Select>
           </FormControl>
+
+          <FormControl sx={{ width: '100%' }}>
+            <InputLabel size='small' id='month-select-label'>
+              {t('Status')}
+            </InputLabel>
+            <Select
+              size='small'
+              label={t('Oy')}
+              id='month-select'
+              labelId='month-select-label'
+              value={queryParams.status}
+              onChange={handleChangeStatus}
+            >
+              <MenuItem value=''>
+                <b>{t('Barchasi')}</b>
+              </MenuItem>
+              <MenuItem value='active'>{t('active')}</MenuItem>
+              <MenuItem value='archived'>{t('archived')}</MenuItem>
+              <MenuItem value='new'>{t('new')}</MenuItem>
+            </Select>
+          </FormControl>
+
           <FormControl sx={{ width: '100%' }}>
             <Autocomplete
               onChange={(e: any, v) => handleChangeTeacher(String(v?.value))}
