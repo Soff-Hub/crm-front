@@ -55,21 +55,21 @@ export default function ExportStudent({
     onSubmit: async values => {
       setLoading(true)
       try {
-        const response = await api.post('common/group-student/export/', { ...values, group_student: id })
+        const discountConfig = {
+          discount_amount: values?.fixed_price,
+          discount_count: 100,
+          discount_description: 'kurs oxirigacha',
+          groups: [values?.new_group],
+          student: id,
+          is_discount: isDiscount
+        }
+
+        const response = await api.post('common/group-student/export/', {
+          ...values,
+          group_student: id,
+          ...discountConfig
+        })
         if (response.status == 201) {
-          if (isDiscount) {
-            const discountConfig = {
-              amount: values?.fixed_price,
-              discount_count: 100,
-              description: 'kurs oxirigacha',
-              group: values?.new_group,
-              student: id
-            }
-            console.log(discountConfig)
-
-            await api.post(`common/personal-payment/`, discountConfig)
-          }
-
           toast.success(t("O'quvchi guruhga ko'chirildi") as string)
           await dispatch(getStudents({ id: groupData?.id, queryString: '' }))
           dispatch(setGettingAttendance(true))
@@ -171,7 +171,7 @@ export default function ExportStudent({
                 </div>
               )}
 
-              {/* <Button
+              <Button
                 onClick={() => setIsDiscount(!isDiscount)}
                 type='button'
                 variant='outlined'
@@ -179,7 +179,7 @@ export default function ExportStudent({
                 color='warning'
               >
                 {isDiscount ? "Alohida narxni o'chirish" : 'Alohida narx kiritish'}
-              </Button> */}
+              </Button>
             </Box>
           )}
 

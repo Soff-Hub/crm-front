@@ -93,19 +93,28 @@ const UserViewLeft = ({ userData }: { userData: any }) => {
       groups: [+value.group]
     }
 
-    const discountConfig = {
-      amount: value?.fixed_price,
-      discount_count: 100,
-      description: 'kurs oxirigacha',
-      group: value?.group,
-      student: userData?.id
-    }
+    // const discountConfig = {
+    //   amount: value?.fixed_price,
+    //   discount_count: 100,
+    //   description: 'kurs oxirigacha',
+    //   group: value?.group,
+    //   student: userData?.id
+    // }
 
     try {
-      await mergeStudentToGroup(data)
-      if (isDiscount) {
-        await api.post(`common/personal-payment/`, discountConfig)
+      const discountConfig = {
+        discount_amount: value?.fixed_price,
+        discount_count: 100,
+        discount_description: 'kurs oxirigacha',
+        groups: [value?.group],
+        student: userData?.id,
+        is_discount: isDiscount
       }
+
+      console.log({...data, ...discountConfig});
+      
+
+      await mergeStudentToGroup({ ...data, ...discountConfig })
       setLoading(false)
       setOpenEdit(null)
 
@@ -350,7 +359,7 @@ const UserViewLeft = ({ userData }: { userData: any }) => {
                 </div>
               )}
 
-              {/* {groupDate && (
+              {groupDate && (
                 <Button
                   onClick={() => setIsDiscount(!isDiscount)}
                   type='button'
@@ -360,7 +369,7 @@ const UserViewLeft = ({ userData }: { userData: any }) => {
                 >
                   {isDiscount ? "Alohida narxni o'chirish" : 'Alohida narx kiritish'}
                 </Button>
-              )} */}
+              )}
 
               {groupShort && (
                 <FormControl fullWidth>

@@ -84,23 +84,36 @@ export default function CreateStudentForm() {
     onSubmit: async (valuess: CreateStudentDto) => {
       setLoading(true)
       dispatch(disablePage(true))
-      const newVlaues = { ...valuess, phone: reversePhone(values.phone), group: values?.group ? [values.group] : [] }
+
+      const discountConfig = {
+        discount_amount: values?.fixed_price,
+        discount_count: 100,
+        discount_description: 'kurs oxirigacha',
+        is_discount: isDiscount
+      }
+
+      const newVlaues = {
+        ...valuess,
+        phone: reversePhone(values.phone),
+        group: values?.group ? [values.group] : [],
+        ...discountConfig
+      }
 
       const resp = await dispatch(createStudent(newVlaues))
 
       if (resp.meta.requestStatus === 'rejected') {
         formik.setErrors(resp.payload)
       } else {
-        if (isDiscount) {
-          const discountConfig = {
-            amount: values?.fixed_price,
-            discount_count: 100,
-            description: 'kurs oxirigacha',
-            group: values?.group,
-            student: resp.payload.id
-          }
-          await api.post(`common/personal-payment/`, discountConfig)
-        }
+        // if (isDiscount) {
+        //   const discountConfig = {
+        //     amount: values?.fixed_price,
+        //     discount_count: 100,
+        //     description: 'kurs oxirigacha',
+        //     group: values?.group,
+        //     student: resp.payload.id
+        //   }
+        //   await api.post(`common/personal-payment/`, discountConfig)
+        // }
 
         toast.success("O'quvchi muvaffaqiyatli yaratildi")
         await dispatch(updateStudentParams({ status: 'active' }))
@@ -289,7 +302,7 @@ export default function CreateStudentForm() {
             </div>
           )}
 
-          {/* <Button
+          <Button
             onClick={() => setIsDiscount(!isDiscount)}
             type='button'
             variant='outlined'
@@ -297,7 +310,7 @@ export default function CreateStudentForm() {
             color='warning'
           >
             {isDiscount ? "Alohida narxni o'chirish" : 'Alohida narx kiritish'}
-          </Button> */}
+          </Button>
         </Box>
       )}
       <LoadingButton loading={loading} variant='contained' type='submit' fullWidth>
