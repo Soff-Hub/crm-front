@@ -33,30 +33,36 @@ const DraggableIcon = ({ style, ...props }: { style?: React.CSSProperties }) => 
   
   const handleMove = (e: MouseEvent | TouchEvent) => {
     if (isDragging) {
-      const { x, y } = getEventCoordinates(e)
-      const distanceMoved = Math.sqrt(Math.pow(y - dragStart.top, 2) + Math.pow(x - dragStart.left, 2))
-
+      const nativeEvent = 'touches' in e ? e.touches[0] : e;
+      const { clientX, clientY } = nativeEvent;
+      const distanceMoved = Math.sqrt(
+        Math.pow(clientY - dragStart.top, 2) + Math.pow(clientX - dragStart.left, 2)
+      );
+  
       if (distanceMoved > 10) {
         setPosition({
-          top: y - 35,
-          left: x - 35
-        })
+          top: clientY - 35,
+          left: clientX - 35,
+        });
       }
     }
-  }
-
+  };
+  
   const handleEnd = (e: MouseEvent | TouchEvent) => {
     if (isDragging) {
-      const { x, y } = getEventCoordinates(e)
-      const distanceMoved = Math.sqrt(Math.pow(y - dragStart.top, 2) + Math.pow(x - dragStart.left, 2))
-
-      setIsDragging(false)
-
+      const nativeEvent = 'touches' in e ? e.changedTouches[0] : e; 
+      const { clientX, clientY } = nativeEvent;
+      const distanceMoved = Math.sqrt(
+        Math.pow(clientY - dragStart.top, 2) + Math.pow(clientX - dragStart.left, 2)
+      );
+  
+      setIsDragging(false);
+  
       if (distanceMoved <= 10) {
-        handleSingleClick()
+        handleSingleClick();
       }
     }
-  }
+  };
 
   const handleSingleClick = async () => {
     try {
