@@ -190,7 +190,6 @@ export default function GroupsPage() {
     pageLoad()
     return () => {
       dispatch(setOpenEdit(null))
-      dispatch(clearStudentParams())
     }
   }, [])
 

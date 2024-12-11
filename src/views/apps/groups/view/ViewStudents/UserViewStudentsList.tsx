@@ -55,6 +55,7 @@ import StudentPaymentForm from 'src/views/apps/students/view/StudentPaymentForm'
 import useBranches from 'src/hooks/useBranch'
 import { useFormik } from 'formik'
 import useResponsive from 'src/@core/hooks/useResponsive'
+import { useSettings } from 'src/@core/hooks/useSettings'
 
 interface StudentType {
   id: number | string
@@ -130,6 +131,8 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, choices }:
   const [openEdit, setOpenEdit] = useState<ModalTypes | null>(null)
   const { t } = useTranslation()
   const { getBranches, branches } = useBranches()
+  const { settings, saveSettings } = useSettings()
+  console.log(settings.mode)
 
   const handleEditClickOpen = (value: ModalTypes) => {
     if (value === 'payment') {
@@ -235,79 +238,174 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, choices }:
         }
       />
       {!(user?.role.length === 1 && user?.role.includes('teacher')) ? (
-        <HtmlTooltip
-          title={
-            <Box sx={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', padding: '10px' }}>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', py: 1 }}>
-                <Box>
-                  <Typography fontSize={12}>{first_name}</Typography>
-                  <Typography variant='body2' fontSize={12}>
-                    {t(status)}
-                  </Typography>
+        settings.mode == 'dark' ? (
+          <HtmlTooltip
+            title={
+              <Box
+                
+                sx={{
+                  width: '100%',
+                  height: '100%',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  padding: '10px',
+                  bgcolor: settings.mode != 'dark' ? 'grey.900' : 'background.paper',
+                  color: settings.mode != 'dark' ? 'grey.100' : 'text.primary',
+                  border: settings.mode != 'dark' ? '1px solid #444' : '1px solid #c3cccc'
+                }}
+              >
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', py: 1 }}>
+                  <Box>
+                    <Typography fontSize={12}>{first_name}</Typography>
+                    <Typography variant='body2' fontSize={12}>
+                      {t(status)}
+                    </Typography>
+                  </Box>
+                  <Typography variant='body2' fontSize={10}>{`( ID: ${activeId} )`}</Typography>
                 </Box>
-                <Typography variant='body2' fontSize={10}>{`( ID: ${activeId} )`}</Typography>
+                <Box py={1} borderTop={`1px solid ${settings.mode != 'dark' ? '#444' : '#c3cccc'}`}>
+                  <Typography variant='body2' fontSize={12}>
+                    {t('phone')}
+                  </Typography>
+                  <Typography fontSize={12}>{phone}</Typography>
+                </Box>
+                <Box py={1} borderTop={`1px solid ${settings.mode != 'dark' ? '#444' : '#c3cccc'}`}>
+                  <Typography variant='body2' fontSize={12}>
+                    {t('Balans')}
+                  </Typography>
+                  <Typography fontSize={12}>{`${balance} so'm`}</Typography>
+                </Box>
+                {lesson_count !== 0 && (
+                  <Box py={1} borderTop={`1px solid ${settings.mode != 'dark' ? '#444' : '#c3cccc'}`}>
+                    <Typography variant='body2' fontSize={12}>
+                      {t("To'lovgacha qolgan darslar")}
+                    </Typography>
+                    <Typography fontSize={12}>{`${lesson_count} ta`}</Typography>
+                  </Box>
+                )}
+                {studentsQueryParams.status === 'archive' ? (
+                  <Box py={1} borderTop={`1px solid ${settings.mode != 'dark' ? '#444' : '#c3cccc'}`}>
+                    <Typography variant='body2' fontSize={12}>
+                      {t("Talaba qo'shilgan va o'chirilgan sana")}
+                    </Typography>
+                    <Typography fontSize={12}>
+                      {added_at} / {deleted_at}
+                    </Typography>
+                  </Box>
+                ) : (
+                  <Box py={1} borderTop={`1px solid ${settings.mode != 'dark' ? '#444' : '#c3cccc'}`}>
+                    <Typography variant='body2' fontSize={12}>
+                      {t("Talaba qo'shilgan sana")}
+                    </Typography>
+                    <Typography fontSize={12}>{added_at}</Typography>
+                  </Box>
+                )}
+                {comment && (
+                  <Box py={1} borderTop={`1px solid ${settings.mode != 'dark' ? '#444' : '#c3cccc'}`}>
+                    <Typography variant='body2' fontSize={12}>
+                      {t('Eslatma')}
+                    </Typography>
+                    <Typography fontSize={12} fontStyle='italic'>
+                      {comment.comment}
+                    </Typography>
+                    <Typography fontSize={12} variant='body2'>{`${comment.user} ${formatDateTime(
+                      comment.created_at
+                    )}`}</Typography>
+                  </Box>
+                )}
               </Box>
-              <Box py={1} borderTop={'1px solid #c3cccc'}>
-                <Typography variant='body2' fontSize={12}>
-                  {t('phone')}
-                </Typography>
-                <Typography fontSize={12}>{phone}</Typography>
+            }
+          >
+            <Link
+              href={`/students/view/security/?student=${id}`}
+              style={{
+                textDecoration: 'underline',
+                color: settings.mode == 'dark' ? 'gray' : 'lightgray'
+              }}
+            >
+              <Typography sx={{ cursor: 'pointer' }} fontSize={10}>
+                {first_name}
+              </Typography>
+            </Link>
+          </HtmlTooltip>
+        ) : (
+          <HtmlTooltip
+            title={
+              <Box sx={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', padding: '10px' }}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', py: 1 }}>
+                  <Box>
+                    <Typography fontSize={12}>{first_name}</Typography>
+                    <Typography variant='body2' fontSize={12}>
+                      {t(status)}
+                    </Typography>
+                  </Box>
+                  <Typography variant='body2' fontSize={10}>{`( ID: ${activeId} )`}</Typography>
+                </Box>
+                <Box py={1} borderTop={'1px solid #c3cccc'}>
+                  <Typography variant='body2' fontSize={12}>
+                    {t('phone')}
+                  </Typography>
+                  <Typography fontSize={12}>{phone}</Typography>
+                </Box>
+                <Box py={1} borderTop={'1px solid #c3cccc'}>
+                  <Typography variant='body2' fontSize={12}>
+                    {t('Balans')}
+                  </Typography>
+                  <Typography fontSize={12}>{`${balance} so'm`}</Typography>
+                </Box>
+                {lesson_count != 0 ? (
+                  <Box py={1} borderTop={'1px solid #c3cccc'}>
+                    <Typography variant='body2' fontSize={12}>
+                      {t("To'lovgacha qolgan darslar")}
+                    </Typography>
+                    <Typography fontSize={12}>{`${lesson_count} ta`}</Typography>
+                  </Box>
+                ) : (
+                  ''
+                )}
+                {studentsQueryParams.status == 'archive' ? (
+                  <Box py={1} borderTop={'1px solid #c3cccc'}>
+                    <Typography variant='body2' fontSize={12}>
+                      {t("Talaba qo'shilgan va o'chirilgan sana")}
+                    </Typography>
+                    <Typography fontSize={12}>
+                      {added_at} / {deleted_at}
+                    </Typography>
+                  </Box>
+                ) : (
+                  <Box py={1} borderTop={'1px solid #c3cccc'}>
+                    <Typography variant='body2' fontSize={12}>
+                      {t("Talaba qo'shilgan sana")}
+                    </Typography>
+                    <Typography fontSize={12}>{added_at}</Typography>
+                  </Box>
+                )}
+                {comment && (
+                  <Box py={1} borderTop={'1px solid #c3cccc'}>
+                    <Typography variant='body2' fontSize={12}>
+                      {t('Eslatma')}
+                    </Typography>
+                    <Typography fontSize={12} fontStyle={'italic'}>
+                      {comment.comment}
+                    </Typography>
+                    <Typography fontSize={12} variant='body2'>{`${comment.user} ${formatDateTime(
+                      comment.created_at
+                    )}`}</Typography>
+                  </Box>
+                )}
               </Box>
-              <Box py={1} borderTop={'1px solid #c3cccc'}>
-                <Typography variant='body2' fontSize={12}>
-                  {t('Balans')}
-                </Typography>
-                <Typography fontSize={12}>{`${balance} so'm`}</Typography>
-              </Box>
-              {lesson_count != 0 ? (
-                <Box py={1} borderTop={'1px solid #c3cccc'}>
-                  <Typography variant='body2' fontSize={12}>
-                    {t("To'lovgacha qolgan darslar")}
-                  </Typography>
-                  <Typography fontSize={12}>{`${lesson_count} ta`}</Typography>
-                </Box>
-              ) : (
-                ''
-              )}
-              {studentsQueryParams.status == 'archive' ? (
-                <Box py={1} borderTop={'1px solid #c3cccc'}>
-                  <Typography variant='body2' fontSize={12}>
-                    {t("Talaba qo'shilgan va o'chirilgan sana")}
-                  </Typography>
-                  <Typography fontSize={12}>
-                    {added_at} / {deleted_at}
-                  </Typography>
-                </Box>
-              ) : (
-                <Box py={1} borderTop={'1px solid #c3cccc'}>
-                  <Typography variant='body2' fontSize={12}>
-                    {t("Talaba qo'shilgan sana")}
-                  </Typography>
-                  <Typography fontSize={12}>{added_at}</Typography>
-                </Box>
-              )}
-              {comment && (
-                <Box py={1} borderTop={'1px solid #c3cccc'}>
-                  <Typography variant='body2' fontSize={12}>
-                    {t('Eslatma')}
-                  </Typography>
-                  <Typography fontSize={12} fontStyle={'italic'}>
-                    {comment.comment}
-                  </Typography>
-                  <Typography fontSize={12} variant='body2'>{`${comment.user} ${formatDateTime(
-                    comment.created_at
-                  )}`}</Typography>
-                </Box>
-              )}
-            </Box>
-          }
-        >
-          <Link href={`/students/view/security/?student=${id}`} style={{ textDecoration: 'underline', color: 'gray' }}>
-            <Typography sx={{ cursor: 'pointer' }} fontSize={10}>
-              {first_name}
-            </Typography>
-          </Link>
-        </HtmlTooltip>
+            }
+          >
+            <Link
+              href={`/students/view/security/?student=${id}`}
+              style={{ textDecoration: 'underline', color: 'gray' }}
+            >
+              <Typography sx={{ cursor: 'pointer' }} fontSize={10}>
+                {first_name}
+              </Typography>
+            </Link>
+          </HtmlTooltip>
+        )
       ) : (
         <Typography sx={{ cursor: 'pointer' }} fontSize={5}>
           {first_name}
