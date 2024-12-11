@@ -25,6 +25,7 @@ export const videoUrls: {
     students: VideoType
     finance: VideoType
     crm_setting: VideoType
+    amocrm:VideoType
 } = {
     all_settings: {
         title: 'Umumiy sozlamalar sahifasidan qanday foydalaniladi?',
@@ -58,6 +59,7 @@ export const videoUrls: {
         title: "Bosh sahifadan qanday foydalaniladi?",
         url: 'https://www.youtube.com/embed/j3EAsc_EFPE?si=Wj_f8-LyMToTLOmG'
     },
+    
     leads: {
         title: "Lidlar sahifasidan qanday foydalaniladi?",
         url: "https://www.youtube.com/embed/VrVlkMRz5BQ?si=SKK0WwsWlh4q0V-J"
@@ -86,6 +88,10 @@ export const videoUrls: {
     crm_setting: {
         title: "CRM sozlamalari sahifasidan qanday foydalaniladi?",
         url: "https://www.youtube.com/embed/nB1n_13sNBk?si=dKIOI-kNc25hSich"
+    },
+    amocrm: {
+        title: "Amo crm sahifasidan qanday foydalaniladi?",
+        url: 'https://www.youtube.com/embed/j3EAsc_EFPE?si=Wj_f8-LyMToTLOmG'
     },
 }
 

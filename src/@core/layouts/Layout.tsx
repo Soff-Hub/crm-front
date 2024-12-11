@@ -7,10 +7,9 @@ import { LayoutProps } from 'src/@core/layouts/types'
 import VerticalLayout from './VerticalLayout'
 import HorizontalLayout from './HorizontalLayout'
 import api from '../utils/api'
-import { useAppDispatch } from 'src/store'
+import { useAppDispatch, useAppSelector } from 'src/store'
 import { toggleBotStatus, setSoffBotText, toggleModal } from 'src/store/apps/page'
 import { AuthContext } from 'src/context/AuthContext'
-import DraggableIcon from 'src/@core/components/soffBotIcon'
 
 const Layout = (props: LayoutProps) => {
   // ** Props
@@ -29,6 +28,7 @@ const Layout = (props: LayoutProps) => {
       return date
     }
   }
+  
 
   const formattedCurrentDate = getYearMonthDay(currentDate)
   const formattedLastLogin = getYearMonthDay(last_login)
@@ -120,7 +120,6 @@ const Layout = (props: LayoutProps) => {
   if (settings.layout === 'horizontal') {
     return (
       <>
-        {/* <DraggableIcon /> */}
         <HorizontalLayout {...props}>{children}</HorizontalLayout>
       </>
     )
@@ -128,7 +127,6 @@ const Layout = (props: LayoutProps) => {
 
   return (
     <>
-      {/* <DraggableIcon /> */}
       <VerticalLayout {...props}> {children}</VerticalLayout>
     </>
   )

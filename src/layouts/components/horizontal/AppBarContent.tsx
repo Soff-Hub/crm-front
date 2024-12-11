@@ -44,7 +44,6 @@ const AppBarContent = (props: Props) => {
   const { settings, saveSettings } = props
   const { user } = useContext(AuthContext)
   const dispatch = useAppDispatch()
-  const { notifications, notificationsCount } = useAppSelector(state => state.user)
   const { t } = useTranslation()
 
   function clickGlobalPay() {
@@ -72,7 +71,6 @@ const AppBarContent = (props: Props) => {
     }
   }, [user?.id])
 
-  console.log(notificationsCount)
 
 
   return (

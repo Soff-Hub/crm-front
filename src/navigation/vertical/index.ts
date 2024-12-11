@@ -1,7 +1,9 @@
 // ** Type import
 import { useContext } from 'react'
+import { useDispatch } from 'react-redux'
 import { VerticalNavItemsType } from 'src/@core/layouts/types'
 import { AuthContext } from 'src/context/AuthContext'
+import { toggleAmoModal } from 'src/store/apps/page'
 
 export const TeacherNavigation = (t: any): any => {
   return [
@@ -60,7 +62,7 @@ export const CPanelNavigation = (t: any): any => {
 
 const Navigation = (t: any): VerticalNavItemsType => {
   const { user } = useContext(AuthContext)
-
+  const dispatch = useDispatch()
   const items = [
     {
       title: t('Bosh sahifa'),
@@ -142,6 +144,10 @@ const Navigation = (t: any): VerticalNavItemsType => {
         {
           title: 'Formalar',
           path: '/settings/forms/'
+        },
+        {
+          title: 'Amo CRM sozlamalari',
+          onclick:()=>dispatch(toggleAmoModal(true))
         }
       ]
     },
@@ -235,6 +241,10 @@ const Navigation = (t: any): VerticalNavItemsType => {
         {
           title: 'Formalar',
           path: '/settings/forms/'
+        },
+        {
+          onclick:()=>dispatch(toggleAmoModal(true)),
+          title: 'Amo CRM sozlamalari',
         }
       ]
     },

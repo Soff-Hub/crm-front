@@ -24,37 +24,24 @@ import { formatCurrency } from 'src/@core/utils/format-currency'
 import { SelectPicker } from 'rsuite'
 import { useAppDispatch, useAppSelector } from 'src/store'
 import { today } from 'src/@core/components/card-statistics/kanban-item'
-import { updateParams } from 'src/store/apps/finance/investments'
+import { fetchInvestments, updateParams } from 'src/store/apps/finance/investments'
 import { monthItems, yearItems } from 'src/views/apps/finance/FinanceAllNumber'
 const InvestmentPage = () => {
-  const [isLoading, setIsLoading] = useState(false)
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
   const [isCreateModalOpen, setOpenCreateModal] = useState(false)
   const [investments, setInvestments] = useState<any | null>(null)
   const [total_investments, setTotalInvestments] = useState<number | null>(null)
-  const { queryParams } = useAppSelector(state => state.investmentSlice)
+  const { queryParams, isLoading } = useAppSelector(state => state.investmentSlice)
   const [year, setYear] = useState<number>(new Date().getFullYear())
   const [month, setMonth] = useState<string>(today.split('-')[1])
   // Fetch investments data
-  async function getInvestments(queryString?: string) {
-    setIsLoading(true)
-    try {
-      const res = await api.get('common/finance/investment/list/?' + queryString)
-      setInvestments(res.data.results)
-      setTotalInvestments(res.data.total_investments)
-    } catch (err) {
-      console.error(err)
-    } finally {
-      setIsLoading(false)
-    }
-  }
 
   useEffect(() => {
     const queryString = new URLSearchParams(
       Object.fromEntries(Object.entries(queryParams).map(([key, value]) => [key, String(value)]))
     ).toString()
-    getInvestments(queryString)
+    dispatch(fetchInvestments(queryString))
   }, [])
   const handleYearDate = async (value: any, t: 'm' | 'y') => {
     let params: any = {
@@ -81,7 +68,7 @@ const InvestmentPage = () => {
     }
     const queryString = new URLSearchParams({ ...queryParams, ...params }).toString()
     dispatch(updateParams(params))
-    await getInvestments(queryString)
+    await dispatch(fetchInvestments(queryString))
   }
 
   // Formik setup
@@ -101,7 +88,10 @@ const InvestmentPage = () => {
         await api.post('common/finance/investment/create/', values)
         resetForm()
         setOpenCreateModal(false)
-        getInvestments()
+        const queryString = new URLSearchParams(
+          Object.fromEntries(Object.entries(queryParams).map(([key, value]) => [key, String(value)]))
+        ).toString()
+        dispatch(fetchInvestments(queryString))
         toast.success(t('Investitsiya muvaffaqiyatli qoshildi') || 'Investitsiya muvaffaqiyatli qoshildi')
       } catch (error) {
         console.error(error)
@@ -162,6 +152,7 @@ const InvestmentPage = () => {
           <Typography sx={{ fontSize: '20px', flexGrow: 1 }}>{t('Investitsiyalar')}</Typography>
         </Box>
         <SelectPicker
+          cleanable={false}
           onChange={v => handleYearDate(v, 'y')}
           size='sm'
           data={yearItems}
@@ -185,6 +176,7 @@ const InvestmentPage = () => {
             width: isMobile ? 'auto' : 224,
             order: 4
           }}
+          cleanable={false}
           value={month}
           searchable={false}
           placeholder='Oyni tanlang'
