@@ -145,10 +145,10 @@ const Navigation = (t: any): VerticalNavItemsType => {
           title: 'Formalar',
           path: '/settings/forms/'
         },
-        {
-          title: 'Amo CRM sozlamalari',
-          onclick:()=>dispatch(toggleAmoModal(true))
-        }
+        // {
+        //   title: 'Amo CRM sozlamalari',
+        //   onclick:()=>dispatch(toggleAmoModal(true))
+        // }
       ]
     },
     {
@@ -242,10 +242,10 @@ const Navigation = (t: any): VerticalNavItemsType => {
           title: 'Formalar',
           path: '/settings/forms/'
         },
-        {
-          onclick:()=>dispatch(toggleAmoModal(true)),
-          title: 'Amo CRM sozlamalari',
-        }
+        // {
+        //   onclick:()=>dispatch(toggleAmoModal(true)),
+        //   title: 'Amo CRM sozlamalari',
+        // }
       ]
     },
     {

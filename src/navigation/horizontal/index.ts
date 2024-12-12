@@ -103,10 +103,10 @@ const Navigation = (t: any): HorizontalNavItemsType => {
           title: 'Formalar',
           path: '/settings/forms/'
         },
-        {
-          title: 'Amo CRM sozlamalari',
-          path: '/settings/amocrm/'
-        }
+        // {
+        //   title: 'Amo CRM sozlamalari',
+        //   path: '/settings/amocrm/'
+        // }
       ]
     },
     {
@@ -201,10 +201,10 @@ const Navigation = (t: any): HorizontalNavItemsType => {
           title: 'Formalar',
           path: '/settings/forms/'
         },
-        {
-          title: 'Amo CRM sozlamalari',
-          path: '/settings/amocrm/',
-        }
+        // {
+        //   title: 'Amo CRM sozlamalari',
+        //   path: '/settings/amocrm/',
+        // }
       ]
     },
     {
