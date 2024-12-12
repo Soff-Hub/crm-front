@@ -20,6 +20,7 @@ import { useTranslation } from 'react-i18next'
 import { AuthContext } from 'src/context/AuthContext'
 import { setDays, setResultId } from 'src/store/apps/groupDetails'
 import { useAppDispatch } from 'src/store'
+import { GroupStudentGrades } from './GroupStudentGrades/GroupStudentGradesList'
 
 interface Props {
   tab: string
@@ -46,11 +47,10 @@ const UserViewRight = ({ tab }: Props) => {
     // dispatch(setDays(null))
     const path = router.route.replace('[tab]', value.toLowerCase())
     dispatch(setResultId(null))
-    router
-      .push({
-        pathname: path,
-        query: { id: router.query.id, month: router.query.month }
-      })
+    router.push({
+      pathname: path,
+      query: { id: router.query.id, month: router.query.month }
+    })
   }
 
   useEffect(() => {
@@ -58,7 +58,6 @@ const UserViewRight = ({ tab }: Props) => {
       setActiveTab(tab)
     }
   }, [tab])
-
 
   return (
     <TabContext value={activeTab}>
@@ -70,14 +69,24 @@ const UserViewRight = ({ tab }: Props) => {
         sx={{ borderBottom: theme => `1px solid ${theme.palette.divider}` }}
       >
         <Tab value='security' label={t('Davomat')} icon={<Icon icon='tabler:user-check' />} />
-        {!(user?.role.length === 1 && user?.role.includes('teacher')) && <Tab value='notes' label={t('Eslatmalar')} icon={<Icon icon='fluent:note-add-48-regular' />} />}
+        {/* {!(user?.role.length === 1 && user?.role.includes('teacher')) && (
+          <Tab value='grade' label={t('Baho')} icon={<Icon icon='mdi:school' />} />
+        )} */}
+        {!(user?.role.length === 1 && user?.role.includes('teacher')) && (
+          <Tab value='notes' label={t('Eslatmalar')} icon={<Icon icon='fluent:note-add-48-regular' />} />
+        )}
         <Tab value='exams' label={t('Imtixon')} icon={<Icon icon='maki:racetrack' />} />
-        {!(user?.role.length === 1 && user?.role.includes('teacher')) && <Tab value='discount' label={t('Chegirmalar')} icon={<Icon icon='mdi:sale' />} />}
+        {!(user?.role.length === 1 && user?.role.includes('teacher')) && (
+          <Tab value='discount' label={t('Chegirmalar')} icon={<Icon icon='mdi:sale' />} />
+        )}
         {/* {!(user?.role.length === 1 && user?.role.includes('teacher')) && <Tab value='money' label={t("Maosh")} icon={<Icon icon='mdi:money' />} />} */}
       </TabList>
       <Box sx={{ mt: 2 }}>
         <TabPanel sx={{ p: 0 }} value='security'>
           <UserViewSecurity />
+        </TabPanel>
+        <TabPanel sx={{ p: 0 }} value='grade'>
+          <GroupStudentGrades />
         </TabPanel>
         <TabPanel sx={{ p: 0 }} value='exams'>
           <GroupExamsList />

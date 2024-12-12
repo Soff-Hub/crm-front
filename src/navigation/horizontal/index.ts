@@ -1,10 +1,14 @@
+import { Button } from '@mui/material';
+import path from 'path'
 import { useContext } from 'react'
+import { useDispatch } from 'react-redux'
 import { HorizontalNavItemsType } from 'src/@core/layouts/types'
 import { AuthContext } from 'src/context/AuthContext'
+import { toggleAmoModal } from 'src/store/apps/page'
 
 const Navigation = (t: any): HorizontalNavItemsType => {
   const { user } = useContext(AuthContext)
-
+  const dispatch = useDispatch()
   const items = [
     {
       title: t('Bosh sahifa'),
@@ -98,7 +102,11 @@ const Navigation = (t: any): HorizontalNavItemsType => {
         {
           title: 'Formalar',
           path: '/settings/forms/'
-        }
+        },
+        // {
+        //   title: 'Amo CRM sozlamalari',
+        //   path: '/settings/amocrm/'
+        // }
       ]
     },
     {
@@ -117,7 +125,8 @@ const Navigation = (t: any): HorizontalNavItemsType => {
         {
           title: t('Davomatlar'),
           path: '/reports/attendances'
-        }
+        },
+        
       ]
     },
    
@@ -191,7 +200,11 @@ const Navigation = (t: any): HorizontalNavItemsType => {
         {
           title: 'Formalar',
           path: '/settings/forms/'
-        }
+        },
+        // {
+        //   title: 'Amo CRM sozlamalari',
+        //   path: '/settings/amocrm/',
+        // }
       ]
     },
     {
