@@ -30,12 +30,9 @@ const InvestmentPage = () => {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
   const [isCreateModalOpen, setOpenCreateModal] = useState(false)
-  const [investments, setInvestments] = useState<any | null>(null)
-  const [total_investments, setTotalInvestments] = useState<number | null>(null)
-  const { queryParams, isLoading } = useAppSelector(state => state.investmentSlice)
+  const { queryParams, isLoading ,investments,totalInvestments} = useAppSelector(state => state.investmentSlice)
   const [year, setYear] = useState<number>(new Date().getFullYear())
   const [month, setMonth] = useState<string>(today.split('-')[1])
-  // Fetch investments data
 
   useEffect(() => {
     const queryString = new URLSearchParams(
@@ -201,7 +198,7 @@ const InvestmentPage = () => {
             size='medium'
             sx={{ fontSize: '14px', fontWeight: 'bold' }}
             color='success'
-            label={`${formatCurrency(total_investments || 0)} UZS`}
+            label={`${formatCurrency(totalInvestments || 0)} UZS`}
           />
         </Typography>
         <Button

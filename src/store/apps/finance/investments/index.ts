@@ -18,10 +18,10 @@ export const fetchInvestments = createAsyncThunk<
 );
 
 const initialState = {
-  isEditId: null,
   queryParams: { page: 1, date_year: `${new Date().getFullYear()}-01-01`, date_month: '' },
   investments: [],
   totalInvestments: 0,
+  openEdit:null,
   isLoading: false,
   error: null as unknown,
 };
@@ -31,7 +31,7 @@ export const investmentSlice = createSlice({
   initialState,
   reducers: {
     setOpenEdit: (state, action) => {
-      state.isEditId = action.payload;
+      state.openEdit = action.payload;
     },
     updateParams: (state, action) => {
       state.queryParams = { ...state.queryParams, ...action.payload };
