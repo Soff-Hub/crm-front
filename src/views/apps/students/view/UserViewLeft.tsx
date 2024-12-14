@@ -70,7 +70,6 @@ const UserViewLeft = ({ userData }: { userData: any }) => {
   const { smsTemps, getSMSTemps } = useSMS()
   const dispatch = useAppDispatch()
   const router = useRouter()
-  console.log(error)
 
   // Handle Edit dialog
   const handleEditClickOpen = (value: ModalTypes) => {
@@ -103,7 +102,7 @@ const UserViewLeft = ({ userData }: { userData: any }) => {
 
     try {
       const discountConfig = {
-        discount_amount: value?.fixed_price,
+        discount_amount: value.fixed_price,
         discount_count: 100,
         discount_description: 'kurs oxirigacha',
         groups: [value?.group],
