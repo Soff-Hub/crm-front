@@ -46,7 +46,7 @@ export default function HomeKanban({ title, items, id }: Props) {
     }
 
     return (
-        <Box sx={{ width: "100%", display: 'flex', flexDirection: 'column', maxWidth: 350, minWidth: '300px' }}>
+        <Box  sx={{width: "100%", display: 'flex', flexDirection: 'column', maxWidth: 350, minWidth: '300px' }}>
             <Box display={"flex"} alignItems={"center"} justifyContent="space-between" marginBottom={5} >
                 <Typography style={{ width: "50%", overflow: "hidden", textOverflow: "ellipsis" }} fontSize={22}>{title}</Typography>
                 {queryParams.is_active ? (

@@ -26,21 +26,21 @@ import { useAppDispatch, useAppSelector } from 'src/store'
 import { today } from 'src/@core/components/card-statistics/kanban-item'
 import { fetchInvestments, updateParams } from 'src/store/apps/finance/investments'
 import { monthItems, yearItems } from 'src/views/apps/finance/FinanceAllNumber'
+import InvestmentRowOptions from 'src/views/apps/finance/investment/InvestmentRowOptions'
 const InvestmentPage = () => {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
   const [isCreateModalOpen, setOpenCreateModal] = useState(false)
-  const [investments, setInvestments] = useState<any | null>(null)
-  const [total_investments, setTotalInvestments] = useState<number | null>(null)
-  const { queryParams, isLoading } = useAppSelector(state => state.investmentSlice)
+  const { queryParams, isLoading ,investments,totalInvestments,openEdit} = useAppSelector(state => state.investmentSlice)
   const [year, setYear] = useState<number>(new Date().getFullYear())
   const [month, setMonth] = useState<string>(today.split('-')[1])
-  // Fetch investments data
 
   useEffect(() => {
     const queryString = new URLSearchParams(
       Object.fromEntries(Object.entries(queryParams).map(([key, value]) => [key, String(value)]))
     ).toString()
+    console.log(queryString);
+    
     dispatch(fetchInvestments(queryString))
   }, [])
   const handleYearDate = async (value: any, t: 'm' | 'y') => {
@@ -128,6 +128,13 @@ const InvestmentPage = () => {
       title: t('Sana'),
       dataIndex: 'created_at',
       render: date => date
+    },
+    {
+      xs: 0.3,
+      dataIndex: 'id',
+      title: '',
+      // title: <Button onClick={() => push("/employee-attendance")} variant='outlined'>{t("Davomat")}</Button>,
+      render: actions => <InvestmentRowOptions id={actions}/>
     }
   ]
 
@@ -201,7 +208,7 @@ const InvestmentPage = () => {
             size='medium'
             sx={{ fontSize: '14px', fontWeight: 'bold' }}
             color='success'
-            label={`${formatCurrency(total_investments || 0)} UZS`}
+            label={`${formatCurrency(totalInvestments || 0)} UZS`}
           />
         </Typography>
         <Button
@@ -236,6 +243,8 @@ const InvestmentPage = () => {
               fullWidth
               margin='normal'
               label={t('Izoh')}
+              multiline
+              rows={4}
               name='description'
               value={formik.values.description}
               onChange={formik.handleChange}

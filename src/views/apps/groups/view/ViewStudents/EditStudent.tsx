@@ -8,6 +8,9 @@ import {
   DialogContent,
   FormControl,
   FormHelperText,
+  InputLabel,
+  MenuItem,
+  Select,
   TextField,
   Typography
 } from '@mui/material'
@@ -121,7 +124,7 @@ export default function EditStudent({
               <FormHelperText error>{`${formik.errors.added_at}`}</FormHelperText>
             )}
           </FormControl>
-          {/* <FormControl sx={{ maxWidth: '100%', marginBottom: 3 }} fullWidth>
+          <FormControl sx={{ maxWidth: '100%', marginBottom: 3 }} fullWidth>
             <InputLabel size='small' id='demo-simple-select-outlined-label'>
               Status (holati)
             </InputLabel>
@@ -142,7 +145,7 @@ export default function EditStudent({
               <MenuItem value={'frozen'}>Muzlatish</MenuItem>
             </Select>
             <FormHelperText error>{formik.errors.status}</FormHelperText>
-          </FormControl> */}
+          </FormControl>
 
           <Box sx={{ display: 'flex', justifyContent: 'center', gap: 4 }}>
             <Button onClick={() => setActivate(false)} size='small' variant='outlined' color='error'>
