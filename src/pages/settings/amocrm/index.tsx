@@ -1,27 +1,47 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useFormik } from 'formik'
 import { Button, Box, TextField } from '@mui/material'
 import * as Yup from 'yup'
 import toast from 'react-hot-toast'
 import VideoHeader, { videoUrls } from 'src/@core/components/video-header/video-header'
+import api from 'src/@core/utils/api'
+import { Loader } from 'rsuite'
+import SubLoader from 'src/views/apps/loaders/SubLoader'
 
 const AmoCrmPage = () => {
   const [loading, setLoading] = useState(false)
-
+  const [pageLoader, setPageLoader] = useState(false)
   // Initial form values
   const initialValues = {
-    secretKey: '',
-    integrationId: '',
-    authorizationCode: '',
-    subDomain: ''
+    client_secret: '',
+    client_id: '',
+    auth_code: '',
+    subdomain: ''
   }
+
+  async function getAmoCrmData() {
+    setPageLoader(true)
+    await api
+      .get('/amocrm/data/')
+      .then(res => {
+        formik.setValues(res.data)
+      })
+      .catch(err => {
+        console.log(err)
+      })
+    setPageLoader(false)
+  }
+
+  useEffect(() => {
+    getAmoCrmData()
+  }, [])
 
   // Validation Schema
   const validationSchema = Yup.object({
-    secretKey: Yup.string().required('Secret Key is required'),
-    integrationId: Yup.string().required('Integration ID is required'),
-    authorizationCode: Yup.string().required('Authorization Code is required'),
-    subDomain: Yup.string().required('Sub Domain is required')
+    client_secret: Yup.string().required('Secret Key is required'),
+    client_id: Yup.string().required('Integration ID is required'),
+    auth_code: Yup.string().required('Authorization Code is required'),
+    subdomain: Yup.string().required('Sub Domain is required')
   })
 
   // Formik hook for form management
@@ -29,23 +49,29 @@ const AmoCrmPage = () => {
     initialValues: initialValues,
     validationSchema: validationSchema,
     onSubmit: async values => {
-      // setLoading(true)
-      // Perform submission logic here, e.g., API call
-      console.log('Form Submitted:', values)
-
-      // Simulate success or error response
-      // const response = await someApiCall(values)
-      // if (response.success) {
-      //     toast.success('Data saved successfully')
-      // } else {
-      //     toast.error('Error saving data')
-      // }
-
-      // setLoading(false)
+      setLoading(true)
+      await api
+        .post('/amocrm/init-tokens/', values)
+        .then(res => {
+          console.log(res)
+          console.log('Form Submitted:', values)
+          setLoading(false)
+          toast.success('Tekshiruvdan otdingiz')
+        })
+        .catch(err => {
+          if (err.response.data.msg) {
+            toast.error(err.response.data.msg)
+          } else {
+            formik.setErrors(err.response.data)
+          }
+          setLoading(false)
+        })
     }
   })
 
-  return (
+  return pageLoader == true ? (
+    <SubLoader />
+  ) : (
     <>
       <VideoHeader item={videoUrls.amocrm} />
       <Box
@@ -63,67 +89,67 @@ const AmoCrmPage = () => {
         }}
       >
         <form onSubmit={formik.handleSubmit} style={{ width: '100%', maxWidth: 600 }}>
-            <Box display="flex" alignItems='center' justifyContent='center' padding={10}>
-              <img width={400} height={50} src='/images/pages/amo-crm.jpg' alt='Amo CRM' />
-            </Box>
+          <Box display='flex' alignItems='center' justifyContent='center' padding={10}>
+            <img width={400} height={50} src='/images/pages/amo-crm.jpg' alt='Amo CRM' />
+          </Box>
           <Box display='flex' flexDirection='column' gap={2}>
             {/* Secret Key */}
             <TextField
               fullWidth
               label='Secret Key'
-              name='secretKey'
+              name='client_secret'
               variant='outlined'
-              value={formik.values.secretKey}
+              value={formik.values.client_secret}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              error={formik.touched.secretKey && Boolean(formik.errors.secretKey)}
-              helperText={formik.touched.secretKey && formik.errors.secretKey}
+              error={formik.touched.client_secret && Boolean(formik.errors.client_secret)}
+              helperText={formik.touched.client_secret && formik.errors.client_secret}
             />
 
             {/* Integration ID */}
             <TextField
               fullWidth
               label='Integration ID'
-              name='integrationId'
+              name='client_id'
               variant='outlined'
-              value={formik.values.integrationId}
+              value={formik.values.client_id}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              error={formik.touched.integrationId && Boolean(formik.errors.integrationId)}
-              helperText={formik.touched.integrationId && formik.errors.integrationId}
+              error={formik.touched.client_id && Boolean(formik.errors.client_id)}
+              helperText={formik.touched.client_id && formik.errors.client_id}
             />
 
             {/* Authorization Code */}
             <TextField
               fullWidth
               label='Authorization Code'
-              name='authorizationCode'
+              name='auth_code'
               variant='outlined'
-              value={formik.values.authorizationCode}
+              value={formik.values.auth_code}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              error={formik.touched.authorizationCode && Boolean(formik.errors.authorizationCode)}
-              helperText={formik.touched.authorizationCode && formik.errors.authorizationCode}
+              error={formik.touched.auth_code && Boolean(formik.errors.auth_code)}
+              helperText={formik.touched.auth_code && formik.errors.auth_code}
             />
 
             {/* Sub Domain */}
             <TextField
               fullWidth
               label='Sub Domain'
-              name='subDomain'
+              name='subdomain'
               variant='outlined'
-              value={formik.values.subDomain}
+              value={formik.values.subdomain}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              error={formik.touched.subDomain && Boolean(formik.errors.subDomain)}
-              helperText={formik.touched.subDomain && formik.errors.subDomain}
+              error={formik.touched.subdomain && Boolean(formik.errors.subdomain)}
+              helperText={formik.touched.subdomain && formik.errors.subdomain}
             />
           </Box>
 
           {/* Submit Button */}
           <Box display='flex' justifyContent='flex-end' paddingBottom={5} paddingTop={5} mt={2}>
             <Button type='submit' variant='outlined' color='primary' disabled={loading}>
-              {loading ? 'Loading...' : 'Save'}
+              {loading ? 'Jarayonda...' : 'Saqlash'}
             </Button>
           </Box>
         </form>

@@ -40,9 +40,7 @@ const RowOptions = ({ id }: { id: number | string }) => {
     }
   }, [groups, id]);
 
-  useEffect(() => {
-    console.log(group, id);
-  }, [group, id]); 
+   
     
     
     
