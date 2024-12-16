@@ -559,7 +559,7 @@ const KanbanItem = (props: KanbarItemProps) => {
         <form onSubmit={formik.handleSubmit} style={{ paddingTop: '5px', display: 'flex', flexDirection: 'column', gap: '15px' }}>
           <FormControl fullWidth>
             <TextField
-              label={t("Sabab (majburiy emas)")}
+              label={t("Sabab (majburiy)")}
               multiline
               rows={4}
               size="small"
