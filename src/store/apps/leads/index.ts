@@ -18,6 +18,20 @@ export const fetchDepartmentList = createAsyncThunk(
     }
   }
 )
+export const fetchAmoCrmPipelines = createAsyncThunk(
+  'appChat/fetchAmoCrmPipelines',
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await api.get('/amocrm/pipelines/')
+      return response.data
+    } catch (err: any) {
+      if (err.response) {
+        return rejectWithValue(err.response.data)
+      }
+      return rejectWithValue(err.message)
+    }
+  }
+)
 
 // ** Fetch All Sources
 export const fetchSources = createAsyncThunk('appChat/fetchSources', async () => {
@@ -84,10 +98,10 @@ export const createDepartmentStudent = createAsyncThunk(
 
 export const updateDepartmentStudent = createAsyncThunk(
   'appChat/updateDepartmentStudent',
-  async (data: any, { rejectWithValue }) => {
+  async (data: any , { rejectWithValue }) => {
     try {
       // const response = await api.patch(`leads/department-user-list/${data.id}/`, data)
-      const response = await api.patch(`leads/anonim-user/update/${data.id}/`, data)
+      const response = await api.patch(data.is_amocrm ? `amocrm/lead/update/${data.data.id}/` : `leads/anonim-user/update/${data.data.id}/`, { status_id: data.data.status_id })
       return response.data
     } catch (err: any) {
       if (err.response) {
@@ -101,6 +115,7 @@ export const updateDepartmentStudent = createAsyncThunk(
 const initialState: ILeadsState = {
   sourceData: [],
   groups: [],
+  pipelines:[],
   leadData: [],
   open: null,
   openItem: null,
@@ -221,6 +236,15 @@ export const appLeadsSlice = createSlice({
       })
       .addCase(editDepartment.rejected, state => {
         state.loading = false
+      }) .addCase(fetchAmoCrmPipelines.pending, state => {
+        state.bigLoader = true
+      })
+      .addCase(fetchAmoCrmPipelines.fulfilled, (state, action) => {
+        state.pipelines = action.payload
+        state.bigLoader = false
+      })
+      .addCase(fetchAmoCrmPipelines.rejected, state => {
+        state.bigLoader = false
       })
   }
 })

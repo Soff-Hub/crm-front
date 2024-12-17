@@ -62,15 +62,28 @@ export default function LidsHeader({}: Props) {
           {t('Hisobot')}
         </Button>
       </form>
-      <Button
-        onClick={() => dispatch(setOpen('add-department'))}
-        sx={{ minWidth: '300px' }}
-        size='small'
-        variant='contained'
-        startIcon={<IconifyIcon icon={'material-symbols:add'} />}
-      >
-        {t("Bo'lim yaratish")}
-      </Button>
+      {isMobile ? (
+        <Button
+          fullWidth
+          onClick={() => dispatch(setOpen('add-department'))}
+          sx={{ minWidth: '300px',my:4 }}
+          size='small'
+          variant='contained'
+          startIcon={<IconifyIcon icon={'material-symbols:add'} />}
+        >
+          {t("Bo'lim yaratish")}
+        </Button>
+      ) : (
+        <Button
+          onClick={() => dispatch(setOpen('add-department'))}
+          sx={{ minWidth: '300px' }}
+          size='small'
+          variant='contained'
+          startIcon={<IconifyIcon icon={'material-symbols:add'} />}
+        >
+          {t("Bo'lim yaratish")}
+        </Button>
+      )}
     </Box>
   )
 }
