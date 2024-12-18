@@ -15,15 +15,20 @@ jobs:
         with:
           token: ${{ secrets.ACCESS_TOKEN }}
 
+      - name: Install sshpass if not installed
+        run: |
+          if ! command -v sshpass &> /dev/null
+          then
+            sudo apt-get update
+            sudo apt-get install -y sshpass
+          fi
+
       - name: Deploy to Server
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.SSH_KEY }}
-          script: |
+        run: |
+          sshpass -p "${{ secrets.PASSWORD }}" ssh -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} << 'EOF'
             cd crm-frontend
             git pull origin auto-deploy
             npm install
             npm run build
             pm2 reload CRMAPP3131
+          EOF
