@@ -128,12 +128,7 @@ const VerticalLayout = (props: LayoutProps) => {
 
           {/* Footer Component */}
           <Footer footerStyles={footerProps?.sx} footerContent={footerProps?.content} {...props} />
-          <DraggableIcon  style={{
-            position: 'fixed',
-            bottom: '50px',
-            right: '20px',
-            cursor: 'pointer'
-          }}/>
+          <DraggableIcon />
         </MainContentWrapper>
       </VerticalLayoutWrapper>
 

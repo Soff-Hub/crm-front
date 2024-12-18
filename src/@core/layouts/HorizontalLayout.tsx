@@ -241,7 +241,13 @@ const HorizontalLayout = (props: LayoutProps) => {
           height='50'
           alt='Happy Bot'
         />{' '} */}
-        {themeConfig.disableCustomizer || hidden ? null : <Customizer />}
+        {themeConfig.disableCustomizer || hidden ? null : (
+          <>
+            <DraggableIcon
+            />
+            <Customizer />
+          </>
+        )}
         {/* Scroll to top button */}
         {scrollToTop ? (
           scrollToTop(props)
@@ -252,13 +258,6 @@ const HorizontalLayout = (props: LayoutProps) => {
             </Fab>
           </ScrollToTop>
         )}
-        <DraggableIcon
-          style={{
-            position: 'fixed',
-            bottom: '20px',
-            cursor: 'pointer'
-          }}
-        />
       </MainContentWrapper>
     </HorizontalLayoutWrapper>
   )

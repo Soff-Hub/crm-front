@@ -6,58 +6,51 @@ import api from 'src/@core/utils/api'
 import useResponsive from 'src/@core/hooks/useResponsive'
 
 const DraggableIcon = ({ style, ...props }: { style?: React.CSSProperties }) => {
-  const [position, setPosition] = useState({ top: 250, left: 250 })
+  const [position, setPosition] = useState({ bottom: 100, right: 5 })
   const [isDragging, setIsDragging] = useState(false)
-  const [dragStart, setDragStart] = useState({ top: 0, left: 0 })
+  const [dragStart, setDragStart] = useState({ bottom: 0, right: 0 })
   const dispatch = useDispatch()
   const { soffBotStatus, isModalOpen: isBotModalOpen } = useAppSelector(state => state.page)
   const { isMobile } = useResponsive()
 
-  const getEventCoordinates = (e: MouseEvent | TouchEvent) => {
-    if ('touches' in e && e.touches.length > 0) {
-      return { x: e.touches[0].clientX, y: e.touches[0].clientY }
-    } else if ('clientX' in e) {
-      return { x: e.clientX, y: e.clientY }
-    }
-    return { x: 0, y: 0 }
-  }
-
   const handleStart = (
     e: React.MouseEvent<HTMLImageElement> | React.TouchEvent<HTMLImageElement>
   ) => {
-    const nativeEvent = 'touches' in e ? e.touches[0] : e; 
-    setDragStart({ top: nativeEvent.clientY, left: nativeEvent.clientX });
+    const nativeEvent = 'touches' in e ? e.touches[0] : e;
+    setDragStart({ bottom: nativeEvent.clientY, right: nativeEvent.clientX });
     setIsDragging(true);
     e.preventDefault();
   };
-  
+
   const handleMove = (e: MouseEvent | TouchEvent) => {
     if (isDragging) {
       const nativeEvent = 'touches' in e ? e.touches[0] : e;
       const { clientX, clientY } = nativeEvent;
+
       const distanceMoved = Math.sqrt(
-        Math.pow(clientY - dragStart.top, 2) + Math.pow(clientX - dragStart.left, 2)
+        Math.pow(clientY - dragStart.bottom, 2) + Math.pow(clientX - dragStart.right, 2)
       );
-  
+
       if (distanceMoved > 10) {
         setPosition({
-          top: clientY - 35,
-          left: clientX - 35,
+          bottom: window.innerHeight - clientY - 35,
+          right: window.innerWidth - clientX - 35
         });
       }
     }
   };
-  
+
   const handleEnd = (e: MouseEvent | TouchEvent) => {
     if (isDragging) {
-      const nativeEvent = 'touches' in e ? e.changedTouches[0] : e; 
+      const nativeEvent = 'touches' in e ? e.changedTouches[0] : e;
       const { clientX, clientY } = nativeEvent;
+
       const distanceMoved = Math.sqrt(
-        Math.pow(clientY - dragStart.top, 2) + Math.pow(clientX - dragStart.left, 2)
+        Math.pow(clientY - dragStart.bottom, 2) + Math.pow(clientX - dragStart.right, 2)
       );
-  
+
       setIsDragging(false);
-  
+
       if (distanceMoved <= 10) {
         handleSingleClick();
       }
@@ -91,7 +84,7 @@ const DraggableIcon = ({ style, ...props }: { style?: React.CSSProperties }) => 
         dispatch(toggleModal(true))
       }
     }
-  }
+  };
 
   useEffect(() => {
     if (isDragging) {
@@ -123,13 +116,13 @@ const DraggableIcon = ({ style, ...props }: { style?: React.CSSProperties }) => 
           ? '/images/avatars/normalbot.webp'
           : '/images/avatars/happybot.webp'
       }
-      width={isMobile ? '40' : '70'}
-      height={isMobile ? '40' : '70'}
+      width={isMobile ? '30' : '45'}
+      height={isMobile ? '30' : '45'}
       alt='Happy Bot'
       style={{
         position: 'fixed',
-        top: `${position.top}px`,
-        left: `${position.left}px`,
+        bottom: `${position.bottom}px`,
+        right: `${position.right}px`,
         zIndex: isBotModalOpen ? 100 : 9999,
         cursor: 'pointer',
         ...style
