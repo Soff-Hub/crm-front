@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next'
 import { useAppSelector } from 'src/store'
 import { today } from 'src/@core/components/card-statistics/kanban-item'
 import api from 'src/@core/utils/api'
-import toast from 'react-hot-toast'
+import toast, { Toaster } from 'react-hot-toast'
 
 type Props = {
   item: any
@@ -20,9 +20,9 @@ type Props = {
 
 export default function AddToGroupForm({ is_amocrm, item, reRender, groups }: Props) {
   const { t } = useTranslation()
-   const [loading,setLoading]= useState(false)
+  const [loading, setLoading] = useState(false)
   const validationSchema = Yup.object({
-    group: Yup.string().required('Ism kiriting'),
+    group: Yup.string().required('Guruhni tanlang'),
     added_at: Yup.string().required("Qo'shilish sanasini tanlang")
   })
 
@@ -48,11 +48,11 @@ export default function AddToGroupForm({ is_amocrm, item, reRender, groups }: Pr
         setLoading(false)
         reRender(false)
       } catch (err: any) {
-        console.log(err);
-        
+        console.log(err)
+
         formik.setErrors(err.response.data)
         setLoading(false)
-        toast.error(JSON.stringify(err.response.data.msg), { position: 'top-center' })
+        toast.error(JSON.stringify(err.response.data.msg || 'serverda hatolik bor'), { position: 'top-center' })
         // showResponseError(err.response.data, setError)
       }
     }
@@ -80,6 +80,13 @@ export default function AddToGroupForm({ is_amocrm, item, reRender, groups }: Pr
       }}
     >
       <FormControl fullWidth>
+        <Toaster
+          
+          position='top-center'
+          containerStyle={{
+            zIndex: 9999
+          }}
+        />
         <InputLabel error={!!errors.group && touched.group} size='small'>
           {t('Guruh')}
         </InputLabel>
