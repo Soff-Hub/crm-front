@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import * as Yup from 'yup'
 import { useFormik } from 'formik'
 import { FormControl, FormHelperText, InputLabel, MenuItem, Select, TextField } from '@mui/material'
@@ -18,10 +18,9 @@ type Props = {
   is_amocrm?: boolean
 }
 
-export default function AddToGroupForm({ is_amocrm, item, reRender, groups, setLoading }: Props) {
+export default function AddToGroupForm({ is_amocrm, item, reRender, groups }: Props) {
   const { t } = useTranslation()
-  const { loading } = useAppSelector(state => state.leads)
-
+   const [loading,setLoading]= useState(false)
   const validationSchema = Yup.object({
     group: Yup.string().required('Ism kiriting'),
     added_at: Yup.string().required("Qo'shilish sanasini tanlang")

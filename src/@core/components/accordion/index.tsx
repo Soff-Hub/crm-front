@@ -81,8 +81,6 @@ export default function AccordionCustom({ onView, parentId, item, is_amocrm, stu
   const { t } = useTranslation()
   const { departmentsState } = useAppSelector(state => state.user)
   const { queryParams } = useAppSelector(state => state.leads)
-  const [amoCrmData, setAmoCrmData] = useState<any | null>(null)
-  console.log(item)
 
   const { smsTemps, getSMSTemps } = useSMS()
   const dispatch = useAppDispatch()
@@ -112,7 +110,6 @@ export default function AccordionCustom({ onView, parentId, item, is_amocrm, stu
       setLoading(false)
     }
   }
-
 
   const handleEditLead = async (id: any, values: any) => {
     // setOpen(false)
@@ -192,14 +189,16 @@ export default function AccordionCustom({ onView, parentId, item, is_amocrm, stu
         </Typography>
         {is_amocrm ? <Box sx={badge}>{student_count}</Box> : <Box sx={badge}>{count}</Box>}
 
-        <IconButton onClick={handleClick} size='small'>
-          <IconifyIcon
-            icon='humbleicons:dots-horizontal'
-            style={{ cursor: 'pointer', color: '#8D8E9C' }}
-            aria-haspopup='true'
-            aria-controls='customized-menu'
-          />
-        </IconButton>
+        {!is_amocrm && (
+          <IconButton onClick={handleClick} size='small'>
+            <IconifyIcon
+              icon='humbleicons:dots-horizontal'
+              style={{ cursor: 'pointer', color: '#8D8E9C' }}
+              aria-haspopup='true'
+              aria-controls='customized-menu'
+            />
+          </IconButton>
+        )}
         <IconButton
           onClick={() => (!open ? handleGetLeads(true) : setOpen(!open))}
           sx={{ marginRight: 1 }}
@@ -219,8 +218,8 @@ export default function AccordionCustom({ onView, parentId, item, is_amocrm, stu
             </Box>
           ) : leadData.length > 0 ? (
             leadData.map(lead => (
-                <KanbanItem
-                    is_amocrm={is_amocrm}
+              <KanbanItem
+                is_amocrm={is_amocrm}
                 reRender={handleGetLeads}
                 is_view={lead.is_view}
                 last_activity={lead.last_activity}
@@ -258,39 +257,34 @@ export default function AccordionCustom({ onView, parentId, item, is_amocrm, stu
       >
         {queryParams.is_active ? (
           <Box>
-            {is_amocrm ?
-            <MenuItem onClick={() => setOpenDialog('delete')} sx={{ '& svg': { mr: 2 } }}>
-            <IconifyIcon icon='mdi:delete' fontSize={20} />
-            {t("O'chirish")}
-              </MenuItem> :
+            {!is_amocrm && (
               <>
-               <MenuItem
-              onClick={async () => {
-                getSMSTemps()
-                setOpenDialog('sms')
-                setAnchorEl(null)
-                await handleGetLeads(false)
-              }}
-              sx={{ '& svg': { mr: 2 } }}
-            >
-              <IconifyIcon icon='mdi:sms' fontSize={20} />
-              {t('SMS yuborish')}
-            </MenuItem>
-            <MenuItem onClick={() => (setOpenDialog('edit'), setAnchorEl(null))} sx={{ '& svg': { mr: 2 } }}>
-              <IconifyIcon icon='mdi:edit' fontSize={20} />
-              {t('Tahrirlash')}
-            </MenuItem>
-            <MenuItem onClick={() => newLids()} sx={{ '& svg': { mr: 2 } }}>
-              <IconifyIcon icon='mdi:leads' fontSize={20} />
-              {t("Yangi lid qo'shish")}
-            </MenuItem>
-            <MenuItem onClick={() => setOpenDialog('delete')} sx={{ '& svg': { mr: 2 } }}>
-              <IconifyIcon icon='mdi:delete' fontSize={20} />
-              {t("O'chirish")}
-            </MenuItem>
+                <MenuItem
+                  onClick={async () => {
+                    getSMSTemps()
+                    setOpenDialog('sms')
+                    setAnchorEl(null)
+                    await handleGetLeads(false)
+                  }}
+                  sx={{ '& svg': { mr: 2 } }}
+                >
+                  <IconifyIcon icon='mdi:sms' fontSize={20} />
+                  {t('SMS yuborish')}
+                </MenuItem>
+                <MenuItem onClick={() => (setOpenDialog('edit'), setAnchorEl(null))} sx={{ '& svg': { mr: 2 } }}>
+                  <IconifyIcon icon='mdi:edit' fontSize={20} />
+                  {t('Tahrirlash')}
+                </MenuItem>
+                <MenuItem onClick={() => newLids()} sx={{ '& svg': { mr: 2 } }}>
+                  <IconifyIcon icon='mdi:leads' fontSize={20} />
+                  {t("Yangi lid qo'shish")}
+                </MenuItem>
+                <MenuItem onClick={() => setOpenDialog('delete')} sx={{ '& svg': { mr: 2 } }}>
+                  <IconifyIcon icon='mdi:delete' fontSize={20} />
+                  {t("O'chirish")}
+                </MenuItem>
               </>
-          }
-           
+            )}
           </Box>
         ) : (
           <>

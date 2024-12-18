@@ -24,8 +24,10 @@ export interface LeadsQueryParamsTypes {
 
 export interface ILeadsState {
   leadData: DepartmentListType
-  groups: []
-  pipelines:[],
+  groups: [],
+  departmentLoading: boolean, 
+  pipelinesLoading: boolean,
+  pipelines:any[],
   sourceData: []
   open: 'add-department' | null
   openItem: null

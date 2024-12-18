@@ -18,7 +18,7 @@ type Props = {
 export default function MergeToDepartment({ is_amocrm, item, reRender }: Props) {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
-  const { loading, leadData,pipelines } = useAppSelector(state => state.leads)
+  const { loading, leadData, pipelines } = useAppSelector(state => state.leads)
   const [department, setDepartment] = useState<any>(null)
 
   const validationSchema = Yup.object({
@@ -36,15 +36,18 @@ export default function MergeToDepartment({ is_amocrm, item, reRender }: Props) 
     validationSchema,
     onSubmit: async values => {
       const resp = await dispatch(
-        updateDepartmentStudent({ is_amocrm, data: { id: item.id, status_id: values.department } })
+        is_amocrm
+          ? updateDepartmentStudent({ is_amocrm, id: item.id, data: { status_id: values.department } })
+          : updateDepartmentStudent({ is_amocrm, id: item.id, data: { ...values } })
       )
       if (resp.meta.requestStatus === 'rejected') {
         formik.setErrors(resp.payload)
       } else {
         toast.success('Muvaffaqiyatli kochirildi')
         // await reRender()
-         await dispatch(fetchAmoCrmPipelines())
-        await dispatch(fetchDepartmentList())
+        {
+          is_amocrm ? await dispatch(fetchAmoCrmPipelines()) : await dispatch(fetchDepartmentList())
+        }
         formik.resetForm()
       }
     }
