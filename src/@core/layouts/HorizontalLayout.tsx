@@ -160,24 +160,56 @@ const HorizontalLayout = (props: LayoutProps) => {
 
             {/* Navigation Menu */}
             {navHidden ? null : (
-              <Box className='layout-horizontal-nav' sx={{ width: '100%', ...horizontalLayoutProps?.navMenu?.sx }}>
+              <Box
+                className='layout-horizontal-nav'
+                sx={{
+                  width: '100%',
+                  ...horizontalLayoutProps?.navMenu?.sx
+                }}
+              >
                 <Toolbar
                   className='horizontal-nav-content-container'
                   sx={{
                     mx: 'auto',
-                    ...(contentWidth === 'boxed' && { '@media (min-width:1440px)': { maxWidth: 1440 } }),
+                    display: 'flex',
+                    justifyContent: 'space-between', // Ensures spacing between items
+                    alignItems: 'center', // Centers items vertically
+                    ...(contentWidth === 'boxed' && {
+                      '@media (min-width:1440px)': { maxWidth: 1440 }
+                    }),
                     minHeight: theme =>
-                      `${(theme.mixins.toolbar.minHeight as number) - (skin === 'bordered' ? 1 : 0)}px !important`
+                      `${(theme.mixins.toolbar.minHeight as number) - (skin === 'bordered' ? 1 : 0)}px !important`,
+                    px: 2, // Add horizontal padding for better spacing
+                    '@media (max-width: 1440px)': {
+                      px: 1 // Adjust padding for MacBook widths
+                    },
+                    '@media (max-width: 768px)': {
+                      flexDirection: 'column', // Stack items vertically for smaller screens
+                      alignItems: 'flex-start'
+                    }
                   }}
                 >
                   {(userNavMenuContent && userNavMenuContent(props)) || (
                     <>
-                      <Navigation
-                        {...props}
-                        horizontalNavItems={
-                          (horizontalLayoutProps as NonNullable<LayoutProps['horizontalLayoutProps']>).navMenu?.navItems
-                        }
-                      />
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: 2, // Adds spacing between nav items
+                          '@media (max-width: 768px)': {
+                            flexDirection: 'column', // Stack navigation items vertically
+                            gap: 1.5
+                          }
+                        }}
+                      >
+                        <Navigation
+                          {...props}
+                          horizontalNavItems={
+                            (horizontalLayoutProps as NonNullable<LayoutProps['horizontalLayoutProps']>).navMenu
+                              ?.navItems
+                          }
+                        />
+                      </Box>
                       <StaticsModal />
                     </>
                   )}

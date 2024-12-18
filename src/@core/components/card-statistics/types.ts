@@ -47,5 +47,6 @@ export type KanbarItemProps = {
   trend?: 'positive' | 'negative'
   handleEditLead?: any
   reRender?: any
-  last_activity?: string
+  last_activity?: string,
+  is_amocrm?:boolean
 }

@@ -65,7 +65,7 @@ export const today = `${new Date().getFullYear()}-${
 
 const KanbanItem = (props: KanbarItemProps) => {
   // ** Props
-  const { title, phone, status, handleEditLead, last_activity, id, is_view, reRender } = props
+  const { title, phone, status, is_amocrm,handleEditLead, last_activity, id, is_view, reRender } = props
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const [error, setError] = useState<any>({})
   const { t } = useTranslation()
@@ -249,6 +249,7 @@ const KanbanItem = (props: KanbarItemProps) => {
               </Typography>
             </Typography>
             <Typography fontSize={12}>{phone}</Typography>
+            
           </Box>
           <IconifyIcon
             icon='solar:menu-dots-bold'
@@ -397,6 +398,7 @@ const KanbanItem = (props: KanbarItemProps) => {
       </CardContent>
 
       <KanbanItemMenu
+        is_amocrm={is_amocrm}
         anchorEl={anchorEl}
         setAnchorEl={setAnchorEl}
         getSMSTemps={getSMSTemps}
@@ -419,6 +421,7 @@ const KanbanItem = (props: KanbarItemProps) => {
             groups={groups}
             loading={loading}
             setLoading={setLoading}
+            is_amocrm={is_amocrm}
           />
         </DialogContent>
       </Dialog>
@@ -429,7 +432,7 @@ const KanbanItem = (props: KanbarItemProps) => {
           <IconifyIcon icon={'material-symbols:close'} onClick={() => setOpen(null)} />
         </DialogTitle>
         <DialogContent>
-          <MergeToDepartment item={props} reRender={() => reRender(false)} />
+          <MergeToDepartment is_amocrm={is_amocrm} item={props} reRender={() => reRender(false)} />
         </DialogContent>
       </Dialog>
 
