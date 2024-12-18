@@ -3,11 +3,11 @@ name: Continuous Integration
 on:
   push:
     branches:
-      - bot-changes
+      - auto-deploy-test
 
   pull_request:
     branches:
-      - bot-changes
+      - auto-deploy-test
 
 jobs:
   install-lint-build:
