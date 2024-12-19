@@ -6,7 +6,7 @@ import IconifyIcon from 'src/@core/components/icon'
 import useResponsive from 'src/@core/hooks/useResponsive'
 import useDebounce from 'src/hooks/useDebounce'
 import { useAppDispatch, useAppSelector } from 'src/store'
-import { fetchDepartmentList, setOpen, updateLeadParams } from 'src/store/apps/leads'
+import { fetchAmoCrmPipelines, fetchDepartmentList, setOpen, updateLeadParams } from 'src/store/apps/leads'
 import { Toggle } from 'rsuite'
 
 type Props = {}
@@ -24,11 +24,14 @@ export default function LidsHeader({}: Props) {
   const viewArchive = (is_active: boolean) => {
     dispatch(updateLeadParams({ is_active }))
     dispatch(fetchDepartmentList({ ...queryParams, is_active }))
+    dispatch(fetchAmoCrmPipelines({ ...queryParams, is_active }))
   }
 
   useEffect(() => {
     dispatch(updateLeadParams({ search }))
     dispatch(fetchDepartmentList({ ...queryParams, search }))
+    dispatch(fetchAmoCrmPipelines({ ...queryParams, search}))
+
   }, [searchVal])
 
   return (

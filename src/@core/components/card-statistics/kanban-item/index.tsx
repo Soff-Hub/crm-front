@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import * as Yup from 'yup';
+import * as Yup from 'yup'
 
 // ** MUI Imports
 import { styled } from '@mui/material/styles'
@@ -65,7 +65,7 @@ export const today = `${new Date().getFullYear()}-${
 
 const KanbanItem = (props: KanbarItemProps) => {
   // ** Props
-  const { title, phone, status, is_amocrm,handleEditLead, last_activity, id, is_view, reRender } = props
+  const { title, phone, status, is_amocrm, handleEditLead, last_activity, id, is_view, reRender } = props
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const [error, setError] = useState<any>({})
   const { t } = useTranslation()
@@ -87,7 +87,8 @@ const KanbanItem = (props: KanbarItemProps) => {
   const [selectDepartment, setSelectDepartment] = useState<any>([])
   const [selectDepartmentItem, setSelectDepartmentItem] = useState<any>(null)
   const [departmentsState, setDepartmentsState] = useState<{ id: number; children: [] }[]>([])
-
+  const [phoneNumber, setPhoneNumber] = useState<any | null>(null)
+  const [first_name, setFirstName] = useState<any | null>(null)
   const dispatch = useAppDispatch()
 
   const handleClick = (event: any) => {
@@ -141,43 +142,69 @@ const KanbanItem = (props: KanbarItemProps) => {
     } catch {
       setLoading(false)
     }
+  }
+  const formik = useFormik({
+    initialValues: {
+      reason: ''
+    },
+    validationSchema: Yup.object({
+      reason: Yup.string().required('Sabab kiritilishi shart')
+    }),
+    onSubmit: async (values, { setSubmitting, resetForm }) => {
+      await handleDelete(values, setSubmitting, resetForm)
     }
-    const formik = useFormik({
-        initialValues: {
-          reason: '',
-        },
-        validationSchema: Yup.object({
-          reason: Yup.string().required("Sabab kiritilishi shart"),
-        }),
-        onSubmit: async (values, { setSubmitting, resetForm }) => {
-          await handleDelete(values, setSubmitting, resetForm);
-        },
-      });
+  })
 
-  const handleDelete = async (values:any, setSubmitting:any, resetForm:any) => {
+  const handleDelete = async (values: any, setSubmitting: any, resetForm: any) => {
     try {
       await handleEditLead(id, { first_name: title, phone, is_active: false, ...values })
       setSubmitting(false)
       resetForm()
       setDepartment(null)
       setOpen(null)
-    } catch (err:any) {
+    } catch (err: any) {
       setSubmitting(false)
       showResponseError(err.response.data, setError)
     }
   }
+  console.log(phoneNumber)
 
   const clickStudent = async () => {
-    if (id === total) {
-      dispatch(addOpenedUser(null))
-    } else {
-      dispatch(addOpenedUser(id))
-      if (activeTab === 'tab-1') {
-        getDepartmentItem('anonim-user')
-      } else if (activeTab === 'tab-2') {
-        getDepartmentItem('lead-user-description')
+    console.log(id, total)
+
+    if (is_amocrm) {
+      if (id === total) {
+        dispatch(addOpenedUser(null))
+        setPhoneNumber(null)
+        setFirstName(null)
       } else {
-        getDepartmentItem('sms-history')
+        dispatch(addOpenedUser(id))
+        setLoadingDetail(true)
+        await api.get(`amocrm/leads/detail/${id}/`).then(res => {
+          setPhoneNumber(res.data.phone)
+          setFirstName(res.data.first_name)
+        })
+        setLoadingDetail(false)
+        if (activeTab === 'tab-1') {
+          getDepartmentItem('anonim-user')
+        } else if (activeTab === 'tab-2') {
+          getDepartmentItem('lead-user-description')
+        } else {
+          getDepartmentItem('sms-history')
+        }
+      }
+    } else {
+      if (id === total) {
+        dispatch(addOpenedUser(null))
+      } else {
+        dispatch(addOpenedUser(id))
+        if (activeTab === 'tab-1') {
+          getDepartmentItem('anonim-user')
+        } else if (activeTab === 'tab-2') {
+          getDepartmentItem('lead-user-description')
+        } else {
+          getDepartmentItem('sms-history')
+        }
       }
     }
   }
@@ -222,7 +249,7 @@ const KanbanItem = (props: KanbarItemProps) => {
   // }, [])
 
   return (
-    <Card  sx={{ cursor: 'pointer', mb: 2 }} draggable>
+    <Card sx={{ cursor: 'pointer', mb: 2 }} draggable>
       <CardContent sx={{ py: theme => `${theme.spacing(2)} !important`, px: 2 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', position: 'relative' }}>
           <Avatar
@@ -242,14 +269,13 @@ const KanbanItem = (props: KanbarItemProps) => {
           </Avatar>
           <Box sx={{ display: 'flex', flexDirection: 'column' }}>
             <Typography sx={{ display: 'flex', alignItems: 'center', gap: '10px' }} fontSize={12}>
-              {title}
+              {first_name ? first_name : title}
               {!is_view && <Status color='success' />}
               <Typography variant='caption' fontSize={9}>
                 {last_activity}
               </Typography>
             </Typography>
-            <Typography fontSize={12}>{phone}</Typography>
-            
+            <Typography fontSize={12}>{phoneNumber != null && phoneNumber}</Typography>
           </Box>
           <IconifyIcon
             icon='solar:menu-dots-bold'
@@ -555,41 +581,39 @@ const KanbanItem = (props: KanbarItemProps) => {
 
       {/* DELETE */}
       <Dialog open={open === 'delete'} onClose={() => setOpen(null)}>
-      <DialogContent sx={{ minWidth: '300px', maxWidth: '350px' }}>
-        <Typography sx={{ fontSize: '24px', marginBottom: '20px', textAlign: 'center' }}>
-          {t("Rostdan ham o'chirib tashlamoqchimisiz?")}
-        </Typography>
-        <form onSubmit={formik.handleSubmit} style={{ paddingTop: '5px', display: 'flex', flexDirection: 'column', gap: '15px' }}>
-          <FormControl fullWidth>
-            <TextField
-              label={t("Sabab (majburiy)")}
-              multiline
-              rows={4}
-              size="small"
-              name="reason"
-              value={formik.values.reason}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              error={formik.touched.reason && Boolean(formik.errors.reason)}
-              helperText={formik.touched.reason && formik.errors.reason}
-            />
-          </FormControl>
-          <Box sx={{ justifyContent: 'space-around', display: 'flex' }}>
-            <LoadingButton variant="outlined" size="small" color="error" onClick={() => setOpen(null)}>
-              {t("Bekor qilish")}
-            </LoadingButton>
-            <LoadingButton
-              loading={formik.isSubmitting}
-              type="submit"
-              size="small"
-              variant="contained"
-            >
-              {t("O'chirish")}
-            </LoadingButton>
-          </Box>
-        </form>
-      </DialogContent>
-    </Dialog>
+        <DialogContent sx={{ minWidth: '300px', maxWidth: '350px' }}>
+          <Typography sx={{ fontSize: '24px', marginBottom: '20px', textAlign: 'center' }}>
+            {t("Rostdan ham o'chirib tashlamoqchimisiz?")}
+          </Typography>
+          <form
+            onSubmit={formik.handleSubmit}
+            style={{ paddingTop: '5px', display: 'flex', flexDirection: 'column', gap: '15px' }}
+          >
+            <FormControl fullWidth>
+              <TextField
+                label={t('Sabab (majburiy)')}
+                multiline
+                rows={4}
+                size='small'
+                name='reason'
+                value={formik.values.reason}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                error={formik.touched.reason && Boolean(formik.errors.reason)}
+                helperText={formik.touched.reason && formik.errors.reason}
+              />
+            </FormControl>
+            <Box sx={{ justifyContent: 'space-around', display: 'flex' }}>
+              <LoadingButton variant='outlined' size='small' color='error' onClick={() => setOpen(null)}>
+                {t('Bekor qilish')}
+              </LoadingButton>
+              <LoadingButton loading={formik.isSubmitting} type='submit' size='small' variant='contained'>
+                {t("O'chirish")}
+              </LoadingButton>
+            </Box>
+          </form>
+        </DialogContent>
+      </Dialog>
 
       <Dialog open={open === 'recover'} onClose={() => setOpen(null)}>
         <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>

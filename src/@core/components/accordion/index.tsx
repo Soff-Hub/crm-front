@@ -28,7 +28,7 @@ import showResponseError from 'src/@core/utils/show-response-error'
 import useSMS from 'src/hooks/useSMS'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch, useAppSelector } from 'src/store'
-import { fetchDepartmentList, setOpenLid, setSectionId } from 'src/store/apps/leads'
+import { fetchAmoCrmPipelines, fetchDepartmentList, setOpenLid, setSectionId } from 'src/store/apps/leads'
 import dynamic from 'next/dynamic'
 
 const DepartmentSendSmsForm = dynamic(() => import('src/views/apps/lids/departmentItem/DepartmentSendSmsForm'), {
@@ -148,6 +148,20 @@ export default function AccordionCustom({ onView, parentId, item, is_amocrm, stu
       setLoading(false)
     }
   }
+  const deleteAmoDataItem = async () => {
+    setLoading(true)
+    try {
+      await api.post(`amocrm/delete/`, { data_id: item.id, is_delete: true, condition: 'status' })
+      setLoading(false)
+      setOpenDialog(null)
+      toast.success("Muvaffaqiyatli o'chirildi", {
+        position: 'top-center'
+      })
+      await dispatch(fetchAmoCrmPipelines(queryParams))
+    } catch {
+      setLoading(false)
+    }
+  }
 
   const recoverDepartmentItem = async (values: any) => {
     setLoading(true)
@@ -159,6 +173,8 @@ export default function AccordionCustom({ onView, parentId, item, is_amocrm, stu
       setLoading(false)
     }
   }
+ 
+  
 
   useEffect(() => {
     if (open) onView()
@@ -189,16 +205,14 @@ export default function AccordionCustom({ onView, parentId, item, is_amocrm, stu
         </Typography>
         {is_amocrm ? <Box sx={badge}>{student_count}</Box> : <Box sx={badge}>{count}</Box>}
 
-        {!is_amocrm && (
-          <IconButton onClick={handleClick} size='small'>
-            <IconifyIcon
-              icon='humbleicons:dots-horizontal'
-              style={{ cursor: 'pointer', color: '#8D8E9C' }}
-              aria-haspopup='true'
-              aria-controls='customized-menu'
-            />
-          </IconButton>
-        )}
+        <IconButton onClick={handleClick} size='small'>
+          <IconifyIcon
+            icon='humbleicons:dots-horizontal'
+            style={{ cursor: 'pointer', color: '#8D8E9C' }}
+            aria-haspopup='true'
+            aria-controls='customized-menu'
+          />
+        </IconButton>
         <IconButton
           onClick={() => (!open ? handleGetLeads(true) : setOpen(!open))}
           sx={{ marginRight: 1 }}
@@ -257,7 +271,12 @@ export default function AccordionCustom({ onView, parentId, item, is_amocrm, stu
       >
         {queryParams.is_active ? (
           <Box>
-            {!is_amocrm && (
+            {is_amocrm ? (
+              <MenuItem onClick={() => setOpenDialog('delete')} sx={{ '& svg': { mr: 2 } }}>
+                <IconifyIcon icon='mdi:delete' fontSize={20} />
+                {t("O'chirish")}
+              </MenuItem>
+            ) : (
               <>
                 <MenuItem
                   onClick={async () => {
@@ -353,7 +372,12 @@ export default function AccordionCustom({ onView, parentId, item, is_amocrm, stu
             <LoadingButton variant='outlined' size='small' color='error' onClick={() => setOpenDialog(null)}>
               {t('Bekor qilish')}
             </LoadingButton>
-            <LoadingButton loading={loading} size='small' variant='outlined' onClick={deleteDepartmentItem}>
+            <LoadingButton
+              loading={loading}
+              size='small'
+              variant='outlined'
+              onClick={is_amocrm ? deleteAmoDataItem : deleteDepartmentItem}
+            >
               {t("O'chirish")}
             </LoadingButton>
           </Box>

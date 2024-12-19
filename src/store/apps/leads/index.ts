@@ -18,17 +18,22 @@ export const fetchDepartmentList = createAsyncThunk(
     }
   }
 )
-export const fetchAmoCrmPipelines = createAsyncThunk('appChat/fetchAmoCrmPipelines', async (_, { rejectWithValue }) => {
-  try {
-    const response = await api.get('/amocrm/pipelines/')
-    return response.data
-  } catch (err: any) {
-    if (err.response) {
-      return rejectWithValue(err.response.data)
+export const fetchAmoCrmPipelines = createAsyncThunk(
+  'appChat/fetchAmoCrmPipelines',
+  async (queryParams: Record<string, any>, { rejectWithValue }) => {
+    try {
+      const response = await api.get('/amocrm/pipelines/', {
+        params: queryParams
+      })
+      return response.data
+    } catch (err: any) {
+      if (err.response) {
+        return rejectWithValue(err.response.data)
+      }
+      return rejectWithValue(err.message)
     }
-    return rejectWithValue(err.message)
   }
-})
+)
 
 // ** Fetch All Sources
 export const fetchSources = createAsyncThunk('appChat/fetchSources', async () => {
@@ -60,6 +65,20 @@ export const editDepartment = createAsyncThunk(
   async (values: { name?: string; id: any; is_active?: boolean }, { rejectWithValue }) => {
     try {
       const response = await api.patch(`leads/department-update/${values.id}`, values)
+      return response.data
+    } catch (err: any) {
+      if (err.response) {
+        return rejectWithValue(err.response.data)
+      }
+      return rejectWithValue(err.message)
+    }
+  }
+)
+export const editAmoCrmData = createAsyncThunk(
+  'appChat/editAmoCrmData',
+  async (values: { data_id: any; is_delete:boolean; condition:string }, { rejectWithValue }) => {
+    try {
+      const response = await api.post(`amocrm/delete/`, values)
       return response.data
     } catch (err: any) {
       if (err.response) {
@@ -117,7 +136,7 @@ const initialState: ILeadsState = {
   groups: [],
   pipelines: [],
   leadData: [],
-  departmentLoading: false, 
+  departmentLoading: false,
   pipelinesLoading: false,
   open: null,
   openItem: null,
@@ -170,33 +189,33 @@ export const appLeadsSlice = createSlice({
   },
   extraReducers: builder => {
     builder
-    .addCase(fetchDepartmentList.pending, state => {
-      state.departmentLoading = true;
-      state.bigLoader = true; // Enable bigLoader when any action starts
-    })
-    .addCase(fetchDepartmentList.fulfilled, (state, action) => {
-      state.leadData = action.payload;
-      state.departmentLoading = false;
-      state.bigLoader = state.pipelinesLoading; // Check if pipelines are still loading
-    })
-    .addCase(fetchDepartmentList.rejected, state => {
-      state.departmentLoading = false;
-      state.bigLoader = state.pipelinesLoading; // Check if pipelines are still loading
-    })
-    .addCase(fetchAmoCrmPipelines.pending, state => {
-      state.pipelinesLoading = true;
-      state.bigLoader = true; // Enable bigLoader when any action starts
-    })
-    .addCase(fetchAmoCrmPipelines.fulfilled, (state, action) => {
-      state.pipelines = action.payload;
-      state.pipelinesLoading = false;
-      state.bigLoader = state.departmentLoading; // Check if department data is still loading
-    })
-    .addCase(fetchAmoCrmPipelines.rejected, state => {
-      state.pipelinesLoading = false;
-      state.bigLoader = state.departmentLoading; // Check if department data is still loading
-    })
-    .addCase(createDepartment.pending, state => {
+      .addCase(fetchDepartmentList.pending, state => {
+        state.departmentLoading = true
+        state.bigLoader = true // Enable bigLoader when any action starts
+      })
+      .addCase(fetchDepartmentList.fulfilled, (state, action) => {
+        state.leadData = action.payload
+        state.departmentLoading = false
+        state.bigLoader = state.pipelinesLoading // Check if pipelines are still loading
+      })
+      .addCase(fetchDepartmentList.rejected, state => {
+        state.departmentLoading = false
+        state.bigLoader = state.pipelinesLoading // Check if pipelines are still loading
+      })
+      .addCase(fetchAmoCrmPipelines.pending, state => {
+        state.pipelinesLoading = true
+        state.bigLoader = true // Enable bigLoader when any action starts
+      })
+      .addCase(fetchAmoCrmPipelines.fulfilled, (state, action) => {
+        state.pipelines = action.payload
+        state.pipelinesLoading = false
+        state.bigLoader = state.departmentLoading // Check if department data is still loading
+      })
+      .addCase(fetchAmoCrmPipelines.rejected, state => {
+        state.pipelinesLoading = false
+        state.bigLoader = state.departmentLoading // Check if department data is still loading
+      })
+      .addCase(createDepartment.pending, state => {
         state.loading = true
       })
       .addCase(createDepartment.fulfilled, (state, action) => {
@@ -253,6 +272,16 @@ export const appLeadsSlice = createSlice({
         state.openActionModal = null
       })
       .addCase(editDepartment.rejected, state => {
+        state.loading = false
+      })
+      .addCase(editAmoCrmData.pending, state => {
+        state.loading = true
+      })
+      .addCase(editAmoCrmData.fulfilled, state => {
+        state.loading = false
+        state.openActionModal = null
+      })
+      .addCase(editAmoCrmData.rejected, state => {
         state.loading = false
       })
   }

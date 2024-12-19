@@ -25,7 +25,7 @@ const CreateDepartmentItemDialog = dynamic(() => import('src/views/apps/lids/dep
 const Lids = () => {
   // ** Hooks
   const { isMobile } = useResponsive()
-  const { leadData, bigLoader,pipelines } = useAppSelector(state => state.leads)
+  const { leadData, bigLoader,pipelines,queryParams } = useAppSelector(state => state.leads)
   const { user } = useContext(AuthContext)
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
@@ -39,7 +39,7 @@ const Lids = () => {
       toast.error('Sahifaga kirish huquqingiz yoq!')
     }
     dispatch(fetchSources())
-    dispatch(fetchAmoCrmPipelines())
+    dispatch(fetchAmoCrmPipelines(queryParams))
   }, [])
 
   return user?.role.length === 1 && user?.role.includes('teacher') ? (
