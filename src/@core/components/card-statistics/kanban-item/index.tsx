@@ -267,16 +267,29 @@ const KanbanItem = (props: KanbarItemProps) => {
               }
             />
           </Avatar>
-          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-            <Typography sx={{ display: 'flex', alignItems: 'center', gap: '10px' }} fontSize={12}>
-              {first_name ? first_name : title}
-              {!is_view && <Status color='success' />}
-              <Typography variant='caption' fontSize={9}>
-                {last_activity}
+          {is_amocrm ? (
+            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+              <Typography sx={{ display: 'flex', alignItems: 'center', gap: '10px' }} fontSize={12}>
+                {first_name ? first_name : title}
+                {!is_view && <Status color='success' />}
+                <Typography variant='caption' fontSize={9}>
+                  {last_activity}
+                </Typography>
               </Typography>
-            </Typography>
-            <Typography fontSize={12}>{phoneNumber != null && phoneNumber}</Typography>
-          </Box>
+              <Typography fontSize={12}>{phoneNumber != null && phoneNumber}</Typography>
+            </Box>
+          ) : (
+            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+              <Typography sx={{ display: 'flex', alignItems: 'center', gap: '10px' }} fontSize={12}>
+                {title}
+                {!is_view && <Status color='success' />}
+                <Typography variant='caption' fontSize={9}>
+                  {last_activity}
+                </Typography>
+              </Typography>
+              <Typography fontSize={12}>{phone}</Typography>
+            </Box>
+          )}
           <IconifyIcon
             icon='solar:menu-dots-bold'
             style={{ marginLeft: 'auto', cursor: 'pointer' }}

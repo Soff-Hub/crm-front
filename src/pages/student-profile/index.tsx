@@ -52,6 +52,41 @@ export default function StudentProfile() {
       <Card sx={{ display: 'flex', justifyContent:"space-between" }}>
         <div>
           <CardContent sx={{ display: 'flex', justifyContent: 'space-between', flexDirection: 'column' }}>
+            {/* <Box sx={{ display: 'flex', gap: 3 }}>
+              <CustomAvatar
+                skin='light'
+                variant='rounded'
+                color={'primary'}
+                sx={{ width: 70, height: 70, fontWeight: 600, mb: 1, fontSize: '2rem' }}
+              >
+                {getInitials(user?.fullName || `Talaba ${user?.id}`)}
+              </CustomAvatar>
+              <Box>
+                <Typography variant='h6'>{user?.fullName || `Talaba ${user?.id}`}</Typography>
+                <Typography fontSize={12}>{`( ID:${user?.id} )`}</Typography>
+              </Box>
+            </Box>
+          </CardContent>
+          <CardContent> */}
+            {/* <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+              <Typography fontSize={13} variant='body2'>
+                {t('phone')}:{' '}
+              </Typography>
+              <Typography fontSize={13}>{user?.username}</Typography>
+            </Box>
+            <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+              <Typography fontSize={13} variant='body2'>
+                {t('Balans')}:{' '}
+              </Typography>
+              <Typography fontSize={13}>{addPeriodToThousands(user?.balance) + " so'm"}</Typography>
+            </Box> */}
+          </CardContent>
+        </div>
+      
+      </Card>
+      <Card sx={{ display: 'flex', justifyContent:"space-between" }}>
+        <div>
+          <CardContent sx={{ display: 'flex', justifyContent: 'space-between', flexDirection: 'column' }}>
             <Box sx={{ display: 'flex', gap: 3 }}>
               <CustomAvatar
                 skin='light'
