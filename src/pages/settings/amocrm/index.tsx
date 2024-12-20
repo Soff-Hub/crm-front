@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useFormik } from 'formik'
-import { Button, Box, TextField } from '@mui/material'
+import { Button, Box, TextField, useMediaQuery } from '@mui/material'
 import * as Yup from 'yup'
 import toast from 'react-hot-toast'
 import VideoHeader, { videoUrls } from 'src/@core/components/video-header/video-header'
@@ -11,6 +11,7 @@ import SubLoader from 'src/views/apps/loaders/SubLoader'
 const AmoCrmPage = () => {
   const [loading, setLoading] = useState(false)
   const [pageLoader, setPageLoader] = useState(false)
+  const isSmallScreen = useMediaQuery('(max-width:600px)');
   // Initial form values
   const initialValues = {
     client_secret: '',
@@ -57,6 +58,7 @@ const AmoCrmPage = () => {
           console.log('Form Submitted:', values)
           setLoading(false)
           toast.success('Tekshiruvdan otdingiz')
+          getAmoCrmData()
         })
         .catch(err => {
           if (err.response.data.msg) {
@@ -81,7 +83,7 @@ const AmoCrmPage = () => {
         justifyContent='center'
         sx={{
           backgroundColor: 'white',
-          width: '50%',
+          width: isSmallScreen ? '100%':'50%',
           borderRadius: 2,
           maxHeight: '100vh',
           padding: 3,
@@ -148,7 +150,12 @@ const AmoCrmPage = () => {
 
           {/* Submit Button */}
           <Box display='flex' justifyContent='flex-end' paddingBottom={5} paddingTop={5} mt={2}>
-            <Button type='submit' variant='outlined' color='primary' disabled={loading}>
+            <Button
+              type='submit'
+              variant='contained'
+              color='primary'
+              disabled={!formik.isValid || !formik.dirty || loading}
+            >
               {loading ? 'Jarayonda...' : 'Saqlash'}
             </Button>
           </Box>

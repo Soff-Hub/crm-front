@@ -20,7 +20,7 @@ export default function CreateModal() {
     const [employees,setEmployes] = useState<EmployeeItemType[]|null>(null)
 
     async function getEmployee() {
-        await api.get("auth/employees-check-list/").then((res) => {
+        await api.get("auth/employees-check-list/?type=employee").then((res) => {
             console.log(res.data)
             setEmployes(res.data)
         }).catch((err) => {

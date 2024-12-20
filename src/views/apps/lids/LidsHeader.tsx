@@ -6,7 +6,7 @@ import IconifyIcon from 'src/@core/components/icon'
 import useResponsive from 'src/@core/hooks/useResponsive'
 import useDebounce from 'src/hooks/useDebounce'
 import { useAppDispatch, useAppSelector } from 'src/store'
-import { fetchDepartmentList, setOpen, updateLeadParams } from 'src/store/apps/leads'
+import { fetchAmoCrmPipelines, fetchDepartmentList, setOpen, updateLeadParams } from 'src/store/apps/leads'
 import { Toggle } from 'rsuite'
 
 type Props = {}
@@ -24,11 +24,14 @@ export default function LidsHeader({}: Props) {
   const viewArchive = (is_active: boolean) => {
     dispatch(updateLeadParams({ is_active }))
     dispatch(fetchDepartmentList({ ...queryParams, is_active }))
+    dispatch(fetchAmoCrmPipelines({ ...queryParams, is_active }))
   }
 
   useEffect(() => {
     dispatch(updateLeadParams({ search }))
     dispatch(fetchDepartmentList({ ...queryParams, search }))
+    dispatch(fetchAmoCrmPipelines({ ...queryParams, search}))
+
   }, [searchVal])
 
   return (
@@ -62,15 +65,28 @@ export default function LidsHeader({}: Props) {
           {t('Hisobot')}
         </Button>
       </form>
-      <Button
-        onClick={() => dispatch(setOpen('add-department'))}
-        sx={{ minWidth: '300px' }}
-        size='small'
-        variant='contained'
-        startIcon={<IconifyIcon icon={'material-symbols:add'} />}
-      >
-        {t("Bo'lim yaratish")}
-      </Button>
+      {isMobile ? (
+        <Button
+          fullWidth
+          onClick={() => dispatch(setOpen('add-department'))}
+          sx={{ minWidth: '300px',my:4 }}
+          size='small'
+          variant='contained'
+          startIcon={<IconifyIcon icon={'material-symbols:add'} />}
+        >
+          {t("Bo'lim yaratish")}
+        </Button>
+      ) : (
+        <Button
+          onClick={() => dispatch(setOpen('add-department'))}
+          sx={{ minWidth: '300px' }}
+          size='small'
+          variant='contained'
+          startIcon={<IconifyIcon icon={'material-symbols:add'} />}
+        >
+          {t("Bo'lim yaratish")}
+        </Button>
+      )}
     </Box>
   )
 }

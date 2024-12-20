@@ -18,6 +18,22 @@ export const fetchDepartmentList = createAsyncThunk(
     }
   }
 )
+export const fetchAmoCrmPipelines = createAsyncThunk(
+  'appChat/fetchAmoCrmPipelines',
+  async (queryParams: Record<string, any>, { rejectWithValue }) => {
+    try {
+      const response = await api.get('/amocrm/pipelines/', {
+        params: queryParams
+      })
+      return response.data
+    } catch (err: any) {
+      if (err.response) {
+        return rejectWithValue(err.response.data)
+      }
+      return rejectWithValue(err.message)
+    }
+  }
+)
 
 // ** Fetch All Sources
 export const fetchSources = createAsyncThunk('appChat/fetchSources', async () => {
@@ -58,6 +74,20 @@ export const editDepartment = createAsyncThunk(
     }
   }
 )
+export const editAmoCrmData = createAsyncThunk(
+  'appChat/editAmoCrmData',
+  async (values: { data_id: any; is_delete:boolean; condition:string }, { rejectWithValue }) => {
+    try {
+      const response = await api.post(`amocrm/delete/`, values)
+      return response.data
+    } catch (err: any) {
+      if (err.response) {
+        return rejectWithValue(err.response.data)
+      }
+      return rejectWithValue(err.message)
+    }
+  }
+)
 
 // ** Create Department Item
 export const createDepartmentItem = createAsyncThunk(
@@ -87,7 +117,10 @@ export const updateDepartmentStudent = createAsyncThunk(
   async (data: any, { rejectWithValue }) => {
     try {
       // const response = await api.patch(`leads/department-user-list/${data.id}/`, data)
-      const response = await api.patch(`leads/anonim-user/update/${data.id}/`, data)
+      const response = await api.patch(
+        data.is_amocrm ? `amocrm/lead/update/${data.id}/` : `leads/anonim-user/update/${data.id}/`,
+        data.data
+      )
       return response.data
     } catch (err: any) {
       if (err.response) {
@@ -101,7 +134,10 @@ export const updateDepartmentStudent = createAsyncThunk(
 const initialState: ILeadsState = {
   sourceData: [],
   groups: [],
+  pipelines: [],
   leadData: [],
+  departmentLoading: false,
+  pipelinesLoading: false,
   open: null,
   openItem: null,
   openLid: null,
@@ -154,14 +190,30 @@ export const appLeadsSlice = createSlice({
   extraReducers: builder => {
     builder
       .addCase(fetchDepartmentList.pending, state => {
-        state.bigLoader = true
+        state.departmentLoading = true
+        state.bigLoader = true // Enable bigLoader when any action starts
       })
       .addCase(fetchDepartmentList.fulfilled, (state, action) => {
         state.leadData = action.payload
-        state.bigLoader = false
+        state.departmentLoading = false
+        state.bigLoader = state.pipelinesLoading // Check if pipelines are still loading
       })
       .addCase(fetchDepartmentList.rejected, state => {
-        state.bigLoader = false
+        state.departmentLoading = false
+        state.bigLoader = state.pipelinesLoading // Check if pipelines are still loading
+      })
+      .addCase(fetchAmoCrmPipelines.pending, state => {
+        state.pipelinesLoading = true
+        state.bigLoader = true // Enable bigLoader when any action starts
+      })
+      .addCase(fetchAmoCrmPipelines.fulfilled, (state, action) => {
+        state.pipelines = action.payload
+        state.pipelinesLoading = false
+        state.bigLoader = state.departmentLoading // Check if department data is still loading
+      })
+      .addCase(fetchAmoCrmPipelines.rejected, state => {
+        state.pipelinesLoading = false
+        state.bigLoader = state.departmentLoading // Check if department data is still loading
       })
       .addCase(createDepartment.pending, state => {
         state.loading = true
@@ -220,6 +272,16 @@ export const appLeadsSlice = createSlice({
         state.openActionModal = null
       })
       .addCase(editDepartment.rejected, state => {
+        state.loading = false
+      })
+      .addCase(editAmoCrmData.pending, state => {
+        state.loading = true
+      })
+      .addCase(editAmoCrmData.fulfilled, state => {
+        state.loading = false
+        state.openActionModal = null
+      })
+      .addCase(editAmoCrmData.rejected, state => {
         state.loading = false
       })
   }

@@ -58,6 +58,7 @@ export default function DashboardStats() {
     test_students: "Sinov darsida o'qiyotgan o'quvchilar soni"
   }
 
+
   return (
     <Box
       sx={{
@@ -87,6 +88,7 @@ export default function DashboardStats() {
               <Tooltip arrow title={tooltip[_.key]}>
                 <Box key={index} className='' sx={{ cursor: 'pointer' }} onClick={() => click(_.link)}>
                   <CardStatsVertical
+                    data_key={_.key}
                     title={stats?.[_.key]}
                     stats={t(_.title)}
                     icon={<IconifyIcon fontSize={'4rem'} icon={_.icon} />}
@@ -101,6 +103,7 @@ export default function DashboardStats() {
                 <Tooltip arrow title={tooltip[_.key]}>
                   <Box key={index} className='' sx={{ cursor: 'pointer' }} onClick={() => click(_.link)}>
                     <CardStatsVertical
+                      key={_.key}
                       title={stats?.[_.key]}
                       stats={t(_.title)}
                       icon={<IconifyIcon fontSize={'4rem'} icon={_.icon} />}

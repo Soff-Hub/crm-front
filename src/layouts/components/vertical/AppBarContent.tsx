@@ -17,7 +17,7 @@ import LanguageDropdown from 'src/@core/layouts/components/shared-components/Lan
 // } from 'src/@core/layouts/components/shared-components/NotificationDropdown'
 import BranchDropdown from 'src/@core/layouts/components/shared-components/BranchDropdown'
 import Clock from 'src/@core/components/clock'
-import { Typography } from '@mui/material'
+import { Autocomplete, TextField, Typography } from '@mui/material'
 import IconifyIcon from 'src/@core/components/icon'
 import useResponsive from 'src/@core/hooks/useResponsive'
 import { useTranslation } from 'react-i18next'
@@ -27,6 +27,9 @@ import NotificationDropdown from 'src/@core/layouts/components/shared-components
 import { useContext, useEffect, useState } from 'react'
 import { setNotifications } from 'src/store/apps/user'
 import { AuthContext } from 'src/context/AuthContext'
+import { updateQueryParams } from 'src/store/apps/settings'
+import Link from 'next/link'
+import api from 'src/@core/utils/api'
 
 interface Props {
   hidden: boolean
@@ -47,6 +50,35 @@ const AppBarContent = (props: Props) => {
   const dispatch = useAppDispatch()
   const [stompClient, setStompClient] = useState<Stomp.Client | null>(null)
 
+  const [employees, setEmployees] = useState<any>([])
+
+ 
+
+  const renderRoleBasedLink = (role: string, id: string, role_id: string) => {
+    dispatch(updateQueryParams({ role: role_id }))
+   console.log(role);
+   
+    switch (role) {
+      case 'STUDENT':
+        return `/students/view/security?student=${id}`
+      case 'TEACHER':
+        return `/mentors/view/security?id=${id}`
+      case 'ADMIN':
+         return `/settings/ceo/users`
+      case 'CEO':
+        return `/settings/ceo/users`
+      default:
+        return `/settings/ceo/users`
+    }
+  }
+
+  async function handleSearch(search: string) {
+    await api.get(`auth/employees-check-list/?search=${search}`).then(res => {
+      setEmployees(res.data)
+    })
+  }
+
+
   useEffect(() => {
     const socket = new WebSocket(`wss://test.api-soffcrm.uz/ws/notifications/${user?.id}/`)
     socket.onopen = () => {
@@ -64,25 +96,71 @@ const AppBarContent = (props: Props) => {
 
 
   return (
-    <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+    <div style={{width:'100%', display:'block'}}>
+        <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
       <Box className='actions-left' sx={{ mr: 2, display: 'flex', alignItems: 'center' }}>
         {hidden && !settings.navHidden ? (
           <IconButton color='inherit' sx={{ ml: -2.75 }} onClick={toggleNavVisibility}>
             <Icon icon='mdi:menu' />
           </IconButton>
         ) : null}
+        
         <BranchDropdown />
       </Box>
 
       <VideoModal />
+      <Box>
 
-      {!isMobile && <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-        <Clock />
+
+
+      </Box>
+
+      {!isMobile && <Box sx={{width:'100%', display: 'flex', alignItems: 'center', gap: '10px' }}>
+        <Autocomplete
+            sx={{paddingX: 10 }}
+            disablePortal
+            onClose={() => {
+              setEmployees([])
+            }}
+            options={employees || []}
+            fullWidth
+            size='small'
+            getOptionLabel={(option: any) => option.first_name}
+            renderOption={(props, option: any) => (
+              <li {...props} key={option.id}>
+                <Link
+                  style={{ textDecoration: 'none' }}
+                  href={renderRoleBasedLink(option.role, option.id, option.role_id)}
+                >
+                  <Icon
+                    icon={
+                      option.role === 'STUDENT'
+                        ? 'mdi:account-student'
+                        : option.role === 'TEACHER'
+                        ? 'mdi:account-tie'
+                        : option.role === 'ADMIN'
+                        ? 'mdi:shield-account'
+                        : option.role === 'CEO'
+                        ? 'mdi:crown'
+                        : 'mdi:account'
+                    }
+                    style={{ marginRight: 8, fontSize: 20 }}
+                  />
+                  <span style={{ color: '#333' }}>{option.first_name}</span>
+                  <span style={{ color: '#777', fontSize: 12 }}> : {option.phone}</span>
+                </Link>
+              </li>
+            )}
+            renderInput={params => (
+              <TextField {...params} placeholder='Qidirish...' onChange={e => handleSearch(e.target.value)} />
+            )}
+          />
+        {/* <Clock />
         <Typography variant='body2'>|</Typography>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-          <IconifyIcon style={{ fontSize: '18px', color: '#40c0e7' }} icon={'la:user-clock'} />
-          <Typography variant='body2'>{t(`Ish vaqti`)} {companyInfo?.work_start_time} - {companyInfo?.work_end_time}</Typography>
-        </Box>
+        <IconifyIcon style={{ fontSize: '18px', color: '#40c0e7' }} icon={'la:user-clock'} />
+        <Typography variant='body2'>{t(`Ish vaqti`)} {companyInfo?.work_start_time} - {companyInfo?.work_end_time}</Typography>
+        </Box> */}
       </Box>}
       <Box className='actions-right' sx={{ display: 'flex', alignItems: 'center' }}>
         <LanguageDropdown settings={settings} saveSettings={saveSettings} />
@@ -90,7 +168,49 @@ const AppBarContent = (props: Props) => {
         <NotificationDropdown settings={settings} />
         <UserDropdown settings={settings} />
       </Box>
+       
     </Box>
+       <Autocomplete
+            sx={{paddingX: 5,paddingY:5 }}
+            disablePortal
+            onClose={() => {
+              setEmployees([])
+            }}
+            options={employees || []}
+            fullWidth
+            size='small'
+            getOptionLabel={(option: any) => option.first_name}
+            renderOption={(props, option: any) => (
+              <li {...props} key={option.id}>
+                <Link
+                  style={{ textDecoration: 'none' }}
+                  href={renderRoleBasedLink(option.role, option.id, option.role_id)}
+                >
+                  <Icon
+                    icon={
+                      option.role === 'STUDENT'
+                        ? 'mdi:account-student'
+                        : option.role === 'TEACHER'
+                        ? 'mdi:account-tie'
+                        : option.role === 'ADMIN'
+                        ? 'mdi:shield-account'
+                        : option.role === 'CEO'
+                        ? 'mdi:crown'
+                        : 'mdi:account'
+                    }
+                    style={{ marginRight: 8, fontSize: 20 }}
+                  />
+                  <span style={{ color: '#333' }}>{option.first_name}</span>
+                  <span style={{ color: '#777', fontSize: 12 }}> : {option.phone}</span>
+                </Link>
+              </li>
+            )}
+            renderInput={params => (
+              <TextField {...params} placeholder='Qidirish...' onChange={e => handleSearch(e.target.value)} />
+            )}
+          />
+    </div>
+  
   )
 }
 

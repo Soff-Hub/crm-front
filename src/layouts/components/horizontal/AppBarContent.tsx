@@ -12,10 +12,10 @@ import LanguageDropdown from 'src/@core/layouts/components/shared-components/Lan
 //   NotificationsType
 // } from 'src/@core/layouts/components/shared-components/NotificationDropdown'
 import BranchDropdown from 'src/@core/layouts/components/shared-components/BranchDropdown'
-import { useContext, useEffect } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { AuthContext } from 'src/context/AuthContext'
 import IconifyIcon from 'src/@core/components/icon'
-import { Button } from '@mui/material'
+import { Autocomplete, Button, Input, TextField } from '@mui/material'
 import { useAppDispatch, useAppSelector } from 'src/store'
 import { setGlobalPay } from 'src/store/apps/students'
 import GlobalPaymentModal from 'src/views/apps/students/GlobalPaymentModal'
@@ -31,7 +31,11 @@ import NotificationDropdown from 'src/@core/layouts/components/shared-components
 //   NotificationsType
 // } from 'src/@core/layouts/components/shared-components/NotificationDropdown'
 import { setNotifications } from 'src/store/apps/user'
+import api from 'src/@core/utils/api'
 
+import { Icon } from '@iconify/react'
+import Link from 'next/link'
+import { updateQueryParams } from 'src/store/apps/settings'
 
 interface Props {
   hidden: boolean
@@ -44,17 +48,37 @@ const AppBarContent = (props: Props) => {
   const { settings, saveSettings } = props
   const { user } = useContext(AuthContext)
   const dispatch = useAppDispatch()
+  const [employees, setEmployees] = useState<any>([])
   const { t } = useTranslation()
-
   function clickGlobalPay() {
     dispatch(setGlobalPay(true))
   }
 
-  const subdomain = location.hostname.split('.')
-  const baseURL = subdomain.length < 3
-    ? `test`
-    : `${subdomain[0]}`
+  const renderRoleBasedLink = (role: string, id: string, role_id: string) => {
+    dispatch(updateQueryParams({ role: role_id }))
 
+    switch (role) {
+      case 'STUDENT':
+        return `/students/view/security?student=${id}`
+      case 'TEACHER':
+        return `/mentors/view/security?id=${id}`
+      case 'ADMIN':
+         return `/settings/ceo/users`
+      case 'CEO':
+        return `/settings/ceo/users`
+      default:
+        return `/settings/ceo/users`
+    }
+  }
+
+  async function handleSearch(search: string) {
+    await api.get(`auth/employees-check-list/?search=${search}`).then(res => {
+      setEmployees(res.data)
+    })
+  }
+
+  const subdomain = location.hostname.split('.')
+  const baseURL = subdomain.length < 3 ? `test` : `${subdomain[0]}`
 
   useEffect(() => {
     const socket = new WebSocket(`wss://${baseURL}.api-soffcrm.uz/ws/notifications/${user?.id}/`)
@@ -62,7 +86,7 @@ const AppBarContent = (props: Props) => {
       console.log('WebSocket connection established')
       socket.send(JSON.stringify({ subscribe: `notifications/${user?.id}/` }))
     }
-    socket.onmessage = (event) => {
+    socket.onmessage = event => {
       const data = JSON.parse(event.data)
       dispatch(setNotifications(data?.notifications.length || 0))
     }
@@ -71,18 +95,57 @@ const AppBarContent = (props: Props) => {
     }
   }, [user?.id])
 
-
-
   return (
-    <Box sx={{ display: 'flex', alignItems: 'center' }}>
-      {(user?.role.includes('admin') || user?.role.includes('ceo') || user?.role.includes('casher')) && !window.location.hostname.split('.').includes('c-panel') && <Button
-        variant='contained'
-        size='small'
-        sx={{ margin: '0 7px' }}
-        onClick={clickGlobalPay}>
-        <IconifyIcon fontSize={18} icon={'weui:add-outlined'} />
-        <span>{t("To'lov")}</span>
-      </Button>}
+    <Box sx={{ width: '100%', display: 'flex', alignItems: 'center' }}>
+      {(user?.role.includes('admin') || user?.role.includes('ceo') || user?.role.includes('casher')) &&
+        !window.location.hostname.split('.').includes('c-panel') && (
+          <>
+            <Autocomplete
+              sx={{ paddingX: 10 }}
+              disablePortal
+              onClose={() => {
+                setEmployees([])
+              }}
+              options={employees || []}
+              fullWidth
+              size='small'
+              getOptionLabel={(option: any) => option.first_name}
+              renderOption={(props, option: any) => (
+                <li {...props} key={option.id}>
+                  <Link
+                    style={{ textDecoration: 'none' }}
+                    href={renderRoleBasedLink(option.role, option.id, option.role_id)}
+                  >
+                    <Icon
+                      icon={
+                        option.role === 'STUDENT'
+                          ? 'mdi:account-student'
+                          : option.role === 'TEACHER'
+                          ? 'mdi:account-tie'
+                          : option.role === 'ADMIN'
+                          ? 'mdi:shield-account'
+                          : option.role === 'CEO'
+                          ? 'mdi:crown'
+                          : 'mdi:account'
+                      }
+                      style={{ marginRight: 8, fontSize: 20 }}
+                    />
+                    <span style={{ color: '#333' }}>{option.first_name}</span>
+                    <span style={{ color: '#777', fontSize: 12 }}> : {option.phone}</span>
+                  </Link>
+                </li>
+              )}
+              renderInput={params => (
+                <TextField {...params} placeholder='Qidirish...' onChange={e => handleSearch(e.target.value)} />
+              )}
+            />
+
+            <Button variant='contained' size='small' sx={{ margin: '0 7px' }} onClick={clickGlobalPay}>
+              <IconifyIcon fontSize={18} icon={'weui:add-outlined'} />
+              <span>{t("To'lov")}</span>
+            </Button>
+          </>
+        )}
 
       {!window.location.hostname.split('.').includes('c-panel') && <BranchDropdown />}
 
@@ -94,7 +157,7 @@ const AppBarContent = (props: Props) => {
       <NotificationDropdown settings={settings} />
       <UserDropdown settings={settings} />
       <GlobalPaymentModal />
-    </Box >
+    </Box>
   )
 }
 
