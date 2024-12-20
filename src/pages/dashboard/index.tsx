@@ -17,7 +17,7 @@ const AppCalendar = () => {
   const router = useRouter()
 
   const pageLoad = async () => {
-    if (!user?.role.includes('admin') && !user?.role.includes('ceo') && !user?.role.includes('teacher')) {
+    if (!user?.role.includes('admin') && !user?.role.includes('ceo') && !user?.role.includes('teacher') &&!user?.role.includes('watcher')) {
       router.push("/")
       toast.error('Sahifaga kirish huquqingiz yoq!')
     }

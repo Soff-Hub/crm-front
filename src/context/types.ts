@@ -22,7 +22,8 @@ export type UserDataType = {
   payment_page?: boolean
   balance?: number
   branches?: any[]
-  active_branch?: any
+  active_branch?: any,
+  qr_code?:string
 }
 
 export type AuthValuesType = {

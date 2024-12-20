@@ -1,7 +1,7 @@
 // ** MUI Imports
 import Box from '@mui/material/Box'
 import IconButton from '@mui/material/IconButton'
-import Stomp from "stompjs"
+import Stomp from 'stompjs'
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
 
@@ -17,8 +17,7 @@ import LanguageDropdown from 'src/@core/layouts/components/shared-components/Lan
 // } from 'src/@core/layouts/components/shared-components/NotificationDropdown'
 import BranchDropdown from 'src/@core/layouts/components/shared-components/BranchDropdown'
 import Clock from 'src/@core/components/clock'
-import { Autocomplete, TextField, Typography } from '@mui/material'
-import IconifyIcon from 'src/@core/components/icon'
+import { Autocomplete, Button, TextField, Typography } from '@mui/material'
 import useResponsive from 'src/@core/hooks/useResponsive'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch, useAppSelector } from 'src/store'
@@ -30,6 +29,8 @@ import { AuthContext } from 'src/context/AuthContext'
 import { updateQueryParams } from 'src/store/apps/settings'
 import Link from 'next/link'
 import api from 'src/@core/utils/api'
+import { setGlobalPay } from 'src/store/apps/students'
+import GlobalPaymentModal from 'src/views/apps/students/GlobalPaymentModal'
 
 interface Props {
   hidden: boolean
@@ -38,11 +39,9 @@ interface Props {
   saveSettings: (values: Settings) => void
 }
 
-
-
 const AppBarContent = (props: Props) => {
   const { hidden, settings, saveSettings, toggleNavVisibility } = props
-  const { companyInfo, notifications } = useAppSelector((state) => state.user)
+  const { companyInfo, notifications } = useAppSelector(state => state.user)
   const { user } = useContext(AuthContext)
 
   const { isMobile } = useResponsive()
@@ -52,19 +51,17 @@ const AppBarContent = (props: Props) => {
 
   const [employees, setEmployees] = useState<any>([])
 
- 
-
   const renderRoleBasedLink = (role: string, id: string, role_id: string) => {
     dispatch(updateQueryParams({ role: role_id }))
-   console.log(role);
-   
+    console.log(role)
+
     switch (role) {
       case 'STUDENT':
         return `/students/view/security?student=${id}`
       case 'TEACHER':
         return `/mentors/view/security?id=${id}`
       case 'ADMIN':
-         return `/settings/ceo/users`
+        return `/settings/ceo/users`
       case 'CEO':
         return `/settings/ceo/users`
       default:
@@ -78,6 +75,9 @@ const AppBarContent = (props: Props) => {
     })
   }
 
+  function clickGlobalPay() {
+      dispatch(setGlobalPay(true))
+    }
 
   useEffect(() => {
     const socket = new WebSocket(`wss://test.api-soffcrm.uz/ws/notifications/${user?.id}/`)
@@ -85,7 +85,7 @@ const AppBarContent = (props: Props) => {
       console.log('WebSocket connection established')
       socket.send(JSON.stringify({ subscribe: `notifications/${user?.id}/` }))
     }
-    socket.onmessage = (event) => {
+    socket.onmessage = event => {
       const data = JSON.parse(event.data)
       dispatch(setNotifications(data?.notifications?.length || 0))
     }
@@ -94,123 +94,128 @@ const AppBarContent = (props: Props) => {
     }
   }, [user?.id])
 
-
   return (
-    <div style={{width:'100%', display:'block'}}>
-        <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-      <Box className='actions-left' sx={{ mr: 2, display: 'flex', alignItems: 'center' }}>
-        {hidden && !settings.navHidden ? (
-          <IconButton color='inherit' sx={{ ml: -2.75 }} onClick={toggleNavVisibility}>
-            <Icon icon='mdi:menu' />
-          </IconButton>
-        ) : null}
-        
-        <BranchDropdown />
-      </Box>
+    <div style={{ width: '100%', display: 'block' }}>
+      <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <Box className='actions-left' sx={{ mr: 2, display: 'flex', alignItems: 'center' }}>
+          {hidden && !settings.navHidden ? (
+            <IconButton color='inherit' sx={{ ml: -2.75 }} onClick={toggleNavVisibility}>
+              <Icon icon='mdi:menu' />
+            </IconButton>
+          ) : null}
 
-      <VideoModal />
-      <Box>
+          <BranchDropdown />
+        </Box>
 
+        <VideoModal />
+        <Box></Box>
 
-
-      </Box>
-
-      {!isMobile && <Box sx={{width:'100%', display: 'flex', alignItems: 'center', gap: '10px' }}>
-        <Autocomplete
-            sx={{paddingX: 10 }}
-            disablePortal
-            onClose={() => {
-              setEmployees([])
-            }}
-            options={employees || []}
-            fullWidth
-            size='small'
-            getOptionLabel={(option: any) => option.first_name}
-            renderOption={(props, option: any) => (
-              <li {...props} key={option.id}>
-                <Link
-                  style={{ textDecoration: 'none' }}
-                  href={renderRoleBasedLink(option.role, option.id, option.role_id)}
-                >
-                  <Icon
-                    icon={
-                      option.role === 'STUDENT'
-                        ? 'mdi:account-student'
-                        : option.role === 'TEACHER'
-                        ? 'mdi:account-tie'
-                        : option.role === 'ADMIN'
-                        ? 'mdi:shield-account'
-                        : option.role === 'CEO'
-                        ? 'mdi:crown'
-                        : 'mdi:account'
-                    }
-                    style={{ marginRight: 8, fontSize: 20 }}
-                  />
-                  <span style={{ color: '#333' }}>{option.first_name}</span>
-                  <span style={{ color: '#777', fontSize: 12 }}> : {option.phone}</span>
-                </Link>
-              </li>
+        {!isMobile && (
+          <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', gap: '10px' }}>
+            {user?.role.join(', ') !== 'student' && (
+              <>
+                <Autocomplete
+                  sx={{ paddingX: 10 }}
+                  disablePortal
+                  onClose={() => {
+                    setEmployees([])
+                  }}
+                  options={employees || []}
+                  fullWidth
+                  size='small'
+                  getOptionLabel={(option: any) => option.first_name}
+                  renderOption={(props, option: any) => (
+                    <li {...props} key={option.id}>
+                      <Link
+                        style={{ textDecoration: 'none' }}
+                        href={renderRoleBasedLink(option.role, option.id, option.role_id)}
+                      >
+                        <Icon
+                          icon={
+                            option.role === 'STUDENT'
+                              ? 'mdi:account-student'
+                              : option.role === 'TEACHER'
+                              ? 'mdi:account-tie'
+                              : option.role === 'ADMIN'
+                              ? 'mdi:shield-account'
+                              : option.role === 'CEO'
+                              ? 'mdi:crown'
+                              : 'mdi:account'
+                          }
+                          style={{ marginRight: 8, fontSize: 20 }}
+                        />
+                        <span style={{ color: '#333' }}>{option.first_name}</span>
+                        <span style={{ color: '#777', fontSize: 12 }}> : {option.phone}</span>
+                      </Link>
+                    </li>
+                  )}
+                  renderInput={params => (
+                    <TextField {...params} placeholder='Qidirish...' onChange={e => handleSearch(e.target.value)} />
+                  )}
+                />
+                <Button variant='contained' size='small' sx={{ margin: '0 7px' }} onClick={clickGlobalPay}>
+                  <span>{t("To'lov")}</span>
+                </Button>
+              </>
             )}
-            renderInput={params => (
-              <TextField {...params} placeholder='Qidirish...' onChange={e => handleSearch(e.target.value)} />
-            )}
-          />
-        {/* <Clock />
+            {/* <Clock />
         <Typography variant='body2'>|</Typography>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
         <IconifyIcon style={{ fontSize: '18px', color: '#40c0e7' }} icon={'la:user-clock'} />
         <Typography variant='body2'>{t(`Ish vaqti`)} {companyInfo?.work_start_time} - {companyInfo?.work_end_time}</Typography>
         </Box> */}
-      </Box>}
-      <Box className='actions-right' sx={{ display: 'flex', alignItems: 'center' }}>
-        <LanguageDropdown settings={settings} saveSettings={saveSettings} />
-        {/* <ModeToggler settings={settings} saveSettings={saveSettings} /> */}
-        <NotificationDropdown settings={settings} />
-        <UserDropdown settings={settings} />
+          </Box>
+        )}
+        <Box className='actions-right' sx={{ display: 'flex', alignItems: 'center' }}>
+          <LanguageDropdown settings={settings} saveSettings={saveSettings} />
+          {/* <ModeToggler settings={settings} saveSettings={saveSettings} /> */}
+          <NotificationDropdown settings={settings} />
+          <UserDropdown settings={settings} />
+        </Box>
       </Box>
-       
-    </Box>
-  {isMobile &&      <Autocomplete
-            sx={{paddingX: 5,paddingY:5 }}
-            disablePortal
-            onClose={() => {
-              setEmployees([])
-            }}
-            options={employees || []}
-            fullWidth
-            size='small'
-            getOptionLabel={(option: any) => option.first_name}
-            renderOption={(props, option: any) => (
-              <li {...props} key={option.id}>
-                <Link
-                  style={{ textDecoration: 'none' }}
-                  href={renderRoleBasedLink(option.role, option.id, option.role_id)}
-                >
-                  <Icon
-                    icon={
-                      option.role === 'STUDENT'
-                        ? 'mdi:account-student'
-                        : option.role === 'TEACHER'
-                        ? 'mdi:account-tie'
-                        : option.role === 'ADMIN'
-                        ? 'mdi:shield-account'
-                        : option.role === 'CEO'
-                        ? 'mdi:crown'
-                        : 'mdi:account'
-                    }
-                    style={{ marginRight: 8, fontSize: 20 }}
-                  />
-                  <span style={{ color: '#333' }}>{option.first_name}</span>
-                  <span style={{ color: '#777', fontSize: 12 }}> : {option.phone}</span>
-                </Link>
-              </li>
-            )}
-            renderInput={params => (
-              <TextField {...params} placeholder='Qidirish...' onChange={e => handleSearch(e.target.value)} />
-            )}
-          />}
+      {isMobile && user?.role.join(', ') !== 'student' && (
+        <Autocomplete
+          sx={{ padding: 5 }}
+          disablePortal
+          onClose={() => {
+            setEmployees([])
+          }}
+          options={employees || []}
+          fullWidth
+          size='small'
+          getOptionLabel={(option: any) => option.first_name}
+          renderOption={(props, option: any) => (
+            <li {...props} key={option.id}>
+              <Link
+                style={{ textDecoration: 'none' }}
+                href={renderRoleBasedLink(option.role, option.id, option.role_id)}
+              >
+                <Icon
+                  icon={
+                    option.role === 'STUDENT'
+                      ? 'mdi:account-student'
+                      : option.role === 'TEACHER'
+                      ? 'mdi:account-tie'
+                      : option.role === 'ADMIN'
+                      ? 'mdi:shield-account'
+                      : option.role === 'CEO'
+                      ? 'mdi:crown'
+                      : 'mdi:account'
+                  }
+                  style={{ marginRight: 8, fontSize: 20 }}
+                />
+                <span style={{ color: '#333' }}>{option.first_name}</span>
+                <span style={{ color: '#777', fontSize: 12 }}> : {option.phone}</span>
+              </Link>
+            </li>
+          )}
+          renderInput={params => (
+            <TextField {...params} placeholder='Qidirish...' onChange={e => handleSearch(e.target.value)} />
+          )}
+        />
+      )}
+      <GlobalPaymentModal />
     </div>
-  
   )
 }
 

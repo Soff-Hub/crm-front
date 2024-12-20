@@ -1,4 +1,4 @@
-import { Button } from '@mui/material';
+import { Button } from '@mui/material'
 import path from 'path'
 import { useContext } from 'react'
 import { useDispatch } from 'react-redux'
@@ -125,11 +125,10 @@ const Navigation = (t: any): HorizontalNavItemsType => {
         {
           title: t('Davomatlar'),
           path: '/reports/attendances'
-        },
-        
+        }
       ]
-    },
-   
+    }
+
     // {
     //   title: t("Video qo'llanmalar"),
     //   icon: 'ph:video-light',
@@ -203,7 +202,7 @@ const Navigation = (t: any): HorizontalNavItemsType => {
         },
         {
           title: 'Amo CRM sozlamalari',
-          path: '/settings/amocrm/',
+          path: '/settings/amocrm/'
         }
       ]
     },
@@ -220,8 +219,7 @@ const Navigation = (t: any): HorizontalNavItemsType => {
           path: '/reports/attendances'
         }
       ]
-    },
-  
+    }
   ]
 
   return user?.role.includes('ceo')

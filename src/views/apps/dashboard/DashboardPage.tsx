@@ -19,7 +19,7 @@ export default function DashboardPage() {
       <VideoHeader item={videoUrls.dashboard} />
       <DashboardStats />
       <Calendar />
-      {user?.role.includes('ceo') && <DashboardNumbers />}
+      {(user?.role.includes('ceo')||user?.role.includes('watcher')) && <DashboardNumbers />}
     </>
   )
 }

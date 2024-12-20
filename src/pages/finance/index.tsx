@@ -178,7 +178,7 @@ const CardStatistics = () => {
 
 
     useEffect(() => {
-        if (!user?.role.includes('ceo') && !user?.role.includes('casher')) {
+        if (!user?.role.includes('ceo') && !user?.role.includes('casher') && !user?.role.includes('watcher')) {
             router.push("/")
             toast.error('Sahifaga kirish huquqingiz yoq!')
         }

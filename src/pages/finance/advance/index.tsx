@@ -32,7 +32,7 @@ function Slug() {
     const { isMobile } = useResponsive()
 
     useEffect(() => {
-        if (!user?.role.includes('ceo') && !user?.role.includes('casher')) {
+        if (!user?.role.includes('ceo') && !user?.role.includes('casher') && !user?.role.includes('watcher')) {
             toast.error('Sahifaga kirish huquqingiz yoq!')
             router.push("/")
         }

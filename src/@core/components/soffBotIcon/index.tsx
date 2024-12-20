@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { setSoffBotText, toggleModal } from 'src/store/apps/page'
 import { useAppSelector } from 'src/store'
 import api from 'src/@core/utils/api'
 import useResponsive from 'src/@core/hooks/useResponsive'
+import { AuthContext } from 'src/context/AuthContext'
 
 const DraggableIcon = ({ style, ...props }: { style?: React.CSSProperties }) => {
   const [position, setPosition] = useState({ bottom: 100, right: 5 })
@@ -12,7 +13,7 @@ const DraggableIcon = ({ style, ...props }: { style?: React.CSSProperties }) => 
   const dispatch = useDispatch()
   const { soffBotStatus, isModalOpen: isBotModalOpen } = useAppSelector(state => state.page)
   const { isMobile } = useResponsive()
-
+  const { user } = useContext(AuthContext)
   const handleStart = (
     e: React.MouseEvent<HTMLImageElement> | React.TouchEvent<HTMLImageElement>
   ) => {
@@ -21,6 +22,8 @@ const DraggableIcon = ({ style, ...props }: { style?: React.CSSProperties }) => 
     setIsDragging(true);
     e.preventDefault();
   };
+
+  
 
   const handleMove = (e: MouseEvent | TouchEvent) => {
     if (isDragging) {
@@ -80,7 +83,7 @@ const DraggableIcon = ({ style, ...props }: { style?: React.CSSProperties }) => 
     } catch (error) {
       console.error(error)
     } finally {
-      if (window.location.pathname !== '/c-panel') {
+      if (window.location.pathname !== '/c-panel' || user?.role.join(', ') !== 'student') {
         dispatch(toggleModal(true))
       }
     }

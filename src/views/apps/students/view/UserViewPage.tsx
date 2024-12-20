@@ -4,6 +4,7 @@ import { useRouter } from 'next/router'
 import { useContext, useEffect } from 'react'
 import { toast } from 'react-hot-toast'
 import VideoHeader, { videoUrls } from 'src/@core/components/video-header/video-header'
+import api from 'src/@core/utils/api'
 import { AuthContext } from 'src/context/AuthContext'
 import { useAppDispatch, useAppSelector } from 'src/store'
 import { fetchStudentDetail } from 'src/store/apps/students'
@@ -21,12 +22,19 @@ const UserView = ({ tab, student }: any) => {
   const router = useRouter()
   const { user } = useContext(AuthContext)
 
+  const handleSendQrCode = async (id?: any)=>{
+    await api.post(`common/attendance/by-qr-code/109/`).then((res) => {
+       console.log(res);
+     })
+  }
+
   useEffect(() => {
-    if (!user?.role.includes('ceo') && !user?.role.includes('admin')) {
+    if (!user?.role.includes('ceo') && !user?.role.includes('admin') && !user?.role.includes('watcher')) {
       router.push("/")
       toast.error("Sizda bu sahifaga kirish huquqi yo'q!")
     }
     dispatch(fetchStudentDetail(student))
+    handleSendQrCode()
   }, [])
 
   return (

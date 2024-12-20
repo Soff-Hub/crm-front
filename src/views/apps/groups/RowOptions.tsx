@@ -15,6 +15,7 @@ import {
   getDashboardLessons,
   getGroupsDetails,
   handleOpenEdit,
+  handleChangeBranchOpenEdit,
   updateParams
 } from 'src/store/apps/groups'
 import { disablePage } from 'src/store/apps/page'
@@ -30,20 +31,16 @@ const RowOptions = ({ id }: { id: number | string }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const [suspendDialogOpen, setSuspendDialogOpen] = useState<boolean>(false)
   const [suspendDialogOpen2, setSuspendDialogOpen2] = useState<boolean>(false)
-  const [group,setGroup] = useState<any>()
+  const [group, setGroup] = useState<any>()
   const rowOptionsOpen = Boolean(anchorEl)
-  
+
   useEffect(() => {
     if (groups && id !== undefined) {
-      const foundGroup = groups.find(group => group.id === id);
-      setGroup(foundGroup);
+      const foundGroup = groups.find(group => group.id === id)
+      setGroup(foundGroup)
     }
-  }, [groups, id]);
+  }, [groups, id])
 
-   
-    
-    
-    
   const { t } = useTranslation()
 
   const handleRowOptionsClick = (event: MouseEvent<HTMLElement>) => {
@@ -56,6 +53,12 @@ const RowOptions = ({ id }: { id: number | string }) => {
   }
   const handleDeleteFully = () => {
     setSuspendDialogOpen2(true)
+  }
+
+  const handleChangeBranch = async (id: any) => {
+    dispatch(handleChangeBranchOpenEdit(true))
+    await Promise.all([dispatch(getGroupsDetails(id))])
+
   }
 
   const handleEdit = async (id: any) => {
@@ -82,12 +85,11 @@ const RowOptions = ({ id }: { id: number | string }) => {
   //   dispatch(updateParams({ is_recovery: true }))
   //   await Promise.all([dispatch(getDashboardLessons(queryString)), dispatch(getGroupsDetails(id))])
   // }
- 
 
   const handleDeleteTeacher = async (id: string | number) => {
     setDeleting(true)
     dispatch(disablePage(true))
-    const response:any = await dispatch(deleteGroups(id))
+    const response: any = await dispatch(deleteGroups(id))
     if (response.meta.requestStatus == 'rejected') {
       toast.error(response.payload.msg || "Guruhni o'chirib bo'lmadi")
     } else {
@@ -131,6 +133,12 @@ const RowOptions = ({ id }: { id: number | string }) => {
           <IconifyIcon icon='mdi:pencil-outline' fontSize={20} />
           {t('Tahrirlash')}
         </MenuItem>
+        {group?.status !== 'archived' && (
+          <MenuItem onClick={()=>handleChangeBranch(id)} sx={{ '& svg': { mr: 2 } }}>
+            <IconifyIcon icon='material-symbols:swap-horiz' fontSize={20} />
+            {t("Guruhni boshqa filialga ko'chirish")}
+          </MenuItem>
+        )}
         {/* 
                 {queryParams.status === 'archived' ? <MenuItem onClick={() => handleRecovery(id)} sx={{ '& svg': { mr: 2 } }}>
                     <IconifyIcon icon='mdi:reload' fontSize={20} />

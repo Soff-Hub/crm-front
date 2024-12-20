@@ -20,12 +20,14 @@ import StudentEditProfileModal from './studentEditModal'
 export default function StudentProfile() {
   const { t } = useTranslation()
   const { isMobile } = useResponsive()
-    const [groups, setGroups] = useState<any[]>([])
-    const [isModalOpen,setIsModalOpen] = useState(false)
+  const [groups, setGroups] = useState<any[]>([])
+  const [isModalOpen, setIsModalOpen] = useState(false)
   const [sms, setSms] = useState<any[]>([])
-  const { user } = useContext(AuthContext)
+  const { user,loading } = useContext(AuthContext)
   const { push } = useRouter()
   const [isLoading, setIsLoading] = useState<boolean>(false)
+
+  
 
   const getGroups = async () => {
     setIsLoading(true)
@@ -48,43 +50,17 @@ export default function StudentProfile() {
   }, [])
 
   return (
-    <div>
-      <Card sx={{ display: 'flex', justifyContent:"space-between" }}>
+    <div >
+      <div >
+      <Card sx={{ display: 'flex', justifyContent: 'center',alignItems:'center' ,marginBottom:5}}>
         <div>
-          <CardContent sx={{ display: 'flex', justifyContent: 'space-between', flexDirection: 'column' }}>
-            {/* <Box sx={{ display: 'flex', gap: 3 }}>
-              <CustomAvatar
-                skin='light'
-                variant='rounded'
-                color={'primary'}
-                sx={{ width: 70, height: 70, fontWeight: 600, mb: 1, fontSize: '2rem' }}
-              >
-                {getInitials(user?.fullName || `Talaba ${user?.id}`)}
-              </CustomAvatar>
-              <Box>
-                <Typography variant='h6'>{user?.fullName || `Talaba ${user?.id}`}</Typography>
-                <Typography fontSize={12}>{`( ID:${user?.id} )`}</Typography>
-              </Box>
-            </Box>
-          </CardContent>
-          <CardContent> */}
-            {/* <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
-              <Typography fontSize={13} variant='body2'>
-                {t('phone')}:{' '}
-              </Typography>
-              <Typography fontSize={13}>{user?.username}</Typography>
-            </Box>
-            <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
-              <Typography fontSize={13} variant='body2'>
-                {t('Balans')}:{' '}
-              </Typography>
-              <Typography fontSize={13}>{addPeriodToThousands(user?.balance) + " so'm"}</Typography>
-            </Box> */}
+          <CardContent sx={{display:'flex',flexDirection:'column',alignItems:'center'}}>
+              <p  style={{textAlign:'center', padding:0,color:'black',fontSize:20}}>Kodni skanerlang</p>
+              <img  src={user?.qr_code} alt='' width={110} height={110} />
           </CardContent>
         </div>
-      
       </Card>
-      <Card sx={{ display: 'flex', justifyContent:"space-between" }}>
+      <Card sx={{ display: 'flex', justifyContent: 'space-between' }}>
         <div>
           <CardContent sx={{ display: 'flex', justifyContent: 'space-between', flexDirection: 'column' }}>
             <Box sx={{ display: 'flex', gap: 3 }}>
@@ -117,10 +93,11 @@ export default function StudentProfile() {
             </Box>
           </CardContent>
         </div>
-        <CardContent sx={{cursor:"pointer"}}>
-          <UserIcon  onClick={()=>setIsModalOpen(true)} icon='lucide:edit' />
+        <CardContent sx={{ cursor: 'pointer' }}>
+          <UserIcon onClick={() => setIsModalOpen(true)} icon='lucide:edit' />
         </CardContent>
       </Card>
+     </div>
       <Box sx={{ display: 'flex', gap: '15px', flexDirection: isMobile ? 'column' : 'row' }}>
         <Box
           sx={{
@@ -249,8 +226,8 @@ export default function StudentProfile() {
             </Box>
           ))}
         </Box>
-          </Box>
-          <StudentEditProfileModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
+      </Box>
+      <StudentEditProfileModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
     </div>
   )
 }
