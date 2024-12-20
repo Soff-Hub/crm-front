@@ -170,7 +170,7 @@ const AppBarContent = (props: Props) => {
       </Box>
        
     </Box>
-       <Autocomplete
+  {isMobile &&      <Autocomplete
             sx={{paddingX: 5,paddingY:5 }}
             disablePortal
             onClose={() => {
@@ -208,7 +208,7 @@ const AppBarContent = (props: Props) => {
             renderInput={params => (
               <TextField {...params} placeholder='Qidirish...' onChange={e => handleSearch(e.target.value)} />
             )}
-          />
+          />}
     </div>
   
   )
