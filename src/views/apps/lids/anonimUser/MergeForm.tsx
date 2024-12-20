@@ -46,7 +46,7 @@ export default function MergeToDepartment({ is_amocrm, item, reRender }: Props) 
         toast.success('Muvaffaqiyatli kochirildi')
         // await reRender()
         {
-          is_amocrm ? await dispatch(fetchAmoCrmPipelines()) : await dispatch(fetchDepartmentList())
+          is_amocrm ? await dispatch(fetchAmoCrmPipelines({})) : await dispatch(fetchDepartmentList())
         }
         formik.resetForm()
       }
