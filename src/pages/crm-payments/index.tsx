@@ -112,7 +112,7 @@ export default function PaymentsList() {
     ]
 
     useEffect(() => {
-        if (!user?.role.includes('ceo') && !user?.role.includes('admin') && !user?.role.includes('casher')) {
+        if (!user?.role.includes('ceo') && !user?.role.includes('admin') && !user?.role.includes('casher') && !user?.role.includes('watcher')) {
             router.push("/")
             toast.error("Sizda bu sahifaga kirish huquqi yo'q!")
         }

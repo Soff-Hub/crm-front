@@ -113,6 +113,10 @@ export default function EditGroupModal() {
 
       if (response.meta.requestStatus === 'rejected') {
         formik.setErrors(response.payload)
+        console.log(response.payload);
+        
+        toast.error(response.payload.msg)
+        
       } else {
         dispatch(updateParams({ is_recovery: false }))
         toast.success(t("O'zgrishlar muvafaqqiyati saqlandi"))

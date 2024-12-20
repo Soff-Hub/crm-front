@@ -34,7 +34,7 @@ const Lids = () => {
 
 
   useEffect(() => {
-    if (!user?.role.includes('ceo') && !user?.role.includes('admin')) {
+    if (!user?.role.includes('ceo') && !user?.role.includes('admin') && !user?.role.includes('watcher')) {
       router.push('/')
       toast.error('Sahifaga kirish huquqingiz yoq!')
     }

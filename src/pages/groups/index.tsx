@@ -34,6 +34,7 @@ import dynamic from 'next/dynamic'
 import getMonthName from 'src/@core/utils/gwt-month-name'
 import { AuthContext } from 'src/context/AuthContext'
 import { toast } from 'react-hot-toast'
+import GroupChangeBranchModal from 'src/views/apps/groups/GroupChangeBranchModal'
 
 const IconifyIcon = dynamic(() => import('src/@core/components/icon'))
 const DataTable = dynamic(() => import('src/@core/components/table'))
@@ -143,13 +144,15 @@ export default function GroupsPage() {
     }
   ]
 
+  
+
   const handleRowsPerPageChange = async (value: number) => {
     const limit = value
-    
+
     setRowsPerPage(Number(value))
     localStorage.setItem('rowsPerPage', `${value}`)
-    console.log({ ...queryParams, limit: `${value}`, offset: `0` });
-    
+    console.log({ ...queryParams, limit: `${value}`, offset: `0` })
+
     await dispatch(fetchGroups({ ...queryParams, limit: value, offset: `0` }))
     dispatch(updateParams({ limit: value }))
     setPage(0)
@@ -160,7 +163,7 @@ export default function GroupsPage() {
     setPage(Number(page))
 
     await dispatch(fetchGroups({ ...queryParams, limit: rowsPerPage, offset: adjustedPage }))
-     dispatch(updateParams({ offset: adjustedPage }))
+    dispatch(updateParams({ offset: adjustedPage }))
   }
 
   const handleOpenModal = async () => {
@@ -176,22 +179,20 @@ export default function GroupsPage() {
     if (!queryParams.limit) {
       dispatch(updateParams({ limit: rowsPerPage }))
 
-      await dispatch(fetchGroups({ ...queryParams}))
+      await dispatch(fetchGroups({ ...queryParams }))
     } else {
-      await dispatch(fetchGroups({...queryParams}))
+      await dispatch(fetchGroups({ ...queryParams }))
     }
     await dispatch(getMetaData())
   }
 
-
   useEffect(() => {
     const initializePage = async () => {
-      if (!user?.role.includes('ceo') && !user?.role.includes('admin')) {
+      if (!user?.role.includes('ceo') && !user?.role.includes('admin') && !user?.role.includes('watcher')) {
         router.push('/')
         toast.error('Sahifaga kirish huquqingiz yoq!')
-      } 
-        await pageLoad()
-      
+      }
+      await pageLoad()
     }
 
     initializePage()
@@ -245,7 +246,7 @@ export default function GroupsPage() {
           />
           <Select
             size='small'
-            onChange={(e) => handleRowsPerPageChange(Number(e.target.value))}
+            onChange={e => handleRowsPerPageChange(Number(e.target.value))}
             value={rowsPerPage}
             className='page-resize'
           >
@@ -260,6 +261,7 @@ export default function GroupsPage() {
 
       <AddGroupModal />
       <EditGroupModal />
+      <GroupChangeBranchModal />
 
       <Dialog fullScreen onClose={() => setOpen(false)} aria-labelledby='full-screen-dialog-title' open={open}>
         <DialogTitle id='full-screen-dialog-title'>

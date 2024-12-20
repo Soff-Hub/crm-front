@@ -61,6 +61,7 @@ export interface TeacherSalariesResponse {
 export interface IGroupsState {
   isTableLoading: boolean
   isOpenEdit: boolean
+  isChangeBranchEdit:boolean,
   isUpdatingDashboard: boolean
   dashboardLessons: ILessonResponse[]
   workTime: string[]

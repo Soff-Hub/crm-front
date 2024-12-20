@@ -100,6 +100,7 @@ const initialState: IGroupsState = {
   groupCount: 0,
   isTableLoading: false,
   isOpenEdit: false,
+  isChangeBranchEdit:false,
   isOpenAddGroup: false,
   isDeleting: false,
   isUpdatingDashboard: false,
@@ -141,6 +142,9 @@ export const groupsSlice = createSlice({
   reducers: {
     handleOpenEdit: (state, action) => {
       state.isOpenEdit = action.payload
+    },
+    handleChangeBranchOpenEdit: (state, action) => {
+      state.isChangeBranchEdit = action.payload
     },
     handleOpenAddModal: (state, action) => {
       state.isOpenAddGroup = action.payload
@@ -241,6 +245,7 @@ export const groupsSlice = createSlice({
 
 export const {
   handleOpenEdit,
+  handleChangeBranchOpenEdit,
   resetFormParams,
   updateFormParams,
   handleOpenAddModal,

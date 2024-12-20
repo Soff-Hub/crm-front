@@ -48,6 +48,8 @@ const AuthProvider = ({ children }: Props) => {
   // ** Hooks
   const dispatch = useAppDispatch()
 
+  
+
   const initAuth = async (): Promise<void> => {
     const storedToken = window.localStorage.getItem(authConfig.storageTokenKeyName)!
     if (storedToken) {
@@ -75,7 +77,8 @@ const AuthProvider = ({ children }: Props) => {
             role: response.data.roles.filter((el: any) => el.exists).map((el: any) => el.name?.toLowerCase()),
             balance: response.data?.balance || 0,
             branches: response.data.branches.filter((item: any) => item.exists === true),
-            active_branch: response.data.active_branch
+            active_branch: response.data.active_branch,
+            qr_code:response.data.qr_code
           })
         })
         .catch(() => {

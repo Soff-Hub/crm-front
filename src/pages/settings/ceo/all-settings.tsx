@@ -77,7 +77,8 @@ export default function AllSettings() {
         role: response.data.roles.filter((el: any) => el.exists).map((el: any) => el.name?.toLowerCase()),
         balance: response.data?.balance || 0,
         branches: response.data.branches.filter((item: any) => item.exists === true),
-        active_branch: response.data.active_branch
+        active_branch: response.data.active_branch,
+        qr_code:response.data.qr_code
       })
     })
   }
@@ -223,7 +224,7 @@ export default function AllSettings() {
   }
 
   useEffect(() => {
-    if (!user?.role.includes('ceo') && !user?.role.includes('admin')) {
+    if (!user?.role.includes('ceo') && !user?.role.includes('admin') && !user?.role.includes('watcher')) {
       push('/')
       toast.error("Sizda bu sahifaga kirish huquqi yo'q!")
     }

@@ -63,7 +63,7 @@ const AppBarContent = (props: Props) => {
       case 'TEACHER':
         return `/mentors/view/security?id=${id}`
       case 'ADMIN':
-         return `/settings/ceo/users`
+        return `/settings/ceo/users`
       case 'CEO':
         return `/settings/ceo/users`
       default:
@@ -96,8 +96,11 @@ const AppBarContent = (props: Props) => {
   }, [user?.id])
 
   return (
-    <Box sx={{ width: '100%', display: 'flex', alignItems: 'center' }}>
-      {(user?.role.includes('admin') || user?.role.includes('ceo') || user?.role.includes('casher')) &&
+    <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'end' }}>
+      {(user?.role.includes('admin') ||
+        user?.role.includes('ceo') ||
+        user?.role.includes('casher') ||
+        user?.role.includes('watcher')) &&
         !window.location.hostname.split('.').includes('c-panel') && (
           <>
             <Autocomplete
@@ -108,7 +111,8 @@ const AppBarContent = (props: Props) => {
               }}
               options={employees || []}
               fullWidth
-              size='small'
+            size='small'
+             noOptionsText="Ma'lumot yo'q.."
               getOptionLabel={(option: any) => option.first_name}
               renderOption={(props, option: any) => (
                 <li {...props} key={option.id}>
@@ -139,7 +143,6 @@ const AppBarContent = (props: Props) => {
                 <TextField {...params} placeholder='Qidirish...' onChange={e => handleSearch(e.target.value)} />
               )}
             />
-
             <Button variant='contained' size='small' sx={{ margin: '0 7px' }} onClick={clickGlobalPay}>
               <IconifyIcon fontSize={18} icon={'weui:add-outlined'} />
               <span>{t("To'lov")}</span>

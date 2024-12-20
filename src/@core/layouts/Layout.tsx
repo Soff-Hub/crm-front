@@ -1,5 +1,5 @@
 // ** React Import
-import { useContext, useEffect, useRef } from 'react'
+import { useContext, useEffect, useRef, useState } from 'react'
 // ** Type Import
 import { LayoutProps } from 'src/@core/layouts/types'
 
@@ -18,16 +18,40 @@ const Layout = (props: LayoutProps) => {
   let currentDate = new Date().toISOString()
   let last_login = localStorage.getItem('last_login')
   let userRole = localStorage.getItem('userRole')
-  const { user } = useContext(AuthContext)
+  const {setUser, user } = useContext(AuthContext)
   // ** Ref
   const isCollapsed = useRef(settings.navCollapsed)
-
+  const [loading,setLoading] = useState(false)
   function getYearMonthDay(timestamp: any) {
     if (timestamp) {
       const [date] = timestamp.split('T')
       return date
     }
   }
+  const reloadProfile = async () => {
+    setLoading(true)
+    await api.get('auth/profile/').then(async response => {
+      setUser({
+        id: response.data.id,
+        fullName: response.data.first_name,
+        username: response.data.phone,
+        password: 'null',
+        avatar: response.data.image,
+        payment_page: response.data.payment_page,
+        role: response.data.roles.filter((el: any) => el.exists).map((el: any) => el.name?.toLowerCase()),
+        balance: response.data?.balance || 0,
+        branches: response.data.branches.filter((item: any) => item.exists === true),
+        active_branch: response.data.active_branch,
+        qr_code: response.data.qr_code
+      })
+    }).catch((err) => {
+      console.log(err);
+      
+      
+    })
+  }
+  
+  console.log(user?.role.includes('student'));
   
 
   const formattedCurrentDate = getYearMonthDay(currentDate)
@@ -38,10 +62,11 @@ const Layout = (props: LayoutProps) => {
       formattedCurrentDate !== formattedLastLogin || 
       userRole !== user?.role.join(', ')
     ) {
-      if (window.location.pathname !== '/c-panel') {
+      if (window.location.pathname !== '/c-panel' || !user?.role.includes('student')) {
         dispatch(toggleModal(true));
       }
     }
+    reloadProfile()
     api
       .get('auth/analytics/')
       .then(res => {

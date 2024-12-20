@@ -242,7 +242,6 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, choices }:
           <HtmlTooltip
             title={
               <Box
-                
                 sx={{
                   width: '100%',
                   height: '100%',
@@ -400,19 +399,19 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, choices }:
               href={`/students/view/security/?student=${id}`}
               style={{ textDecoration: 'underline', color: 'gray' }}
             >
-              <Typography sx={{ cursor: 'pointer' }} fontSize={10}>
+              <Typography sx={{ cursor: 'pointer' }} fontSize={13}>
                 {first_name}
               </Typography>
             </Link>
           </HtmlTooltip>
         )
       ) : (
-        <Typography sx={{ cursor: 'pointer' }} fontSize={5}>
+        <Typography sx={{ cursor: 'pointer' }} fontSize={8}>
           {first_name}
         </Typography>
       )}
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', minWidth: '100%' }}>
-        <Typography marginRight={3} fontSize={8} flexGrow={1} textAlign={'start'}>
+        <Typography marginRight={3} fontSize={13} flexGrow={1} textAlign={'start'}>
           {phone}
         </Typography>
 
@@ -424,7 +423,7 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, choices }:
                 color='success'
                 variant='outlined'
                 size='small'
-                sx={{ cursor: 'pointer', fontWeight: 500, fontSize: '9px', padding: 0 }}
+                sx={{ cursor: 'pointer', fontWeight: 500, fontSize: '10px', padding: 0 }}
               />
             ) : student_status === 'archive' ? (
               <Chip
@@ -432,7 +431,7 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, choices }:
                 color='error'
                 variant='outlined'
                 size='small'
-                sx={{ cursor: 'pointer', fontWeight: 500, fontSize: '9px', padding: 0 }}
+                sx={{ cursor: 'pointer', fontWeight: 500, fontSize: '10px', padding: 0 }}
               />
             ) : student_status === 'frozen' ? (
               <Chip
@@ -443,7 +442,7 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, choices }:
                 sx={{
                   cursor: 'pointer',
                   fontWeight: 500,
-                  fontSize: '9px',
+                  fontSize: '10px',
                   padding: 0
                 }}
               />
@@ -453,7 +452,7 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, choices }:
                 color='warning'
                 variant='outlined'
                 size='small'
-                sx={{ cursor: 'pointer', fontWeight: 500, fontSize: '9px', padding: 0 }}
+                sx={{ cursor: 'pointer', fontWeight: 500, fontSize: '10px', padding: 0 }}
               />
             ) : student_status === 'in_progress' ? (
               <Chip
@@ -461,7 +460,7 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, choices }:
                 color='info'
                 variant='outlined'
                 size='small'
-                sx={{ cursor: 'pointer', fontWeight: 500, fontSize: '9px', padding: 0 }}
+                sx={{ cursor: 'pointer', fontWeight: 500, fontSize: '10px', padding: 0 }}
               />
             ) : (
               <Tooltip title={t(`Status: ${student_status}`)} arrow>
@@ -470,7 +469,7 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, choices }:
                   color='warning'
                   variant='outlined'
                   size='small'
-                  sx={{ cursor: 'pointer', fontWeight: 500, fontSize: '9px', padding: 0 }}
+                  sx={{ cursor: 'pointer', fontWeight: 500, fontSize: '10px', padding: 0 }}
                 />
               </Tooltip>
             )}
@@ -489,7 +488,7 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, choices }:
               color='error'
               variant='outlined'
               size='small'
-              sx={{ fontWeight: 500, fontSize: '9px', padding: 0 }}
+              sx={{ fontWeight: 500, fontSize: '10px', padding: 0 }}
             />
           ) : (
             <Chip
@@ -497,7 +496,7 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, choices }:
               color='success'
               variant='outlined'
               size='small'
-              sx={{ fontWeight: 500, fontSize: '9px', padding: 0 }}
+              sx={{ fontWeight: 500, fontSize: '10px', padding: 0 }}
             />
           )}
         </Box>

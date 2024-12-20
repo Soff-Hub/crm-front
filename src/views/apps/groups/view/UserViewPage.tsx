@@ -18,7 +18,7 @@ const UserView = () => {
   const dispatch = useAppDispatch()
 
   useEffect(() => {
-    if (user?.role.includes('student')) {
+    if (user?.role.includes('student') && !user?.role.includes('watcher')) {
       router.push("/")
       toast.error('Sahifaga kirish huquqingiz yoq!')
     }
