@@ -26,6 +26,8 @@ import { hexToRGBA } from 'src/@core/utils/hex-to-rgba'
 import { useAuth } from 'src/hooks/useAuth'
 import DraggableIcon from '../components/soffBotIcon'
 import StaticsModal from '../components/statics-modal'
+import QrCodeModal from '../components/qrCode-Modal'
+import { Toaster } from 'react-hot-toast'
 
 const HorizontalLayoutWrapper = styled(Box)({
   height: '100%',
@@ -106,6 +108,7 @@ const HorizontalLayout = (props: LayoutProps) => {
     <HorizontalLayoutWrapper className='layout-wrapper'>
       <MainContentWrapper className='layout-content-wrapper' sx={{ ...(contentHeightFixed && { maxHeight: '100vh' }) }}>
         {/* Navbar (or AppBar) and Navigation Menu Wrapper */}
+       
         {!auth?.user?.payment_page && (
           <AppBar
             color='default'
@@ -211,6 +214,7 @@ const HorizontalLayout = (props: LayoutProps) => {
                         />
                       </Box>
                       <StaticsModal />
+                      <QrCodeModal/>
                     </>
                   )}
                 </Toolbar>

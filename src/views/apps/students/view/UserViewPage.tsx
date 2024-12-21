@@ -23,7 +23,7 @@ const UserView = ({ tab, student }: any) => {
   const { user } = useContext(AuthContext)
 
   const handleSendQrCode = async (id?: any)=>{
-    await api.post(`common/attendance/by-qr-code/109/`).then((res) => {
+    await api.post(`common/attendance/by-qr-code/57/`).then((res) => {
        console.log(res);
      })
   }
@@ -34,7 +34,7 @@ const UserView = ({ tab, student }: any) => {
       toast.error("Sizda bu sahifaga kirish huquqi yo'q!")
     }
     dispatch(fetchStudentDetail(student))
-    handleSendQrCode()
+    
   }, [])
 
   return (
