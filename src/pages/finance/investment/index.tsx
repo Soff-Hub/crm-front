@@ -255,10 +255,10 @@ const InvestmentPage = () => {
             />
           </DialogContent>
           <DialogActions>
-            <Button onClick={() => setOpenCreateModal(false)} color='error'>
+            <Button onClick={() => setOpenCreateModal(false)} variant='contained' color='error'>
               {t('Bekor qilish')}
             </Button>
-            <Button type='submit' color='primary' disabled={formik.isSubmitting}>
+            <Button type='submit' color='primary' variant='contained' disabled={formik.isSubmitting}>
               {t("Qo'shish")}
             </Button>
           </DialogActions>

@@ -13,7 +13,8 @@ export type CardStatsHorizontalProps = {
   trendNumber?: string
   trend?: 'positive' | 'negative'
   id?: string,
-  bgColor?:string
+  bgColor?: string,
+  iconplus?:any
 }
 
 export type CardStatsVerticalProps = {

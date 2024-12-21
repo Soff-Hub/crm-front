@@ -265,12 +265,16 @@ const Navigation = (t: any): VerticalNavItemsType => {
     },
    
   ]
+  const watcherItems = items.filter((el) => el.slug !== 'settings');
+
 
   return user?.role.includes('ceo')
-    ? items
-    : user?.role.includes('casher')
-    ? items.filter(el => el.path == '/finance')
-    : adminItems
+  ? items
+  : user?.role.includes('casher')
+  ? items.filter((el) => el.path === '/finance')
+  : user?.role.includes('watcher')
+  ? watcherItems
+  : adminItems;
 }
 
 export default Navigation
