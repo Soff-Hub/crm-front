@@ -222,11 +222,15 @@ const Navigation = (t: any): HorizontalNavItemsType => {
     }
   ]
 
+  const watcherItems = items.filter((el) => el.slug !== 'settings');
+
   return user?.role.includes('ceo')
     ? items
     : user?.role.includes('casher')
-    ? items.filter(el => el.path == '/finance')
-    : adminItems
+    ? items.filter((el) => el.path === '/finance')
+    : user?.role.includes('watcher')
+    ? watcherItems
+    : adminItems;
 }
 
 export default Navigation

@@ -74,6 +74,7 @@ const FinanceAllNumber = () => {
           stats: all_numbers?.label?.active_balance,
           trend: Number(all_numbers?.label.active_balance) < 0 ? 'negative' : 'positive',
           icon: "mdi:wallet",
+          iconplus:'mdi:plus',
           trendNumber: '12.6%',
           title: t('Aktiv balans'),
             bgColor: Number(all_numbers?.label.active_balance) < 0 ? 'bg-red-500' : 'bg-green-500', // Added bgColor
