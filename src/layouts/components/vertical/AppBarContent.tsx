@@ -17,7 +17,7 @@ import LanguageDropdown from 'src/@core/layouts/components/shared-components/Lan
 // } from 'src/@core/layouts/components/shared-components/NotificationDropdown'
 import BranchDropdown from 'src/@core/layouts/components/shared-components/BranchDropdown'
 import Clock from 'src/@core/components/clock'
-import { Autocomplete, Button, TextField, Typography } from '@mui/material'
+import { Autocomplete, Button, TextField, Tooltip, Typography } from '@mui/material'
 import useResponsive from 'src/@core/hooks/useResponsive'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch, useAppSelector } from 'src/store'
@@ -31,6 +31,7 @@ import Link from 'next/link'
 import api from 'src/@core/utils/api'
 import { setGlobalPay } from 'src/store/apps/students'
 import GlobalPaymentModal from 'src/views/apps/students/GlobalPaymentModal'
+import { toggleQrCodeModal } from 'src/store/apps/page'
 
 interface Props {
   hidden: boolean
@@ -76,8 +77,8 @@ const AppBarContent = (props: Props) => {
   }
 
   function clickGlobalPay() {
-      dispatch(setGlobalPay(true))
-    }
+    dispatch(setGlobalPay(true))
+  }
 
   useEffect(() => {
     const socket = new WebSocket(`wss://test.api-soffcrm.uz/ws/notifications/${user?.id}/`)
@@ -153,6 +154,23 @@ const AppBarContent = (props: Props) => {
                     <TextField {...params} placeholder='Qidirish...' onChange={e => handleSearch(e.target.value)} />
                   )}
                 />
+                <Tooltip title='Davomat' arrow>
+                  <span
+                    style={{
+                      border: 'solid 1px',
+                      borderRadius: 8,
+                      cursor: 'pointer',
+                      padding: 3,
+                      paddingLeft: 5,
+                      paddingRight: 5
+                    }}
+                    onClick={() => dispatch(toggleQrCodeModal(true))}
+                  >
+                    <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='20' height='20'>
+                      <path d='M3 3H9V9H3V3M5 5V7H7V5H5M3 15H9V21H3V15M5 17V19H7V17H5M15 3H21V9H15V3M17 5V7H19V5H17M16 12H18V14H16V12M18 16H20V18H18V16M11 11H13V13H11V11M10 7H12V9H10V7M8 11H10V13H8V11M14 14H16V16H14V14M12 18H14V20H12V18M12 14H14V16H12V14M20 11H22V13H20V11M19 7H21V9H19V7M16 16H18V18H16V16Z' />
+                    </svg>
+                  </span>
+                </Tooltip>
                 <Button variant='contained' size='small' sx={{ margin: '0 7px' }} onClick={clickGlobalPay}>
                   <span>{t("To'lov")}</span>
                 </Button>
