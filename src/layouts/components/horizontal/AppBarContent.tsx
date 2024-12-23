@@ -17,7 +17,7 @@ import { AuthContext } from 'src/context/AuthContext'
 import IconifyIcon from 'src/@core/components/icon'
 import { Autocomplete, Button, Input, TextField, Tooltip } from '@mui/material'
 import { useAppDispatch, useAppSelector } from 'src/store'
-import { setGlobalPay } from 'src/store/apps/students'
+import { setGlobalPay, setStudentId } from 'src/store/apps/students'
 import GlobalPaymentModal from 'src/views/apps/students/GlobalPaymentModal'
 import VideoModal from 'src/@core/components/video-header'
 import { useTranslation } from 'react-i18next'
@@ -51,18 +51,19 @@ const AppBarContent = (props: Props) => {
   const dispatch = useAppDispatch()
   const [employees, setEmployees] = useState<any>([])
   const { t } = useTranslation()
+  const [searchOption, setSearchOption] = useState<any>(null)
   function clickGlobalPay() {
     dispatch(setGlobalPay(true))
   }
 
-  const renderRoleBasedLink = (role: string, id: string, role_id: string) => {
-    dispatch(updateQueryParams({ role: role_id }))
-
-    switch (role) {
+  const renderRoleBasedLink = (option:any) => {
+    dispatch(updateQueryParams({ role: option.role_id }))
+      
+    switch (option.role) {
       case 'STUDENT':
-        return `/students/view/security?student=${id}`
+        return `/students/view/security?student=${option.id}`
       case 'TEACHER':
-        return `/mentors/view/security?id=${id}`
+        return `/mentors/view/security?id=${option.id}`
       case 'ADMIN':
         return `/settings/ceo/users`
       case 'CEO':
@@ -71,6 +72,7 @@ const AppBarContent = (props: Props) => {
         return `/settings/ceo/users`
     }
   }
+  
 
   async function handleSearch(search: string) {
     await api.get(`auth/employees-check-list/?search=${search}`).then(res => {
@@ -117,10 +119,8 @@ const AppBarContent = (props: Props) => {
               getOptionLabel={(option: any) => option.first_name}
               renderOption={(props, option: any) => (
                 <li {...props} key={option.id}>
-                  <Link
-                    style={{ textDecoration: 'none' }}
-                    href={renderRoleBasedLink(option.role, option.id, option.role_id)}
-                  >
+                  <Link style={{ textDecoration: 'none' }} onClick={() => dispatch(setStudentId(option.id))
+                  } href={renderRoleBasedLink(option)}>
                     <Icon
                       icon={
                         option.role === 'STUDENT'
@@ -145,7 +145,17 @@ const AppBarContent = (props: Props) => {
               )}
             />
             <Tooltip title='Davomat' arrow>
-              <span style={{border:'solid 1px',borderRadius:8, cursor: 'pointer' ,padding:3,paddingLeft:4,paddingRight:4}} onClick={() => dispatch(toggleQrCodeModal(true))}>
+              <span
+                style={{
+                  border: 'solid 1px',
+                  borderRadius: 8,
+                  cursor: 'pointer',
+                  padding: 3,
+                  paddingLeft: 4,
+                  paddingRight: 4
+                }}
+                onClick={() => dispatch(toggleQrCodeModal(true))}
+              >
                 <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='20' height='20'>
                   <path d='M3 3H9V9H3V3M5 5V7H7V5H5M3 15H9V21H3V15M5 17V19H7V17H5M15 3H21V9H15V3M17 5V7H19V5H17M16 12H18V14H16V12M18 16H20V18H18V16M11 11H13V13H11V11M10 7H12V9H10V7M8 11H10V13H8V11M14 14H16V16H14V14M12 18H14V20H12V18M12 14H14V16H12V14M20 11H22V13H20V11M19 7H21V9H19V7M16 16H18V18H16V16Z' />
                 </svg>

@@ -23,7 +23,7 @@ import CreateStudentModal from 'src/views/apps/students/CreateStudentModal'
 import EditStudentModal from 'src/views/apps/students/EditStudentModal'
 import StudentRowOptions from 'src/views/apps/students/StudentRowOptions'
 import { useAppDispatch, useAppSelector } from 'src/store'
-import { clearStudentParams, fetchStudentsList, updateStudentParams } from 'src/store/apps/students'
+import { clearStudentParams, fetchStudentsList, setStudentId, updateStudentParams } from 'src/store/apps/students'
 import { formatCurrency } from 'src/@core/utils/format-currency'
 import { setOpenEdit } from 'src/store/apps/students';
 import VideoHeader, { videoUrls } from 'src/@core/components/video-header/video-header'
@@ -179,6 +179,7 @@ export default function GroupsPage() {
   }
 
   const rowClick = (id: any) => {
+    dispatch(setStudentId(id))
     router.push(`/students/view/security?student=${id}`)
   }
 

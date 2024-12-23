@@ -56,6 +56,7 @@ export interface UpdateStudentDto extends StudentItemType {
 }
 
 export interface IStudentState {
+  studentId?:any,
   openEdit: 'edit' | 'create' | 'delete' | null
   students: StudentsListType
   studentsCount: number
@@ -65,6 +66,7 @@ export interface IStudentState {
   groups: any[]
   payments: any[]
   global_pay: boolean
+  openLeadModal: any
 }
 
 export interface StudentDetailType {

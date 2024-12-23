@@ -57,19 +57,27 @@ export const searchStudent = createAsyncThunk('students/searchStudent', async (s
 const initialState: IStudentState = {
   openEdit: null,
   groups: [],
+  studentId:null,
   students: [],
   studentsCount: 0,
   studentData: null,
   isLoading: false,
   queryParams: { status: 'active', is_debtor: '', group_status: '', offset: '0', },
   payments: [],
-  global_pay: false
+  global_pay: false,
+  openLeadModal: null,
 }
 
 export const studentsSlice = createSlice({
   name: 'students',
   initialState,
   reducers: {
+    setOpenLeadModal: (state, action) => {
+      state.openLeadModal = action.payload
+    },
+    setStudentId: (state, action) => {
+      state.studentId = action.payload
+    },
     setOpenEdit: (state, action) => {
       state.openEdit = action.payload
       state.studentData = null
@@ -119,7 +127,7 @@ export const studentsSlice = createSlice({
   }
 })
 
-export const { setOpenEdit, setStudentData, updateStudentParams, clearStudentParams, setGlobalPay } =
+export const { setOpenEdit,setOpenLeadModal,setStudentId, setStudentData, updateStudentParams, clearStudentParams, setGlobalPay } =
   studentsSlice.actions
 
 export default studentsSlice.reducer

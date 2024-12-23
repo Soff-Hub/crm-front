@@ -12,6 +12,7 @@ import SubLoader from '../../loaders/SubLoader'
 import { useAppDispatch, useAppSelector } from 'src/store'
 import { getAttendance, getDays, setGettingAttendance, updateParams } from 'src/store/apps/groupDetails'
 import { toast } from 'react-hot-toast'
+import { useSettings } from 'src/@core/hooks/useSettings'
 
 interface Result {
   date: string
@@ -153,9 +154,9 @@ const UserViewSecurity = () => {
   const dispatch = useAppDispatch()
 
   const start_date: any = groupData?.start_date ? Number(groupData?.start_date.split('-')[1]) : ''
-
+  
   const { pathname, query, push } = useRouter()
-
+   const {settings} = useSettings()
   const [opened_id, setOpenedId] = useState<any>(null)
   const [openTooltip, setOpenTooltip] = useState<null | string>(null)
   const [topic, setTopic] = useState<any>('')
@@ -297,13 +298,13 @@ const UserViewSecurity = () => {
                   style={{
                     position: 'sticky',
                     left: 0,
-                    background: '#ffffff',
+                    background: settings.mode == "dark" ? '#282A42' : '#ffffff', // Dark mode background
+                    color: settings.mode == "dark" ? '#f0f0f0' : '#000000', // Dark mode text color
                     zIndex: 1,
                     padding: '8px 20px',
                     textAlign: 'start',
                     fontSize: '14px',
-                    minWidth: '150px',
-                    borderRight: '1px solid #c3cccc'
+                    borderRight: `1px solid ${settings.mode == "dark" ? '#444' : '#c3cccc'}` // Dark mode border color
                   }}
                 >
                   <Typography>{t('Mavzular')}</Typography>
@@ -440,16 +441,17 @@ const UserViewSecurity = () => {
               </tr>
               <tr style={{ borderBottom: '1px solid #c3cccc' }}>
                 <td
-                  style={{
-                    position: 'sticky',
-                    left: 0,
-                    background: '#ffffff', 
-                    zIndex: 1,
-                    padding: '8px 20px',
-                    textAlign: 'start',
-                    fontSize: '14px',
-                    borderRight: '1px solid #c3cccc'
-                  }}
+                    style={{
+                      position: 'sticky',
+                      left: 0,
+                      background: settings.mode == "dark" ? '#282A42' : '#ffffff', // Dark mode background
+                      color: settings.mode == "dark" ? '#f0f0f0' : '#000000', // Dark mode text color
+                      zIndex: 1,
+                      padding: '8px 20px',
+                      textAlign: 'start',
+                      fontSize: '14px',
+                      borderRight: `1px solid ${settings.mode == "dark" ? '#444' : '#c3cccc'}` // Dark mode border color
+                    }}
                 >
                   <Typography>{t("O'quvchilar")}</Typography>
                 </td>
@@ -470,16 +472,17 @@ const UserViewSecurity = () => {
                   attendance.students.map((student: any) => (
                     <tr key={student.id} style={{}}>
                       <td
-                        style={{
-                          position: 'sticky',
-                          left: 0,
-                          background: '#ffffff',
-                          zIndex: 1,
-                          padding: '8px 20px',
-                          textAlign: 'start',
-                          fontSize: '14px',
-                          borderRight: '1px solid #c3cccc'
-                        }}
+                   style={{
+                    position: 'sticky',
+                    left: 0,
+                    background: settings.mode == "dark" ? '#282A42' : '#ffffff', // Dark mode background
+                    color: settings.mode == "dark" ? '#f0f0f0' : '#000000', // Dark mode text color
+                    zIndex: 1,
+                    padding: '8px 20px',
+                    textAlign: 'start',
+                    fontSize: '14px',
+                    borderRight: `1px solid ${settings.mode == "dark" ? '#444' : '#c3cccc'}` // Dark mode border color
+                  }}
                       >
                         {student.first_name}
                       </td>

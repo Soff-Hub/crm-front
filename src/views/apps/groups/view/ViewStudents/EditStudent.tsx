@@ -17,7 +17,7 @@ import {
 import api from 'src/@core/utils/api'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { getAttendance, getDays, getStudents, setGettingAttendance } from 'src/store/apps/groupDetails'
 import { useRouter } from 'next/router'
@@ -43,9 +43,10 @@ export default function EditStudent({
   const [isLoading, setLoading] = useState(false)
   const { query } = useRouter()
   const { t } = useTranslation()
+  console.log(student, status)
 
-  const formik: any = useFormik({
-    initialValues: { added_at: student.added_at, status, lesson_count: student.lesson_count },
+  const formik = useFormik({
+    initialValues: { added_at: student?.added_at, status, lesson_count: student?.lesson_count },
     validationSchema: () =>
       Yup.object({
         added_at: Yup.string(),
@@ -86,6 +87,17 @@ export default function EditStudent({
       }
     }
   })
+
+  useEffect(() => {
+    formik.resetForm({
+      values: {
+        added_at: student?.added_at,
+        lesson_count: student?.lesson_count,
+        status: status
+      }
+    })
+  }, [student, status])
+  
 
   return (
     <Dialog open={activate} onClose={() => setActivate(false)}>

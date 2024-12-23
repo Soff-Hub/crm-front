@@ -7,7 +7,7 @@ import VideoHeader, { videoUrls } from 'src/@core/components/video-header/video-
 import api from 'src/@core/utils/api'
 import { AuthContext } from 'src/context/AuthContext'
 import { useAppDispatch, useAppSelector } from 'src/store'
-import { fetchStudentDetail } from 'src/store/apps/students'
+import { fetchStudentDetail, setStudentId } from 'src/store/apps/students'
 
 // ** Demo Components Imports
 import UserViewLeft from 'src/views/apps/students/view/UserViewLeft'
@@ -17,25 +17,24 @@ const UserView = ({ tab, student }: any) => {
   const url = tab
 
   // hooks
-  const { studentData } = useAppSelector(state => state.students)
+  const { studentData ,studentId} = useAppSelector(state => state.students)
   const dispatch = useAppDispatch()
   const router = useRouter()
   const { user } = useContext(AuthContext)
 
-  const handleSendQrCode = async (id?: any)=>{
-    await api.post(`common/attendance/by-qr-code/57/`).then((res) => {
-       console.log(res);
-     })
-  }
+ 
+  
+ 
+  
 
   useEffect(() => {
     if (!user?.role.includes('ceo') && !user?.role.includes('admin') && !user?.role.includes('watcher')) {
       router.push("/")
       toast.error("Sizda bu sahifaga kirish huquqi yo'q!")
     }
-    dispatch(fetchStudentDetail(student))
+    dispatch(fetchStudentDetail(studentId || student))
     
-  }, [])
+  }, [studentId])
 
   return (
     <div>
