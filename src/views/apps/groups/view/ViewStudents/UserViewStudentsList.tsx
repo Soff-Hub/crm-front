@@ -56,6 +56,7 @@ import useBranches from 'src/hooks/useBranch'
 import { useFormik } from 'formik'
 import useResponsive from 'src/@core/hooks/useResponsive'
 import { useSettings } from 'src/@core/hooks/useSettings'
+import { setStudentId } from 'src/store/apps/students'
 
 interface StudentType {
   id: number | string
@@ -396,6 +397,7 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, choices }:
             }
           >
             <Link
+              onClick={() => dispatch(setStudentId(id))}
               href={`/students/view/security/?student=${id}`}
               style={{ textDecoration: 'underline', color: 'gray' }}
             >

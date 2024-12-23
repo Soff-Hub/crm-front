@@ -39,7 +39,7 @@ import usePayment from 'src/hooks/usePayment'
 import api from 'src/@core/utils/api'
 import useSMS from 'src/hooks/useSMS'
 import { today } from 'src/@core/components/card-statistics/kanban-item'
-import { useAppDispatch } from 'src/store'
+import { useAppDispatch, useAppSelector } from 'src/store'
 import { fetchStudentDetail, fetchStudentPayment } from 'src/store/apps/students'
 import StudentPaymentForm from './StudentPaymentForm'
 import { useRouter } from 'next/router'
@@ -52,6 +52,7 @@ import toast from 'react-hot-toast'
 export type ModalTypes = 'group' | 'withdraw' | 'payment' | 'sms' | 'delete' | 'edit' | 'notes' | 'parent'
 
 const UserViewLeft = ({ userData }: { userData: any }) => {
+  
   // ** States
   const [openEdit, setOpenEdit] = useState<ModalTypes | null>(null)
   const [data, setData] = useState<StudentTypes | null>(null)
@@ -59,7 +60,6 @@ const UserViewLeft = ({ userData }: { userData: any }) => {
   const [error, setError] = useState<any>({})
   const [groupDate, setGroupDate] = useState<any>(null)
   const [isDiscount, setIsDiscount] = useState<boolean>(false)
-  const [discountPrice, setDiscount] = useState<any>(0)
 
   // Hooks
   const { t } = useTranslation()
@@ -110,8 +110,7 @@ const UserViewLeft = ({ userData }: { userData: any }) => {
         is_discount: isDiscount
       }
 
-      console.log({...data, ...discountConfig});
-      
+      console.log({ ...data, ...discountConfig })
 
       await mergeStudentToGroup({ ...data, ...discountConfig })
       setLoading(false)
@@ -151,6 +150,7 @@ const UserViewLeft = ({ userData }: { userData: any }) => {
       setError(err?.response?.data)
     }
   }
+  
 
   useEffect(() => {
     setData(userData)

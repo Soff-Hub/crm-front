@@ -51,7 +51,6 @@ const Layout = (props: LayoutProps) => {
     })
   }
   
-  console.log(user?.role.includes('student'));
   
 
   const formattedCurrentDate = getYearMonthDay(currentDate)

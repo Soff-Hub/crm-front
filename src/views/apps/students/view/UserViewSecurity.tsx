@@ -26,7 +26,7 @@ import getMontName from 'src/@core/utils/gwt-month-name'
 import usePayment from 'src/hooks/usePayment'
 import { customTableProps } from 'src/pages/groups'
 import { useAppDispatch, useAppSelector } from 'src/store'
-import { fetchStudentDetail, fetchStudentPayment } from 'src/store/apps/students'
+import { fetchStudentDetail, fetchStudentPayment, setOpenLeadModal } from 'src/store/apps/students'
 import StudentPaymentEditForm from './StudentPaymentEdit'
 import { AuthContext } from 'src/context/AuthContext'
 import { Icon } from '@iconify/react'
@@ -34,6 +34,12 @@ import useBranches from 'src/hooks/useBranch'
 import { ModalTypes } from './UserViewLeft'
 import useSMS from 'src/hooks/useSMS'
 import StudentPaymentForm from './StudentPaymentForm'
+import EditStudent from '../../groups/view/ViewStudents/EditStudent'
+import ExportStudent from '../../groups/view/ViewStudents/ExportStudent'
+import toast from 'react-hot-toast'
+import api from 'src/@core/utils/api'
+import MergeToDepartment from '../../groups/view/ViewStudents/MergeForm'
+import ExportDetailStudent from '../../groups/view/ViewStudents/ExportDetailStudent'
 
 // Rasm yuklab olish misoli
 export async function downloadImage(filename: string, url: string) {
@@ -74,11 +80,15 @@ const UserViewSecurity = ({ groupData }: any) => {
   const [openEdit, setOpenEdit] = useState<ModalTypes | null>(null)
   const [activate, setActivate] = useState<boolean>(false)
   const { smsTemps, getSMSTemps } = useSMS()
-  const { studentData } = useAppSelector(state => state.students)
-
+  const { studentData ,openLeadModal} = useAppSelector(state => state.students)
+  
+  const [group_data, setGroupData] = useState<any>()
   const { deletePayment } = usePayment()
 
   const { getBranches, branches } = useBranches()
+
+  console.log(group_data?.id);
+  
 
   const handleEditClickOpen = (value: ModalTypes) => {
     if (value === 'payment') {
@@ -88,8 +98,10 @@ const UserViewSecurity = ({ groupData }: any) => {
   }
 
   const open = Boolean(anchorEl)
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+  const handleClick = (event: React.MouseEvent<HTMLElement>, groupData: any) => {
     setAnchorEl(event.currentTarget)
+    setGroupData(groupData)
+    console.log(groupData)
   }
   const handleEdit = (id: any) => {
     setAmount(payments.find((el: any) => el.id === id)?.amount)
@@ -261,6 +273,37 @@ const UserViewSecurity = ({ groupData }: any) => {
       )
     }
   ]
+  const handleLeft = async () => {
+    setLoading(true)
+    try {
+      await api.delete(`common/group-student-delete/${group_data?.group_data.id}/`).then(res => {
+        console.log(res)
+      })
+       await dispatch(fetchStudentDetail(Number(query?.student)))
+      toast.success("O'quvchi guruhdan chetlatildi", { position: 'top-center' })
+      setLoading(false)
+
+      // const queryString = new URLSearchParams(studentsQueryParams).toString()
+      // const queryStringAttendance = new URLSearchParams(queryParams).toString()
+      // await dispatch(getStudents({ id: query.id, queryString: queryString }))
+      // dispatch(setGettingAttendance(true))
+      // if (query.month && query?.id) {
+      //   await dispatch(
+      //     getAttendance({
+      //       date: `${query?.year || new Date().getFullYear()}-${getMontNumber(query.month)}`,
+      //       group: query?.id,
+      //       queryString: queryStringAttendance
+      //     })
+      //   )
+      // }
+      // dispatch(setGettingAttendance(false))
+    } catch (err: any) {
+      console.log(err)
+      toast.error(err.response.data.msg)
+      setLoading(false)
+    }
+    setOpenLeft(false)
+  }
 
   const onHandleDelete = async () => {
     setLoading(true)
@@ -295,7 +338,9 @@ const UserViewSecurity = ({ groupData }: any) => {
                   display: 'flex',
                   alignItems: 'center'
                 }}
-                onClick={!(user?.role.length === 1 && user?.role.includes('teacher')) ? handleClick : undefined}
+                onClick={e =>
+                  !(user?.role.length === 1 && user?.role.includes('teacher')) ? handleClick(e, group) : undefined
+                }
               >
                 <IconifyIcon icon={'charm:menu-kebab'} fontSize={11} />
               </Typography>
@@ -332,20 +377,21 @@ const UserViewSecurity = ({ groupData }: any) => {
                   {t('Guruhdan chiqarish')}
                 </MenuItem>
                 {/* <MenuItem
-          sx={{ display: 'flex', alignItems: 'center', gap: '7px' }}
-          onClick={() => (dispatch(setOpenLeadModal(studentStatusId)), handleClose('none'))}
-        >
-          <Icon fontSize={'20px'} icon={'mdi:leads'} />
-          {t('Lidlarga qaytarish')}
-        </MenuItem> */}
+                  sx={{ display: 'flex', alignItems: 'center', gap: '7px' }}
+                  onClick={() => (dispatch(setOpenLeadModal(group_data?.group_data.id))
+                    , handleClose('none'))}
+                >
+                  <Icon fontSize={'20px'} icon={'mdi:leads'} />
+                  {t('Lidlarga qaytarish')}
+                </MenuItem> */}
                 {/* <MenuItem
                   sx={{ display: 'flex', alignItems: 'center', gap: '7px' }}
                   onClick={() => handleClose('notes')}
                 >
                   <Icon fontSize={'20px'} icon={'material-symbols:note-alt'} />
                   {t('Eslatma')} +
-                </MenuItem>
-                <MenuItem
+                </MenuItem> */}
+                {/* <MenuItem
                   sx={{ display: 'flex', alignItems: 'center', gap: '7px' }}
                   onClick={() => (handleClose('sms'), getSMSTemps())}
                 >
@@ -432,7 +478,36 @@ const UserViewSecurity = ({ groupData }: any) => {
       <iframe src='' id='printFrame' style={{ height: 0 }}></iframe>
 
       <StudentPaymentEditForm openEdit={edit} setOpenEdit={setEdit} />
-
+      <Dialog open={openLeft} onClose={() => setOpenLeft(false)}>
+        <DialogContent sx={{ maxWidth: '350px' }}>
+          <Typography sx={{ fontSize: '20px', textAlign: 'center', mb: 3 }}>
+            {t("O'quvchini guruhdan chetlatishni tasdiqlang")}
+          </Typography>
+          <Box sx={{ display: 'flex', justifyContent: 'center', gap: 4 }}>
+            <Button onClick={() => setOpenLeft(false)} size='small' variant='outlined' color='error'>
+              {t('Bekor qilish')}
+            </Button>
+            <LoadingButton loading={loading} onClick={handleLeft} size='small' variant='contained'>
+              {t('Tasdiqlash')}
+            </LoadingButton>
+          </Box>
+        </DialogContent>
+      </Dialog>
+      {/* <Dialog
+        open={openLeadModal == group_data?.group_data.id}
+        onClose={() => (dispatch(setOpenLeadModal(null)), handleClose('none'))}
+      >
+        <DialogTitle sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <Typography sx={{ fontSize: '20px', textAlign: 'center' }}>{t("Lidlar bo'limga qo'shish")}</Typography>
+          <IconifyIcon
+            icon={'material-symbols:close'}
+            onClick={() => (dispatch(setOpenLeadModal(null)), handleClose('none'))}
+          />
+        </DialogTitle>
+        <DialogContent>
+          <MergeToDepartment studentId={String(group_data?.group_data.id)} />
+        </DialogContent>
+      </Dialog> */}
       <Dialog
         open={deleteId}
         onClose={() => setDelete(null)}
@@ -452,10 +527,16 @@ const UserViewSecurity = ({ groupData }: any) => {
           </Box>
         </DialogContent>
       </Dialog>
-      {/* <EditStudent status={status} student={student} id={activeId} activate={activate} setActivate={setActivate} />
-      <AddNote id={query.id} modalRef={modalRef} setModalRef={setModalRef} />
-      <SentSMS smsTemps={smsTemps} id={query.id} modalRef={modalRef} setModalRef={setModalRef} />
-      <ExportStudent id={studentStatusId} modalRef={modalRef} setModalRef={setModalRef} /> */}
+      <EditStudent
+        status={group_data?.status}
+        student={group_data}
+        id={group_data?.id}
+        activate={activate}
+        setActivate={setActivate}
+      />
+      {/*<AddNote id={query.id} modalRef={modalRef} setModalRef={setModalRef} />
+      <SentSMS smsTemps={smsTemps} id={query.id} modalRef={modalRef} setModalRef={setModalRef} />*/}
+      <ExportDetailStudent id={group_data?.id} modalRef={modalRef} setModalRef={setModalRef} />
     </Box>
   )
 }

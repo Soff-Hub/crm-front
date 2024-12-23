@@ -70,7 +70,7 @@ const QrCodeModal = () => {
         open={isQrCodeModalOpen}
         onClose={handleClose}
         sx={{
-          '& .MuiPaper-root': { width: '100%', maxWidth: 450, zIndex: 10000 } // Set a higher zIndex for the modal
+          '& .MuiPaper-root': { width: '100%', maxWidth: 450, zIndex: 10000 }
         }}
       >
         <DialogTitle id='user-view-edit' sx={{ textAlign: 'center', fontSize: '1.5rem !important' }}>
