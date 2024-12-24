@@ -3,9 +3,21 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import api from 'src/@core/utils/api'
 import { RoomType, SettingsState, SmsItemType } from 'src/types/apps/settings'
 
-export const fetchSmsList = createAsyncThunk('settings/fetchSmsList', async () => {
-  return (await api.get('common/sms-form/list/')).data
-})
+
+
+export const fetchSmsListQuery = createAsyncThunk(
+  'settings/fetchSmsListQuery',
+  async (queryString?:number) => {
+    return (await api.get(`common/sms-form/list/?parent_id=${queryString || ''}`)).data
+  }
+)
+
+export const fetchSmsList = createAsyncThunk(
+  'settings/fetchSmsList',
+  async () => {
+    return (await api.get(`common/sms-form/list/`)).data
+  }
+)
 
 export const createSms = createAsyncThunk(
   'settings/createSms',
@@ -156,8 +168,11 @@ export const editEmployee = createAsyncThunk('settings/editEmployee', async (dat
 
 const initialState: SettingsState = {
   is_pending: false,
+  is_childpending:false,
   sms_list: [],
+  smschild_list:[],
   openCreateSms: false,
+  openCreateSmsCategory:false,
   openEditSms: null,
   course_list: { count: 0, results: [], is_lesson_count: false },
   openEditCourse: null,
@@ -196,6 +211,9 @@ export const settingsSlice = createSlice({
     },
     setOpenCreateSms: (state, action) => {
       state.openCreateSms = action.payload
+    },
+    setOpenCreateSmsCategory: (state, action) => {
+      state.openCreateSmsCategory = action.payload
     },
     setOpenEditSms: (state, action) => {
       state.openEditSms = action.payload
@@ -237,6 +255,13 @@ export const settingsSlice = createSlice({
       .addCase(fetchSmsList.fulfilled, (state, action) => {
         state.is_pending = false
         state.sms_list = action.payload.sort((a: SmsItemType, b: SmsItemType) => a.id - b.id)
+      })
+      .addCase(fetchSmsListQuery.pending, state => {
+        state.is_childpending = true
+      })
+      .addCase(fetchSmsListQuery.fulfilled, (state, action) => {
+        state.is_childpending = false
+        state.smschild_list = action.payload.sort((a: SmsItemType, b: SmsItemType) => a.id - b.id)
       })
       .addCase(createSms.fulfilled, (state, action) => {
         state.sms_list.push(action.payload)
@@ -281,6 +306,7 @@ export const settingsSlice = createSlice({
 })
 
 export const {
+  setOpenCreateSmsCategory,
   setOpenCreateSms,
   setOpenEditSms,
   setOpenEditCourse,

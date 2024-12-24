@@ -28,7 +28,7 @@ const UserView = ({ tab, student }: any) => {
   
 
   useEffect(() => {
-    if (!user?.role.includes('ceo') && !user?.role.includes('admin') && !user?.role.includes('watcher')) {
+    if (!user?.role.includes('ceo') && !user?.role.includes('admin') && !user?.role.includes('watcher')&& !user?.role.includes('marketolog')) {
       router.push("/")
       toast.error("Sizda bu sahifaga kirish huquqi yo'q!")
     }

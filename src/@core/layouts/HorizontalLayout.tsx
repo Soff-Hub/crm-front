@@ -28,6 +28,8 @@ import DraggableIcon from '../components/soffBotIcon'
 import StaticsModal from '../components/statics-modal'
 import QrCodeModal from '../components/qrCode-Modal'
 import { Toaster } from 'react-hot-toast'
+import { useContext } from 'react'
+import { AuthContext } from 'src/context/AuthContext'
 
 const HorizontalLayoutWrapper = styled(Box)({
   height: '100%',
@@ -96,6 +98,7 @@ const HorizontalLayout = (props: LayoutProps) => {
   const appBarProps = horizontalLayoutProps?.appBar?.componentProps
   const userNavMenuContent = horizontalLayoutProps?.navMenu?.content
   const auth = useAuth()
+  const { user } = useContext(AuthContext)
 
   let userAppBarStyle = {}
   if (appBarProps && appBarProps.sx) {
@@ -108,7 +111,7 @@ const HorizontalLayout = (props: LayoutProps) => {
     <HorizontalLayoutWrapper className='layout-wrapper'>
       <MainContentWrapper className='layout-content-wrapper' sx={{ ...(contentHeightFixed && { maxHeight: '100vh' }) }}>
         {/* Navbar (or AppBar) and Navigation Menu Wrapper */}
-       
+
         {!auth?.user?.payment_page && (
           <AppBar
             color='default'
@@ -213,8 +216,8 @@ const HorizontalLayout = (props: LayoutProps) => {
                           }
                         />
                       </Box>
-                      <StaticsModal />
-                      <QrCodeModal/>
+                      {!user?.role.includes('marketolog') && <StaticsModal />}
+                      <QrCodeModal />
                     </>
                   )}
                 </Toolbar>
@@ -247,8 +250,8 @@ const HorizontalLayout = (props: LayoutProps) => {
         />{' '} */}
         {themeConfig.disableCustomizer || hidden ? null : (
           <>
-            <DraggableIcon
-            />
+            {!user?.role.includes('marketolog') && <DraggableIcon />}
+
             <Customizer />
           </>
         )}

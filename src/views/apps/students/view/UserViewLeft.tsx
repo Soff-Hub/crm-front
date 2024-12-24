@@ -48,6 +48,7 @@ import * as Yup from 'yup'
 import StudentParentList from './StudentParentList'
 import StudentWithDrawForm from './StudentWithdrawForm'
 import toast from 'react-hot-toast'
+import { fetchSmsList, fetchSmsListQuery } from 'src/store/apps/settings'
 
 export type ModalTypes = 'group' | 'withdraw' | 'payment' | 'sms' | 'delete' | 'edit' | 'notes' | 'parent'
 
@@ -516,7 +517,6 @@ const UserViewLeft = ({ userData }: { userData: any }) => {
         <SendSMSModal
           handleEditClose={handleEditClose}
           openEdit={openEdit}
-          smsTemps={smsTemps}
           setOpenEdit={setOpenEdit}
           userData={userData}
         />
@@ -529,13 +529,14 @@ const UserViewLeft = ({ userData }: { userData: any }) => {
 
 export default UserViewLeft
 
-export const SendSMSModal = ({ handleEditClose, openEdit, setOpenEdit, smsTemps, userData, usersData }: any) => {
+export const SendSMSModal = ({ handleEditClose, openEdit, setOpenEdit, userData, usersData }: any) => {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
   const [loading, setLoading] = useState(false)
   const [isErrorText, setIsErrorText] = useState<null | string>(null)
   const [isActive, setIsActive] = useState(false)
-
+  const {sms_list ,smschild_list} = useAppSelector(state => state.settings)
+  const [parent_id,setParentId] = useState<number|null>(null)
   const formik: any = useFormik({
     initialValues: {
       message: ''
@@ -563,6 +564,7 @@ export const SendSMSModal = ({ handleEditClose, openEdit, setOpenEdit, smsTemps,
     try {
       await api.post(`common/send-message-user/`, data)
       toast.success('Sms yuborildi')
+      setParentId(null)
       setLoading(false)
       setOpenEdit(null)
       formik.resetForm()
@@ -581,6 +583,14 @@ export const SendSMSModal = ({ handleEditClose, openEdit, setOpenEdit, smsTemps,
       }
     }
   }
+  useEffect(() => {
+    dispatch(fetchSmsList())
+  }, [])
+  useEffect(() => {
+    if (parent_id) {
+      dispatch(fetchSmsListQuery(parent_id))
+    }
+  },[parent_id])
 
   return (
     <Dialog
@@ -595,25 +605,43 @@ export const SendSMSModal = ({ handleEditClose, openEdit, setOpenEdit, smsTemps,
       </DialogTitle>
       <DialogContent>
         <form style={{ marginTop: 10 }} onSubmit={formik.handleSubmit}>
-          <FormControl sx={{ maxWidth: '100%' }} fullWidth>
+        <FormControl sx={{ width: '100%' ,marginBottom:5}}>
+          <InputLabel size='small' id='demo-simple-select-outlined-label'>
+            {t('Kategoriya')}
+          </InputLabel>
+          <Select
+            size='small'
+            label={t('Kategoriya')}
+            name='parent'
+            onChange={(e:any)=>setParentId(e.target.value)}
+            id='demo-simple-select-outlined'
+            labelId='demo-simple-select-outlined-label'
+          >
+            {sms_list.map(item => (
+              <MenuItem value={item.id}>{item.description}</MenuItem>
+            ))}
+          </Select>
+
+        </FormControl>
+           {parent_id && <FormControl sx={{ maxWidth: '100%' }} fullWidth>
             <InputLabel size='small' id='demo-simple-select-outlined-label'>
               {t('Shablonlar')}
             </InputLabel>
             <Select
               size='small'
               label={t('Shablonlar')}
-              value={''}
+              value={formik.values.message}
               id='demo-simple-select-outlined'
               labelId='demo-simple-select-outlined-label'
               onChange={e => formik?.setFieldValue('message', e.target.value)}
             >
-              {smsTemps.map((el: any) => (
+              {smschild_list.map((el: any) => (
                 <MenuItem value={el.description} sx={{ wordBreak: 'break-word' }}>
                   <span style={{ maxWidth: '250px', wordBreak: 'break-word', fontSize: '10px' }}>{el.description}</span>
                 </MenuItem>
               ))}
             </Select>
-          </FormControl>
+          </FormControl>}
           <p style={{ fontSize: 12 }} className='mb-3 mt-2'>
             {"Xabar matniga talaba ismini qo'shish uchun ${first_name} kalit so'zi qoldiring"}
           </p>
@@ -646,7 +674,7 @@ export const SendSMSModal = ({ handleEditClose, openEdit, setOpenEdit, smsTemps,
               type='button'
               color='secondary'
               onClick={() => (
-                handleEditClose(), formik.resetForm(), setLoading(false), setIsErrorText(null), setIsActive(false)
+                handleEditClose(), formik.resetForm(), setLoading(false), setIsErrorText(null),setParentId(null), setIsActive(false)
               )}
             >
               {t('Bekor qilish')}
