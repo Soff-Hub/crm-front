@@ -31,6 +31,7 @@
     "@iconify/react": "^4.1.1",
     "@mdi/js": "^7.4.47",
     "@mdi/react": "^1.6.1",
+    "@mui/icons-material": "^6.3.0",
     "@mui/lab": "^5.0.0-alpha.105",
     "@mui/material": "5.10.11",
     "@mui/x-data-grid": "5.17.9",

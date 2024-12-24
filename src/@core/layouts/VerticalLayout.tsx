@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 
 // ** MUI Imports
 import Fab from '@mui/material/Fab'
@@ -25,6 +25,7 @@ import { useAuth } from 'src/hooks/useAuth'
 import StaticsModal from 'src/@core/components/statics-modal'
 import DraggableIcon from '../components/soffBotIcon'
 import QrCodeModal from '../components/qrCode-Modal'
+import { AuthContext } from 'src/context/AuthContext'
 
 const VerticalLayoutWrapper = styled(Box)({
   height: '100%',
@@ -61,6 +62,7 @@ const VerticalLayout = (props: LayoutProps) => {
   const navigationBorderWidth = skin === 'bordered' ? 1 : 0
   const collapsedNavWidth = collapsedNavigationSize
   const auth = useAuth()
+  const { user } = useContext(AuthContext)
 
   // ** States
   const [navVisible, setNavVisible] = useState<boolean>(false)
@@ -129,7 +131,7 @@ const VerticalLayout = (props: LayoutProps) => {
 
           {/* Footer Component */}
           <Footer footerStyles={footerProps?.sx} footerContent={footerProps?.content} {...props} />
-          <DraggableIcon />
+          {!user?.role.includes('marketolog') && <DraggableIcon />}
         </MainContentWrapper>
       </VerticalLayoutWrapper>
 
@@ -147,8 +149,9 @@ const VerticalLayout = (props: LayoutProps) => {
         </ScrollToTop>
       )}
 
-      <StaticsModal />
-      <QrCodeModal/>
+      {!user?.role.includes('marketolog') && <StaticsModal />}
+
+      <QrCodeModal />
     </>
   )
 }

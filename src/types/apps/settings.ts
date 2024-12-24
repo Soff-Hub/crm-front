@@ -3,6 +3,7 @@ import { genderTypes } from './userTypes'
 export interface SmsItemType {
   id: number
   description: string
+  parent:number
 }
 
 export interface RoomType {
@@ -52,6 +53,9 @@ export interface EmployeeItemType {
 
 export interface SettingsState {
   is_pending: boolean
+  is_childpending:boolean
+  smschild_list:SmsItemType[]
+  openCreateSmsCategory:boolean,
   sms_list: SmsItemType[]
   openCreateSms: boolean
   openEditSms: null | SmsItemType

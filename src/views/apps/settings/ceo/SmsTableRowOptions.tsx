@@ -10,21 +10,22 @@ import { useTranslation } from 'react-i18next'
 import api from 'src/@core/utils/api'
 import toast from 'react-hot-toast'
 import { useAppDispatch, useAppSelector } from 'src/store'
-import { fetchSmsList, setOpenEditSms } from 'src/store/apps/settings'
+import { fetchSmsList, fetchSmsListQuery, setOpenEditSms } from 'src/store/apps/settings'
 import { disablePage } from 'src/store/apps/page'
 
 
 type Props = {
     id: number
+    parent_id?:number
 }
 
-export default function SmsTableRowOptions({ id }: Props) {
+export default function SmsTableRowOptions({ id,parent_id }: Props) {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
     const [suspendDialogOpen, setSuspendDialogOpen] = useState<boolean>(false)
     const [loading, setLoading] = useState<boolean>(false)
     const { t } = useTranslation()
 
-    const { openEditSms, sms_list } = useAppSelector(state => state.settings)
+    const { openEditSms, sms_list,smschild_list } = useAppSelector(state => state.settings)
     const dispatch = useAppDispatch()
 
     const rowOptionsOpen = Boolean(anchorEl)
@@ -48,7 +49,10 @@ export default function SmsTableRowOptions({ id }: Props) {
         try {
             await api.delete(`common/sms-form/delete/${id}`)
             toast.success("Muvaffaqiyatli! o'chirildi", { position: 'top-center' })
-            dispatch(fetchSmsList())
+            {
+                parent_id ? dispatch(fetchSmsListQuery(parent_id)) :
+                dispatch(fetchSmsList())
+            }
         } catch (error: any) {
             toast.error('Xatolik yuz berdi!', { position: 'top-center' })
         }
@@ -60,8 +64,10 @@ export default function SmsTableRowOptions({ id }: Props) {
 
 
     async function handleEdit(id: number) {
+        
         handleRowOptionsClose()
-        const find = sms_list.find(el => el.id === id)
+        const find = smschild_list.find(el => el.id === id) || sms_list.find(el => el.id === id)
+        
         dispatch(setOpenEditSms(find))
     }
 
