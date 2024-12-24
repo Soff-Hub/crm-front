@@ -135,6 +135,40 @@ const Navigation = (t: any): HorizontalNavItemsType => {
     //   path: '/video-tutorials'
     // }
   ]
+  const marketologItems = [
+    {
+      title: t('Bosh sahifa'),
+      icon: 'clarity:home-solid',
+      path: '/dashboard'
+    },
+    {
+      title: t('Lidlar'),
+      icon: 'mdi:receipt-text-edit-outline',
+      path: '/lids'
+    },
+
+    {
+      title: t('Sozlamalar'),
+      icon: 'mdi:settings',
+      slug: 'settings',
+      children: [
+        {
+          title: 'Formalar',
+          path: '/settings/forms/'
+        },
+        {
+          title: 'Amo CRM sozlamalari',
+          path: '/settings/amocrm/'
+        }
+      ]
+    }
+
+    // {
+    //   title: t("Video qo'llanmalar"),
+    //   icon: 'ph:video-light',
+    //   path: '/video-tutorials'
+    // }
+  ]
 
   const adminItems = [
     {
@@ -222,15 +256,17 @@ const Navigation = (t: any): HorizontalNavItemsType => {
     }
   ]
 
-  const watcherItems = items.filter((el) => el.slug !== 'settings');
+  const watcherItems = items.filter(el => el.slug !== 'settings')
 
   return user?.role.includes('ceo')
     ? items
     : user?.role.includes('casher')
-    ? items.filter((el) => el.path === '/finance')
+    ? items.filter(el => el.path === '/finance')
     : user?.role.includes('watcher')
     ? watcherItems
-    : adminItems;
+    : user?.role.includes('marketolog')
+    ? marketologItems
+    : adminItems
 }
 
 export default Navigation
