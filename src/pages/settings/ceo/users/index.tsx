@@ -33,6 +33,7 @@ import VideoHeader, { videoUrls } from 'src/@core/components/video-header/video-
 import { formatCurrency } from 'src/@core/utils/format-currency';
 import { AuthContext } from 'src/context/AuthContext';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 
 export interface customTableProps {
     xs: number
@@ -51,6 +52,9 @@ export default function GroupsPage() {
 
     const { push } = useRouter()
     const { user } = useContext(AuthContext)
+
+
+     
 
     const RowOptions = ({ id }: { id: number | string }) => {
         // ** State
@@ -297,6 +301,7 @@ export default function GroupsPage() {
                 <ButtonGroup size="small" aria-label="Small button group">
                     {buttons}
                 </ButtonGroup>
+                <Link href='/settings/ceo/users/attandance-table'><Button  variant='contained'  size='medium'>Xodimlar Davomati</Button></Link>
                 <FormControlLabel control={<Switch checked={queryParams.status == "archive"} onChange={handleChangeStatus} />} label={t("Arxiv")} />
             </Box>
 

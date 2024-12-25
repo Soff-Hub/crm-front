@@ -103,8 +103,10 @@ export default function CreateForm({ }: Props) {
                 application_form_types: [...components]
             })
             push('/settings/forms')
-        } catch (err) {
+            toast.success('Forma yaratildi')
+        } catch (err:any) {
             console.log(err)
+            toast.error(err.response.data.msg)
         }
         setLoading(false)
     }
@@ -146,7 +148,7 @@ export default function CreateForm({ }: Props) {
                                 py: '20px',
                             }}
                         >
-                            <FormControl fullWidth>
+                            {/* <FormControl fullWidth>
                                 <InputLabel size='small' id='user-view-language-label'>{t("Bo'lim")}</InputLabel>
                                 <Select
                                     size='small'
@@ -162,7 +164,7 @@ export default function CreateForm({ }: Props) {
                                         departments.map(item => <MenuItem key={item.id} value={item.id}>{item.name}</MenuItem>)
                                     }
                                 </Select>
-                            </FormControl>
+                            </FormControl> */}
 
                             {selectedDepartment && (
                                 <FormControl fullWidth>
