@@ -40,7 +40,7 @@ export default function EditProfile({ isOpen, setEdit }: PropsType) {
         onSubmit: async (values) => {
             setLoading(true)
             try {
-                await api.post(`common/finance/expense/create/`, { ...values, amount: revereAmount(values.amount), expense_category: 12 })
+                await api.post(`finance/expense/create/`, { ...values, amount: revereAmount(values.amount), expense_category: 12 })
             } catch (err: any) {
                 if (err?.response?.data) {
                     formik.setErrors(err?.response?.data)

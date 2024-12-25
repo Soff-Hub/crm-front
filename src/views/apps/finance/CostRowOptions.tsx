@@ -46,7 +46,7 @@ export default function CostRowActions({ id, onEdit, reRender }: Props) {
     async function submitDelete() {
         setLoading(true)
         dispatch(disablePage(true))
-        const res = await api.delete(`/common/finance/expense/destroy/${id}/`)
+        const res = await api.delete(`/finance/expense/destroy/${id}/`)
         if (res.status == 201 || 200) {
             toast.success("Avans o'chirildi")
             await reRender()
