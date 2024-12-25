@@ -1,4 +1,3 @@
-//@ts-nocheck
 'use client'
 import { Box, Button, Chip, FormControlLabel, Pagination, Switch, Typography } from '@mui/material'
 import { ReactNode, useContext, useEffect, useState } from 'react'
@@ -6,7 +5,7 @@ import IconifyIcon from 'src/@core/components/icon'
 import { useTranslation } from 'react-i18next'
 import { useRouter } from 'next/router'
 import { useAppDispatch, useAppSelector } from 'src/store'
-import { fetchTeachersList, setOpenEdit, updateParams } from 'src/store/apps/mentors'
+import { fetchTeachersList, updateParams ,setOpenEdit} from 'src/store/apps/mentors'
 import { formatCurrency } from 'src/@core/utils/format-currency'
 import { videoUrls } from 'src/@core/components/video-header/video-header'
 import dynamic from 'next/dynamic'
@@ -37,17 +36,17 @@ export default function GroupsPage() {
   const { isMobile } = useResponsive()
   const { user } = useContext(AuthContext)
     const [error, setError] = useState<any>({})
-  const [openEdit, setOpenEdit] = useState<ModalTypes | null>(null)
-  
+  const [openSms, setOpenSms] = useState<ModalTypes | null>(null)
+  const router = useRouter()
   const { smsTemps, getSMSTemps } = useSMS()
   const { teachers, teachersCount, queryParams, isLoading } = useAppSelector(state => state.mentors)
-  const teacherIds = teachers.map(teacher => teacher.id)
+  const studentIds = teachers.map(student => student.id)
  const handleEditClickOpen = (value: ModalTypes) => {
-    setOpenEdit(value)
+    setOpenSms(value)
   }
   const handleEditClose = () => {
     setError({})
-    setOpenEdit(null)
+    setOpenSms(null)
   }
   const date = new Date().toLocaleDateString()
 
@@ -183,11 +182,11 @@ export default function GroupsPage() {
           />
         </Box>
         <Box sx={{display:'flex',gap:5}}>
-          <Button
+        <Button
             onClick={() => (getSMSTemps(), handleEditClickOpen('sms'))}
             variant='outlined'
             color='warning'
-            // fullWidth
+            fullWidth
             size='small'
             startIcon={<IconifyIcon icon='material-symbols-light:sms-outline' />}
           >
@@ -217,10 +216,10 @@ export default function GroupsPage() {
       <TeacherEditDialog />
           <SendSMSModal
                 handleEditClose={handleEditClose}
-                openEdit={openEdit}
+                openEdit={openSms}
                 smsTemps={smsTemps}
-                setOpenEdit={setOpenEdit}
-                usersData={teacherIds}
+                setOpenEdit={setOpenSms}
+                usersData={studentIds}
               />
     </div>
   )
