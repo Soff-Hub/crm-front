@@ -168,6 +168,8 @@ export const editEmployee = createAsyncThunk('settings/editEmployee', async (dat
 
 const initialState: SettingsState = {
   is_pending: false,
+  employee_id:null,
+  openSms:null,
   is_childpending:false,
   sms_list: [],
   smschild_list:[],
@@ -206,8 +208,14 @@ export const settingsSlice = createSlice({
   name: 'settings',
   initialState,
   reducers: {
+    setEmployeeId: (state, action) => {
+      state.employee_id = action.payload
+    },
     updateParams: (state, action) => {
       state.courseQueryParams = action.payload
+    },
+    setOpenSms: (state, action) => {
+      state.openSms = action.payload
     },
     setOpenCreateSms: (state, action) => {
       state.openCreateSms = action.payload
@@ -317,7 +325,9 @@ export const {
   updateParams,
   updateQueryParams,
   closeVideoModal,
-  openVideoModal
+  openVideoModal,
+  setOpenSms,
+  setEmployeeId
 } = settingsSlice.actions
 
 export default settingsSlice.reducer

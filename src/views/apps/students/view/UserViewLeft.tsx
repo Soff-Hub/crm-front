@@ -566,11 +566,11 @@ export const SendSMSModal = ({ handleEditClose, openEdit, setOpenEdit, userData,
       toast.success('Sms yuborildi')
       setParentId(null)
       setLoading(false)
-      setOpenEdit(null)
+      dispatch(setOpenEdit(null))
       formik.resetForm()
       setIsErrorText(null)
       setIsActive(false)
-      await dispatch(userData.id)
+      await dispatch(userData?.id)
     } catch (err: any) {
       console.log(err)
 

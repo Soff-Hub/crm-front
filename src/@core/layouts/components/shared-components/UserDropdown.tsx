@@ -90,6 +90,24 @@ const UserDropdown = (props: Props) => {
       mr: 2
     }
   }
+  type Arg = {
+    data: any
+    name?: string
+  }
+
+  function downloadExcel({ data, name = new Date().toISOString() }: Arg) {
+    const blob = new Blob([data])
+    const url = window.URL.createObjectURL(blob)
+
+    const a = document.createElement('a')
+    a.href = url
+    a.download = name + '.xlsx'
+    document.body.appendChild(a)
+    a.click()
+    a.remove()
+    window.URL.revokeObjectURL(url)
+  }
+
   const handleLogout = () => {
     logout()
     handleDropdownClose()
@@ -138,26 +156,26 @@ const UserDropdown = (props: Props) => {
               </Box>
             </Box>
             {user?.qr_code && (
-        <img
-          width={30}
-          height={30}
-          src={user?.qr_code}
-          style={{
-            cursor: 'pointer',
-            marginLeft: 5,
-            transition: 'transform 0.3s, opacity 0.3s',
-          }}
-          onMouseEnter={(e:any) => {
-            e.target.style.transform = 'scale(1.1)';
-            e.target.style.opacity = '0.8';
-          }}
-          onMouseLeave={(e:any) => {
-            e.target.style.transform = 'scale(1)';
-            e.target.style.opacity = '1';
-          }}
-          onClick={() => handleClickOpen(user?.qr_code)}  // Open modal on image click
-        />
-      )}
+              <img
+                width={30}
+                height={30}
+                src={user?.qr_code}
+                style={{
+                  cursor: 'pointer',
+                  marginLeft: 5,
+                  transition: 'transform 0.3s, opacity 0.3s'
+                }}
+                onMouseEnter={(e: any) => {
+                  e.target.style.transform = 'scale(1.1)'
+                  e.target.style.opacity = '0.8'
+                }}
+                onMouseLeave={(e: any) => {
+                  e.target.style.transform = 'scale(1)'
+                  e.target.style.opacity = '1'
+                }}
+                onClick={() => handleClickOpen(user?.qr_code)} // Open modal on image click
+              />
+            )}
             <button className='border-0 bg-transparent cursor-pointer'>
               <UserIcon onClick={() => setIsModalOpen(true)} icon='lucide:edit' />
             </button>
@@ -198,38 +216,38 @@ const UserDropdown = (props: Props) => {
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>
           <IconButton
-            edge="end"
-            color="inherit"
+            edge='end'
+            color='inherit'
             onClick={handleClose}
-            aria-label="close"
+            aria-label='close'
             sx={{
               position: 'absolute',
               right: 20,
               top: 8,
-              color: (theme) => theme.palette.grey[500],
+              color: theme => theme.palette.grey[500]
             }}
           >
-            <GridCloseIcon/>
+            <GridCloseIcon />
           </IconButton>
           <div>QR Code</div>
         </DialogTitle>
         <DialogContent>
           <img
             src={imageSrc}
-            alt="QR Code"
+            alt='QR Code'
             style={{
               width: '100%',
               height: 'auto',
-              maxWidth: '500px', 
-              margin: '0 auto',
+              maxWidth: '500px',
+              margin: '0 auto'
             }}
           />
-          <a style={{width:'100%'}} href={imageSrc} download={imageSrc} target='_blank'>
-            <Button fullWidth color="primary" variant="contained">
-              Yuklab olish
-            </Button>
-          </a>
         </DialogContent>
+        <DialogActions>
+          <Button onClick={() => downloadExcel({ data: imageSrc })} fullWidth color='primary' variant='contained'>
+            Yuklab olish
+          </Button>
+        </DialogActions>
       </Dialog>
     </Fragment>
   )
