@@ -7,7 +7,6 @@ import { fetchSmsList, fetchSmsListQuery, setOpenCreateSms, setOpenCreateSmsCate
 import Accordion from '@mui/material/Accordion'
 import AccordionSummary from '@mui/material/AccordionSummary'
 import AccordionDetails from '@mui/material/AccordionDetails'
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import SmsTableRowOptions from 'src/views/apps/settings/ceo/SmsTableRowOptions'
 import CreateSmsDialog from 'src/views/apps/settings/ceo/CreateSmsDialog'
 import CreateSmsCategoryDialog from 'src/views/apps/settings/ceo/CreateSmsCategoryDialog'
@@ -17,6 +16,7 @@ import { useTranslation } from 'react-i18next'
 import UserSuspendDialog from 'src/views/apps/mentors/view/UserSuspendDialog'
 import api from 'src/@core/utils/api'
 import toast from 'react-hot-toast'
+import { GridExpandMoreIcon } from '@mui/x-data-grid'
 import useResponsive from 'src/@core/hooks/useResponsive'
 
 export default function RoomsPage() {
@@ -121,7 +121,7 @@ export default function RoomsPage() {
             onChange={() => setParentId(parentId === item.id ? null : item.id)}
           >
             <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
+              expandIcon={<GridExpandMoreIcon />}
               aria-controls='panel1-content'
               id={`panel-${item.id}-header`}
             >

@@ -5,12 +5,12 @@ import api from 'src/@core/utils/api'
 import { AllNumbersParams, IFinanceState } from 'src/types/apps/finance'
 
 export const fetchModerationSalaries = createAsyncThunk('finance/fetchModerationSalaries', async (params?: string) => {
-  return (await api.get('/common/finance/employee-salaries/?' + params)).data
+  return (await api.get('/finance/employee-salaries/?' + params)).data
 })
 export const fetchCalculatedSalary = createAsyncThunk(
   'finance/fetchCalculatedSalary',
   async (data: { id: number; queryParams?: string }) => {
-    return (await api.get(`/common/finance/calculated-salary/${data.id}/?` + data.queryParams)).data
+    return (await api.get(`/finance/calculated-salary/${data.id}/?` + data.queryParams)).data
   }
 )
 
@@ -25,16 +25,16 @@ export const editSms = createAsyncThunk('finance/editSms', async (data: { descri
 export const fetchFinanceAllNumbers = createAsyncThunk(
   'finance/fetchFinanceAllNumbers',
   async (params?: AllNumbersParams) => {
-    return (await api.get('common/finance/dashboard/', { params })).data
+    return (await api.get('finance/dashboard/', { params })).data
   }
 )
 
 export const getExpenseCategories = createAsyncThunk('getExpenseCategories', async (params: any = '') => {
-  return (await api.get('common/finance/expense-category/list/', { params })).data
+  return (await api.get('finance/budget-category/list/', { params })).data
 })
 
 export const getGroupsFinance = createAsyncThunk('getGroupsFinance', async (params: any = '') => {
-  const response = await api.get(`/common/finance/group-payments/?`, { params })
+  const response = await api.get(`/finance/group-payments/?`, { params })
   return { ...response.data }
 })
 
@@ -67,10 +67,10 @@ export const financeSlice = createSlice({
       const data = state.moderation_salaries.map(el =>
         Number(el.id) === Number(action.payload.id)
           ? {
-              ...el,
-              bonus_amount: +action.payload.bonus_amount,
-              final_salary: Number(el.salary) + Number(action.payload.bonus_amount) - Number(el.fine_amount)
-            }
+            ...el,
+            bonus_amount: +action.payload.bonus_amount,
+            final_salary: Number(el.salary) + Number(action.payload.bonus_amount) - Number(el.fine_amount)
+          }
           : el
       )
 
@@ -80,10 +80,10 @@ export const financeSlice = createSlice({
       const data = state.moderation_salaries.map(el =>
         Number(el.id) === Number(action.payload.id)
           ? {
-              ...el,
-              fine_amount: +action.payload.fine_amount,
-              final_salary: Number(el.salary) - Number(action.payload.fine_amount) + Number(el.bonus_amount)
-            }
+            ...el,
+            fine_amount: +action.payload.fine_amount,
+            final_salary: Number(el.salary) - Number(action.payload.fine_amount) + Number(el.bonus_amount)
+          }
           : el
       )
 

@@ -9,7 +9,7 @@ import AdvanceRowActions from 'src/views/apps/finance/advance/AdvanceRowActions'
 
 
 export const getAdvanceList = createAsyncThunk('getAdvanceList', async (params?: string) => {
-    return (await api.get('/common/finance/prepayment/list/?' + params)).data
+    return (await api.get('/finance/prepayment/list/?' + params)).data
 })
 
 export const getStaffs = createAsyncThunk('getStaffs', async (params?: string) => {
@@ -18,7 +18,7 @@ export const getStaffs = createAsyncThunk('getStaffs', async (params?: string) =
 
 export const createAdvance = createAsyncThunk('createAdvance', async (values: Partial<IAdvanceFormState>, { rejectWithValue }) => {
     try {
-        const response = await api.post("/common/finance/prepayment/create/", values)
+        const response = await api.post("/finance/prepayment/create/", values)
         return response.data
     } catch (err: any) {
         if (err.response) {
@@ -30,7 +30,7 @@ export const createAdvance = createAsyncThunk('createAdvance', async (values: Pa
 
 export const updateAdvance = createAsyncThunk('updateAdvance', async (values: Partial<IAdvanceFormState>, { rejectWithValue }) => {
     try {
-        const response = await api.patch(`/common/finance/prepayment/update/${values.id}/`, values)
+        const response = await api.patch(`/finance/prepayment/update/${values.id}/`, values)
         return response.data
     } catch (err: any) {
         if (err.response) {
@@ -43,7 +43,7 @@ export const updateAdvance = createAsyncThunk('updateAdvance', async (values: Pa
 export const deleteStudent = createAsyncThunk(
     'deleteAdvance',
     async (id: number) => {
-        const res = await api.delete(`/common/finance/prepayment/delete/${id}/`)
+        const res = await api.delete(`/finance/prepayment/delete/${id}/`)
         return res
     }
 );

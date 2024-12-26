@@ -5,7 +5,7 @@ export const fetchInvestments = createAsyncThunk<any, string | undefined>(
   'finance/fetchInvestments',
   async (queryString, { rejectWithValue }) => {
     try {
-      const response = await api.get('common/finance/investment/list/?' + queryString)
+      const response = await api.get('finance/investment/list/?' + queryString)
       return response.data
     } catch (error: any) {
       return rejectWithValue(error.response?.data || error.message)

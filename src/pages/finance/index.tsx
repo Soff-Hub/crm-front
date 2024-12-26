@@ -149,7 +149,7 @@ const CardStatistics = () => {
   const createExpenseCategroy = async () => {
     setLoading(true)
     try {
-      await api.post(`common/finance/expense-category/create/`, { name: nameVal })
+      await api.post(`finance/budget-category/create/`, { name: nameVal })
       setOpen(null)
       dispatch(getExpenseCategories(''))
     } catch (err) {
@@ -160,14 +160,14 @@ const CardStatistics = () => {
   }
 
   const getSalaries = async () => {
-    const resp = await api.get(`common/finance/monthly-report/`)
+    const resp = await api.get(`finance/monthly-report/`)
     setSalaries(resp.data)
   }
 
   const confirmDeleteCategory = async () => {
     setLoading(true)
     try {
-      await api.patch(`/common/finance/expense-category/update/${deleteCategory}/`, { is_active: false })
+      await api.patch(`/finance/budget-category/update/${deleteCategory}/`, { is_active: false })
       setDeleteCategory(null)
       dispatch(getExpenseCategories(''))
     } catch (err) {

@@ -85,7 +85,7 @@ const InvestmentPage = () => {
     }),
     onSubmit: async (values, { setSubmitting, resetForm }) => {
       try {
-        await api.post('common/finance/investment/create/', values)
+        await api.post('finance/investment/create/', values)
         resetForm()
         setOpenCreateModal(false)
         const queryString = new URLSearchParams(

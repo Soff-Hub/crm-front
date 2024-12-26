@@ -37,7 +37,7 @@ function Slug(props: { slug: string }) {
 
     const updateCategory = async () => {
         try {
-            await api.patch(`common/finance/expense-category/update/${query?.slug}/`, { name })
+            await api.patch(`finance/budget-category/update/${query?.slug}/`, { name })
             getExpense(``)
             setEditable(false)
         } catch (err) {
@@ -47,7 +47,7 @@ function Slug(props: { slug: string }) {
 
     const getExpense = async (params: string) => {
         setLoading(true)
-        const resp = await api.get(`common/finance/expense/list/${query?.slug}/?${params}`)
+        const resp = await api.get(`finance/expense/list/${query?.slug}/?${params}`)
         setData(resp.data.result);
         setName(resp.data?.category);
         setAllAmount(resp.data?.total_expense);

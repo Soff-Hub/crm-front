@@ -132,7 +132,7 @@ const UserView = ({ slug }: InferGetStaticPropsType<typeof getServerSideProps>) 
         setLoading(status)
         const update_data = moderation_salaries.map(el => ({ ...el, status }))
         try {
-            await api.patch(`common/finance/employee-salaries/update/`, { update_data })
+            await api.patch(`finance/employee-salaries/update/`, { update_data })
             toast.success("Ma'lumotlar saqlandi")
             // await dispatch(fetchModerationSalaries(''))
             push('/finance')

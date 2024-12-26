@@ -96,7 +96,7 @@ export default function SalaryConfirm({ }: Props) {
         setLoading(status)
         const update_data = moderation_salaries.map(el => ({ ...el, status }))
         try {
-            await api.patch(`common/finance/employee-salaries/update/`, { update_data })
+            await api.patch(`finance/employee-salaries/update/`, { update_data })
             toast.success("Muvaffaqiyatli saqlandi")
             if (status === 'frozen') {
                 await dispatch(fetchModerationSalaries(''))

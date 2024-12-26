@@ -29,7 +29,7 @@ export default function CreateCostForm({ slug, setOpen, reRender }: any) {
         onSubmit: async (values) => {
             setLoading(true)
             try {
-                await api.post(`common/finance/expense/create/`, { ...values, amount: revereAmount(values.amount), expense_category: slug })
+                await api.post(`finance/expense/create/`, { ...values, amount: revereAmount(values.amount), expense_category: slug })
                 await reRender()
                 setOpen(false)
             } catch (err: any) {

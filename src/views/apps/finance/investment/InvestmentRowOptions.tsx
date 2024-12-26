@@ -38,7 +38,7 @@ const InvestmentRowOptions = ({ id }: { id: number | string }) => {
   const handleDeleteInvestment = async (id: string | number) => {
     setLoading(true)
     dispatch(disablePage(true))
-    await api.delete(`common/finance/investment/delete/${id}/`).then(res => {
+    await api.delete(`finance/investment/delete/${id}/`).then(res => {
       try {
         if (res.status == 204) {
           setLoading(false)
