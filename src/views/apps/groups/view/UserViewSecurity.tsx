@@ -476,7 +476,6 @@ const UserViewSecurity = () => {
                     position: 'sticky',
                     left: 0,
                     background: settings.mode == "dark" ? '#282A42' : '#ffffff', // Dark mode background
-                    color: settings.mode == "dark" ? '#f0f0f0' : '#000000', // Dark mode text color
                     zIndex: 1,
                     padding: '8px 20px',
                     textAlign: 'start',

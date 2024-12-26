@@ -1,18 +1,19 @@
-//@ts-nocheck
 'use client'
 import { Box, Button, Chip, FormControlLabel, Pagination, Switch, Typography } from '@mui/material'
-import { ReactNode, useContext, useEffect } from 'react'
+import { ReactNode, useContext, useEffect, useState } from 'react'
 import IconifyIcon from 'src/@core/components/icon'
 import { useTranslation } from 'react-i18next'
 import { useRouter } from 'next/router'
 import { useAppDispatch, useAppSelector } from 'src/store'
-import { fetchTeachersList, setOpenEdit, updateParams } from 'src/store/apps/mentors'
+import { fetchTeachersList, updateParams ,setOpenEdit} from 'src/store/apps/mentors'
 import { formatCurrency } from 'src/@core/utils/format-currency'
 import { videoUrls } from 'src/@core/components/video-header/video-header'
 import dynamic from 'next/dynamic'
 import useResponsive from 'src/@core/hooks/useResponsive'
 import { AuthContext } from 'src/context/AuthContext'
 import { toast } from 'react-hot-toast'
+import useSMS from 'src/hooks/useSMS'
+import { ModalTypes, SendSMSModal } from 'src/views/apps/students/view/UserViewLeft'
 
 const RowOptions = dynamic(() => import('src/views/apps/mentors/RowOptions'))
 const TeacherAvatar = dynamic(() => import('src/views/apps/mentors/AddMentorsModal').then(mod => mod.TeacherAvatar))
@@ -34,9 +35,19 @@ export default function GroupsPage() {
   const dispatch = useAppDispatch()
   const { isMobile } = useResponsive()
   const { user } = useContext(AuthContext)
-
+    const [error, setError] = useState<any>({})
+  const [openSms, setOpenSms] = useState<ModalTypes | null>(null)
+  const router = useRouter()
+  const { smsTemps, getSMSTemps } = useSMS()
   const { teachers, teachersCount, queryParams, isLoading } = useAppSelector(state => state.mentors)
-
+  const studentIds = teachers.map(student => student.id)
+ const handleEditClickOpen = (value: ModalTypes) => {
+    setOpenSms(value)
+  }
+  const handleEditClose = () => {
+    setError({})
+    setOpenSms(null)
+  }
   const date = new Date().toLocaleDateString()
 
   const columns: customTableProps[] = [
@@ -110,11 +121,15 @@ export default function GroupsPage() {
     push(`/mentors/view/security?id=${id}`)
   }
 
-  console.log(queryParams);
-  
+  console.log(queryParams)
 
   useEffect(() => {
-    if (!user?.role.includes('ceo') && !user?.role.includes('admin') && !user?.role.includes('watcher')&& !user?.role.includes('marketolog')) {
+    if (
+      !user?.role.includes('ceo') &&
+      !user?.role.includes('admin') &&
+      !user?.role.includes('watcher') &&
+      !user?.role.includes('marketolog')
+    ) {
       router.push('/')
       toast.error('Sahifaga kirish huquqingiz yoq!')
     }
@@ -166,14 +181,26 @@ export default function GroupsPage() {
             label={t('archive')}
           />
         </Box>
+        <Box sx={{display:'flex',gap:5}}>
         <Button
-          onClick={() => dispatch(setOpenEdit('create'))}
-          variant='contained'
-          size='small'
-          startIcon={<IconifyIcon icon='ic:baseline-plus' />}
-        >
-          {t("Yangi qo'shish")}
-        </Button>
+            onClick={() => (getSMSTemps(), handleEditClickOpen('sms'))}
+            variant='outlined'
+            color='warning'
+            fullWidth
+            size='small'
+            startIcon={<IconifyIcon icon='material-symbols-light:sms-outline' />}
+          >
+            {t('Sms yuborish')}
+          </Button>
+          <Button
+            onClick={() => dispatch(setOpenEdit('create'))}
+            variant='contained'
+            size='small'
+            startIcon={<IconifyIcon icon='ic:baseline-plus' />}
+          >
+            {t("Yangi qo'shish")}
+          </Button>
+        </Box>
       </Box>
       <DataTable loading={isLoading} columns={columns} data={teachers} rowClick={rowClick} />
       {Math.ceil(teachersCount / 10) > 1 && !isLoading && (
@@ -187,6 +214,13 @@ export default function GroupsPage() {
       )}
       <TeacherCreateDialog />
       <TeacherEditDialog />
+          <SendSMSModal
+                handleEditClose={handleEditClose}
+                openEdit={openSms}
+                smsTemps={smsTemps}
+                setOpenEdit={setOpenSms}
+                usersData={studentIds}
+              />
     </div>
   )
 }

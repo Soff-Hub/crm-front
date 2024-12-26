@@ -4,7 +4,7 @@ import api from 'src/@core/utils/api'
 import { useTranslation } from 'react-i18next'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
   Button,
   Dialog,
@@ -18,6 +18,8 @@ import {
   TextField
 } from '@mui/material'
 import { toast } from 'react-hot-toast'
+import { useAppDispatch, useAppSelector } from 'src/store'
+import { fetchSmsList, fetchSmsListQuery } from 'src/store/apps/settings'
 
 export default function SentSMS({
   id,
@@ -32,7 +34,9 @@ export default function SentSMS({
 }) {
   const [isLoading, setLoading] = useState(false)
   const { t } = useTranslation()
-
+  const { smschild_list, sms_list } = useAppSelector(state => state.settings)
+  const [parent_id, setParentId] = useState<number | null>(null)
+  const dispatch = useAppDispatch()
   const formik: any = useFormik({
     initialValues: { message: '' },
     validationSchema: () =>
@@ -54,6 +58,15 @@ export default function SentSMS({
     }
   })
 
+   useEffect(() => {
+      dispatch(fetchSmsList())
+    }, [])
+    useEffect(() => {
+      if (parent_id) {
+        dispatch(fetchSmsListQuery(parent_id))
+      }
+    }, [parent_id])
+
   return (
     <Dialog
       open={modalRef === 'sms'}
@@ -67,24 +80,53 @@ export default function SentSMS({
       </DialogTitle>
       <DialogContent>
         <form style={{ marginTop: 10 }} onSubmit={formik.handleSubmit}>
-          <FormControl sx={{ maxWidth: '100%', mb: 3 }} fullWidth>
+        <FormControl fullWidth sx={{ marginBottom: 5 }}>
             <InputLabel size='small' id='demo-simple-select-outlined-label'>
-              {t('Shablonlar')}
+              {t('Kategorya')}
             </InputLabel>
             <Select
               size='small'
-              label={t('Shablonlar')}
+              label='Kategorya'
+              defaultValue=''
               id='demo-simple-select-outlined'
               labelId='demo-simple-select-outlined-label'
-              onChange={e => formik.setFieldValue('message', e.target.value)}
+              onChange={(e: any) => {
+                setParentId(e.target.value)
+              }}
             >
-              {smsTemps?.map((el: any) => (
-                <MenuItem value={el.description} sx={{ wordBreak: 'break-word' }}>
+              {sms_list.map((el: any) => (
+                <MenuItem value={el.id} sx={{ wordBreak: 'break-word' }}>
                   <span style={{ maxWidth: '250px', wordBreak: 'break-word', fontSize: '10px' }}>{el.description}</span>
                 </MenuItem>
               ))}
             </Select>
           </FormControl>
+          {parent_id && (
+            <FormControl fullWidth sx={{marginBottom:5}}>
+              <InputLabel size='small' id='demo-simple-select-outlined-label'>
+                {t('Shablonlar')}
+              </InputLabel>
+              <Select
+                size='small'
+                label='Shablonlar'
+                defaultValue=''
+                id='demo-simple-select-outlined'
+                labelId='demo-simple-select-outlined-label'
+                onChange={e => {
+                  //   setSMS(true)
+                  formik.setFieldValue('message', e.target.value)
+                }}
+              >
+                {smschild_list.map((el: any) => (
+                  <MenuItem value={el.description} sx={{ wordBreak: 'break-word' }}>
+                    <span style={{ maxWidth: '250px', wordBreak: 'break-word', fontSize: '10px' }}>
+                      {el.description}
+                    </span>
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          )}
           <FormControl fullWidth>
             <TextField
               label={t('SMS matni')}

@@ -51,6 +51,7 @@ import SendSmsAnonimUserForm from 'src/views/apps/lids/anonimUser/SendSmsAnonimU
 import AddNoteAnonimUser from 'src/views/apps/lids/anonimUser/AddNoteAnonimUser'
 import { fetchGroupCheckList } from 'src/store/apps/leads'
 import { useFormik } from 'formik'
+import { fetchSmsList } from 'src/store/apps/settings'
 
 // ** Styled Avatar component
 const Avatar = styled(CustomAvatar)<AvatarProps>(({ theme }) => ({
@@ -82,7 +83,7 @@ const KanbanItem = (props: KanbarItemProps) => {
   const { queryParams, groups } = useAppSelector(state => state.leads)
   const { smsTemps, getSMSTemps } = useSMS()
   const { branches, getBranches } = useBranches()
-
+  const {sms_list} = useAppSelector(state => state.settings)
   const [selectBranch, setSelectBranch] = useState<any>(null)
   const [selectDepartment, setSelectDepartment] = useState<any>([])
   const [selectDepartmentItem, setSelectDepartmentItem] = useState<any>(null)
@@ -167,7 +168,6 @@ const KanbanItem = (props: KanbarItemProps) => {
       showResponseError(err.response.data, setError)
     }
   }
-  console.log(phoneNumber)
 
   const clickStudent = async () => {
     console.log(id, total)
@@ -236,6 +236,9 @@ const KanbanItem = (props: KanbarItemProps) => {
     const resp = await api.get(`leads/department/list/`, { params: { ...queryParams, is_active: true } })
     setDepartmentsState(resp.data)
   }
+  useEffect(() => {
+    dispatch(fetchSmsList())
+  },[])
 
   // useEffect(() => {
   //     getLeadData()
@@ -570,7 +573,7 @@ const KanbanItem = (props: KanbarItemProps) => {
 
         <DialogContent sx={{ minWidth: '300px' }}>
           <SendSmsAnonimUserForm
-            smsTemps={smsTemps}
+            smsTemps={sms_list}
             user={props.id}
             closeModal={() => setOpen(null)}
             reRender={() => getDepartmentItem('sms-history')}

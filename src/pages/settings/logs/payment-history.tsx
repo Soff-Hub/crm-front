@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import EmptyContent from 'src/@core/components/empty-content'
 import { formatPhoneNumber } from 'src/@core/components/phone-input/format-phone-number'
 import useResponsive from 'src/@core/hooks/useResponsive'
+import { useSettings } from 'src/@core/hooks/useSettings'
 import { useAppDispatch, useAppSelector } from 'src/store'
 import { fetchPaymetLogs, updateQueryParams } from 'src/store/apps/logs'
 import SubLoader from 'src/views/apps/loaders/SubLoader'
@@ -14,7 +15,7 @@ export default function PaymentHistory() {
   const dispatch = useAppDispatch()
   const { isMobile } = useResponsive();
   const { t } = useTranslation()
-
+  const {settings} = useSettings()
   const { paymentCount, paymentLogs, isLoading } = useAppSelector(state => state.logs)
 
   async function handleSearch(search: string) {
@@ -47,7 +48,8 @@ export default function PaymentHistory() {
         !isLoading && (
           <div
             style={{
-              display: 'flex',
+                display: 'flex',
+              
               flexDirection: 'column',
               gap: isMobile ? 10 : 40,
               marginTop: isMobile ? 0 : 30,
@@ -58,7 +60,7 @@ export default function PaymentHistory() {
               <div
                 className='payment-history-card'
                 style={{
-                  backgroundColor: 'white',
+                  backgroundColor: settings.mode == 'dark' ?'#30334E':'white',
                   padding: '20px',
                   borderRadius: '14px',
                   position: 'relative',
@@ -74,7 +76,7 @@ export default function PaymentHistory() {
                   style={{
                     position: isMobile ? 'relative' : 'absolute',
                     top: isMobile ? 0 : '-30px',
-                    backgroundColor: 'white',
+                    backgroundColor: settings.mode == 'dark' ?'#30334E':'white',
                     padding: isMobile ? 0 : '6px 20px',
                     left: 0,
                     borderTopLeftRadius: 10,
