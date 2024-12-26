@@ -43,7 +43,6 @@ export default function EditStudent({
   const [isLoading, setLoading] = useState(false)
   const { query } = useRouter()
   const { t } = useTranslation()
-  console.log(student, status)
 
   const formik = useFormik({
     initialValues: { added_at: student?.added_at, status, lesson_count: student?.lesson_count },

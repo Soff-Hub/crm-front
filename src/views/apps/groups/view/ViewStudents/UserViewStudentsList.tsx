@@ -133,7 +133,6 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, choices }:
   const { t } = useTranslation()
   const { getBranches, branches } = useBranches()
   const { settings, saveSettings } = useSettings()
-  console.log(settings.mode)
 
   const handleEditClickOpen = (value: ModalTypes) => {
     if (value === 'payment') {
