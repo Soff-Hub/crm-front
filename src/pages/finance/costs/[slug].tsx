@@ -37,7 +37,7 @@ function Slug(props: { slug: string }) {
 
     const updateCategory = async () => {
         try {
-            await api.patch(`finance/expense-category/update/${query?.slug}/`, { name })
+            await api.patch(`finance/budget-category/update/${query?.slug}/`, { name })
             getExpense(``)
             setEditable(false)
         } catch (err) {
