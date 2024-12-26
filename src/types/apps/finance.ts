@@ -53,11 +53,13 @@ export type GroupFinance = {
 
 export interface IFinanceState {
   isPending: boolean
+  incomeCategoriesData:any[]
   isGettingGroupsFinance: boolean
   numbersLoad: boolean
   isGettingExpenseCategories: boolean
   moderation_salaries: SalaryitemType[]
   categoriesData: any[]
+  isGettingIncomeCategories:boolean
   groupsFinance: any[]
   calculatedSalary: GroupFinance[] | null
   isGettingCalculatedSalary: boolean

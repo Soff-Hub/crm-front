@@ -90,13 +90,13 @@ export default function EmployeesAttendanceTable() {
                   className={`sticky left-0 bg-${settings.mode === 'dark' ? '#282A42' : '#ffffff'}`}
                   sx={{ zIndex: 100, position: 'sticky', left: 0 }}
                 >
-                  {t('Name')}
+                  {t('Ism')}
                 </TableCell>
                 <TableCell
                   className={`sticky left-150 bg-${settings.mode === 'dark' ? '#282A42' : '#ffffff'}`}
                   sx={{ zIndex: 100, position: 'sticky', left: 145 }}
                 >
-                  {t('Phone')}
+                  {t('Telefon')}
                 </TableCell>
                 {dates.map((d: any) => (
                   <TableCell key={d.date} sx={{ textAlign: 'center' }}>

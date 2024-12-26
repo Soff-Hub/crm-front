@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next'
 import {
   fetchFinanceAllNumbers,
   getExpenseCategories,
+  getIncomeCategories,
   // getGroupsFinance,
   updateNumberParams
 } from 'src/store/apps/finance'
@@ -140,14 +141,17 @@ export default function HeadingFilter() {
         dispatch(updateNumberParams({ date_month: '' }))
         await Promise.all([
           dispatch(fetchFinanceAllNumbers({ ...allNumbersParams, date_month: '', start_date: ``, end_date: `` })),
-          dispatch(getExpenseCategories({ ...allNumbersParams, date_month: '', start_date: ``, end_date: `` }))
+          dispatch(getExpenseCategories({ ...allNumbersParams, date_month: '', start_date: ``, end_date: `` })),
+          dispatch(getIncomeCategories({ ...allNumbersParams, date_month: '', start_date: ``, end_date: `` }))
           // dispatch(getGroupsFinance({ ...allNumbersParams, date_month: '', start_date: ``, end_date: `` }))
         ])
       } else {
         dispatch(updateNumberParams({ date_year: `${new Date().getFullYear()}-01-01` }))
         await Promise.all([
           dispatch(fetchFinanceAllNumbers({ ...allNumbersParams, date_month: '', start_date: ``, end_date: `` })),
-          dispatch(getExpenseCategories({ ...allNumbersParams, date_month: '', start_date: ``, end_date: `` }))
+          dispatch(getExpenseCategories({ ...allNumbersParams, date_month: '', start_date: ``, end_date: `` })),
+          dispatch(getIncomeCategories({ ...allNumbersParams, date_month: '', start_date: ``, end_date: `` }))
+
           // dispatch(getGroupsFinance({ ...allNumbersParams, date_month: '', start_date: ``, end_date: `` }))
         ])
       }
@@ -161,6 +165,9 @@ export default function HeadingFilter() {
         ),
         dispatch(
           getExpenseCategories({ ...allNumbersParams, date_year: `${value}-01-01`, start_date: ``, end_date: `` })
+        ),
+        dispatch(
+          getIncomeCategories({ ...allNumbersParams, date_year: `${value}-01-01`, start_date: ``, end_date: `` })
         )
         // dispatch(getGroupsFinance({ ...allNumbersParams, date_year: `${value}-01-01`, start_date: ``, end_date: `` }))
       ])
@@ -178,6 +185,15 @@ export default function HeadingFilter() {
         ),
         dispatch(
           getExpenseCategories({
+            ...allNumbersParams,
+            date_year: allNumbersParams.date_year || `${new Date().getFullYear()}-01-01`,
+            date_month: value,
+            start_date: ``,
+            end_date: ``
+          })
+        ),
+        dispatch(
+          getIncomeCategories({
             ...allNumbersParams,
             date_year: allNumbersParams.date_year || `${new Date().getFullYear()}-01-01`,
             date_month: value,
@@ -204,7 +220,9 @@ export default function HeadingFilter() {
       dispatch(updateNumberParams({ branch }))
       await Promise.all([
         dispatch(fetchFinanceAllNumbers({ ...allNumbersParams, branch })),
-        dispatch(getExpenseCategories({ ...allNumbersParams, branch }))
+        dispatch(getExpenseCategories({ ...allNumbersParams, branch })),
+        dispatch(getIncomeCategories({ ...allNumbersParams, branch }))
+
         // dispatch(getGroupsFinance({ ...allNumbersParams, branch }))
       ])
     } else {
@@ -212,7 +230,8 @@ export default function HeadingFilter() {
       dispatch(updateNumberParams({ branch: '' }))
       await Promise.all([
         dispatch(fetchFinanceAllNumbers({ ...allNumbersParams, branch: '' })),
-        dispatch(getExpenseCategories({ ...allNumbersParams, branch: '' }))
+        dispatch(getExpenseCategories({ ...allNumbersParams, branch: '' })),
+        dispatch(getIncomeCategories({ ...allNumbersParams, branch }))
         // dispatch(getGroupsFinance({ ...allNumbersParams, branch: '' }))
       ])
     }
@@ -222,7 +241,9 @@ export default function HeadingFilter() {
     ;(async function () {
       await Promise.all([
         dispatch(fetchFinanceAllNumbers({ ...allNumbersParams, branch: activeBranch })),
-        dispatch(getExpenseCategories({ ...allNumbersParams, branch: activeBranch }))
+        dispatch(getExpenseCategories({ ...allNumbersParams, branch: activeBranch })),
+        dispatch(getIncomeCategories({ ...allNumbersParams, branch: activeBranch }))
+
         // dispatch(getGroupsFinance({ ...allNumbersParams, branch: activeBranch }))
       ])
     })()
@@ -259,6 +280,27 @@ export default function HeadingFilter() {
         searchable={false}
         placeholder={t('Filialni tanlang')}
         value={activeBranch}
+        renderMenuItem={(label, item) => {
+          const [isHovered, setIsHovered] = useState(false);
+      
+          return (
+            <div
+              key={item.value}  // Unique key for each item
+              style={{
+                padding: '10px',
+                backgroundColor: isHovered ? '#e0e0e0' : (item.index % 2 === 0 ? '#f0f0f0' : '#ffffff'), // Hover effect
+                color: '#333', // Text color
+                fontSize: '14px', // Font size
+                cursor: 'pointer', // Pointer cursor on hover
+                transition: 'background-color 0.3s', // Smooth transition
+              }}
+              onMouseEnter={() => setIsHovered(true)} // Set hover state to true
+              onMouseLeave={() => setIsHovered(false)} // Set hover state to false
+            >
+              {label}
+            </div>
+          );
+        }}
       />
       <SelectPicker
         onChange={v => handleYearDate(v, 'y')}
@@ -269,6 +311,28 @@ export default function HeadingFilter() {
         searchable={false}
         cleanable={false}
         placeholder={t('Yilni tanlang')}
+        menuStyle={{ maxHeight: 300, overflowY: 'auto' }} 
+        renderMenuItem={(label, item) => {
+          const [isHovered, setIsHovered] = useState(false);
+      
+          return (
+            <div
+              key={item.value}  // Unique key for each item
+              style={{
+                padding: '10px',
+                backgroundColor: isHovered ? '#e0e0e0' : (item.index % 2 === 0 ? '#f0f0f0' : '#ffffff'), // Hover effect
+                color: '#333', // Text color
+                fontSize: '14px', // Font size
+                cursor: 'pointer', // Pointer cursor on hover
+                transition: 'background-color 0.3s', // Smooth transition
+              }}
+              onMouseEnter={() => setIsHovered(true)} // Set hover state to true
+              onMouseLeave={() => setIsHovered(false)} // Set hover state to false
+            >
+              {label}
+            </div>
+          );
+        }}
       />
       <SelectPicker
         onChange={v => handleYearDate(v, 'm')}
@@ -278,6 +342,27 @@ export default function HeadingFilter() {
         value={allNumbersParams.date_month}
         searchable={false}
         placeholder={t('Oyni tanlang')}
+        renderMenuItem={(label, item) => {
+          const [isHovered, setIsHovered] = useState(false);
+      
+          return (
+            <div
+              key={item.value}  // Unique key for each item
+              style={{
+                padding: '10px',
+                backgroundColor: isHovered ? '#e0e0e0' : (item.index % 2 === 0 ? '#f0f0f0' : '#ffffff'), // Hover effect
+                color: '#333', // Text color
+                fontSize: '14px', // Font size
+                cursor: 'pointer', // Pointer cursor on hover
+                transition: 'background-color 0.3s', // Smooth transition
+              }}
+              onMouseEnter={() => setIsHovered(true)} // Set hover state to true
+              onMouseLeave={() => setIsHovered(false)} // Set hover state to false
+            >
+              {label}
+            </div>
+          );
+        }}
       />
       <DateRangePicker
         showOneCalendar

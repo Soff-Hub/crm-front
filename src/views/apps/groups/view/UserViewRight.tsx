@@ -20,7 +20,7 @@ import { useTranslation } from 'react-i18next'
 import { AuthContext } from 'src/context/AuthContext'
 import { setDays, setResultId } from 'src/store/apps/groupDetails'
 import { useAppDispatch } from 'src/store'
-import { GroupStudentGrades } from './GroupStudentGrades/GroupStudentGradesList'
+import GroupStudentGrades from './GroupStudentGrades/GroupStudentGradesList'
 
 interface Props {
   tab: string
@@ -85,9 +85,9 @@ const UserViewRight = ({ tab }: Props) => {
         <TabPanel sx={{ p: 0 }} value='security'>
           <UserViewSecurity />
         </TabPanel>
-        <TabPanel sx={{ p: 0 }} value='grade'>
+        {/* <TabPanel sx={{ p: 0 }} value='grade'>
           <GroupStudentGrades />
-        </TabPanel>
+        </TabPanel> */}
         <TabPanel sx={{ p: 0 }} value='exams'>
           <GroupExamsList />
         </TabPanel>
