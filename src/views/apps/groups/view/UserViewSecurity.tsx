@@ -153,10 +153,12 @@ const UserViewSecurity = () => {
   )
   const dispatch = useAppDispatch()
 
+  console.log(days)
+
   const start_date: any = groupData?.start_date ? Number(groupData?.start_date.split('-')[1]) : ''
-  
+
   const { pathname, query, push } = useRouter()
-   const {settings} = useSettings()
+  const { settings } = useSettings()
   const [opened_id, setOpenedId] = useState<any>(null)
   const [openTooltip, setOpenTooltip] = useState<null | string>(null)
   const [topic, setTopic] = useState<any>('')
@@ -298,13 +300,13 @@ const UserViewSecurity = () => {
                   style={{
                     position: 'sticky',
                     left: 0,
-                    background: settings.mode == "dark" ? '#282A42' : '#ffffff', // Dark mode background
-                    color: settings.mode == "dark" ? '#f0f0f0' : '#000000', // Dark mode text color
+                    background: settings.mode == 'dark' ? '#282A42' : '#ffffff', // Dark mode background
+                    color: settings.mode == 'dark' ? '#f0f0f0' : '#000000', // Dark mode text color
                     zIndex: 1,
                     padding: '8px 20px',
                     textAlign: 'start',
                     fontSize: '14px',
-                    borderRight: `1px solid ${settings.mode == "dark" ? '#444' : '#c3cccc'}` // Dark mode border color
+                    borderRight: `1px solid ${settings.mode == 'dark' ? '#444' : '#c3cccc'}` // Dark mode border color
                   }}
                 >
                   <Typography>{t('Mavzular')}</Typography>
@@ -441,17 +443,17 @@ const UserViewSecurity = () => {
               </tr>
               <tr style={{ borderBottom: '1px solid #c3cccc' }}>
                 <td
-                    style={{
-                      position: 'sticky',
-                      left: 0,
-                      background: settings.mode == "dark" ? '#282A42' : '#ffffff', // Dark mode background
-                      color: settings.mode == "dark" ? '#f0f0f0' : '#000000', // Dark mode text color
-                      zIndex: 1,
-                      padding: '8px 20px',
-                      textAlign: 'start',
-                      fontSize: '14px',
-                      borderRight: `1px solid ${settings.mode == "dark" ? '#444' : '#c3cccc'}` // Dark mode border color
-                    }}
+                  style={{
+                    position: 'sticky',
+                    left: 0,
+                    background: settings.mode == 'dark' ? '#282A42' : '#ffffff', // Dark mode background
+                    color: settings.mode == 'dark' ? '#f0f0f0' : '#000000', // Dark mode text color
+                    zIndex: 1,
+                    padding: '8px 20px',
+                    textAlign: 'start',
+                    fontSize: '14px',
+                    borderRight: `1px solid ${settings.mode == 'dark' ? '#444' : '#c3cccc'}` // Dark mode border color
+                  }}
                 >
                   <Typography>{t("O'quvchilar")}</Typography>
                 </td>
@@ -472,23 +474,23 @@ const UserViewSecurity = () => {
                   attendance.students.map((student: any) => (
                     <tr key={student.id} style={{}}>
                       <td
-                   style={{
-                    position: 'sticky',
-                    left: 0,
-                    background: settings.mode == "dark" ? '#282A42' : '#ffffff', // Dark mode background
-                    zIndex: 1,
-                    padding: '8px 20px',
-                    textAlign: 'start',
-                    fontSize: '14px',
-                    borderRight: `1px solid ${settings.mode == "dark" ? '#444' : '#c3cccc'}` // Dark mode border color
-                  }}
+                        style={{
+                          position: 'sticky',
+                          left: 0,
+                          background: settings.mode == 'dark' ? '#282A42' : '#ffffff', // Dark mode background
+                          zIndex: 1,
+                          padding: '8px 20px',
+                          textAlign: 'start',
+                          fontSize: '14px',
+                          borderRight: `1px solid ${settings.mode == 'dark' ? '#444' : '#c3cccc'}` // Dark mode border color
+                        }}
                       >
                         {student.first_name}
                       </td>
                       {days?.map((hour: any) => {
                         const currentDate = student.attendance.find((el: any) => el.date === hour.date)
                         return student.attendance.some((el: any) => el.date === hour.date) &&
-                          student.attendance.find((el: any) => el.date === hour.date) ? (
+                          student.attendance.find((el: any) => el.date === hour.date && !hour.weekend?.date) ? (
                           <td
                             key={student.attendance.find((el: any) => el.date === hour.date).date}
                             style={{ padding: '8px 0', textAlign: 'center', cursor: 'pointer' }}
@@ -526,6 +528,23 @@ const UserViewSecurity = () => {
                             ) : (
                               <></>
                             )}
+                          </td>
+                        ) : hour.weekend?.date ? (
+                          <td
+                            key={hour.date}
+                              style={{
+                              padding: '10px 8px',
+                              textAlign: 'center',
+                              cursor: 'default',
+                              backgroundColor: '#ffe4e6', // Light red
+                              color: '#c53030', // Dark red
+                              borderRadius: '4px',
+                              boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+                              fontSize: '14px',
+                              fontWeight: '500'
+                            }}
+                          >
+                            <span>{hour.weekend?.description}</span>
                           </td>
                         ) : (
                           <td key={hour.date} style={{ padding: '8px 0', textAlign: 'center', cursor: 'not-allowed' }}>

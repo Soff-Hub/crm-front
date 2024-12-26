@@ -29,7 +29,7 @@ import FinanceAllNumber from 'src/views/apps/finance/FinanceAllNumber'
 import VideoHeader, { videoUrls } from 'src/@core/components/video-header/video-header'
 import HeadingFilter from 'src/views/apps/finance/HeadingFilter'
 import { useAppDispatch, useAppSelector } from 'src/store'
-import { getExpenseCategories } from 'src/store/apps/finance'
+import { getExpenseCategories, getIncomeCategories } from 'src/store/apps/finance'
 import getMonthName from 'src/@core/utils/getMonthName'
 import { AuthContext } from 'src/context/AuthContext'
 import useResponsive from 'src/@core/hooks/useResponsive'
@@ -46,8 +46,14 @@ export function formatDateString(date: Date) {
 const CardStatistics = () => {
   const { t } = useTranslation()
   const [nameVal, setNameVal] = useState<string>('')
-  const [open, setOpen] = useState<'create' | null>(null)
-  const { categoriesData, allNumbersParams } = useAppSelector(state => state.finance)
+  const [open, setOpen] = useState<'create' | 'income' | null>(null)
+  const {
+    categoriesData,
+    allNumbersParams,
+    incomeCategoriesData,
+    isGettingExpenseCategories,
+    isGettingIncomeCategories
+  } = useAppSelector(state => state.finance)
   const { user } = useContext(AuthContext)
   const router = useRouter()
   const dispatch = useAppDispatch()
@@ -149,9 +155,21 @@ const CardStatistics = () => {
   const createExpenseCategroy = async () => {
     setLoading(true)
     try {
-      await api.post(`finance/budget-category/create/`, { name: nameVal })
+      await api.post(`finance/budget-category/create/`, { name: nameVal, status: 'expense' })
       setOpen(null)
       dispatch(getExpenseCategories(''))
+    } catch (err) {
+      console.log(err)
+    } finally {
+      setLoading(false)
+    }
+  }
+  const createIncomeCategroy = async () => {
+    setLoading(true)
+    try {
+      await api.post(`finance/budget-category/create/`, { name: nameVal, status: 'income' })
+      setOpen(null)
+      dispatch(getIncomeCategories(''))
     } catch (err) {
       console.log(err)
     } finally {
@@ -170,6 +188,7 @@ const CardStatistics = () => {
       await api.patch(`/finance/budget-category/update/${deleteCategory}/`, { is_active: false })
       setDeleteCategory(null)
       dispatch(getExpenseCategories(''))
+      dispatch(getIncomeCategories(''))
     } catch (err) {
       console.log(err)
     } finally {
@@ -183,7 +202,12 @@ const CardStatistics = () => {
   }
 
   useEffect(() => {
-    if (!user?.role.includes('ceo') && !user?.role.includes('casher') && !user?.role.includes('watcher')&& !user?.role.includes('marketolog')) {
+    if (
+      !user?.role.includes('ceo') &&
+      !user?.role.includes('casher') &&
+      !user?.role.includes('watcher') &&
+      !user?.role.includes('marketolog')
+    ) {
       router.push('/')
       toast.error('Sahifaga kirish huquqingiz yoq!')
     }
@@ -253,7 +277,30 @@ const CardStatistics = () => {
                 deleteCategory={deleteCategory}
                 categryData={categoriesData}
                 confirmDeleteCategory={confirmDeleteCategory}
-                loading={loading}
+                loading={isGettingExpenseCategories || loading}
+                setDeleteCategory={setDeleteCategory}
+              />
+            ) : (
+              <EmptyContent />
+            )}
+          </Grid>
+          <Grid item xs={12}>
+            <Box sx={{ display: 'flex', gap: '10px' }}>
+              <Typography sx={{ fontSize: '20px', flexGrow: 1 }}>{t('Kirimlar hisoboti')}</Typography>
+              <Button variant='contained' onClick={() => setOpen('income')}>
+                + {t("Bo'lim")}
+              </Button>
+            </Box>
+          </Grid>
+          <div id='kirimlar'></div>
+
+          <Grid item xs={12} md={12}>
+            {incomeCategoriesData?.length ? (
+              <FinanceCategories
+                deleteCategory={deleteCategory}
+                categryData={incomeCategoriesData}
+                confirmDeleteCategory={confirmDeleteCategory}
+                loading={isGettingIncomeCategories}
                 setDeleteCategory={setDeleteCategory}
               />
             ) : (
@@ -296,6 +343,25 @@ const CardStatistics = () => {
             onChange={e => setNameVal(e.target.value)}
           />
           <LoadingButton loading={loading} onClick={() => createExpenseCategroy()} variant='contained'>
+            {t('Saqlash')}
+          </LoadingButton>
+        </DialogContent>
+      </Dialog>
+      <Dialog open={open === 'income'} onClose={() => setOpen(null)}>
+        <DialogTitle sx={{ display: 'flex', alignItems: 'center', minWidth: '300px', justifyContent: 'space-between' }}>
+          <Typography>{t("Kirimlar bo'limini yaratish")}</Typography>
+          <IconifyIcon icon={'mdi:close'} onClick={() => setOpen(null)} />
+        </DialogTitle>
+        <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+          <TextField
+            required
+            autoComplete='off'
+            size='small'
+            placeholder={t("Bo'lim nomi")}
+            fullWidth
+            onChange={e => setNameVal(e.target.value)}
+          />
+          <LoadingButton loading={loading} onClick={() => createIncomeCategroy()} variant='contained'>
             {t('Saqlash')}
           </LoadingButton>
         </DialogContent>

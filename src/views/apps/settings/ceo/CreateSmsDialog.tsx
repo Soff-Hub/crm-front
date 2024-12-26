@@ -70,6 +70,7 @@ export default function CreateSmsDialog({}: Props) {
       } else {
         dispatch(disablePage(false))
         dispatch(fetchSmsListQuery(formik.values.parent))
+        dispatch(fetchSmsList())
         formik.resetForm()
         toast.success('SMS shablon yaratildi')
         setOpenAddGroup(false)

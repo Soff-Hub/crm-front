@@ -24,9 +24,10 @@ import { useAuth } from 'src/hooks/useAuth'
 import { Settings } from 'src/@core/context/settingsContext'
 import { AuthContext } from 'src/context/AuthContext'
 import { useTranslation } from 'react-i18next'
-import { Button } from '@mui/material'
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton } from '@mui/material'
 import UserIcon from 'src/layouts/components/UserIcon'
 import StudentEditProfileModal from 'src/pages/student-profile/studentEditModal'
+import { GridCloseIcon } from '@mui/x-data-grid'
 
 interface Props {
   settings: Settings
@@ -42,21 +43,28 @@ const BadgeContentSpan = styled('span')(({ theme }) => ({
 }))
 
 const UserDropdown = (props: Props) => {
-  // ** Props
+  const [imageSrc, setImageSrc] = useState('')
+
   const { settings } = props
+  const [open, setOpen] = useState(false)
   const { t } = useTranslation()
-  // ** States
   const [anchorEl, setAnchorEl] = useState<Element | null>(null)
-  const [isModalOpen,setIsModalOpen] = useState(false)
-  // ** Hooks
+  const [isModalOpen, setIsModalOpen] = useState(false)
   const router = useRouter()
   const { logout } = useAuth()
 
-  // ** Context
   const { user } = useContext(AuthContext)
 
-  // ** Vars
   const { direction } = settings
+
+  const handleClickOpen = (src: any) => {
+    setImageSrc(src)
+    setOpen(true)
+  }
+
+  const handleClose = () => {
+    setOpen(false)
+  }
 
   const handleDropdownOpen = (event: SyntheticEvent) => {
     setAnchorEl(event.currentTarget)
@@ -78,12 +86,8 @@ const UserDropdown = (props: Props) => {
     display: 'flex',
     justifyContent: 'flex-start',
     alignItems: 'center',
-    // color: 'text.primary',
-    // textDecoration: 'none',
     '& svg': {
       mr: 2
-      // fontSize: '1.375rem',
-      // color: 'text.primary'
     }
   }
   const handleLogout = () => {
@@ -133,14 +137,36 @@ const UserDropdown = (props: Props) => {
                 </Typography>
               </Box>
             </Box>
+            {user?.qr_code && (
+        <img
+          width={30}
+          height={30}
+          src={user?.qr_code}
+          style={{
+            cursor: 'pointer',
+            marginLeft: 5,
+            transition: 'transform 0.3s, opacity 0.3s',
+          }}
+          onMouseEnter={(e:any) => {
+            e.target.style.transform = 'scale(1.1)';
+            e.target.style.opacity = '0.8';
+          }}
+          onMouseLeave={(e:any) => {
+            e.target.style.transform = 'scale(1)';
+            e.target.style.opacity = '1';
+          }}
+          onClick={() => handleClickOpen(user?.qr_code)}  // Open modal on image click
+        />
+      )}
             <button className='border-0 bg-transparent cursor-pointer'>
-              <UserIcon onClick={()=>setIsModalOpen(true)} icon='lucide:edit' />
+              <UserIcon onClick={() => setIsModalOpen(true)} icon='lucide:edit' />
             </button>
           </Box>
         </Box>
         <Typography variant='body2' sx={{ fontSize: '0.8rem', color: 'black', paddingLeft: '20px' }}>
           {user?.username}
         </Typography>
+
         <Divider sx={{ mb: '0 !important', mt: '1 !important' }} />
         {user?.role.includes('ceo') && !window.location.hostname.split('.').includes('c-panel') && (
           <>
@@ -169,6 +195,42 @@ const UserDropdown = (props: Props) => {
         </MenuItem>
       </Menu>
       <StudentEditProfileModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
+      <Dialog open={open} onClose={handleClose}>
+        <DialogTitle>
+          <IconButton
+            edge="end"
+            color="inherit"
+            onClick={handleClose}
+            aria-label="close"
+            sx={{
+              position: 'absolute',
+              right: 20,
+              top: 8,
+              color: (theme) => theme.palette.grey[500],
+            }}
+          >
+            <GridCloseIcon/>
+          </IconButton>
+          <div>QR Code</div>
+        </DialogTitle>
+        <DialogContent>
+          <img
+            src={imageSrc}
+            alt="QR Code"
+            style={{
+              width: '100%',
+              height: 'auto',
+              maxWidth: '500px', 
+              margin: '0 auto',
+            }}
+          />
+          <a style={{width:'100%'}} href={imageSrc} download={imageSrc} target='_blank'>
+            <Button fullWidth color="primary" variant="contained">
+              Yuklab olish
+            </Button>
+          </a>
+        </DialogContent>
+      </Dialog>
     </Fragment>
   )
 }
