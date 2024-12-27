@@ -5,7 +5,7 @@ import IconifyIcon from 'src/@core/components/icon'
 import { useTranslation } from 'react-i18next'
 import { useRouter } from 'next/router'
 import { useAppDispatch, useAppSelector } from 'src/store'
-import { fetchTeachersList, updateParams ,setOpenEdit} from 'src/store/apps/mentors'
+import { fetchTeachersList, updateParams ,setOpenEdit, setOpenSms} from 'src/store/apps/mentors'
 import { formatCurrency } from 'src/@core/utils/format-currency'
 import { videoUrls } from 'src/@core/components/video-header/video-header'
 import dynamic from 'next/dynamic'
@@ -36,17 +36,16 @@ export default function GroupsPage() {
   const { isMobile } = useResponsive()
   const { user } = useContext(AuthContext)
     const [error, setError] = useState<any>({})
-  const [openSms, setOpenSms] = useState<ModalTypes | null>(null)
   const router = useRouter()
   const { smsTemps, getSMSTemps } = useSMS()
-  const { teachers, teachersCount, queryParams, isLoading } = useAppSelector(state => state.mentors)
+  const { teachers, teachersCount, queryParams, isLoading,openSms } = useAppSelector(state => state.mentors)
   const studentIds = teachers.map(student => student.id)
  const handleEditClickOpen = (value: ModalTypes) => {
-    setOpenSms(value)
+    dispatch(setOpenSms(value))
   }
   const handleEditClose = () => {
     setError({})
-    setOpenSms(null)
+    dispatch(setOpenSms(null))
   }
   const date = new Date().toLocaleDateString()
 
@@ -113,15 +112,16 @@ export default function GroupsPage() {
       dataIndex: 'id',
       title: '',
       // title: <Button onClick={() => push("/employee-attendance")} variant='outlined'>{t("Davomat")}</Button>,
-      render: actions => <RowOptions id={actions} status={queryParams?.status} />
+      render: (actions) => <RowOptions id={actions} status={queryParams?.status}  />
     }
   ]
 
   const rowClick = (id: any) => {
+    console.log(id);
+    
     push(`/mentors/view/security?id=${id}`)
   }
 
-  console.log(queryParams)
 
   useEffect(() => {
     if (

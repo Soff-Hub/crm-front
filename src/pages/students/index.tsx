@@ -228,7 +228,7 @@ export default function GroupsPage() {
           {t('Filterlash')}
         </Button>
       )}
-      {!isMobile && <StudentsFilter isMobile={isMobile} />}
+      {!isMobile && <StudentsFilter  isMobile={isMobile} />}
       <DataTable
         color
         loading={isLoading}

@@ -52,6 +52,8 @@ export interface EmployeeItemType {
 }
 
 export interface SettingsState {
+  employee_id:number|null
+  openSms:string|null
   is_pending: boolean
   is_childpending:boolean
   smschild_list:SmsItemType[]

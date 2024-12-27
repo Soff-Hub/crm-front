@@ -55,6 +55,7 @@ export const deleteTeacher = createAsyncThunk(
 
 const initialState: IMentorsState = {
   openEdit: null,
+  openSms:false,
   teachers: [],
   teachersCount: 0,
   queryParams: { page: 1, status: 'active' },
@@ -68,6 +69,9 @@ export const mentorsSlice = createSlice({
   reducers: {
     setOpenEdit: (state, action) => {
       state.openEdit = action.payload
+    },
+    setOpenSms: (state, action) => {
+      state.openSms = action.payload
     },
     updateParams: (state, action) => {
       state.queryParams = { ...state.queryParams, ...action.payload }
@@ -97,6 +101,6 @@ export const mentorsSlice = createSlice({
   }
 })
 
-export const { setOpenEdit, setTeacherData, updateParams } = mentorsSlice.actions
+export const {setOpenSms, setOpenEdit, setTeacherData, updateParams } = mentorsSlice.actions
 
 export default mentorsSlice.reducer

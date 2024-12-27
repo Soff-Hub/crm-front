@@ -10,6 +10,7 @@ export interface TacherItemType {
 }
 
 export interface IMentorsState {
+  openSms:boolean
   openEdit: 'edit' | 'create' | 'delete' | null
   teachers: TacherItemType[]
   teachersCount: number
