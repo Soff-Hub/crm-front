@@ -138,6 +138,10 @@ const Navigation = (t: any): VerticalNavItemsType => {
             {
               title: t('Bot xabarnoma'),
               path: '/settings/logs/bot-notification'
+            },
+            {
+              title: t('Yuborilgan SMS lar'),
+              path: '/settings/logs/sms-history'
             }
           ]
         },
