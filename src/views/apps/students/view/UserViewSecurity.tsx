@@ -80,14 +80,14 @@ const UserViewSecurity = ({ groupData }: any) => {
   const [openEdit, setOpenEdit] = useState<ModalTypes | null>(null)
   const [activate, setActivate] = useState<boolean>(false)
   const { smsTemps, getSMSTemps } = useSMS()
-  const { studentData ,openLeadModal} = useAppSelector(state => state.students)
+  const { studentData ,openLeadModal,studentId} = useAppSelector(state => state.students)
   
   const [group_data, setGroupData] = useState<any>()
   const { deletePayment } = usePayment()
 
   const { getBranches, branches } = useBranches()
 
-  console.log(group_data?.id);
+
   
 
   const handleEditClickOpen = (value: ModalTypes) => {
@@ -313,11 +313,13 @@ const UserViewSecurity = ({ groupData }: any) => {
     await dispatch(fetchStudentPayment(query?.student))
     await dispatch(fetchStudentDetail(Number(query?.student)))
   }
+  console.log(studentId,query?.student);
+  
 
   useEffect(() => {
     dispatch(fetchStudentPayment(query?.student))
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [query?.student])
 
   return (
     <Box className='demo-space-y'>

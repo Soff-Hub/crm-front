@@ -29,7 +29,7 @@ import { AuthContext } from 'src/context/AuthContext'
 import { updateQueryParams } from 'src/store/apps/settings'
 import Link from 'next/link'
 import api from 'src/@core/utils/api'
-import { setGlobalPay } from 'src/store/apps/students'
+import { setGlobalPay, setStudentId } from 'src/store/apps/students'
 import GlobalPaymentModal from 'src/views/apps/students/GlobalPaymentModal'
 import { toggleQrCodeModal } from 'src/store/apps/page'
 
@@ -129,6 +129,7 @@ const AppBarContent = (props: Props) => {
                     <li {...props} key={option.id}>
                       <Link
                         style={{ textDecoration: 'none' }}
+                        onClick={() => dispatch(setStudentId(option.id))}
                         href={renderRoleBasedLink(option.role, option.id, option.role_id)}
                       >
                         <Icon
@@ -206,6 +207,7 @@ const AppBarContent = (props: Props) => {
             <li {...props} key={option.id}>
               <Link
                 style={{ textDecoration: 'none' }}
+                onClick={() => dispatch(setStudentId(option.id))}
                 href={renderRoleBasedLink(option.role, option.id, option.role_id)}
               >
                 <Icon
