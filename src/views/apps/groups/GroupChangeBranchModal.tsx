@@ -44,7 +44,6 @@ export default function GroupChangeBranchModal() {
     validationSchema,
     onSubmit: async values => {
       setLoading(true)
-      console.log('Selected Branch ID:', values.branchId)
       await api
         .post(`common/group/branch-update/`, {
           branch: values.branchId,

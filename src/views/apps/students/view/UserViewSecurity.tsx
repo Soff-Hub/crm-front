@@ -101,7 +101,6 @@ const UserViewSecurity = ({ groupData }: any) => {
   const handleClick = (event: React.MouseEvent<HTMLElement>, groupData: any) => {
     setAnchorEl(event.currentTarget)
     setGroupData(groupData)
-    console.log(groupData)
   }
   const handleEdit = (id: any) => {
     setAmount(payments.find((el: any) => el.id === id)?.amount)

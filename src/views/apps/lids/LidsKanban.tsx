@@ -32,6 +32,7 @@ import dynamic from 'next/dynamic'
 import api from 'src/@core/utils/api'
 import { useState } from 'react'
 import Form from 'src/@core/components/form'
+import { fetchSmsList } from 'src/store/apps/settings'
 
 const AccordionCustom = dynamic(() => import('src/@core/components/accordion'))
 const EditDepartmentDialog = dynamic(() => import('./department/edit-dialog'))

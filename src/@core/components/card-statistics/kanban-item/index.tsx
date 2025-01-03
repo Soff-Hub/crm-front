@@ -236,9 +236,9 @@ const KanbanItem = (props: KanbarItemProps) => {
     const resp = await api.get(`leads/department/list/`, { params: { ...queryParams, is_active: true } })
     setDepartmentsState(resp.data)
   }
-  useEffect(() => {
-    dispatch(fetchSmsList())
-  },[])
+  // useEffect(() => {
+  //   dispatch(fetchSmsList())
+  // },[])
 
   // useEffect(() => {
   //     getLeadData()

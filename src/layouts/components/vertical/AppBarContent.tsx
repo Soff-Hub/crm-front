@@ -54,7 +54,6 @@ const AppBarContent = (props: Props) => {
 
   const renderRoleBasedLink = (role: string, id: string, role_id: string) => {
     dispatch(updateQueryParams({ role: role_id }))
-    console.log(role)
 
     switch (role) {
       case 'STUDENT':
@@ -83,7 +82,6 @@ const AppBarContent = (props: Props) => {
   useEffect(() => {
     const socket = new WebSocket(`wss://test.api-soffcrm.uz/ws/notifications/${user?.id}/`)
     socket.onopen = () => {
-      console.log('WebSocket connection established')
       socket.send(JSON.stringify({ subscribe: `notifications/${user?.id}/` }))
     }
     socket.onmessage = event => {

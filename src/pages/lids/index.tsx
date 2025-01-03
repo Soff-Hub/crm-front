@@ -12,6 +12,7 @@ import api from 'src/@core/utils/api'
 import { AuthContext } from 'src/context/AuthContext'
 import { useAppDispatch, useAppSelector } from 'src/store'
 import { fetchAmoCrmPipelines, fetchSources } from 'src/store/apps/leads'
+import { fetchSmsList } from 'src/store/apps/settings'
 
 const VideoHeader = dynamic(() => import('src/@core/components/video-header/video-header'))
 const LidsHeader = dynamic(() => import('src/views/apps/lids/LidsHeader'))
@@ -38,6 +39,7 @@ const Lids = () => {
       router.push('/')
       toast.error('Sahifaga kirish huquqingiz yoq!')
     }
+    dispatch(fetchSmsList())
     dispatch(fetchSources())
     dispatch(fetchAmoCrmPipelines(queryParams))
   }, [])

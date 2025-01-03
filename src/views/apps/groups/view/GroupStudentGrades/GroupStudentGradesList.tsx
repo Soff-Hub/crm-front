@@ -9,7 +9,13 @@ import { styled } from '@mui/material/styles'
 import { useTranslation } from 'react-i18next'
 import EmptyContent from 'src/@core/components/empty-content'
 import { useAppDispatch, useAppSelector } from 'src/store'
-import { getAttendance, getDays, setGettingAttendance, updateParams } from 'src/store/apps/groupDetails'
+import {
+  getDays,
+  getStudentsGrades,
+  setGettingAttendance,
+  setGettingGrades,
+  updateGradeParams
+} from 'src/store/apps/groupDetails'
 import { toast } from 'react-hot-toast'
 import { useSettings } from 'src/@core/hooks/useSettings'
 import SubLoader from 'src/views/apps/loaders/SubLoader'
@@ -43,30 +49,46 @@ const Item = ({
   setOpenedId
 }: {
   currentDate: any
-  defaultValue: true | false | null | 0
+  defaultValue: any,
   groupId?: any
   userId?: any
   date?: any
   opened_id: any
   setOpenedId: any
 }) => {
-  const [value, setValue] = useState<true | false | null | 0>(defaultValue)
+
+  const [value, setValue] = useState<number>(defaultValue)
+  const [inputValue, setInputValue] = useState<string>(defaultValue?.toString() || '')
   const [open, setOpen] = useState<boolean>(false)
 
-  const handleClick = async (status: any) => {
+  const handleSave = async () => {
+    if (!inputValue) {
+      toast.error('Bahoni kiritishingiz kerak')
+      return
+    }
+
+    const grade = parseFloat(inputValue)
+    if (isNaN(grade) || grade < 0) {
+      toast.error('Faqat musbat son kiriting')
+      return
+    }
+
     setOpenedId(null)
-    if (value !== status) {
-      setValue(status)
+
+    if (value !== grade) {
+      setValue(grade)
       const data = {
-        group: groupId,
-        student: userId,
+        group_student: userId,
         date: date,
-        is_available: status
+        score: grade
       }
+      console.log(data);
+      
       try {
-        const response = await api.patch(`common/attendance/update/${currentDate?.id}/`, data)
+        const response = await api.post(`common/group-student/rating/create/`, data)
+        toast.success('Baholash muvaffaqiyatli saqlandi')
       } catch (e: any) {
-        toast.error(e.response.data.msg?.[0] || "Saqlab bo'lmadi qayta urinib ko'ring")
+        toast.error(e.response.data.msg || "Bahoni saqlab bo'lmadi, qayta urinib ko'ring")
         setValue(defaultValue)
       }
     }
@@ -80,80 +102,66 @@ const Item = ({
     }
   }, [opened_id])
 
-  if (value === true || value === false || value === null) {
+   
+
+  if ( value != null) {
     return (
       <Box sx={{ position: 'relative' }}>
-        {open && (
-          <Box
-            onBlur={() => setOpen(false)}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-evenly',
-              gap: '4px',
-              position: 'absolute',
-              width: '80px',
+        <Box
+          onBlur={() => setOpen(false)}
+          style={{
+            border: 'none',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-evenly',
+            gap: '8px',
+            position: 'absolute',
+            width: '120px',
+            height: '40px',
+            backgroundColor: 'transparent',
+            // backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            padding: '8px',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            borderRadius: '8px'
+          }}
+        >
+          <TextField
+            variant='standard'
+            size='small'
+            value={inputValue}
+            onChange={e => setInputValue(e.target.value)}
+            onKeyDown={e => e.key === 'Enter' && handleSave()}
+            placeholder='Bahoni kiriting'
+            inputProps={{ style: { fontSize: '14px', textAlign: 'center' } }}
+            sx={{
+              // backgroundColor: '#fff',
+              // borderRadius: '4px',
+              border: 'none',
+              width: '40px',
               height: '30px',
-              backgroundColor: 'rgba(0, 0, 0, 0.5)',
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)'
+              '& .MuiOutlinedInput-input': { padding: '5px 10px' }
             }}
-          >
-            <IconifyIcon
-              icon={'mdi:cancel-bold'}
-              onClick={() => handleClick(false)}
-              fontSize={18}
-              color='#e31309'
-              cursor={'pointer'}
-            />
-            <IconifyIcon
-              icon={'game-icons:check-mark'}
-              onClick={() => handleClick(true)}
-              fontSize={18}
-              color='#4be309'
-              cursor={'pointer'}
-            />
-            <IconifyIcon
-              icon={'material-symbols-light:square-outline'}
-              onClick={() => handleClick(null)}
-              fontSize={18}
-              color='#4be309'
-              cursor={'pointer'}
-            />
-          </Box>
-        )}
-        {!open && (
-          <span onClick={() => setOpenedId(`${userId}-${date}`)}>
-            {value === true ? (
-              <IconifyIcon icon={'game-icons:check-mark'} fontSize={18} color='#4be309' />
-            ) : value === false ? (
-              <IconifyIcon icon={'mdi:cancel-bold'} fontSize={18} color='#e31309' />
-            ) : value === null ? (
-              <IconifyIcon icon={'fluent:square-20-regular'} fontSize={18} color='#9e9e9e' />
-            ) : (
-              ''
-            )}
-          </span>
-        )}
+          />
+        </Box>
       </Box>
     )
   } else {
     return (
       <span>
         <IconifyIcon icon={'material-symbols:lock-outline'} fontSize={18} color='#9e9e9e' />
+        
       </span>
     )
   }
 }
 
 const GroupStudentGrades = () => {
-  const { queryParams, attendance, isGettingDays, isGettingAttendance, days, groupData, month_list } = useAppSelector(
+  const { gradeQueryParams, isGettingGrades, grades, isGettingDays, days, groupData, month_list } = useAppSelector(
     state => state.groupDetails
   )
   const dispatch = useAppDispatch()
-
-  console.log(days)
 
   const start_date: any = groupData?.start_date ? Number(groupData?.start_date.split('-')[1]) : ''
 
@@ -193,12 +201,11 @@ const GroupStudentGrades = () => {
       month: date.date.split('-')[1],
       year: date.date.split('-')[0]
     }
-
-    dispatch(setGettingAttendance(true))
-    const queryString = new URLSearchParams(queryParams).toString()
-    await dispatch(getAttendance({ date: `${value.year}-${value.month}`, group: query?.id, queryString: queryString }))
+    const currentDate = new Date()
+    const currentDay = currentDate.getDate()
+    const queryString = new URLSearchParams(gradeQueryParams).toString()
+    await dispatch(getStudentsGrades({ id: query?.id, queryString: `date=${value.year}-${value.month}-${currentDay}` }))
     await dispatch(getDays({ date: `${value.year}-${value.month}`, group: query?.id }))
-    dispatch(setGettingAttendance(false))
 
     push({
       pathname,
@@ -237,29 +244,12 @@ const GroupStudentGrades = () => {
   }
 
   useEffect(() => {
-    ;(async function () {
-      const queryString = new URLSearchParams(queryParams).toString()
-      dispatch(setGettingAttendance(true))
-      if (query?.month && query?.id) {
-        await dispatch(
-          getAttendance({
-            date: `${query?.year || new Date().getFullYear()}-${getMontNumber(query?.month)}`,
-            group: query?.id,
-            queryString: queryString
-          })
-        )
-        await dispatch(
-          getDays({
-            date: `${query?.year || new Date().getFullYear()}-${getMontNumber(query?.month)}`,
-            group: query?.id
-          })
-        )
-      }
-      dispatch(setGettingAttendance(false))
-    })()
-  }, [queryParams.status])
+    dispatch(getStudentsGrades({id:query.id,queryString:''}))
+  },[])
+  
+ 
 
-  return isGettingAttendance ? (
+  return isGettingGrades ? (
     <SubLoader />
   ) : (
     <Box className='demo-space-y'>
@@ -309,155 +299,9 @@ const GroupStudentGrades = () => {
                     borderRight: `1px solid ${settings.mode == 'dark' ? '#444' : '#c3cccc'}` // Dark mode border color
                   }}
                 >
-                  <Typography>{t('Mavzular')}</Typography>
-                </td>
-                {attendance &&
-                  days?.map((hour: any) => (
-                    <td
-                      key={hour.date}
-                      style={{
-                        textAlign: 'center',
-                        width: '60px',
-                        padding: '8px 0',
-                        cursor: 'pointer',
-                        backgroundColor: hour.exam ? '#96f3a5' : hour.lesson ? '#a7c0fb' : 'transparent'
-                      }}
-                    >
-                      <div>
-                        {hour.exam ? (
-                          <HtmlTooltip
-                            PopperProps={{
-                              disablePortal: true
-                            }}
-                            onClose={() => setOpenTooltip(null)}
-                            open={openTooltip === hour.date}
-                            disableFocusListener
-                            disableHoverListener
-                            disableTouchListener
-                            arrow
-                            title={
-                              <div>
-                                <p style={{ margin: '0', marginBottom: '4px' }}>{hour.exam.title}</p>
-                                <p style={{ margin: '0', marginBottom: '4px' }}>
-                                  Ball: {hour.exam.min_score} / {hour.exam.max_score}
-                                </p>
-                              </div>
-                            }
-                          >
-                            <Box
-                              sx={{
-                                padding: '5px',
-                                width: '60px',
-                                overflow: 'hidden',
-                                textOverflow: 'ellipsis',
-                                textWrap: 'nowrap'
-                              }}
-                              onClick={() => setOpenTooltip(c => (c === hour.date ? null : hour.date))}
-                            >
-                              {hour.exam?.title}
-                            </Box>
-                          </HtmlTooltip>
-                        ) : hour.lesson ? (
-                          <HtmlTooltip
-                            PopperProps={{
-                              disablePortal: true
-                            }}
-                            onClose={() => setOpenTooltip(null)}
-                            open={openTooltip === hour.date}
-                            disableFocusListener
-                            disableHoverListener
-                            disableTouchListener
-                            arrow
-                            title={
-                              <div>
-                                <p style={{ margin: '0', marginBottom: '4px' }}>{hour.lesson.topic}</p>
-                              </div>
-                            }
-                          >
-                            <Box
-                              sx={{
-                                padding: '5px',
-                                width: '60px',
-                                overflow: 'hidden',
-                                textOverflow: 'ellipsis',
-                                textWrap: 'nowrap'
-                              }}
-                              onClick={() => setOpenTooltip(c => (c === hour.date ? null : hour.date))}
-                            >
-                              {hour.lesson.topic}
-                            </Box>
-                          </HtmlTooltip>
-                        ) : (
-                          <HtmlTooltip
-                            PopperProps={{
-                              disablePortal: true
-                            }}
-                            onClose={() => setOpenTooltip(null)}
-                            open={openTooltip === hour.date}
-                            disableFocusListener
-                            disableHoverListener
-                            disableTouchListener
-                            arrow
-                            title={
-                              <form
-                                style={{
-                                  display: 'flex',
-                                  alignItems: 'stretch',
-                                  width: '100%',
-                                  padding: '5px',
-                                  flexDirection: 'column',
-                                  gap: '3px'
-                                }}
-                                onSubmit={async e => {
-                                  e.preventDefault()
-                                  handleTopicSubmit(hour)
-                                }}
-                              >
-                                <TextField
-                                  autoComplete='off'
-                                  onChange={e => setTopic(e.target.value)}
-                                  size='small'
-                                  placeholder='Mavzu..'
-                                />
-                                <Button type='submit'>{t('Saqlash')}</Button>
-                              </form>
-                            }
-                          >
-                            <span
-                              style={{
-                                padding: '15px',
-                                minWidth: '60px',
-                                overflow: 'hidden',
-                                textOverflow: 'ellipsis',
-                                textWrap: 'nowrap'
-                              }}
-                              onClick={() => setOpenTooltip(c => (c === hour.date ? null : hour.date))}
-                            >
-                              <IconifyIcon icon={'iconamoon:file-add-light'} />
-                            </span>
-                          </HtmlTooltip>
-                        )}
-                      </div>
-                    </td>
-                  ))}
-              </tr>
-              <tr style={{ borderBottom: '1px solid #c3cccc' }}>
-                <td
-                  style={{
-                    position: 'sticky',
-                    left: 0,
-                    background: settings.mode == 'dark' ? '#282A42' : '#ffffff', // Dark mode background
-                    color: settings.mode == 'dark' ? '#f0f0f0' : '#000000', // Dark mode text color
-                    zIndex: 1,
-                    padding: '8px 20px',
-                    textAlign: 'start',
-                    fontSize: '14px',
-                    borderRight: `1px solid ${settings.mode == 'dark' ? '#444' : '#c3cccc'}` // Dark mode border color
-                  }}
-                >
                   <Typography>{t("O'quvchilar")}</Typography>
                 </td>
-                {attendance &&
+                {grades &&
                   days?.map((hour: any) => (
                     <th
                       key={hour.date}
@@ -468,10 +312,10 @@ const GroupStudentGrades = () => {
                   ))}
               </tr>
             </thead>
-            {attendance?.students?.length > 0 ? (
+            {grades?.result.length > 0 ? (
               <tbody>
-                {attendance &&
-                  attendance.students.map((student: any) => (
+                {grades &&
+                  grades.result.map((student: any) => (
                     <tr key={student.id} style={{}}>
                       <td
                         style={{
@@ -488,51 +332,30 @@ const GroupStudentGrades = () => {
                         {student.first_name}
                       </td>
                       {days?.map((hour: any) => {
-                        const currentDate = student.attendance.find((el: any) => el.date === hour.date)
-                        return student.attendance.some((el: any) => el.date === hour.date) &&
-                          student.attendance.find((el: any) => el.date === hour.date && !hour.weekend?.date) ? (
+                        const currentDate = student.ratings?.find((el: any) => el.date === hour.date)
+                        const matchedRating = student?.ratings?.find(
+                          (el: any) => el.date === hour.date && !hour.weekend?.date
+                        )
+                        return student?.ratings?.some((el: any) => el.date === hour.date) &&
+                          student?.ratings?.find((el: any) => el.date === hour.date && !hour.weekend?.date) ? (
                           <td
-                            key={student.attendance.find((el: any) => el.date === hour.date).date}
-                            style={{ padding: '8px 0', textAlign: 'center', cursor: 'pointer' }}
+                            key={student.ratings.find((el: any) => el.date === hour.date).date}
+                            style={{ padding: '8px 10px', textAlign: 'center', cursor: 'pointer' }}
                           >
-                            {student.attendance.find((el: any) => el.date === hour.date).is_available === true ? (
-                              <Item
-                                currentDate={currentDate}
-                                opened_id={opened_id}
-                                setOpenedId={setOpenedId}
-                                defaultValue={true}
-                                groupId={query?.id}
-                                userId={student.id}
-                                date={hour.date}
-                              />
-                            ) : student.attendance.find((el: any) => el.date === hour.date).is_available === false ? (
-                              <Item
-                                currentDate={currentDate}
-                                opened_id={opened_id}
-                                setOpenedId={setOpenedId}
-                                defaultValue={false}
-                                groupId={query?.id}
-                                userId={student.id}
-                                date={hour.date}
-                              />
-                            ) : student.attendance.find((el: any) => el.date === hour.date).is_available === null ? (
-                              <Item
-                                currentDate={currentDate}
-                                opened_id={opened_id}
-                                setOpenedId={setOpenedId}
-                                defaultValue={null}
-                                groupId={query?.id}
-                                userId={student.id}
-                                date={hour.date}
-                              />
-                            ) : (
-                              <></>
-                            )}
+                            <Item
+                              currentDate={currentDate}
+                              opened_id={opened_id}
+                              setOpenedId={setOpenedId}
+                              defaultValue={matchedRating?.score}
+                              groupId={query?.id}
+                              userId={student.id}
+                              date={hour.date}
+                            />
                           </td>
                         ) : hour.weekend?.date ? (
                           <td
                             key={hour.date}
-                              style={{
+                            style={{
                               padding: '10px 8px',
                               textAlign: 'center',
                               cursor: 'default',
@@ -553,7 +376,7 @@ const GroupStudentGrades = () => {
                                 currentDate={currentDate}
                                 opened_id={opened_id}
                                 setOpenedId={setOpenedId}
-                                defaultValue={0}
+                                defaultValue={null}
                               />
                             </span>
                           </td>
@@ -570,26 +393,26 @@ const GroupStudentGrades = () => {
               </tr>
             )}
           </table>
-          {!isGettingAttendance && (
+          {!isGettingGrades && (
             <Box sx={{ width: '100%', display: 'flex', pt: '10px' }}>
               <Button
                 startIcon={
                   <IconifyIcon
                     style={{ fontSize: '12px' }}
-                    icon={`icon-park-outline:to-${queryParams.status === 'archive' ? 'top' : 'bottom'}`}
+                    icon={`icon-park-outline:to-${gradeQueryParams.status === 'archive' ? 'top' : 'bottom'}`}
                   />
                 }
                 sx={{ fontSize: '10px', marginLeft: 'auto' }}
                 size='small'
-                color={queryParams.status === 'archive' ? 'primary' : 'error'}
+                color={gradeQueryParams.status === 'archive' ? 'primary' : 'error'}
                 variant='text'
                 onClick={() => {
-                  if (queryParams?.status === 'archive') {
-                    dispatch(updateParams({ status: 'active,new' }))
-                  } else dispatch(updateParams({ status: 'archive' }))
+                  if (gradeQueryParams?.status === 'archive') {
+                    dispatch(updateGradeParams({ status: 'active,new' }))
+                  } else dispatch(updateGradeParams({ status: 'archive' }))
                 }}
               >
-                {queryParams.status === 'archive' ? t('Arxivni yopish') : t("Arxivdagi o'quvchilarni ko'rish")}
+                {gradeQueryParams.status === 'archive' ? t('Arxivni yopish') : t("Arxivdagi o'quvchilarni ko'rish")}
               </Button>
             </Box>
           )}

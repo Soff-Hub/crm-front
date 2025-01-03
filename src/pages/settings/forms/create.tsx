@@ -124,7 +124,7 @@ export default function CreateForm({ }: Props) {
     }
 
     useEffect(() => {
-        if (!user?.role.includes('ceo') && !user?.role.includes('admin') && !user?.role.includes('watcher')&& !user?.role.includes('marketolog')) {
+        if (!user?.role.includes('ceo') && !user?.role.includes('admin') && !user?.role.includes('watcher') && !user?.role.includes('marketolog')) {
             push("/")
             toast.error("Sizda bu sahifaga kirish huquqi yo'q!")
         }
@@ -132,6 +132,8 @@ export default function CreateForm({ }: Props) {
         getSources()
     }, [])
 
+        console.log(departments[0]);
+        
 
     return (
         <div>
@@ -166,7 +168,7 @@ export default function CreateForm({ }: Props) {
                                 </Select>
                             </FormControl> */}
 
-                            {selectedDepartment && (
+                            { (
                                 <FormControl fullWidth>
                                     <InputLabel size='small' id='user-view-language-label'>{t("Quyi bo'lim")}</InputLabel>
                                     <Select
@@ -179,7 +181,7 @@ export default function CreateForm({ }: Props) {
                                         onChange={(e) => setDepartment(e.target.value)}
                                     >
                                         {
-                                            departments.find(el => Number(el.id) === selectedDepartment).children.map((item: any) => <MenuItem key={item.id} value={item.id}>{item.name}</MenuItem>)
+                                            departments[0].children?.map((item: any) => <MenuItem key={item.id} value={item.id}>{item.name}</MenuItem>)
                                         }
                                     </Select>
                                 </FormControl>
