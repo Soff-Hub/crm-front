@@ -29,7 +29,7 @@ import { AuthContext } from 'src/context/AuthContext'
 import { updateQueryParams } from 'src/store/apps/settings'
 import Link from 'next/link'
 import api from 'src/@core/utils/api'
-import { setGlobalPay } from 'src/store/apps/students'
+import { setGlobalPay, setStudentId } from 'src/store/apps/students'
 import GlobalPaymentModal from 'src/views/apps/students/GlobalPaymentModal'
 import { toggleQrCodeModal } from 'src/store/apps/page'
 
@@ -54,7 +54,6 @@ const AppBarContent = (props: Props) => {
 
   const renderRoleBasedLink = (role: string, id: string, role_id: string) => {
     dispatch(updateQueryParams({ role: role_id }))
-    console.log(role)
 
     switch (role) {
       case 'STUDENT':
@@ -83,7 +82,6 @@ const AppBarContent = (props: Props) => {
   useEffect(() => {
     const socket = new WebSocket(`wss://test.api-soffcrm.uz/ws/notifications/${user?.id}/`)
     socket.onopen = () => {
-      console.log('WebSocket connection established')
       socket.send(JSON.stringify({ subscribe: `notifications/${user?.id}/` }))
     }
     socket.onmessage = event => {
@@ -129,6 +127,7 @@ const AppBarContent = (props: Props) => {
                     <li {...props} key={option.id}>
                       <Link
                         style={{ textDecoration: 'none' }}
+                        onClick={() => dispatch(setStudentId(option.id))}
                         href={renderRoleBasedLink(option.role, option.id, option.role_id)}
                       >
                         <Icon
@@ -206,6 +205,7 @@ const AppBarContent = (props: Props) => {
             <li {...props} key={option.id}>
               <Link
                 style={{ textDecoration: 'none' }}
+                onClick={() => dispatch(setStudentId(option.id))}
                 href={renderRoleBasedLink(option.role, option.id, option.role_id)}
               >
                 <Icon

@@ -31,7 +31,6 @@ export default function EditSmsDialog({ }: Props) {
     const { t } = useTranslation()
     const dispatch = useAppDispatch()
     const { openEditSms } = useAppSelector(state => state.settings)
-     console.log(openEditSms);
      
     const setOpenAddGroup = () => {
         dispatch(setOpenEditSms(null))

@@ -30,6 +30,7 @@ import { useTranslation } from 'react-i18next'
 import { useAppDispatch, useAppSelector } from 'src/store'
 import { fetchAmoCrmPipelines, fetchDepartmentList, setOpenLid, setSectionId } from 'src/store/apps/leads'
 import dynamic from 'next/dynamic'
+import { fetchSmsList } from 'src/store/apps/settings'
 
 const DepartmentSendSmsForm = dynamic(() => import('src/views/apps/lids/departmentItem/DepartmentSendSmsForm'), {
   ssr: false // Disable server-side rendering if required
@@ -94,7 +95,6 @@ export default function AccordionCustom({ onView, parentId, item, is_amocrm, stu
   const handleRowOptionsClose = () => {
     setAnchorEl(null)
   }
-  
 
   const handleGetLeads = async (isLoad: boolean) => {
     if (isLoad) setOpen(!open)
@@ -174,12 +174,11 @@ export default function AccordionCustom({ onView, parentId, item, is_amocrm, stu
       setLoading(false)
     }
   }
- 
-  
 
   useEffect(() => {
     if (open) onView()
   }, [open])
+
 
   useEffect(() => {
     if (open) {
@@ -284,7 +283,7 @@ export default function AccordionCustom({ onView, parentId, item, is_amocrm, stu
                     getSMSTemps()
                     setOpenDialog('sms')
                     setAnchorEl(null)
-                    await handleGetLeads(false)
+                    // await handleGetLeads(false)
                   }}
                   sx={{ '& svg': { mr: 2 } }}
                 >

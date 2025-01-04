@@ -33,6 +33,13 @@ export const getAttendance = createAsyncThunk(
     return resp.data
   }
 )
+export const getStudentsGrades = createAsyncThunk(
+  'getStudentsGrades/getStudentsGrades',
+  async ({ id, queryString }: { id: any; queryString?: string }) => {
+    const resp = await api.get(`common/group-student/rating/list/${id}/?${queryString}`);
+    return resp.data
+  }
+)
 export const getDays = createAsyncThunk(
   'getDays/getDays',
   async ({ date, group }: { date: string; group: string | string[] | undefined }) => {
@@ -101,6 +108,7 @@ const initialState: IGroupDetailsState = {
   isOpenDelete: null,
   students: null,
   attendance: null,
+  grades: null,
   days: null,
   rooms: null,
   results: null,
@@ -108,6 +116,7 @@ const initialState: IGroupDetailsState = {
   examStudentId: null,
   editData: null,
   openEdit: null,
+  gradeQueryParams: '',
   queryParams: {
     status: 'active,new'
   },
@@ -119,6 +128,7 @@ const initialState: IGroupDetailsState = {
   isGettingStudents: false,
   isGettingExams: false,
   isGettingAttendance: false,
+  isGettingGrades: false,
   isGettingExamsResults: false,
   openLeadModal: null,
   month_list: [],
@@ -159,11 +169,17 @@ export const groupDetailsSlice = createSlice({
     updateParams: (state, action) => {
       state.queryParams = { ...state.queryParams, ...action.payload }
     },
+    updateGradeParams: (state, action) => {
+      state.gradeQueryParams = { ...state.gradeQueryParams, ...action.payload }
+    },
     studentsUpdateParams: (state, action) => {
       state.studentsQueryParams = { ...state.studentsQueryParams, ...action.payload }
     },
     setGettingAttendance: (state, action) => {
       state.isGettingAttendance = action.payload
+    },
+    setGettingGrades: (state, action) => {
+      state.isGettingGrades = action.payload
     },
     resetStore: state => {
       state.groupData = null
@@ -205,10 +221,20 @@ export const groupDetailsSlice = createSlice({
     })
     builder.addCase(getAttendance.fulfilled, (state, action) => {
       state.attendance = action.payload
-      // state.isGettingAttendance = false
+      state.isGettingAttendance = false
     })
     builder.addCase(getAttendance.rejected, (state, action) => {
       state.isGettingAttendance = false
+    })
+    builder.addCase(getStudentsGrades.pending, (state, action) => {
+      state.isGettingGrades = true
+    })
+    builder.addCase(getStudentsGrades.fulfilled, (state, action) => {
+      state.grades = action.payload
+      state.isGettingGrades = false
+    })
+    builder.addCase(getStudentsGrades.rejected, (state, action) => {
+      state.isGettingGrades = false
     })
     builder.addCase(getDays.fulfilled, (state, action) => {
       state.days = action.payload?.result
@@ -239,8 +265,10 @@ export const {
   handleOpenDeleteNote,
   updateParams,
   resetStore,
+  updateGradeParams,
   studentsUpdateParams,
   setGettingAttendance,
+  setGettingGrades,
   setOpen,
   setEditData,
   setResultEdit,

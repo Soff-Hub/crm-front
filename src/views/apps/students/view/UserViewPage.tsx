@@ -16,7 +16,6 @@ import UserViewRight from 'src/views/apps/students/view/UserViewRight'
 const UserView = ({ tab, student }: any) => {
   const url = tab
 
-  // hooks
   const { studentData ,studentId} = useAppSelector(state => state.students)
   const dispatch = useAppDispatch()
   const router = useRouter()
@@ -24,7 +23,7 @@ const UserView = ({ tab, student }: any) => {
 
  
   
- 
+  
   
 
   useEffect(() => {

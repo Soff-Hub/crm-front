@@ -60,8 +60,6 @@ export default function TransitionsModal({ id }: { id: string }) {
         formik.resetForm()
         dispatch(setOpenModal(null))
     }
-    console.log(formik.errors);
-    console.log(formik.values);
 
 
     return (
