@@ -532,7 +532,7 @@ const UserViewSecurity = () => {
                         ) : hour.weekend?.date ? (
                           <td
                             key={hour.date}
-                              style={{
+                            style={{
                               padding: '10px 8px',
                               textAlign: 'center',
                               cursor: 'default',
@@ -541,10 +541,24 @@ const UserViewSecurity = () => {
                               borderRadius: '4px',
                               boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
                               fontSize: '14px',
-                              fontWeight: '500'
+                              fontWeight: '500',
+                              position: 'relative' // For tooltip positioning
                             }}
                           >
-                            <span>{hour.weekend?.description}</span>
+                            <Tooltip title={hour.weekend?.description || ''} arrow placement='top'>
+                              <span
+                                style={{
+                                  display: 'inline-block',
+                                  maxWidth: '100px', // Limit the text width
+                                  overflow: 'hidden',
+                                  textOverflow: 'ellipsis',
+                                  whiteSpace: 'nowrap', // Prevent line breaks
+                                  cursor: 'pointer'
+                                }}
+                              >
+                                {hour.weekend?.description}
+                              </span>
+                            </Tooltip>
                           </td>
                         ) : (
                           <td key={hour.date} style={{ padding: '8px 0', textAlign: 'center', cursor: 'not-allowed' }}>

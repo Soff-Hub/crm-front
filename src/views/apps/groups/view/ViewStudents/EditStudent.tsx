@@ -24,6 +24,7 @@ import { useRouter } from 'next/router'
 import { useAppDispatch, useAppSelector } from 'src/store'
 import { getMontNumber } from 'src/@core/utils/gwt-month-name'
 import { useTranslation } from 'react-i18next'
+import { fetchStudentDetail } from 'src/store/apps/students'
 
 export default function EditStudent({
   student,
@@ -44,6 +45,9 @@ export default function EditStudent({
   const { query } = useRouter()
   const { t } = useTranslation()
 
+  console.log(query);
+  
+
   const formik = useFormik({
     initialValues: { added_at: student?.added_at, status, lesson_count: student?.lesson_count },
     validationSchema: () =>
@@ -59,10 +63,11 @@ export default function EditStudent({
         toast.success("O'quvchi malumotlari o'zgartirildi", { position: 'top-center' })
         setLoading(false)
         setActivate(false)
+        await dispatch(fetchStudentDetail(Number(query?.student || query.id)))
         const queryString = new URLSearchParams({ ...studentsQueryParams }).toString()
         const queryStringAttendance = new URLSearchParams(queryParams).toString()
         dispatch(setGettingAttendance(true))
-        await dispatch(getStudents({ id: query.id, queryString: queryString }))
+        await dispatch(getStudents({ id: query.student || query.id, queryString: queryString }))
         if (query.month && query?.id) {
           await dispatch(
             getAttendance({

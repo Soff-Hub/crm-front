@@ -81,7 +81,6 @@ const UserViewSecurity = ({ groupData }: any) => {
   const [activate, setActivate] = useState<boolean>(false)
   const { smsTemps, getSMSTemps } = useSMS()
   const { studentData ,openLeadModal,studentId} = useAppSelector(state => state.students)
-  
   const [group_data, setGroupData] = useState<any>()
   const { deletePayment } = usePayment()
 
@@ -101,6 +100,8 @@ const UserViewSecurity = ({ groupData }: any) => {
   const handleClick = (event: React.MouseEvent<HTMLElement>, groupData: any) => {
     setAnchorEl(event.currentTarget)
     setGroupData(groupData)
+    
+    
   }
   const handleEdit = (id: any) => {
     setAmount(payments.find((el: any) => el.id === id)?.amount)
@@ -109,6 +110,7 @@ const UserViewSecurity = ({ groupData }: any) => {
 
   const handleClose = (value: 'none' | 'left' | 'payment' | 'notes' | 'sms' | 'export') => {
     setAnchorEl(null)
+    
     if (value === 'notes') setModalRef('note')
     else if (value === 'sms') setModalRef('sms')
     else if (value === 'export') setModalRef('export')
@@ -275,7 +277,7 @@ const UserViewSecurity = ({ groupData }: any) => {
   const handleLeft = async () => {
     setLoading(true)
     try {
-      await api.delete(`common/group-student-delete/${group_data?.group_data.id}/`).then(res => {
+      await api.delete(`common/group-student-delete/${group_data?.id}/`).then(res => {
         console.log(res)
       })
        await dispatch(fetchStudentDetail(Number(query?.student)))
@@ -312,7 +314,6 @@ const UserViewSecurity = ({ groupData }: any) => {
     await dispatch(fetchStudentPayment(query?.student))
     await dispatch(fetchStudentDetail(Number(query?.student)))
   }
-  console.log(studentId,query?.student);
   
 
   useEffect(() => {
@@ -407,7 +408,7 @@ const UserViewSecurity = ({ groupData }: any) => {
                   {t('Tahrirlash')}
                 </MenuItem>
               </Menu>
-              <StudentPaymentForm student_id={query.id} openEdit={openEdit} setOpenEdit={setOpenEdit} />
+              <StudentPaymentForm student_id={query.id} group={group_data?.group_data.id} openEdit={openEdit} setOpenEdit={setOpenEdit} />
 
               <Link
                 href={`/groups/view/security/?id=${group.group_data.id}&month=${getMontName(null)}`}

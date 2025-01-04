@@ -69,9 +69,9 @@ const UserViewRight = ({ tab }: Props) => {
         sx={{ borderBottom: theme => `1px solid ${theme.palette.divider}` }}
       >
         <Tab value='security' label={t('Davomat')} icon={<Icon icon='tabler:user-check' />} />
-        {/* {!(user?.role.length === 1 && user?.role.includes('teacher')) && (
+        {!(user?.role.length === 1 && user?.role.includes('teacher')) && (
           <Tab value='grade' label={t('Baho')} icon={<Icon icon='mdi:school' />} />
-        )} */}
+        )}
         {!(user?.role.length === 1 && user?.role.includes('teacher')) && (
           <Tab value='notes' label={t('Eslatmalar')} icon={<Icon icon='fluent:note-add-48-regular' />} />
         )}
@@ -85,9 +85,9 @@ const UserViewRight = ({ tab }: Props) => {
         <TabPanel sx={{ p: 0 }} value='security'>
           <UserViewSecurity />
         </TabPanel>
-        {/* <TabPanel sx={{ p: 0 }} value='grade'>
+        <TabPanel sx={{ p: 0 }} value='grade'>
           <GroupStudentGrades />
-        </TabPanel> */}
+        </TabPanel>
         <TabPanel sx={{ p: 0 }} value='exams'>
           <GroupExamsList />
         </TabPanel>

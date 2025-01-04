@@ -24,7 +24,7 @@ interface DataTableProps {
   loading?: boolean,
 }
 
-export default function DataTable({
+export default function PaymentTable({
   columns,
   loading = false,
   data,
@@ -116,7 +116,7 @@ export default function DataTable({
               {rowClick && (
                 <Box
                   sx={{ width: '75%', zIndex: 1, height: '36px', position: 'absolute' }}
-                  onClick={() => handleClick(item.id)}
+                  onClick={() => handleClick(item.student)}
                 ></Box>
               )}
             </Box>
