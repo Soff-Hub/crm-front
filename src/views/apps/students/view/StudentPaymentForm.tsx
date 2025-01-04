@@ -26,9 +26,10 @@ type Props = {
   openEdit: any
   setOpenEdit: any
   student_id?: any
+  group?: any
 }
 
-export default function StudentPaymentForm({ openEdit, setOpenEdit, student_id }: Props) {
+export default function StudentPaymentForm({ openEdit, setOpenEdit, student_id, group }: Props) {
   const [loading, setLoading] = useState<boolean>(false)
   const [showWarning, setShowWarning] = useState<boolean>(false)
 
@@ -84,6 +85,7 @@ export default function StudentPaymentForm({ openEdit, setOpenEdit, student_id }
 
   const handleEditClose = () => {
     setOpenEdit(null)
+
     setShowWarning(true)
   }
   const handleConfirmCancel = () => {
@@ -95,8 +97,10 @@ export default function StudentPaymentForm({ openEdit, setOpenEdit, student_id }
   }
 
   useEffect(() => {
-    formik.setFieldValue('group', studentData ? `${studentData.groups?.[0]?.group_data?.id}` : '')
-  }, [studentData])
+    if (studentData) {
+      formik.setFieldValue('group', group || `${studentData.groups?.[0]?.group_data?.id}`)
+    }
+  }, [studentData, group])
 
   useEffect(() => {
     if (student_id && openEdit === 'payment') {
@@ -110,6 +114,7 @@ export default function StudentPaymentForm({ openEdit, setOpenEdit, student_id }
       getPaymentMethod()
     }
   }, [openEdit])
+  console.log(group)
 
   return (
     <div>
@@ -264,8 +269,7 @@ export default function StudentPaymentForm({ openEdit, setOpenEdit, student_id }
         </DialogTitle>
         <DialogContent>
           <Typography id='warning-dialog-description' sx={{ mt: 2, textAlign: 'center' }}>
-            {t(`Are you sure you want to cancel?`)} <br />
-            {t('Unsaved changes will be lost')}
+            {t(`Bekor qilishga ishonchingiz komilmi?`)} <br />
           </Typography>
         </DialogContent>
         <DialogActions sx={{ justifyContent: 'center' }}>

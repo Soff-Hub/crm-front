@@ -46,10 +46,11 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
   const { smsTemps, getSMSTemps } = useSMS()
   const [error, setError] = useState<any>({})
   const studentIds = students.map(student => student.id)
-
   const handleEditClickOpen = (value: ModalTypes) => {
     setOpenEdit(value)
   }
+
+  console.log(queryParams.debt_date)
 
   const handleEditClose = () => {
     setError({})
@@ -71,6 +72,7 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
 
   async function handleFilter(key: string, value: string | number | null) {
     dispatch(updateStudentParams({ [key]: value }))
+
     if (key === 'debt_date') {
       setIsActive(false)
       dispatch(updateStudentParams({ is_debtor: true, last_payment: '', not_in_debt: '', debt_date: `${value}` }))
@@ -250,12 +252,20 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
 
           {queryParams.is_debtor && (
             <DatePicker
+            
               size='lg'
-              label='Yil va oy'
+              label={`${queryParams.debt_date ? queryParams.debt_date : 'Yil va Oy'}`}
+              value={queryParams.debt_date ? new Date(queryParams.debt_date) : null}
               format='MMM/yyyy'
               placeholder='Select month and year'
-              onChange={value => handleFilter('debt_date', format(value || new Date(), 'yyyy-MM-dd'))}
-              style={{ width: 180 }}
+              onChange={value => {
+                if (!value) {
+                  handleFilter('debt_date', '')
+                } else {
+                  handleFilter('debt_date', format(value, 'yyyy-MM-dd'))
+                }
+              }}
+              style={{ width: '100%' }}
             />
           )}
 
@@ -428,11 +438,19 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
 
           {queryParams.is_debtor && (
             <DatePicker
+              cleanable
               size='lg'
-              label='Yil va oy'
+              label={`${queryParams.debt_date ? queryParams.debt_date : 'Yil va Oy'}`}
+              value={queryParams.debt_date ? new Date(queryParams.debt_date) : null}
               format='MMM/yyyy'
               placeholder='Select month and year'
-              onChange={value => handleFilter('debt_date', format(value || new Date(), 'yyyy-MM-dd'))}
+              onChange={value => {
+                if (!value) {
+                  handleFilter('debt_date', '')
+                } else {
+                  handleFilter('debt_date', format(value, 'yyyy-MM-dd'))
+                }
+              }}
               style={{ width: 180 }}
             />
           )}
@@ -451,6 +469,7 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
             <Autocomplete
               sx={{ maxWidth: 180, width: '100%' }}
               disablePortal
+              value={teacherOptions?.find((option: any) => option.value === queryParams.teacher) || null}
               options={teacherOptions}
               onChange={(e: any, v: any) => handleFilter('teacher', v?.value)}
               size='small'

@@ -1,4 +1,4 @@
-import { Box, Button, TextField, Typography } from '@mui/material'
+import { Box, Button, ClickAwayListener, MenuItem, Select, TextField, Typography } from '@mui/material'
 import { useRouter } from 'next/router'
 import IconifyIcon from 'src/@core/components/icon'
 import Tooltip, { TooltipProps, tooltipClasses } from '@mui/material/Tooltip'
@@ -49,27 +49,19 @@ const Item = ({
   setOpenedId
 }: {
   currentDate: any
-  defaultValue: any,
+  defaultValue: any
   groupId?: any
   userId?: any
   date?: any
   opened_id: any
   setOpenedId: any
 }) => {
-
   const [value, setValue] = useState<number>(defaultValue)
-  const [inputValue, setInputValue] = useState<string>(defaultValue?.toString() || '')
   const [open, setOpen] = useState<boolean>(false)
 
-  const handleSave = async () => {
-    if (!inputValue) {
-      toast.error('Bahoni kiritishingiz kerak')
-      return
-    }
-
-    const grade = parseFloat(inputValue)
-    if (isNaN(grade) || grade < 0) {
-      toast.error('Faqat musbat son kiriting')
+  const handleGradeClick = async (grade: number) => {
+    if (grade < 1 || grade > 5) {
+      toast.error('1 dan 5 gacha bo‘lgan sonlarni tanlashingiz mumkin')
       return
     }
 
@@ -82,16 +74,17 @@ const Item = ({
         date: date,
         score: grade
       }
-      console.log(data);
-      
+      console.log(data)
+
       try {
-        const response = await api.post(`common/group-student/rating/create/`, data)
-        toast.success('Baholash muvaffaqiyatli saqlandi')
+        await api.post(`common/group-student/rating/create/`, data)
       } catch (e: any) {
-        toast.error(e.response.data.msg || "Bahoni saqlab bo'lmadi, qayta urinib ko'ring")
+        toast.error(e.response?.data.msg || 'Bahoni saqlab bo‘lmadi, qayta urinib ko‘ring')
         setValue(defaultValue)
       }
     }
+
+    setOpen(false)
   }
 
   useEffect(() => {
@@ -102,61 +95,83 @@ const Item = ({
     }
   }, [opened_id])
 
-   
+  console.log(value)
 
-  if ( value != null) {
-    return (
-      <Box sx={{ position: 'relative' }}>
-        <Box
-          onBlur={() => setOpen(false)}
-          style={{
-            border: 'none',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-evenly',
-            gap: '8px',
-            position: 'absolute',
-            width: '120px',
-            height: '40px',
-            backgroundColor: 'transparent',
-            // backgroundColor: 'rgba(0, 0, 0, 0.5)',
-            padding: '8px',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            borderRadius: '8px'
-          }}
-        >
-          <TextField
-            variant='standard'
-            size='small'
-            value={inputValue}
-            onChange={e => setInputValue(e.target.value)}
-            onKeyDown={e => e.key === 'Enter' && handleSave()}
-            placeholder='Bahoni kiriting'
-            inputProps={{ style: { fontSize: '14px', textAlign: 'center' } }}
-            sx={{
-              // backgroundColor: '#fff',
-              // borderRadius: '4px',
-              border: 'none',
-              width: '40px',
-              height: '30px',
-              '& .MuiOutlinedInput-input': { padding: '5px 10px' }
-            }}
-          />
-        </Box>
-      </Box>
-    )
-  } else {
-    return (
-      <span>
-        <IconifyIcon icon={'material-symbols:lock-outline'} fontSize={18} color='#9e9e9e' />
-        
-      </span>
-    )
-  }
+  return (
+    <Box sx={{ position: 'relative' }}>
+      {value != null ? (
+        <ClickAwayListener onClickAway={() => setOpen(false)}>
+          <Box sx={{ position: 'relative' }}>
+            <TextField
+              variant='outlined'
+              value={value}
+              // onChange={(e:any) => setValue(e.target.value)} 
+              onClick={() => setOpen(true)}
+              size='small'
+              inputProps={{ readOnly: true }}
+              sx={{
+                width: '40px',
+                textAlign: 'center',
+                cursor: 'pointer',
+                '& .MuiOutlinedInput-root': {
+                  borderRadius: '8px',
+                  backgroundColor: '#fff',
+                  borderColor: '#ccc'
+                }
+              }}
+            />
+            {open && (
+              <Tooltip
+                open
+                title={
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      textAlign: 'center',
+                      alignItems: 'center',
+                      gap: '4px'
+                    }}
+                  >
+                    {[1, 2, 3, 4, 5].map(grade => (
+                      <Typography
+                        key={grade}
+                        variant='body2'
+                        onClick={() => handleGradeClick(grade)}
+                        sx={{
+                          textAlign: 'center',
+                          color: 'white',
+                          cursor: 'pointer',
+                          padding: '4px 8px',
+                          borderRadius: '4px',
+                          '&:hover': {
+                            backgroundColor: 'gray'
+                          }
+                        }}
+                      >
+                        {grade}
+                      </Typography>
+                    ))}
+                  </Box>
+                }
+                arrow
+                placement='bottom'
+              >
+                <span />
+              </Tooltip>
+            )}
+          </Box>
+        </ClickAwayListener>
+      ) : (
+        <Tooltip title="Yopiq baho (o'zgartirib bo'lmaydi)" arrow>
+          <span>
+            <IconifyIcon icon={'material-symbols:lock-outline'} fontSize={18} color='#9e9e9e' />
+          </span>
+        </Tooltip>
+      )}
+    </Box>
+  )
 }
-
 const GroupStudentGrades = () => {
   const { gradeQueryParams, isGettingGrades, grades, isGettingDays, days, groupData, month_list } = useAppSelector(
     state => state.groupDetails
@@ -204,7 +219,7 @@ const GroupStudentGrades = () => {
     const currentDate = new Date()
     const currentDay = currentDate.getDate()
     const queryString = new URLSearchParams(gradeQueryParams).toString()
-    await dispatch(getStudentsGrades({ id: query?.id, queryString: `date=${value.year}-${value.month}-${currentDay}` }))
+    await dispatch(getStudentsGrades({ id: query?.id, queryString: `date=${value.year}-${value.month}-1` }))
     await dispatch(getDays({ date: `${value.year}-${value.month}`, group: query?.id }))
 
     push({
@@ -244,10 +259,8 @@ const GroupStudentGrades = () => {
   }
 
   useEffect(() => {
-    dispatch(getStudentsGrades({id:query.id,queryString:''}))
-  },[])
-  
- 
+    dispatch(getStudentsGrades({ id: query.id, queryString: '' }))
+  }, [])
 
   return isGettingGrades ? (
     <SubLoader />
@@ -336,21 +349,35 @@ const GroupStudentGrades = () => {
                         const matchedRating = student?.ratings?.find(
                           (el: any) => el.date === hour.date && !hour.weekend?.date
                         )
+                        console.log(matchedRating)
+
                         return student?.ratings?.some((el: any) => el.date === hour.date) &&
                           student?.ratings?.find((el: any) => el.date === hour.date && !hour.weekend?.date) ? (
                           <td
                             key={student.ratings.find((el: any) => el.date === hour.date).date}
                             style={{ padding: '8px 10px', textAlign: 'center', cursor: 'pointer' }}
                           >
-                            <Item
-                              currentDate={currentDate}
-                              opened_id={opened_id}
-                              setOpenedId={setOpenedId}
-                              defaultValue={matchedRating?.score}
-                              groupId={query?.id}
-                              userId={student.id}
-                              date={hour.date}
-                            />
+                            {matchedRating.score != null ? (
+                              <Item
+                                currentDate={currentDate}
+                                opened_id={opened_id}
+                                setOpenedId={setOpenedId}
+                                defaultValue={matchedRating?.score}
+                                groupId={query?.id}
+                                userId={student.id}
+                                date={hour.date}
+                              />
+                            ) : (
+                              <Item
+                                currentDate={currentDate}
+                                opened_id={opened_id}
+                                setOpenedId={setOpenedId}
+                                defaultValue={0}
+                                groupId={query?.id}
+                                userId={student.id}
+                                date={hour.date}
+                              />
+                            )}
                           </td>
                         ) : hour.weekend?.date ? (
                           <td
@@ -364,10 +391,24 @@ const GroupStudentGrades = () => {
                               borderRadius: '4px',
                               boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
                               fontSize: '14px',
-                              fontWeight: '500'
+                              fontWeight: '500',
+                              position: 'relative' // For tooltip positioning
                             }}
                           >
-                            <span>{hour.weekend?.description}</span>
+                            <Tooltip title={hour.weekend?.description || ''} arrow placement='top'>
+                              <span
+                                style={{
+                                  display: 'inline-block',
+                                  maxWidth: '100px', // Limit the text width
+                                  overflow: 'hidden',
+                                  textOverflow: 'ellipsis',
+                                  whiteSpace: 'nowrap', // Prevent line breaks
+                                  cursor: 'pointer'
+                                }}
+                              >
+                                {hour.weekend?.description}
+                              </span>
+                            </Tooltip>
                           </td>
                         ) : (
                           <td key={hour.date} style={{ padding: '8px 0', textAlign: 'center', cursor: 'not-allowed' }}>

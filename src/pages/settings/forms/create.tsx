@@ -106,7 +106,7 @@ export default function CreateForm({ }: Props) {
             toast.success('Forma yaratildi')
         } catch (err:any) {
             console.log(err)
-            toast.error(err.response.data.msg)
+            toast.error(err.response.data.msg || "Ma'lumotlarni to'liq kiriting")
         }
         setLoading(false)
     }
@@ -132,7 +132,6 @@ export default function CreateForm({ }: Props) {
         getSources()
     }, [])
 
-        console.log(departments[0]);
         
 
     return (
@@ -181,7 +180,7 @@ export default function CreateForm({ }: Props) {
                                         onChange={(e) => setDepartment(e.target.value)}
                                     >
                                         {
-                                            departments[0].children?.map((item: any) => <MenuItem key={item.id} value={item.id}>{item.name}</MenuItem>)
+                                            departments[0]?.children?.map((item: any) => <MenuItem key={item.id} value={item.id}>{item.name}</MenuItem>)
                                         }
                                     </Select>
                                 </FormControl>
@@ -275,7 +274,7 @@ export default function CreateForm({ }: Props) {
 
                         <Box sx={{ display: 'flex', justifyContent: 'center', gap: 4, mt: 4 }}>
                             <LoadingButton onClick={handleClose} variant='outlined'>{t("Bekor qilish")}</LoadingButton>
-                            <LoadingButton variant='contained' onClick={() => createComponent('varchar', name)}>{t("Saqlash")}</LoadingButton>
+                            <LoadingButton disabled={name.length == 0} variant='contained' onClick={() => createComponent('varchar', name)}>{t("Saqlash")}</LoadingButton>
                         </Box>
                     </DialogContent>
                 </Dialog>

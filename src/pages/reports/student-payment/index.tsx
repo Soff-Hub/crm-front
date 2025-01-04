@@ -11,6 +11,7 @@ import FilterBlock from 'src/views/apps/reports/student-payments/FilterBlock'
 import useResponsive from 'src/@core/hooks/useResponsive'
 import { AuthContext } from 'src/context/AuthContext'
 import { toast } from 'react-hot-toast'
+import PaymentTable from 'src/@core/components/table/paymentTable'
 
 const DataTable = dynamic(() => import('src/@core/components/table'))
 
@@ -30,6 +31,8 @@ export default function StudentPaymentsPage() {
   const { studentsPayment, paymentsCount, total_payments, isLoading, queryParams } = useAppSelector(
     state => state.studentPayments
   )
+  const router = useRouter()
+
   const [page, setPage] = useState<number>(queryParams.page ? Number(queryParams.page) - 1 : 1)
   const { limit, offset, is_payment, page: paramPage, group, start_date, end_date } = queryParams
 
@@ -127,6 +130,9 @@ export default function StudentPaymentsPage() {
       )
     )
   }
+   const rowClick = (student: any) => {
+      router.push(`/students/view/security?student=${student}`)
+    }
   const { isMobile } = useResponsive()
 
   return (
@@ -155,7 +161,7 @@ export default function StudentPaymentsPage() {
         </Box>
         <FilterBlock />
       </Box>
-      <DataTable loading={isLoading} columns={columns} data={studentsPayment} />
+      <PaymentTable rowClick={rowClick} loading={isLoading} columns={columns} data={studentsPayment} />
       {Math.ceil(paymentsCount / 10) > 1 && !isLoading && (
         <div className='d-flex'>
           <Pagination
