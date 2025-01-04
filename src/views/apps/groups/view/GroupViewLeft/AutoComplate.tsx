@@ -16,7 +16,7 @@ export default function AutoComplete({ setSelectedStudents }: { setSelectedStude
 
     const searchStudent = async () => {
         setSearchData([]);
-        const resp = await api.get('auth/student/list/?search=' + searchDebounce);
+        const resp = await api.get('student/list/?search=' + searchDebounce);
         setSearchData(resp.data.results?.map((item: StudentDetailType) => ({ label: item?.first_name, id: item?.id })));
     };
 

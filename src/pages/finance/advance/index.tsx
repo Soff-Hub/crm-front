@@ -32,7 +32,7 @@ function Slug() {
     const { isMobile } = useResponsive()
 
     useEffect(() => {
-        if (!user?.role.includes('ceo') && !user?.role.includes('casher') && !user?.role.includes('watcher')&& !user?.role.includes('marketolog')) {
+        if (!user?.role.includes('ceo') && !user?.role.includes('casher') && !user?.role.includes('watcher') && !user?.role.includes('marketolog')) {
             toast.error('Sahifaga kirish huquqingiz yoq!')
             router.push("/")
         }
@@ -92,7 +92,29 @@ function Slug() {
                         style={{ width: isMobile ? "auto" : 224, margin: isMobile ? "0" : '0 10px 0 auto', order: 3 }}
                         value={year}
                         searchable={false}
+                        menuStyle={{ maxHeight: 300, overflowY: 'auto' }}
                         placeholder="Yilni tanlang"
+                        renderMenuItem={(label, item) => {
+                            const [isHovered, setIsHovered] = useState(false);
+
+                            return (
+                                <div
+                                    key={item.value}  // Unique key for each item
+                                    style={{
+                                        padding: '10px',
+                                        backgroundColor: isHovered ? '#e0e0e0' : (item.index % 2 === 0 ? '#f0f0f0' : '#ffffff'), // Hover effect
+                                        color: '#333', // Text color
+                                        fontSize: '14px', // Font size
+                                        cursor: 'pointer', // Pointer cursor on hover
+                                        transition: 'background-color 0.3s', // Smooth transition
+                                    }}
+                                    onMouseEnter={() => setIsHovered(true)} // Set hover state to true
+                                    onMouseLeave={() => setIsHovered(false)} // Set hover state to false
+                                >
+                                    {label}
+                                </div>
+                            );
+                        }}
                     />
                     <SelectPicker
                         onChange={(v) => handleYearDate(v, 'm')}
@@ -102,7 +124,31 @@ function Slug() {
                         value={month}
                         searchable={false}
                         placeholder="Oyni tanlang"
+                        menuStyle={{ maxHeight: 300, overflowY: 'auto' }}
+                        renderMenuItem={(label, item) => {
+                            const [isHovered, setIsHovered] = useState(false);
+
+                            return (
+                                <div
+                                    key={item.value}  // Unique key for each item
+                                    style={{
+                                        padding: '10px',
+                                        backgroundColor: isHovered ? '#e0e0e0' : (item.index % 2 === 0 ? '#f0f0f0' : '#ffffff'), // Hover effect
+                                        color: '#333', // Text color
+                                        fontSize: '14px', // Font size
+                                        cursor: 'pointer', // Pointer cursor on hover
+                                        transition: 'background-color 0.3s', // Smooth transition
+                                    }}
+                                    onMouseEnter={() => setIsHovered(true)} // Set hover state to true
+                                    onMouseLeave={() => setIsHovered(false)} // Set hover state to false
+                                >
+                                    {label}
+                                </div>
+                            );
+                        }}
                     />
+
+
                     <Typography sx={{ fontSize: '14px', order: 2, color: 'error.main', ml: 4, display: 'flex', alignItems: 'center', mr: 4, gap: '5px' }} >
                         <Chip variant='outlined' size='medium' sx={{ fontSize: "14px", fontWeight: "bold" }} color="success" label={`${formatCurrency(advanceList?.total_prepayments)} UZS`} />
                     </Typography>

@@ -28,10 +28,10 @@ const ceoConfigs = {
   merge_student: 'common/group-student-create/',
   group_short_list: 'common/group-check-list/?branch=',
 
-  students: 'auth/student/list/',
-  students_detail: 'auth/student/detail/',
-  students_update: 'auth/student/update/',
-  students_create: 'auth/student-create/',
+  students: 'student/list/',
+  students_detail: 'student/detail/',
+  students_update: 'student/update/',
+  students_create: 'student/create/',
   students_delete: 'auth/student-destroy/',
 
   attendances: 'common/attendance-report/'

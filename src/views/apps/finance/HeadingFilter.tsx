@@ -338,9 +338,10 @@ export default function HeadingFilter() {
         onChange={v => handleYearDate(v, 'm')}
         size='md'
         data={monthItems2}
-        style={{ width: isMobile ? 'auto' : 180 }}
+        style={{ width: isMobile ? 'auto' : 180, }}
+        menuStyle={{ maxHeight: 300, overflowY: 'auto' }} 
         value={allNumbersParams.date_month}
-        searchable={false}
+        searchable={false} 
         placeholder={t('Oyni tanlang')}
         renderMenuItem={(label, item) => {
           const [isHovered, setIsHovered] = useState(false);
@@ -364,6 +365,7 @@ export default function HeadingFilter() {
           );
         }}
       />
+      
       <DateRangePicker
         showOneCalendar
         placement='bottomEnd'

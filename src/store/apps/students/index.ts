@@ -6,17 +6,17 @@ import { IStudentState, StudentsQueryParamsTypes } from 'src/types/apps/students
 export const fetchStudentsList = createAsyncThunk(
   'students/fetchStudentsList',
   async (params?: StudentsQueryParamsTypes | undefined) => {
-    return (await api.get(`auth/students-list/`, { params })).data
+    return (await api.get(`student/offset-list/`, { params })).data
   }
 )
 
 export const fetchStudentDetail = createAsyncThunk('students/fetchStudentDetail', async (id: number) => {
-  return (await api.get(`auth/student/detail/${id}`)).data
+  return (await api.get(`student/detail/${id}`)).data
 })
 
 export const createStudent = createAsyncThunk('students/createStudent', async (values: any, { rejectWithValue }) => {
   try {
-    const response = await api.post(`auth/student-create/`, values)
+    const response = await api.post(`student/create/`, values)
     return response.data
   } catch (err: any) {
     if (err.response) {
@@ -32,7 +32,7 @@ export const fetchGroupCheckList = createAsyncThunk('fetchGroupCheckList', async
 
 export const updateStudent = createAsyncThunk('students/updateStudent', async (valuess: any, { rejectWithValue }) => {
   try {
-    const response = await api.patch(`auth/student/update/${valuess.id}`, valuess)
+    const response = await api.patch(`student/update/${valuess.id}`, valuess)
     return response.data
   } catch (err: any) {
     if (err.response) {
@@ -43,7 +43,7 @@ export const updateStudent = createAsyncThunk('students/updateStudent', async (v
 })
 
 export const deleteStudent = createAsyncThunk('students/deleteStudent', async (pk: number | any) => {
-  return (await api.delete(`auth/student/destroy/${pk}/`)).data
+  return (await api.delete(`student/destroy/${pk}/`)).data
 })
 
 export const fetchStudentPayment = createAsyncThunk('students/fetchStudentPayment', async (id: any) => {
@@ -51,7 +51,7 @@ export const fetchStudentPayment = createAsyncThunk('students/fetchStudentPaymen
 })
 
 export const searchStudent = createAsyncThunk('students/searchStudent', async (search?: string) => {
-  return (await api.get(`auth/student/list/`, { params: { search } })).data?.results
+  return (await api.get(`student/list/`, { params: { search } })).data?.results
 })
 
 const initialState: IStudentState = {

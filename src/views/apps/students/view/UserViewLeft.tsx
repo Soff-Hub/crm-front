@@ -128,7 +128,7 @@ const UserViewLeft = ({ userData }: { userData: any }) => {
   const handleAddNote = async (value: any) => {
     setLoading(true)
     try {
-      await api.post('auth/student/description/', { user: userData?.id, ...value })
+      await api.post('student/description/', { user: userData?.id, ...value })
       setLoading(false)
       setOpenEdit(null)
       await dispatch(fetchStudentDetail(userData.id))

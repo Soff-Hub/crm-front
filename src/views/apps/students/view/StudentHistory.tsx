@@ -22,7 +22,7 @@ export default function StudentHistory() {
     const getHistory = async () => {
         setLoading(true)
         try {
-            const resp = await api.get(`auth/student/logs/?pk=${query.student}`)
+            const resp = await api.get(`student/logs/?pk=${query.student}`)
             setData(resp.data)
             setLoading(false)
         } catch (err: any) {
