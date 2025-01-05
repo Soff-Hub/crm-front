@@ -24,7 +24,7 @@ import { useRouter } from 'next/router'
 import { useAppDispatch, useAppSelector } from 'src/store'
 import { getMontNumber } from 'src/@core/utils/gwt-month-name'
 import { useTranslation } from 'react-i18next'
-import { fetchStudentDetail } from 'src/store/apps/students'
+import { fetchStudentDetail, fetchStudentGroups } from 'src/store/apps/students'
 
 export default function EditStudent({
   student,
@@ -45,7 +45,6 @@ export default function EditStudent({
   const { query } = useRouter()
   const { t } = useTranslation()
 
-  console.log(query);
   
 
   const formik = useFormik({
@@ -67,7 +66,12 @@ export default function EditStudent({
         const queryString = new URLSearchParams({ ...studentsQueryParams }).toString()
         const queryStringAttendance = new URLSearchParams(queryParams).toString()
         dispatch(setGettingAttendance(true))
-        await dispatch(getStudents({ id: query.student || query.id, queryString: queryString }))
+        if (query.id) {
+          await dispatch(getStudents({ id:query.id, queryString: queryString }))
+
+        }
+        await dispatch(fetchStudentGroups(query.student||query.id))
+
         if (query.month && query?.id) {
           await dispatch(
             getAttendance({

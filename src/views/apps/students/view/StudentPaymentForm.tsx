@@ -114,7 +114,6 @@ export default function StudentPaymentForm({ openEdit, setOpenEdit, student_id, 
       getPaymentMethod()
     }
   }, [openEdit])
-  console.log(group)
 
   return (
     <div>
