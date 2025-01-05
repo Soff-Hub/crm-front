@@ -56,7 +56,9 @@ export interface UpdateStudentDto extends StudentItemType {
 }
 
 export interface IStudentState {
-  studentId?:any,
+  isGettingStudentsGroups?:boolean,
+  studentId?: any,
+  studentGroups?:any,
   openEdit: 'edit' | 'create' | 'delete' | null
   students: StudentsListType
   studentsCount: number

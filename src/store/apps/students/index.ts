@@ -13,6 +13,9 @@ export const fetchStudentsList = createAsyncThunk(
 export const fetchStudentDetail = createAsyncThunk('students/fetchStudentDetail', async (id: number) => {
   return (await api.get(`student/detail/${id}`)).data
 })
+export const fetchStudentGroups = createAsyncThunk('students/fetchStudentGroups', async (id: any) => {
+  return (await api.get(`student/groups/${id}`)).data
+})
 
 export const createStudent = createAsyncThunk('students/createStudent', async (values: any, { rejectWithValue }) => {
   try {
@@ -57,10 +60,12 @@ export const searchStudent = createAsyncThunk('students/searchStudent', async (s
 const initialState: IStudentState = {
   openEdit: null,
   groups: [],
+  studentGroups:[],
   studentId:null,
   students: [],
   studentsCount: 0,
   studentData: null,
+  isGettingStudentsGroups:false,
   isLoading: false,
   queryParams: { status: 'active', is_debtor: '', group_status: '', offset: '0',teacher:'' },
   payments: [],
@@ -74,6 +79,9 @@ export const studentsSlice = createSlice({
   reducers: {
     setOpenLeadModal: (state, action) => {
       state.openLeadModal = action.payload
+    },
+    setIsGettingStudentGroups: (state, action) => {
+      state.isGettingStudentsGroups = action.payload
     },
     setStudentId: (state, action) => {
       state.studentId = action.payload
@@ -121,13 +129,20 @@ export const studentsSlice = createSlice({
         state.payments = action.payload
         state.isLoading = false
       })
+      .addCase(fetchStudentGroups.pending, state => {
+        state.isGettingStudentsGroups = true
+      })
+      .addCase(fetchStudentGroups.fulfilled, (state, action) => {
+        state.studentGroups = action.payload
+        state.isGettingStudentsGroups = false
+      })
       .addCase(fetchGroupCheckList.fulfilled, (state, action) => {
         state.groups = action.payload
       })
   }
 })
 
-export const { setOpenEdit,setOpenLeadModal,setStudentId, setStudentData, updateStudentParams, clearStudentParams, setGlobalPay } =
+export const { setOpenEdit,setIsGettingStudentGroups,setOpenLeadModal,setStudentId, setStudentData, updateStudentParams, clearStudentParams, setGlobalPay } =
   studentsSlice.actions
 
 export default studentsSlice.reducer

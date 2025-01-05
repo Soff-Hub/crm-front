@@ -9,8 +9,12 @@ import {
   DialogContent,
   DialogTitle,
   Fade,
+  FormControl,
+  FormHelperText,
+  InputLabel,
   Menu,
   MenuItem,
+  Select,
   Typography
 } from '@mui/material'
 import Link from 'next/link'
@@ -26,22 +30,18 @@ import getMontName from 'src/@core/utils/gwt-month-name'
 import usePayment from 'src/hooks/usePayment'
 import { customTableProps } from 'src/pages/groups'
 import { useAppDispatch, useAppSelector } from 'src/store'
-import { fetchStudentDetail, fetchStudentPayment, setOpenLeadModal } from 'src/store/apps/students'
+import { fetchStudentDetail, fetchStudentGroups, fetchStudentPayment } from 'src/store/apps/students'
 import StudentPaymentEditForm from './StudentPaymentEdit'
 import { AuthContext } from 'src/context/AuthContext'
 import { Icon } from '@iconify/react'
 import useBranches from 'src/hooks/useBranch'
 import { ModalTypes } from './UserViewLeft'
-import useSMS from 'src/hooks/useSMS'
 import StudentPaymentForm from './StudentPaymentForm'
 import EditStudent from '../../groups/view/ViewStudents/EditStudent'
-import ExportStudent from '../../groups/view/ViewStudents/ExportStudent'
 import toast from 'react-hot-toast'
 import api from 'src/@core/utils/api'
-import MergeToDepartment from '../../groups/view/ViewStudents/MergeForm'
 import ExportDetailStudent from '../../groups/view/ViewStudents/ExportDetailStudent'
 
-// Rasm yuklab olish misoli
 export async function downloadImage(filename: string, url: string) {
   await fetch(url, {
     headers: {
@@ -63,7 +63,7 @@ export async function downloadImage(filename: string, url: string) {
     .catch(console.error)
 }
 
-const UserViewSecurity = ({ groupData }: any) => {
+const UserViewSecurity = () => {
   const { t } = useTranslation()
   const { query, push } = useRouter()
   const { isMobile } = useResponsive()
@@ -79,16 +79,12 @@ const UserViewSecurity = ({ groupData }: any) => {
   const [openLeft, setOpenLeft] = useState<boolean>(false)
   const [openEdit, setOpenEdit] = useState<ModalTypes | null>(null)
   const [activate, setActivate] = useState<boolean>(false)
-  const { smsTemps, getSMSTemps } = useSMS()
-  const { studentData ,openLeadModal,studentId} = useAppSelector(state => state.students)
+  const { studentGroups } = useAppSelector(state => state.students)
   const [group_data, setGroupData] = useState<any>()
   const { deletePayment } = usePayment()
 
   const { getBranches, branches } = useBranches()
-
-
-  
-
+  const [changeStatusLoader, setChangeStatusLoader] = useState(false)
   const handleEditClickOpen = (value: ModalTypes) => {
     if (value === 'payment') {
       getBranches()
@@ -100,8 +96,6 @@ const UserViewSecurity = ({ groupData }: any) => {
   const handleClick = (event: React.MouseEvent<HTMLElement>, groupData: any) => {
     setAnchorEl(event.currentTarget)
     setGroupData(groupData)
-    
-    
   }
   const handleEdit = (id: any) => {
     setAmount(payments.find((el: any) => el.id === id)?.amount)
@@ -110,7 +104,7 @@ const UserViewSecurity = ({ groupData }: any) => {
 
   const handleClose = (value: 'none' | 'left' | 'payment' | 'notes' | 'sms' | 'export') => {
     setAnchorEl(null)
-    
+
     if (value === 'notes') setModalRef('note')
     else if (value === 'sms') setModalRef('sms')
     else if (value === 'export') setModalRef('export')
@@ -145,9 +139,9 @@ const UserViewSecurity = ({ groupData }: any) => {
 
       const downloadLink = document.createElement('a')
       downloadLink.href = blobUrl
-      downloadLink.download = `check-${id}.pdf` // set a name for the downloaded file
+      downloadLink.download = `check-${id}.pdf`
       document.body.appendChild(downloadLink)
-      downloadLink.click() // Trigger the download
+      downloadLink.click()
       document.body.removeChild(downloadLink)
     } catch (error) {
       setLoading(false)
@@ -280,30 +274,30 @@ const UserViewSecurity = ({ groupData }: any) => {
       await api.delete(`common/group-student-delete/${group_data?.id}/`).then(res => {
         console.log(res)
       })
-       await dispatch(fetchStudentDetail(Number(query?.student)))
+      // await dispatch(fetchStudentDetail(Number(query?.student)))
+      await dispatch(fetchStudentGroups(query.student))
       toast.success("O'quvchi guruhdan chetlatildi", { position: 'top-center' })
       setLoading(false)
-
-      // const queryString = new URLSearchParams(studentsQueryParams).toString()
-      // const queryStringAttendance = new URLSearchParams(queryParams).toString()
-      // await dispatch(getStudents({ id: query.id, queryString: queryString }))
-      // dispatch(setGettingAttendance(true))
-      // if (query.month && query?.id) {
-      //   await dispatch(
-      //     getAttendance({
-      //       date: `${query?.year || new Date().getFullYear()}-${getMontNumber(query.month)}`,
-      //       group: query?.id,
-      //       queryString: queryStringAttendance
-      //     })
-      //   )
-      // }
-      // dispatch(setGettingAttendance(false))
     } catch (err: any) {
       console.log(err)
       toast.error(err.response.data.msg)
       setLoading(false)
     }
     setOpenLeft(false)
+  }
+
+  async function handleChangeStatus(statusValue: string, statusId: any) {
+    setChangeStatusLoader(true)
+    await api
+      .patch(`common/group-student-update/status/${statusId}/`, { status: statusValue })
+      .then(res => {
+        console.log(res)
+        dispatch(fetchStudentGroups(query?.student))
+      })
+      .catch(err => {
+        toast.error(err.response.data.msg || 'Xatolik')
+      })
+    setChangeStatusLoader(false)
   }
 
   const onHandleDelete = async () => {
@@ -314,18 +308,17 @@ const UserViewSecurity = ({ groupData }: any) => {
     await dispatch(fetchStudentPayment(query?.student))
     await dispatch(fetchStudentDetail(Number(query?.student)))
   }
-  
 
   useEffect(() => {
+    dispatch(fetchStudentGroups(query?.student))
     dispatch(fetchStudentPayment(query?.student))
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query?.student])
 
   return (
     <Box className='demo-space-y'>
-      {groupData && groupData.length > 0 ? (
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-          {groupData.map((group: any) => (
+      {studentGroups && studentGroups.length > 0 ? (
+        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '15px' }}>
+          {studentGroups.map((group: any) => (
             <Box key={group.id} sx={{ position: 'relative' }}>
               <Typography
                 id='fade-button'
@@ -335,7 +328,7 @@ const UserViewSecurity = ({ groupData }: any) => {
                 sx={{
                   position: 'absolute',
                   top: 15,
-                  right: 465,
+                  right: 5,
                   cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center'
@@ -378,28 +371,7 @@ const UserViewSecurity = ({ groupData }: any) => {
                   <Icon fontSize={'20px'} icon={'material-symbols:group-remove'} />
                   {t('Guruhdan chiqarish')}
                 </MenuItem>
-                {/* <MenuItem
-                  sx={{ display: 'flex', alignItems: 'center', gap: '7px' }}
-                  onClick={() => (dispatch(setOpenLeadModal(group_data?.group_data.id))
-                    , handleClose('none'))}
-                >
-                  <Icon fontSize={'20px'} icon={'mdi:leads'} />
-                  {t('Lidlarga qaytarish')}
-                </MenuItem> */}
-                {/* <MenuItem
-                  sx={{ display: 'flex', alignItems: 'center', gap: '7px' }}
-                  onClick={() => handleClose('notes')}
-                >
-                  <Icon fontSize={'20px'} icon={'material-symbols:note-alt'} />
-                  {t('Eslatma')} +
-                </MenuItem> */}
-                {/* <MenuItem
-                  sx={{ display: 'flex', alignItems: 'center', gap: '7px' }}
-                  onClick={() => (handleClose('sms'), getSMSTemps())}
-                >
-                  <Icon fontSize={'20px'} icon={'ic:baseline-message'} />
-                  {t('Xabar (sms)')} +
-                </MenuItem> */}
+
                 <MenuItem
                   sx={{ display: 'flex', alignItems: 'center', gap: '7px' }}
                   onClick={() => (setActivate(true), handleClose('none'))}
@@ -408,49 +380,192 @@ const UserViewSecurity = ({ groupData }: any) => {
                   {t('Tahrirlash')}
                 </MenuItem>
               </Menu>
-              <StudentPaymentForm student_id={query.id} group={group_data?.group_data.id} openEdit={openEdit} setOpenEdit={setOpenEdit} />
+              <StudentPaymentForm
+                student_id={query.id}
+                group={group?.group_id}
+                openEdit={openEdit}
+                setOpenEdit={setOpenEdit}
+              />
 
               <Link
-                href={`/groups/view/security/?id=${group.group_data.id}&month=${getMontName(null)}`}
+                href={`/groups/view/security/?id=${group.group_id}&month=${getMontName(null)}`}
                 style={{ textDecoration: 'none' }}
               >
                 <Box sx={{ display: 'flex', gap: '20px' }}>
-                  <Card sx={{ width: isMobile ? '100%' : '50%' }}>
-                    <CardContent sx={{ display: 'flex', justifyContent: 'space-between', margin: '0', py: '10px' }}>
-                      <Chip
-                        label={`${formatCurrency(group.group_data.balance)} so'm`}
-                        size='small'
-                        variant='outlined'
-                        color={group.group_data.balance >= 0 ? 'success' : 'error'}
-                      />
-                      <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                        <Chip
-                          label={`${t(group.status)}`}
-                          size='small'
-                          variant='outlined'
-                          color={
-                            group.status === 'active'
-                              ? 'success'
-                              : group.status === 'new'
-                              ? 'warning'
-                              : group.status === 'frozen'
-                              ? 'secondary'
-                              : 'error'
-                          }
-                        />
+                  <Card sx={{ width: isMobile ? '100%' : '400px', minHeight: 300 }}>
+                    <div onClick={e => e.stopPropagation()}>
+                      <CardContent
+                        sx={{
+                          backgroundColor: '#666CFF',
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          py: '10px'
+                        }}
+                      >
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                          <Icon color='lightgreen' icon={'mdi:wallet'} />
+                          <Chip
+                            sx={{ backgroundColor: 'white' }}
+                            label={`${formatCurrency(group.student_group_balance)} so'm`}
+                            size='small'
+                            variant='outlined'
+                            color={group.student_group_balance >= 0 ? 'success' : 'error'}
+                          />
+                        </Box>
+                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                          {group.status == 'archive' ? (
+                            <Chip
+                              label={t('archive')}
+                              color='error'
+                              variant='outlined'
+                              size='small'
+                              sx={{
+                                backgroundColor: 'white',
+                                cursor: 'pointer',
+                                fontWeight: 500,
+                                fontSize: '10px',
+                                padding: 0
+                              }}
+                            />
+                          ) : group.status == 'new' ? (
+                            <Select
+                              placeholder='Statusni tanlang'
+                              value={group?.status}
+                              disabled={changeStatusLoader}
+                              onChange={e => handleChangeStatus(e.target.value, group.id)}
+                              sx={{ height: 30, width: 'auto', backgroundColor: 'white', color: 'orange' }}
+                            >
+                              {group.choices?.map((status: any) =>
+                                status == 'active' ? (
+                                  <MenuItem sx={{ color: 'green' }} value={status}>
+                                    {t(status)}
+                                  </MenuItem>
+                                ) : status == 'new' ? (
+                                  <MenuItem sx={{ color: 'orange' }} value={status}>
+                                    {t(status)}
+                                  </MenuItem>
+                                ) : (
+                                  <MenuItem value={status}>{t(status)}</MenuItem>
+                                )
+                              )}
+                            </Select>
+                          ) : group.status == 'active' ? (
+                            <Select
+                              placeholder='Statusni tanlang'
+                              value={group?.status}
+                              disabled={changeStatusLoader}
+                              onChange={e => handleChangeStatus(e.target.value, group.id)}
+                              sx={{ height: 30, width: 'auto', backgroundColor: 'white', color: 'green' }}
+                            >
+                              {group.choices?.map((status: any) => (
+                               status == 'active' ? (
+                                <MenuItem sx={{ color: 'green' }} value={status}>
+                                  {t(status)}
+                                </MenuItem>
+                              ) : status == 'new' ? (
+                                <MenuItem sx={{ color: 'orange' }} value={status}>
+                                  {t(status)}
+                                </MenuItem>
+                              ) : (
+                                <MenuItem value={status}>{t(status)}</MenuItem>
+                              )
+                              ))}
+                            </Select>
+                          ) : (
+                            <Select
+                              placeholder='Statusni tanlang'
+                              value={group?.status}
+                              disabled={changeStatusLoader}
+                              onChange={e => handleChangeStatus(e.target.value, group.id)}
+                              sx={{ height: 30, width: 'auto', backgroundColor: 'white' }}
+                            >
+                              {group.choices?.map((status: any) => (
+                               status == 'active' ? (
+                                <MenuItem sx={{ color: 'green' }} value={status}>
+                                  {t(status)}
+                                </MenuItem>
+                              ) : status == 'new' ? (
+                                <MenuItem sx={{ color: 'orange' }} value={status}>
+                                  {t(status)}
+                                </MenuItem>
+                              ) : (
+                                <MenuItem value={status}>{t(status)}</MenuItem>
+                              )
+                              ))}
+                            </Select>
+                          )}
+                        </Box>
+                      </CardContent>
+                    </div>
+                    <CardContent>
+                      <Box sx={{ marginBottom: 2 }}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                          <Typography sx={{ fontSize: '20px', color: 'black' }}>{group.group_name} </Typography>
+                          <Typography fontSize={12}>{group.group_interval}</Typography>
+                        </Box>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                          <Icon color='lightgreen' icon={'mdi:school'} />
+                          <Typography sx={{ fontSize: '15px' }}>{group.teacher_name}</Typography>
+                        </Box>
                       </Box>
-                    </CardContent>
-                    <CardContent sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                      <Box sx={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
-                        <Typography sx={{ fontSize: '12px' }}>{group.group_data.name}</Typography>
-                        <Typography sx={{ fontSize: '12px' }}>{group.course.name}</Typography>
-                        <Typography sx={{ fontSize: '12px' }}>{group.teacher.first_name}</Typography>
+                      <Box sx={{ marginBottom: 2 }}>
+                        <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', marginBottom: 2 }}>
+                          <Typography sx={{ color: 'black' }}>Dars kunlari :</Typography>
+                          <Typography fontSize={12}>{group.lesson_time}</Typography>
+                        </Box>
+                        <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
+                          {group?.lesson_days?.map((day: any) => (
+                            <Typography
+                              sx={{
+                                backgroundColor: 'lightgrey',
+                                borderRadius: 10,
+                                color: 'black',
+                                paddingX: 3,
+                                paddingY: 2
+                              }}
+                              fontSize={10}
+                            >
+                              {t(day)}
+                            </Typography>
+                          ))}
+                        </Box>
                       </Box>
-                      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '5px' }}>
-                        <Typography sx={{ fontSize: '12px' }}>
-                          {group.added_at} / {group.deleted_at}
-                        </Typography>
-                        <Typography sx={{ fontSize: '12px' }}>Juft kunlar - {group.start_at}</Typography>
+                      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <Box>
+                          <Typography fontSize={13} sx={{ color: 'black' }}>
+                            Boshlangan sana
+                          </Typography>
+                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                            <Icon icon={'mdi:calendar'} color='green' />
+                            <Typography fontSize={12}>{group.added_at}</Typography>
+                          </Box>
+                        </Box>
+                        <Box>
+                          <Typography fontSize={13} sx={{ color: 'black' }}>
+                            O'chiriladigan sana
+                          </Typography>
+                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                            <Icon icon={'mdi:calendar'} color='red' />
+                            <Typography fontSize={12}>{group.deleted_at}</Typography>
+                          </Box>
+                        </Box>
+                      </Box>
+                      <Box
+                        sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 5 }}
+                      >
+                        <Box>
+                          <Typography color={'black'}>Keyingi to'lov</Typography>
+                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                            <Icon icon={'mdi:clock'} />
+                            <Typography fontSize={13}>{group.next_payment}</Typography>
+                          </Box>
+                        </Box>
+                        <Box>
+                          <Typography color={'black'}>To'lov narxi</Typography>
+                          <Typography color='green' fontSize={13}>
+                            {group.payment_amount} so'm
+                          </Typography>
+                        </Box>
                       </Box>
                     </CardContent>
                   </Card>
@@ -495,21 +610,7 @@ const UserViewSecurity = ({ groupData }: any) => {
           </Box>
         </DialogContent>
       </Dialog>
-      {/* <Dialog
-        open={openLeadModal == group_data?.group_data.id}
-        onClose={() => (dispatch(setOpenLeadModal(null)), handleClose('none'))}
-      >
-        <DialogTitle sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <Typography sx={{ fontSize: '20px', textAlign: 'center' }}>{t("Lidlar bo'limga qo'shish")}</Typography>
-          <IconifyIcon
-            icon={'material-symbols:close'}
-            onClick={() => (dispatch(setOpenLeadModal(null)), handleClose('none'))}
-          />
-        </DialogTitle>
-        <DialogContent>
-          <MergeToDepartment studentId={String(group_data?.group_data.id)} />
-        </DialogContent>
-      </Dialog> */}
+
       <Dialog
         open={deleteId}
         onClose={() => setDelete(null)}
@@ -538,7 +639,7 @@ const UserViewSecurity = ({ groupData }: any) => {
       />
       {/*<AddNote id={query.id} modalRef={modalRef} setModalRef={setModalRef} />
       <SentSMS smsTemps={smsTemps} id={query.id} modalRef={modalRef} setModalRef={setModalRef} />*/}
-      <ExportDetailStudent id={group_data?.id} modalRef={modalRef} setModalRef={setModalRef} />
+      <ExportDetailStudent id={group_data?.group_id} modalRef={modalRef} setModalRef={setModalRef} />
     </Box>
   )
 }
