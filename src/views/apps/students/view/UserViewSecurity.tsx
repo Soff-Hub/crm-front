@@ -385,7 +385,7 @@ const UserViewSecurity = () => {
               </Menu>
               <StudentPaymentForm
                 student_id={query.id}
-                group={group?.group_id}
+                group={group_data?.group_id}
                 openEdit={openEdit}
                 setOpenEdit={setOpenEdit}
               />
