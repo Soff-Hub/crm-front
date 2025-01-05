@@ -25,7 +25,7 @@ import { today } from 'src/@core/components/card-statistics/kanban-item'
 import { getAttendance, getStudents, setGettingAttendance } from 'src/store/apps/groupDetails'
 import { useRouter } from 'next/router'
 import { getMontNumber } from 'src/@core/utils/gwt-month-name'
-import { fetchStudentDetail } from 'src/store/apps/students'
+import { fetchStudentDetail, fetchStudentGroups } from 'src/store/apps/students'
 
 export default function ExportDetailStudent({
   id,
@@ -72,7 +72,10 @@ export default function ExportDetailStudent({
         })
         if (response.status == 201) {
           toast.success(t("O'quvchi guruhga ko'chirildi") as string)
-          await dispatch(fetchStudentDetail(Number(query?.id)))
+          if (query.id) {
+            await dispatch(fetchStudentDetail(Number(query?.id)))
+          }
+          await dispatch(fetchStudentGroups(Number(query?.id||query.student)))
         }
         setLoading(false)
         setModalRef(null)

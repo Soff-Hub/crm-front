@@ -642,7 +642,7 @@ const UserViewSecurity = () => {
       />
       {/*<AddNote id={query.id} modalRef={modalRef} setModalRef={setModalRef} />
       <SentSMS smsTemps={smsTemps} id={query.id} modalRef={modalRef} setModalRef={setModalRef} />*/}
-      <ExportDetailStudent id={group_data?.group_id} modalRef={modalRef} setModalRef={setModalRef} />
+      <ExportDetailStudent id={group_data?.id} modalRef={modalRef} setModalRef={setModalRef} />
     </Box>
   )
 }
