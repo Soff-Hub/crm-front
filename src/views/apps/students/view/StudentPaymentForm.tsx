@@ -18,7 +18,7 @@ import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import usePayment from 'src/hooks/usePayment'
 import Router, { useRouter } from 'next/router'
-import { fetchStudentDetail, fetchStudentPayment } from 'src/store/apps/students'
+import { fetchStudentDetail, fetchStudentGroups, fetchStudentPayment } from 'src/store/apps/students'
 import AmountInput, { revereAmount } from 'src/@core/components/amount-input'
 import IconifyIcon from 'src/@core/components/icon'
 
@@ -71,7 +71,9 @@ export default function StudentPaymentForm({ openEdit, setOpenEdit, student_id, 
         await createPayment(data)
         setLoading(false)
         setOpenEdit(null)
-
+        if (query.student) {
+          await dispatch(fetchStudentGroups(query.student))
+        }
         await dispatch(fetchStudentDetail(userData?.id || student_id))
         await dispatch(fetchStudentPayment(userData?.id || student_id))
       } catch (err: any) {
@@ -95,6 +97,9 @@ export default function StudentPaymentForm({ openEdit, setOpenEdit, student_id, 
   const handleDismissWarning = () => {
     setShowWarning(false)
   }
+
+  console.log(group);
+  
 
   useEffect(() => {
     if (studentData) {

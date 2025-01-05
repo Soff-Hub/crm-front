@@ -385,7 +385,7 @@ const UserViewSecurity = () => {
               </Menu>
               <StudentPaymentForm
                 student_id={query.id}
-                group={group?.group_id}
+                group={group_data?.group_id}
                 openEdit={openEdit}
                 setOpenEdit={setOpenEdit}
               />
@@ -642,7 +642,7 @@ const UserViewSecurity = () => {
       />
       {/*<AddNote id={query.id} modalRef={modalRef} setModalRef={setModalRef} />
       <SentSMS smsTemps={smsTemps} id={query.id} modalRef={modalRef} setModalRef={setModalRef} />*/}
-      <ExportDetailStudent id={group_data?.group_id} modalRef={modalRef} setModalRef={setModalRef} />
+      <ExportDetailStudent id={group_data?.id} modalRef={modalRef} setModalRef={setModalRef} />
     </Box>
   )
 }
