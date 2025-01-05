@@ -314,12 +314,15 @@ const UserViewSecurity = () => {
     dispatch(fetchStudentPayment(query?.student))
   }, [query?.student])
 
+  console.log(isMobile);
+  
+
   return (
     <Box className='demo-space-y'>
       {studentGroups && studentGroups.length > 0 ? (
-        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '15px' }}>
+        <Box sx={{ width: isMobile ?'100%':'auto', display: 'flex', flexWrap: 'wrap',alignItems:'center', gap: '15px' }}>
           {studentGroups.map((group: any) => (
-            <Box key={group.id} sx={{ position: 'relative' }}>
+            <Box key={group.id} sx={{width:isMobile ? '100%':'auto', position: 'relative' }}>
               <Typography
                 id='fade-button'
                 aria-controls={open ? 'fade-menu' : undefined}
@@ -391,7 +394,7 @@ const UserViewSecurity = () => {
                 href={`/groups/view/security/?id=${group.group_id}&month=${getMontName(null)}`}
                 style={{ textDecoration: 'none' }}
               >
-                <Box sx={{ display: 'flex', gap: '20px' }}>
+                <Box sx={{ width:'100%', display: 'flex', gap: '20px' }}>
                   <Card sx={{ width: isMobile ? '100%' : '400px', minHeight: 300 }}>
                     <div onClick={e => e.stopPropagation()}>
                       <CardContent
