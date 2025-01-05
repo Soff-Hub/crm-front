@@ -7,7 +7,7 @@ import { Box, Button, Card, CardContent, Dialog, DialogActions, DialogContent, D
 // ** Demo Component Imports
 import { UserViewStudentsItem } from './UserViewStudentsList'
 import IconifyIcon from 'src/@core/components/icon'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Form from 'src/@core/components/form'
 import api from 'src/@core/utils/api'
 import LoadingButton from '@mui/lab/LoadingButton'
@@ -15,7 +15,7 @@ import { useTranslation } from 'react-i18next'
 import showResponseError from 'src/@core/utils/show-response-error'
 import { useRouter } from 'next/router'
 import { useAppDispatch, useAppSelector } from 'src/store'
-import { fetchStudentDetail } from 'src/store/apps/students'
+import { fetchStudentComments, fetchStudentDetail } from 'src/store/apps/students'
 import EmptyContent from 'src/@core/components/empty-content'
 
 
@@ -36,18 +36,20 @@ const UserViewOverview = ({ data }: ItemTypes) => {
   const { t } = useTranslation()
   const { query } = useRouter()
   const dispatch = useAppDispatch()
-  const { studentData } = useAppSelector(state => state.students)
+  const { studentData,comments } = useAppSelector(state => state.students)
 
   const setError = (val: any) => {
     console.log(val);
   }
-
+  
+  
 
   const handleAddNote = async (value: any) => {
     setLoading(true)
     try {
       await api.post('student/description/', { user: query.student, ...value })
       await dispatch(fetchStudentDetail(studentData?.id || 1))
+      await dispatch(fetchStudentComments(query.student))
       setLoading(false)
       setOpen(false)
     } catch (err: any) {
@@ -55,6 +57,9 @@ const UserViewOverview = ({ data }: ItemTypes) => {
       setLoading(false)
     }
   }
+  useEffect(() => {
+    dispatch(fetchStudentComments(query.student))
+  },[])
 
   return (
     <Box>
@@ -63,7 +68,7 @@ const UserViewOverview = ({ data }: ItemTypes) => {
       </Box>
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
         {
-          data && data.length ? data.map(el => (
+          comments && comments.length ? comments.map((el:any) => (
             <Card sx={{ maxWidth: '450px' }} key={el.id}>
               <CardContent>
                 <UserViewStudentsItem setOpenEdit={setOpen} key={el.id} item={el} />

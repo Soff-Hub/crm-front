@@ -31,7 +31,7 @@ export const UserViewStudentsItem = ({ item }: ItemChildTypes) => {
                 <Status color='success' />
                 <Typography fontStyle={'italic'} variant='body1' fontSize={14}>{message || description}</Typography>
                 <Box sx={{ display: 'flex', gap: '15px' }}>
-                    {admin_data &&<Typography fontSize={10}>{admin_data}</Typography>}
+                    {/* {admin_data &&<Typography fontSize={10}>{admin_data}</Typography>} */}
                     <Typography fontSize={10}>{created_at}</Typography>
                 </Box>
             </Box>

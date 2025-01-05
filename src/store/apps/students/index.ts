@@ -17,6 +17,11 @@ export const fetchStudentGroups = createAsyncThunk('students/fetchStudentGroups'
   return (await api.get(`student/groups/${id}`)).data
 })
 
+export const fetchStudentComments = createAsyncThunk('students/fetchStudentComments', async (id: any) => {
+  return (await api.get(`student/notes/?user=${id}`)).data
+})
+
+
 export const createStudent = createAsyncThunk('students/createStudent', async (values: any, { rejectWithValue }) => {
   try {
     const response = await api.post(`student/create/`, values)
@@ -60,6 +65,7 @@ export const searchStudent = createAsyncThunk('students/searchStudent', async (s
 const initialState: IStudentState = {
   openEdit: null,
   groups: [],
+  comments:[],
   studentGroups:[],
   studentId:null,
   students: [],
@@ -135,6 +141,9 @@ export const studentsSlice = createSlice({
       .addCase(fetchStudentGroups.fulfilled, (state, action) => {
         state.studentGroups = action.payload
         state.isGettingStudentsGroups = false
+      })
+      .addCase(fetchStudentComments.fulfilled, (state, action) => {
+        state.comments = action.payload
       })
       .addCase(fetchGroupCheckList.fulfilled, (state, action) => {
         state.groups = action.payload
