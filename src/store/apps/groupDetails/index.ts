@@ -22,7 +22,7 @@ export const updateGroup = createAsyncThunk('updateGroup/fetchGroup', async (id:
 export const getStudents = createAsyncThunk(
   'getStudents/getStudents',
   async ({ id, queryString }: { id: string | string[] | undefined; queryString: string }) => {
-    const resp = await api.get(`common/group/students/${id}?` + queryString)
+    const resp = await api.get(`common/group/students/?group=${id}&` + queryString)
     return resp.data
   }
 )

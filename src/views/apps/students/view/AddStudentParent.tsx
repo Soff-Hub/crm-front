@@ -55,7 +55,7 @@ const AddStudentParent = ({ open, setOpen }: IAddParentProps) => {
     const handleCreateParent = async (values: IParentData, helpers: FormikHelpers<IParentData>) => {
         try {
             setLoading(true);
-            const response = await api.post('/auth/student-parent/create/', { ...values, student: studentData?.id });
+            const response = await api.post('/student/parent/create/', { ...values, student: studentData?.id });
             if (response.status === 201) {
                 toast.success(t("Muvaffaqiyatli saqlandi"));
                 studentData?.id && dispatch(fetchStudentDetail(studentData.id));

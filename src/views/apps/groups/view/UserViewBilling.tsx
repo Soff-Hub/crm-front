@@ -79,7 +79,7 @@ const UserViewBilling = () => {
 
   const getExams = async () => {
     try {
-      const resp = await api.get('common/group/students/' + query.id)
+      const resp = await api.get('common/group/students/?group=' + query.id + "&")
       setExams(resp.data?.response)
     } catch (err) {
       console.log(err)

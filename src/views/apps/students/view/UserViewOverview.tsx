@@ -46,7 +46,7 @@ const UserViewOverview = ({ data }: ItemTypes) => {
   const handleAddNote = async (value: any) => {
     setLoading(true)
     try {
-      await api.post('auth/student/description/', { user: query.student, ...value })
+      await api.post('student/description/', { user: query.student, ...value })
       await dispatch(fetchStudentDetail(studentData?.id || 1))
       setLoading(false)
       setOpen(false)
