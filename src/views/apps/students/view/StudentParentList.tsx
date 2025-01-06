@@ -36,12 +36,13 @@ export default function StudentParentList() {
       )
     }
   ]
+     
 
   return (
     <Box sx={{ mt: 4 }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <Typography variant='h6'>{t('Ota-onalari')}</Typography>
-        {!studentData?.parent_data && (
+        {(
           <Button onClick={() => setOpen('create')} variant='contained'>
             {t('Yaratish')}
           </Button>
@@ -50,7 +51,7 @@ export default function StudentParentList() {
       <DataTable
         maxWidth='100%'
         minWidth='100%'
-        data={studentData?.parent_data ? [studentData?.parent_data] : []}
+        data={studentData?.parent_data|| []}
         columns={columns}
       />
 

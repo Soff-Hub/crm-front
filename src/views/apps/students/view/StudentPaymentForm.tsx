@@ -98,7 +98,6 @@ export default function StudentPaymentForm({ openEdit, setOpenEdit, student_id, 
     setShowWarning(false)
   }
 
-  console.log(group);
   
 
   useEffect(() => {

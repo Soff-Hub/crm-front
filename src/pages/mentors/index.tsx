@@ -14,6 +14,7 @@ import { AuthContext } from 'src/context/AuthContext'
 import { toast } from 'react-hot-toast'
 import useSMS from 'src/hooks/useSMS'
 import { ModalTypes, SendSMSModal } from 'src/views/apps/students/view/UserViewLeft'
+import { fetchSmsList } from 'src/store/apps/settings'
 
 const RowOptions = dynamic(() => import('src/views/apps/mentors/RowOptions'))
 const TeacherAvatar = dynamic(() => import('src/views/apps/mentors/AddMentorsModal').then(mod => mod.TeacherAvatar))
@@ -156,6 +157,10 @@ export default function GroupsPage() {
     const queryString = new URLSearchParams({ status: checked ? 'archive' : 'active', page: '1' }).toString()
     await dispatch(fetchTeachersList(queryString))
   }
+  
+  useEffect(() => {
+    dispatch(fetchSmsList())
+  }, [])
 
   return (
     <div>

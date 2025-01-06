@@ -57,6 +57,7 @@ import { useFormik } from 'formik'
 import useResponsive from 'src/@core/hooks/useResponsive'
 import { useSettings } from 'src/@core/hooks/useSettings'
 import { setStudentId } from 'src/store/apps/students'
+import { fetchSmsList } from 'src/store/apps/settings'
 
 interface StudentType {
   id: number | string
@@ -200,6 +201,9 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, choices }:
       }
     }
   })
+    useEffect(() => {
+      dispatch(fetchSmsList())
+    }, [])
 
   const handleLeft = async () => {
     setLoading(true)
@@ -400,7 +404,7 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, choices }:
               href={`/students/view/security/?student=${id}`}
               style={{ textDecoration: 'underline', color: 'gray' }}
             >
-              <Typography sx={{ cursor: 'pointer' }} fontSize={13}>
+              <Typography  sx={{ cursor: 'pointer' }} fontSize={10}>
                 {first_name}
               </Typography>
             </Link>
@@ -412,12 +416,12 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, choices }:
         </Typography>
       )}
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', minWidth: '100%' }}>
-        <Typography marginRight={3} fontSize={13} flexGrow={1} textAlign={'start'}>
+        <Typography  fontSize={13} flexGrow={1} textAlign={'center'}>
           {phone}
         </Typography>
 
         <div onClick={() => setUpdateStatusModal(true)}>
-          <Box sx={{ width: 75, textAlign: 'start' }}>
+          <Box sx={{ width: 55, textAlign: 'center' }}>
             {student_status === 'active' ? (
               <Chip
                 label={t('active')}

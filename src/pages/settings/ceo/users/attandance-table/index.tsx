@@ -22,32 +22,49 @@ import SubLoader from 'src/views/apps/loaders/SubLoader'
 export default function EmployeesAttendanceTable() {
   const [dates, setDates] = useState<any>([])
   const [attendances, setAttendances] = useState<any>([])
-  const [selectedMonth, setSelectedMonth] = useState<string>('2024-12')
+  const [selectedMonth, setSelectedMonth] = useState<string>(
+    String(new Date().getMonth() + 1).padStart(2, '0') 
+  );
+  const [selectedYear, setSelectedYear] = useState<string>(
+    new Date().getFullYear().toString()
+  );
   const { t } = useTranslation()
   const [loading, setLoading] = useState(false)
   const { settings } = useSettings()
 
-  async function fetchEmployeesAttendance(month: string) {
+  console.log(selectedYear,selectedMonth);
+  
+  async function fetchEmployeesAttendance(year: any, month: string) {
     setLoading(true)
+    const date = `${year}-${month}-01`
     await api
-      .get(`auth/attendance/employees/?date=${month}-01`)
+      .get(`auth/attendance/employees/?date=${date}`)
       .then(res => {
         setAttendances(res.data.result)
         setDates(res.data.dates)
-        console.log(res)
       })
       .catch(err => {
-        console.log(err)
+        console.error(err)
       })
     setLoading(false)
   }
 
   useEffect(() => {
-    fetchEmployeesAttendance(selectedMonth)
-  }, [selectedMonth])
+    fetchEmployeesAttendance(selectedYear, selectedMonth)
+  }, [selectedYear, selectedMonth])
 
   const handleMonthChange = (event: any) => {
     setSelectedMonth(event.target.value)
+  }
+
+  const handleYearChange = (event: any) => {
+    setSelectedYear(event.target.value)
+  }
+
+  const generateYearOptions = () => {
+    const currentYear = new Date().getFullYear()
+    const startYear = 2020 
+    return Array.from({ length: currentYear - startYear + 1 }, (_, i) => startYear + i)
   }
 
   return (
@@ -56,28 +73,45 @@ export default function EmployeesAttendanceTable() {
         <Typography variant='h5' sx={{ paddingY: 5 }}>
           {t('Xodimlar Davomati')}
         </Typography>
-        <FormControl sx={{ marginBottom: 3, minWidth: 200 }}>
-          <InputLabel id='month-select-label'>{t('Oyni tanlang')}</InputLabel>
-          <Select
-            labelId='month-select-label'
-            value={selectedMonth}
-            onChange={handleMonthChange}
-            label={t('Oyni tanlang')}
-          >
-            <MenuItem value='2024-01'>{t('Yanvar')}</MenuItem>
-            <MenuItem value='2024-02'>{t('Fevral')}</MenuItem>
-            <MenuItem value='2024-03'>{t('Mart')}</MenuItem>
-            <MenuItem value='2024-04'>{t('Aprel')}</MenuItem>
-            <MenuItem value='2024-05'>{t('May')}</MenuItem>
-            <MenuItem value='2024-06'>{t('Iyun')}</MenuItem>
-            <MenuItem value='2024-07'>{t('Iyul')}</MenuItem>
-            <MenuItem value='2024-08'>{t('Avgust')}</MenuItem>
-            <MenuItem value='2024-09'>{t('Sentyabr')}</MenuItem>
-            <MenuItem value='2024-10'>{t('Oktyabr')}</MenuItem>
-            <MenuItem value='2024-11'>{t('Noyabr')}</MenuItem>
-            <MenuItem value='2024-12'>{t('Dekabr')}</MenuItem>
-          </Select>
-        </FormControl>
+        <Box sx={{ display: 'flex', gap: 2 }}>
+          <FormControl sx={{ minWidth: 120 }}>
+            <InputLabel id='year-select-label'>{t('Yilni tanlang')}</InputLabel>
+            <Select
+              labelId='year-select-label'
+              value={selectedYear}
+              onChange={handleYearChange}
+              label={t('Yilni tanlang')}
+            >
+              {generateYearOptions().map(year => (
+                <MenuItem key={year} value={year}>
+                  {year}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <FormControl sx={{ minWidth: 200 }}>
+            <InputLabel id='month-select-label'>{t('Oyni tanlang')}</InputLabel>
+            <Select
+              labelId='month-select-label'
+              value={selectedMonth}
+              onChange={handleMonthChange}
+              label={t('Oyni tanlang')}
+            >
+              <MenuItem value='01'>{t('Yanvar')}</MenuItem>
+              <MenuItem value='02'>{t('Fevral')}</MenuItem>
+              <MenuItem value='03'>{t('Mart')}</MenuItem>
+              <MenuItem value='04'>{t('Aprel')}</MenuItem>
+              <MenuItem value='05'>{t('May')}</MenuItem>
+              <MenuItem value='06'>{t('Iyun')}</MenuItem>
+              <MenuItem value='07'>{t('Iyul')}</MenuItem>
+              <MenuItem value='08'>{t('Avgust')}</MenuItem>
+              <MenuItem value='09'>{t('Sentyabr')}</MenuItem>
+              <MenuItem value='10'>{t('Oktyabr')}</MenuItem>
+              <MenuItem value='11'>{t('Noyabr')}</MenuItem>
+              <MenuItem value='12'>{t('Dekabr')}</MenuItem>
+            </Select>
+          </FormControl>
+        </Box>
       </Box>
       {loading ? (
         <SubLoader />
