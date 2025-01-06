@@ -583,9 +583,7 @@ export const SendSMSModal = ({ handleEditClose, openEdit, setOpenEdit, userData,
       }
     }
   }
-  useEffect(() => {
-    dispatch(fetchSmsList())
-  }, [])
+ 
   useEffect(() => {
     if (parent_id) {
       dispatch(fetchSmsListQuery(parent_id))

@@ -30,7 +30,6 @@ import { useTranslation } from 'react-i18next'
 import { useAppDispatch, useAppSelector } from 'src/store'
 import { fetchAmoCrmPipelines, fetchDepartmentList, setOpenLid, setSectionId } from 'src/store/apps/leads'
 import dynamic from 'next/dynamic'
-import { fetchSmsList } from 'src/store/apps/settings'
 
 const DepartmentSendSmsForm = dynamic(() => import('src/views/apps/lids/departmentItem/DepartmentSendSmsForm'), {
   ssr: false // Disable server-side rendering if required

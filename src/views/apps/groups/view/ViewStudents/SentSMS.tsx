@@ -58,9 +58,9 @@ export default function SentSMS({
     }
   })
 
-   useEffect(() => {
-      dispatch(fetchSmsList())
-    }, [])
+  //  useEffect(() => {
+  //     dispatch(fetchSmsList())
+  //   }, [])
     useEffect(() => {
       if (parent_id) {
         dispatch(fetchSmsListQuery(parent_id))

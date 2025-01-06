@@ -81,6 +81,7 @@ const RowOptions = ({ id, status }: { id: number | string; status: string }) => 
     handleRowOptionsClose()
     await dispatch(fetchTeacherdetail(id))
   }
+  
 
   return (
     <>

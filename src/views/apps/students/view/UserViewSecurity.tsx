@@ -314,7 +314,6 @@ const UserViewSecurity = () => {
     dispatch(fetchStudentPayment(query?.student))
   }, [query?.student])
 
-  console.log(isMobile);
   
 
   return (
@@ -395,7 +394,7 @@ const UserViewSecurity = () => {
                 style={{ textDecoration: 'none' }}
               >
                 <Box sx={{ width:'100%', display: 'flex', gap: '20px' }}>
-                  <Card sx={{ width: isMobile ? '100%' : '400px', minHeight: 300 }}>
+                  <Card sx={{ width: isMobile ? '100%' : '400px', minHeight: 380 }}>
                     <div onClick={e => e.stopPropagation()}>
                       <CardContent
                         sx={{
