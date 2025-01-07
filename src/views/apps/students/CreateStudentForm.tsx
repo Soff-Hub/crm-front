@@ -50,7 +50,7 @@ export default function CreateStudentForm() {
   const dispatch = useAppDispatch()
   const { groups } = useAppSelector(state => state.students)
   const { isMobile } = useResponsive()
-
+  const [isSchool, setIsSchool] = useState(false)
   // ** States
   const [isGroup, setIsGroup] = useState<boolean>(false)
   const [loading, setLoading] = useState<boolean>(false)
@@ -72,6 +72,7 @@ export default function CreateStudentForm() {
   const initialValues: CreateStudentDto = {
     first_name: '',
     phone: '',
+    school: '',
     birth_date: today,
     gender: 'male',
     start_at: today,
@@ -94,6 +95,7 @@ export default function CreateStudentForm() {
 
       const newVlaues = {
         ...valuess,
+        extra_data: values?.school ? [{ school: values.school }] : [],
         phone: reversePhone(values.phone),
         group: values?.group ? [values.group] : [],
         ...discountConfig
@@ -266,10 +268,25 @@ export default function CreateStudentForm() {
       ) : (
         ''
       )}
+      {isSchool && (
+        <FormControl sx={{ width: '100%' }}>
+          <TextField
+            size='small'
+            label={t('Maktab nomi')}
+            name='school'
+            error={!!errors.school}
+            value={values.school}
+            onChange={handleChange}
+            onBlur={handleBlur}
+          />
+          <FormHelperText error={true}>{errors.school}</FormHelperText>
+        </FormControl>
+      )}
 
       <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
         {!isGroup && (
           <Button
+            fullWidth
             onClick={async () => setIsGroup(true)}
             type='button'
             variant='outlined'
@@ -277,6 +294,21 @@ export default function CreateStudentForm() {
             startIcon={<IconifyIcon icon={'material-symbols:add'} />}
           >
             {t("Guruhga qo'shish")}
+          </Button>
+        )}
+      </Box>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+        {!isSchool && (
+          <Button
+            fullWidth
+            color='warning'
+            onClick={async () => setIsSchool(true)}
+            type='button'
+            variant='outlined'
+            size='small'
+            startIcon={<IconifyIcon icon={'material-symbols:add'} />}
+          >
+            {t("Maktab qo'shish")}
           </Button>
         )}
       </Box>

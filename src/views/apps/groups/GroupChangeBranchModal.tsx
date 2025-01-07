@@ -31,7 +31,6 @@ export default function GroupChangeBranchModal() {
     getBranches()
   }, [])
 
-  console.log(groupData)
 
   const validationSchema = Yup.object().shape({
     branchId: Yup.string().required(t('Filialni tanlash majburiy!') || 'Filialni tanlash majburiy!')
