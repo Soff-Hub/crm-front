@@ -4,6 +4,7 @@ import React, { MouseEvent, useState } from 'react'
 import toast from 'react-hot-toast'
 import { useTranslation } from 'react-i18next'
 import IconifyIcon from 'src/@core/components/icon'
+import api from 'src/@core/utils/api'
 import { useAppDispatch, useAppSelector } from 'src/store'
 import { disablePage } from 'src/store/apps/page'
 import {
@@ -61,13 +62,15 @@ export default function StudentRowOptions({ id }: Props) {
   async function submitDelete() {
     setLoading(true)
     dispatch(disablePage(true))
-    const resp = await dispatch(deleteStudent(id))
-    if (resp.meta.requestStatus === 'rejected') {
-      toast.error("Guruhga qo'shilgan o'quvchini o'chirib bo'lmaydi")
-    } else {
+    await api.delete(`student/destroy/${id}/`).then((res) => {
       toast.success("O'quvchi muvaffaqiyatli o'chirildi")
-      await dispatch(fetchStudentsList({ status: queryParams.status }))
-    }
+      dispatch(fetchStudentsList({ status: queryParams.status }))
+    }).catch((err) => {
+      toast.error(err.response.data.msg||"O'quvchini o'chirib bo'lmadi")
+      console.log(err);
+      
+    })
+   
     dispatch(disablePage(false))
     setLoading(false)
   }

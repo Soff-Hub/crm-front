@@ -80,6 +80,7 @@ const AddStudentParent = ({ open, setOpen }: IAddParentProps) => {
                 handleClose();
             }
         } catch (err: any) {
+            toast.error('Xatolik',{style:{zIndex:9999}})
             handleError(err, helpers);
         } finally {
             setLoading(false);
@@ -113,7 +114,6 @@ const AddStudentParent = ({ open, setOpen }: IAddParentProps) => {
         setOpen(null);
     };
 
-    console.log(formik.values);
     
     
     

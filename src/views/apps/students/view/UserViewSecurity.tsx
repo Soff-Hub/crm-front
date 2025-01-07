@@ -293,6 +293,7 @@ const UserViewSecurity = () => {
       .then(res => {
         console.log(res)
         dispatch(fetchStudentGroups(query?.student))
+        dispatch(fetchStudentPayment(query?.student))
       })
       .catch(err => {
         toast.error(err.response.data.msg || 'Xatolik')
@@ -565,7 +566,7 @@ const UserViewSecurity = () => {
                         <Box>
                           <Typography color={'black'}>To'lov narxi</Typography>
                           <Typography color='green' fontSize={13}>
-                            {group.payment_amount} so'm
+                             {formatCurrency(group.payment_amount)} so'm
                           </Typography>
                         </Box>
                       </Box>

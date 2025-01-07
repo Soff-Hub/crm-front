@@ -21,18 +21,20 @@ import Router, { useRouter } from 'next/router'
 import { fetchStudentDetail, fetchStudentGroups, fetchStudentPayment } from 'src/store/apps/students'
 import AmountInput, { revereAmount } from 'src/@core/components/amount-input'
 import IconifyIcon from 'src/@core/components/icon'
+import { getStudents } from 'src/store/apps/groupDetails'
 
 type Props = {
   openEdit: any
   setOpenEdit: any
   student_id?: any
-  group?: any
+  group?: any,
+  active_id?:any
 }
 
-export default function StudentPaymentForm({ openEdit, setOpenEdit, student_id, group }: Props) {
+export default function StudentPaymentForm({ openEdit, setOpenEdit, student_id, group,active_id }: Props) {
   const [loading, setLoading] = useState<boolean>(false)
   const [showWarning, setShowWarning] = useState<boolean>(false)
-
+  const { studentsQueryParams} = useAppSelector(state => state.groupDetails)
   const { t } = useTranslation()
   const { studentData } = useAppSelector(state => state.students)
   const userData: any = { ...studentData }
@@ -56,6 +58,9 @@ export default function StudentPaymentForm({ openEdit, setOpenEdit, student_id, 
     payment_date: today
   }
 
+  console.log(userData.id,student_id);
+  
+
   const formik: any = useFormik({
     initialValues,
     validationSchema,
@@ -73,9 +78,13 @@ export default function StudentPaymentForm({ openEdit, setOpenEdit, student_id, 
         setOpenEdit(null)
         if (query.student) {
           await dispatch(fetchStudentGroups(query.student))
+          await dispatch(fetchStudentDetail(userData?.id || student_id))
+          await dispatch(fetchStudentPayment(userData?.id || student_id))
+        } else {
+          const queryString = new URLSearchParams(studentsQueryParams).toString()
+
+          await dispatch(getStudents( {id:query.id, queryString:queryString }))
         }
-        await dispatch(fetchStudentDetail(userData?.id || student_id))
-        await dispatch(fetchStudentPayment(userData?.id || student_id))
       } catch (err: any) {
         // showResponseError(err.response.data, setError)
         setLoading(false)

@@ -153,7 +153,6 @@ const UserViewSecurity = () => {
   )
   const dispatch = useAppDispatch()
 
-  console.log(days)
 
   const start_date: any = groupData?.start_date ? Number(groupData?.start_date.split('-')[1]) : ''
 
