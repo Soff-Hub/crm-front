@@ -134,7 +134,8 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, choices }:
   const { t } = useTranslation()
   const { getBranches, branches } = useBranches()
   const { settings, saveSettings } = useSettings()
-
+  
+  const [group_data, setGroupData] = useState<any>()
   const handleEditClickOpen = (value: ModalTypes) => {
     if (value === 'payment') {
       getBranches()
@@ -201,9 +202,9 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, choices }:
       }
     }
   })
-    useEffect(() => {
-      dispatch(fetchSmsList())
-    }, [])
+  useEffect(() => {
+    dispatch(fetchSmsList())
+  }, [])
 
   const handleLeft = async () => {
     setLoading(true)
@@ -404,7 +405,7 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, choices }:
               href={`/students/view/security/?student=${id}`}
               style={{ textDecoration: 'underline', color: 'gray' }}
             >
-              <Typography  sx={{ cursor: 'pointer' }} fontSize={10}>
+              <Typography sx={{ cursor: 'pointer' }} fontSize={10}>
                 {first_name}
               </Typography>
             </Link>
@@ -415,24 +416,47 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, choices }:
           {first_name}
         </Typography>
       )}
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', minWidth: '100%' }}>
-        <Typography  fontSize={13} flexGrow={1} textAlign={'center'}>
+      <Box sx={{ width: '65px', display: 'flex', justifyContent: 'space-between', alignItems: 'end' }}>
+        <Typography fontSize={13} flexGrow={1} textAlign={'end'}>
           {phone}
         </Typography>
 
         <div onClick={() => setUpdateStatusModal(true)}>
-          <Box sx={{ width: 55, textAlign: 'center' }}>
+          <Box sx={{ textAlign: 'start', paddingX:settings.layout == 'vertical' ? 2:4 }}>
             {student_status === 'active' ? (
               <Chip
-                label={t('active')}
+                label={
+                  <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                    {t('active')}
+                    {updateStatusModal ? (
+                      <Icon icon='mdi:chevron-up' style={{ fontSize: '12px' }} />
+                    ) : (
+                      <Icon icon='mdi:chevron-down' style={{ fontSize: '12px' }} />
+                    )}
+                  </span>
+                }
                 color='success'
                 variant='outlined'
                 size='small'
-                sx={{ cursor: 'pointer', fontWeight: 500, fontSize: '10px', padding: 0 }}
+                sx={{
+                  cursor: 'pointer',
+                  fontWeight: 500,
+                  fontSize: '10px',
+                  padding: 0
+                }}
               />
             ) : student_status === 'archive' ? (
               <Chip
-                label={t('archive')}
+                label={
+                  <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                    {t('archive')}
+                    {updateStatusModal ? (
+                      <Icon icon='mdi:chevron-up' style={{ fontSize: '12px' }} />
+                    ) : (
+                      <Icon icon='mdi:chevron-down' style={{ fontSize: '12px' }} />
+                    )}
+                  </span>
+                }
                 color='error'
                 variant='outlined'
                 size='small'
@@ -440,7 +464,16 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, choices }:
               />
             ) : student_status === 'frozen' ? (
               <Chip
-                label={t('frozen')}
+                label={
+                  <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                    {t('frozen')}
+                    {updateStatusModal ? (
+                      <Icon icon='mdi:chevron-up' style={{ fontSize: '12px' }} />
+                    ) : (
+                      <Icon icon='mdi:chevron-down' style={{ fontSize: '12px' }} />
+                    )}
+                  </span>
+                }
                 color='error'
                 variant='outlined'
                 size='small'
@@ -453,7 +486,16 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, choices }:
               />
             ) : student_status === 'new' ? (
               <Chip
-                label={t('new')}
+                label={
+                  <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                    {t('new')}
+                    {updateStatusModal ? (
+                      <Icon icon='mdi:chevron-up' style={{ fontSize: '12px' }} />
+                    ) : (
+                      <Icon icon='mdi:chevron-down' style={{ fontSize: '12px' }} />
+                    )}
+                  </span>
+                }
                 color='warning'
                 variant='outlined'
                 size='small'
@@ -483,27 +525,31 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, choices }:
 
         <Box
           sx={{
-            width: 80,
-            textAlign: 'start'
+            width: settings.lastLayout == 'horizontal' ? 70 : 60,
+            textAlign: 'end'
           }}
         >
-          {Number(balance) < 0 ? (
+          <Tooltip
+            title={String(balance).length > 6 ? formatCurrency(+balance) + " so'm" : ''}
+            arrow
+            disableHoverListener={String(balance).length <= 6}
+          >
             <Chip
-              label={`${formatCurrency(+balance)}`}
-              color='error'
+              label={formatCurrency(+balance)}
+              color={Number(balance) < 0 ? 'error' : 'success'}
               variant='outlined'
               size='small'
-              sx={{ fontWeight: 500, fontSize: '10px', padding: 0 }}
+              sx={{
+                fontWeight: 500,
+                fontSize: '10px',
+                padding: 0,
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+                maxWidth: '100%'
+              }}
             />
-          ) : (
-            <Chip
-              label={`${formatCurrency(+balance)}`}
-              color='success'
-              variant='outlined'
-              size='small'
-              sx={{ fontWeight: 500, fontSize: '10px', padding: 0 }}
-            />
-          )}
+          </Tooltip>
         </Box>
       </Box>
       <Typography
@@ -570,7 +616,7 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, choices }:
           {t('Tahrirlash')}
         </MenuItem>
       </Menu>
-      <StudentPaymentForm student_id={id} openEdit={openEdit} setOpenEdit={setOpenEdit} />
+      <StudentPaymentForm student_id={id} active_id={activeId} group={query.id} openEdit={openEdit} setOpenEdit={setOpenEdit} />
 
       <Dialog open={openLeft} onClose={() => setOpenLeft(false)}>
         <DialogContent sx={{ maxWidth: '350px' }}>

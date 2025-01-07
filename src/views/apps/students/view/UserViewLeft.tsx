@@ -40,7 +40,7 @@ import api from 'src/@core/utils/api'
 import useSMS from 'src/hooks/useSMS'
 import { today } from 'src/@core/components/card-statistics/kanban-item'
 import { useAppDispatch, useAppSelector } from 'src/store'
-import { fetchStudentDetail, fetchStudentPayment } from 'src/store/apps/students'
+import { fetchStudentDetail, fetchStudentGroups, fetchStudentPayment } from 'src/store/apps/students'
 import StudentPaymentForm from './StudentPaymentForm'
 import { useRouter } from 'next/router'
 import { useFormik } from 'formik'
@@ -116,7 +116,7 @@ const UserViewLeft = ({ userData }: { userData: any }) => {
       await mergeStudentToGroup({ ...data, ...discountConfig })
       setLoading(false)
       setOpenEdit(null)
-
+      await dispatch(fetchStudentGroups(userData.id))
       await dispatch(fetchStudentDetail(userData.id))
       await dispatch(fetchStudentPayment(userData.id))
     } catch (err: any) {

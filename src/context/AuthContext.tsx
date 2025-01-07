@@ -48,8 +48,6 @@ const AuthProvider = ({ children }: Props) => {
   // ** Hooks
   const dispatch = useAppDispatch()
 
-  
-
   const initAuth = async (): Promise<void> => {
     const storedToken = window.localStorage.getItem(authConfig.storageTokenKeyName)!
     if (storedToken) {
@@ -78,7 +76,7 @@ const AuthProvider = ({ children }: Props) => {
             balance: response.data?.balance || 0,
             branches: response.data.branches.filter((item: any) => item.exists === true),
             active_branch: response.data.active_branch,
-            qr_code:response.data.qr_code
+            qr_code: response.data.qr_code
           })
         })
         .catch(() => {
@@ -101,8 +99,8 @@ const AuthProvider = ({ children }: Props) => {
       }
     } else {
       setLoading(false)
-      window.localStorage.removeItem("accessToken")
-      window.localStorage.removeItem("userData")
+      window.localStorage.removeItem('accessToken')
+      window.localStorage.removeItem('userData')
     }
   }
 
@@ -118,17 +116,18 @@ const AuthProvider = ({ children }: Props) => {
     api
       .post(authConfig.loginEndpoint, params)
       .then(async response => {
-        !params.rememberMe
-          ? window.localStorage.setItem(authConfig.storageTokenKeyName, response.data.tokens.access)
-          : null
-        const returnUrl = router.query.returnUrl
-
-        !params.rememberMe
-          ? window.localStorage.setItem('userData', JSON.stringify({ ...response.data, role: 'admin', tokens: null }))
-          : null
+        if (!params.rememberMe) {
+          window.localStorage.setItem(authConfig.storageTokenKeyName, response.data.tokens.access)
+          window.localStorage.setItem('userData', JSON.stringify({ ...response.data, role: 'admin', tokens: null }))
+        }
 
         const settings: any = window.localStorage.getItem('settings')
         i18n.changeLanguage(JSON.parse(settings)?.locale || 'uz')
+
+        const userRoles = response.data.roles.filter((el: any) => el.exists).map((el: any) => el.name?.toLowerCase())
+
+        const isMarketolog = userRoles.includes('marketolog')
+
         if (!response.data.payment_page) {
           if (
             !window.location.hostname.split('.').includes('c-panel') &&
@@ -137,7 +136,14 @@ const AuthProvider = ({ children }: Props) => {
             const resp = await api.get('common/settings/list/')
             dispatch(setCompanyInfo(resp.data[0]))
           }
-          const redirectURL = returnUrl && returnUrl !== '/' ? returnUrl : '/'
+
+          const returnUrl = router.query.returnUrl
+
+          const redirectURL = isMarketolog
+            ? '/lids' 
+            : returnUrl && returnUrl !== '/'
+            ? returnUrl
+            : '/'
           router.replace(redirectURL as string)
         } else {
           router.replace('/crm-payments')
@@ -145,19 +151,17 @@ const AuthProvider = ({ children }: Props) => {
 
         setUser({
           id: response.data.id,
-          // role: response.data.roles.find((el: any) => el.name === "Teacher").exists && !response.data.roles.find((el: any) => el.name === "Admin").exists && !response.data.roles.find((el: any) => el.name === "CEO").exists ? 'teacher' : 'admin',
           fullName: response.data.first_name,
           username: response.data.phone,
           password: 'null',
           avatar: response.data.image,
           payment_page: response.data.payment_page,
-          role: response.data.roles.filter((el: any) => el.exists).map((el: any) => el.name?.toLowerCase()),
+          role: userRoles,
           balance: response.data?.balance || 0,
           branches: response.data.branches.filter((item: any) => item.exists === true),
           active_branch: response.data.active_branch
         })
       })
-
       .catch(err => {
         if (errorCallback) errorCallback(err)
       })

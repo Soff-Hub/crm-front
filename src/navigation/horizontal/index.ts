@@ -136,11 +136,7 @@ const Navigation = (t: any): HorizontalNavItemsType => {
     // }
   ]
   const marketologItems = [
-    {
-      title: t('Bosh sahifa'),
-      icon: 'clarity:home-solid',
-      path: '/dashboard'
-    },
+   
     {
       title: t('Lidlar'),
       icon: 'mdi:receipt-text-edit-outline',
