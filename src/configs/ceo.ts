@@ -25,6 +25,7 @@ const ceoConfigs = {
   groups_detail: 'common/group/detail/',
   groups_create: 'common/group-create/',
   groups_update: 'common/group/update/',
+  groups_updateStatus: 'common/group/update/status/',
   merge_student: 'common/group-student-create/',
   group_short_list: 'common/group-check-list/?branch=',
 

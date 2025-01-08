@@ -101,7 +101,7 @@ const UserDropdown = (props: Props) => {
 
     const a = document.createElement('a')
     a.href = url
-    a.download = name + '.xlsx'
+    a.download = name + '.pdf'
     document.body.appendChild(a)
     a.click()
     a.remove()

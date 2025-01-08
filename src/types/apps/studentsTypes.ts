@@ -41,10 +41,12 @@ export interface StudentItemType {
   phone: string
   gender: genderTypes
   birth_date: null | string
+
 }
 
 export interface CreateStudentDto extends StudentItemType {
   password?: string | null
+  school?:string,
   group?: number | string
   start_at?: string
   fixed_price: string

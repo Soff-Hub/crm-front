@@ -130,6 +130,7 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
               <MenuItem value={'active'}>{t('Aktiv')}</MenuItem>
               <MenuItem value={'archived'}>{t('archive')}</MenuItem>
               <MenuItem value={'new'}>{t('Sinov darsida')}</MenuItem>
+              <MenuItem value={'frozen'}>{t('Muzlatilgan')}</MenuItem>
             </Select>
           </FormControl>
           <FormControl sx={{ width: '100%' }}>
@@ -226,6 +227,8 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
               <MenuItem value={'active'}>{t('active')}</MenuItem>
               <MenuItem value={'archived'}>{t('archive')}</MenuItem>
               <MenuItem value={'new'}>{t('new')}</MenuItem>
+              <MenuItem value={'frozen'}>{t('frozen')}</MenuItem>
+
             </Select>
           </FormControl>
           {options?.length > 0 && (
