@@ -113,7 +113,8 @@ const initialState: IGroupsState = {
   queryParams: {
     status: 'active',
     is_recovery: false,
-    limit: 10
+    limit: 10,
+    search:''
   },
   formParams: {
     day_of_week:

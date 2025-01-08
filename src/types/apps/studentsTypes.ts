@@ -38,6 +38,7 @@ export type StudentsListType = StudentListItemType[]
 export interface StudentItemType {
   id?: number
   first_name: string
+  school?:any
   phone: string
   gender: genderTypes
   birth_date: null | string
@@ -82,6 +83,7 @@ export interface StudentDetailType {
   phone: string
   gender: genderTypes
   created_at: string
+  school_data:{id:number,name:string},
   parent_data: any[] | null
   roles_list: any[]
   branches: {

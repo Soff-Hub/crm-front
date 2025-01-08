@@ -58,6 +58,10 @@ const Navigation = (t: any): HorizontalNavItemsType => {
             {
               title: 'Dam olish kunlari',
               path: '/settings/office/free-days'
+            },
+            {
+              title: 'Maktablar',
+              path: '/settings/office/schools'
             }
             // {
             //   title: 'Arxiv',
@@ -215,6 +219,9 @@ const Navigation = (t: any): HorizontalNavItemsType => {
             {
               title: 'Dam olish kunlari',
               path: '/settings/office/free-days'
+            }, {
+              title: 'Maktablar',
+              path: '/settings/office/schools'
             }
             // {
             //   title: 'Arxiv',

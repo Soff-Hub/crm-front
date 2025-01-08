@@ -121,6 +121,7 @@ const AppBarContent = (props: Props) => {
                   }}
                   options={employees || []}
                   fullWidth
+                  noOptionsText="Ma'lumot yo'q.."
                   size='small'
                   getOptionLabel={(option: any) => option.first_name}
                   renderOption={(props, option: any) => (
@@ -198,6 +199,7 @@ const AppBarContent = (props: Props) => {
             setEmployees([])
           }}
           options={employees || []}
+          noOptionsText="Ma'lumot yo'q.."
           fullWidth
           size='small'
           getOptionLabel={(option: any) => option.first_name}

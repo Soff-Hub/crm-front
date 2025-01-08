@@ -112,6 +112,9 @@ const Navigation = (t: any): VerticalNavItemsType => {
             {
               title: 'Dam olish kunlari',
               path: '/settings/office/free-days'
+            }, {
+              title: 'Maktablar',
+              path: '/settings/office/schools'
             }
           ]
         },
@@ -125,7 +128,8 @@ const Navigation = (t: any): VerticalNavItemsType => {
             {
               title: 'Xodimlar',
               path: '/settings/ceo/users'
-            }
+            },
+            
           ]
         },
         {
@@ -261,6 +265,10 @@ const Navigation = (t: any): VerticalNavItemsType => {
             {
               title: 'Dam olish kunlari',
               path: '/settings/office/free-days'
+            },
+            {
+              title: 'Maktablar',
+              path: '/settings/office/schools'
             }
             // {
             //   title: 'Arxiv',

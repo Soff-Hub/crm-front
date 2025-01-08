@@ -58,7 +58,6 @@ export default function StudentPaymentForm({ openEdit, setOpenEdit, student_id, 
     payment_date: today
   }
 
-  console.log(userData.id,student_id);
   
 
   const formik: any = useFormik({
