@@ -27,6 +27,7 @@ import useSMS from 'src/hooks/useSMS'
 import 'rsuite/DateRangePicker/styles/index.css'
 import { DatePicker } from 'rsuite'
 import { format } from 'date-fns'
+import { fetchSchoolList, fetchSchoolsList } from 'src/store/apps/settings'
 
 type StudentsFilterProps = {
   isMobile: boolean
@@ -36,6 +37,8 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
   const [search, setSearch] = useState<string>('')
   const dispatch = useAppDispatch()
   const { students, queryParams } = useAppSelector(state => state.students)
+  const { schools } = useAppSelector(state => state.settings)
+
   const { getCourses, courses } = useCourses()
   const [groups, setGroups] = useState<any>()
   const [teachers, setTeachers] = useState<any>()
@@ -50,7 +53,6 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
     setOpenEdit(value)
   }
 
-  console.log(queryParams.debt_date)
 
   const handleEditClose = () => {
     setError({})
@@ -112,6 +114,7 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
     getCourses()
     getGroups()
     getTeachers()
+    dispatch(fetchSchoolsList())
   }, [])
 
   const groupOptions = groups?.map((item: MetaTypes) => ({
@@ -192,6 +195,34 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
               {courses.map(course => (
                 <MenuItem key={course.id} value={course.id}>
                   {course.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <FormControl fullWidth>
+            <InputLabel size='small' id='demo-simple-select-outlined-label'>
+              {t('Maktab')}
+            </InputLabel>
+            <Select
+              size='small'
+              label={t('Maktab')}
+              defaultValue={''}
+              id='demo-simple-select-outlined'
+              labelId='demo-simple-select-outlined-label'
+              onChange={(e: any) => {
+                if (e.target.value === '') {
+                  handleFilter('school', null)
+                } else {
+                  handleFilter('school', e.target.value)
+                }
+              }}
+            >
+              <MenuItem value={''}>
+                <b>{t('Barchasi')}</b>
+              </MenuItem>
+              {schools.map((school:any) => (
+                <MenuItem key={school.id} value={school.id}>
+                  {school.name}
                 </MenuItem>
               ))}
             </Select>
@@ -368,6 +399,34 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
               {courses.map(course => (
                 <MenuItem key={course.id} value={course.id}>
                   {course.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <FormControl sx={{ maxWidth: 180, width: '100%' }}>
+            <InputLabel size='small' id='demo-simple-select-outlined-label'>
+              {t('Maktab')}
+            </InputLabel>
+            <Select
+              size='small'
+              label={t('Maktab')}
+              defaultValue={''}
+              id='demo-simple-select-outlined'
+              labelId='demo-simple-select-outlined-label'
+              onChange={(e: any) => {
+                if (e.target.value === '') {
+                  handleFilter('school', null)
+                } else {
+                  handleFilter('school', e.target.value)
+                }
+              }}
+            >
+              <MenuItem value={''}>
+                <b>{t('Barchasi')}</b>
+              </MenuItem>
+              {schools.map((school:any) => (
+                <MenuItem key={school.id} value={school.id}>
+                  {school.name}
                 </MenuItem>
               ))}
             </Select>

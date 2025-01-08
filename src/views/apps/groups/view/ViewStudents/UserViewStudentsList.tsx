@@ -107,7 +107,9 @@ export type ModalTypes = 'group' | 'withdraw' | 'payment' | 'sms' | 'delete' | '
 export const UserViewStudentsItem = ({ item, index, status, activeId, choices }: ItemTypes) => {
   const { studentsQueryParams, queryParams, openLeadModal } = useAppSelector(state => state.groupDetails)
   const dispatch = useAppDispatch()
+
   const { student, id: studentStatusId } = item
+  console.log(item, student.id)
   const {
     first_name,
     phone,
@@ -134,7 +136,7 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, choices }:
   const { t } = useTranslation()
   const { getBranches, branches } = useBranches()
   const { settings, saveSettings } = useSettings()
-  
+
   const [group_data, setGroupData] = useState<any>()
   const handleEditClickOpen = (value: ModalTypes) => {
     if (value === 'payment') {
@@ -202,9 +204,7 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, choices }:
       }
     }
   })
-  useEffect(() => {
-    dispatch(fetchSmsList())
-  }, [])
+  
 
   const handleLeft = async () => {
     setLoading(true)
@@ -403,11 +403,20 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, choices }:
             <Link
               onClick={() => dispatch(setStudentId(id))}
               href={`/students/view/security/?student=${id}`}
-              style={{ textDecoration: 'underline', color: 'gray' }}
+              style={{ textDecoration: 'underline', color: 'gray'}}
             >
-              <Typography sx={{ cursor: 'pointer' }} fontSize={10}>
-                {first_name}
-              </Typography>
+                {settings.layout == 'horizontal' ?
+             <Tooltip title={first_name.length > 9 ? first_name : ''} arrow>
+             <Typography sx={{ cursor: 'pointer' }} minWidth={75} fontSize={10}>
+               {first_name.length > 9 ? `${first_name.slice(0, 9)}...` : first_name}
+             </Typography>
+                  </Tooltip> :
+            <Tooltip title={first_name.length > 7 ? first_name : ''} arrow>
+            <Typography sx={{ cursor: 'pointer' }} minWidth={58} fontSize={10}>
+              {first_name.length > 7 ? `${first_name.slice(0, 7)}...` : first_name}
+            </Typography>
+          </Tooltip>       
+            }
             </Link>
           </HtmlTooltip>
         )
@@ -416,13 +425,27 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, choices }:
           {first_name}
         </Typography>
       )}
-      <Box sx={{ width: '65px', display: 'flex', justifyContent: 'space-between', alignItems: 'end' }}>
-        <Typography fontSize={13} flexGrow={1} textAlign={'end'}>
-          {phone}
-        </Typography>
+      <Box sx={{ display: 'flex', justifyContent: 'end', alignItems: 'end' }}>
+        {settings.layout == 'horizontal' ? (
+          <Typography minWidth={110}  fontSize={13} flexGrow={1} textAlign={'end'}>
+            {phone}
+          </Typography>
+        ) : (
+          <Typography  minWidth={88} fontSize={10} flexGrow={1} textAlign={'end'}>
+            {phone}
+          </Typography>
+        )}
 
         <div onClick={() => setUpdateStatusModal(true)}>
-          <Box sx={{ textAlign: 'start', paddingX:settings.layout == 'vertical' ? 2:4 }}>
+          <Box
+            sx={{
+              minWidth:student_status == 'archive'||'frozen' ? 110 : 90,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'end',
+              paddingX: 2,
+            }}
+          >
             {student_status === 'active' ? (
               <Chip
                 label={
@@ -525,17 +548,20 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, choices }:
 
         <Box
           sx={{
-            width: settings.lastLayout == 'horizontal' ? 70 : 60,
-            textAlign: 'end'
+            width: settings.layout == 'horizontal' ? 70 : 60,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'end',
+            minWidth: settings.layout == 'horizontal' ? 80 : 60
           }}
         >
           <Tooltip
-            title={String(balance).length > 6 ? formatCurrency(+balance) + " so'm" : ''}
+            title={formatCurrency(+balance) + " so'm"}
             arrow
-            disableHoverListener={String(balance).length <= 6}
+            // disableHoverListener={String(balance).length <= 6}
           >
             <Chip
-              label={formatCurrency(+balance)}
+              label={formatCurrency(+balance) + " so'm"}
               color={Number(balance) < 0 ? 'error' : 'success'}
               variant='outlined'
               size='small'
@@ -545,8 +571,7 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, choices }:
                 padding: 0,
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
-                whiteSpace: 'nowrap',
-                maxWidth: '100%'
+                whiteSpace: 'nowrap'
               }}
             />
           </Tooltip>
@@ -616,7 +641,13 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, choices }:
           {t('Tahrirlash')}
         </MenuItem>
       </Menu>
-      <StudentPaymentForm student_id={id} active_id={activeId} group={query.id} openEdit={openEdit} setOpenEdit={setOpenEdit} />
+      <StudentPaymentForm
+        student_id={id}
+        active_id={activeId}
+        group={query.id}
+        openEdit={openEdit}
+        setOpenEdit={setOpenEdit}
+      />
 
       <Dialog open={openLeft} onClose={() => setOpenLeft(false)}>
         <DialogContent sx={{ maxWidth: '350px' }}>

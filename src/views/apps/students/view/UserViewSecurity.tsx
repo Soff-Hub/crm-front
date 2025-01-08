@@ -315,14 +315,20 @@ const UserViewSecurity = () => {
     dispatch(fetchStudentPayment(query?.student))
   }, [query?.student])
 
-  
-
   return (
     <Box className='demo-space-y'>
       {studentGroups && studentGroups.length > 0 ? (
-        <Box sx={{ width: isMobile ?'100%':'auto', display: 'flex', flexWrap: 'wrap',alignItems:'center', gap: '15px' }}>
+        <Box
+          sx={{
+            width: isMobile ? '100%' : 'auto',
+            display: 'flex',
+            flexWrap: 'wrap',
+            alignItems: 'center',
+            gap: '15px'
+          }}
+        >
           {studentGroups.map((group: any) => (
-            <Box key={group.id} sx={{width:isMobile ? '100%':'auto', position: 'relative' }}>
+            <Box key={group.id} sx={{ width: isMobile ? '100%' : 'auto', position: 'relative' }}>
               <Typography
                 id='fade-button'
                 aria-controls={open ? 'fade-menu' : undefined}
@@ -372,7 +378,7 @@ const UserViewSecurity = () => {
                   onClick={() => handleClose('left')}
                 >
                   <Icon fontSize={'20px'} icon={'material-symbols:group-remove'} />
-                  {t('Guruhdan chiqarish')}
+                  {group_data?.status == 'archive' ? ("Ba'zadan chiqarish") : ('Guruhdan chiqarish')}
                 </MenuItem>
 
                 <MenuItem
@@ -394,7 +400,7 @@ const UserViewSecurity = () => {
                 href={`/groups/view/security/?id=${group.group_id}&month=${getMontName(null)}`}
                 style={{ textDecoration: 'none' }}
               >
-                <Box sx={{ width:'100%', display: 'flex', gap: '20px' }}>
+                <Box sx={{ width: '100%', display: 'flex', gap: '20px' }}>
                   <Card sx={{ width: isMobile ? '100%' : '400px', minHeight: 380 }}>
                     <div onClick={e => e.stopPropagation()}>
                       <CardContent
@@ -460,19 +466,19 @@ const UserViewSecurity = () => {
                               onChange={e => handleChangeStatus(e.target.value, group.id)}
                               sx={{ height: 30, width: 'auto', backgroundColor: 'white', color: 'green' }}
                             >
-                              {group.choices?.map((status: any) => (
-                               status == 'active' ? (
-                                <MenuItem sx={{ color: 'green' }} value={status}>
-                                  {t(status)}
-                                </MenuItem>
-                              ) : status == 'new' ? (
-                                <MenuItem sx={{ color: 'orange' }} value={status}>
-                                  {t(status)}
-                                </MenuItem>
-                              ) : (
-                                <MenuItem value={status}>{t(status)}</MenuItem>
-                              )
-                              ))}
+                              {group.choices?.map((status: any) =>
+                                status == 'active' ? (
+                                  <MenuItem sx={{ color: 'green' }} value={status}>
+                                    {t(status)}
+                                  </MenuItem>
+                                ) : status == 'new' ? (
+                                  <MenuItem sx={{ color: 'orange' }} value={status}>
+                                    {t(status)}
+                                  </MenuItem>
+                                ) : (
+                                  <MenuItem value={status}>{t(status)}</MenuItem>
+                                )
+                              )}
                             </Select>
                           ) : (
                             <Select
@@ -482,19 +488,19 @@ const UserViewSecurity = () => {
                               onChange={e => handleChangeStatus(e.target.value, group.id)}
                               sx={{ height: 30, width: 'auto', backgroundColor: 'white' }}
                             >
-                              {group.choices?.map((status: any) => (
-                               status == 'active' ? (
-                                <MenuItem sx={{ color: 'green' }} value={status}>
-                                  {t(status)}
-                                </MenuItem>
-                              ) : status == 'new' ? (
-                                <MenuItem sx={{ color: 'orange' }} value={status}>
-                                  {t(status)}
-                                </MenuItem>
-                              ) : (
-                                <MenuItem value={status}>{t(status)}</MenuItem>
-                              )
-                              ))}
+                              {group.choices?.map((status: any) =>
+                                status == 'active' ? (
+                                  <MenuItem sx={{ color: 'green' }} value={status}>
+                                    {t(status)}
+                                  </MenuItem>
+                                ) : status == 'new' ? (
+                                  <MenuItem sx={{ color: 'orange' }} value={status}>
+                                    {t(status)}
+                                  </MenuItem>
+                                ) : (
+                                  <MenuItem value={status}>{t(status)}</MenuItem>
+                                )
+                              )}
                             </Select>
                           )}
                         </Box>
@@ -566,7 +572,7 @@ const UserViewSecurity = () => {
                         <Box>
                           <Typography color={'black'}>To'lov narxi</Typography>
                           <Typography color='green' fontSize={13}>
-                             {formatCurrency(group.payment_amount)} so'm
+                            {formatCurrency(group.payment_amount)} so'm
                           </Typography>
                         </Box>
                       </Box>

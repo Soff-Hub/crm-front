@@ -57,7 +57,7 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
 
   const handleChangeStatus = async (e: SelectChangeEvent<string>) => {
     dispatch(updateParams({ status: e.target.value }))
-    // const queryString = new URLSearchParams({ ...queryParams, status: e.target.value }).toString()
+    const queryString = new URLSearchParams({ ...queryParams, status: e.target.value }).toString()
     await dispatch(fetchGroups({ ...queryParams, status: e.target.value }))
   }
   const handleChangeTeacher = async (e: SelectChangeEvent<string>) => {
@@ -73,16 +73,16 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
     dispatch(fetchGroups({ ...queryParams, day_of_week: e.target.value }))
   }
 
-  const handleSearch = async () => {
+  const handleSearch = async (searchVal:string) => {
     setLoading(true)
     dispatch(updateParams({ search: searchVal }))
     await dispatch(fetchGroups({ ...queryParams, search: searchVal }))
     setLoading(false)
   }
 
-  useEffect(() => {
-    handleSearch()
-  }, [searchVal])
+ 
+
+  
 
   const queryString = new URLSearchParams({ ...queryParams }).toString()
 
@@ -100,7 +100,7 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
               {t('Qidirish')}
             </InputLabel>
             <OutlinedInput
-              onChange={e => setSearch(e.target.value)}
+              onChange={e => handleSearch(e.target.value)}
               endAdornment={
                 <InputAdornment position='end'>
                   <IconifyIcon icon={'tabler:search'} />
@@ -197,7 +197,7 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
               {t('Qidirish')}
             </InputLabel>
             <OutlinedInput
-              onChange={e => setSearch(e.target.value)}
+              onChange={e => handleSearch(e.target.value)}
               endAdornment={
                 <InputAdornment position='end'>
                   <IconifyIcon icon={'tabler:search'} />

@@ -297,6 +297,7 @@ export default function GroupsPage() {
           {t('Filterlash')}
         </Button>
       )}
+      
       {!isMobile && <GroupsFilter isMobile={isMobile} />}
       <DataTable columns={columns} loading={isLoading} data={groups || []} rowClick={rowClick} color text_color />
       {Math.ceil(groupCount / 10) > 1 && !isLoading && (

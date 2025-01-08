@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 
 // ** Components
 import {
+  Autocomplete,
   Box,
   Button,
   FormControl,
@@ -49,6 +50,8 @@ export default function CreateStudentForm() {
   const error: any = {}
   const dispatch = useAppDispatch()
   const { groups } = useAppSelector(state => state.students)
+  const { schools } = useAppSelector(state => state.settings)
+
   const { isMobile } = useResponsive()
   const [isSchool, setIsSchool] = useState(false)
   // ** States
@@ -95,7 +98,6 @@ export default function CreateStudentForm() {
 
       const newVlaues = {
         ...valuess,
-        extra_data: values?.school ? [{ school: values.school }] : [],
         phone: reversePhone(values.phone),
         group: values?.group ? [values.group] : [],
         ...discountConfig
@@ -270,19 +272,28 @@ export default function CreateStudentForm() {
       )}
       {isSchool && (
         <FormControl sx={{ width: '100%' }}>
-          <TextField
+          <Autocomplete
+            noOptionsText="Ma'lumot yo'q"
             size='small'
-            label={t('Maktab nomi')}
-            name='school'
-            error={!!errors.school}
-            value={values.school}
-            onChange={handleChange}
+            options={schools || []}
+            getOptionLabel={(option: any) => option.name}
+            onChange={(event, newValue) => {
+
+              formik.setFieldValue('school', newValue.id)
+            }}
             onBlur={handleBlur}
+            renderInput={params => (
+              <TextField
+                {...params}
+                label={t('Maktab nomi')}
+                placeholder='Maktab'
+                error={!!errors.school}
+                helperText={errors.school}
+              />
+            )}
           />
-          <FormHelperText error={true}>{errors.school}</FormHelperText>
         </FormControl>
       )}
-
       <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
         {!isGroup && (
           <Button

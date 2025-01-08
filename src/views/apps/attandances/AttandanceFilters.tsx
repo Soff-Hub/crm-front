@@ -117,9 +117,12 @@ export const AttandanceFilters = ({ isMobile }: AttandanceFiltersProps) => {
     const month = queryParams.date_month ? queryParams.date_month.split('-')[1] : queryParams.date_month || '01'
 
     const day = String(now.getDate()).padStart(2, '0')
+    const currentMonth = new Date().getMonth() + 1
+    const formattedMonth = month || currentMonth.toString().padStart(2, '0')
+
     dispatch(
       updateQueryParam({
-        date_year: `${e.target.value}-${month}-${day}`,
+        date_year: `${e.target.value}-${month || formattedMonth}-${day}`,
         date: ''
       })
     )
@@ -135,7 +138,13 @@ export const AttandanceFilters = ({ isMobile }: AttandanceFiltersProps) => {
     setSelectedDate(null)
     const year = queryParams.date_year ? queryParams.date_year.split('-')[0] : queryParams.date_year || currentYear
     const day = String(now.getDate()).padStart(2, '0')
-    dispatch(updateQueryParam({ date_month: `${year}-${e.target.value}-${day}`, date: '' }))
+    console.log(e.target.value)
+
+    if (e.target.value) {
+      dispatch(updateQueryParam({ date_month: `${year}-${e.target.value}-${day}`, date: '' }))
+    } else {
+      dispatch(updateQueryParam({ date_month: '' }))
+    }
 
     const updatedQueryParams = store.getState().attendance.queryParams
 
