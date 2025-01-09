@@ -69,9 +69,7 @@ const UserViewRight = ({ tab }: Props) => {
         sx={{ borderBottom: theme => `1px solid ${theme.palette.divider}` }}
       >
         <Tab value='security' label={t('Davomat')} icon={<Icon icon='tabler:user-check' />} />
-        {!(user?.role.length === 1 && user?.role.includes('teacher')) && (
           <Tab value='grade' label={t('Baho')} icon={<Icon icon='mdi:school' />} />
-        )}
         {!(user?.role.length === 1 && user?.role.includes('teacher')) && (
           <Tab value='notes' label={t('Eslatmalar')} icon={<Icon icon='fluent:note-add-48-regular' />} />
         )}

@@ -73,16 +73,12 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
     dispatch(fetchGroups({ ...queryParams, day_of_week: e.target.value }))
   }
 
-  const handleSearch = async (searchVal:string) => {
+  const handleSearch = async (searchVal: string) => {
     setLoading(true)
     dispatch(updateParams({ search: searchVal }))
     await dispatch(fetchGroups({ ...queryParams, search: searchVal }))
     setLoading(false)
   }
-
- 
-
-  
 
   const queryString = new URLSearchParams({ ...queryParams }).toString()
 
@@ -134,14 +130,14 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
             </Select>
           </FormControl>
           <FormControl sx={{ width: '100%' }}>
-          <Autocomplete
-                onChange={(e, v) => handleChangeTeacher({ ...e, target: { ...e.target, value: v?.value || '' } })}
-                size='small'
-                placeholder={"O'qituvchi"}
-                disablePortal
-                options={options}
-                renderInput={params => <TextField {...params} label={t("O'qituvchi")} />}
-              />
+            <Autocomplete
+              onChange={(e, v) => handleChangeTeacher({ ...e, target: { ...e.target, value: v?.value || '' } })}
+              size='small'
+              placeholder={"O'qituvchi"}
+              disablePortal
+              options={options}
+              renderInput={params => <TextField {...params} label={t("O'qituvchi")} />}
+            />
           </FormControl>
           <FormControl sx={{ width: '100%' }}>
             <InputLabel size='small' id='demo-simple-select-outlined-label'>
@@ -228,7 +224,6 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
               <MenuItem value={'archived'}>{t('archive')}</MenuItem>
               <MenuItem value={'new'}>{t('new')}</MenuItem>
               <MenuItem value={'frozen'}>{t('frozen')}</MenuItem>
-
             </Select>
           </FormControl>
           {options?.length > 0 && (

@@ -168,30 +168,49 @@ export default function GroupsPage() {
       <Box
         className='groups-page-header'
         sx={{
-          display: isMobile ? 'grid' : 'flex',
-          gridTemplateColumns: '1fr',
-          gap: '10px',
+          display: 'flex',
+          flexWrap:'wrap',
+          // flexDirection: isMobile ? 'column' : 'row',
+          alignItems: isMobile ? 'start' : 'center',
           justifyContent: 'space-between',
           margin: '10px 0',
-          flexWrap: 'nowrap'
+          gap: '10px',
         }}
         py={2}
       >
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <Typography variant='h5'>{t('Mentorlar')}</Typography>
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            // flexDirection: isMobile ? 'column' : 'row',
+            gap: isMobile ? '5px' : '10px',
+          }}
+        >
+          <Typography variant={isMobile ? 'h6' : 'h5'}>{t('Mentorlar')}</Typography>
           <Chip label={`${teachersCount || 0}`} variant='outlined' color='primary' size='medium' />
           <FormControlLabel
             control={<Switch onChange={handleChangeStatus} />}
-            checked={queryParams.status == 'archive'}
+            checked={queryParams.status === 'archive'}
             label={t('archive')}
+            sx={{ marginLeft: isMobile ? '0' : '10px' }}
           />
         </Box>
-        <Box sx={{display:'flex',gap:5}}>
-        <Button
-            onClick={() => (getSMSTemps(), handleEditClickOpen('sms'))}
+        <Box
+          sx={{
+            width:isMobile ? '100%':'auto',
+            display: 'flex',
+            gap: isMobile ? '10px' : '20px',
+            flexDirection: isMobile ? 'column' : 'row',
+          }}
+        >
+          <Button
+            onClick={() => {
+              getSMSTemps();
+              handleEditClickOpen('sms');
+            }}
             variant='outlined'
             color='warning'
-            fullWidth
+            fullWidth={isMobile}
             size='small'
             startIcon={<IconifyIcon icon='material-symbols-light:sms-outline' />}
           >
@@ -201,6 +220,7 @@ export default function GroupsPage() {
             onClick={() => dispatch(setOpenEdit('create'))}
             variant='contained'
             size='small'
+            fullWidth={isMobile}
             startIcon={<IconifyIcon icon='ic:baseline-plus' />}
           >
             {t("Yangi qo'shish")}
@@ -215,17 +235,22 @@ export default function GroupsPage() {
           variant='outlined'
           shape='rounded'
           onChange={(e: any, page) => handlePagination(page)}
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            mt: 2,
+          }}
         />
       )}
       <TeacherCreateDialog />
       <TeacherEditDialog />
-          <SendSMSModal
-                handleEditClose={handleEditClose}
-                openEdit={openSms}
-                smsTemps={smsTemps}
-                setOpenEdit={setOpenSms}
-                usersData={studentIds}
-              />
+      <SendSMSModal
+        handleEditClose={handleEditClose}
+        openEdit={openSms}
+        smsTemps={smsTemps}
+        setOpenEdit={setOpenSms}
+        usersData={studentIds}
+      />
     </div>
   )
 }

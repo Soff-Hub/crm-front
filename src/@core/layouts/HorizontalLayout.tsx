@@ -216,7 +216,7 @@ const HorizontalLayout = (props: LayoutProps) => {
                           }
                         />
                       </Box>
-                      {!user?.role.includes('marketolog') && <StaticsModal />}
+                      {user?.role.includes('admin') || user?.role.includes('ceo') && <StaticsModal />}
                       <QrCodeModal />
                     </>
                   )}
@@ -250,7 +250,7 @@ const HorizontalLayout = (props: LayoutProps) => {
         />{' '} */}
         {themeConfig.disableCustomizer || hidden ? null : (
           <>
-            {!user?.role.includes('marketolog') && <DraggableIcon />}
+            {user?.role.includes('admin') || user?.role.includes('ceo') && <DraggableIcon />}
 
             <Customizer />
           </>

@@ -26,9 +26,7 @@ import Router from 'next/router'
 import api from 'src/@core/utils/api'
 
 export default function AddGroupModal() {
-  const { isOpenAddGroup, courses, formParams, queryParams, initialValues } = useAppSelector(
-    state => state.groups
-  )
+  const { isOpenAddGroup, courses, formParams, queryParams, initialValues } = useAppSelector(state => state.groups)
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
   const [loading, setLoading] = useState(false)
@@ -39,14 +37,14 @@ export default function AddGroupModal() {
 
   const getTeachers = async () => {
     await api
-       .get('auth/employees-check-list/?role=teacher')
-       .then(data => {
-         setTeachersData(data.data)
-       })
-       .catch(error => {
-         console.log(error)
-       })
-   }
+      .get('auth/employees-check-list/?role=teacher')
+      .then(data => {
+        setTeachersData(data.data)
+      })
+      .catch(error => {
+        console.log(error)
+      })
+  }
 
   const getRooms = async () => {
     await api
@@ -111,18 +109,21 @@ export default function AddGroupModal() {
   ) => {
     formik.setFieldValue(name, event?.target?.value || event)
     if (name == 'teacher') {
-      dispatch(updateFormParams({ teacher: event?.target?.value||event }))
+      dispatch(updateFormParams({ teacher: event?.target?.value || event }))
       const queryString = new URLSearchParams({ ...formParams, teacher: event?.target?.value || event }).toString()
       await dispatch(getDashboardLessons(queryString))
     } else if (name == 'room') {
-      dispatch(updateFormParams({ room: event?.target?.value||event }))
-      const queryString = new URLSearchParams({ ...formParams, room: event?.target?.value ||event}).toString()
+      dispatch(updateFormParams({ room: event?.target?.value || event }))
+      const queryString = new URLSearchParams({ ...formParams, room: event?.target?.value || event }).toString()
       await dispatch(getDashboardLessons(queryString))
     } else if (name == 'day_of_week') {
       if (event.target.value != '0') {
         setCustomWeekDays([])
-        dispatch(updateFormParams({ day_of_week: event?.target?.value||event }))
-        const queryString = new URLSearchParams({ ...formParams, day_of_week: event?.target?.value||event }).toString()
+        dispatch(updateFormParams({ day_of_week: event?.target?.value || event }))
+        const queryString = new URLSearchParams({
+          ...formParams,
+          day_of_week: event?.target?.value || event
+        }).toString()
         await dispatch(getDashboardLessons(queryString))
       }
     }
@@ -319,7 +320,7 @@ export default function AddGroupModal() {
                   id='user-view-language'
                   labelId='user-view-language-label'
                   name='teacher'
-                  disabled={!!!formik.values.room}
+                  disabled={!formik.values.room}
                   onChange={e => handleChangeField('teacher', e)}
                   onBlur={formik.handleBlur}
                   value={formik.values.teacher}
