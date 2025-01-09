@@ -410,7 +410,6 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
             <Select
               size='small'
               label={t('Maktab')}
-              defaultValue={''}
               id='demo-simple-select-outlined'
               labelId='demo-simple-select-outlined-label'
               onChange={(e: any) => {
