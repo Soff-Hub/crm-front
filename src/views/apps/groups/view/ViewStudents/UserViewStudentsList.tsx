@@ -552,7 +552,7 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, choices }:
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'end',
-            minWidth: settings.layout == 'horizontal' ? 80 : 60
+            minWidth: settings.layout == 'horizontal' ? 70 : 60
           }}
         >
           <Tooltip
