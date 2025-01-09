@@ -6,7 +6,15 @@ import VideoHeader, { videoUrls } from 'src/@core/components/video-header/video-
 import { getMontNumber } from 'src/@core/utils/gwt-month-name'
 import { AuthContext } from 'src/context/AuthContext'
 import { useAppDispatch, useAppSelector } from 'src/store'
-import { getAttendance, getDays, getGroupById, getSubData, resetStore, setGettingAttendance, setGettingGroupDetails } from 'src/store/apps/groupDetails'
+import {
+  getAttendance,
+  getDays,
+  getGroupById,
+  getSubData,
+  resetStore,
+  setGettingAttendance,
+  setGettingGroupDetails
+} from 'src/store/apps/groupDetails'
 import UserViewLeft from 'src/views/apps/groups/view/GroupViewLeft/UserViewLeft'
 import UserViewRight from 'src/views/apps/groups/view/UserViewRight'
 
@@ -19,22 +27,31 @@ const UserView = () => {
 
   useEffect(() => {
     if (user?.role.includes('student') && !user?.role.includes('watcher')) {
-      router.push("/")
+      router.push('/')
       toast.error('Sahifaga kirish huquqingiz yoq!')
     }
-    (async function () {
+    ;(async function () {
       const queryString = new URLSearchParams(queryParams).toString()
       dispatch(setGettingAttendance(true))
       dispatch(setGettingGroupDetails(true))
       if (user && user?.role[0] !== 'teacher' && user.role.length === 1) {
-        await Promise.all([
-          dispatch(getSubData())
-        ])
+        await Promise.all([dispatch(getSubData())])
       }
       await Promise.all([
-        dispatch(getDays({ date: `${router.query?.year || new Date().getFullYear()}-${getMontNumber(router.query.month)}`, group: router.query.id })),
+        dispatch(
+          getDays({
+            date: `${router.query?.year || new Date().getFullYear()}-${getMontNumber(router.query.month)}`,
+            group: router.query.id
+          })
+        ),
         dispatch(getGroupById(router.query.id)),
-        dispatch(getAttendance({ date: `${router.query?.year || new Date().getFullYear()}-${getMontNumber(router.query.month)}`, group: router.query.id, queryString: queryString }))
+        dispatch(
+          getAttendance({
+            date: `${router.query?.year || new Date().getFullYear()}-${getMontNumber(router.query.month)}`,
+            group: router.query.id,
+            queryString: queryString
+          })
+        )
       ])
       dispatch(setGettingAttendance(false))
       dispatch(setGettingGroupDetails(false))
@@ -48,10 +65,10 @@ const UserView = () => {
     <div>
       <VideoHeader item={videoUrls.group} />
       <Grid container spacing={6}>
-        <Grid item xs={12} md={5} lg={4}>
+        <Grid item xs={12} md={5}>
           <UserViewLeft />
         </Grid>
-        <Grid item xs={12} md={7} lg={8}>
+        <Grid item xs={12} md={7}>
           <UserViewRight tab={url} />
         </Grid>
       </Grid>

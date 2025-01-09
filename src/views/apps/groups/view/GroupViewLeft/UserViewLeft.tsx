@@ -15,17 +15,28 @@ import AddNote from './AddNote'
 import AddStudents from './AddStudents'
 import Delete from './Delete'
 import UserViewStudentsList from '../ViewStudents/UserViewStudentsList'
+import useResponsive from 'src/@core/hooks/useResponsive'
 
 const UserViewLeft = () => {
   const { studentsQueryParams, isGettingStudents } = useAppSelector(state => state.groupDetails)
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
   const { query } = useRouter()
-
+  const { isTablet, isDesktop, isMobile } = useResponsive()
   useEffect(() => {
     const queryString = new URLSearchParams(studentsQueryParams).toString()
     dispatch(getStudents({ id: query.id, queryString: queryString }))
   }, [studentsQueryParams.status])
+
+  console.log(
+    'desktop:',
+    isDesktop,
+    'tablet:',
+    isTablet,
+
+    'mobile:',
+    isMobile
+  )
 
   return (
     <Grid container spacing={6}>
@@ -33,7 +44,7 @@ const UserViewLeft = () => {
         <GroupDetails />
       </Grid>
       <Grid item xs={12}>
-        <CardContent sx={{ p: 0 }}>
+        <CardContent sx={{ p: 0 }} >
           <div style={{ display: 'flex', alignItems: 'center', gap: '20px', marginBottom: '10px' }}>
             {['new', 'active', 'archive', 'frozen'].map(el => (
               <div key={el} style={{ display: 'flex', alignItems: 'center', gap: '3px', cursor: 'pointer' }}>

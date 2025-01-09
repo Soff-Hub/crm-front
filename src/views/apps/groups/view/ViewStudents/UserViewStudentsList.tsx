@@ -107,9 +107,7 @@ export type ModalTypes = 'group' | 'withdraw' | 'payment' | 'sms' | 'delete' | '
 export const UserViewStudentsItem = ({ item, index, status, activeId, choices }: ItemTypes) => {
   const { studentsQueryParams, queryParams, openLeadModal } = useAppSelector(state => state.groupDetails)
   const dispatch = useAppDispatch()
-
   const { student, id: studentStatusId } = item
-  console.log(item, student.id)
   const {
     first_name,
     phone,
@@ -204,7 +202,6 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, choices }:
       }
     }
   })
-  
 
   const handleLeft = async () => {
     setLoading(true)
@@ -235,13 +232,517 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, choices }:
   }
 
   return (
-    <Box sx={{ display: 'grid', gridTemplateColumns: '10px 10px 0.5fr 1fr 20px', alignItems: 'center', gap: 2 }}>
-      <Typography sx={{ width: '20px' }}>{index}.</Typography>
-      <Status
-        color={
-          status == 'active' ? 'success' : status == 'new' ? 'warning' : status == 'frozen' ? 'secondary' : 'error'
-        }
-      />
+    // <Box sx={{ display: 'grid', gridTemplateColumns: '5px 5px 0.5fr 2fr 10px', alignItems: 'center', gap: 2 }}>
+    //   <Typography sx={{ width: '20px' }}>{index}.</Typography>
+    //   <Status
+    //     color={
+    //       status == 'active' ? 'success' : status == 'new' ? 'warning' : status == 'frozen' ? 'secondary' : 'error'
+    //     }
+    //   />
+    //   {!(user?.role.length === 1 && user?.role.includes('teacher')) ? (
+    //     settings.mode == 'dark' ? (
+    //       <HtmlTooltip
+    //         title={
+    //           <Box
+    //             sx={{
+    //               width: '100%',
+    //               height: '100%',
+    //               display: 'flex',
+    //               flexDirection: 'column',
+    //               padding: '10px',
+    //               bgcolor: settings.mode != 'dark' ? 'grey.900' : 'background.paper',
+    //               color: settings.mode != 'dark' ? 'grey.100' : 'text.primary',
+    //               border: settings.mode != 'dark' ? '1px solid #444' : '1px solid #c3cccc'
+    //             }}
+    //           >
+    //             <Box sx={{ display: 'flex', justifyContent: 'space-between', py: 1 }}>
+    //               <Box>
+    //                 <Typography fontSize={12}>{first_name}</Typography>
+    //                 <Typography variant='body2' fontSize={12}>
+    //                   {t(status)}
+    //                 </Typography>
+    //               </Box>
+    //               <Typography variant='body2' fontSize={10}>{`( ID: ${activeId} )`}</Typography>
+    //             </Box>
+    //             <Box py={1} borderTop={`1px solid ${settings.mode != 'dark' ? '#444' : '#c3cccc'}`}>
+    //               <Typography variant='body2' fontSize={12}>
+    //                 {t('phone')}
+    //               </Typography>
+    //               <Typography fontSize={12}>{phone}</Typography>
+    //             </Box>
+    //             <Box py={1} borderTop={`1px solid ${settings.mode != 'dark' ? '#444' : '#c3cccc'}`}>
+    //               <Typography variant='body2' fontSize={12}>
+    //                 {t('Balans')}
+    //               </Typography>
+    //               <Typography fontSize={12}>{`${balance} so'm`}</Typography>
+    //             </Box>
+    //             {lesson_count !== 0 && (
+    //               <Box py={1} borderTop={`1px solid ${settings.mode != 'dark' ? '#444' : '#c3cccc'}`}>
+    //                 <Typography variant='body2' fontSize={12}>
+    //                   {t("To'lovgacha qolgan darslar")}
+    //                 </Typography>
+    //                 <Typography fontSize={12}>{`${lesson_count} ta`}</Typography>
+    //               </Box>
+    //             )}
+    //             {studentsQueryParams.status === 'archive' ? (
+    //               <Box py={1} borderTop={`1px solid ${settings.mode != 'dark' ? '#444' : '#c3cccc'}`}>
+    //                 <Typography variant='body2' fontSize={12}>
+    //                   {t("Talaba qo'shilgan va o'chirilgan sana")}
+    //                 </Typography>
+    //                 <Typography fontSize={12}>
+    //                   {added_at} / {deleted_at}
+    //                 </Typography>
+    //               </Box>
+    //             ) : (
+    //               <Box py={1} borderTop={`1px solid ${settings.mode != 'dark' ? '#444' : '#c3cccc'}`}>
+    //                 <Typography variant='body2' fontSize={12}>
+    //                   {t("Talaba qo'shilgan sana")}
+    //                 </Typography>
+    //                 <Typography fontSize={12}>{added_at}</Typography>
+    //               </Box>
+    //             )}
+    //             {comment && (
+    //               <Box py={1} borderTop={`1px solid ${settings.mode != 'dark' ? '#444' : '#c3cccc'}`}>
+    //                 <Typography variant='body2' fontSize={12}>
+    //                   {t('Eslatma')}
+    //                 </Typography>
+    //                 <Typography fontSize={12} fontStyle='italic'>
+    //                   {comment.comment}
+    //                 </Typography>
+    //                 <Typography fontSize={12} variant='body2'>{`${comment.user} ${formatDateTime(
+    //                   comment.created_at
+    //                 )}`}</Typography>
+    //               </Box>
+    //             )}
+    //           </Box>
+    //         }
+    //       >
+    //         <Link
+    //           href={`/students/view/security/?student=${id}`}
+    //           style={{
+    //             textDecoration: 'underline',
+    //             color: settings.mode == 'dark' ? 'gray' : 'lightgray'
+    //           }}
+    //         >
+    //           <Typography sx={{ cursor: 'pointer' }} fontSize={10}>
+    //             {first_name}
+    //           </Typography>
+    //         </Link>
+    //       </HtmlTooltip>
+    //     ) : (
+    //       <HtmlTooltip
+    //         title={
+    //           <Box sx={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', padding: '10px' }}>
+    //             <Box sx={{ display: 'flex', justifyContent: 'space-between', py: 1 }}>
+    //               <Box>
+    //                 <Typography fontSize={12}>{first_name}</Typography>
+    //                 <Typography variant='body2' fontSize={12}>
+    //                   {t(status)}
+    //                 </Typography>
+    //               </Box>
+    //               <Typography variant='body2' fontSize={10}>{`( ID: ${activeId} )`}</Typography>
+    //             </Box>
+    //             <Box py={1} borderTop={'1px solid #c3cccc'}>
+    //               <Typography variant='body2' fontSize={12}>
+    //                 {t('phone')}
+    //               </Typography>
+    //               <Typography fontSize={12}>{phone}</Typography>
+    //             </Box>
+    //             <Box py={1} borderTop={'1px solid #c3cccc'}>
+    //               <Typography variant='body2' fontSize={12}>
+    //                 {t('Balans')}
+    //               </Typography>
+    //               <Typography fontSize={12}>{`${balance} so'm`}</Typography>
+    //             </Box>
+    //             {lesson_count != 0 ? (
+    //               <Box py={1} borderTop={'1px solid #c3cccc'}>
+    //                 <Typography variant='body2' fontSize={12}>
+    //                   {t("To'lovgacha qolgan darslar")}
+    //                 </Typography>
+    //                 <Typography fontSize={12}>{`${lesson_count} ta`}</Typography>
+    //               </Box>
+    //             ) : (
+    //               ''
+    //             )}
+    //             {studentsQueryParams.status == 'archive' ? (
+    //               <Box py={1} borderTop={'1px solid #c3cccc'}>
+    //                 <Typography variant='body2' fontSize={12}>
+    //                   {t("Talaba qo'shilgan va o'chirilgan sana")}
+    //                 </Typography>
+    //                 <Typography fontSize={12}>
+    //                   {added_at} / {deleted_at}
+    //                 </Typography>
+    //               </Box>
+    //             ) : (
+    //               <Box py={1} borderTop={'1px solid #c3cccc'}>
+    //                 <Typography variant='body2' fontSize={12}>
+    //                   {t("Talaba qo'shilgan sana")}
+    //                 </Typography>
+    //                 <Typography fontSize={12}>{added_at}</Typography>
+    //               </Box>
+    //             )}
+    //             {comment && (
+    //               <Box py={1} borderTop={'1px solid #c3cccc'}>
+    //                 <Typography variant='body2' fontSize={12}>
+    //                   {t('Eslatma')}
+    //                 </Typography>
+    //                 <Typography fontSize={12} fontStyle={'italic'}>
+    //                   {comment.comment}
+    //                 </Typography>
+    //                 <Typography fontSize={12} variant='body2'>{`${comment.user} ${formatDateTime(
+    //                   comment.created_at
+    //                 )}`}</Typography>
+    //               </Box>
+    //             )}
+    //           </Box>
+    //         }
+    //       >
+    //         <Link
+    //           onClick={() => dispatch(setStudentId(id))}
+    //           href={`/students/view/security/?student=${id}`}
+    //           style={{ textDecoration: 'underline', color: 'gray' }}
+    //         >
+    //           {settings.layout == 'horizontal' ? (
+    //             <Tooltip title={first_name.length > 9 ? first_name : ''} arrow>
+    //               <Typography  sx={{ cursor: 'pointer' }} minWidth={70} fontSize={10}>
+    //                 {first_name.length > 9 ? `${first_name.slice(0, 9)}...` : first_name}
+    //               </Typography>
+    //             </Tooltip>
+    //           ) : (
+    //             <Tooltip title={first_name.length > 7 ? first_name : ''} arrow>
+    //               <Typography sx={{ cursor: 'pointer' }} minWidth={58} fontSize={10}>
+    //                 {first_name.length > 7 ? `${first_name.slice(0, 7)}...` : first_name}
+    //               </Typography>
+    //             </Tooltip>
+    //           )}
+    //         </Link>
+    //       </HtmlTooltip>
+    //     )
+    //   ) : settings.layout == 'horizontal' ? (
+    //     <Tooltip title={first_name.length > 9 ? first_name : ''} arrow>
+    //       <Typography sx={{ cursor: 'pointer' }} minWidth={75} fontSize={10}>
+    //         {first_name.length > 9 ? `${first_name.slice(0, 9)}...` : first_name}
+    //       </Typography>
+    //     </Tooltip>
+    //   ) : (
+    //     <Tooltip title={first_name.length > 7 ? first_name : ''} arrow>
+    //       <Typography sx={{ cursor: 'pointer' }} minWidth={58} fontSize={10}>
+    //         {first_name.length > 7 ? `${first_name.slice(0, 7)}...` : first_name}
+    //       </Typography>
+    //     </Tooltip>
+    //   )}
+    //   <Box sx={{ display: 'flex', justifyContent: 'end', alignItems: 'end' }}>
+    //     {settings.layout == 'horizontal' ? (
+    //       <Typography minWidth={110} fontSize={13} flexGrow={1} textAlign={'end'}>
+    //         {phone}
+    //       </Typography>
+    //     ) : (
+    //       <Typography minWidth={88} fontSize={10} flexGrow={1} textAlign={'end'}>
+    //         {phone}
+    //       </Typography>
+    //     )}
+
+    //     <div onClick={() => setUpdateStatusModal(true)}>
+    //       <Box
+    //         sx={{
+    //           minWidth: student_status == 'archive' || 'frozen' ? 110 : 90,
+    //           display: 'flex',
+    //           alignItems: 'center',
+    //           justifyContent: 'end',
+    //           paddingX: 2
+    //         }}
+    //       >
+    //         {student_status === 'active' ? (
+    //           <Chip
+    //             label={
+    //               <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+    //                 {t('active')}
+    //                 {updateStatusModal ? (
+    //                   <Icon icon='mdi:chevron-up' style={{ fontSize: '12px' }} />
+    //                 ) : (
+    //                   <Icon icon='mdi:chevron-down' style={{ fontSize: '12px' }} />
+    //                 )}
+    //               </span>
+    //             }
+    //             color='success'
+    //             variant='outlined'
+    //             size='small'
+    //             sx={{
+    //               cursor: 'pointer',
+    //               fontWeight: 500,
+    //               fontSize: '10px',
+    //               padding: 0
+    //             }}
+    //           />
+    //         ) : student_status === 'archive' ? (
+    //           <Chip
+    //             label={
+    //               <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+    //                 {t('archive')}
+    //                 {updateStatusModal ? (
+    //                   <Icon icon='mdi:chevron-up' style={{ fontSize: '12px' }} />
+    //                 ) : (
+    //                   <Icon icon='mdi:chevron-down' style={{ fontSize: '12px' }} />
+    //                 )}
+    //               </span>
+    //             }
+    //             color='error'
+    //             variant='outlined'
+    //             size='small'
+    //             sx={{ cursor: 'pointer', fontWeight: 500, fontSize: '10px', padding: 0 }}
+    //           />
+    //         ) : student_status === 'frozen' ? (
+    //           <Chip
+    //             label={
+    //               <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+    //                 {t('frozen')}
+    //                 {updateStatusModal ? (
+    //                   <Icon icon='mdi:chevron-up' style={{ fontSize: '12px' }} />
+    //                 ) : (
+    //                   <Icon icon='mdi:chevron-down' style={{ fontSize: '12px' }} />
+    //                 )}
+    //               </span>
+    //             }
+    //             color='error'
+    //             variant='outlined'
+    //             size='small'
+    //             sx={{
+    //               cursor: 'pointer',
+    //               fontWeight: 500,
+    //               fontSize: '10px',
+    //               padding: 0
+    //             }}
+    //           />
+    //         ) : student_status === 'new' ? (
+    //           <Chip
+    //             label={
+    //               <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+    //                 {t('new')}
+    //                 {updateStatusModal ? (
+    //                   <Icon icon='mdi:chevron-up' style={{ fontSize: '12px' }} />
+    //                 ) : (
+    //                   <Icon icon='mdi:chevron-down' style={{ fontSize: '12px' }} />
+    //                 )}
+    //               </span>
+    //             }
+    //             color='warning'
+    //             variant='outlined'
+    //             size='small'
+    //             sx={{ cursor: 'pointer', fontWeight: 500, fontSize: '10px', padding: 0 }}
+    //           />
+    //         ) : student_status === 'in_progress' ? (
+    //           <Chip
+    //             label={t('in_progress')}
+    //             color='info'
+    //             variant='outlined'
+    //             size='small'
+    //             sx={{ cursor: 'pointer', fontWeight: 500, fontSize: '10px', padding: 0 }}
+    //           />
+    //         ) : (
+    //           <Tooltip title={t(`Status: ${student_status}`)} arrow>
+    //             <Chip
+    //               label={student_status}
+    //               color='warning'
+    //               variant='outlined'
+    //               size='small'
+    //               sx={{ cursor: 'pointer', fontWeight: 500, fontSize: '10px', padding: 0 }}
+    //             />
+    //           </Tooltip>
+    //         )}
+    //       </Box>
+    //     </div>
+
+    //     <Box
+    //       sx={{
+    //         width: settings.layout == 'horizontal' ? 70 : 60,
+    //         display: 'flex',
+    //         alignItems: 'center',
+    //         justifyContent: 'end',
+    //         minWidth: settings.layout == 'horizontal' ? 70 : 60
+    //       }}
+    //     >
+    //       <Tooltip
+    //         title={formatCurrency(+balance) + " so'm"}
+    //         arrow
+    //         // disableHoverListener={String(balance).length <= 6}
+    //       >
+    //         <Chip
+    //           label={formatCurrency(+balance) + " so'm"}
+    //           color={Number(balance) < 0 ? 'error' : 'success'}
+    //           variant='outlined'
+    //           size='small'
+    //           sx={{
+    //             fontWeight: 500,
+    //             fontSize: '10px',
+    //             padding: 0,
+    //             overflow: 'hidden',
+    //             textOverflow: 'ellipsis',
+    //             whiteSpace: 'nowrap'
+    //           }}
+    //         />
+    //       </Tooltip>
+    //     </Box>
+    //   </Box>
+    //   <Typography
+    //     sx={{ ml: 3 }}
+    //     fontSize={11}
+    //     id='fade-button'
+    //     aria-controls={open ? 'fade-menu' : undefined}
+    //     aria-haspopup='true'
+    //     aria-expanded={open ? 'true' : undefined}
+    //     style={{ cursor: 'pointer' }}
+    //     onClick={!(user?.role.length === 1 && user?.role.includes('teacher')) ? handleClick : undefined}
+    //   >
+    //     <IconifyIcon icon={'charm:menu-kebab'} fontSize={11} />
+    //   </Typography>
+
+    //   <Menu
+    //     id='fade-menu'
+    //     MenuListProps={{
+    //       'aria-labelledby': 'fade-button'
+    //     }}
+    //     anchorEl={anchorEl}
+    //     open={open}
+    //     onClose={() => handleClose('none')}
+    //     TransitionComponent={Fade}
+    //   >
+    //     <MenuItem
+    //       sx={{ display: 'flex', alignItems: 'center', gap: '7px' }}
+    //       onClick={async () => handleEditClickOpen('payment')}
+    //     >
+    //       <Icon fontSize={'20px'} icon={'ic:baseline-payments'} />
+    //       {t("To'lov")}
+    //     </MenuItem>
+    //     <MenuItem sx={{ display: 'flex', alignItems: 'center', gap: '7px' }} onClick={() => handleClose('export')}>
+    //       <Icon fontSize={'20px'} icon={'tabler:status-change'} />
+    //       {t("Boshqa guruhga ko'chirishsh")}
+    //     </MenuItem>
+    //     <MenuItem sx={{ display: 'flex', alignItems: 'center', gap: '7px' }} onClick={() => handleClose('left')}>
+    //       <Icon fontSize={'20px'} icon={'material-symbols:group-remove'} />
+    //       {student_status == 'archive' ? t("Ba'zadan chiqarish") : t('Guruhdan chiqarish')}
+    //     </MenuItem>
+    //     <MenuItem
+    //       sx={{ display: 'flex', alignItems: 'center', gap: '7px' }}
+    //       onClick={() => (dispatch(setOpenLeadModal(studentStatusId)), handleClose('none'))}
+    //     >
+    //       <Icon fontSize={'20px'} icon={'mdi:leads'} />
+    //       {t('Lidlarga qaytarish')}
+    //     </MenuItem>
+    //     <MenuItem sx={{ display: 'flex', alignItems: 'center', gap: '7px' }} onClick={() => handleClose('notes')}>
+    //       <Icon fontSize={'20px'} icon={'material-symbols:note-alt'} />
+    //       {t('Eslatma')} +
+    //     </MenuItem>
+    //     <MenuItem
+    //       sx={{ display: 'flex', alignItems: 'center', gap: '7px' }}
+    //       onClick={() => (handleClose('sms'), getSMSTemps())}
+    //     >
+    //       <Icon fontSize={'20px'} icon={'ic:baseline-message'} />
+    //       {t('Xabar (sms)')} +
+    //     </MenuItem>
+    //     <MenuItem
+    //       sx={{ display: 'flex', alignItems: 'center', gap: '7px' }}
+    //       onClick={() => (setActivate(true), handleClose('none'))}
+    //     >
+    //       <Icon fontSize={'20px'} icon={'ri:file-edit-fill'} />
+    //       {t('Tahrirlash')}
+    //     </MenuItem>
+    //   </Menu>
+    //   <StudentPaymentForm
+    //     student_id={id}
+    //     active_id={activeId}
+    //     group={query.id}
+    //     openEdit={openEdit}
+    //     setOpenEdit={setOpenEdit}
+    //   />
+
+    //   <Dialog open={openLeft} onClose={() => setOpenLeft(false)}>
+    //     <DialogContent sx={{ maxWidth: '350px' }}>
+    //       <Typography sx={{ fontSize: '20px', textAlign: 'center', mb: 3 }}>
+    //         {t("O'quvchini guruhdan chetlatishni tasdiqlang")}
+    //       </Typography>
+    //       <Box sx={{ display: 'flex', justifyContent: 'center', gap: 4 }}>
+    //         <Button onClick={() => setOpenLeft(false)} size='small' variant='outlined' color='error'>
+    //           {t('Bekor qilish')}
+    //         </Button>
+    //         <LoadingButton loading={loading} onClick={handleLeft} size='small' variant='contained'>
+    //           {t('Tasdiqlash')}
+    //         </LoadingButton>
+    //       </Box>
+    //     </DialogContent>
+    //   </Dialog>
+    //   <Dialog
+    //     open={openLeadModal == studentStatusId}
+    //     onClose={() => (dispatch(setOpenLeadModal(null)), handleClose('none'))}
+    //   >
+    //     <DialogTitle sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+    //       <Typography sx={{ fontSize: '20px', textAlign: 'center' }}>{t("Lidlar bo'limga qo'shish")}</Typography>
+    //       <IconifyIcon
+    //         icon={'material-symbols:close'}
+    //         onClick={() => (dispatch(setOpenLeadModal(null)), handleClose('none'))}
+    //       />
+    //     </DialogTitle>
+    //     <DialogContent>
+    //       <MergeToDepartment studentId={String(studentStatusId)} />
+    //     </DialogContent>
+    //   </Dialog>
+    //   <Dialog open={updateStatusModal} onClose={() => setUpdateStatusModal(false)}>
+    //     <form onSubmit={formik.handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+    //       <DialogContent sx={{ maxWidth: '350px' }}>
+    //         <Typography sx={{ fontSize: '20px', textAlign: 'center', mb: 3 }}>
+    //           {t("O'quvchini statusini ozgartirish")}
+    //         </Typography>
+
+    //         <FormControl sx={{ maxWidth: '100%', marginBottom: 3 }} fullWidth>
+    //           <InputLabel size='small' id='demo-simple-select-outlined-label'>
+    //             Status (holati)
+    //           </InputLabel>
+    //           <Select
+    //             size='small'
+    //             label='Status (holati)'
+    //             value={formik.values.status}
+    //             onChange={formik.handleChange}
+    //             onBlur={formik.handleBlur}
+    //             id='demo-simple-select-outlined'
+    //             labelId='demo-simple-select-outlined-label'
+    //             name='status'
+    //             error={!!formik.errors.status && !!formik.touched.status}
+    //           >
+    //             {choices?.map(el => (
+    //               <MenuItem value={el} key={el}>
+    //                 {t(el)}
+    //               </MenuItem>
+    //             ))}
+    //             {/* <MenuItem value={'new'}>Sinov darsi</MenuItem> */}
+    //             {/* <MenuItem value={'archive'}>Arxiv</MenuItem> */}
+    //             {/* <MenuItem value={'frozen'}>Muzlatish</MenuItem> */}
+    //           </Select>
+    //           <FormHelperText error>{!!formik.errors.status ? `${formik.errors.status}` : ''}</FormHelperText>
+    //         </FormControl>
+    //         <Box sx={{ display: 'flex', justifyContent: 'center', gap: 4 }}>
+    //           <Button onClick={() => setUpdateStatusModal(false)} size='small' variant='outlined' color='error'>
+    //             {t('Bekor qilish')}
+    //           </Button>
+    //           <LoadingButton loading={loading} type='submit' size='small' variant='contained'>
+    //             {t('Tasdiqlash')}
+    //           </LoadingButton>
+    //         </Box>
+    //       </DialogContent>
+    //     </form>
+    //   </Dialog>
+    //   <EditStudent status={status} student={student} id={activeId} activate={activate} setActivate={setActivate} />
+    //   <AddNote id={id} modalRef={modalRef} setModalRef={setModalRef} />
+    //   <SentSMS smsTemps={smsTemps} id={id} modalRef={modalRef} setModalRef={setModalRef} />
+    //   <ExportStudent id={studentStatusId} modalRef={modalRef} setModalRef={setModalRef} />
+    // </Box>
+    <Box sx={{ width: '100%', gap: 2, display: 'flex', justifyContent: 'space-between' }}>
+      <Box display='flex' alignItems='center'>
+        <Typography sx={{ width: '20px' }}>{index}.</Typography>
+        <Status
+          color={
+            status == 'active' ? 'success' : status == 'new' ? 'warning' : status == 'frozen' ? 'secondary' : 'error'
+          }
+        />
+      </Box>
       {!(user?.role.length === 1 && user?.role.includes('teacher')) ? (
         settings.mode == 'dark' ? (
           <HtmlTooltip
@@ -403,182 +904,180 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, choices }:
             <Link
               onClick={() => dispatch(setStudentId(id))}
               href={`/students/view/security/?student=${id}`}
-              style={{ textDecoration: 'underline', color: 'gray'}}
+              style={{ textDecoration: 'underline', color: 'gray' }}
             >
-                {settings.layout == 'horizontal' ?
-             <Tooltip title={first_name.length > 9 ? first_name : ''} arrow>
-             <Typography sx={{ cursor: 'pointer' }} minWidth={75} fontSize={10}>
-               {first_name.length > 9 ? `${first_name.slice(0, 9)}...` : first_name}
-             </Typography>
-                  </Tooltip> :
-            <Tooltip title={first_name.length > 7 ? first_name : ''} arrow>
-            <Typography sx={{ cursor: 'pointer' }} minWidth={58} fontSize={10}>
-              {first_name.length > 7 ? `${first_name.slice(0, 7)}...` : first_name}
-            </Typography>
-          </Tooltip>       
-            }
+              {settings.layout == 'horizontal' ? (
+                <Tooltip title={first_name.length > 9 ? first_name : ''} arrow>
+                  <Typography sx={{ cursor: 'pointer' }} minWidth={70} fontSize={10}>
+                    {first_name.length > 9 ? `${first_name.slice(0, 9)}...` : first_name}
+                  </Typography>
+                </Tooltip>
+              ) : (
+                <Tooltip title={first_name.length > 7 ? first_name : ''} arrow>
+                  <Typography sx={{ cursor: 'pointer' }} minWidth={58} fontSize={10}>
+                    {first_name.length > 7 ? `${first_name.slice(0, 7)}...` : first_name}
+                  </Typography>
+                </Tooltip>
+              )}
             </Link>
           </HtmlTooltip>
         )
+      ) : settings.layout == 'horizontal' ? (
+        <Tooltip title={first_name.length > 9 ? first_name : ''} arrow>
+          <Typography sx={{ cursor: 'pointer' }} fontSize={10}>
+            {first_name.length > 9 ? `${first_name.slice(0, 9)}...` : first_name}
+          </Typography>
+        </Tooltip>
       ) : (
-        <Typography sx={{ cursor: 'pointer' }} fontSize={8}>
-          {first_name}
-        </Typography>
+        <Tooltip title={first_name.length > 7 ? first_name : ''} arrow>
+          <Typography sx={{ cursor: 'pointer' }} fontSize={10}>
+            {first_name.length > 7 ? `${first_name.slice(0, 7)}...` : first_name}
+          </Typography>
+        </Tooltip>
       )}
-      <Box sx={{ display: 'flex', justifyContent: 'end', alignItems: 'end' }}>
-        {settings.layout == 'horizontal' ? (
-          <Typography minWidth={110}  fontSize={13} flexGrow={1} textAlign={'end'}>
-            {phone}
-          </Typography>
-        ) : (
-          <Typography  minWidth={88} fontSize={10} flexGrow={1} textAlign={'end'}>
-            {phone}
-          </Typography>
-        )}
-
-        <div onClick={() => setUpdateStatusModal(true)}>
-          <Box
-            sx={{
-              minWidth:student_status == 'archive'||'frozen' ? 110 : 90,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'end',
-              paddingX: 2,
-            }}
-          >
-            {student_status === 'active' ? (
+      <Typography display='flex' alignItems='center' justifyContent='end' fontSize={10}>
+        {phone}
+      </Typography>
+      <div onClick={() => setUpdateStatusModal(true)}>
+        <Box
+          sx={{
+            // minWidth: student_status == 'archive' || 'frozen' ? 100 : 90,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            paddingY: 1
+          }}
+        >
+          {student_status === 'active' ? (
+            <Chip
+              label={
+                <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                  {t('active')}
+                  {updateStatusModal ? (
+                    <Icon icon='mdi:chevron-up' style={{ fontSize: '12px' }} />
+                  ) : (
+                    <Icon icon='mdi:chevron-down' style={{ fontSize: '12px' }} />
+                  )}
+                </span>
+              }
+              color='success'
+              variant='outlined'
+              size='small'
+              sx={{
+                cursor: 'pointer',
+                fontWeight: 500,
+                fontSize: '10px',
+                padding: 0
+              }}
+            />
+          ) : student_status === 'archive' ? (
+            <Chip
+              label={
+                <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                  {t('archive')}
+                  {updateStatusModal ? (
+                    <Icon icon='mdi:chevron-up' style={{ fontSize: '12px' }} />
+                  ) : (
+                    <Icon icon='mdi:chevron-down' style={{ fontSize: '12px' }} />
+                  )}
+                </span>
+              }
+              color='error'
+              variant='outlined'
+              size='small'
+              sx={{ cursor: 'pointer', fontWeight: 500, fontSize: '10px', padding: 0 }}
+            />
+          ) : student_status === 'frozen' ? (
+            <Chip
+              label={
+                <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                  {t('frozen')}
+                  {updateStatusModal ? (
+                    <Icon icon='mdi:chevron-up' style={{ fontSize: '12px' }} />
+                  ) : (
+                    <Icon icon='mdi:chevron-down' style={{ fontSize: '12px' }} />
+                  )}
+                </span>
+              }
+              color='error'
+              variant='outlined'
+              size='small'
+              sx={{
+                cursor: 'pointer',
+                fontWeight: 500,
+                fontSize: '10px',
+                padding: 0
+              }}
+            />
+          ) : student_status === 'new' ? (
+            <Chip
+              label={
+                <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                  {t('new')}
+                  {updateStatusModal ? (
+                    <Icon icon='mdi:chevron-up' style={{ fontSize: '12px' }} />
+                  ) : (
+                    <Icon icon='mdi:chevron-down' style={{ fontSize: '12px' }} />
+                  )}
+                </span>
+              }
+              color='warning'
+              variant='outlined'
+              size='small'
+              sx={{ cursor: 'pointer', fontWeight: 500, fontSize: '10px', padding: 0 }}
+            />
+          ) : student_status === 'in_progress' ? (
+            <Chip
+              label={t('in_progress')}
+              color='info'
+              variant='outlined'
+              size='small'
+              sx={{ cursor: 'pointer', fontWeight: 500, fontSize: '10px', padding: 0 }}
+            />
+          ) : (
+            <Tooltip title={t(`Status: ${student_status}`)} arrow>
               <Chip
-                label={
-                  <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                    {t('active')}
-                    {updateStatusModal ? (
-                      <Icon icon='mdi:chevron-up' style={{ fontSize: '12px' }} />
-                    ) : (
-                      <Icon icon='mdi:chevron-down' style={{ fontSize: '12px' }} />
-                    )}
-                  </span>
-                }
-                color='success'
-                variant='outlined'
-                size='small'
-                sx={{
-                  cursor: 'pointer',
-                  fontWeight: 500,
-                  fontSize: '10px',
-                  padding: 0
-                }}
-              />
-            ) : student_status === 'archive' ? (
-              <Chip
-                label={
-                  <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                    {t('archive')}
-                    {updateStatusModal ? (
-                      <Icon icon='mdi:chevron-up' style={{ fontSize: '12px' }} />
-                    ) : (
-                      <Icon icon='mdi:chevron-down' style={{ fontSize: '12px' }} />
-                    )}
-                  </span>
-                }
-                color='error'
-                variant='outlined'
-                size='small'
-                sx={{ cursor: 'pointer', fontWeight: 500, fontSize: '10px', padding: 0 }}
-              />
-            ) : student_status === 'frozen' ? (
-              <Chip
-                label={
-                  <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                    {t('frozen')}
-                    {updateStatusModal ? (
-                      <Icon icon='mdi:chevron-up' style={{ fontSize: '12px' }} />
-                    ) : (
-                      <Icon icon='mdi:chevron-down' style={{ fontSize: '12px' }} />
-                    )}
-                  </span>
-                }
-                color='error'
-                variant='outlined'
-                size='small'
-                sx={{
-                  cursor: 'pointer',
-                  fontWeight: 500,
-                  fontSize: '10px',
-                  padding: 0
-                }}
-              />
-            ) : student_status === 'new' ? (
-              <Chip
-                label={
-                  <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                    {t('new')}
-                    {updateStatusModal ? (
-                      <Icon icon='mdi:chevron-up' style={{ fontSize: '12px' }} />
-                    ) : (
-                      <Icon icon='mdi:chevron-down' style={{ fontSize: '12px' }} />
-                    )}
-                  </span>
-                }
+                label={student_status}
                 color='warning'
                 variant='outlined'
                 size='small'
                 sx={{ cursor: 'pointer', fontWeight: 500, fontSize: '10px', padding: 0 }}
               />
-            ) : student_status === 'in_progress' ? (
-              <Chip
-                label={t('in_progress')}
-                color='info'
-                variant='outlined'
-                size='small'
-                sx={{ cursor: 'pointer', fontWeight: 500, fontSize: '10px', padding: 0 }}
-              />
-            ) : (
-              <Tooltip title={t(`Status: ${student_status}`)} arrow>
-                <Chip
-                  label={student_status}
-                  color='warning'
-                  variant='outlined'
-                  size='small'
-                  sx={{ cursor: 'pointer', fontWeight: 500, fontSize: '10px', padding: 0 }}
-                />
-              </Tooltip>
-            )}
-          </Box>
-        </div>
-
-        <Box
-          sx={{
-            width: settings.layout == 'horizontal' ? 70 : 60,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'end',
-            minWidth: settings.layout == 'horizontal' ? 70 : 60
-          }}
-        >
-          <Tooltip
-            title={formatCurrency(+balance) + " so'm"}
-            arrow
-            // disableHoverListener={String(balance).length <= 6}
-          >
-            <Chip
-              label={formatCurrency(+balance) + " so'm"}
-              color={Number(balance) < 0 ? 'error' : 'success'}
-              variant='outlined'
-              size='small'
-              sx={{
-                fontWeight: 500,
-                fontSize: '10px',
-                padding: 0,
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                whiteSpace: 'nowrap'
-              }}
-            />
-          </Tooltip>
+            </Tooltip>
+          )}
         </Box>
+      </div>
+      <Box
+        sx={{
+          // width: settings.layout == 'horizontal' ? 70 : 60,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'end'
+          // minWidth: settings.layout == 'horizontal' ? 70 : 60
+        }}
+      >
+        <Tooltip
+          title={formatCurrency(+balance) + " so'm"}
+          arrow
+          // disableHoverListener={String(balance).length <= 6}
+        >
+          <Chip
+            label={formatCurrency(+balance) + " so'm"}
+            color={Number(balance) < 0 ? 'error' : 'success'}
+            variant='outlined'
+            size='small'
+            sx={{
+              fontWeight: 500,
+              fontSize: '10px',
+              padding: 0,
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap'
+            }}
+          />
+        </Tooltip>
       </Box>
       <Typography
-        sx={{ ml: 3 }}
         fontSize={11}
         id='fade-button'
         aria-controls={open ? 'fade-menu' : undefined}
@@ -589,7 +1088,6 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, choices }:
       >
         <IconifyIcon icon={'charm:menu-kebab'} fontSize={11} />
       </Typography>
-
       <Menu
         id='fade-menu'
         MenuListProps={{
@@ -648,7 +1146,6 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, choices }:
         openEdit={openEdit}
         setOpenEdit={setOpenEdit}
       />
-
       <Dialog open={openLeft} onClose={() => setOpenLeft(false)}>
         <DialogContent sx={{ maxWidth: '350px' }}>
           <Typography sx={{ fontSize: '20px', textAlign: 'center', mb: 3 }}>
@@ -748,7 +1245,7 @@ export default function UserViewStudentsList() {
   }, [debounce])
 
   return (
-    <Box>
+    <Box width='100%'>
       <TextField
         onChange={e => setSearch(e.target.value)}
         autoComplete='off'
@@ -756,7 +1253,16 @@ export default function UserViewStudentsList() {
         size='small'
         fullWidth
       />
-      <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%', mt: '10px', gap: '5px' }}>
+      <Box
+        sx={{
+          boxSizing: 'border-box',
+          display: 'flex',
+          flexDirection: 'column',
+          width: '100%',
+          mt: '10px',
+          gap: '2px'
+        }}
+      >
         {isGettingStudents ? (
           <SubLoader />
         ) : students?.length ? (
