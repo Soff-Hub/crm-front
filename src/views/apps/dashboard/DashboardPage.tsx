@@ -9,6 +9,7 @@ import { Icon } from '@iconify/react'
 import { useAppDispatch, useAppSelector } from 'src/store'
 import { updateEyeVisible } from 'src/store/apps/dashboard'
 import { Box, Button, Typography } from '@mui/material'
+import useResponsive from 'src/@core/hooks/useResponsive'
 
 // Dynamic imports
 const Calendar = dynamic(() => import('./Calendar'), { ssr: false })
@@ -17,13 +18,14 @@ const DashboardNumbers = dynamic(() => import('./DashboardNumbers'), { ssr: fals
 
 export default function DashboardPage() {
   const { user } = useContext(AuthContext)
+  const {isMobile} = useResponsive()
   const { eyeVisible } = useAppSelector(state => state.dashboard)
   const dispatch = useAppDispatch()
   return (
     <>
-      <Box display='flex' alignItems='center' gap={5} justifyContent='flex-end'>
+      <Box display={!isMobile ? 'flex':'block'} alignItems='center' gap={5} justifyContent='flex-end'>
       <Box sx={{ marginBottom: '10px', display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
-            <Button  onClick={() => dispatch(updateEyeVisible(!eyeVisible))} size='small' variant='outlined' sx={{ textTransform: 'unset', display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: '3px' }}>
+            <Button  fullWidth={isMobile} onClick={() => dispatch(updateEyeVisible(!eyeVisible))} size='small' variant='outlined' sx={{ textTransform: 'unset', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '3px' }}>
             <Icon
             icon={eyeVisible ? 'mdi:eye-off' : 'mdi:eye'}
             style={{
@@ -54,7 +56,7 @@ export default function DashboardPage() {
             }}
           />
         </Button> */}
-        <VideoHeader item={videoUrls.dashboard} />
+        <VideoHeader  item={videoUrls.dashboard} />
       </Box>
 
       <DashboardStats />

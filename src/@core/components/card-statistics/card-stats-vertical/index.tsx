@@ -61,14 +61,14 @@ const CardStatsVertical = (props: CardStatsVerticalProps) => {
               gap: 1,
             }}
           >
-            <Icon
+            {/* <Icon
               icon={!eyeVisible ? 'mdi:eye-off' : 'mdi:eye'}
               style={{
                 fontSize: '20px',
                 cursor: 'pointer',
               }}
-              onClick={handleEyeChange}
-            />
+              // onClick={handleEyeChange}
+            /> */}
             <Typography className="text-center" variant="h4" sx={{ mb: 0, fontSize: '16px !important' }}>
               {eyeVisible ? formatCurrency(title) : '****'}
             </Typography>

@@ -3,6 +3,7 @@ import IconifyIcon from '../icon'
 import { useAppDispatch } from 'src/store'
 import { openVideoModal } from 'src/store/apps/settings'
 import { useTranslation } from 'react-i18next'
+import useResponsive from 'src/@core/hooks/useResponsive'
 
 interface VideoType {
     title: string
@@ -97,7 +98,7 @@ export const videoUrls: {
 
 export default function VideoHeader({ item }: { item: VideoType }) {
     const dispatch = useAppDispatch()
-
+    const {isMobile } = useResponsive()
     const clickBtn = () => {
         dispatch(openVideoModal({
             open: true,
@@ -108,7 +109,7 @@ export default function VideoHeader({ item }: { item: VideoType }) {
 
     return (
         <Box sx={{ marginBottom: '10px', display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
-            <Button onClick={clickBtn} size='small' variant='outlined' sx={{ textTransform: 'unset', display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: '3px' }}>
+            <Button fullWidth={isMobile} onClick={clickBtn} size='small' variant='outlined' sx={{ textTransform: 'unset', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '3px' }}>
                 <IconifyIcon icon={'mdi:youtube'} />
                 {t([item.title])}
             </Button>
