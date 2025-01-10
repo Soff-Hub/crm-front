@@ -26,39 +26,18 @@ import Router from 'next/router'
 import api from 'src/@core/utils/api'
 
 export default function AddGroupModal() {
-  const { isOpenAddGroup, courses, formParams, queryParams, initialValues } = useAppSelector(state => state.groups)
+  const { isOpenAddGroup,teachersData,roomsData, courses, formParams, queryParams, initialValues } = useAppSelector(state => state.groups)
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
   const [loading, setLoading] = useState(false)
   const [customWeekdays, setCustomWeekDays] = useState<string[]>([])
-  const [roomsData, setRoomsData] = useState<any[] | null>(null)
 
-  const [teachersData, setTeachersData] = useState<TacherItemType[] | null>(null)
 
-  const getTeachers = async () => {
-    await api
-      .get('auth/employees-check-list/?role=teacher')
-      .then(data => {
-        setTeachersData(data.data)
-      })
-      .catch(error => {
-        console.log(error)
-      })
-  }
+ 
 
-  const getRooms = async () => {
-    await api
-      .get('common/room-check-list/')
-      .then(data => setRoomsData(data.data))
-      .catch(error => {
-        console.log(error)
-      })
-  }
+ 
 
-  useEffect(() => {
-    getRooms()
-    getTeachers()
-  }, [isOpenAddGroup])
+  
 
   const options = roomsData?.map(item => ({
     label: item?.name,

@@ -88,8 +88,10 @@ const currentDay: string = `${new Date()}`.split(' ')[0].toLocaleLowerCase()
 
 const initialState: IGroupsState = {
   groups: null,
+  teachersData:null,
   groupChecklist: null,
   groupData: null,
+  roomsData:null,
   courses: null,
   teachers: null,
   teacherSalaries: null,
@@ -112,9 +114,10 @@ const initialState: IGroupsState = {
   },
   queryParams: {
     status: 'active',
+    offset:'0',
     is_recovery: false,
-    limit: 10,
-    search:''
+
+
   },
   formParams: {
     day_of_week:
@@ -152,6 +155,12 @@ export const groupsSlice = createSlice({
     },
     setGroupData: (state, action) => {
       state.groupData = action.payload
+    },
+    setTeacherData: (state, action) => {
+      state.teachersData = action.payload
+    },
+    setRoomsData: (state, action) => {
+      state.roomsData = action.payload
     },
     updateParams: (state, action) => {
       state.queryParams = { ...state.queryParams, ...action.payload }
@@ -252,6 +261,8 @@ export const {
   handleOpenAddModal,
   updateParams,
   setGroupData,
+  setTeacherData,
+  setRoomsData,
   resetGroupParams,
   updateMyGroupParams
 } = groupsSlice.actions

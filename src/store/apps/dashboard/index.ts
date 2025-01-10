@@ -86,6 +86,7 @@ export const fetchLessons = createAsyncThunk('dashboard/fetchLessons', async (qu
 
 const initialState: IDashboardState = {
   stats: null,
+  eyeVisible:false,
   open: null,
   isLessonLoading: false,
   isStatsLoading: false,
@@ -106,6 +107,9 @@ export const dashboardSlice = createSlice({
   reducers: {
     handleTabValue: (state, action) => {
       state.tabValue = action.payload
+    },
+    updateEyeVisible: (state, action) => {
+      state.eyeVisible = action.payload
     },
     handleOpen: (state, action) => {
       state.open = action.payload
@@ -147,5 +151,5 @@ export const dashboardSlice = createSlice({
   }
 })
 
-export const { handleTabValue, updateWeeks, handleOpen, handleChangeWeeks } = dashboardSlice.actions
+export const { handleTabValue,updateEyeVisible, updateWeeks, handleOpen, handleChangeWeeks } = dashboardSlice.actions
 export default dashboardSlice.reducer

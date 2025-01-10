@@ -6,15 +6,18 @@ import CustomAvatar from 'src/@core/components/mui/avatar';
 import { CardStatsVerticalProps } from 'src/@core/components/card-statistics/types';
 import useResponsive from 'src/@core/hooks/useResponsive';
 import { formatCurrency } from 'src/@core/utils/format-currency';
-import { useState } from 'react';
 import { Icon } from '@iconify/react';
+import { updateEyeVisible } from 'src/store/apps/dashboard';
+import { useAppDispatch, useAppSelector } from 'src/store';
 
 const CardStatsVertical = (props: CardStatsVerticalProps) => {
-  const [eyeVisible, setEyeVisible] = useState<boolean>(false);
 
+  const { eyeVisible} = useAppSelector(state => state.dashboard)
   const handleEyeChange = (event: React.MouseEvent) => {
+  
+    const dispatch = useAppDispatch()
     event.stopPropagation(); // Prevents the event from propagating to parent elements
-    setEyeVisible(!eyeVisible);
+    dispatch(updateEyeVisible(!eyeVisible))
   };
 
   const { title, color, icon, stats, data_key } = props;
@@ -47,11 +50,9 @@ const CardStatsVertical = (props: CardStatsVerticalProps) => {
         >
           {stats}
         </Typography>
-        {data_key !== 'active_debts_amount' ? (
-          <Typography className="text-center" variant="h4" sx={{ mb: 0, fontSize: '16px !important' }}>
+          {/* <Typography className="text-center" variant="h4" sx={{ mb: 0, fontSize: '16px !important' }}>
             {formatCurrency(title)}
-          </Typography>
-        ) : (
+          </Typography> */}
           <Box
             sx={{
               display: 'flex',
@@ -61,7 +62,7 @@ const CardStatsVertical = (props: CardStatsVerticalProps) => {
             }}
           >
             <Icon
-              icon={eyeVisible ? 'mdi:eye-off' : 'mdi:eye'}
+              icon={!eyeVisible ? 'mdi:eye-off' : 'mdi:eye'}
               style={{
                 fontSize: '20px',
                 cursor: 'pointer',
@@ -72,7 +73,6 @@ const CardStatsVertical = (props: CardStatsVerticalProps) => {
               {eyeVisible ? formatCurrency(title) : '****'}
             </Typography>
           </Box>
-        )}
       </CardContent>
     </Card>
   );

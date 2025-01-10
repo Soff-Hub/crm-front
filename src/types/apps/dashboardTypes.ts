@@ -13,6 +13,7 @@ export interface IDashboardState {
   stats: null | DashboardStats
   tabValue: string
   open: string | null
+  eyeVisible:boolean,
   isStatsLoading: boolean
   isLessonLoading: boolean
   events: ILessonResponse[]
