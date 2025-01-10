@@ -27,6 +27,8 @@ import {
   getMetaData,
   handleOpenAddModal,
   resetGroupParams,
+  setRoomsData,
+  setTeacherData,
   updateParams
 } from 'src/store/apps/groups'
 import { useRouter } from 'next/router'
@@ -43,6 +45,7 @@ import * as Yup from 'yup'
 import api from 'src/@core/utils/api'
 import { LoadingButton } from '@mui/lab'
 import ceoConfigs from 'src/configs/ceo'
+import { Icon } from '@iconify/react'
 
 const IconifyIcon = dynamic(() => import('src/@core/components/icon'))
 const DataTable = dynamic(() => import('src/@core/components/table'))
@@ -162,6 +165,13 @@ export default function GroupsPage() {
             size='small'
             variant='filled'
             color={status?.status === 'active' ? 'success' : status?.status === 'archived' ? 'error' : 'warning'}
+            icon={
+              updateStatusModal ? (
+                <Icon icon='mdi:chevron-up' style={{ fontSize: '12px' }} />
+              ) : (
+                <Icon icon='mdi:chevron-down' style={{ fontSize: '12px' }} />
+              )
+            }
           />
         </Box>
       )
@@ -176,12 +186,11 @@ export default function GroupsPage() {
 
   const handleRowsPerPageChange = async (value: number) => {
     const limit = value
-
     setRowsPerPage(Number(value))
     localStorage.setItem('rowsPerPage', `${value}`)
 
-    await dispatch(fetchGroups({ ...queryParams, limit: value, offset: `0` }))
     dispatch(updateParams({ limit: value }))
+    await dispatch(fetchGroups({ ...queryParams, limit: value, offset: `0` }))
     setPage(0)
   }
 
@@ -189,7 +198,7 @@ export default function GroupsPage() {
     const adjustedPage: any = (Number(page) - 1) * rowsPerPage
     setPage(Number(page))
 
-    await dispatch(fetchGroups({ ...queryParams, limit: rowsPerPage, offset: adjustedPage }))
+    await dispatch(fetchGroups({ ...queryParams, limit: Number(rowsPerPage), offset: adjustedPage }))
     dispatch(updateParams({ offset: adjustedPage }))
   }
 
@@ -233,6 +242,28 @@ export default function GroupsPage() {
       setLoading(false)
     }
   })
+  const getTeachers = async () => {
+    await api
+      .get('auth/employees-check-list/?role=teacher')
+      .then(data => {
+        dispatch(setTeacherData(data.data))
+      })
+      .catch(error => {
+        console.log(error)
+      })
+  }
+  const getRooms = async () => {
+    await api
+      .get('common/room-check-list/')
+      .then(data => dispatch(setRoomsData(data.data)))
+      .catch(error => {
+        console.log(error)
+      })
+  }
+  useEffect(() => {
+    getTeachers()
+    getRooms()
+  }, [])
 
   useEffect(() => {
     const group = groups?.find((item: any) => item.id == group_id)
@@ -260,10 +291,6 @@ export default function GroupsPage() {
     }
 
     initializePage()
-
-    return () => {
-      dispatch(resetGroupParams())
-    }
   }, [])
 
   return (
@@ -297,7 +324,7 @@ export default function GroupsPage() {
           {t('Filterlash')}
         </Button>
       )}
-      
+
       {!isMobile && <GroupsFilter isMobile={isMobile} />}
       <DataTable columns={columns} loading={isLoading} data={groups || []} rowClick={rowClick} color text_color />
       {Math.ceil(groupCount / 10) > 1 && !isLoading && (

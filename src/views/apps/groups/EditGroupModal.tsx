@@ -1,5 +1,4 @@
 //@ts-nocheck
-
 import { Autocomplete, Box, Drawer, FormHelperText, IconButton, InputLabel, TextField, Typography } from '@mui/material'
 import IconifyIcon from 'src/@core/components/icon'
 import MenuItem from '@mui/material/MenuItem'
@@ -38,40 +37,21 @@ import { getMontNumber } from 'src/@core/utils/gwt-month-name'
 import api from 'src/@core/utils/api'
 
 export default function EditGroupModal() {
-  const { isOpenEdit, groupData, courses, initialValues, formParams, queryParams, isGettingGroupDetails } =
+  const { isOpenEdit,teachersData,roomsData, groupData, courses, initialValues, formParams, queryParams, isGettingGroupDetails } =
     useAppSelector(state => state.groups)
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
   const [loading, setLoading] = useState(false)
   const [customWeekdays, setCustomWeekDays] = useState<string[]>([])
   const { query } = useRouter()
-  const [roomsData, setRoomsData] = useState<any[] | null>(null)
-  const [teachersData, setTeachersData] = useState<TacherItemType[] | null>(null)
 
-  const getTeachers = async () => {
-    await api
-      .get('auth/employees-check-list/?role=teacher')
-      .then(data => {
-        setTeachersData(data.data)
-      })
-      .catch(error => {
-        console.log(error)
-      })
-  }
 
-  const getRooms = async () => {
-    await api
-      .get('common/room-check-list/')
-      .then(data => setRoomsData(data.data))
-      .catch(error => {
-        console.log(error)
-      })
-  }
+  console.log(teachersData);
+  
 
-  useEffect(() => {
-    getRooms()
-    getTeachers()
-  }, [groupData])
+
+
+  
 
   const options = roomsData?.map(item => ({
     label: item?.name,
@@ -155,7 +135,7 @@ export default function EditGroupModal() {
 
   const handleChangeField = async (
     name: string,
-    event: SelectChangeEvent<string> | ChangeEvent<HTMLInputElement> | string
+    event: SelectChangeEvent<string> | ChangeEvent<HTMLInputElement> | string 
   ) => {
     formik.setFieldValue(name, event?.target?.value || event)
     if (name == 'teacher') {
@@ -422,7 +402,7 @@ export default function EditGroupModal() {
                     error={!!formik.errors.teacher && formik.touched.teacher}
                   >
                     {teachersData?.map(teacher => (
-                      <MenuItem key={teacher.id} value={+teacher.id}>
+                      <MenuItem key={teacher.id} value={+teacher?.id}>
                         {teacher.first_name}
                       </MenuItem>
                     ))}

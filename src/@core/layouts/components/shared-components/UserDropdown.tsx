@@ -95,18 +95,19 @@ const UserDropdown = (props: Props) => {
     name?: string
   }
 
-  function downloadExcel({ data, name = new Date().toISOString() }: Arg) {
-    const blob = new Blob([data])
-    const url = window.URL.createObjectURL(blob)
-
-    const a = document.createElement('a')
-    a.href = url
-    a.download = name + '.pdf'
-    document.body.appendChild(a)
-    a.click()
-    a.remove()
-    window.URL.revokeObjectURL(url)
+  function downloadImage(imageUrl:any, filename:any) {
+    const anchor = document.createElement('a');
+    anchor.href = imageUrl;
+  
+    anchor.download = filename;
+  
+    document.body.appendChild(anchor);
+  
+    anchor.click();
+  
+    document.body.removeChild(anchor);
   }
+  
 
   const handleLogout = () => {
     logout()
@@ -244,7 +245,7 @@ const UserDropdown = (props: Props) => {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => downloadExcel({ data: imageSrc })} fullWidth color='primary' variant='contained'>
+          <Button onClick={() => downloadImage(imageSrc,'qr_code')} fullWidth color='primary' variant='contained'>
             Yuklab olish
           </Button>
         </DialogActions>

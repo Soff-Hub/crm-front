@@ -31,27 +31,15 @@ type GroupsFilterProps = {
 }
 
 export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
-  const { queryParams, courses } = useAppSelector(state => state.groups)
+  const { queryParams, courses,teachersData } = useAppSelector(state => state.groups)
   const dispatch = useAppDispatch()
   const [search, setSearch] = useState<string>('')
   const searchVal = useDebounce(search, 600)
   const [loading, setLoading] = useState<boolean>(false)
-  const [teachersData, setTeachersData] = useState<TacherItemType[] | null>(null)
 
-  const getTeachers = async () => {
-    await api
-      .get('auth/employees-check-list/?role=teacher')
-      .then(data => {
-        setTeachersData(data.data)
-      })
-      .catch(error => {
-        console.log(error)
-      })
-  }
+ 
 
-  useEffect(() => {
-    getTeachers()
-  }, [])
+ 
 
   const { t } = useTranslation()
 
