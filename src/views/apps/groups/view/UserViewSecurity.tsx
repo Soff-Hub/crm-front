@@ -1,4 +1,14 @@
-import { Box, Button, TextField, Typography } from '@mui/material'
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  FormControl,
+  TextField,
+  Typography
+} from '@mui/material'
 import { useRouter } from 'next/router'
 import IconifyIcon from 'src/@core/components/icon'
 import Tooltip, { TooltipProps, tooltipClasses } from '@mui/material/Tooltip'
@@ -13,6 +23,12 @@ import { useAppDispatch, useAppSelector } from 'src/store'
 import { getAttendance, getDays, setGettingAttendance, updateParams } from 'src/store/apps/groupDetails'
 import { toast } from 'react-hot-toast'
 import { useSettings } from 'src/@core/hooks/useSettings'
+import { DatePicker } from 'rsuite'
+import dayjs from 'dayjs'
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
+import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker'
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
+import { setLoading } from 'src/store/apps/leads'
 
 interface Result {
   date: string
@@ -153,8 +169,56 @@ const UserViewSecurity = () => {
   )
   const dispatch = useAppDispatch()
 
-
   const start_date: any = groupData?.start_date ? Number(groupData?.start_date.split('-')[1]) : ''
+  const [chandeDateLoader, setChangeDateLoader] = useState(false)
+  const [selectedOldDate, setSelectedOldDate] = useState(null)
+  const [selectedNewDate, setSelectedNewDate] = useState(null)
+
+  const [openDialog, setOpenDialog] = useState(false)
+
+  const handleDateChange = async () => {
+    setChangeDateLoader(true)
+    await api
+      .post(`common/group/lesson/transfer/`, {
+        group: query.id,
+        old_date: selectedOldDate,
+        new_date: dayjs(selectedNewDate).format('YYYY-MM-DD')
+      })
+      .then(res => {
+        console.log(res)
+        toast.success("Dars kuni o'zgartirildi")
+        setSelectedNewDate(null)
+        setSelectedOldDate(null)
+        setOpenDialog(false)
+        const queryString = new URLSearchParams(queryParams).toString()
+        dispatch(
+          getAttendance({
+            date: `${query?.year || new Date().getFullYear()}-${getMontNumber(query?.month)}`,
+            group: query?.id,
+            queryString: queryString
+          })
+        )
+        dispatch(
+          getDays({
+            date: `${query?.year || new Date().getFullYear()}-${getMontNumber(query?.month)}`,
+            group: query?.id
+          })
+        )
+      })
+      .catch(err => {
+        console.log(err)
+        toast.error('Xatolik')
+      })
+    setChangeDateLoader(false)
+    // setOpenDialog(false)
+  }
+
+  const handleDayClick = (day: any) => {
+    console.log(day)
+
+    setSelectedOldDate(day)
+    setOpenDialog(true)
+  }
 
   const { pathname, query, push } = useRouter()
   const { settings } = useSettings()
@@ -461,6 +525,7 @@ const UserViewSecurity = () => {
                     <th
                       key={hour.date}
                       style={{ textAlign: 'center', width: '60px', padding: '8px 0', cursor: 'pointer' }}
+                      onClick={() => handleDayClick(hour.date)} // Open dialog on click
                     >
                       <Typography>{`${hour.date.split('-')[2]}`}</Typography>
                     </th>
@@ -607,6 +672,47 @@ const UserViewSecurity = () => {
             </Box>
           )}
         </Box>
+        <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
+          <DialogTitle>
+            <Typography>Select Date</Typography>
+          </DialogTitle>
+          <DialogContent>
+            <LocalizationProvider dateAdapter={AdapterDateFns}>
+              <DesktopDatePicker
+                sx={{
+                  '& .MuiInputBase-input': {
+                    padding: '8px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }
+                }}
+                value={
+                  selectedNewDate
+                    ? dayjs(selectedNewDate).toDate()
+                    : selectedOldDate
+                    ? dayjs(selectedOldDate).toDate()
+                    : null
+                }
+                onChange={(day: any) => setSelectedNewDate(day)}
+              />
+            </LocalizationProvider>
+          </DialogContent>
+          <DialogActions>
+            <Button
+              variant='outlined'
+              color='error'
+              onClick={() => {
+                setOpenDialog(false), setSelectedOldDate(null), setSelectedNewDate(null)
+              }}
+            >
+              Cancel
+            </Button>
+            <Button disabled={chandeDateLoader} variant='outlined' onClick={handleDateChange}>
+              Select
+            </Button>
+          </DialogActions>
+        </Dialog>
       </Box>
     </Box>
   )

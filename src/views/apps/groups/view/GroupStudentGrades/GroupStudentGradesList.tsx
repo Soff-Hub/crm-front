@@ -19,6 +19,7 @@ import {
 import { toast } from 'react-hot-toast'
 import { useSettings } from 'src/@core/hooks/useSettings'
 import SubLoader from 'src/views/apps/loaders/SubLoader'
+import dayjs from "dayjs"
 
 interface Result {
   date: string
@@ -258,8 +259,10 @@ const GroupStudentGrades = () => {
     }
   }
 
+  
   useEffect(() => {
-    dispatch(getStudentsGrades({ id: query.id, queryString: '' }))
+    const currentDate = dayjs().format('YYYY-MM-DD')
+    dispatch(getStudentsGrades({ id: query.id, queryString: `date=${currentDate}`}))
   }, [])
 
   return isGettingGrades ? (
@@ -349,7 +352,6 @@ const GroupStudentGrades = () => {
                         const matchedRating = student?.ratings?.find(
                           (el: any) => el.date === hour.date && !hour.weekend?.date
                         )
-                        console.log(matchedRating)
 
                         return student?.ratings?.some((el: any) => el.date === hour.date) &&
                           student?.ratings?.find((el: any) => el.date === hour.date && !hour.weekend?.date) ? (

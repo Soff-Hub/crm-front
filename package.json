@@ -12,6 +12,7 @@
     "build:icons": "tsc -b src/iconify-bundle && node src/iconify-bundle/bundle-icons-react.js"
   },
   "dependencies": {
+    "@angular/cdk": "^19.0.5",
     "@casl/ability": "6.3.2",
     "@casl/react": "3.1.0",
     "@date-io/date-fns": "^3.0.0",
@@ -65,6 +66,7 @@
     "prismjs": "1.29.0",
     "react": "18.2.0",
     "react-apexcharts": "1.4.0",
+    "react-beautiful-dnd": "^13.1.1",
     "react-chartjs-2": "4.3.1",
     "react-credit-cards": "0.8.3",
     "react-datepicker": "4.8.0",
@@ -102,6 +104,7 @@
     "@types/payment": "2.1.4",
     "@types/prismjs": "1.26.0",
     "@types/react": "18.0.24",
+    "@types/react-beautiful-dnd": "^13.1.8",
     "@types/react-credit-cards": "0.8.1",
     "@types/react-datepicker": "4.8.0",
     "@types/react-draft-wysiwyg": "1.13.4",
