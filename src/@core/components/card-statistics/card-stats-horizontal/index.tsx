@@ -25,7 +25,6 @@ const CardStatsHorizontal = (props: CardStatsHorizontalProps) => {
   // ** Props
   const { title, icon,iconplus, stats,bgColor, trendNumber, color = 'primary', trend = 'positive' } = props
 
-  console.log(iconplus);
   
 
   return (

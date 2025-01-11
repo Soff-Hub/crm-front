@@ -55,7 +55,6 @@ const AmoCrmPage = () => {
         .post('/amocrm/init-tokens/', values)
         .then(res => {
           console.log(res)
-          console.log('Form Submitted:', values)
           setLoading(false)
           toast.success('Tekshiruvdan otdingiz')
           getAmoCrmData()

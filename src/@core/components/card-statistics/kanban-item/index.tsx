@@ -83,7 +83,7 @@ const KanbanItem = (props: KanbarItemProps) => {
   const { queryParams, groups } = useAppSelector(state => state.leads)
   const { smsTemps, getSMSTemps } = useSMS()
   const { branches, getBranches } = useBranches()
-  const {sms_list} = useAppSelector(state => state.settings)
+  const { sms_list } = useAppSelector(state => state.settings)
   const [selectBranch, setSelectBranch] = useState<any>(null)
   const [selectDepartment, setSelectDepartment] = useState<any>([])
   const [selectDepartmentItem, setSelectDepartmentItem] = useState<any>(null)
@@ -117,6 +117,19 @@ const KanbanItem = (props: KanbarItemProps) => {
     setLoadingDetail(true)
     try {
       const resp = await api.get(`leads/${endpoint}/${id}/`)
+      setLeadDetail(resp.data)
+
+      setLoading(false)
+    } catch {
+      setLoading(false)
+    }
+    setLoadingDetail(false)
+  }
+  const getDepartmentAmoCrmItem = async () => {
+    setLoading(true)
+    setLoadingDetail(true)
+    try {
+      const resp = await api.get(`amocrm/lead/notes/${id}/`)
       setLeadDetail(resp.data)
 
       setLoading(false)
@@ -170,7 +183,6 @@ const KanbanItem = (props: KanbarItemProps) => {
   }
 
   const clickStudent = async () => {
-    console.log(id, total)
 
     if (is_amocrm) {
       if (id === total) {
@@ -188,7 +200,7 @@ const KanbanItem = (props: KanbarItemProps) => {
         if (activeTab === 'tab-1') {
           getDepartmentItem('anonim-user')
         } else if (activeTab === 'tab-2') {
-          getDepartmentItem('lead-user-description')
+          getDepartmentAmoCrmItem()
         } else {
           getDepartmentItem('sms-history')
         }
@@ -214,6 +226,9 @@ const KanbanItem = (props: KanbarItemProps) => {
     if (value === 'tab-1') {
       getDepartmentItem('anonim-user')
     } else if (value === 'tab-2') {
+      if (is_amocrm) {
+        getDepartmentAmoCrmItem()
+      }
       getDepartmentItem('lead-user-description')
     } else {
       getDepartmentItem('sms-history')
@@ -388,13 +403,19 @@ const KanbanItem = (props: KanbarItemProps) => {
                         gap: '6px'
                       }}
                     >
-                      <Typography fontSize={12} fontStyle={'italic'}>
-                        {el.body}
-                      </Typography>
-                      <Typography fontSize={12}>
-                        {el.admin} {el.created_at.split(' ')[0].split('-').reverse().join('/')}{' '}
-                        {el.created_at.split(' ')[1].split('-').join(':')}
-                      </Typography>
+                      {is_amocrm ? (
+                        <Typography fontSize={12}>{el.text}</Typography>
+                      ) : (
+                        <>
+                          <Typography fontSize={12} fontStyle={'italic'}>
+                            {el.body}
+                          </Typography>
+                          <Typography fontSize={12}>
+                            {el.admin} {el.created_at.split(' ')[0].split('-').reverse().join('/')}{' '}
+                            {el.created_at.split(' ')[1].split('-').join(':')}
+                          </Typography>
+                        </>
+                      )}
                     </Box>
                   ))
                 ) : (

@@ -265,6 +265,7 @@ export default function HeadingFilter() {
     >
       {' '}
       <SelectPicker
+        
         // sx={{ maxWidth: 180, width: '100%' }}
         onChange={handleChangeBranch}
         size='md'
@@ -367,6 +368,7 @@ export default function HeadingFilter() {
       />
       
       <DateRangePicker
+        
         showOneCalendar
         placement='bottomEnd'
         locale={{
