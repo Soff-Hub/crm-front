@@ -40,14 +40,14 @@ export default function EditStudentForm() {
   const dispatch = useAppDispatch()
   const { groups, getGroups } = useGroups()
   const { isMobile } = useResponsive()
-  const { studentData } = useAppSelector(state => state.students)
+  const { studentData, queryParams } = useAppSelector(state => state.students)
   const { schools } = useAppSelector(state => state.settings)
+  const [rowsPerPage, setRowsPerPage] = useState<number>(() => Number(localStorage.getItem('rowsPerPage')) || 10)
 
-  // ** States
   const [isGroup, setIsGroup] = useState<boolean>(false)
   const [isPassword, setIsPassword] = useState<boolean>(false)
   const [loading, setLoading] = useState<boolean>(false)
-
+  const [isSchool, setIsSchool] = useState(false)
   const validationSchema = Yup.object({
     first_name: Yup.string().required('Ismingizni kiriting'),
     phone: Yup.string().required('Telefon raqam kiriting'),
@@ -79,7 +79,8 @@ export default function EditStudentForm() {
         formik.setErrors(resp.payload)
       } else {
         toast.success("O'zgarishlar muvaffaqiyatli saqlandi")
-        await dispatch(fetchStudentsList())
+        await dispatch(fetchStudentsList({ ...queryParams, limit: String(rowsPerPage) }))
+
         dispatch(setOpenEdit(null))
         formik.resetForm()
         setIsGroup(false)
@@ -140,6 +141,30 @@ export default function EditStudentForm() {
         />
         {errors.phone && touched.phone && <FormHelperText error={true}>{errors.phone}</FormHelperText>}
       </FormControl>
+
+      {isSchool && (
+        <FormControl sx={{ width: '100%' }}>
+          <Autocomplete
+            noOptionsText="Ma'lumot yo'q"
+            size='small'
+            options={schools || []}
+            getOptionLabel={(option: any) => option.name}
+            onChange={(event, newValue) => {
+              formik.setFieldValue('school', newValue.id)
+            }}
+            onBlur={handleBlur}
+            renderInput={params => (
+              <TextField
+                {...params}
+                label={t('Maktab nomi')}
+                placeholder='Maktab'
+                error={!!errors.school}
+                helperText={errors.school}
+              />
+            )}
+          />
+        </FormControl>
+      )}
 
       {studentData?.school_data && (
         <FormControl sx={{ width: '100%' }}>
@@ -217,6 +242,21 @@ export default function EditStudentForm() {
       <LoadingButton loading={loading} variant='contained' type='submit' fullWidth>
         {t('Saqlash')}
       </LoadingButton>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+        {!studentData?.school_data && (
+          <Button
+            fullWidth
+            color='warning'
+            onClick={async () => setIsSchool(true)}
+            type='button'
+            variant='outlined'
+            size='small'
+            startIcon={<IconifyIcon icon={'material-symbols:add'} />}
+          >
+            {t("Maktab qo'shish")}
+          </Button>
+        )}
+      </Box>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
         {/* {!isGroup && <Button onClick={async () => (setIsGroup(true), await getGroups())} type='button' variant='outlined' size='small' startIcon={<IconifyIcon icon={'material-symbols:add'} />}>{t("Guruhga qo'shish")}</Button>} */}
         {!isPassword && (

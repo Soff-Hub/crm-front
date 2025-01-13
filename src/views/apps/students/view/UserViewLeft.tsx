@@ -192,6 +192,12 @@ const UserViewLeft = ({ userData }: { userData: any }) => {
                 </Typography>
                 <Typography fontSize={13}>{addPeriodToThousands(+data.balance) + " so'm"}</Typography>
               </Box>
+              <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+                <Typography fontSize={13} variant='body2'>
+                  {t('Maktab')}:{' '}
+                </Typography>
+                <Typography fontSize={13}>{addPeriodToThousands(data?.school_data.name)}</Typography>
+              </Box>
             </CardContent>
             <CardContent sx={{ display: 'flex', gap: 4, justifyContent: 'space-between' }}>
               <Button

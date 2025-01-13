@@ -734,7 +734,7 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, choices }:
     //   <SentSMS smsTemps={smsTemps} id={id} modalRef={modalRef} setModalRef={setModalRef} />
     //   <ExportStudent id={studentStatusId} modalRef={modalRef} setModalRef={setModalRef} />
     // </Box>
-    <Box sx={{ width: '100%', gap: 2, display: 'flex', alignItems:'center',justifyContent: 'space-between' }}>
+    <Box sx={{ width: '100%', gap: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
       <Box display='flex' alignItems='center'>
         <Typography sx={{ width: '20px' }}>{index}.</Typography>
         <Status
@@ -923,7 +923,7 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, choices }:
           </HtmlTooltip>
         )
       ) : settings.layout == 'horizontal' ? (
-        <Tooltip title={first_name.length > 9 ? first_name : ''} arrow>
+        <Tooltip sx={{ textAlign: 'start' }} title={first_name.length > 9 ? first_name : ''} arrow>
           <Typography sx={{ cursor: 'pointer' }} fontSize={10}>
             {first_name.length > 9 ? `${first_name.slice(0, 9)}...` : first_name}
           </Typography>

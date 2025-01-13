@@ -6,6 +6,7 @@ import {
   DialogContent,
   DialogTitle,
   FormControl,
+  FormHelperText,
   TextField,
   Typography
 } from '@mui/material'
@@ -29,6 +30,8 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 import { setLoading } from 'src/store/apps/leads'
+import { useFormik } from 'formik'
+import * as Yup from 'yup'
 
 interface Result {
   date: string
@@ -171,10 +174,19 @@ const UserViewSecurity = () => {
 
   const start_date: any = groupData?.start_date ? Number(groupData?.start_date.split('-')[1]) : ''
   const [chandeDateLoader, setChangeDateLoader] = useState(false)
+  const [chandeTopicLoader, setChangeTopicLoader] = useState(false)
+
   const [selectedOldDate, setSelectedOldDate] = useState(null)
   const [selectedNewDate, setSelectedNewDate] = useState(null)
-
   const [openDialog, setOpenDialog] = useState(false)
+  const { pathname, query, push } = useRouter()
+  const { settings } = useSettings()
+  const [opened_id, setOpenedId] = useState<any>(null)
+  const [openTooltip, setOpenTooltip] = useState<null | string>(null)
+  const [topic, setTopic] = useState<any>('')
+  const [updateTopic, setUpdateTopic] = useState(false)
+  const [topicId, setTopicId] = useState<number | null>(null)
+  const { t } = useTranslation()
 
   const handleDateChange = async () => {
     setChangeDateLoader(true)
@@ -213,19 +225,63 @@ const UserViewSecurity = () => {
     // setOpenDialog(false)
   }
 
+  const formik = useFormik({
+    initialValues: {
+      newTopic: topic || ''
+    },
+    validationSchema: Yup.object({
+      newTopic: Yup.string().required('Dars nomi majburiy.')
+    }),
+    onSubmit: () => {
+      handleTopicChange()
+      setUpdateTopic(false)
+    }
+  })
+
+  useEffect(() => {
+    formik.setFieldValue('newTopic', topic)
+  }, [topic])
+
+  const handleTopicChange = async () => {
+    setChangeTopicLoader(true)
+    await api
+      .patch(`common/topic/update/${topicId}`, {
+        topic: formik.values.newTopic
+      })
+      .then(res => {
+        console.log(res)
+        toast.success("Dars nomi o'zgartirildi")
+        formik.resetForm()
+        setUpdateTopic(false)
+        const queryString = new URLSearchParams(queryParams).toString()
+        dispatch(
+          getAttendance({
+            date: `${query?.year || new Date().getFullYear()}-${getMontNumber(query?.month)}`,
+            group: query?.id,
+            queryString: queryString
+          })
+        )
+        dispatch(
+          getDays({
+            date: `${query?.year || new Date().getFullYear()}-${getMontNumber(query?.month)}`,
+            group: query?.id
+          })
+        )
+      })
+      .catch(err => {
+        console.log(err)
+        toast.error('Xatolik')
+      })
+    setChangeTopicLoader(false)
+    // setOpenDialog(false)
+  }
+
   const handleDayClick = (day: any) => {
     console.log(day)
 
     setSelectedOldDate(day)
     setOpenDialog(true)
   }
-
-  const { pathname, query, push } = useRouter()
-  const { settings } = useSettings()
-  const [opened_id, setOpenedId] = useState<any>(null)
-  const [openTooltip, setOpenTooltip] = useState<null | string>(null)
-  const [topic, setTopic] = useState<any>('')
-  const { t } = useTranslation()
 
   const months: string[] = ['yan', 'fev', 'mar', 'apr', 'may', 'iyun', 'iyul', 'avg', 'sen', 'okt', 'noy', 'dek']
 
@@ -427,9 +483,6 @@ const UserViewSecurity = () => {
                             }}
                             onClose={() => setOpenTooltip(null)}
                             open={openTooltip === hour.date}
-                            disableFocusListener
-                            disableHoverListener
-                            disableTouchListener
                             arrow
                             title={
                               <div>
@@ -443,11 +496,20 @@ const UserViewSecurity = () => {
                                 width: '60px',
                                 overflow: 'hidden',
                                 textOverflow: 'ellipsis',
-                                textWrap: 'nowrap'
+                                whiteSpace: 'nowrap',
+
+                                cursor: 'pointer'
                               }}
-                              onClick={() => setOpenTooltip(c => (c === hour.date ? null : hour.date))}
+                              onMouseEnter={() => setOpenTooltip(hour.date)}
+                              onMouseLeave={() => setOpenTooltip(null)}
                             >
-                              {hour.lesson.topic}
+                              <span
+                                onClick={() => {
+                                  setUpdateTopic(true), setTopicId(hour.lesson.id), setTopic(hour.lesson.topic)
+                                }}
+                              >
+                                {hour.lesson.topic}
+                              </span>
                             </Box>
                           </HtmlTooltip>
                         ) : (
@@ -674,7 +736,7 @@ const UserViewSecurity = () => {
         </Box>
         <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
           <DialogTitle>
-            <Typography>Select Date</Typography>
+            <Typography>Kunni tanlang</Typography>
           </DialogTitle>
           <DialogContent>
             <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -706,10 +768,47 @@ const UserViewSecurity = () => {
                 setOpenDialog(false), setSelectedOldDate(null), setSelectedNewDate(null)
               }}
             >
-              Cancel
+              Bekor qilish
             </Button>
             <Button disabled={chandeDateLoader} variant='outlined' onClick={handleDateChange}>
-              Select
+              Saqlash
+            </Button>
+          </DialogActions>
+        </Dialog>
+        <Dialog open={updateTopic} onClose={() => setUpdateTopic(false)}>
+          <DialogTitle>
+            <Typography>Dars o'zgartirish</Typography>
+          </DialogTitle>
+          <DialogContent>
+            <FormControl>
+              <TextField
+                name='newTopic'
+                onChange={formik.handleChange}
+                size='small'
+                value={formik.values.newTopic}
+                fullWidth
+                onBlur={formik.handleBlur}
+                error={!!formik.errors.newTopic && !!formik.touched.newTopic}
+                title='dars nomi'
+              />
+              <FormHelperText error={!!formik.errors.newTopic && !!formik.touched.newTopic}>
+                {!!formik.errors.newTopic && !!formik.touched.newTopic && Boolean(formik.errors.newTopic)}
+              </FormHelperText>
+            </FormControl>
+          </DialogContent>
+          <DialogActions>
+            <Button
+              size='small'
+              variant='outlined'
+              color='error'
+              onClick={() => {
+                formik.resetForm(), setUpdateTopic(false)
+              }}
+            >
+              Bekor qilish
+            </Button>
+            <Button size='small' disabled={chandeTopicLoader} variant='outlined' onClick={handleTopicChange}>
+              Saqlash
             </Button>
           </DialogActions>
         </Dialog>

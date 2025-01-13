@@ -30,6 +30,7 @@ import QrCodeModal from '../components/qrCode-Modal'
 import { Toaster } from 'react-hot-toast'
 import { useContext } from 'react'
 import { AuthContext } from 'src/context/AuthContext'
+import QRCodeScanner from '../components/qrCodeScanner'
 
 const HorizontalLayoutWrapper = styled(Box)({
   height: '100%',
@@ -218,6 +219,7 @@ const HorizontalLayout = (props: LayoutProps) => {
                       </Box>
                       {user?.role.includes('admin') || user?.role.includes('ceo') && <StaticsModal />}
                       <QrCodeModal />
+                       <QRCodeScanner />
                     </>
                   )}
                 </Toolbar>
