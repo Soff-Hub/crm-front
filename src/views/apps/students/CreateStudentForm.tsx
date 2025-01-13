@@ -284,12 +284,14 @@ export default function CreateStudentForm() {
             onBlur={handleBlur}
             renderInput={params => (
               <TextField
+                 
                 {...params}
                 label={t('Maktab nomi')}
                 placeholder='Maktab'
                 error={!!errors.school}
                 helperText={errors.school}
               />
+              
             )}
           />
         </FormControl>

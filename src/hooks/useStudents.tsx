@@ -7,6 +7,10 @@ export interface StudentTypes {
     id: string | number
     first_name: string
     phone: string
+    school_data: {
+        id: number,
+        name:string
+    }
     birth_date: string
     gender: 'male' | 'female'
     body: string
