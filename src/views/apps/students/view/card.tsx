@@ -164,7 +164,11 @@ export default function StudentCard({
       <CardHeaderStyled
         sx={{ marginBottom: 5 }}
         action={
-          <Chip sx={{ backgroundColor: 'white', padding: 2 }} icon={<Wallet size={16} />} label={balance + " so'm"} />
+          <Chip
+            sx={{ backgroundColor: 'white', padding: 2 }}
+            icon={<Wallet size={16} />}
+            label={balance || 0 + " so'm"}
+          />
         }
       />
       <CardContent>
@@ -183,18 +187,18 @@ export default function StudentCard({
             <Typography variant='h6' component='h3' gutterBottom>
               {name}
             </Typography>
-            {gpa && (
+            {
               <Chip
                 color='error'
                 label={`Baho: ${gpa?.toFixed(2)}`}
                 variant='outlined'
                 size='small'
                 sx={{
-                  color: gpa >= 4 ? 'green' : gpa >= 3 ? 'orange' : 'red',
-                  borderColor: gpa >= 4 ? 'green' : gpa >= 3 ? 'orange' : 'red'
+                  color: Number(gpa) >= 4 ? 'green' : Number(gpa) >= 3 ? 'orange' : 'red',
+                  borderColor: Number(gpa) >= 4 ? 'green' : Number(gpa) >= 3 ? 'orange' : 'red'
                 }}
               />
-            )}
+            }
             <Typography variant='body2' color='text.secondary' mt={1}>
               ID: {id}
             </Typography>
@@ -208,12 +212,14 @@ export default function StudentCard({
             </Typography>
             <Typography variant='body1'>{phone}</Typography>
           </Grid>
-          <Grid item xs={6}>
-            <Typography variant='body2' color='text.secondary'>
-              Maktab :
-            </Typography>
-            <Typography variant='body1'>{school}</Typography>
-          </Grid>
+          {school && (
+            <Grid item xs={6}>
+              <Typography variant='body2' color='text.secondary'>
+                Maktab :
+              </Typography>
+              <Typography variant='body1'>{school}</Typography>
+            </Grid>
+          )}
         </Grid>
       </CardContent>
       <Box
