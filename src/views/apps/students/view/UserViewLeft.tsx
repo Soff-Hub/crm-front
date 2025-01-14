@@ -25,7 +25,7 @@ import CustomAvatar from 'src/@core/components/mui/avatar'
 import { useTranslation } from 'react-i18next'
 import IconifyIcon from 'src/@core/components/icon'
 
-import { ButtonGroup, Checkbox, FormHelperText, Radio, RadioGroup, Tooltip } from '@mui/material'
+import { ButtonGroup, Checkbox, Chip, FormHelperText, Radio, RadioGroup, Tooltip } from '@mui/material'
 import Form from 'src/@core/components/form'
 import { addPeriodToThousands } from 'src/pages/settings/office/courses'
 import UserViewStudentsList from './UserViewStudentsList'
@@ -49,6 +49,7 @@ import StudentParentList from './StudentParentList'
 import StudentWithDrawForm from './StudentWithdrawForm'
 import toast from 'react-hot-toast'
 import { fetchSmsList, fetchSmsListQuery } from 'src/store/apps/settings'
+import StudentCard from './card'
 
 export type ModalTypes = 'group' | 'withdraw' | 'payment' | 'sms' | 'delete' | 'edit' | 'notes' | 'parent'
 
@@ -111,7 +112,6 @@ const UserViewLeft = ({ userData }: { userData: any }) => {
         is_discount: isDiscount
       }
 
-      console.log({ ...data, ...discountConfig })
 
       await mergeStudentToGroup({ ...data, ...discountConfig })
       setLoading(false)
@@ -158,97 +158,14 @@ const UserViewLeft = ({ userData }: { userData: any }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userData, studentData])
 
+  
+
   if (data) {
     return (
       <Grid container spacing={6}>
-        <Grid item xs={12}>
-          <Card>
-            <CardContent sx={{ display: 'flex', justifyContent: 'space-between', flexDirection: 'column' }}>
-              <Box sx={{ display: 'flex', gap: 3 }}>
-                <CustomAvatar
-                  skin='light'
-                  variant='rounded'
-                  color={'primary'}
-                  sx={{ width: 70, height: 70, fontWeight: 600, mb: 1, fontSize: '2rem' }}
-                >
-                  {getInitials(data.first_name)}
-                </CustomAvatar>
-                <Box>
-                  <Typography variant='h6'>{data.first_name}</Typography>
-                  <Typography fontSize={12}>{`( ID:${data.id} )`}</Typography>
-                </Box>
-              </Box>
-            </CardContent>
-            <CardContent>
-              <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
-                <Typography fontSize={13} variant='body2'>
-                  {t('phone')}:{' '}
-                </Typography>
-                <Typography fontSize={13}>{data.phone}</Typography>
-              </Box>
-              <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
-                <Typography fontSize={13} variant='body2'>
-                  {t('Balans')}:{' '}
-                </Typography>
-                <Typography fontSize={13}>{addPeriodToThousands(+data.balance) + " so'm"}</Typography>
-              </Box>
-              {data?.school_data?.name && 
-               <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
-               <Typography fontSize={13} variant='body2'>
-                 {t('Maktab')}:{' '}
-               </Typography>
-               <Typography fontSize={13}>{addPeriodToThousands(data?.school_data?.name)}</Typography>
-             </Box>
-              }
-            </CardContent>
-            <CardContent sx={{ display: 'flex', gap: 4, justifyContent: 'space-between' }}>
-              <Button
-                size='small'
-                variant='outlined'
-                startIcon={<IconifyIcon icon={'mdi:table-add'} />}
-                onClick={() => handleEditClickOpen('group')}
-              >
-                {t("Guruhga qo'shish")}
-              </Button>
-              <Button
-                color='error'
-                size='small'
-                startIcon={<IconifyIcon icon={'mdi:cash-minus'} />}
-                variant='outlined'
-                onClick={async () => handleEditClickOpen('withdraw')}
-              >
-                {t('Pul qaytarish')}
-              </Button>
-            </CardContent>
-            <CardContent sx={{ display: 'flex', gap: 4, justifyContent: 'flex-end' }}>
-              <Button
-                color='warning'
-                size='small'
-                startIcon={<IconifyIcon icon={'mdi:cash-plus'} />}
-                variant='outlined'
-                onClick={async () => handleEditClickOpen('payment')}
-              >
-                {t("To'lov")}
-              </Button>
-            </CardContent>
-            <Box sx={{ display: 'flex', justifyContent: 'center', pb: 3 }}>
-              {/* <Tooltip title={t("Ota-ona ma'lumotini kiritish")} placement='bottom'>
-                <Button size='small' color="secondary" onClick={() => (handleEditClickOpen('parent'))}>
-                  <IconifyIcon icon='ri:parent-line' />
-                </Button>
-              </Tooltip> */}
-              <Tooltip title={t('Xabar (sms)')} placement='bottom'>
-                <Button size='small' color='warning' onClick={() => (getSMSTemps(), handleEditClickOpen('sms'))}>
-                  <IconifyIcon icon='material-symbols-light:sms-outline' />
-                </Button>
-              </Tooltip>
-              <Tooltip title={t('Tahrirlash')} placement='bottom'>
-                <Button size='small' onClick={() => handleEditClickOpen('edit')}>
-                  <IconifyIcon icon='iconamoon:edit-thin' />
-                </Button>
-              </Tooltip>
-            </Box>
-          </Card>
+        <Grid item xs={12} >
+          <StudentCard userData={userData} name={data.first_name} gpa={data.gpa} balance={data.balance} id={data.id} phone={data.phone} school={data?.school_data.name}   />
+         
         </Grid>
         <Grid item gap={2} xs={12}>
           {userData && userData?.comments?.length > 0 ? (

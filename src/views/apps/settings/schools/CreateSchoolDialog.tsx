@@ -64,7 +64,7 @@ export default function CreateSchoolDialog({ openModal, setOpenModal }: Props) {
         }}
       >
         <Typography variant='h6' sx={{ fontWeight: 600 }}>
-          {t("Yangi xona qo'shish")}
+          {t("Yangi maktab qo'shish")}
         </Typography>
         <IconButton
           onClick={() => {

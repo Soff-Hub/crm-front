@@ -12,6 +12,8 @@ import useResponsive from 'src/@core/hooks/useResponsive'
 import { AuthContext } from 'src/context/AuthContext'
 import { toast } from 'react-hot-toast'
 import PaymentTable from 'src/@core/components/table/paymentTable'
+import { fetchTeachersList } from 'src/store/apps/mentors'
+import { fetchCoursesList } from 'src/store/apps/settings'
 
 const DataTable = dynamic(() => import('src/@core/components/table'))
 
@@ -108,6 +110,11 @@ export default function StudentPaymentsPage() {
   ]
 
   useEffect(() => {
+    dispatch(fetchTeachersList(''))
+    dispatch(fetchCoursesList(''))
+  },[])
+
+  useEffect(() => {
     if (!user?.role.includes('ceo') && !user?.role.includes('admin') && !user?.role.includes('watcher')&& !user?.role.includes('marketolog')) {
       push('/')
       toast.error("Sizda bu sahifaga kirish huquqi yo'q!")
@@ -148,7 +155,8 @@ export default function StudentPaymentsPage() {
         }}
         py={2}
       >
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+        <Box  sx={{display: 'flex', alignItems: 'center', justifyContent:'space-between',marginBottom:5 }}>
+          <Box display='flex' alignItems='center' gap='10px'>
           <Typography variant='h5'>{t("O'quvchilar to'lovi")}</Typography>
           {!isLoading && <Chip label={`${paymentsCount}`} variant='outlined' color='primary' size='medium' />}
           <Chip
@@ -158,6 +166,14 @@ export default function StudentPaymentsPage() {
             color='success'
             label={`${formatCurrency(total_payments)} UZS`}
           />
+        </Box>
+        <Chip
+          variant="outlined"
+          size="medium"
+          sx={{ fontSize: "14px", display: isMobile ? "none" : "flex", fontWeight: "bold" }}
+          color="success"
+          label={`${formatCurrency(total_payments)} UZS`}
+        />
         </Box>
         <FilterBlock />
       </Box>

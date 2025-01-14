@@ -37,7 +37,11 @@ export default function MergeToDepartment({ is_amocrm, item, reRender }: Props) 
     onSubmit: async values => {
       const resp = await dispatch(
         is_amocrm
-          ? updateDepartmentStudent({ is_amocrm, id: item.id, data: { status_id: values.department } })
+          ? updateDepartmentStudent({
+              is_amocrm,
+              id: item.id,
+              data: { department: values.department, lead_id: item.id }
+            })
           : updateDepartmentStudent({ is_amocrm, id: item.id, data: { ...values } })
       )
       if (resp.meta.requestStatus === 'rejected') {
@@ -45,9 +49,10 @@ export default function MergeToDepartment({ is_amocrm, item, reRender }: Props) 
       } else {
         toast.success('Muvaffaqiyatli kochirildi')
         // await reRender()
-        {
-          is_amocrm ? await dispatch(fetchAmoCrmPipelines({})) : await dispatch(fetchDepartmentList())
-        }
+
+        await dispatch(fetchAmoCrmPipelines({}))
+        await dispatch(fetchDepartmentList())
+
         formik.resetForm()
       }
     }
@@ -78,7 +83,7 @@ export default function MergeToDepartment({ is_amocrm, item, reRender }: Props) 
         <InputLabel>{t("Bo'lim")}</InputLabel>
         <Select label={t("Bo'lim")} defaultValue={''} onChange={e => setDepartment(e.target.value)}>
           {is_amocrm
-            ? pipelines?.map((el: any) => (
+            ? leadData?.map((el: any) => (
                 <MenuItem key={el.id} value={el.id}>
                   {el.name}
                 </MenuItem>
@@ -103,7 +108,7 @@ export default function MergeToDepartment({ is_amocrm, item, reRender }: Props) 
             value={values.department}
           >
             {is_amocrm
-              ? pipelines
+              ? leadData
                   ?.find((item: any) => item.id === department)
                   ?.children?.map((el: any) => (
                     <MenuItem key={el.id} value={el.id}>

@@ -46,7 +46,6 @@ export default function EditGroupModal() {
   const { query } = useRouter()
 
 
-  console.log(teachersData);
   
 
 

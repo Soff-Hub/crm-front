@@ -76,7 +76,7 @@ export const editDepartment = createAsyncThunk(
 )
 export const editAmoCrmData = createAsyncThunk(
   'appChat/editAmoCrmData',
-  async (values: { data_id: any; is_delete:boolean; condition:string }, { rejectWithValue }) => {
+  async (values: { data_id: any; is_delete: boolean; condition: string }, { rejectWithValue }) => {
     try {
       const response = await api.post(`amocrm/delete/`, values)
       return response.data
@@ -116,13 +116,20 @@ export const updateDepartmentStudent = createAsyncThunk(
   'appChat/updateDepartmentStudent',
   async (data: any, { rejectWithValue }) => {
     try {
-      // const response = await api.patch(`leads/department-user-list/${data.id}/`, data)
-      const response = await api.patch(
-        data.is_amocrm ? `amocrm/lead/update/${data.id}/` : `leads/anonim-user/update/${data.id}/`,
-        data.data
-      )
+      let response
+
+      console.log('Sending data:', data)
+
+      if (data.is_amocrm) {
+        response = await api.post(`amocrm/leads/export/`, data.data)
+      } else {
+        response = await api.patch(`leads/anonim-user/update/${data.id}/`, { department: data.data.department })
+      }
+
+      console.log('Response:', response)
       return response.data
     } catch (err: any) {
+      console.error('Error:', err.response || err.message)
       if (err.response) {
         return rejectWithValue(err.response.data)
       }

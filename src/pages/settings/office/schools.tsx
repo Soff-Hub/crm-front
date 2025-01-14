@@ -79,6 +79,7 @@ export default function SchoolsPage() {
         />
       )}
       <CreateSchoolDialog openModal={openSchoolModal} setOpenModal={setOpenSchoolModal} />
+      
       <EditSchoolDialog />
     </div>
   )

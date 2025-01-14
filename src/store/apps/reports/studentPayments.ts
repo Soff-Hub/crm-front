@@ -30,6 +30,8 @@ interface IStudentsPaymentState {
   isLoading: boolean
   groups: any[]
   queryParams: {
+    teacher?: any,
+    course?:any,
     limit?: string
     offset?: string
     is_payment: any
@@ -43,7 +45,7 @@ interface IStudentsPaymentState {
 const initialState: IStudentsPaymentState = {
   studentsPayment: [],
   groups: [],
-  queryParams: { is_payment: true, page: '1', offset: '0', limit: '10' },
+  queryParams: { is_payment: true, page: '1', offset: '0', limit: '10',teacher:'',course:'' },
   paymentsCount: 0,
   total_payments: 0,
   isLoading: false

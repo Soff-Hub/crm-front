@@ -18,7 +18,7 @@ import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import usePayment from 'src/hooks/usePayment'
 import Router, { useRouter } from 'next/router'
-import { fetchStudentDetail, fetchStudentPayment } from 'src/store/apps/students'
+import { fetchStudentDetail, fetchStudentGroups, fetchStudentPayment } from 'src/store/apps/students'
 import AmountInput, { convertToNegative, revereAmount } from 'src/@core/components/amount-input'
 import IconifyIcon from 'src/@core/components/icon'
 
@@ -71,6 +71,7 @@ export default function StudentWithDrawForm({ openEdit, setOpenEdit }: Props) {
         formik.resetForm()
         await dispatch(fetchStudentDetail(userData.id))
         await dispatch(fetchStudentPayment(userData.id))
+        await dispatch(fetchStudentGroups(query.student))
       } catch (err: any) {
         // showResponseError(err.response.data, setError)
         setLoading(false)
