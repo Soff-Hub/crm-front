@@ -271,30 +271,89 @@ export default function CreateStudentForm() {
         ''
       )}
       {isSchool && (
-        <FormControl sx={{ width: '100%' }}>
-          <Autocomplete
-            noOptionsText="Ma'lumot yo'q"
-            size='small'
-            options={schools || []}
-            getOptionLabel={(option: any) => option.name}
-            onChange={(event, newValue) => {
-
-              formik.setFieldValue('school', newValue.id)
-            }}
-            onBlur={handleBlur}
-            renderInput={params => (
-              <TextField
-                 
-                {...params}
-                label={t('Maktab nomi')}
-                placeholder='Maktab'
-                error={!!errors.school}
-                helperText={errors.school}
-              />
+        // <FormControl sx={{ width: '100%' }}>
+        // <Autocomplete
+        //   noOptionsText="Ma'lumot yo'q"
+        //   size="small"
+        //     options={schools || []}
+        //     value={formik.values.school}
+        //   getOptionLabel={(option: any) => (typeof option === 'string' ? option : option.name)}
+        //     onChange={(event, newValue:{name:string,id:number|string}) => {
               
-            )}
+        //     if (newValue?.id == 'add-group') {
+        //       // Handle adding a new group
+        //       console.log('Add Group clicked');
+        //     } else {
+        //       console.log('fwefewf');
+              
+        //     }
+        //   }}
+        //   // onInputChange={(event, value, reason) => {
+        //   //   if (reason === 'input') {
+        //   //     setCustomOptions([{ id: 'add-group', name: 'Add Group' }, ...(schools || [])]);
+        //   //   }
+        //   // }}
+        //   filterOptions={(options, state) => {
+        //     const filtered = options.filter(option => option.name?.toLowerCase().includes(state.inputValue.toLowerCase()));
+        //     return [{ id: 'add-group', name: 'Add Group' }, ...filtered];
+        //   }}
+        //   onBlur={handleBlur}
+        //   renderInput={params => (
+        //     <TextField
+        //       {...params}
+        //       label={t('Maktab nomi')}
+        //       placeholder="Maktab"
+        //       error={!!errors.school}
+        //       helperText={errors.school}
+        //     />
+        //   )}
+        //   renderOption={(props, option) => (
+        //     <li {...props}>
+        //       {option.id === 'add-group' ? 'Maktab qoshish +' : option.name}
+        //     </li>
+        //   )}
+        // />
+        // </FormControl>
+          <FormControl fullWidth>
+          <InputLabel size='small' id='user-view-language-label'>
+            {t('Maktab')}
+          </InputLabel>
+          <Select
+            size='small'
+            error={!!errors.school && touched.school}
+            label={t('Maktab')}
+            id='user-view-language'
+            labelId='user-view-language-label'
+            name='school'
+            onChange={handleChange}
+            value={values.school || ''}
+            sx={{ mb: 3 }}
+          >
+            {schools.map((school:{id:number|string,name:string}) => (
+              <MenuItem key={school.id} value={Number(school.id)}>
+                {school.name}
+              </MenuItem>
+            ))}
+            <MenuItem sx={{ fontWeight: 600 }} onClick={() => Router.push('/settings/office/schools')}>
+              {t('Yangi yaratish')}
+              <IconifyIcon icon={'ion:add-sharp'} />
+            </MenuItem>
+          </Select>
+          {errors.school && <FormHelperText error={!!errors.school}>{errors.school}</FormHelperText>}
+
+          <TextField
+            size='small'
+            label={t("Qo'shilish sanasi")}
+            name='start_at'
+            type='date'
+            error={!!errors.start_at && touched.start_at}
+            value={values.start_at}
+            onChange={handleChange}
+            onBlur={handleBlur}
           />
+          <FormHelperText error={true}>{errors.start_at}</FormHelperText>
         </FormControl>
+      
       )}
       <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
         {!isGroup && (
@@ -362,5 +421,6 @@ export default function CreateStudentForm() {
         {t('Saqlash')}
       </LoadingButton>
     </form>
+    
   )
 }

@@ -69,6 +69,7 @@ const initialState: IStudentState = {
   studentGroups:[],
   studentId:null,
   students: [],
+  total_debts:0,
   studentsCount: 0,
   studentData: null,
   isGettingStudentsGroups:false,
@@ -116,6 +117,7 @@ export const studentsSlice = createSlice({
       })
       .addCase(fetchStudentsList.fulfilled, (state, action) => {
         state.students = action.payload.results
+        state.total_debts = action.payload.total_debts
         state.studentsCount = Math.ceil(action.payload.count)
         state.isLoading = false
       })

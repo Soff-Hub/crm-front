@@ -118,7 +118,6 @@ export default function GroupsPage() {
   ]
 
   const rowClick = (id: any) => {
-    console.log(id);
     
     push(`/mentors/view/security?id=${id}`)
   }

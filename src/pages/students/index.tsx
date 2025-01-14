@@ -46,7 +46,7 @@ export default function GroupsPage() {
   const { user } = useContext(AuthContext)
   const [open, setOpen] = useState<boolean>(false)
   const dispatch = useAppDispatch()
-  const { students, isLoading, studentsCount, queryParams } = useAppSelector(state => state.students)
+  const { students, isLoading, studentsCount, queryParams,total_debts } = useAppSelector(state => state.students)
   const [page, setPage] = useState<number>(queryParams.page ? Number(queryParams.page) - 1 : 1)
   const [rowsPerPage, setRowsPerPage] = useState<number>(() => Number(localStorage.getItem('rowsPerPage')) || 10)
 
@@ -208,6 +208,8 @@ export default function GroupsPage() {
         <Box sx={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
           <Typography variant='h5'>{t("O'quvchilar")}</Typography>
           {!isLoading && <Chip label={`${studentsCount}`} variant='outlined' color='primary' />}
+          {!isLoading && queryParams.is_debtor && <Chip label={`${formatCurrency(total_debts)}` + " so'm"} variant='outlined' color='error' />}
+
         </Box>
         <Button
           onClick={()=>dispatch(setOpenEdit('create'))}

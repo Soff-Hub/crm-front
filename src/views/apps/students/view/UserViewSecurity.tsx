@@ -378,7 +378,7 @@ const UserViewSecurity = () => {
                   onClick={() => handleClose('left')}
                 >
                   <Icon fontSize={'20px'} icon={'material-symbols:group-remove'} />
-                  {group_data?.status == 'archive' ? ("Ba'zadan chiqarish") : ('Guruhdan chiqarish')}
+                  {group_data?.status == 'archive' ? "Ba'zadan chiqarish" : 'Guruhdan chiqarish'}
                 </MenuItem>
 
                 <MenuItem
@@ -508,8 +508,23 @@ const UserViewSecurity = () => {
                     </div>
                     <CardContent>
                       <Box sx={{ marginBottom: 2 }}>
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                           <Typography sx={{ fontSize: '20px', color: 'black' }}>{group.group_name} </Typography>
+                          {group?.gpa && (
+                            <Chip
+                              color='error'
+                              label={`Baho: ${group.gpa?.toFixed(2)}`}
+                              variant='outlined'
+                              size='small'
+                              sx={{
+                                color: group.gpa >= 4 ? 'green' : group.gpa >= 3 ? 'orange' : 'red',
+                                borderColor: group.gpa >= 4 ? 'green' : group.gpa >= 3 ? 'orange' : 'red'
+                              }}
+                            />
+                          )}
+                        </Box>
+                        <Box display='flex' alignItems='center' gap={2} marginY={3}>
+                          <Typography color='black'>Guruh intervali : </Typography>
                           <Typography fontSize={12}>{group.group_interval}</Typography>
                         </Box>
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>

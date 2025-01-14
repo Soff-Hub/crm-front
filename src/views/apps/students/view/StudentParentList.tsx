@@ -21,7 +21,7 @@ export default function StudentParentList() {
   const dispatch = useAppDispatch()
   const { query } = useRouter()
   const [deleteLoading,setDeleteLoading] = useState(false)
-  console.log(id);
+
   
 
   async function handleDelete() {

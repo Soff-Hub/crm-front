@@ -4,7 +4,9 @@ import { Box, Paper, Typography } from '@mui/material'
 import useResponsive from 'src/@core/hooks/useResponsive'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch, useAppSelector } from 'src/store'
+import ButtonGroup from '@mui/material/ButtonGroup'
 import { fetchDepartmentList } from 'src/store/apps/leads'
+import { Button } from 'rsuite'
 
 const DragDropConnectedSortingExample: React.FC = () => {
   const { leadData } = useAppSelector(state => state.leads)
@@ -40,19 +42,40 @@ const DragDropConnectedSortingExample: React.FC = () => {
 
     destinationList.splice(destination.index, 0, movedItem)
 
-   console.log(updatedLeadData);
-   
+    console.log(updatedLeadData)
 
     dispatch({
       type: 'leads/updateLeadData',
       payload: updatedLeadData
     })
   }
+  const handleFilter = async (value: number | string) => {
+    console.log(value)
+  }
+  const buttons = [
+    <Button key={''} onClick={() => handleFilter('')}>
+      {t('Barchasi')} - {leadData.length}
+    </Button>,
+    ...leadData.map(el => (
+      <Button
+        key={el.id}
+        onClick={() => handleFilter(el.id)}
+        // variant={queryParams.role === el.id ? 'contained' : 'outlined'}
+      >
+        {t(el.name)}
+      </Button>
+    ))
+  ]
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <Box marginY={5}>
         <Typography variant={isMobile ? 'h6' : 'h5'}>{t('Lidlar')}</Typography>
+      </Box>
+      <Box marginY={5}>
+        <ButtonGroup size='small' aria-label='Small button group'>
+          {buttons}
+        </ButtonGroup>
       </Box>
       <Box display='flex' justifyContent='start' alignItems='start' gap={2}>
         {/* Todo List */}
