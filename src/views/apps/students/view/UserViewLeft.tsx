@@ -164,7 +164,7 @@ const UserViewLeft = ({ userData }: { userData: any }) => {
     return (
       <Grid container spacing={6}>
         <Grid item xs={12} >
-          <StudentCard userData={userData} name={data.first_name} gpa={data.gpa} balance={data.balance} id={data.id} phone={data.phone} school={data?.school_data.name}   />
+          <StudentCard userData={userData} name={data?.first_name} gpa={data.gpa} balance={data.balance} id={data.id} phone={data.phone} school={data?.school_data?.name}   />
          
         </Grid>
         <Grid item gap={2} xs={12}>
