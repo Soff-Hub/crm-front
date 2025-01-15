@@ -222,7 +222,9 @@ const HorizontalLayout = (props: LayoutProps) => {
                           }
                         />
                       </Box>
-                      {user?.role.includes('admin') || user?.role.includes('ceo') && <StaticsModal />}
+                      {user?.role.includes('admin') && <StaticsModal />}
+                      {user?.role.includes('ceo') && <StaticsModal />}
+
                       <QrCodeModal />
                        <QRCodeScanner />
                     </>

@@ -66,6 +66,14 @@ export default function GroupsPage() {
     },
     {
       xs: 1.1,
+      title: t('Maktab'),
+      dataIndex: 'school',
+      render: (school) => {
+        return (school ? school :"Maktabi yo'q")
+      }
+    },
+    {
+      xs: 1.1,
       title: t('phone'),
       dataIndex: 'phone'
     },
