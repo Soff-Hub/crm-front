@@ -1,4 +1,4 @@
-import { Box, Button, ClickAwayListener, MenuItem, Select, TextField, Typography } from '@mui/material'
+import { Box, Button, Chip, ClickAwayListener, MenuItem, Select, TextField, Typography } from '@mui/material'
 import { useRouter } from 'next/router'
 import IconifyIcon from 'src/@core/components/icon'
 import Tooltip, { TooltipProps, tooltipClasses } from '@mui/material/Tooltip'
@@ -19,7 +19,7 @@ import {
 import { toast } from 'react-hot-toast'
 import { useSettings } from 'src/@core/hooks/useSettings'
 import SubLoader from 'src/views/apps/loaders/SubLoader'
-import dayjs from "dayjs"
+import dayjs from 'dayjs'
 
 interface Result {
   date: string
@@ -59,7 +59,8 @@ const Item = ({
 }) => {
   const [value, setValue] = useState<number>(defaultValue)
   const [open, setOpen] = useState<boolean>(false)
-
+  const dispatch = useAppDispatch()
+  const { pathname, query, push } = useRouter()
   const handleGradeClick = async (grade: number) => {
     if (grade < 1 || grade > 5) {
       toast.error('1 dan 5 gacha bo‘lgan sonlarni tanlashingiz mumkin')
@@ -79,6 +80,8 @@ const Item = ({
 
       try {
         await api.post(`common/group-student/rating/create/`, data)
+        await dispatch(getStudentsGrades({ id: query?.id, queryString: '' }))
+
       } catch (e: any) {
         toast.error(e.response?.data.msg || 'Bahoni saqlab bo‘lmadi, qayta urinib ko‘ring')
         setValue(defaultValue)
@@ -106,7 +109,7 @@ const Item = ({
             <TextField
               variant='outlined'
               value={value}
-              // onChange={(e:any) => setValue(e.target.value)} 
+              // onChange={(e:any) => setValue(e.target.value)}
               onClick={() => setOpen(true)}
               size='small'
               inputProps={{ readOnly: true }}
@@ -259,10 +262,9 @@ const GroupStudentGrades = () => {
     }
   }
 
-  
   useEffect(() => {
     const currentDate = dayjs().format('YYYY-MM-DD')
-    dispatch(getStudentsGrades({ id: query.id, queryString: `date=${currentDate}`}))
+    dispatch(getStudentsGrades({ id: query.id, queryString: `date=${currentDate}` }))
   }, [])
 
   return isGettingGrades ? (
@@ -345,7 +347,19 @@ const GroupStudentGrades = () => {
                           borderRight: `1px solid ${settings.mode == 'dark' ? '#444' : '#c3cccc'}` // Dark mode border color
                         }}
                       >
-                        {student.first_name}
+                        <Box display='flex' alignItems='center' justifyContent={'space-between'} gap={3}>
+                          <Typography>{student.first_name}</Typography>
+                          <Chip
+                            color='error'
+                            size='small'
+                            sx={{
+                              color: Number(student?.gpa) >= 4 ? 'green' : Number(student?.gpa) >= 3 ? 'orange' : 'red',
+                              borderColor: Number(student?.gpa) >= 4 ? 'green' : Number(student?.gpa) >= 3 ? 'orange' : 'red'
+                            }}
+                            variant='outlined'
+                            label={student?.gpa}
+                          />
+                        </Box>
                       </td>
                       {days?.map((hour: any) => {
                         const currentDate = student.ratings?.find((el: any) => el.date === hour.date)
