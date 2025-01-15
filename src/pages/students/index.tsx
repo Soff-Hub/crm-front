@@ -64,14 +64,15 @@ export default function GroupsPage() {
       title: t('first_name'),
       dataIndex: 'first_name'
     },
-    // {
-    //   xs: 1.1,
-    //   title: t('Maktab'),
-    //   dataIndex: 'school',
-    //   render: (school) => {
-    //     return (school ? school :"Maktabi yo'q")
-    //   }
-    // },
+    {
+      xs: 1.1,
+      title: t('Baho'),
+      dataIndex: 'gpa',
+      render: (gpa) => {
+        return (gpa ? <Chip sx={{ color: Number(gpa) >= 4 ? 'green' : Number(gpa) >= 3 ? 'orange' : 'red',
+          borderColor: Number(gpa) >= 4 ? 'green' : Number(gpa) >= 3 ? 'orange' : 'red'}} variant='outlined' color='info' label={gpa}/> : "Bahosi yo'q")
+      }
+    },
     {
       xs: 1.1,
       title: t('phone'),
