@@ -23,8 +23,7 @@ import {
   export default function FilterBlock() {
     const [search, setSearch] = useState<string>('');
     const { t } = useTranslation();
-      const { groups, queryParams, total_payments } = useAppSelector(state => state.studentPayments);
-      const { teachers } = useAppSelector(state => state.mentors);
+      const { groups, queryParams, total_payments,teachersData } = useAppSelector(state => state.studentPayments);
       const { course_list } = useAppSelector(state => state.settings);
 
     const dispatch = useAppDispatch();
@@ -123,7 +122,7 @@ import {
           <Select
             sx={{ bgcolor: "white" }}
             size="small"
-            label={t('O\'qituvchilar')}
+            label={t("O'qituvchilar")}
             value={queryParams.teacher || ""}
             id="teacher-filter"
             labelId="teacher-filter-label"
@@ -132,7 +131,7 @@ import {
             <MenuItem value="">
               <b>{t('Barchasi')}</b>
             </MenuItem>
-            {teachers?.map((teacher: any) => (
+            {teachersData?.map((teacher: any) => (
               <MenuItem key={teacher.id} value={teacher.id}>{teacher.first_name}</MenuItem>
             ))}
           </Select>

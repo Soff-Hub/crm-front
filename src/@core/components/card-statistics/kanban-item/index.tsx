@@ -71,7 +71,7 @@ const KanbanItem = (props: KanbarItemProps) => {
   const [error, setError] = useState<any>({})
   const { t } = useTranslation()
   const [open, setOpen] = useState<
-    'edit' | 'merge-to' | 'sms' | 'delete' | 'note' | 'branch' | 'recover' | 'add-group' | null
+    'edit' | 'merge-to' | 'merge-to-amo' | 'sms' | 'delete' | 'note' | 'branch' | 'recover' | 'add-group' | null
   >(null)
   const [department, setDepartment] = useState<any>(null)
   const [loading, setLoading] = useState<boolean>(false)
@@ -183,7 +183,6 @@ const KanbanItem = (props: KanbarItemProps) => {
   }
 
   const clickStudent = async () => {
-
     if (is_amocrm) {
       if (id === total) {
         dispatch(addOpenedUser(null))
@@ -489,13 +488,13 @@ const KanbanItem = (props: KanbarItemProps) => {
         </DialogContent>
       </Dialog>
 
-      <Dialog open={open === 'merge-to'} onClose={() => setOpen(null)}>
+      <Dialog open={open === 'merge-to' || open === 'merge-to-amo'} onClose={() => setOpen(null)}>
         <DialogTitle sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <Typography>{t("Boshqa bo'limga")}</Typography>
+          <Typography>{t(open == "merge-to" ? "Soff crmga o'tkazish":"Boshqa bo'limga o'tkazish")}</Typography>
           <IconifyIcon icon={'material-symbols:close'} onClick={() => setOpen(null)} />
         </DialogTitle>
         <DialogContent>
-          <MergeToDepartment is_amocrm={is_amocrm} item={props} reRender={() => reRender(false)} />
+          <MergeToDepartment open={open} is_amocrm={is_amocrm} item={props} reRender={() => reRender(false)} />
         </DialogContent>
       </Dialog>
 

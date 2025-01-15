@@ -6,7 +6,7 @@ import { useRouter } from 'next/router'
 import { useAppDispatch, useAppSelector } from 'src/store'
 import { formatCurrency } from 'src/@core/utils/format-currency'
 import dynamic from 'next/dynamic'
-import { fetchGroupsList, fetchStudentPaymentsList, updateParams } from 'src/store/apps/reports/studentPayments'
+import { fetchGroupsList, fetchStudentPaymentsList, setTeacherData, updateParams } from 'src/store/apps/reports/studentPayments'
 import FilterBlock from 'src/views/apps/reports/student-payments/FilterBlock'
 import useResponsive from 'src/@core/hooks/useResponsive'
 import { AuthContext } from 'src/context/AuthContext'
@@ -14,6 +14,7 @@ import { toast } from 'react-hot-toast'
 import PaymentTable from 'src/@core/components/table/paymentTable'
 import { fetchTeachersList } from 'src/store/apps/mentors'
 import { fetchCoursesList } from 'src/store/apps/settings'
+import api from 'src/@core/utils/api'
 
 const DataTable = dynamic(() => import('src/@core/components/table'))
 
@@ -30,7 +31,7 @@ export default function StudentPaymentsPage() {
   const { push } = useRouter()
   const { user } = useContext(AuthContext)
   const [rowsPerPage, setRowsPerPage] = useState<number>(() => Number(localStorage.getItem('rowsPerPage')) || 10)
-  const { studentsPayment, paymentsCount, total_payments, isLoading, queryParams } = useAppSelector(
+  const { studentsPayment, paymentsCount, total_payments, isLoading, queryParams} = useAppSelector(
     state => state.studentPayments
   )
   const router = useRouter()
@@ -108,9 +109,19 @@ export default function StudentPaymentsPage() {
       dataIndex: 'payment_type_name'
     }
   ]
+  const getTeachers = async () => {
+    await api
+      .get('auth/employees-check-list/?role=teacher')
+      .then(data => {
+        dispatch(setTeacherData(data.data))
+      })
+      .catch(error => {
+        console.log(error)
+      })
+  }
 
   useEffect(() => {
-    dispatch(fetchTeachersList(''))
+    getTeachers()
     dispatch(fetchCoursesList(''))
   },[])
 
@@ -155,8 +166,8 @@ export default function StudentPaymentsPage() {
         }}
         py={2}
       >
-        <Box  sx={{display: 'flex', alignItems: 'center', justifyContent:'space-between',marginBottom:5 }}>
-          <Box display='flex' alignItems='center' gap='10px'>
+        <Box gap={5} sx={{display: 'flex', alignItems: 'center', justifyContent:'space-between',marginBottom:5 }}>
+          <Box display='flex' width='100%'  alignItems='center' gap='10px'>
           <Typography variant='h5'>{t("O'quvchilar to'lovi")}</Typography>
           {!isLoading && <Chip label={`${paymentsCount}`} variant='outlined' color='primary' size='medium' />}
           <Chip

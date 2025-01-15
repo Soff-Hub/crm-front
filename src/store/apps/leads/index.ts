@@ -126,7 +126,26 @@ export const updateDepartmentStudent = createAsyncThunk(
         response = await api.patch(`leads/anonim-user/update/${data.id}/`, { department: data.data.department })
       }
 
-      console.log('Response:', response)
+      return response.data
+    } catch (err: any) {
+      console.error('Error:', err.response || err.message)
+      if (err.response) {
+        return rejectWithValue(err.response.data)
+      }
+      return rejectWithValue(err.message)
+    }
+  }
+)
+export const updateAmoCrmStudent = createAsyncThunk(
+  'appChat/updateAmoCrmStudent',
+  async (data: any, { rejectWithValue }) => {
+    try {
+      let response
+
+      console.log('Sending data:', data)
+
+        response = await api.patch(`amocrm/lead/update/${data.id}/`, {status_id:data.data.department})
+
       return response.data
     } catch (err: any) {
       console.error('Error:', err.response || err.message)
