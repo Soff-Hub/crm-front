@@ -64,9 +64,9 @@ export default function LidsHeader({}: Props) {
         <Button variant='outlined' onClick={() => push('/lids/stats')}>
           {t('Hisobot')}
         </Button>
-        <Button sx={{width:'auto'}} variant='outlined' onClick={() => push('/lids/dragonDrobLids')}>
+        {/* <Button sx={{width:'auto'}} variant='outlined' onClick={() => push('/lids/dragonDrobLids')}>
           {t('Dragon drob')}
-        </Button>
+        </Button> */}
       </form>
       {isMobile ? (
         <Button
