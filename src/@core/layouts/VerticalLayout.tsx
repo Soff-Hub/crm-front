@@ -52,8 +52,6 @@ const ContentWrapper = styled(Box)(({ theme }) => ({
   }
 }))
 
-
-
 const VerticalLayout = (props: LayoutProps) => {
   // ** Props
   const { hidden, settings, children, scrollToTop, footerProps, contentHeightFixed, verticalLayoutProps } = props
@@ -66,7 +64,7 @@ const VerticalLayout = (props: LayoutProps) => {
   const collapsedNavWidth = collapsedNavigationSize
   const auth = useAuth()
   const { user } = useContext(AuthContext)
-  
+
   // ** States
   const [navVisible, setNavVisible] = useState<boolean>(false)
 
@@ -134,8 +132,9 @@ const VerticalLayout = (props: LayoutProps) => {
 
           {/* Footer Component */}
           <Footer footerStyles={footerProps?.sx} footerContent={footerProps?.content} {...props} />
-          {user?.role.includes('admin')||user?.role.includes('ceo') && <DraggableIcon />}
-          </MainContentWrapper>
+          {user?.role.includes('admin') && <DraggableIcon />}
+          {user?.role.includes('ceo') && <DraggableIcon />}
+        </MainContentWrapper>
       </VerticalLayoutWrapper>
 
       {/* Customizer */}
@@ -152,10 +151,10 @@ const VerticalLayout = (props: LayoutProps) => {
         </ScrollToTop>
       )}
 
-      {user?.role.includes('admin') || user?.role.includes('ceo') && <StaticsModal />}
+      {user?.role.includes('admin') || (user?.role.includes('ceo') && <StaticsModal />)}
 
       <QrCodeModal />
-       <QRCodeScanner />
+      <QRCodeScanner />
     </>
   )
 }

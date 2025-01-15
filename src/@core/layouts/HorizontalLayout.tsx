@@ -101,6 +101,11 @@ const HorizontalLayout = (props: LayoutProps) => {
   const auth = useAuth()
   const { user } = useContext(AuthContext)
 
+
+  console.log(user?.role.includes('admin'));
+  
+  
+
   let userAppBarStyle = {}
   if (appBarProps && appBarProps.sx) {
     userAppBarStyle = appBarProps.sx
@@ -252,7 +257,8 @@ const HorizontalLayout = (props: LayoutProps) => {
         />{' '} */}
         {themeConfig.disableCustomizer || hidden ? null : (
           <>
-            {user?.role.includes('admin') || user?.role.includes('ceo') && <DraggableIcon />}
+            {user?.role.includes('admin') && <DraggableIcon />}
+            {user?.role.includes('ceo') && <DraggableIcon />}
 
             <Customizer />
           </>

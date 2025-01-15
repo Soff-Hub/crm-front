@@ -25,6 +25,7 @@ type Payment = {
 
 interface IStudentsPaymentState {
   studentsPayment: Payment[]
+  teachersData:any
   paymentsCount: number
   total_payments: number
   isLoading: boolean
@@ -44,6 +45,7 @@ interface IStudentsPaymentState {
 
 const initialState: IStudentsPaymentState = {
   studentsPayment: [],
+  teachersData:null,
   groups: [],
   queryParams: { is_payment: true, page: '1', offset: '0', limit: '10',teacher:'',course:'' },
   paymentsCount: 0,
@@ -55,6 +57,9 @@ export const studentPaymentsSlice = createSlice({
   name: 'studentsPayment',
   initialState,
   reducers: {
+    setTeacherData: (state, action) => {
+      state.teachersData = action.payload
+    },
     updateParams: (state, action) => {
       state.queryParams = { ...state.queryParams, ...action.payload }
     }
@@ -79,5 +84,5 @@ export const studentPaymentsSlice = createSlice({
   }
 })
 
-export const { updateParams } = studentPaymentsSlice.actions
+export const { updateParams ,setTeacherData} = studentPaymentsSlice.actions
 export default studentPaymentsSlice.reducer

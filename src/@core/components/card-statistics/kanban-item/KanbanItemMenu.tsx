@@ -61,7 +61,11 @@ export default function KanbanItemMenu({
               </MenuItem>
               <MenuItem onClick={() => setOpen('merge-to')} sx={{ '& svg': { mr: 2 } }}>
                 <IconifyIcon icon='subway:round-arrow-2' fontSize={17} />
-                {t("Boshqa bo'limga")}
+                {t("Soff crmga qo'shish")}
+              </MenuItem>
+              <MenuItem onClick={() => setOpen('merge-to-amo')} sx={{ '& svg': { mr: 2 } }}>
+                <IconifyIcon icon='subway:round-arrow-2' fontSize={17} />
+                {t("Boshqa bo'limga o'tkazish")}
               </MenuItem>
             </>
           ) : (

@@ -5,17 +5,22 @@ import { FormControl, FormHelperText, InputLabel, MenuItem, Select } from '@mui/
 import LoadingButton from '@mui/lab/LoadingButton'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch, useAppSelector } from 'src/store'
-import { fetchAmoCrmPipelines, fetchDepartmentList, updateDepartmentStudent } from 'src/store/apps/leads'
-import api from 'src/@core/utils/api'
+import {
+  fetchAmoCrmPipelines,
+  fetchDepartmentList,
+  updateAmoCrmStudent,
+  updateDepartmentStudent
+} from 'src/store/apps/leads'
 import toast from 'react-hot-toast'
 
 type Props = {
   item: any
   reRender: any
   is_amocrm?: boolean
+  open: any
 }
 
-export default function MergeToDepartment({ is_amocrm, item, reRender }: Props) {
+export default function MergeToDepartment({ open, is_amocrm, item, reRender }: Props) {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
   const { loading, leadData, pipelines } = useAppSelector(state => state.leads)
@@ -35,25 +40,37 @@ export default function MergeToDepartment({ is_amocrm, item, reRender }: Props) 
     initialValues,
     validationSchema,
     onSubmit: async values => {
-      const resp = await dispatch(
-        is_amocrm
-          ? updateDepartmentStudent({
+      const action =
+        open === 'merge-to'
+          ? is_amocrm
+            ? updateDepartmentStudent({
+                is_amocrm,
+                id: item.id,
+                data: { department: values.department, lead_id: item.id }
+              })
+            : updateDepartmentStudent({
+                is_amocrm,
+                id: item.id,
+                data: { ...values }
+              })
+          : updateAmoCrmStudent({
               is_amocrm,
               id: item.id,
               data: { department: values.department, lead_id: item.id }
             })
-          : updateDepartmentStudent({ is_amocrm, id: item.id, data: { ...values } })
-      )
-      if (resp.meta.requestStatus === 'rejected') {
-        formik.setErrors(resp.payload)
-      } else {
-        toast.success('Muvaffaqiyatli kochirildi')
-        // await reRender()
 
-        await dispatch(fetchAmoCrmPipelines({}))
-        await dispatch(fetchDepartmentList())
+      if (action) {
+        const resp = await dispatch(action)
+        if (resp.meta.requestStatus === 'rejected') {
+          formik.setErrors(resp.payload)
+        } else {
+          toast.success('Muvaffaqiyatli kochirildi')
 
-        formik.resetForm()
+          await dispatch(fetchAmoCrmPipelines({}))
+          await dispatch(fetchDepartmentList())
+
+          formik.resetForm()
+        }
       }
     }
   })
@@ -82,13 +99,13 @@ export default function MergeToDepartment({ is_amocrm, item, reRender }: Props) 
       <FormControl fullWidth>
         <InputLabel>{t("Bo'lim")}</InputLabel>
         <Select label={t("Bo'lim")} defaultValue={''} onChange={e => setDepartment(e.target.value)}>
-          {is_amocrm
+          {open == 'merge-to'
             ? leadData?.map((el: any) => (
                 <MenuItem key={el.id} value={el.id}>
                   {el.name}
                 </MenuItem>
               ))
-            : leadData.map((el: any) => (
+            : pipelines.map((el: any) => (
                 <MenuItem key={el.id} value={el.id}>
                   {el.name}
                 </MenuItem>
@@ -107,7 +124,7 @@ export default function MergeToDepartment({ is_amocrm, item, reRender }: Props) 
             onBlur={handleBlur}
             value={values.department}
           >
-            {is_amocrm
+            {open == 'merge-to'
               ? leadData
                   ?.find((item: any) => item.id === department)
                   ?.children?.map((el: any) => (
@@ -115,7 +132,7 @@ export default function MergeToDepartment({ is_amocrm, item, reRender }: Props) 
                       {el.name}
                     </MenuItem>
                   ))
-              : leadData
+              : pipelines
                   .find((item: any) => item.id === department)
                   ?.children?.map((el: any) => (
                     <MenuItem key={el.id} value={el.id}>
