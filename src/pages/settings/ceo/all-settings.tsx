@@ -68,6 +68,8 @@ export default function AllSettings() {
   const reloadProfile = async () => {
     await api.get('auth/profile/').then(async response => {
       setUser({
+        phone:response.data?.gpa,
+        gpa:response.data?.gpa,
         id: response.data.id,
         fullName: response.data.first_name,
         username: response.data.phone,
