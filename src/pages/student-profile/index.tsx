@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from 'react'
-import { Box, Card, CardContent, Chip, Skeleton, Typography } from '@mui/material'
+import { Box, Button, Card, CardContent, CardHeader, Chip, Grid, Skeleton, styled, Typography } from '@mui/material'
 import CustomAvatar from 'src/@core/components/mui/avatar'
 import { getInitials } from 'src/@core/utils/get-initials'
 import { addPeriodToThousands } from '../settings/office/courses'
@@ -18,6 +18,19 @@ import UserIcon from 'src/layouts/components/UserIcon'
 import StudentEditProfileModal from './studentEditModal'
 import { formatCurrency } from 'src/@core/utils/format-currency'
 import { Icon } from '@iconify/react'
+import { Wallet } from 'lucide-react'
+
+const StyledCard = styled(Card)(({ theme }) => ({
+  width: '100%',
+  overflow: 'hidden'
+}))
+
+const CardHeaderStyled = styled(CardHeader)(({ theme }) => ({
+  backgroundColor: theme.palette.primary.main,
+  color: theme.palette.primary.contrastText,
+  padding: theme.spacing(2),
+  paddingBottom: theme.spacing(3)
+}))
 
 export default function StudentProfile() {
   const { t } = useTranslation()
@@ -25,11 +38,9 @@ export default function StudentProfile() {
   const [groups, setGroups] = useState<any[]>([])
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [sms, setSms] = useState<any[]>([])
-  const { user,loading } = useContext(AuthContext)
+  const { user, loading } = useContext(AuthContext)
   const { push } = useRouter()
   const [isLoading, setIsLoading] = useState<boolean>(false)
-
-  
 
   const getGroups = async () => {
     setIsLoading(true)
@@ -51,55 +62,85 @@ export default function StudentProfile() {
     Promise.all([getGroups(), getSmsHistory()])
   }, [])
 
+  console.log(user)
+
   return (
-    <div >
-      <div >
-      <Card sx={{ display: 'flex', justifyContent: 'center',alignItems:'center' ,marginBottom:5}}>
-        <div>
-          <CardContent sx={{display:'flex',flexDirection:'column',alignItems:'center'}}>
-              <p  style={{textAlign:'center', padding:0,color:'black',fontSize:20}}>Kodni skanerlang</p>
-              <img  src={user?.qr_code} alt='' width={110} height={110} />
-          </CardContent>
-        </div>
-      </Card>
-      <Card sx={{ display: 'flex', justifyContent: 'space-between' }}>
-        <div>
-          <CardContent sx={{ display: 'flex', justifyContent: 'space-between', flexDirection: 'column' }}>
-            <Box sx={{ display: 'flex', gap: 3 }}>
-              <CustomAvatar
-                skin='light'
-                variant='rounded'
-                color={'primary'}
-                sx={{ width: 70, height: 70, fontWeight: 600, mb: 1, fontSize: '2rem' }}
-              >
-                {getInitials(user?.fullName || `Talaba ${user?.id}`)}
-              </CustomAvatar>
+    <div>
+      <div>
+        <Card sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginBottom: 5 }}>
+          <div>
+            <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <p style={{ textAlign: 'center', padding: 0, color: 'black', fontSize: 20 }}>Kodni skanerlang</p>
+              <img src={user?.qr_code} alt='' width={110} height={110} />
+            </CardContent>
+          </div>
+        </Card>
+        <StyledCard>
+          <CardHeaderStyled
+            sx={{ marginBottom: 5 }}
+            action={
+              <Chip
+                sx={{ backgroundColor: 'white', padding: 2 }}
+                icon={<Wallet size={16} />}
+                label={user?.balance || 0 + " so'm"}
+              />
+            }
+          />
+          <CardContent>
+            <Box display='flex' gap={2} mb={3}>
+              {user?.fullName && (
+                <CustomAvatar
+                  skin='light'
+                  variant='rounded'
+                  color={'primary'}
+                  sx={{ width: 70, height: 70, fontWeight: 600, mb: 1, fontSize: '2rem' }}
+                >
+                  {getInitials(user?.fullName)}
+                </CustomAvatar>
+              )}
               <Box>
-                <Typography variant='h6'>{user?.fullName || `Talaba ${user?.id}`}</Typography>
-                <Typography fontSize={12}>{`( ID:${user?.id} )`}</Typography>
+                <Box display='flex' gap={2} alignItems='center'>
+                  <Typography variant='h6' >
+                    {user?.fullName}
+                  </Typography>
+                  <Typography variant='body2' color='text.secondary'>
+                    ID: {user?.id}
+                  </Typography>
+                </Box>
+                {
+                  <Chip
+                    color='error'
+                    label={`Baho: ${user?.gpa?.toFixed(2) || 0}`}
+                    variant='outlined'
+                    size='small'
+                    sx={{
+                      color: Number(user?.gpa) >= 4 ? 'green' : Number(user?.gpa) >= 3 ? 'orange' : 'red',
+                      borderColor: Number(user?.gpa) >= 4 ? 'green' : Number(user?.gpa) >= 3 ? 'orange' : 'red'
+                    }}
+                  />
+                }
               </Box>
             </Box>
-          </CardContent>
-          <CardContent>
-            <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
-              <Typography fontSize={13} variant='body2'>
-                {t('phone')}:{' '}
+
+            <Grid container spacing={2}>
+              <Grid item xs={6}>
+                <Typography variant='body2' color='text.secondary'>
+                  Telefon raqam :
+                </Typography>
+                <Typography variant='body1'>{user?.username}</Typography>
+              </Grid>
+              {/* {school && (
+            <Grid item xs={6}>
+              <Typography variant='body2' color='text.secondary'>
+                Maktab :
               </Typography>
-              <Typography fontSize={13}>{user?.username}</Typography>
-            </Box>
-            <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
-              <Typography fontSize={13} variant='body2'>
-                {t('Balans')}:{' '}
-              </Typography>
-              <Typography fontSize={13}>{addPeriodToThousands(user?.balance) + " so'm"}</Typography>
-            </Box>
+              <Typography variant='body1'>{school}</Typography>
+            </Grid>
+          )} */}
+            </Grid>
           </CardContent>
-        </div>
-        <CardContent sx={{ cursor: 'pointer' }}>
-          <UserIcon onClick={() => setIsModalOpen(true)} icon='lucide:edit' />
-        </CardContent>
-      </Card>
-     </div>
+        </StyledCard>
+      </div>
       <Box sx={{ display: 'flex', gap: '15px', flexDirection: isMobile ? 'column' : 'row' }}>
         <Box
           sx={{
@@ -218,9 +259,8 @@ export default function StudentProfile() {
                                 padding: 0
                               }}
                             />
-                            ) : group.status == 'active' ? (
-                                
-                              <Chip
+                          ) : group.status == 'active' ? (
+                            <Chip
                               label={t('active')}
                               color='success'
                               variant='outlined'
@@ -235,18 +275,18 @@ export default function StudentProfile() {
                             />
                           ) : (
                             <Chip
-                            label={t('frozen')}
-                            color='secondary'
-                            variant='outlined'
-                            size='small'
-                            sx={{
-                              backgroundColor: 'white',
-                              cursor: 'pointer',
-                              fontWeight: 500,
-                              fontSize: '10px',
-                              padding: 0
-                            }}
-                          />
+                              label={t('frozen')}
+                              color='secondary'
+                              variant='outlined'
+                              size='small'
+                              sx={{
+                                backgroundColor: 'white',
+                                cursor: 'pointer',
+                                fontWeight: 500,
+                                fontSize: '10px',
+                                padding: 0
+                              }}
+                            />
                           )}
                         </Box>
                       </CardContent>

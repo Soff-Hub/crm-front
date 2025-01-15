@@ -32,6 +32,8 @@ const Layout = (props: LayoutProps) => {
     setLoading(true)
     await api.get('auth/profile/').then(async response => {
       setUser({
+        phone: response.data?.phone,
+        gpa:response.data?.gpa,
         id: response.data.id,
         fullName: response.data.first_name,
         username: response.data.phone,

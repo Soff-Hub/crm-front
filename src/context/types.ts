@@ -13,7 +13,9 @@ export type RegisterParams = {
 }
 
 export type UserDataType = {
+  phone:number,
   id: number
+  gpa:number,
   role: string[]
   fullName: string
   username: string

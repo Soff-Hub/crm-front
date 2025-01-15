@@ -3,6 +3,7 @@ import { useRouter } from 'next/router'
 import { useContext, useEffect } from 'react'
 import { toast } from 'react-hot-toast'
 import VideoHeader, { videoUrls } from 'src/@core/components/video-header/video-header'
+import api from 'src/@core/utils/api'
 import { getMontNumber } from 'src/@core/utils/gwt-month-name'
 import { AuthContext } from 'src/context/AuthContext'
 import { useAppDispatch, useAppSelector } from 'src/store'
@@ -15,6 +16,7 @@ import {
   setGettingAttendance,
   setGettingGroupDetails
 } from 'src/store/apps/groupDetails'
+import { setRoomsData, setTeacherData } from 'src/store/apps/groups'
 import UserViewLeft from 'src/views/apps/groups/view/GroupViewLeft/UserViewLeft'
 import UserViewRight from 'src/views/apps/groups/view/UserViewRight'
 
@@ -24,6 +26,31 @@ const UserView = () => {
   const { queryParams } = useAppSelector(state => state.groupDetails)
   const { user } = useContext(AuthContext)
   const dispatch = useAppDispatch()
+
+  const getTeachers = async () => {
+    await api
+      .get('auth/employees-check-list/?role=teacher')
+      .then(data => {
+        console.log(data);
+        
+        dispatch(setTeacherData(data.data))
+      })
+      .catch(error => {
+        console.log(error)
+      })
+  }
+  const getRooms = async () => {
+    await api
+      .get('common/room-check-list/')
+      .then(data => dispatch(setRoomsData(data.data)))
+      .catch(error => {
+        console.log(error)
+      })
+  }
+  useEffect(() => {
+    getTeachers()
+    getRooms()
+  },[])
 
   useEffect(() => {
     if (user?.role.includes('student') && !user?.role.includes('watcher')) {
