@@ -50,6 +50,7 @@ export interface TeacherDetailType {
 
 export interface UpdateTeacherDto {
   id?: number
+  lesson_amount?:number,
   first_name: string
   birth_date: string
   activated_at: string

@@ -60,10 +60,10 @@ const Item = ({
   const [value, setValue] = useState<number>(defaultValue)
   const [open, setOpen] = useState<boolean>(false)
   const dispatch = useAppDispatch()
-  const { pathname, query, push } = useRouter()
+  const {  query,  } = useRouter()
   const handleGradeClick = async (grade: number) => {
-    if (grade < 1 || grade > 5) {
-      toast.error('1 dan 5 gacha bo‘lgan sonlarni tanlashingiz mumkin')
+    if (grade < 1 || grade >= 100) {
+      toast.error('1 dan 100 gacha bo‘lgan sonlarni tanlashingiz mumkin')
       return
     }
 
@@ -80,7 +80,7 @@ const Item = ({
 
       try {
         await api.post(`common/group-student/rating/create/`, data)
-        await dispatch(getStudentsGrades({ id: query?.id, queryString: '' }))
+        // await dispatch(getStudentsGrades({ id: query?.id, queryString: '' }))
 
       } catch (e: any) {
         toast.error(e.response?.data.msg || 'Bahoni saqlab bo‘lmadi, qayta urinib ko‘ring')
@@ -109,12 +109,14 @@ const Item = ({
             <TextField
               variant='outlined'
               value={value}
-              // onChange={(e:any) => setValue(e.target.value)}
+              onChange={(e:any) => handleGradeClick(e.target.value)}
               onClick={() => setOpen(true)}
               size='small'
-              inputProps={{ readOnly: true }}
+              // inputProps={{ readOnly: true }}
               sx={{
-                width: '40px',
+                width: '50px',
+                display: 'flex',
+                justifyContent:'center',
                 textAlign: 'center',
                 cursor: 'pointer',
                 '& .MuiOutlinedInput-root': {
@@ -124,7 +126,7 @@ const Item = ({
                 }
               }}
             />
-            {open && (
+            {/* {open && (
               <Tooltip
                 open
                 title={
@@ -163,7 +165,7 @@ const Item = ({
               >
                 <span />
               </Tooltip>
-            )}
+            )} */}
           </Box>
         </ClickAwayListener>
       ) : (

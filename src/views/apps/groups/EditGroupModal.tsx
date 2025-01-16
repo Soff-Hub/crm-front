@@ -26,6 +26,7 @@ import Calendar from './Calendar'
 import { disablePage } from 'src/store/apps/page'
 import toast from 'react-hot-toast'
 import { useRouter } from 'next/router'
+import Router from 'next/router'
 import {
   getAttendance,
   getDays,
@@ -217,6 +218,8 @@ export default function EditGroupModal() {
       dispatch(updateParams({ is_recovery: false }))
     }
   }, [])
+  console.log(formik.values);
+  
 
   return (
     <Drawer open={isOpenEdit} hideBackdrop anchor='right' variant='temporary' sx={{ width: '100%' }}>
@@ -366,9 +369,39 @@ export default function EditGroupModal() {
                   </Box>
                 ) : (
                   ''
-                )}
+                  )}
+                   <FormControl fullWidth>
+              <InputLabel size='small' id='user-view-language-label'>
+                  {t("Xona")}
+                </InputLabel>
+                <Select
+                  size='small'
+                  label={t("Xona")}
+                  id='user-view-language'
+                  labelId='user-view-language-label'
+                  name='room'
+                  onChange={e => handleChangeField('room', e)}
+                  onBlur={formik.handleBlur}
+                  value={formik.values?.room}
+                  error={!!formik.errors.room && !!formik.touched.room}
+                >
+                  {roomsData?.map(room => (
+                    <MenuItem key={room.id} value={+room.id}>
+                      {room.name}
+                    </MenuItem>
+                  ))}
+                  <MenuItem sx={{ fontWeight: 600 }} onClick={() => Router?.push('/settings/office/rooms')}>
+                    {t('Yangi yaratish')}
+                    <IconifyIcon icon={'ion:add-sharp'} />
+                  </MenuItem>
+                </Select>
+                <FormHelperText error={!!formik.errors.room && !!formik.touched.room}>
+                  {!!formik.errors.room && !!formik.touched.room && formik.errors.room}
+                </FormHelperText>
+              </FormControl>
 
-                <FormControl fullWidth>
+
+                {/* <FormControl fullWidth>
                   <Autocomplete
                     placeholder={t('Xonalar')}
                     size='small'
@@ -382,7 +415,7 @@ export default function EditGroupModal() {
                   <FormHelperText error={!!formik.errors.room && formik.touched.room}>
                     {!!formik.errors.room && formik.touched.room && formik.errors.room}
                   </FormHelperText>
-                </FormControl>
+                </FormControl> */}
 
                 <FormControl fullWidth>
                   <InputLabel size='small' id='user-view-language-label'>

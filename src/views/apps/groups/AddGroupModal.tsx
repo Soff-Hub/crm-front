@@ -274,16 +274,30 @@ export default function AddGroupModal() {
                 ''
               )}
               <FormControl fullWidth>
-                <Autocomplete
+              <InputLabel size='small' id='user-view-language-label'>
+                  {t("Xona")}
+                </InputLabel>
+                <Select
                   size='small'
-                  placeholder={'Xonalar'}
+                  label={t("Xona")}
+                  id='user-view-language'
+                  labelId='user-view-language-label'
+                  name='room'
+                  onChange={e => handleChangeField('room', e)}
                   onBlur={formik.handleBlur}
-                  disablePortal
-                  onChange={(e, v) => handleChangeField('room', v?.value)}
-                  //   value={formik.values.room}
-                  options={options}
-                  renderInput={params => <TextField {...params} label='Xonalar' />}
-                />
+                  value={formik.values.room}
+                  error={!!formik.errors.room && !!formik.touched.room}
+                >
+                  {roomsData?.map(room => (
+                    <MenuItem key={room.id} value={+room.id}>
+                      {room.name}
+                    </MenuItem>
+                  ))}
+                  <MenuItem sx={{ fontWeight: 600 }} onClick={() => Router.push('/settings/office/rooms')}>
+                    {t('Yangi yaratish')}
+                    <IconifyIcon icon={'ion:add-sharp'} />
+                  </MenuItem>
+                </Select>
                 <FormHelperText error={!!formik.errors.room && !!formik.touched.room}>
                   {!!formik.errors.room && !!formik.touched.room && formik.errors.room}
                 </FormHelperText>
