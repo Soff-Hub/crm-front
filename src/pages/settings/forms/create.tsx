@@ -76,7 +76,7 @@ export default function CreateForm({}: Props) {
   const [components, setComponents] = useState<any>([])
   const [variants, setVariants] = useState<any>([])
   const [name, setName] = useState<any>(null)
-
+  const [successText,setSuccessText] = useState<string|null>(null)
   const [departments, setDepartments] = useState<any[]>([])
   const [selectedDepartment, setSelectedDepartment] = useState<any>(null)
   const [sourceData, setSourceData] = useState<any>([])
@@ -119,6 +119,7 @@ export default function CreateForm({}: Props) {
       await api.post(`leads/forms/create/`, {
         title: fields,
         department,
+        success_text:successText,
         source: addSource,
         type: 'lead_form',
         application_form_types: [...components]
@@ -241,6 +242,15 @@ export default function CreateForm({}: Props) {
                   size='small'
                   onChange={e =>
                     e.target.value === '' ? setFields('Aloqa uchun kontakt qoldiring') : setFields(e.target.value)
+                  }
+                />
+              </FormControl>
+              <FormControl>
+                <TextField
+                  label={t('Yakuniy text')}
+                  size='small'
+                  onChange={e =>
+                    setSuccessText(e.target.value)
                   }
                 />
               </FormControl>

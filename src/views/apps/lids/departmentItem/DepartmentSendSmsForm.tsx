@@ -40,11 +40,11 @@ export default function DepartmentSendSmsForm({ smsTemps, loading, setLoading, u
           message: values.message,
           for_lead: true
         })
+        setLoading(false)
+        setOpenDialog(null)
         toast.success(`${t("SMS muvaffaqiyatli jo'natildi!")}`, {
           position: 'top-center'
         })
-        setLoading(false)
-        setOpenDialog(null)
         formik.resetForm()
       } catch {
         setLoading(false)

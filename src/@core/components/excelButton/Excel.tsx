@@ -28,8 +28,11 @@ export default function Excel({ queryString = "", variant = "outlined", color = 
             }
             download
             target={"_blank"}
+            style={{
+                width:'100%'
+            }}
         >
-            <Button startIcon={<VscodeIconsFileTypeExcel2 />} {...args} variant={variant} color={color} size={size}>
+            <Button fullWidth    startIcon={<VscodeIconsFileTypeExcel2 />} {...args} variant={variant} color={color} size={"medium"}>
                 Excel
             </Button>
         </Link>
