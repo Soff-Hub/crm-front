@@ -174,9 +174,9 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
     )
   } else
     return (
-      <Box display={'flex'} gap={2} flexWrap={'nowrap'} alignItems='center' justifyContent='space-between' width='100%'>
-        <Box display={'flex'} width='90%' gap={2} flexWrap={'nowrap'}>
-          <FormControl sx={{ width: '100%', maxWidth: 260 }}>
+      <Box  display={'flex'} gap={2} flexWrap={'nowrap'} alignItems='center' justifyContent='space-between' width='100%'>
+        <Box display={'flex'} width='100%' gap={2} flexWrap={'nowrap'}>
+          <FormControl sx={{ width: '100%'}}>
             <InputLabel size='small' id='search-input'>
               {t('Qidirish')}
             </InputLabel>
@@ -193,7 +193,7 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
               size='small'
             />
           </FormControl>
-          <FormControl sx={{ maxWidth: 220, width: '100%' }}>
+          <FormControl sx={{width: '100%' }}>
             <InputLabel size='small' id='demo-simple-select-outlined-label'>
               {t('Holat')}
             </InputLabel>
@@ -215,7 +215,7 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
             </Select>
           </FormControl>
           {options?.length > 0 && (
-            <FormControl sx={{ maxWidth: 180, width: '100%' }}>
+            <FormControl sx={{ width: '100%' }}>
               <Autocomplete
                 onChange={(e, v) => handleChangeTeacher({ ...e, target: { ...e.target, value: v?.value || '' } })}
                 size='small'
@@ -226,7 +226,7 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
               />
             </FormControl>
           )}
-          <FormControl sx={{ maxWidth: 180, width: '100%' }}>
+          <FormControl sx={{width: '100%' }}>
             <InputLabel size='small' id='demo-simple-select-outlined-label'>
               {t('Kurslar')}
             </InputLabel>
@@ -248,7 +248,7 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
               ))}
             </Select>
           </FormControl>
-          <FormControl sx={{ maxWidth: 180, width: '100%' }}>
+          <FormControl sx={{ width: '100%' }}>
             <InputLabel size='small' id='demo-simple-select-outlined-label'>
               {t('Kunlar')}
             </InputLabel>
@@ -268,8 +268,8 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
               <MenuItem value={'monday,tuesday,wednesday,thursday,friday,saturday,sunday'}>{t('Har kuni')}</MenuItem>
             </Select>
           </FormControl>
-        </Box>
         <Excel url='/common/groups/export/' queryString={queryString} />
+        </Box>
       </Box>
     )
 }

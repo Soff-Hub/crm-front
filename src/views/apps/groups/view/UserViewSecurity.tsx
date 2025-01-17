@@ -219,7 +219,7 @@ const UserViewSecurity = () => {
       })
       .catch(err => {
         console.log(err)
-        toast.error('Xatolik')
+        toast.error(t(err.response.data.new_date) || 'Xatolik',{style:{zIndex:99999}})
       })
     setChangeDateLoader(false)
     // setOpenDialog(false)

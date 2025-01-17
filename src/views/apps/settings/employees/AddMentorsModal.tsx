@@ -97,6 +97,7 @@ export default function CreateEmployeeForm() {
         first_name: "",
         phone: "",
         birth_date: today,
+        lesson_amount:0,
         activated_at: today,
         gender: 'male',
         // image: null,
@@ -159,6 +160,8 @@ export default function CreateEmployeeForm() {
             dispatch(setOpenCreateSms(false))
         }
     }, [])
+    
+    
 
     return (
         <Box width={'100%'}>
@@ -321,6 +324,22 @@ export default function CreateEmployeeForm() {
                             {(!!formik.errors.amount && formik.touched.amount) && formik.errors.amount}
                         </FormHelperText>
                     </FormControl>
+                    {formik.values.roles.length == 1 && formik.values.roles[0] == 3 &&
+                     <FormControl sx={{ width: '100%' }}>
+                     <AmountInput
+                         // type='number'
+                         label={t("Darslar soni")}
+                         name='lesson_amount'
+                         onChange={formik.handleChange}
+                         onBlur={formik.handleBlur}
+                         // disabled={!formik.values.is_fixed_salary}
+                         value={formik.values.lesson_amount}
+                         error={!!formik.errors.lesson_amount && formik.touched.lesson_amount} />
+                     <FormHelperText error>
+                         {(!!formik.errors.lesson_amount && formik.touched.lesson_amount) && formik.errors.lesson_amount}
+                     </FormHelperText>
+                 </FormControl>
+                     }
                 </Box>
                 <FormControl sx={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 1 }}>
                     <FormLabel>{t('Jinsini tanlang')}</FormLabel>

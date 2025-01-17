@@ -40,12 +40,12 @@ export default function SendSmsAnonimUserForm({ smsTemps, user, closeModal, reRe
           message: values.message,
           for_lead: true
         })
+        setLoading(false)
+        closeModal()
         toast.success(`${t("SMS muvaffaqiyatli jo'natildi!")}`, {
           position: 'top-center'
         })
         await reRender()
-        setLoading(false)
-        closeModal()
         formik.resetForm()
       } catch {
         formik.setErrors({ message: 'Xabar matni belgilangan miqdordan oshib ketdi, maksimal belgilar soni 555ta' })

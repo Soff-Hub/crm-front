@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { ReactNode, useContext, useEffect, useState } from 'react'
 import {
   Box,
   Button,
@@ -58,6 +58,8 @@ import useResponsive from 'src/@core/hooks/useResponsive'
 import { useSettings } from 'src/@core/hooks/useSettings'
 import { setStudentId } from 'src/store/apps/students'
 import { fetchSmsList } from 'src/store/apps/settings'
+import DataTable from 'src/@core/components/table'
+import StudentRowOptions from 'src/views/apps/students/StudentRowOptions'
 
 interface StudentType {
   id: number | string
@@ -102,6 +104,14 @@ const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
     border: '1px solid #dadde9'
   }
 }))
+
+export interface customTableProps {
+  xs: number
+  title: string
+  dataIndex?: string | ReactNode
+  render?: (source: any) => any | undefined
+}
+
 export type ModalTypes = 'group' | 'withdraw' | 'payment' | 'sms' | 'delete' | 'edit' | 'notes' | 'parent'
 
 export const UserViewStudentsItem = ({ item, index, status, activeId, choices }: ItemTypes) => {
@@ -136,12 +146,15 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, choices }:
   const { settings, saveSettings } = useSettings()
 
   const [group_data, setGroupData] = useState<any>()
+
+ 
   const handleEditClickOpen = (value: ModalTypes) => {
     if (value === 'payment') {
       getBranches()
     }
     setOpenEdit(value)
   }
+  
 
   const open = Boolean(anchorEl)
 
@@ -232,7 +245,7 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, choices }:
   }
 
   return (
-    // <Box sx={{ display: 'grid', gridTemplateColumns: '5px 5px 0.5fr 2fr 10px', alignItems: 'center', gap: 2 }}>
+    // <Box sx={{ display: 'grid', gridTemplateColumns: '5px 5px 0.5fr 2fr 10px', alignItems: 'start', gap: 2 }}>
     //   <Typography sx={{ width: '20px' }}>{index}.</Typography>
     //   <Status
     //     color={
@@ -420,24 +433,24 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, choices }:
     //     )
     //   ) : settings.layout == 'horizontal' ? (
     //     <Tooltip title={first_name.length > 9 ? first_name : ''} arrow>
-    //       <Typography sx={{ cursor: 'pointer' }} minWidth={75} fontSize={10}>
+    //       <Typography sx={{ cursor: 'pointer' }}  fontSize={10}>
     //         {first_name.length > 9 ? `${first_name.slice(0, 9)}...` : first_name}
     //       </Typography>
     //     </Tooltip>
     //   ) : (
     //     <Tooltip title={first_name.length > 7 ? first_name : ''} arrow>
-    //       <Typography sx={{ cursor: 'pointer' }} minWidth={58} fontSize={10}>
+    //       <Typography sx={{ cursor: 'pointer' }}  fontSize={10}>
     //         {first_name.length > 7 ? `${first_name.slice(0, 7)}...` : first_name}
     //       </Typography>
     //     </Tooltip>
     //   )}
     //   <Box sx={{ display: 'flex', justifyContent: 'end', alignItems: 'end' }}>
     //     {settings.layout == 'horizontal' ? (
-    //       <Typography minWidth={110} fontSize={13} flexGrow={1} textAlign={'end'}>
+    //       <Typography  fontSize={13} flexGrow={1} textAlign={'end'}>
     //         {phone}
     //       </Typography>
     //     ) : (
-    //       <Typography minWidth={88} fontSize={10} flexGrow={1} textAlign={'end'}>
+    //       <Typography  fontSize={10} flexGrow={1} textAlign={'end'}>
     //         {phone}
     //       </Typography>
     //     )}
@@ -1236,6 +1249,57 @@ export default function UserViewStudentsList() {
   const debounce = useDebounce(search, 500)
   const { query } = useRouter()
 
+  const columns: customTableProps[] = [
+    {
+      xs: 0.2,
+      title: t('ID'),
+      dataIndex: 'index',
+      render: index => {
+        return index
+      }
+    },
+    {
+      xs: 1.4,
+      title: t('first_name'),
+      dataIndex: 'student',
+      render: (student:any) => {
+        return student.first_name
+      }
+    },
+    {
+      xs: 1.1,
+      title: t('telefon raqam'),
+      dataIndex: 'student',
+      render: (student:any) => {
+        return (student.phone)
+      }
+    },
+  
+    {
+      xs: 1.3,
+      title: t("Status"),
+      dataIndex: 'student',
+      render: (student: any) => {
+        return student.status
+      }
+      },
+    {
+      xs: 0.7,
+      title: t('Balans'),
+      dataIndex: 'student',
+      render: (student: any) =>
+      {
+        return student.balance
+       }
+    },
+    {
+      xs: 0.8,
+      dataIndex: 'id',
+      title: t('Harakatlar'),
+      render: actions => <StudentRowOptions id={actions} />
+    }
+  ]
+
   useEffect(() => {
     ;(function () {
       const queryString = new URLSearchParams({ ...studentsQueryParams, search: debounce }).toString()
@@ -1276,6 +1340,8 @@ export default function UserViewStudentsList() {
               index={index + 1}
               status={el.status}
             />
+            // <DataTable columns={columns} data={students||[]}/>
+
           ))
         ) : (
           <Box sx={{ paddingX: '50px' }}>

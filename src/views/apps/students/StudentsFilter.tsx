@@ -19,7 +19,6 @@ import useCourses from 'src/hooks/useCourses'
 import useDebounce from 'src/hooks/useDebounce'
 import { Toggle } from 'rsuite'
 import 'rsuite/Toggle/styles/index.css'
-import Excel from 'src/@core/components/excelButton/Excel'
 import api from 'src/@core/utils/api'
 import { MetaTypes } from 'src/types/apps/groupsTypes'
 import { ModalTypes, SendSMSModal } from './view/UserViewLeft'
@@ -28,6 +27,7 @@ import 'rsuite/DateRangePicker/styles/index.css'
 import { DatePicker } from 'rsuite'
 import { format } from 'date-fns'
 import { fetchSchoolList, fetchSchoolsList } from 'src/store/apps/settings'
+import ExcelStudents from 'src/@core/components/excelButton/ExcelStudents'
 
 type StudentsFilterProps = {
   isMobile: boolean
@@ -131,6 +131,8 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
 
   const queryString = new URLSearchParams({ ...queryParams } as Record<string, string>).toString()
 
+  
+
   const uzLocale = {
     DatePicker: {
       months: [
@@ -149,6 +151,9 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
       ]
     }
   }
+
+  console.log(queryString,queryParams);
+  
 
   if (isMobile) {
     return (
@@ -552,7 +557,7 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
               />
             </Box>
           )}
-          <Excel size='medium' url='/common/students/export/' queryString={queryString} />
+          <ExcelStudents  size='medium' url='/student/offset-list/' queryString={queryString} />
           <Button
             onClick={() => (getSMSTemps(), handleEditClickOpen('sms'))}
             variant='outlined'
