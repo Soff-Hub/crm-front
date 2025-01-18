@@ -56,9 +56,9 @@ const AppBarContent = (props: Props) => {
     dispatch(setGlobalPay(true))
   }
 
-  const renderRoleBasedLink = (option:any) => {
+  const renderRoleBasedLink = (option: any) => {
     dispatch(updateQueryParams({ role: option.role_id }))
-      
+
     switch (option.role) {
       case 'STUDENT':
         return `/students/view/security?student=${option.id}`
@@ -72,7 +72,6 @@ const AppBarContent = (props: Props) => {
         return `/settings/ceo/users`
     }
   }
-  
 
   async function handleSearch(search: string) {
     await api.get(`auth/employees-check-list/?search=${search}`).then(res => {
@@ -98,6 +97,8 @@ const AppBarContent = (props: Props) => {
     }
   }, [user?.id])
 
+  console.log(employees)
+
   return (
     <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'end' }}>
       {(user?.role.includes('admin') ||
@@ -116,11 +117,15 @@ const AppBarContent = (props: Props) => {
               fullWidth
               size='small'
               noOptionsText="Ma'lumot yo'q.."
-              getOptionLabel={(option: any) => option.first_name}
+              getOptionLabel={(option: any) => option?.first_name || ''}
+              filterOptions={options => options}
               renderOption={(props, option: any) => (
                 <li {...props} key={option.id}>
-                  <Link style={{ textDecoration: 'none' }} onClick={() => dispatch(setStudentId(option.id))
-                  } href={renderRoleBasedLink(option)}>
+                  <Link
+                    style={{ textDecoration: 'none' }}
+                    onClick={() => dispatch(setStudentId(option.id))}
+                    href={renderRoleBasedLink(option)}
+                  >
                     <Icon
                       icon={
                         option.role === 'STUDENT'
@@ -144,6 +149,7 @@ const AppBarContent = (props: Props) => {
                 <TextField {...params} placeholder='Qidirish...' onChange={e => handleSearch(e.target.value)} />
               )}
             />
+
             <Tooltip title='Davomat' arrow>
               <span
                 style={{

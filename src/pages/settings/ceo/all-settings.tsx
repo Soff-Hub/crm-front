@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useRef, useState } from 'react'
 import {
   Box,
   Button,
@@ -65,11 +65,23 @@ export default function AllSettings() {
   const { t } = useTranslation()
   const { setUser, user } = useContext(AuthContext)
 
+
+  console.log(companyInfo);
+  
+
+  const inputRef = useRef<any | null>(null)
+
+  useEffect(() => {
+    if (createble === 'branch' || (createble === 'payment-type' && inputRef.current)) {
+      inputRef.current.focus()
+    }
+  }, [createble])
+
   const reloadProfile = async () => {
     await api.get('auth/profile/').then(async response => {
       setUser({
-        phone:response.data?.gpa,
-        gpa:response.data?.gpa,
+        phone: response.data?.gpa,
+        gpa: response.data?.gpa,
         id: response.data.id,
         fullName: response.data.first_name,
         username: response.data.phone,
@@ -80,7 +92,7 @@ export default function AllSettings() {
         balance: response.data?.balance || 0,
         branches: response.data.branches.filter((item: any) => item.exists === true),
         active_branch: response.data.active_branch,
-        qr_code:response.data.qr_code
+        qr_code: response.data.qr_code
       })
     })
   }
@@ -206,7 +218,7 @@ export default function AllSettings() {
       }
 
       const getresp = await api.get('common/settings/list/')
-      console.log(getresp)
+      
 
       dispatch(setCompanyInfo(getresp.data[0]))
       setEditable(null)
@@ -226,7 +238,12 @@ export default function AllSettings() {
   }
 
   useEffect(() => {
-    if (!user?.role.includes('ceo') && !user?.role.includes('admin') && !user?.role.includes('watcher')&& !user?.role.includes('marketolog')) {
+    if (
+      !user?.role.includes('ceo') &&
+      !user?.role.includes('admin') &&
+      !user?.role.includes('watcher') &&
+      !user?.role.includes('marketolog')
+    ) {
       push('/')
       toast.error("Sizda bu sahifaga kirish huquqi yo'q!")
     }
@@ -347,7 +364,12 @@ export default function AllSettings() {
                   ))}
                   {createble === 'branch' && (
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                      <TextField size='small' placeholder={t('Yangi filial')} onChange={e => setName(e.target.value)} />
+                      <TextField
+                        size='small'
+                        inputRef={inputRef}
+                        placeholder={t('Yangi filial')}
+                        onChange={e => setName(e.target.value)}
+                      />
                       <IconifyIcon
                         icon={loading === 'branch' ? 'line-md:loading-loop' : 'ic:baseline-check'}
                         style={{ cursor: 'pointer' }}
@@ -418,7 +440,12 @@ export default function AllSettings() {
                   ))}
                   {createble === 'payment-type' && (
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                      <TextField size='small' placeholder="To'lov turi" onChange={e => setName(e.target.value)} />
+                      <TextField
+                        size='small'
+                        inputRef={inputRef}
+                        placeholder="To'lov turi"
+                        onChange={e => setName(e.target.value)}
+                      />
                       <IconifyIcon
                         icon={loading === 'paytype' ? 'line-md:loading-loop' : 'ic:baseline-check'}
                         style={{ cursor: 'pointer' }}
@@ -538,22 +565,27 @@ export default function AllSettings() {
           <Card>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-                <Typography sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}>
-                  {t("Tug'ilgan kunda sms bilan tabriklash")}:
-                </Typography>
+                <Box>
+                  <Typography sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}>
+                    {t("Tug'ilgan kunda sms bilan tabriklash")}:
+                  </Typography>
+                </Box>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                   {loading === 'birthdate' ? (
                     <CircularProgress disableShrink size={'20px'} sx={{ margin: '10px 0', marginLeft: '15px' }} />
                   ) : (
                     <Switch
-                      checked={Boolean(companyInfo?.auto_sms?.on_birthday)}
-                      onChange={async (e, i) => {
+                    checked={Boolean(companyInfo?.auto_sms?.on_birthday)}
+                    onChange={async (e, i) => {
                         await updateSettings('on_birthday', i)
                       }}
-                    />
+                      />
                   )}
                 </Box>
               </Box>
+                      <Typography sx={{marginBottom:5}} fontSize={12}>
+                        {"Xabar matniga talaba ismini qo'shish uchun ${first_name} kalit so'zi qoldiring."}
+                      </Typography>
 
               <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: '20px', flexDirection: 'column' }}>
                 <Typography sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}>
@@ -626,7 +658,9 @@ export default function AllSettings() {
                   )}
                 </Box>
               </Box>
-
+              <Typography sx={{marginBottom:5}} fontSize={12}>
+                        {"Xabar matniga talaba ismini qo'shish uchun ${first_name} kalit so'zi qoldiring."}
+                      </Typography>
               <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: '20px', flexDirection: 'column' }}>
                 <Typography sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}>
                   {t(`SMS matnini kiriting (kelmagan o'quvchiga ertasi kuni yuboriladi)`)}

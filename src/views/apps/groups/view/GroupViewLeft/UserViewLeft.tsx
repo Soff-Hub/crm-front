@@ -28,15 +28,6 @@ const UserViewLeft = () => {
     dispatch(getStudents({ id: query.id, queryString: queryString }))
   }, [studentsQueryParams.status])
 
-  console.log(
-    'desktop:',
-    isDesktop,
-    'tablet:',
-    isTablet,
-
-    'mobile:',
-    isMobile
-  )
 
   return (
     <Grid container spacing={6}>

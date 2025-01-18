@@ -7,7 +7,8 @@ type ActionTypes = 'delete' | 'send-sms' | 'add-student' | 'notes' | 'edit'
 
 export interface IGroupDetailsState {
   groupData: null | any
-  gradeQueryParams:any,
+  gradeQueryParams: any,
+  updateStatusModal: any,
   days: null | any
   exams: null | any
   open: 'add' | 'edit' | 'delete' | 'result' | null
