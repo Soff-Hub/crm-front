@@ -112,6 +112,7 @@ const initialState: IGroupDetailsState = {
   days: null,
   rooms: null,
   results: null,
+  updateStatusModal:null,
   resultId: null,
   examStudentId: null,
   editData: null,
@@ -141,6 +142,9 @@ export const groupDetailsSlice = createSlice({
   reducers: {
     setResultEdit: (state, action) => {
       state.examStudentId = action.payload
+    },
+    setUpdateStatusModal: (state, action) => {
+      state.updateStatusModal = action.payload
     },
     setDays: (state, action) => {
       state.days = action.payload
@@ -270,6 +274,7 @@ export const {
   setGettingAttendance,
   setGettingGrades,
   setOpen,
+  setUpdateStatusModal,
   setEditData,
   setResultEdit,
   setResultId,

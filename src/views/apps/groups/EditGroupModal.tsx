@@ -218,7 +218,6 @@ export default function EditGroupModal() {
       dispatch(updateParams({ is_recovery: false }))
     }
   }, [])
-  console.log(formik.values);
   
 
   return (

@@ -38,6 +38,7 @@ import {
   getStudents,
   setGettingAttendance,
   setOpenLeadModal,
+  setUpdateStatusModal,
   studentsUpdateParams
 } from 'src/store/apps/groupDetails'
 import SubLoader from '../../../loaders/SubLoader'
@@ -60,6 +61,8 @@ import { setStudentId } from 'src/store/apps/students'
 import { fetchSmsList } from 'src/store/apps/settings'
 import DataTable from 'src/@core/components/table'
 import StudentRowOptions from 'src/views/apps/students/StudentRowOptions'
+import StudentsDataTable from 'src/@core/components/table/studentsTable'
+import GroupDetailRowOptions from '../../GroupDetailRowOptions'
 
 interface StudentType {
   id: number | string
@@ -109,6 +112,7 @@ export interface customTableProps {
   xs: number
   title: string
   dataIndex?: string | ReactNode
+  renderItem?: (source: any) => any | undefined
   render?: (source: any) => any | undefined
 }
 
@@ -147,14 +151,12 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, choices }:
 
   const [group_data, setGroupData] = useState<any>()
 
- 
   const handleEditClickOpen = (value: ModalTypes) => {
     if (value === 'payment') {
       getBranches()
     }
     setOpenEdit(value)
   }
-  
 
   const open = Boolean(anchorEl)
 
@@ -609,57 +611,57 @@ export const UserViewStudentsItem = ({ item, index, status, activeId, choices }:
     //     <IconifyIcon icon={'charm:menu-kebab'} fontSize={11} />
     //   </Typography>
 
-    //   <Menu
-    //     id='fade-menu'
-    //     MenuListProps={{
-    //       'aria-labelledby': 'fade-button'
-    //     }}
-    //     anchorEl={anchorEl}
-    //     open={open}
-    //     onClose={() => handleClose('none')}
-    //     TransitionComponent={Fade}
+    // <Menu
+    //   id='fade-menu'
+    //   MenuListProps={{
+    //     'aria-labelledby': 'fade-button'
+    //   }}
+    //   anchorEl={anchorEl}
+    //   open={open}
+    //   onClose={() => handleClose('none')}
+    //   TransitionComponent={Fade}
+    // >
+    //   <MenuItem
+    //     sx={{ display: 'flex', alignItems: 'center', gap: '7px' }}
+    //     onClick={async () => handleEditClickOpen('payment')}
     //   >
-    //     <MenuItem
-    //       sx={{ display: 'flex', alignItems: 'center', gap: '7px' }}
-    //       onClick={async () => handleEditClickOpen('payment')}
-    //     >
-    //       <Icon fontSize={'20px'} icon={'ic:baseline-payments'} />
-    //       {t("To'lov")}
-    //     </MenuItem>
-    //     <MenuItem sx={{ display: 'flex', alignItems: 'center', gap: '7px' }} onClick={() => handleClose('export')}>
-    //       <Icon fontSize={'20px'} icon={'tabler:status-change'} />
-    //       {t("Boshqa guruhga ko'chirishsh")}
-    //     </MenuItem>
-    //     <MenuItem sx={{ display: 'flex', alignItems: 'center', gap: '7px' }} onClick={() => handleClose('left')}>
-    //       <Icon fontSize={'20px'} icon={'material-symbols:group-remove'} />
-    //       {student_status == 'archive' ? t("Ba'zadan chiqarish") : t('Guruhdan chiqarish')}
-    //     </MenuItem>
-    //     <MenuItem
-    //       sx={{ display: 'flex', alignItems: 'center', gap: '7px' }}
-    //       onClick={() => (dispatch(setOpenLeadModal(studentStatusId)), handleClose('none'))}
-    //     >
-    //       <Icon fontSize={'20px'} icon={'mdi:leads'} />
-    //       {t('Lidlarga qaytarish')}
-    //     </MenuItem>
-    //     <MenuItem sx={{ display: 'flex', alignItems: 'center', gap: '7px' }} onClick={() => handleClose('notes')}>
-    //       <Icon fontSize={'20px'} icon={'material-symbols:note-alt'} />
-    //       {t('Eslatma')} +
-    //     </MenuItem>
-    //     <MenuItem
-    //       sx={{ display: 'flex', alignItems: 'center', gap: '7px' }}
-    //       onClick={() => (handleClose('sms'), getSMSTemps())}
-    //     >
-    //       <Icon fontSize={'20px'} icon={'ic:baseline-message'} />
-    //       {t('Xabar (sms)')} +
-    //     </MenuItem>
-    //     <MenuItem
-    //       sx={{ display: 'flex', alignItems: 'center', gap: '7px' }}
-    //       onClick={() => (setActivate(true), handleClose('none'))}
-    //     >
-    //       <Icon fontSize={'20px'} icon={'ri:file-edit-fill'} />
-    //       {t('Tahrirlash')}
-    //     </MenuItem>
-    //   </Menu>
+    //     <Icon fontSize={'20px'} icon={'ic:baseline-payments'} />
+    //     {t("To'lov")}
+    //   </MenuItem>
+    //   <MenuItem sx={{ display: 'flex', alignItems: 'center', gap: '7px' }} onClick={() => handleClose('export')}>
+    //     <Icon fontSize={'20px'} icon={'tabler:status-change'} />
+    //     {t("Boshqa guruhga ko'chirishsh")}
+    //   </MenuItem>
+    //   <MenuItem sx={{ display: 'flex', alignItems: 'center', gap: '7px' }} onClick={() => handleClose('left')}>
+    //     <Icon fontSize={'20px'} icon={'material-symbols:group-remove'} />
+    //     {student_status == 'archive' ? t("Ba'zadan chiqarish") : t('Guruhdan chiqarish')}
+    //   </MenuItem>
+    //   <MenuItem
+    //     sx={{ display: 'flex', alignItems: 'center', gap: '7px' }}
+    //     onClick={() => (dispatch(setOpenLeadModal(studentStatusId)), handleClose('none'))}
+    //   >
+    //     <Icon fontSize={'20px'} icon={'mdi:leads'} />
+    //     {t('Lidlarga qaytarish')}
+    //   </MenuItem>
+    //   <MenuItem sx={{ display: 'flex', alignItems: 'center', gap: '7px' }} onClick={() => handleClose('notes')}>
+    //     <Icon fontSize={'20px'} icon={'material-symbols:note-alt'} />
+    //     {t('Eslatma')} +
+    //   </MenuItem>
+    //   <MenuItem
+    //     sx={{ display: 'flex', alignItems: 'center', gap: '7px' }}
+    //     onClick={() => (handleClose('sms'), getSMSTemps())}
+    //   >
+    //     <Icon fontSize={'20px'} icon={'ic:baseline-message'} />
+    //     {t('Xabar (sms)')} +
+    //   </MenuItem>
+    //   <MenuItem
+    //     sx={{ display: 'flex', alignItems: 'center', gap: '7px' }}
+    //     onClick={() => (setActivate(true), handleClose('none'))}
+    //   >
+    //     <Icon fontSize={'20px'} icon={'ri:file-edit-fill'} />
+    //     {t('Tahrirlash')}
+    //   </MenuItem>
+    // </Menu>
     //   <StudentPaymentForm
     //     student_id={id}
     //     active_id={activeId}
@@ -1247,8 +1249,7 @@ export default function UserViewStudentsList() {
   const { t } = useTranslation()
   const [search, setSearch] = useState('')
   const debounce = useDebounce(search, 500)
-  const { query } = useRouter()
-
+  const { query, push } = useRouter()
   const columns: customTableProps[] = [
     {
       xs: 0.2,
@@ -1262,7 +1263,7 @@ export default function UserViewStudentsList() {
       xs: 1.4,
       title: t('first_name'),
       dataIndex: 'student',
-      render: (student:any) => {
+      render: (student: any) => {
         return student.first_name
       }
     },
@@ -1270,33 +1271,52 @@ export default function UserViewStudentsList() {
       xs: 1.1,
       title: t('telefon raqam'),
       dataIndex: 'student',
-      render: (student:any) => {
-        return (student.phone)
+      render: (student: any) => {
+        return student.phone
       }
     },
-  
+
     {
       xs: 1.3,
-      title: t("Status"),
-      dataIndex: 'student',
-      render: (student: any) => {
-        return student.status
+      title: t('Status'),
+      dataIndex: 'id',
+      renderItem: (status: any) => {
+        // Define a function or object to map statuses to colors
+        const getColorByStatus = (status: string) => {
+          switch (status) {
+            case 'active':
+              return 'success' // Green
+            case 'archive':
+              return 'error' // Gray
+            case 'new':
+              return 'warning' // Red
+            default:
+              return 'default' // Default color
+          }
+        }
+
+        return (
+          <div onClick={() => dispatch(setUpdateStatusModal(status))}>
+            <Chip label={t(status?.status)} variant='outlined' color={getColorByStatus(status?.status)} />
+          </div>
+        )
       }
-      },
+    },
+
     {
       xs: 0.7,
       title: t('Balans'),
       dataIndex: 'student',
-      render: (student: any) =>
-      {
+      render: (student: any) => {
         return student.balance
-       }
+      }
     },
     {
       xs: 0.8,
       dataIndex: 'id',
       title: t('Harakatlar'),
-      render: actions => <StudentRowOptions id={actions} />
+
+      render: actions => <GroupDetailRowOptions id={actions} />
     }
   ]
 
@@ -1307,6 +1327,11 @@ export default function UserViewStudentsList() {
       dispatch(studentsUpdateParams({ search: debounce }))
     })()
   }, [debounce])
+
+  const rowClick = (id: any,item:any) => {
+    
+    push(`/students/view/security/?student=${item?.student?.id}`)
+  }
 
   return (
     <Box width='100%'>
@@ -1327,27 +1352,10 @@ export default function UserViewStudentsList() {
           gap: '2px'
         }}
       >
-        {isGettingStudents ? (
-          <SubLoader />
-        ) : students?.length ? (
-          students?.map((el: any, index: any) => (
-            <UserViewStudentsItem
-              reRender={() => {}}
-              key={el.id}
-              activeId={el.id}
-              item={el}
-              choices={el?.choices}
-              index={index + 1}
-              status={el.status}
-            />
-            // <DataTable columns={columns} data={students||[]}/>
-
-          ))
-        ) : (
-          <Box sx={{ paddingX: '50px' }}>
-            <EmptyContent />
-          </Box>
-        )}
+        <StudentsDataTable loading={isGettingStudents} rowClick={rowClick}  columns={columns} data={students || []} />
+        {/* <Box sx={{ paddingX: '50px' }}>
+          <EmptyContent />
+        </Box> */}
       </Box>
     </Box>
   )
