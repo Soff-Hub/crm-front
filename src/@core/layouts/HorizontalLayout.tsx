@@ -102,7 +102,6 @@ const HorizontalLayout = (props: LayoutProps) => {
   const { user } = useContext(AuthContext)
 
 
-  console.log(user?.role.includes('admin'));
   
   
 

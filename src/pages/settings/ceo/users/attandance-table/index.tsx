@@ -122,13 +122,13 @@ export default function EmployeesAttendanceTable() {
               <TableRow>
                 <TableCell
                   className={`sticky left-0 bg-${settings.mode === 'dark' ? '#282A42' : '#ffffff'}`}
-                  sx={{ zIndex: 100, position: 'sticky', left: 0 }}
+                  sx={{minWidth:150, zIndex: 100, position: 'sticky', left: 0 }}
                 >
                   {t('Ism')}
                 </TableCell>
                 <TableCell
                   className={`sticky left-150 bg-${settings.mode === 'dark' ? '#282A42' : '#ffffff'}`}
-                  sx={{ zIndex: 100, position: 'sticky', left: 145 }}
+                  sx={{ zIndex: 100, position: 'sticky', left: 150 }}
                 >
                   {t('Telefon')}
                 </TableCell>
@@ -147,6 +147,7 @@ export default function EmployeesAttendanceTable() {
                 <TableRow key={user.id}>
                   <TableCell
                     sx={{
+                      minWidth:150,
                       position: 'sticky',
                       left: 0,
                       background: settings.mode === 'dark' ? '#282A42' : '#ffffff',
@@ -161,7 +162,7 @@ export default function EmployeesAttendanceTable() {
                   <TableCell
                     sx={{
                       position: 'sticky',
-                      left: 152,
+                      left: 150,
                       background: settings.mode === 'dark' ? '#282A42' : '#ffffff',
                       zIndex: 1,
                       fontSize: '14px',

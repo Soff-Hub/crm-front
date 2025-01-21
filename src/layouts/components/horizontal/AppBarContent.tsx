@@ -97,7 +97,6 @@ const AppBarContent = (props: Props) => {
     }
   }, [user?.id])
 
-  console.log(employees)
 
   return (
     <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'end' }}>

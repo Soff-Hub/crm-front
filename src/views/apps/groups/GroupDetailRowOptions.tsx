@@ -58,10 +58,12 @@ export default function GroupDetailRowOptions({ id }: Props) {
   const { push, query } = useRouter()
   const { students, studentsQueryParams, isGettingStudents, queryParams, openLeadModal,updateStatusModal } = useAppSelector(
     state => state.groupDetails
+  
   )
+
+  
+
   const [openEdit, setOpenEdit] = useState<ModalTypes | null>(null)
-  const [suspendDialogOpen, setSuspendDialogOpen] = useState<boolean>(false)
-  const [recoveModal, setRecoveModal] = useState<boolean>(false)
   const [loading, setLoading] = useState<boolean>(false)
   const { t } = useTranslation()
   const [modalRef, setModalRef] = useState<'sms' | 'note' | 'export' | null>(null)
@@ -82,48 +84,7 @@ export default function GroupDetailRowOptions({ id }: Props) {
 
   
   
-  const formik = useFormik({
-    initialValues: { status: updateStatusModal?.status },
-    validationSchema: () =>
-      Yup.object({
-        status: Yup.string()
-      }),
-    onSubmit: async values => {
-
-      setLoading(true)
-      try {
-        await api.patch(`common/group-student-update/status/${updateStatusModal?.id}/`, { status: values.status })
-        toast.success("O'quvchi malumotlari o'zgartirildi", { position: 'top-center' })
-        setLoading(false)
-          setActivate(false)
-          dispatch(setUpdateStatusModal(null))
-        const queryString = new URLSearchParams({ ...studentsQueryParams }).toString()
-        const queryStringAttendance = new URLSearchParams(queryParams).toString()
-        dispatch(setGettingAttendance(true))
-        await dispatch(getStudents({ id: query.id, queryString: queryString }))
-        if (query.month && query?.id) {
-          await dispatch(
-            getAttendance({
-              date: `${query?.year || new Date().getFullYear()}-${getMontNumber(query.month)}`,
-              group: query?.id,
-              queryString: queryStringAttendance
-            })
-          )
-          await dispatch(
-            getDays({
-              date: `${query?.year || new Date().getFullYear()}-${getMontNumber(query.month)}`,
-              group: query?.id
-            })
-          )
-        }
-        dispatch(setGettingAttendance(false))
-      } catch (err: any) {
-        formik.setErrors(err?.response?.data)
-        console.log(err?.response?.data)
-        setLoading(false)
-      }
-    }
-  })
+  
 
   const handleClose = (value: 'none' | 'left' | 'payment' | 'notes' | 'sms' | 'export') => {
     setAnchorEl(null)
@@ -205,11 +166,9 @@ export default function GroupDetailRowOptions({ id }: Props) {
     setLoading(false)
     }
     
-  useEffect(() => {
-    if (updateStatusModal?.status) {
-      formik.setFieldValue("status",updateStatusModal?.status)
-    }
-  }, [updateStatusModal])
+
+  
+  
   
 
   return (
@@ -305,50 +264,7 @@ export default function GroupDetailRowOptions({ id }: Props) {
           <MergeToDepartment studentId={String(student?.id)} />
         </DialogContent>
       </Dialog>
-      <Dialog open={updateStatusModal != null} onClose={() => dispatch(setUpdateStatusModal(null))}>
-        <form onSubmit={formik.handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-          <DialogContent sx={{ maxWidth: '350px' }}>
-            <Typography sx={{ fontSize: '20px', textAlign: 'center', mb: 3 }}>
-              {t("O'quvchini statusini ozgartirish")}
-            </Typography>
-
-            <FormControl sx={{ maxWidth: '100%', marginBottom: 3 }} fullWidth>
-              <InputLabel size='small' id='demo-simple-select-outlined-label'>
-                Status (holati)
-              </InputLabel>
-              <Select
-                size='small'
-                label='Status (holati)'
-                value={formik.values.status}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                id='demo-simple-select-outlined'
-                labelId='demo-simple-select-outlined-label'
-                name='status'
-                error={!!formik.errors.status && !!formik.touched.status}
-              >
-                {student?.choices?.map((el: any) => (
-                  <MenuItem value={el} key={el}>
-                    {t(el)}
-                  </MenuItem>
-                ))}
-                {/* <MenuItem value={'new'}>Sinov darsi</MenuItem> */}
-                {/* <MenuItem value={'archive'}>Arxiv</MenuItem> */}
-                {/* <MenuItem value={'frozen'}>Muzlatish</MenuItem> */}
-              </Select>
-              <FormHelperText error>{!!formik.errors.status ? `${formik.errors.status}` : ''}</FormHelperText>
-            </FormControl>
-            <Box sx={{ display: 'flex', justifyContent: 'center', gap: 4 }}>
-              <Button onClick={() => { dispatch(setUpdateStatusModal(null)),formik.resetForm() }} size='small' variant='outlined' color='error'>
-                {t('Bekor qilish')}
-              </Button>
-              <LoadingButton loading={loading} type='submit' size='small' variant='contained'>
-                {t('Tasdiqlash')}
-              </LoadingButton>
-            </Box>
-          </DialogContent>
-        </form>
-      </Dialog>
+    
       <EditStudent status={student?.status} student={student?.student} id={student?.id} activate={activate} setActivate={setActivate} />
       <AddNote id={student?.student?.id} modalRef={modalRef} setModalRef={setModalRef} />
       <SentSMS smsTemps={smsTemps} id={student?.student?.id} modalRef={modalRef} setModalRef={setModalRef} />

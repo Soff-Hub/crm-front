@@ -29,6 +29,7 @@ import { useRouter } from 'next/router'
 import Link from 'next/link'
 import useSMS from 'src/hooks/useSMS'
 import { SendSMSModal } from 'src/views/apps/students/view/UserViewLeft'
+import useResponsive from 'src/@core/hooks/useResponsive'
 
 export interface customTableProps {
   xs: number
@@ -46,7 +47,7 @@ export default function GroupsPage() {
   )
 
   console.log(openSms);
-  
+  const {isMobile} = useResponsive()
 
   const dispatch = useAppDispatch()
   const { smsTemps, getSMSTemps } = useSMS()
@@ -319,9 +320,14 @@ export default function GroupsPage() {
           }
         }}
       >
-        <ButtonGroup size='small' aria-label='Small button group'>
-          {buttons}
-        </ButtonGroup>
+        <ButtonGroup
+      size="small"
+      aria-label="Small button group"
+      orientation={isMobile ? 'vertical' : 'horizontal'} 
+      fullWidth={isMobile} 
+    >
+      {buttons}
+    </ButtonGroup>
         <Link href='/settings/ceo/users/attandance-table'>
           <Button variant='contained' size='medium'>
             Xodimlar Davomati

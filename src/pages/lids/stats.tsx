@@ -57,7 +57,7 @@ const Stats = () => {
 
     const initialValues = { name: '' }
 
-    const formik: any = useFormik({
+    const formik = useFormik({
         initialValues,
         validationSchema,
         onSubmit: async (valuess) => {
@@ -65,6 +65,7 @@ const Stats = () => {
             try {
                 await api.post(`leads/source/`, valuess)
                 await getSources()
+                formik.resetForm()
                 setOpen(false)
             } catch (err: any) {
                 if (err?.response?.data) {
@@ -119,7 +120,7 @@ const Stats = () => {
                     </Typography>
                     <IconButton
                         aria-label='close'
-                        onClick={() => setOpen(false)}
+                        onClick={() => {setOpen(false),formik.resetForm()}}
                         icon={<IconifyIcon icon={'mdi:close'} />}
                     >
                     </IconButton>

@@ -44,6 +44,7 @@ const VisuallyHiddenInput = styled('input')({
 
 export default function AllSettings() {
   const { isMobile } = useResponsive()
+
   const [editable, setEditable] = useState<
     null | 'title' | 'logo' | 'start-time' | 'end-time' | 'birthdate' | 'absend' | 'payment'
   >(null)
@@ -64,10 +65,10 @@ export default function AllSettings() {
   const { companyInfo } = useAppSelector((state: any) => state.user)
   const { t } = useTranslation()
   const { setUser, user } = useContext(AuthContext)
+  const birthday_text = localStorage.getItem('birthday_text')
+  const absent_text = localStorage.getItem('absent_text')
+  const payment_text = localStorage.getItem('payment_text')
 
-
-  console.log(companyInfo);
-  
 
   const inputRef = useRef<any | null>(null)
 
@@ -166,7 +167,7 @@ export default function AllSettings() {
       ) {
         if (key === 'on_birthday') {
           setLoading('birthdate')
-          formData.append('birthday_text', 'Text')
+          formData.append('birthday_text', birthday_text || companyInfo?.auto_sms?.birthday_text)
           formData.append('on_absent', companyInfo?.auto_sms?.on_absent)
           formData.append('absent_text', companyInfo?.auto_sms?.absent_text)
           formData.append('payment_warning', companyInfo?.auto_sms?.payment_warning)
@@ -180,18 +181,18 @@ export default function AllSettings() {
           formData.append('payment_text', companyInfo?.auto_sms?.payment_text)
         } else if (key === 'payment_warning') {
           setLoading('payment')
-          formData.append('payment_text', 'Text')
+          formData.append('payment_text', companyInfo?.auto_sms?.payment_text)
           formData.append('on_absent', companyInfo?.auto_sms?.on_absent)
           formData.append('absent_text', companyInfo?.auto_sms?.absent_text)
           formData.append('on_birthday', companyInfo?.auto_sms?.on_birthday)
-          formData.append('birthday_text', companyInfo?.auto_sms?.birthday_text)
+          formData.append('birthday_text', birthday_text || companyInfo?.auto_sms?.birthday_text)
         } else if (key === 'payment_text') {
           setLoading('payment')
           formData.append('payment_warning', true)
           formData.append('on_absent', companyInfo?.auto_sms?.on_absent)
           formData.append('absent_text', companyInfo?.auto_sms?.absent_text)
           formData.append('on_birthday', companyInfo?.auto_sms?.on_birthday)
-          formData.append('birthday_text', companyInfo?.auto_sms?.birthday_text)
+          formData.append('birthday_text', birthday_text || companyInfo?.auto_sms?.birthday_text)
         } else if (key === 'on_absent') {
           setLoading('absend')
           formData.append(
@@ -199,14 +200,14 @@ export default function AllSettings() {
             'Assalomu Alaykum, siz kecha dars qoldirdingiz iltimos sababini bildirishni unurtmang'
           )
           formData.append('on_birthday', companyInfo?.auto_sms?.on_birthday)
-          formData.append('birthday_text', companyInfo?.auto_sms?.birthday_text)
+          formData.append('birthday_text', birthday_text || companyInfo?.auto_sms?.birthday_text)
           formData.append('payment_warning', companyInfo?.auto_sms?.payment_warning)
           formData.append('payment_text', companyInfo?.auto_sms?.payment_text)
         } else {
           setLoading('absend')
           formData.append('on_absent', true)
           formData.append('on_birthday', companyInfo?.auto_sms?.on_birthday)
-          formData.append('birthday_text', companyInfo?.auto_sms?.birthday_text)
+          formData.append('birthday_text', birthday_text || companyInfo?.auto_sms?.birthday_text)
           formData.append('payment_warning', companyInfo?.auto_sms?.payment_warning)
           formData.append('payment_text', companyInfo?.auto_sms?.payment_text)
         }
@@ -218,7 +219,7 @@ export default function AllSettings() {
       }
 
       const getresp = await api.get('common/settings/list/')
-      
+      console.log(getresp)
 
       dispatch(setCompanyInfo(getresp.data[0]))
       setEditable(null)
@@ -575,17 +576,17 @@ export default function AllSettings() {
                     <CircularProgress disableShrink size={'20px'} sx={{ margin: '10px 0', marginLeft: '15px' }} />
                   ) : (
                     <Switch
-                    checked={Boolean(companyInfo?.auto_sms?.on_birthday)}
-                    onChange={async (e, i) => {
+                      checked={Boolean(companyInfo?.auto_sms?.on_birthday)}
+                      onChange={async (e, i) => {
                         await updateSettings('on_birthday', i)
                       }}
-                      />
+                    />
                   )}
                 </Box>
               </Box>
-                      <Typography sx={{marginBottom:5}} fontSize={12}>
-                        {"Xabar matniga talaba ismini qo'shish uchun ${first_name} kalit so'zi qoldiring."}
-                      </Typography>
+              <Typography sx={{ marginBottom: 5 }} fontSize={12}>
+                {"Xabar matniga talaba ismini qo'shish uchun ${first_name} kalit so'zi qoldiring."}
+              </Typography>
 
               <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: '20px', flexDirection: 'column' }}>
                 <Typography sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}>
@@ -599,11 +600,13 @@ export default function AllSettings() {
                         rows={4}
                         size='small'
                         focused
-                        defaultValue={companyInfo?.auto_sms?.birthday_text || ''}
+                        value={birthday_text || companyInfo?.auto_sms?.birthday_text}
                         onBlur={e => {
                           updateSettings('birthday_text', e.target.value)
                         }}
-                        onChange={e => setName(e.target.value)}
+                        onChange={e => {
+                          setName(e.target.value), localStorage.setItem('birthday_text', e.target.value)
+                        }}
                         fullWidth
                       />
                       <IconifyIcon
@@ -621,7 +624,7 @@ export default function AllSettings() {
                         multiline
                         rows={4}
                         type='text'
-                        value={`${companyInfo?.auto_sms?.birthday_text}`}
+                        value={`${birthday_text || companyInfo?.auto_sms?.birthday_text}`}
                         size='small'
                         placeholder={t('SMS Matni')}
                         onBlur={e => console.log(e.target.value)}
@@ -658,9 +661,9 @@ export default function AllSettings() {
                   )}
                 </Box>
               </Box>
-              <Typography sx={{marginBottom:5}} fontSize={12}>
-                        {"Xabar matniga talaba ismini qo'shish uchun ${first_name} kalit so'zi qoldiring."}
-                      </Typography>
+              <Typography sx={{ marginBottom: 5 }} fontSize={12}>
+                {"Xabar matniga talaba ismini qo'shish uchun ${first_name} kalit so'zi qoldiring."}
+              </Typography>
               <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: '20px', flexDirection: 'column' }}>
                 <Typography sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}>
                   {t(`SMS matnini kiriting (kelmagan o'quvchiga ertasi kuni yuboriladi)`)}
@@ -673,11 +676,13 @@ export default function AllSettings() {
                         rows={4}
                         size='small'
                         focused
-                        defaultValue={companyInfo?.auto_sms?.absent_text || ''}
+                        defaultValue={absent_text || companyInfo?.auto_sms?.absent_text}
                         onBlur={e => {
                           updateSettings('absent_text', e.target.value)
                         }}
-                        onChange={e => setName(e.target.value)}
+                        onChange={e => {
+                          setName(e.target.value), localStorage.setItem('absent_text', e.target.value)
+                        }}
                         fullWidth
                       />
                       <IconifyIcon
@@ -695,7 +700,7 @@ export default function AllSettings() {
                         multiline
                         rows={4}
                         type='text'
-                        value={`${companyInfo?.auto_sms?.absent_text}`}
+                        value={`${absent_text || companyInfo?.auto_sms?.absent_text}`}
                         size='small'
                         placeholder={t('Boshlanish vaqti')}
                         onBlur={e => console.log(e.target.value)}
@@ -768,7 +773,9 @@ export default function AllSettings() {
                         onBlur={e => {
                           updateSettings('payment_text', e.target.value)
                         }}
-                        onChange={e => setName(e.target.value)}
+                        onChange={e => {
+                          setName(e.target.value), localStorage.setItem('payment_text', e.target.value)
+                        }}
                         fullWidth
                       />
                       <IconifyIcon
@@ -786,7 +793,7 @@ export default function AllSettings() {
                         multiline
                         rows={4}
                         type='text'
-                        value={`${companyInfo?.auto_sms?.payment_text}`}
+                        value={`${payment_text || companyInfo?.auto_sms?.payment_text}`}
                         size='small'
                         placeholder={t('SMS Matni')}
                         onBlur={e => console.log(e.target.value)}
