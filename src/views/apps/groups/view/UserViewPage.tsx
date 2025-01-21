@@ -31,7 +31,6 @@ const UserView = () => {
     await api
       .get('auth/employees-check-list/?role=teacher')
       .then(data => {
-        console.log(data);
         
         dispatch(setTeacherData(data.data))
       })

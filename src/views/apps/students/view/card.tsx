@@ -44,6 +44,7 @@ import useSMS from 'src/hooks/useSMS'
 import { SendSMSModal } from './UserViewLeft'
 import { fetchSmsList } from 'src/store/apps/settings'
 import useStudent from 'src/hooks/useStudents'
+import { formatCurrency } from 'src/@core/utils/format-currency'
 
 interface StudentCardProps {
   photo?: string
@@ -165,9 +166,11 @@ export default function StudentCard({
         sx={{ marginBottom: 5 }}
         action={
           <Chip
-            sx={{ backgroundColor: 'white', padding: 2 }}
-            icon={<Wallet size={16} />}
-            label={balance || 0 + " so'm"}
+            sx={{ backgroundColor: 'white' }}
+            label={`${formatCurrency(balance ?? 0)} so'm`} 
+            size='small'
+            variant='outlined'
+            color={typeof balance === 'number' && balance >= 0 ? 'success' : 'error'}
           />
         }
       />
