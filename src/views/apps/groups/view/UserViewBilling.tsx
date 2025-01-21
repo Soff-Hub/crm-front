@@ -30,7 +30,6 @@ import { customTableProps } from 'src/pages/groups'
 import * as Yup from 'yup'
 import { getStudents, studentsUpdateParams } from 'src/store/apps/groupDetails';
 import { useAppDispatch, useAppSelector } from 'src/store'
-import { ModalTypes } from './ViewStudents/UserViewStudentsList'
 import useBranches from 'src/hooks/useBranch'
 
 
@@ -74,8 +73,6 @@ const UserViewBilling = () => {
   const [openLeft, setOpenLeft] = useState<boolean>(false)
   const { groupData, studentsQueryParams, isGettingStudents } = useAppSelector(state => state.groupDetails)
   const { getBranches, branches } = useBranches()
-  const [openEdit, setOpenEdit] = useState<ModalTypes | null>(null)
-  const [modalRef, setModalRef] = useState<'sms' | 'note' | 'export' | null>(null)
 
   const getExams = async () => {
     try {
