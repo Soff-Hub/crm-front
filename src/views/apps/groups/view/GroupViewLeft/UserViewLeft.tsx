@@ -16,6 +16,7 @@ import AddStudents from './AddStudents'
 import Delete from './Delete'
 import UserViewStudentsList from '../ViewStudents/UserViewStudentsList'
 import useResponsive from 'src/@core/hooks/useResponsive'
+import OnlineLessonModal from './OnlineLessonModal'
 
 const UserViewLeft = () => {
   const { studentsQueryParams, isGettingStudents } = useAppSelector(state => state.groupDetails)
@@ -73,6 +74,7 @@ const UserViewLeft = () => {
         </CardContent>
       </Grid>
       <SendSMS />
+      <OnlineLessonModal/>
       <AddNote />
       <AddStudents />
       <Delete />

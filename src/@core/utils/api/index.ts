@@ -35,7 +35,7 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   resp => resp,
   err => {
-    if (err.response && [403, 401].includes(err.response.status)) {
+    if (err.response && [ 401].includes(err.response.status)) {
       localStorage.removeItem(authConfg.storageTokenKeyName)
       localStorage.removeItem('settings')
       window.location.href = '/'

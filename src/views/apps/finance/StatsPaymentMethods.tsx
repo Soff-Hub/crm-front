@@ -1,4 +1,4 @@
-import { Box, Skeleton, Typography } from '@mui/material'
+import { Box, Chip, Skeleton, Typography } from '@mui/material'
 import { useTranslation } from 'react-i18next'
 import EmptyContent from 'src/@core/components/empty-content'
 import ReactApexcharts from 'src/@core/components/react-apexcharts'
@@ -66,10 +66,15 @@ export default function StatsPaymentMethods() {
         ) : props?.series?.some((el: number) => el > 0) && all_numbers ? (
           <Box>
             <ReactApexcharts options={props.options} series={props.series} type='pie' width={isMobile ? '100%' : 380} />
+
             {all_numbers?.payment_types.map(item => (
-              <Box display='flex' alignItems='center' gap={2}>
-                <Typography  display='flex'>{item.name} : </Typography>
-                <Typography  fontSize={12}>{item.amount}</Typography>
+              <Box display='flex' marginBottom={3} alignItems='center' gap={2}>
+                <Typography display='flex' color='rgba(76, 78, 100, 0.87)'>
+                  {item.name} :
+                </Typography>
+
+                {/* <Chip  sx={{fontSize:12}} label={formatCurrency(item?.amount)+" so'm"} /> */}
+                <Typography fontSize={14}>{formatCurrency(item.amount) + " so'm"}</Typography>
               </Box>
             ))}
           </Box>

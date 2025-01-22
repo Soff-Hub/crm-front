@@ -107,9 +107,11 @@ const initialState: IGroupDetailsState = {
   teachers: null,
   isOpenDelete: null,
   students: null,
+  meet_link:null,
   attendance: null,
   grades: null,
   days: null,
+  onlineLessonLoading:false,
   rooms: null,
   results: null,
   updateStatusModal:null,
@@ -140,6 +142,12 @@ export const groupDetailsSlice = createSlice({
   name: 'groupDetails',
   initialState,
   reducers: {
+    setMeetLink: (state, action) => {
+      state.meet_link = action.payload
+    },
+    setOnlineLessonLoading: (state, action) => {
+      state.onlineLessonLoading = action.payload
+    },
     setResultEdit: (state, action) => {
       state.examStudentId = action.payload
     },
@@ -276,8 +284,10 @@ export const {
   setOpen,
   setUpdateStatusModal,
   setEditData,
+  setMeetLink,
   setResultEdit,
   setResultId,
+  setOnlineLessonLoading,
   setOpenLeadModal,
   setDays,
   setGettingGroupDetails

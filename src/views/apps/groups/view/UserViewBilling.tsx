@@ -28,11 +28,10 @@ import { formatCurrency } from 'src/@core/utils/format-currency'
 import showResponseError from 'src/@core/utils/show-response-error'
 import { customTableProps } from 'src/pages/groups'
 import * as Yup from 'yup'
-import { getStudents, studentsUpdateParams } from 'src/store/apps/groupDetails';
+import { getStudents, studentsUpdateParams } from 'src/store/apps/groupDetails'
 import { useAppDispatch, useAppSelector } from 'src/store'
 import useBranches from 'src/hooks/useBranch'
-
-
+import AmountInput, { revereAmount } from 'src/@core/components/amount-input'
 
 export const getFormattedDate = () => {
   const today = new Date()
@@ -60,7 +59,7 @@ export interface ExamType {
 }
 
 const UserViewBilling = () => {
-  const { push,query } = useRouter()
+  const { push, query } = useRouter()
   const { t } = useTranslation()
   const { isMobile } = useResponsive()
   const [error, setError] = useState<any>({})
@@ -76,14 +75,12 @@ const UserViewBilling = () => {
 
   const getExams = async () => {
     try {
-      const resp = await api.get('common/group/students/?group=' + query.id + "&")
+      const resp = await api.get('common/group/students/?group=' + query.id + '&')
       setExams(resp.data?.response)
     } catch (err) {
       console.log(err)
     }
   }
-
-
 
   const handleEditOpen = async (id: any) => {
     const findedItem: any = await exams.find((el: any) => el.student.id === id)
@@ -101,7 +98,6 @@ const UserViewBilling = () => {
     setEditData(null)
     setOpen(null)
   }
- 
 
   const handleDelete = async () => {
     setLoading(true)
@@ -203,12 +199,17 @@ const UserViewBilling = () => {
     onSubmit: async values => {
       setLoading(true)
       try {
-        await api.post('common/personal-payment/', { ...values, group: query.id, student: Number(editData.id) })
+        await api.post('common/personal-payment/', {
+          ...values,
+          amount: revereAmount(String(values.amount)),
+          group: query.id,
+          student: Number(editData.id)
+        })
         await dispatch(studentsUpdateParams({ status: 'active,new' }))
         const queryString = new URLSearchParams(studentsQueryParams).toString()
         await dispatch(getStudents({ id: query.id, queryString: queryString }))
         await getExams()
-        
+
         handleClose()
       } catch (err: any) {
         showResponseError(err.response.data, setError)
@@ -259,17 +260,16 @@ const UserViewBilling = () => {
             <IconifyIcon icon='mdi:close' fontSize={20} />
           </IconButton>
         </Box>
-     
+
         {editData && (
           <form
             onSubmit={formik.handleSubmit}
             style={{ padding: '15px', display: 'flex', flexDirection: 'column', gap: 12 }}
           >
             <FormControl>
-              <TextField
+              <AmountInput
                 size='small'
                 label={t('Chegirmadagi kurs narxi')}
-                type='number'
                 name='amount'
                 error={!!formik.errors.amount && !!formik.touched.amount}
                 onChange={formik.handleChange}
