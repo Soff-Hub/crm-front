@@ -36,7 +36,11 @@ import { useFormik } from 'formik'
 import StudentsDataTable from 'src/@core/components/table/studentsTable'
 import GroupDetailRowOptions from '../../GroupDetailRowOptions'
 import Link from 'next/link'
-
+import Tooltip, { TooltipProps, tooltipClasses } from '@mui/material/Tooltip'
+import { styled } from '@mui/material/styles'
+import { useSettings } from 'src/@core/hooks/useSettings'
+import { formatDateTime } from 'src/@core/utils/date-formatter'
+import { Icon } from '@iconify/react'
 export interface customTableProps {
   xs: number
   title: string
@@ -45,12 +49,26 @@ export interface customTableProps {
   render?: (source: any) => any | undefined
 }
 
+const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
+  <Tooltip {...props} classes={{ popper: className }} />
+))(({ theme }) => ({
+  [`& .${tooltipClasses.tooltip}`]: {
+    backgroundColor: '#f5f5f9',
+    width: '300px',
+    minHeight: '250px',
+    color: 'rgba(0, 0, 0, 0.87)',
+    maxWidth: 300,
+    fontSize: theme.typography.pxToRem(12),
+    border: '1px solid #dadde9'
+  }
+}))
+
 export default function UserViewStudentsList() {
   const { students, studentsQueryParams, isGettingStudents, updateStatusModal, queryParams } = useAppSelector(
     state => state.groupDetails
   )
   console.log(updateStatusModal)
-
+  const { settings } = useSettings()
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
   const [loading, setLoading] = useState<boolean>(false)
@@ -70,21 +88,173 @@ export default function UserViewStudentsList() {
     {
       xs: 1.4,
       title: t('first_name'),
-      dataIndex: 'student',
-      render: (student: any) => {
-        return (
-          <Link
-            style={{ textDecoration: 'none', color: '#4C4E64' }}
-            href={`/students/view/security/?student=${student?.id}`}
+      dataIndex: 'id',
+      renderItem: (student: any) => {
+        return settings.mode == 'dark' ? (
+          <HtmlTooltip
+            title={
+              <Box
+                sx={{
+                  width: '100%',
+                  height: '100%',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  padding: '10px',
+                  bgcolor: settings.mode != 'dark' ? 'grey.900' : 'background.paper',
+                  color: settings.mode != 'dark' ? 'grey.100' : 'text.primary',
+                  border: settings.mode != 'dark' ? '1px solid #444' : '1px solid #c3cccc'
+                }}
+              >
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', py: 1 }}>
+                  <Box>
+                    <Typography fontSize={12}>{student?.student.first_name}</Typography>
+                    <Typography variant='body2' fontSize={12}>
+                      {t(student?.status)}
+                    </Typography>
+                  </Box>
+                  <Typography variant='body2' fontSize={10}>{` ID: ${student?.student?.id} `}</Typography>
+                </Box>
+                <Box py={1} borderTop={`1px solid ${settings.mode != 'dark' ? '#444' : '#c3cccc'}`}>
+                  <Typography variant='body2' fontSize={12}>
+                    {t('phone')}
+                  </Typography>
+                  <Typography fontSize={12}>{student?.student.phone}</Typography>
+                </Box>
+                <Box py={1} borderTop={`1px solid ${settings.mode != 'dark' ? '#444' : '#c3cccc'}`}>
+                  <Typography variant='body2' fontSize={12}>
+                    {t('Balans')}
+                  </Typography>
+                  <Typography fontSize={12}>{`${student?.student.balance} so'm`}</Typography>
+                </Box>
+                {student.lesson_count !== 0 && (
+                  <Box py={1} borderTop={`1px solid ${settings.mode != 'dark' ? '#444' : '#c3cccc'}`}>
+                    <Typography variant='body2' fontSize={12}>
+                      {t("To'lovgacha qolgan darslar")}
+                    </Typography>
+                    <Typography fontSize={12}>{`${student?.student.lesson_count} ta`}</Typography>
+                  </Box>
+                )}
+                {studentsQueryParams.status === 'archive' ? (
+                  <Box py={1} borderTop={`1px solid ${settings.mode != 'dark' ? '#444' : '#c3cccc'}`}>
+                    <Typography variant='body2' fontSize={12}>
+                      {t("Talaba qo'shilgan va o'chirilgan sana")}
+                    </Typography>
+                    <Typography fontSize={12}>
+                      {student?.student?.added_at} / {student?.student?.deleted_at}
+                    </Typography>
+                  </Box>
+                ) : (
+                  <Box py={1} borderTop={`1px solid ${settings.mode != 'dark' ? '#444' : '#c3cccc'}`}>
+                    <Typography variant='body2' fontSize={12}>
+                      {t("Talaba qo'shilgan sana")}
+                    </Typography>
+                    <Typography fontSize={12}>{student?.student?.added_at}</Typography>
+                  </Box>
+                )}
+                {student?.student?.comment && (
+                  <Box py={1} borderTop={`1px solid ${settings.mode != 'dark' ? '#444' : '#c3cccc'}`}>
+                    <Typography variant='body2' fontSize={12}>
+                      {t('Eslatma')}
+                    </Typography>
+                    <Typography fontSize={12} fontStyle='italic'>
+                      {student?.student?.comment.comment}
+                    </Typography>
+                    <Typography fontSize={12} variant='body2'>{`${student?.student?.comment.user} ${formatDateTime(
+                      student?.student?.comment.created_at
+                    )}`}</Typography>
+                  </Box>
+                )}
+              </Box>
+            }
           >
-            {student?.first_name}
-          </Link>
+            <Link
+              style={{ textDecoration: 'none', color: '#4C4E64' }}
+              href={`/students/view/security/?student=${student?.student.id}`}
+            >
+              <Typography fontSize={12}>{student?.student.first_name}</Typography>
+            </Link>
+          </HtmlTooltip>
+        ) : (
+          <HtmlTooltip
+            title={
+              <Box sx={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', padding: '10px' }}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', py: 1 }}>
+                  <Box>
+                    <Typography fontSize={12}>{student?.student?.first_name}</Typography>
+                    <Typography variant='body2' fontSize={12}>
+                      {t(student?.status)}
+                    </Typography>
+                  </Box>
+                  <Typography variant='body2' fontSize={10}>{`( ID: ${student.student.id} )`}</Typography>
+                </Box>
+                <Box py={1} borderTop={'1px solid #c3cccc'}>
+                  <Typography variant='body2' fontSize={12}>
+                    {t('phone')}
+                  </Typography>
+                  <Typography fontSize={12}>{student?.student?.phone}</Typography>
+                </Box>
+                <Box py={1} borderTop={'1px solid #c3cccc'}>
+                  <Typography variant='body2' fontSize={12}>
+                    {t('Balans')}
+                  </Typography>
+                  <Typography fontSize={12}>{`${student.student.balance} so'm`}</Typography>
+                </Box>
+                {student.student.lesson_count != 0 ? (
+                  <Box py={1} borderTop={'1px solid #c3cccc'}>
+                    <Typography variant='body2' fontSize={12}>
+                      {t("To'lovgacha qolgan darslar")}
+                    </Typography>
+                    <Typography fontSize={12}>{`${student.student.lesson_count} ta`}</Typography>
+                  </Box>
+                ) : (
+                  ''
+                )}
+                {studentsQueryParams.status == 'archive' ? (
+                  <Box py={1} borderTop={'1px solid #c3cccc'}>
+                    <Typography variant='body2' fontSize={12}>
+                      {t("Talaba qo'shilgan va o'chirilgan sana")}
+                    </Typography>
+                    <Typography fontSize={12}>
+                      {student.student.added_at} / {student.student.deleted_at}
+                    </Typography>
+                  </Box>
+                ) : (
+                  <Box py={1} borderTop={'1px solid #c3cccc'}>
+                    <Typography variant='body2' fontSize={12}>
+                      {t("Talaba qo'shilgan sana")}
+                    </Typography>
+                    <Typography fontSize={12}>{student.student.added_at}</Typography>
+                  </Box>
+                )}
+                {student.student.comment && (
+                  <Box py={1} borderTop={'1px solid #c3cccc'}>
+                    <Typography variant='body2' fontSize={12}>
+                      {t('Eslatma')}
+                    </Typography>
+                    <Typography fontSize={12} fontStyle={'italic'}>
+                      {student.student.comment.comment}
+                    </Typography>
+                    <Typography fontSize={12} variant='body2'>{`${student.student.comment.user} ${formatDateTime(
+                      student.student.comment.created_at
+                    )}`}</Typography>
+                  </Box>
+                )}
+              </Box>
+            }
+          >
+            <Link
+              style={{ textDecoration: 'none', color: '#4C4E64' }}
+              href={`/students/view/security/?student=${student?.student.id}`}
+            >
+              <Typography fontSize={12}>{student?.student.first_name}</Typography>
+            </Link>
+          </HtmlTooltip>
         )
       }
     },
     {
       xs: 1.1,
-      title: t('telefon raqam'),
+      title: t('Telefon raqam'),
       dataIndex: 'student',
       render: (student: any) => {
         return (
@@ -92,7 +262,7 @@ export default function UserViewStudentsList() {
             style={{ textDecoration: 'none', color: '#4C4E64' }}
             href={`/students/view/security/?student=${student?.id}`}
           >
-            {student?.phone}
+            <Typography fontSize={12}>{student?.phone}</Typography>
           </Link>
         )
       }
@@ -118,7 +288,27 @@ export default function UserViewStudentsList() {
 
         return (
           <div onClick={() => dispatch(setUpdateStatusModal(status))}>
-            <Chip label={t(status?.status)} variant='outlined' color={getColorByStatus(status?.status)} />
+            <Chip
+              label={
+                <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                  {t('active')}
+                  {updateStatusModal ? (
+                    <Icon icon='mdi:chevron-up' style={{ fontSize: '12px' }} />
+                  ) : (
+                    <Icon icon='mdi:chevron-down' style={{ fontSize: '12px' }} />
+                  )}
+                </span>
+              }
+              color={getColorByStatus(status?.status)}
+              variant='outlined'
+              size='small'
+              sx={{
+                cursor: 'pointer',
+                fontWeight: 500,
+                fontSize: '10px',
+                padding: 0
+              }}
+            />
           </div>
         )
       }
@@ -129,7 +319,13 @@ export default function UserViewStudentsList() {
       title: t('Balans'),
       dataIndex: 'student',
       render: (student: any) => {
-        return student.balance
+        return (
+          <Chip
+            variant='outlined'
+            color={student.balance >= 0 ? 'success' : 'error'}
+            label={student.balance + " so'm"}
+          />
+        )
       }
     },
     {

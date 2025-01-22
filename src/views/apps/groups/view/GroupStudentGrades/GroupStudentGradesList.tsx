@@ -62,10 +62,10 @@ const Item = ({
   const dispatch = useAppDispatch()
   const {  query,  } = useRouter()
   const handleGradeClick = async (grade: number) => {
-    if (grade < 1 || grade >= 100) {
-      toast.error('1 dan 100 gacha bo‘lgan sonlarni tanlashingiz mumkin')
-      return
-    }
+    // if (grade < 1 || grade >= 100) {
+    //   toast.error('1 dan 100 gacha bo‘lgan sonlarni tanlashingiz mumkin')
+    //   return
+    // }
 
     setOpenedId(null)
 
@@ -74,7 +74,7 @@ const Item = ({
       const data = {
         group_student: userId,
         date: date,
-        score: grade
+        score: grade || 0
       }
       console.log(data)
 
@@ -390,7 +390,7 @@ const GroupStudentGrades = () => {
                                 currentDate={currentDate}
                                 opened_id={opened_id}
                                 setOpenedId={setOpenedId}
-                                defaultValue={0}
+                                defaultValue={"-"}
                                 groupId={query?.id}
                                 userId={student.id}
                                 date={hour.date}

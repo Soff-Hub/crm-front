@@ -233,7 +233,7 @@ const CardStatistics = () => {
       <KeenSliderWrapper>
         <Grid container spacing={4} columnSpacing={6}>
           <Grid item xs={12}>
-            <FinanceAllNumber />
+              <FinanceAllNumber />
           </Grid>
 
           <Grid item xs={12} sm={12} md={4}>
