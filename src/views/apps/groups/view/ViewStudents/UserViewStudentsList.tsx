@@ -41,6 +41,7 @@ import { styled } from '@mui/material/styles'
 import { useSettings } from 'src/@core/hooks/useSettings'
 import { formatDateTime } from 'src/@core/utils/date-formatter'
 import { Icon } from '@iconify/react'
+import { formatCurrency } from 'src/@core/utils/format-currency'
 export interface customTableProps {
   xs: number
   title: string
@@ -291,7 +292,7 @@ export default function UserViewStudentsList() {
             <Chip
               label={
                 <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                  {t('active')}
+                  {t(status?.status)}
                   {updateStatusModal ? (
                     <Icon icon='mdi:chevron-up' style={{ fontSize: '12px' }} />
                   ) : (
@@ -323,7 +324,7 @@ export default function UserViewStudentsList() {
           <Chip
             variant='outlined'
             color={student.balance >= 0 ? 'success' : 'error'}
-            label={student.balance + " so'm"}
+            label={formatCurrency(student.balance) + " so'm"}
           />
         )
       }

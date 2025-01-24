@@ -85,7 +85,7 @@ const Item = ({
       try {
         const response = await api.patch(`common/attendance/update/${currentDate?.id}/`, data)
       } catch (e: any) {
-        toast.error(e.response.data.msg?.[0] || "Saqlab bo'lmadi qayta urinib ko'ring")
+        toast.error(e.response?.data.msg?.[0] || "Saqlab bo'lmadi qayta urinib ko'ring")
         setValue(defaultValue)
       }
     }
@@ -315,8 +315,8 @@ const UserViewSecurity = () => {
 
     dispatch(setGettingAttendance(true))
     const queryString = new URLSearchParams(queryParams).toString()
-    await dispatch(getAttendance({ date: `${value.year}-${value.month}`, group: query?.id, queryString: queryString }))
     await dispatch(getDays({ date: `${value.year}-${value.month}`, group: query?.id }))
+    await dispatch(getAttendance({ date: `${value.year}-${value.month}`, group: query?.id, queryString: queryString }))
     dispatch(setGettingAttendance(false))
 
     push({

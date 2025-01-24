@@ -299,11 +299,11 @@ export const AttandanceFilters = ({ isMobile }: AttandanceFiltersProps) => {
         </Box>
       </form>
 
-      {!isMobile && (
+      {/* {!isMobile && (
         <Box display={'flex'} justifyContent='flex-end' marginTop={2}>
           <Excel url='/common/attendances/export/' queryString={queryString} />
         </Box>
-      )}
+      )} */}
     </Box>
   )
 }

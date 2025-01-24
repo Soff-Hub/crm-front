@@ -66,7 +66,8 @@ const Lids = () => {
           ))}
         </Box>
       ) : (
-        <SubLoader />
+            <SubLoader />
+            
       )}
 
       <CreateDepartmentDialog />

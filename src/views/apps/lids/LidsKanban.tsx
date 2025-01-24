@@ -33,6 +33,7 @@ import api from 'src/@core/utils/api'
 import { useState } from 'react'
 import Form from 'src/@core/components/form'
 import { fetchSmsList } from 'src/store/apps/settings'
+import DragAndDrop from 'src/pages/lids/dragonDrobLids'
 
 const AccordionCustom = dynamic(() => import('src/@core/components/accordion'))
 const EditDepartmentDialog = dynamic(() => import('./department/edit-dialog'))
@@ -59,18 +60,20 @@ export default function HomeKanban({ title, items, id, is_amocrm }: Props) {
   const recoverAmoDataItem = async () => {
     setRecoverLoading(true)
     try {
-      await api.post(`amocrm/delete/`, { data_id: id, is_delete: false, condition: 'pipeline' }).then(res => {
-        setOpenDialog(null)
-        toast.success('Muvaffaqiyatli tiklandi', {
-          position: 'top-center'
+      await api
+        .post(`amocrm/delete/`, { data_id: id, is_delete: false, condition: 'pipeline' })
+        .then(res => {
+          setOpenDialog(null)
+          toast.success('Muvaffaqiyatli tiklandi', {
+            position: 'top-center'
+          })
+          dispatch(fetchAmoCrmPipelines({ ...queryParams, status: 'active' }))
         })
-        dispatch(fetchAmoCrmPipelines({ ...queryParams, status: 'active' }))
-      }).catch((err) => {
-        setRecoverLoading(false)
-        toast.error(err.response.data.is_delete)
-        console.log(err);
-        
-      })
+        .catch(err => {
+          setRecoverLoading(false)
+          toast.error(err.response.data.is_delete)
+          console.log(err)
+        })
     } catch {
       setRecoverLoading(false)
     }
@@ -102,7 +105,6 @@ export default function HomeKanban({ title, items, id, is_amocrm }: Props) {
 
   return (
     <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', maxWidth: 350, minWidth: '300px' }}>
-      
       <Box display={'flex'} alignItems={'center'} justifyContent='space-between' marginBottom={5}>
         {is_amocrm && (
           <div style={{ width: '100%', display: 'flex', alignItems: 'center' }}>
@@ -190,13 +192,19 @@ export default function HomeKanban({ title, items, id, is_amocrm }: Props) {
           </Typography>
         )}
         {items.map(lead => (
-          <AccordionCustom
-            student_count={lead.student_count}
-            is_amocrm={is_amocrm}
-            parentId={id}
-            item={lead}
-            key={lead.id}
-            onView={() => null}
+          <DragAndDrop
+            key={lead?.id}
+            data={lead}
+            children={
+              <AccordionCustom
+                student_count={lead.student_count}
+                is_amocrm={is_amocrm}
+                parentId={id}
+                item={lead}
+                key={lead.id}
+                onView={() => null}
+              />
+            }
           />
         ))}
       </Box>

@@ -225,8 +225,8 @@ const GroupStudentGrades = () => {
     const currentDate = new Date()
     const currentDay = currentDate.getDate()
     const queryString = new URLSearchParams(gradeQueryParams).toString()
-    await dispatch(getStudentsGrades({ id: query?.id, queryString: `date=${value.year}-${value.month}-1` }))
     await dispatch(getDays({ date: `${value.year}-${value.month}`, group: query?.id }))
+    await dispatch(getStudentsGrades({ id: query?.id, queryString: `date=${value.year}-${value.month}-1` }))
 
     push({
       pathname,
