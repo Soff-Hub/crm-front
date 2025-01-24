@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast'
 import api from 'src/@core/utils/api'
 import { useAppDispatch, useAppSelector } from 'src/store'
-import { handleEditClickOpen } from 'src/store/apps/groupDetails'
+import { handleEditClickOpen, setMeetLink, setOnlineLessonLoading } from 'src/store/apps/groupDetails'
 
 // ** MUI Imports
 import LoadingButton from '@mui/lab/LoadingButton'
@@ -37,6 +37,38 @@ export default function OnlineLessonModal() {
       toast.success('Link copied to clipboard!')
     }
   }
+
+
+
+  const emailFormik = useFormik({
+    initialValues: {
+      email: ''
+    },
+    validationSchema: () =>
+      Yup.object({
+        email: Yup.string().required('Xabar kiriting')
+      }),
+    onSubmit: async values => {
+      dispatch(setOnlineLessonLoading(true))
+      try {
+        await api.post(`meets/create/`, {
+          email: values.email
+        }).then((res) => {
+          dispatch(setMeetLink(res.data.meet_link))
+        })
+        // toast.success(`SMS muvaffaqiyatli jo'natildi!`, {
+        //   position: 'top-center'
+        // })
+        // dispatch(handleEditClickOpen(null))
+        emailFormik.resetForm()
+        setIsSentSms(false)
+      } catch {
+        setLoading(false)
+      }
+      dispatch(setOnlineLessonLoading(false))
+
+    }
+  })
 
   const formik = useFormik({
     initialValues: {
@@ -89,6 +121,29 @@ export default function OnlineLessonModal() {
         {t('Online darsni boshlash')}
       </DialogTitle>
       <DialogContent>
+        {!meet_link && 
+        <form style={{marginTop:10}} onSubmit={emailFormik.handleSubmit}>
+        <FormControl fullWidth>
+              <TextField
+                name='email'
+                label={t('Email kiriting')}
+                size='small'
+                value={emailFormik.values.email}
+                onChange={emailFormik.handleChange}
+                onBlur={emailFormik.handleBlur}
+                error={!!emailFormik.errors.email && emailFormik.touched.email}
+              />
+              <FormHelperText error>
+                {emailFormik.errors.email && emailFormik.touched.email && emailFormik.errors.email}
+              </FormHelperText>
+          </FormControl>
+          <LoadingButton loading={onlineLessonLoading} variant='contained' sx={{marginTop:5}} fullWidth type='submit'>
+            Boshlash
+          </LoadingButton>
+        </form>
+        }
+        {meet_link &&
+        <>
         {onlineLessonLoading ? (
           <Typography textAlign='center'>Yuklanmoqda...</Typography>
         ) : (
@@ -106,54 +161,6 @@ export default function OnlineLessonModal() {
         )}
 
         <form style={{ marginTop: 10 }} onSubmit={formik.handleSubmit}>
-          {/* <FormControl fullWidth sx={{ marginBottom: 5 }}>
-            <InputLabel size='small' id='demo-simple-select-outlined-label'>
-              {t('Kategorya')}
-            </InputLabel>
-            <Select
-              size='small'
-              label='Kategorya'
-              defaultValue=''
-              id='demo-simple-select-outlined'
-              labelId='demo-simple-select-outlined-label'
-              onChange={(e: any) => {
-                setParentId(e.target.value)
-              }}
-            >
-              {sms_list.map((el: any) => (
-                <MenuItem value={el.id} sx={{ wordBreak: 'break-word' }}>
-                  <span style={{ maxWidth: '250px', wordBreak: 'break-word', fontSize: '10px' }}>{el.description}</span>
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          {parent_id && (
-            <FormControl fullWidth sx={{marginBottom:5}}>
-              <InputLabel size='small' id='demo-simple-select-outlined-label'>
-                {t('Shablonlar')}
-              </InputLabel>
-              <Select
-                size='small'
-                label='Shablonlar'
-                defaultValue=''
-                id='demo-simple-select-outlined'
-                labelId='demo-simple-select-outlined-label'
-                onChange={e => {
-                  //   setSMS(true)
-                  formik.setFieldValue('message', e.target.value)
-                }}
-              >
-                {smschild_list.map((el: any) => (
-                  <MenuItem value={el.description} sx={{ wordBreak: 'break-word' }}>
-                    <span style={{ maxWidth: '250px', wordBreak: 'break-word', fontSize: '10px' }}>
-                      {el.description}
-                    </span>
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          )} */}
-
           {isSentSms && (
             <FormControl fullWidth>
               <TextField
@@ -217,6 +224,8 @@ export default function OnlineLessonModal() {
             </Link>
           </DialogActions>
         </form>
+        </>
+        }
       </DialogContent>
     </Dialog>
   )

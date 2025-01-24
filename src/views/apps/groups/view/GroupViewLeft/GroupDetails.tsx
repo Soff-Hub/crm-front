@@ -32,15 +32,7 @@ export default function GroupDetails() {
   const { user } = useContext(AuthContext)
   const { t } = useTranslation()
 
-    async function createOnlineLesson() {
-      dispatch(setOnlineLessonLoading(true))
-    await api.post('meets/create/').then(res => {
-      dispatch(setMeetLink(res.data.meet_link))
-    })
-    dispatch(setOnlineLessonLoading(false))
-
-  }
-
+    
   const handleOpenSendSMSModal = async () => {
     dispatch(handleEditClickOpen('send-sms'))
     await dispatch(getSMSTemp())
@@ -246,7 +238,7 @@ export default function GroupDetails() {
               </Button>
             </Tooltip>
           )}
-          {/* {isGettingGroupDetails ? (
+          {isGettingGroupDetails ? (
             <Skeleton variant='rounded' animation='wave' width={70} height={40} />
           ) : (
             <Tooltip title={t('Online dars')} placement='top'>
@@ -254,13 +246,13 @@ export default function GroupDetails() {
                 color='success'
                 variant='outlined'
                 onClick={() => {
-                  dispatch(handleEditClickOpen('online-lesson')), createOnlineLesson()
+                  dispatch(handleEditClickOpen('online-lesson'))
                 }}
               >
                 <IconifyIcon icon='mdi:laptop' />
               </Button>
             </Tooltip>
-          )} */}
+          )}
         </CardActions>
       ) : (
         ''

@@ -49,8 +49,8 @@ export default function PaymentHistory() {
           <div
             style={{
                 display: 'flex',
-              
-              flexDirection: 'column',
+                flexWrap:'wrap',
+              // flexDirection: 'column',
               gap: isMobile ? 10 : 40,
               marginTop: isMobile ? 0 : 30,
               alignItems: 'flex-start'

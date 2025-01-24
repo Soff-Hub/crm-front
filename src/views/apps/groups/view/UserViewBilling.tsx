@@ -287,12 +287,13 @@ const UserViewBilling = () => {
                 size='small'
                 id='sale-count'
               >
-                {t('Chegirma soni')}
+                {t('Necha oyga chegirma bermoqchisiz')}
               </InputLabel>
               <OutlinedInput
                 id='sale-count'
                 size='small'
-                label={t('Chegirma soni')}
+                type='number'
+                label={t('Necha oyga chegirma bermoqchisiz')}
                 name='discount_count'
                 error={!!formik.errors.discount_count && !!formik.touched.discount_count}
                 onChange={formik.handleChange}

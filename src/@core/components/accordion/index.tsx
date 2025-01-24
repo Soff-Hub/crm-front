@@ -73,7 +73,7 @@ const badge = {
 export default function AccordionCustom({ onView, parentId, item, is_amocrm, student_count }: AccordionProps) {
   const [open, setOpen] = useState<boolean>(false)
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
-  const [loading, setLoading] = useState<boolean>(false)
+  const [loading, setLoading] = useState<boolean>(true)
   const [leadData, setLeadData] = useState<any[]>([])
   const [openDialog, setOpenDialog] = useState<'sms' | 'edit' | 'delete' | 'recover' | null>(null)
   const [error, setError] = useState<any>({})
@@ -178,7 +178,6 @@ export default function AccordionCustom({ onView, parentId, item, is_amocrm, stu
     if (open) onView()
   }, [open])
 
-
   useEffect(() => {
     if (open) {
       handleGetLeads(false)
@@ -192,6 +191,13 @@ export default function AccordionCustom({ onView, parentId, item, is_amocrm, stu
     setAnchorEl(null)
   }
 
+  const onDragStart = (e: React.DragEvent<HTMLDivElement>, data: any) => {
+    if (data?.id) {
+      e.dataTransfer.setData('application/json', JSON.stringify({ id: data.id, department: data.department }))
+    }
+  }
+
+  
   return (
     <Card sx={{ width: '100%', boxShadow: 'rgba(148, 163, 184, 0.1) 0px 3px 12px' }} id={item.id} draggable>
       <Box sx={{ width: '100%', display: 'flex', alignItems: 'center' }}>
@@ -226,23 +232,51 @@ export default function AccordionCustom({ onView, parentId, item, is_amocrm, stu
       <Box sx={{ maxHeight: '500px', overflow: 'auto', px: 2, gap: 2, pt: open ? 2 : 0, marginY: open ? 2 : 0 }}>
         {open ? (
           loading ? (
-            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            <Box sx={{ width: '100%',display:'flex', alignItems:'center' ,justifyContent:'center' }}>
               <CircularProgress disableShrink sx={{ mt: 1, mb: 2, mx: 'auto' }} size={25} />
+              {/* <div className='card p-3 mb-3 border-0 shadow-sm rounded'>
+                <div className='d-flex align-items-center'>
+                  <div
+                    className='rounded-circle bg-secondary placeholder-glow'
+                    style={{ width: 15, height: 15, borderRadius: '50%' }}
+                  ></div>
+
+                  <div className='ms-3 flex-grow-1'>
+                    <div className='placeholder-glow'>
+                      <span className='placeholder col-6 bg-secondary'></span>
+                    </div>
+                    <div className='placeholder-glow mt-2'>
+                      <span className='placeholder col-4 bg-secondary'></span>
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className='placeholder-glow'>
+                      <span
+                        className='placeholder col-1 bg-secondary'
+                        style={{ width: 15, height: 15, borderRadius: '50%' }}
+                      ></span>
+                    </div>
+                  </div>
+                </div>
+              </div> */}
             </Box>
           ) : leadData.length > 0 ? (
             leadData.map(lead => (
-              <KanbanItem
-                is_amocrm={is_amocrm}
-                reRender={handleGetLeads}
-                is_view={lead.is_view}
-                last_activity={lead.last_activity}
-                id={lead.id}
-                handleEditLead={handleEditLead}
-                key={lead.id}
-                status={'success'}
-                title={lead.first_name}
-                phone={lead.phone}
-              />
+              <div draggable onDragStart={e => onDragStart(e, lead)} className='cursor-move'>
+                <KanbanItem
+                  is_amocrm={is_amocrm}
+                  reRender={handleGetLeads}
+                  is_view={lead.is_view}
+                  last_activity={lead.last_activity}
+                  id={lead.id}
+                  handleEditLead={handleEditLead}
+                  key={lead.id}
+                  status={'success'}
+                  title={lead.first_name}
+                  phone={lead.phone}
+                />
+              </div>
             ))
           ) : (
             <Typography variant='body2' sx={{ fontStyle: 'italic', textAlign: 'center' }}>

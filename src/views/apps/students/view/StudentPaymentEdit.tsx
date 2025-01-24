@@ -17,10 +17,11 @@ import { useAppDispatch, useAppSelector } from 'src/store'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import usePayment from 'src/hooks/usePayment'
-import { useRouter } from 'next/router'
+import Router, { useRouter } from 'next/router'
 import { fetchStudentDetail, fetchStudentGroups, fetchStudentPayment } from 'src/store/apps/students'
 import AmountInput, { revereAmount } from 'src/@core/components/amount-input'
 import SubLoader from '../../loaders/SubLoader'
+import IconifyIcon from 'src/@core/components/icon'
 
 type Props = {
   openEdit: any
@@ -34,9 +35,11 @@ export default function StudentPaymentEditForm({ openEdit, setOpenEdit }: Props)
   const { t } = useTranslation()
   const { studentData } = useAppSelector(state => state.students)
   const userData: any = { ...studentData }
-  const { updatePayment } = usePayment()
+  const { updatePayment,paymentMethods,getPaymentMethod } = usePayment()
   const { query } = useRouter()
   const dispatch = useAppDispatch()
+  console.log(openEdit);
+  
 
   const validationSchema = Yup.object({
     payment_type: openEdit?.amount > 0 ? Yup.string().required('Tanlash majburiy') : Yup.string(),
@@ -92,7 +95,7 @@ export default function StudentPaymentEditForm({ openEdit, setOpenEdit }: Props)
   }
 
   useEffect(() => {
-    // getPaymentMethod()
+    getPaymentMethod()
 
     return () => {
       formik.resetForm()
@@ -106,7 +109,7 @@ export default function StudentPaymentEditForm({ openEdit, setOpenEdit }: Props)
         payment_date: openEdit.payment_date,
         payment_type: openEdit.payment_type || '',
         description: openEdit.description,
-        group: openEdit.group
+        group: openEdit.group,
       })
       setTimeout(() => {
         setOpen(true)
@@ -159,6 +162,39 @@ export default function StudentPaymentEditForm({ openEdit, setOpenEdit }: Props)
                 </FormControl>
               )}
 
+<FormControl fullWidth>
+              <InputLabel
+                size='small'
+                id='user-view-language-label'
+                error={!!errors.payment_type && touched.payment_type}
+              >
+                {t("To'lov usulini tanlang")}
+              </InputLabel>
+              <Select
+                size='small'
+                label={t("To'lov usulini tanlang")}
+                id='user-view-language'
+                labelId='user-view-language-label'
+                name='payment_type'
+                value={values.payment_type}
+                onChange={handleChange}
+                onBlur={handleBlur}
+              >
+                {paymentMethods.map((branch: any) => (
+                  <MenuItem key={branch.id} value={branch.id}>
+                    {branch.name}
+                  </MenuItem>
+                ))}
+                <MenuItem sx={{ fontWeight: 600 }} onClick={() => Router.push('/settings/ceo/all-settings')}>
+                  {t('Yangi yaratish')}
+                  <IconifyIcon icon={'ion:add-sharp'} />
+                </MenuItem>
+              </Select>
+              {!!errors.payment_type && touched.payment_type && (
+                <FormHelperText error>{errors.payment_type}</FormHelperText>
+              )}
+            </FormControl>
+              
               <FormControl fullWidth>
                 <AmountInput
                   label={t('Summa')}
