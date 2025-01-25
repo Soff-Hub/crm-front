@@ -238,7 +238,7 @@ export default function GroupDetails() {
               </Button>
             </Tooltip>
           )}
-          {isGettingGroupDetails ? (
+          {/* {isGettingGroupDetails ? (
             <Skeleton variant='rounded' animation='wave' width={70} height={40} />
           ) : (
             <Tooltip title={t('Online dars')} placement='top'>
@@ -252,7 +252,7 @@ export default function GroupDetails() {
                 <IconifyIcon icon='mdi:laptop' />
               </Button>
             </Tooltip>
-          )}
+          )} */}
         </CardActions>
       ) : (
         ''

@@ -12,20 +12,26 @@ import {
   import { useEffect, useState } from "react";
   import { useTranslation } from "react-i18next";
   import { DateRangePicker } from "rsuite";
+import ExcelStudents from "src/@core/components/excelButton/ExcelStudents";
   import IconifyIcon from "src/@core/components/icon";
   import useResponsive from "src/@core/hooks/useResponsive";
   import { formatCurrency } from "src/@core/utils/format-currency";
   import useDebounce from "src/hooks/useDebounce";
+import usePayment from "src/hooks/usePayment";
   import { formatDateString } from "src/pages/finance";
   import { useAppDispatch, useAppSelector } from "src/store";
   import { fetchStudentPaymentsList, updateParams } from "src/store/apps/reports/studentPayments";
   
   export default function FilterBlock() {
     const [search, setSearch] = useState<string>('');
+    const { isMobile } = useResponsive();
+        const { createPayment, paymentMethods, getPaymentMethod } = usePayment()
     const { t } = useTranslation();
       const { groups, queryParams, total_payments,teachersData } = useAppSelector(state => state.studentPayments);
       const { course_list } = useAppSelector(state => state.settings);
 
+      const queryString = new URLSearchParams({ ...queryParams}).toString();
+    
     const dispatch = useAppDispatch();
     const [date, setDate] = useState<any>('');
     const searchVal = useDebounce(search, 800);
@@ -66,8 +72,19 @@ import {
       const queryString = new URLSearchParams({ ...queryParams, course: e.target.value, page: "1" }).toString();
       await dispatch(fetchStudentPaymentsList(queryString));
     };
+    const handleFilterPayment = async (e: SelectChangeEvent<string>) => {
+      dispatch(updateParams({ payment_type: e.target.value, page: "1" }));
+      const queryString = new URLSearchParams({ ...queryParams, payment_type: e.target.value, page: "1" }).toString();
+      await dispatch(fetchStudentPaymentsList(queryString));
+    };
+
+    useEffect(() => {
+      getPaymentMethod()
+    }, [])
+    
+    console.log(paymentMethods);
+    
   
-    const { isMobile } = useResponsive();
   
     return (
       <Box
@@ -75,7 +92,7 @@ import {
                 display: "grid",
           gridColumn: isMobile ? "1/5" : "1/5",
           alignItems: "center",
-          gridTemplateColumns: isMobile ? "1fr 1fr" : " 1fr 1fr 1fr 1fr 1fr",
+          gridTemplateColumns: isMobile ? "1fr 1fr" : " 1fr 1fr 1fr 1fr 1fr 1fr 1fr",
           gap: "10px",
         }}
       >
@@ -118,6 +135,25 @@ import {
           </Select>
         </FormControl>
         <FormControl fullWidth>
+          <InputLabel size="small" id="group-filter-label">{t('Tolov')}</InputLabel>
+          <Select
+            sx={{ bgcolor: "white" }}
+            size="small"
+            label={t('Tolov')}
+            value={queryParams.payment_type || ""}
+            id="group-filter"
+            labelId="group-filter-label"
+            onChange={handleFilterPayment}
+          >
+            <MenuItem value="">
+              <b>{t('Barchasi')}</b>
+            </MenuItem>
+            {paymentMethods?.map((group: any) => (
+              <MenuItem key={group.id} value={group.id}>{group.name}</MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+        <FormControl fullWidth>
           <InputLabel size="small" id="teacher-filter-label">{t('O\'qituvchilar')}</InputLabel>
           <Select
             sx={{ bgcolor: "white" }}
@@ -155,6 +191,7 @@ import {
             ))}
           </Select>
         </FormControl>
+        
         <DateRangePicker
           style={{ minWidth: "auto", gridColumn: isMobile ? "1/3" : "" }}
           showOneCalendar
@@ -181,6 +218,7 @@ import {
           size="lg"
           value={date}
         />
+        <ExcelStudents queryString={queryString} url="/common/student/payments/"/>
       </Box>
     );
   }
