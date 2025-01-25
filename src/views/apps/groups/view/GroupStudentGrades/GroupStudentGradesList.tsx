@@ -76,7 +76,6 @@ const Item = ({
         date: date,
         score: grade || 0
       }
-      console.log(data)
 
       try {
         await api.post(`common/group-student/rating/create/`, data)

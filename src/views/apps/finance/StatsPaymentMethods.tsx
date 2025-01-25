@@ -1,14 +1,19 @@
 import { Box, Chip, Skeleton, Typography } from '@mui/material'
+import { Briefcase, Wallet } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import EmptyContent from 'src/@core/components/empty-content'
 import ReactApexcharts from 'src/@core/components/react-apexcharts'
 import useResponsive from 'src/@core/hooks/useResponsive'
+import { useSettings } from 'src/@core/hooks/useSettings'
 import { formatCurrency } from 'src/@core/utils/format-currency'
 import { useAppSelector } from 'src/store'
 
 export default function StatsPaymentMethods() {
   const { all_numbers, numbersLoad: loading } = useAppSelector(state => state.finance)
   const { isMobile } = useResponsive()
+  const { settings } = useSettings()
+
+  console.log(settings.mode)
 
   const { t } = useTranslation()
   const props: any = {
@@ -67,16 +72,49 @@ export default function StatsPaymentMethods() {
           <Box>
             <ReactApexcharts options={props.options} series={props.series} type='pie' width={isMobile ? '100%' : 380} />
 
-            {all_numbers?.payment_types.map(item => (
-              <Box display='flex' marginBottom={3} alignItems='center' gap={2}>
-                <Typography display='flex' color='rgba(76, 78, 100, 0.87)'>
-                  {item.name} :
-                </Typography>
-
-                {/* <Chip  sx={{fontSize:12}} label={formatCurrency(item?.amount)+" so'm"} /> */}
-                <Typography fontSize={14}>{formatCurrency(item.amount) + " so'm"}</Typography>
-              </Box>
-            ))}
+            {all_numbers?.payment_types.map(item =>
+              settings.mode == 'light' ? (
+                <div className='mt-4 mb-4 '>
+                  <div className='d-flex align-items-center justify-content-between p-2 bg-success bg-opacity-10 rounded px-3'>
+                    <div className='d-flex align-items-center gap-2'>
+                      <div
+                        className='d-flex align-items-center justify-content-center rounded-circle bg-success'
+                        style={{ width: '1.5rem', height: '1.5rem' }}
+                      >
+                        <Wallet className='text-white' style={{ width: '0.75rem', height: '0.75rem' }} />
+                      </div>
+                      <div>
+                        <div className='fw-medium small'>{item?.name}</div>
+                        <div className='text-muted small'>1 операция</div>
+                      </div>
+                    </div>
+                    <div className='text-end fw-medium text-success small'>
+                      {formatCurrency(item?.amount) + " so'm"}
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className='mt-4 mb-4'>
+                  <div className='d-flex align-items-center justify-content-between p-2 bg-dark bg-opacity-50 rounded px-3'>
+                    <div className='d-flex align-items-center gap-2'>
+                      <div
+                        className='d-flex align-items-center justify-content-center rounded-circle bg-success'
+                        style={{ width: '1.5rem', height: '1.5rem' }}
+                      >
+                        <Wallet className='text-white' style={{ width: '0.75rem', height: '0.75rem' }} />
+                      </div>
+                      <div>
+                       <Typography fontSize={15}>{item?.name}</Typography>
+                        <div className='small text-light'><Typography fontSize={12}>1 операция</Typography></div>
+                      </div>
+                    </div>
+                    <div className='text-end fw-medium text-light small'>
+                      {formatCurrency(item?.amount) + " so'm"}
+                    </div>
+                  </div>
+                </div>
+              )
+            )}
           </Box>
         ) : (
           <EmptyContent title="To'lovlar mavjud emas" />

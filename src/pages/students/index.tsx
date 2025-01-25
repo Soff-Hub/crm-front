@@ -31,6 +31,7 @@ import { AuthContext } from 'src/context/AuthContext'
 import { toast } from 'react-hot-toast'
 import useResponsive from 'src/@core/hooks/useResponsive'
 import IconifyIcon from 'src/@core/components/icon'
+import ExcelStudents from 'src/@core/components/excelButton/ExcelStudents'
 
 export interface customTableProps {
   xs: number
@@ -49,6 +50,8 @@ export default function GroupsPage() {
   const { students, isLoading, studentsCount, queryParams,total_debts } = useAppSelector(state => state.students)
   const [page, setPage] = useState<number>(queryParams.page ? Number(queryParams.page) - 1 : 1)
   const [rowsPerPage, setRowsPerPage] = useState<number>(() => Number(localStorage.getItem('rowsPerPage')) || 10)
+
+  const queryString = new URLSearchParams({ ...queryParams } as Record<string, string>).toString()
 
   const columns: customTableProps[] = [
     {
@@ -230,14 +233,18 @@ export default function GroupsPage() {
         </Button>
       </Box>
       {isMobile && (
+        <Box>
         <Button
           size='small'
-          sx={{ marginLeft: 'auto', width: '100%' }}
+          sx={{ marginLeft: 'auto', width: '100%',marginBottom:2 }}
           variant='outlined'
           onClick={() => setOpen(true)}
         >
           {t('Filterlash')}
         </Button>
+                  <ExcelStudents  size='small' url='/student/offset-list/' queryString={queryString} />
+        </Box>
+        
       )}
       {!isMobile && <StudentsFilter  isMobile={isMobile} />}
       <DataTable

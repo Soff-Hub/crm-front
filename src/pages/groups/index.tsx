@@ -46,6 +46,7 @@ import api from 'src/@core/utils/api'
 import { LoadingButton } from '@mui/lab'
 import ceoConfigs from 'src/configs/ceo'
 import { Icon } from '@iconify/react'
+import Excel from 'src/@core/components/excelButton/Excel'
 
 const IconifyIcon = dynamic(() => import('src/@core/components/icon'))
 const DataTable = dynamic(() => import('src/@core/components/table'))
@@ -184,6 +185,14 @@ export default function GroupsPage() {
     }
   ]
 
+  const queryString = new URLSearchParams(
+    Object.entries(queryParams).reduce((acc, [key, value]) => {
+      if (value !== undefined && value !== null) {
+        acc[key] = String(value);
+      }
+      return acc;
+    }, {} as Record<string, string>)
+  ).toString();
   const handleRowsPerPageChange = async (value: number) => {
     const limit = value
     setRowsPerPage(Number(value))
@@ -246,7 +255,6 @@ export default function GroupsPage() {
     await api
       .get('auth/employees-check-list/?role=teacher')
       .then(data => {
-        
         dispatch(setTeacherData(data.data))
       })
       .catch(error => {
@@ -316,14 +324,17 @@ export default function GroupsPage() {
         </Button>
       </Box>
       {isMobile && (
-        <Button
-          size='small'
-          sx={{ marginLeft: 'auto', width: '100%' }}
-          variant='outlined'
-          onClick={() => setOpen(true)}
-        >
-          {t('Filterlash')}
-        </Button>
+        <>
+          <Button
+            size='small'
+            sx={{ marginLeft: 'auto', width: '100%',marginBottom:2}}
+            variant='outlined'
+            onClick={() => setOpen(true)}
+          >
+            {t('Filterlash')}
+          </Button>
+          <Excel size='small' url='/common/groups/export/' queryString={queryString} />
+        </>
       )}
 
       {!isMobile && <GroupsFilter isMobile={isMobile} />}
