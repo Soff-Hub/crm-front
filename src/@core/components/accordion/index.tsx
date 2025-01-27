@@ -30,6 +30,7 @@ import { useTranslation } from 'react-i18next'
 import { useAppDispatch, useAppSelector } from 'src/store'
 import { fetchAmoCrmPipelines, fetchDepartmentList, setOpenLid, setSectionId } from 'src/store/apps/leads'
 import dynamic from 'next/dynamic'
+import { Draggable } from 'react-beautiful-dnd'
 
 const DepartmentSendSmsForm = dynamic(() => import('src/views/apps/lids/departmentItem/DepartmentSendSmsForm'), {
   ssr: false // Disable server-side rendering if required
@@ -197,7 +198,6 @@ export default function AccordionCustom({ onView, parentId, item, is_amocrm, stu
     }
   }
 
-  
   return (
     <Card sx={{ width: '100%', boxShadow: 'rgba(148, 163, 184, 0.1) 0px 3px 12px' }} id={item.id} draggable>
       <Box sx={{ width: '100%', display: 'flex', alignItems: 'center' }}>
@@ -232,7 +232,7 @@ export default function AccordionCustom({ onView, parentId, item, is_amocrm, stu
       <Box sx={{ maxHeight: '500px', overflow: 'auto', px: 2, gap: 2, pt: open ? 2 : 0, marginY: open ? 2 : 0 }}>
         {open ? (
           loading ? (
-            <Box sx={{ width: '100%',display:'flex', alignItems:'center' ,justifyContent:'center' }}>
+            <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <CircularProgress disableShrink sx={{ mt: 1, mb: 2, mx: 'auto' }} size={25} />
               {/* <div className='card p-3 mb-3 border-0 shadow-sm rounded'>
                 <div className='d-flex align-items-center'>
@@ -263,20 +263,32 @@ export default function AccordionCustom({ onView, parentId, item, is_amocrm, stu
             </Box>
           ) : leadData.length > 0 ? (
             leadData.map(lead => (
-              <div draggable onDragStart={e => onDragStart(e, lead)} className='cursor-move'>
-                <KanbanItem
-                  is_amocrm={is_amocrm}
-                  reRender={handleGetLeads}
-                  is_view={lead.is_view}
-                  last_activity={lead.last_activity}
-                  id={lead.id}
-                  handleEditLead={handleEditLead}
-                  key={lead.id}
-                  status={'success'}
-                  title={lead.first_name}
-                  phone={lead.phone}
-                />
-              </div>
+              <Draggable key={lead.id} draggableId={`${lead?.id}`} index={lead?.id}>
+                {(provided, snapshot) => (
+                  <div
+                    ref={provided.innerRef}
+                    {...provided.draggableProps}
+                    {...provided.dragHandleProps}
+                    style={{
+                      ...provided.draggableProps.style,
+                      opacity: snapshot.isDragging ? '0.5' : '1'
+                    }}
+                  >
+                    <KanbanItem
+                      is_amocrm={is_amocrm}
+                      reRender={handleGetLeads}
+                      is_view={lead.is_view}
+                      last_activity={lead.last_activity}
+                      id={lead.id}
+                      handleEditLead={handleEditLead}
+                      key={lead.id}
+                      status={'success'}
+                      title={lead.first_name}
+                      phone={lead.phone}
+                    />
+                  </div>
+                )}
+              </Draggable>
             ))
           ) : (
             <Typography variant='body2' sx={{ fontStyle: 'italic', textAlign: 'center' }}>

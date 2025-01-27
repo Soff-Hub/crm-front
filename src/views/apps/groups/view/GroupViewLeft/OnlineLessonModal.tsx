@@ -38,37 +38,45 @@ export default function OnlineLessonModal() {
     }
   }
 
+  // const emailFormik = useFormik({
+  //   initialValues: {
+  //     email: ''
+  //   },
+  //   validationSchema: () =>
+  //     Yup.object({
+  //       email: Yup.string().required('Xabar kiriting')
+  //     }),
+  //   onSubmit: async values => {
+  //     dispatch(setOnlineLessonLoading(true))
+  //     try {
+  //       await api
+  //         .post(`meets/create/`, {
+  //           email: values.email
+  //         })
+  //         .then(res => {
+  //           dispatch(setMeetLink(res.data.meet_link))
+  //         })
+  //       // toast.success(`SMS muvaffaqiyatli jo'natildi!`, {
+  //       //   position: 'top-center'
+  //       // })
+  //       // dispatch(handleEditClickOpen(null))
+  //       emailFormik.resetForm()
+  //       setIsSentSms(false)
+  //     } catch {
+  //       setLoading(false)
+  //     }
+  //     dispatch(setOnlineLessonLoading(false))
+  //   }
+  // })
 
-
-  const emailFormik = useFormik({
-    initialValues: {
-      email: ''
-    },
-    validationSchema: () =>
-      Yup.object({
-        email: Yup.string().required('Xabar kiriting')
-      }),
-    onSubmit: async values => {
-      dispatch(setOnlineLessonLoading(true))
-      try {
-        await api.post(`meets/create/`, {
-          email: values.email
-        }).then((res) => {
-          dispatch(setMeetLink(res.data.meet_link))
-        })
-        // toast.success(`SMS muvaffaqiyatli jo'natildi!`, {
-        //   position: 'top-center'
-        // })
-        // dispatch(handleEditClickOpen(null))
-        emailFormik.resetForm()
-        setIsSentSms(false)
-      } catch {
-        setLoading(false)
-      }
-      dispatch(setOnlineLessonLoading(false))
-
-    }
-  })
+  async function handleGetMeetLink() {
+    dispatch(setOnlineLessonLoading(true))
+    await api.get('meets/google/login/').then((res) => {
+      console.log(res);
+      
+    })
+    dispatch(setOnlineLessonLoading(false))
+  }
 
   const formik = useFormik({
     initialValues: {
@@ -121,7 +129,7 @@ export default function OnlineLessonModal() {
         {t('Online darsni boshlash')}
       </DialogTitle>
       <DialogContent>
-        {!meet_link && 
+        {/* {!meet_link && 
         <form style={{marginTop:10}} onSubmit={emailFormik.handleSubmit}>
         <FormControl fullWidth>
               <TextField
@@ -141,91 +149,89 @@ export default function OnlineLessonModal() {
             Boshlash
           </LoadingButton>
         </form>
-        }
-        {meet_link &&
+        } */}
         <>
-        {onlineLessonLoading ? (
-          <Typography textAlign='center'>Yuklanmoqda...</Typography>
-        ) : (
-          <Tooltip title='Linkni nusxalang' arrow>
-            <Typography
-              textAlign='center'
-              onClick={handleCopy}
-              sx={{
-                cursor: 'pointer'
-              }}
-            >
-              {meet_link}
-            </Typography>
-          </Tooltip>
-        )}
-
-        <form style={{ marginTop: 10 }} onSubmit={formik.handleSubmit}>
-          {isSentSms && (
-            <FormControl fullWidth>
-              <TextField
-                name='message'
-                multiline
-                rows={4}
-                label={t('SMS matni')}
-                size='small'
-                value={formik.values.message}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                error={!!formik.errors.message && formik.touched.message}
-              />
-              <FormHelperText error>
-                {formik.errors.message && formik.touched.message && formik.errors.message}
-              </FormHelperText>
-            </FormControl>
+          {onlineLessonLoading ? (
+            <Typography textAlign='center'>Yuklanmoqda...</Typography>
+          ) : (
+            <Tooltip title='Linkni nusxalang' arrow>
+              <Typography
+                textAlign='center'
+                onClick={handleCopy}
+                sx={{
+                  cursor: 'pointer'
+                }}
+              >
+                {meet_link}
+              </Typography>
+            </Tooltip>
           )}
-          <Box width='100%' display='flex' alignItems='center' justifyContent='center'>
-            {successText && (
-              <Chip
-                icon={<IconifyIcon icon='mdi:check-circle-outline' />}
-                variant='outlined'
-                sx={{ fontSize: 15, padding: 5 }}
-                label={successText}
-                color='success'
-              />
-            )}
-          </Box>
 
-          <DialogActions sx={{ justifyContent: 'center' }}>
-            {!isSentSms || !successText ? (
-              <LoadingButton
-                type='button'
-                color='warning'
-                onClick={() => {
-                  setIsSentSms(true)
-                  setIsSuccessText('')
-                }}
-                variant='contained'
-                sx={{ mr: 1 }}
-              >
-                {t('Sms yuborish')}
-              </LoadingButton>
-            ) : (
-              <LoadingButton color='warning'  loading={isLoading} type='submit' variant='contained' sx={{ mr: 1 }}>
-                {t('Sms jonatish')}
-              </LoadingButton>
+          <form style={{ marginTop: 10 }} onSubmit={formik.handleSubmit}>
+            {isSentSms && (
+              <FormControl fullWidth>
+                <TextField
+                  name='message'
+                  multiline
+                  rows={4}
+                  label={t('SMS matni')}
+                  size='small'
+                  value={formik.values.message}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  error={!!formik.errors.message && formik.touched.message}
+                />
+                <FormHelperText error>
+                  {formik.errors.message && formik.touched.message && formik.errors.message}
+                </FormHelperText>
+              </FormControl>
             )}
-            <Link target='_blank' href={String(meet_link)}>
-              <LoadingButton
-                loading={onlineLessonLoading}
-                variant='contained'
-                type='button'
-                onClick={() => {
-                  dispatch(handleEditClickOpen(null)), formik.resetForm()
-                }}
-              >
-                {t('Boshlash')}
-              </LoadingButton>
-            </Link>
-          </DialogActions>
-        </form>
+            <Box width='100%' display='flex' alignItems='center' justifyContent='center'>
+              {successText && (
+                <Chip
+                  icon={<IconifyIcon icon='mdi:check-circle-outline' />}
+                  variant='outlined'
+                  sx={{ fontSize: 15, padding: 5 }}
+                  label={successText}
+                  color='success'
+                />
+              )}
+            </Box>
+
+            <DialogActions sx={{ justifyContent: 'center' }}>
+              {!isSentSms || !successText ? (
+                <LoadingButton
+                  type='button'
+                  color='warning'
+                  onClick={() => {
+                    setIsSentSms(true)
+                    setIsSuccessText('')
+                  }}
+                  variant='contained'
+                  sx={{ mr: 1 }}
+                >
+                  {t('Sms yuborish')}
+                </LoadingButton>
+              ) : (
+                <LoadingButton color='warning' loading={isLoading} type='submit' variant='contained' sx={{ mr: 1 }}>
+                  {t('Sms jonatish')}
+                </LoadingButton>
+              )}
+              <Link target='_blank' href={String(meet_link)}>
+                <LoadingButton
+                  loading={onlineLessonLoading}
+                  variant='contained'
+                  type='button'
+                  onClick={() => {
+                    dispatch(handleEditClickOpen(null)), formik.resetForm()
+                  }}
+                >
+                  {t('Boshlash')}
+                </LoadingButton>
+              </Link>
+            </DialogActions>
+          </form>
         </>
-        }
       </DialogContent>
     </Dialog>
   )

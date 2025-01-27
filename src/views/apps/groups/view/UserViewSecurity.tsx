@@ -329,6 +329,7 @@ const UserViewSecurity = () => {
     try {
       const response = await api.post('common/topic/create/', { topic, group: query?.id, date: hour.date })
       if (response.status == 201) {
+        setTopic(null)
         setOpenTooltip(null)
         if (query.month) {
           await dispatch(
@@ -802,7 +803,7 @@ const UserViewSecurity = () => {
               variant='outlined'
               color='error'
               onClick={() => {
-                formik.resetForm(), setUpdateTopic(false)
+                formik.resetForm(), setUpdateTopic(false),setTopic(null)
               }}
             >
               Bekor qilish

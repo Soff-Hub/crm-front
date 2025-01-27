@@ -716,6 +716,81 @@ export default function AllSettings() {
               </Box>
             </CardContent>
           </Card>
+          {/* <Card>
+            <CardContent>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+                <Typography sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}>
+                  {t('Darsga kelganlarga sms yuborish')}:
+                </Typography>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  {loading === 'absend' ? (
+                    <CircularProgress disableShrink size={'20px'} sx={{ margin: '10px 0', marginLeft: '15px' }} />
+                  ) : (
+                    <Switch
+                      checked={Boolean(companyInfo?.auto_sms?.on_absent)}
+                      onChange={async (e, i) => {
+                        setLoading('absend')
+                        await updateSettings('on_absent', i)
+                      }}
+                    />
+                  )}
+                </Box>
+              </Box>
+              <Typography sx={{ marginBottom: 5 }} fontSize={12}>
+                {"Xabar matniga talaba ismini qo'shish uchun ${first_name} kalit so'zi qoldiring."}
+              </Typography>
+              <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: '20px', flexDirection: 'column' }}>
+                <Typography sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}>
+                  {t(`SMS matnini kiriting (kelmagan o'quvchiga ertasi kuni yuboriladi)`)}
+                </Typography>
+                <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: '10px', width: '100%' }}>
+                  {editable === 'absend' ? (
+                    <>
+                      <TextField
+                        multiline
+                        rows={4}
+                        size='small'
+                        focused
+                        defaultValue={absent_text || companyInfo?.auto_sms?.absent_text}
+                        onBlur={e => {
+                          updateSettings('absent_text', e.target.value)
+                        }}
+                        onChange={e => {
+                          setName(e.target.value), localStorage.setItem('absent_text', e.target.value)
+                        }}
+                        fullWidth
+                      />
+                      <IconifyIcon
+                        icon={loading === 'absend' ? 'line-md:loading-loop' : 'ic:baseline-check'}
+                        style={{ cursor: 'pointer' }}
+                        onClick={() => {
+                          updateSettings('absent_text', name)
+                        }}
+                      />
+                    </>
+                  ) : (
+                    <>
+                      <TextField
+                        fullWidth
+                        multiline
+                        rows={4}
+                        type='text'
+                        value={`${absent_text || companyInfo?.auto_sms?.absent_text}`}
+                        size='small'
+                        placeholder={t('Boshlanish vaqti')}
+                        onBlur={e => console.log(e.target.value)}
+                      />
+                      <IconifyIcon
+                        icon={'basil:edit-outline'}
+                        style={{ cursor: 'pointer' }}
+                        onClick={() => setEditable('absend')}
+                      />
+                    </>
+                  )}
+                </Box>
+              </Box>
+            </CardContent>
+          </Card> */}
           <Card>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
@@ -809,6 +884,81 @@ export default function AllSettings() {
               </Box>
             </CardContent>
           </Card>
+          {/* <Card>
+            <CardContent>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+                <Typography sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}>
+                  {t('Imtihon natijalarini sms yuborish')}:
+                </Typography>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  {loading === 'absend' ? (
+                    <CircularProgress disableShrink size={'20px'} sx={{ margin: '10px 0', marginLeft: '15px' }} />
+                  ) : (
+                    <Switch
+                      checked={Boolean(companyInfo?.auto_sms?.on_absent)}
+                      onChange={async (e, i) => {
+                        setLoading('absend')
+                        await updateSettings('on_absent', i)
+                      }}
+                    />
+                  )}
+                </Box>
+              </Box>
+              <Typography sx={{ marginBottom: 5 }} fontSize={12}>
+                {"Xabar matniga talaba ismini qo'shish uchun ${first_name} kalit so'zi qoldiring."}
+              </Typography>
+              <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: '20px', flexDirection: 'column' }}>
+                <Typography sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}>
+                  {t(`SMS matnini kiriting (kelmagan o'quvchiga ertasi kuni yuboriladi)`)}
+                </Typography>
+                <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: '10px', width: '100%' }}>
+                  {editable === 'absend' ? (
+                    <>
+                      <TextField
+                        multiline
+                        rows={4}
+                        size='small'
+                        focused
+                        defaultValue={absent_text || companyInfo?.auto_sms?.absent_text}
+                        onBlur={e => {
+                          updateSettings('absent_text', e.target.value)
+                        }}
+                        onChange={e => {
+                          setName(e.target.value), localStorage.setItem('absent_text', e.target.value)
+                        }}
+                        fullWidth
+                      />
+                      <IconifyIcon
+                        icon={loading === 'absend' ? 'line-md:loading-loop' : 'ic:baseline-check'}
+                        style={{ cursor: 'pointer' }}
+                        onClick={() => {
+                          updateSettings('absent_text', name)
+                        }}
+                      />
+                    </>
+                  ) : (
+                    <>
+                      <TextField
+                        fullWidth
+                        multiline
+                        rows={4}
+                        type='text'
+                        value={`${absent_text || companyInfo?.auto_sms?.absent_text}`}
+                        size='small'
+                        placeholder={t('Boshlanish vaqti')}
+                        onBlur={e => console.log(e.target.value)}
+                      />
+                      <IconifyIcon
+                        icon={'basil:edit-outline'}
+                        style={{ cursor: 'pointer' }}
+                        onClick={() => setEditable('absend')}
+                      />
+                    </>
+                  )}
+                </Box>
+              </Box>
+            </CardContent>
+          </Card> */}
         </Box>
 
         <Dialog open={deleteId?.open === 'payment-type'} onClose={() => setDeleteId(null)}>

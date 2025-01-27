@@ -1,6 +1,6 @@
 import { Box, Button, Card, CardActions, CardContent, Skeleton, Tooltip, Typography } from '@mui/material'
 import Link from 'next/link'
-import { useContext } from 'react'
+import { useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AuthContext } from 'src/context/AuthContext'
 import { useAppDispatch, useAppSelector } from 'src/store'
@@ -28,11 +28,11 @@ const roleColors: ColorsType = {
 export default function GroupDetails() {
   const { groupData, isGettingGroupDetails } = useAppSelector(state => state.groupDetails)
   const dispatch = useAppDispatch()
-
+  const [url, setUrl] = useState('')
   const { user } = useContext(AuthContext)
-  const { t } = useTranslation()
+  const { t } = useTranslation();
+  
 
-    
   const handleOpenSendSMSModal = async () => {
     dispatch(handleEditClickOpen('send-sms'))
     await dispatch(getSMSTemp())
@@ -47,6 +47,23 @@ export default function GroupDetails() {
       room: String(filtered?.room_data?.id)
     }).toString()
     await Promise.all([dispatch(getDashboardLessons(queryString)), dispatch(getGroupsDetails(id))])
+  }
+
+  async function handleGetMeetLink() {
+    if (window.location.hostname == 'test.soffcrm.uz' || 'localhost') {
+      dispatch(setOnlineLessonLoading(true))
+      await api.get('meets/google/login/').then(res => {
+        setUrl(res.data.url)
+        if (url) {
+          window.location.assign(url);
+        }
+
+         
+      })
+      dispatch(setOnlineLessonLoading(false))
+    } else {
+      console.log('xatolik')
+    }
   }
 
   return (
@@ -238,21 +255,23 @@ export default function GroupDetails() {
               </Button>
             </Tooltip>
           )}
-          {/* {isGettingGroupDetails ? (
+          {isGettingGroupDetails ? (
+            window.location.hostname == 'test.soffcrm.uz' &&
             <Skeleton variant='rounded' animation='wave' width={70} height={40} />
           ) : (
+              window.location.hostname == 'test.soffcrm.uz'  &&
             <Tooltip title={t('Online dars')} placement='top'>
               <Button
                 color='success'
                 variant='outlined'
                 onClick={() => {
-                  dispatch(handleEditClickOpen('online-lesson'))
+                  dispatch(handleEditClickOpen('online-lesson')), handleGetMeetLink()
                 }}
               >
                 <IconifyIcon icon='mdi:laptop' />
               </Button>
             </Tooltip>
-          )} */}
+          )}
         </CardActions>
       ) : (
         ''
