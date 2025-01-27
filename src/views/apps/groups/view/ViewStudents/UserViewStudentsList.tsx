@@ -68,7 +68,6 @@ export default function UserViewStudentsList() {
   const { students, studentsQueryParams, isGettingStudents, updateStatusModal, queryParams } = useAppSelector(
     state => state.groupDetails
   )
-  console.log(updateStatusModal)
   const { settings } = useSettings()
   const dispatch = useAppDispatch()
   const { t } = useTranslation()

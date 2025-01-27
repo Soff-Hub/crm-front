@@ -33,7 +33,7 @@ import api from 'src/@core/utils/api'
 import { useState } from 'react'
 import Form from 'src/@core/components/form'
 import { fetchSmsList } from 'src/store/apps/settings'
-import DragAndDrop from 'src/pages/lids/dragonDrobLids'
+import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd'
 
 const AccordionCustom = dynamic(() => import('src/@core/components/accordion'))
 const EditDepartmentDialog = dynamic(() => import('./department/edit-dialog'))
@@ -53,9 +53,36 @@ export default function HomeKanban({ title, items, id, is_amocrm }: Props) {
   const { query } = useRouter()
   const [openDialog, setOpenDialog] = useState<'sms' | 'edit' | 'delete' | 'recover' | null>(null)
   const { t } = useTranslation()
+  const [data, setData] = useState(items)
   const [error, setError] = useState<any>({})
   const [recoverLoading, setRecoverLoading] = useState(false)
   //** Main Funcitons
+  const [leadData, setLeadData] = useState<any[]>([])
+
+
+  const onDragEnd = (result: any) => {
+    if (!result.destination) return
+    const { source, destination } = result
+
+    if (source.droppableId !== destination.droppableId) {
+      const sourceColIndex = data.findIndex(e => e.id === source.droppableId)
+      const destinationColIndex = data.findIndex(e => e.id === destination.droppableId)
+
+      const sourceCol = data[sourceColIndex]
+      const destinationCol = data[destinationColIndex]
+
+      const sourceTask = [...sourceCol.tasks]
+      const destinationTask = [...destinationCol.tasks]
+
+      const [removed] = sourceTask.splice(source.index, 1)
+      destinationTask.splice(destination.index, 0, removed)
+
+      data[sourceColIndex].tasks = sourceTask
+      data[destinationColIndex].tasks = destinationTask
+
+      setData(data)
+    }
+  }
 
   const recoverAmoDataItem = async () => {
     setRecoverLoading(true)
@@ -191,22 +218,32 @@ export default function HomeKanban({ title, items, id, is_amocrm }: Props) {
             {t("Bo'sh")}
           </Typography>
         )}
-        {items.map(lead => (
-          <DragAndDrop
-            key={lead?.id}
-            data={lead}
-            children={
-              <AccordionCustom
-                student_count={lead.student_count}
-                is_amocrm={is_amocrm}
-                parentId={id}
-                item={lead}
-                key={lead.id}
-                onView={() => null}
-              />
-            }
-          />
-        ))}
+        <DragDropContext onDragEnd={onDragEnd}>
+          <div className="w-100  space-y-3">
+          {items.map(lead => (
+            <Droppable key={lead?.id} droppableId={`${lead?.id}`}>
+              {provided => (
+                <div  {...provided.droppableProps} ref={provided.innerRef} className='w-100' style={{marginBottom:10}}>
+
+                  <div  className="kanban__section__title">
+                  <AccordionCustom
+                    student_count={lead.student_count}
+                    is_amocrm={is_amocrm}
+                    parentId={id}
+                    item={lead}
+                    key={lead.id}
+                    onView={() => null}
+                  />
+
+                  </div>
+                  
+                </div>
+              )}
+            </Droppable>
+          ))}
+
+          </div>
+        </DragDropContext>
       </Box>
 
       <Dialog open={open === 'delete' && actionId === id}>
