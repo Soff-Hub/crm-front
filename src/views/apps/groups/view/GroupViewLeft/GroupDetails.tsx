@@ -15,6 +15,7 @@ import { getDashboardLessons, getGroupsDetails, getMetaData, handleOpenEdit } fr
 import api from 'src/@core/utils/api'
 import { LoadingButton } from '@mui/lab'
 import { Router, useRouter } from 'next/router'
+import toast from 'react-hot-toast'
 
 interface ColorsType {
   [key: string]: ThemeColor
@@ -57,18 +58,18 @@ export default function GroupDetails() {
   }
 
   async function handleGetMeetLink() {
-    if (window.location.hostname == 'test.soffcrm.uz' || 'localhost') {
       dispatch(setOnlineLessonLoading(true))
       await api.get(`meets/google/login/?id=${id}&month=${month}`).then(res => {
         if (res.data.url) {
           window.location.assign(res.data.url)
           // dispatch(setMeetLink(res.data.url))
         }
+      }).catch((err) => {
+        console.log(err);
+        toast.error(err.response.data.msg)
+        
       })
       dispatch(setOnlineLessonLoading(false))
-    } else {
-      console.log('xatolik')
-    }
   }
 
   return (
