@@ -47,6 +47,7 @@ import { LoadingButton } from '@mui/lab'
 import ceoConfigs from 'src/configs/ceo'
 import { Icon } from '@iconify/react'
 import Excel from 'src/@core/components/excelButton/Excel'
+import OnlineLessonModal from 'src/views/apps/groups/view/GroupViewLeft/OnlineLessonModal'
 
 const IconifyIcon = dynamic(() => import('src/@core/components/icon'))
 const DataTable = dynamic(() => import('src/@core/components/table'))
@@ -439,6 +440,7 @@ export default function GroupsPage() {
           </DialogContent>
         </form>
       </Dialog>
+      <OnlineLessonModal/>
     </div>
   )
 }

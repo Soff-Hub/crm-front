@@ -1,6 +1,7 @@
 // @ts-nocheck
 
 // ** MUI Imports
+import { LoadingButton } from '@mui/lab'
 import {
   Autocomplete,
   Box,
@@ -23,6 +24,7 @@ import IconifyIcon from 'src/@core/components/icon'
 import api from 'src/@core/utils/api'
 import useDebounce from 'src/hooks/useDebounce'
 import { useAppDispatch, useAppSelector } from 'src/store'
+import { setOnlineLessonLoading } from 'src/store/apps/groupDetails'
 import { fetchGroups, updateParams } from 'src/store/apps/groups'
 import { TacherItemType } from 'src/types/apps/mentorsTypes'
 
@@ -31,17 +33,34 @@ type GroupsFilterProps = {
 }
 
 export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
-  const { queryParams, courses,teachersData } = useAppSelector(state => state.groups)
+  const { queryParams, courses, teachersData } = useAppSelector(state => state.groups)
+  const { onlineLessonLoading } = useAppSelector(state => state.groupDetails)
+
   const dispatch = useAppDispatch()
   const [search, setSearch] = useState<string>('')
   const searchVal = useDebounce(search, 600)
   const [loading, setLoading] = useState<boolean>(false)
-
- 
-
- 
-
+  
   const { t } = useTranslation()
+ 
+  async function handleGetMeetLink() {
+    if (window.location.hostname == 'test.soffcrm.uz' || 'localhost') {
+      dispatch(setOnlineLessonLoading(true))
+      await api.get(`meets/google/login/`).then(res => {
+        if (res.data.url) {
+          window.location.assign(res.data.url)
+          // console.log(window.location);
+          
+          // dispatch(setMeetLink(res.data.url))
+        }
+      })
+      dispatch(setOnlineLessonLoading(false))
+    } else {
+      console.log('xatolik')
+    }
+  }
+ 
+
 
   const handleChangeStatus = async (e: SelectChangeEvent<string>) => {
     dispatch(updateParams({ status: e.target.value }))
@@ -268,7 +287,17 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
               <MenuItem value={'monday,tuesday,wednesday,thursday,friday,saturday,sunday'}>{t('Har kuni')}</MenuItem>
             </Select>
           </FormControl>
-        <Excel url='/common/groups/export/' queryString={queryString} />
+          <Excel url='/common/groups/export/' queryString={queryString} />
+          <LoadingButton
+                  loading={onlineLessonLoading}
+                color='success'
+                variant='outlined'
+                onClick={() => {
+                  handleGetMeetLink()
+                }}
+              >
+                <IconifyIcon icon='mdi:laptop' />
+              </LoadingButton>
         </Box>
       </Box>
     )

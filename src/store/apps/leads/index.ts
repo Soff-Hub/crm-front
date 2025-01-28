@@ -118,7 +118,6 @@ export const updateDepartmentStudent = createAsyncThunk(
     try {
       let response
 
-      console.log('Sending data:', data)
 
       if (data.is_amocrm) {
         response = await api.post(`amocrm/leads/export/`, data.data)
@@ -136,6 +135,31 @@ export const updateDepartmentStudent = createAsyncThunk(
     }
   }
 )
+
+export const editDepartmentStudent = createAsyncThunk(
+  'appChat/editDepartmentStudent',
+  async (data: any, { rejectWithValue }) => {
+    try {
+      let response
+
+
+      if (data.is_amocrm) {
+        response = await api.post(`amocrm/leads/export/`, data.data)
+      } else {
+        response = await api.patch(`leads/anonim-user/update/${data.id}/`, { first_name:data.first_name,phone:data.phone })
+      }
+
+      return response.data
+    } catch (err: any) {
+      console.error('Error:', err.response || err.message)
+      if (err.response) {
+        return rejectWithValue(err.response.data)
+      }
+      return rejectWithValue(err.message)
+    }
+  }
+)
+
 export const updateAmoCrmStudent = createAsyncThunk(
   'appChat/updateAmoCrmStudent',
   async (data: any, { rejectWithValue }) => {

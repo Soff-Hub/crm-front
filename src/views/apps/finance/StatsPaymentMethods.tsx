@@ -1,4 +1,4 @@
-import { Box, Chip, Skeleton, Typography } from '@mui/material'
+import { Box, Chip, Grid, Skeleton, Typography } from '@mui/material'
 import { Briefcase, Wallet } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import EmptyContent from 'src/@core/components/empty-content'
@@ -72,49 +72,51 @@ export default function StatsPaymentMethods() {
           <Box>
             <ReactApexcharts options={props.options} series={props.series} type='pie' width={isMobile ? '100%' : 380} />
 
-            {all_numbers?.payment_types.map(item =>
-              settings.mode == 'light' ? (
-                <div className='mt-4 mb-4 '>
-                  <div className='d-flex align-items-center justify-content-between p-2 bg-success bg-opacity-10 rounded px-3'>
-                    <div className='d-flex align-items-center gap-2'>
-                      <div
-                        className='d-flex align-items-center justify-content-center rounded-circle bg-success'
-                        style={{ width: '1.5rem', height: '1.5rem' }}
-                      >
-                        <Wallet className='text-white' style={{ width: '0.75rem', height: '0.75rem' }} />
+            <Grid container spacing={2}>
+              {all_numbers?.payment_types.map((item, index) => (
+                <Grid item xs={12} sm={6} key={index}>
+                  {settings.mode === 'light' ? (
+                    <div className='d-flex align-items-center justify-content-between p-2 bg-success bg-opacity-10 rounded px-3'>
+                      <div className='d-flex align-items-center gap-2'>
+                        <div
+                          className='d-flex align-items-center justify-content-center rounded-circle bg-success'
+                          style={{ width: '1.5rem', height: '1.5rem' }}
+                        >
+                          <Wallet className='text-white' style={{ width: '0.75rem', height: '0.75rem' }} />
+                        </div>
+                        <div>
+                          <div className='fw-medium small'>{item?.name}</div>
+                          <div className='text-muted small'>{item?.count || '1 операция'}</div>
+                        </div>
                       </div>
-                      <div>
-                        <div className='fw-medium small'>{item?.name}</div>
-                        <div className='text-muted small'>1 операция</div>
-                      </div>
-                    </div>
-                    <div className='text-end fw-medium text-success small'>
-                      {formatCurrency(item?.amount) + " so'm"}
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                <div className='mt-4 mb-4'>
-                  <div className='d-flex align-items-center justify-content-between p-2 bg-dark bg-opacity-50 rounded px-3'>
-                    <div className='d-flex align-items-center gap-2'>
-                      <div
-                        className='d-flex align-items-center justify-content-center rounded-circle bg-success'
-                        style={{ width: '1.5rem', height: '1.5rem' }}
-                      >
-                        <Wallet className='text-white' style={{ width: '0.75rem', height: '0.75rem' }} />
-                      </div>
-                      <div>
-                       <Typography fontSize={15}>{item?.name}</Typography>
-                        <div className='small text-light'><Typography fontSize={12}>1 операция</Typography></div>
+                      <div className='text-end fw-medium text-success small'>
+                        {formatCurrency(item?.amount) + " so'm"}
                       </div>
                     </div>
-                    <div className='text-end fw-medium text-light small'>
-                      {formatCurrency(item?.amount) + " so'm"}
+                  ) : (
+                    <div className='d-flex align-items-center justify-content-between p-2 bg-dark bg-opacity-50 rounded px-3'>
+                      <div className='d-flex align-items-center gap-2'>
+                        <div
+                          className='d-flex align-items-center justify-content-center rounded-circle bg-success'
+                          style={{ width: '1.5rem', height: '1.5rem' }}
+                        >
+                          <Wallet className='text-white' style={{ width: '0.75rem', height: '0.75rem' }} />
+                        </div>
+                        <div>
+                          <Typography fontSize={15}>{item?.name}</Typography>
+                          <div className='small text-light'>
+                              <Typography fontSize={12}>{item?.count||"1 операция"}</Typography>
+                          </div>
+                        </div>
+                      </div>
+                      <div className='text-end fw-medium text-light small'>
+                        {formatCurrency(item?.amount) + " so'm"}
+                      </div>
                     </div>
-                  </div>
-                </div>
-              )
-            )}
+                  )}
+                </Grid>
+              ))}
+            </Grid>
           </Box>
         ) : (
           <EmptyContent title="To'lovlar mavjud emas" />

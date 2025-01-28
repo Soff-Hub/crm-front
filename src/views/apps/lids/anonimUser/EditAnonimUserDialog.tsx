@@ -11,9 +11,10 @@ type Props = {
     setOpen: any
     item: any
     reRender: any
+    department?:any
 }
 
-export default function EditAnonimDialogDialog({ open, setOpen, item, reRender }: Props) {
+export default function EditAnonimDialogDialog({department, open, setOpen, item, reRender }: Props) {
 
     const { t } = useTranslation()
 
@@ -38,7 +39,7 @@ export default function EditAnonimDialogDialog({ open, setOpen, item, reRender }
                     </IconButton>
                 </DialogTitle>
                 <DialogContent sx={{ minWidth: '320px' }}>
-                    <EditAnonimUserForm item={item} reRender={reRender} />
+                    <EditAnonimUserForm department={department} item={item} reRender={reRender} />
                 </DialogContent>
             </Dialog >
         </div>

@@ -74,7 +74,7 @@ const badge = {
 export default function AccordionCustom({ onView, parentId, item, is_amocrm, student_count }: AccordionProps) {
   const [open, setOpen] = useState<boolean>(false)
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
-  const [loading, setLoading] = useState<boolean>(true)
+  const [loading, setLoading] = useState<boolean>(false)
   const [leadData, setLeadData] = useState<any[]>([])
   const [openDialog, setOpenDialog] = useState<'sms' | 'edit' | 'delete' | 'recover' | null>(null)
   const [error, setError] = useState<any>({})
