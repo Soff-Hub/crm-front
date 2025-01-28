@@ -13,6 +13,8 @@ import { getSMSTemp, handleEditClickOpen, setMeetLink, setOnlineLessonLoading } 
 import EditGroupModal from '../../EditGroupModal'
 import { getDashboardLessons, getGroupsDetails, getMetaData, handleOpenEdit } from 'src/store/apps/groups'
 import api from 'src/@core/utils/api'
+import { LoadingButton } from '@mui/lab'
+import { Router, useRouter } from 'next/router'
 
 interface ColorsType {
   [key: string]: ThemeColor
@@ -26,17 +28,22 @@ const roleColors: ColorsType = {
 }
 
 export default function GroupDetails() {
-  const { groupData, isGettingGroupDetails } = useAppSelector(state => state.groupDetails)
+  const { groupData, isGettingGroupDetails ,onlineLessonLoading} = useAppSelector(state => state.groupDetails)
   const dispatch = useAppDispatch()
   const [url, setUrl] = useState('')
   const { user } = useContext(AuthContext)
   const { t } = useTranslation();
-  
+  const router = useRouter()
+  const { id,month } = router.query
+
 
   const handleOpenSendSMSModal = async () => {
     dispatch(handleEditClickOpen('send-sms'))
     await dispatch(getSMSTemp())
   }
+
+  console.log(id,month);
+  
 
   const handleEdit = async (id: any) => {
     dispatch(handleOpenEdit(true))
@@ -52,13 +59,11 @@ export default function GroupDetails() {
   async function handleGetMeetLink() {
     if (window.location.hostname == 'test.soffcrm.uz' || 'localhost') {
       dispatch(setOnlineLessonLoading(true))
-      await api.get('meets/google/login/').then(res => {
-        setUrl(res.data.url)
-        if (url) {
-          window.location.assign(url);
+      await api.get(`meets/google/login/?id=${id}&month=${month}`).then(res => {
+        if (res.data.url) {
+          window.location.assign(res.data.url)
+          // dispatch(setMeetLink(res.data.url))
         }
-
-         
       })
       dispatch(setOnlineLessonLoading(false))
     } else {
@@ -256,20 +261,19 @@ export default function GroupDetails() {
             </Tooltip>
           )}
           {isGettingGroupDetails ? (
-            window.location.hostname == 'test.soffcrm.uz' &&
             <Skeleton variant='rounded' animation='wave' width={70} height={40} />
           ) : (
-              window.location.hostname == 'test.soffcrm.uz'  &&
             <Tooltip title={t('Online dars')} placement='top'>
-              <Button
+                <LoadingButton
+                  loading={onlineLessonLoading}
                 color='success'
                 variant='outlined'
                 onClick={() => {
-                  dispatch(handleEditClickOpen('online-lesson')), handleGetMeetLink()
+                  handleGetMeetLink()
                 }}
               >
                 <IconifyIcon icon='mdi:laptop' />
-              </Button>
+              </LoadingButton>
             </Tooltip>
           )}
         </CardActions>

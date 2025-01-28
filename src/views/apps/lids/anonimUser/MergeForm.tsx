@@ -18,9 +18,10 @@ type Props = {
   reRender: any
   is_amocrm?: boolean
   open: any
+  setOpen:(val:any)=>void
 }
 
-export default function MergeToDepartment({ open, is_amocrm, item, reRender }: Props) {
+export default function MergeToDepartment({ setOpen,open, is_amocrm, item, reRender }: Props) {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
   const { loading, leadData, pipelines } = useAppSelector(state => state.leads)
@@ -65,7 +66,7 @@ export default function MergeToDepartment({ open, is_amocrm, item, reRender }: P
           formik.setErrors(resp.payload)
         } else {
           toast.success('Muvaffaqiyatli kochirildi')
-
+           setOpen(null)
           await dispatch(fetchAmoCrmPipelines({}))
           await dispatch(fetchDepartmentList())
 

@@ -79,6 +79,7 @@ export interface IFinanceState {
 
         payment_types: {
           id: number
+          count?:number
           name: string
           amount: number
         }[]

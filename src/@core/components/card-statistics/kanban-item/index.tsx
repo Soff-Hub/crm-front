@@ -469,7 +469,7 @@ const KanbanItem = (props: KanbarItemProps) => {
         setOpen={setOpen}
       />
 
-      <EditAnonimDialogDialog open={open} setOpen={setOpen} item={props} reRender={() => reRender(false)} />
+      <EditAnonimDialogDialog department={id} open={open} setOpen={setOpen} item={props} reRender={() => reRender(false)} />
 
       <Dialog open={open === 'add-group'} onClose={() => setOpen(null)}>
         <DialogTitle sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -494,7 +494,7 @@ const KanbanItem = (props: KanbarItemProps) => {
           <IconifyIcon icon={'material-symbols:close'} onClick={() => setOpen(null)} />
         </DialogTitle>
         <DialogContent>
-          <MergeToDepartment open={open} is_amocrm={is_amocrm} item={props} reRender={() => reRender(false)} />
+          <MergeToDepartment setOpen={setOpen} open={open} is_amocrm={is_amocrm} item={props} reRender={() => reRender(false)} />
         </DialogContent>
       </Dialog>
 
