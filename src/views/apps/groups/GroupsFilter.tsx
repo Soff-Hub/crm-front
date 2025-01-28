@@ -18,6 +18,7 @@ import { useEffect, useState } from 'react'
 
 // ** Third Party Imports
 import 'react-datepicker/dist/react-datepicker.css' // Import CSS file for react-datepicker
+import toast from 'react-hot-toast'
 import { useTranslation } from 'react-i18next'
 import Excel from 'src/@core/components/excelButton/Excel'
 import IconifyIcon from 'src/@core/components/icon'
@@ -40,27 +41,26 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
   const [search, setSearch] = useState<string>('')
   const searchVal = useDebounce(search, 600)
   const [loading, setLoading] = useState<boolean>(false)
-  
-  const { t } = useTranslation()
- 
-  async function handleGetMeetLink() {
-    if (window.location.hostname == 'test.soffcrm.uz' || 'localhost') {
-      dispatch(setOnlineLessonLoading(true))
-      await api.get(`meets/google/login/`).then(res => {
-        if (res.data.url) {
-          window.location.assign(res.data.url)
-          // console.log(window.location);
-          
-          // dispatch(setMeetLink(res.data.url))
-        }
-      })
-      dispatch(setOnlineLessonLoading(false))
-    } else {
-      console.log('xatolik')
-    }
-  }
- 
 
+  const { t } = useTranslation()
+
+  async function handleGetMeetLink() {
+      dispatch(setOnlineLessonLoading(true))
+      await api
+        .get(`meets/google/login/`)
+        .then(res => {
+          if (res.data.url) {
+            window.location.assign(res.data.url)
+            // console.log(window.location);
+
+            // dispatch(setMeetLink(res.data.url))
+          }
+        })
+        .catch(err => {
+          console.log(err)
+          toast.error(err.response.data.msg)
+        })
+  }
 
   const handleChangeStatus = async (e: SelectChangeEvent<string>) => {
     dispatch(updateParams({ status: e.target.value }))
@@ -193,9 +193,9 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
     )
   } else
     return (
-      <Box  display={'flex'} gap={2} flexWrap={'nowrap'} alignItems='center' justifyContent='space-between' width='100%'>
+      <Box display={'flex'} gap={2} flexWrap={'nowrap'} alignItems='center' justifyContent='space-between' width='100%'>
         <Box display={'flex'} width='100%' gap={2} flexWrap={'nowrap'}>
-          <FormControl sx={{ width: '100%'}}>
+          <FormControl sx={{ width: '100%' }}>
             <InputLabel size='small' id='search-input'>
               {t('Qidirish')}
             </InputLabel>
@@ -212,7 +212,7 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
               size='small'
             />
           </FormControl>
-          <FormControl sx={{width: '100%' }}>
+          <FormControl sx={{ width: '100%' }}>
             <InputLabel size='small' id='demo-simple-select-outlined-label'>
               {t('Holat')}
             </InputLabel>
@@ -245,7 +245,7 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
               />
             </FormControl>
           )}
-          <FormControl sx={{width: '100%' }}>
+          <FormControl sx={{ width: '100%' }}>
             <InputLabel size='small' id='demo-simple-select-outlined-label'>
               {t('Kurslar')}
             </InputLabel>
@@ -289,15 +289,15 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
           </FormControl>
           <Excel url='/common/groups/export/' queryString={queryString} />
           <LoadingButton
-                  loading={onlineLessonLoading}
-                color='success'
-                variant='outlined'
-                onClick={() => {
-                  handleGetMeetLink()
-                }}
-              >
-                <IconifyIcon icon='mdi:laptop' />
-              </LoadingButton>
+            loading={onlineLessonLoading}
+            color='success'
+            variant='outlined'
+            onClick={() => {
+              handleGetMeetLink()
+            }}
+          >
+            <IconifyIcon icon='mdi:laptop' />
+          </LoadingButton>
         </Box>
       </Box>
     )
