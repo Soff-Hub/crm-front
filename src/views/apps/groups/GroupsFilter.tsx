@@ -45,21 +45,22 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
   const { t } = useTranslation()
 
   async function handleGetMeetLink() {
-      dispatch(setOnlineLessonLoading(true))
-      await api
-        .get(`meets/google/login/`)
-        .then(res => {
-          if (res.data.url) {
-            window.location.assign(res.data.url)
-            // console.log(window.location);
+    dispatch(setOnlineLessonLoading(true))
+    await api
+      .get(`meets/google/login/`)
+      .then(res => {
+        if (res.data.url) {
+          window.location.assign(res.data.url)
+          // console.log(window.location);
 
-            // dispatch(setMeetLink(res.data.url))
-          }
-        })
-        .catch(err => {
-          console.log(err)
-          toast.error(err.response.data.msg)
-        })
+          // dispatch(setMeetLink(res.data.url))
+        }
+      })
+      .catch(err => {
+        console.log(err)
+        toast.error(err.response.data.msg)
+      })
+    dispatch(setOnlineLessonLoading(false))
   }
 
   const handleChangeStatus = async (e: SelectChangeEvent<string>) => {
