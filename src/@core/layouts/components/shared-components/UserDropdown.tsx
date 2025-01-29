@@ -156,7 +156,7 @@ const UserDropdown = (props: Props) => {
                 <Typography sx={{ fontWeight: 600 }}>{user?.fullName}</Typography>
                 <div
                   onClick={() => {
-                    setUser((prevUser: UserDataType) => ({
+                    setUser((prevUser: any) => ({
                       ...prevUser,
                       role: [role]
                     }))
