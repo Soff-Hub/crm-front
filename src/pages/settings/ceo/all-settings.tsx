@@ -46,14 +46,25 @@ export default function AllSettings() {
   const { isMobile } = useResponsive()
 
   const [editable, setEditable] = useState<
-    null | 'title' | 'logo' | 'start-time' | 'end-time' | 'birthdate' | 'absend' | 'payment'
+    null | 'title' | 'logo' | 'start-time' | 'end-time' | 'birthdate' | 'absend' | 'payment' | 'score' | 'attend'
   >(null)
   const [createble, setCreatable] = useState<null | 'branch' | 'payment-type'>(null)
   const [id, setId] = useState<null | { key: 'branch' | 'payment-type'; id: any }>(null)
   const [deleteId, setDeleteId] = useState<null | { open: null | 'payment-type' | 'branch'; id: any }>(null)
   const [name, setName] = useState<string>('')
   const [loading, setLoading] = useState<
-    'name' | 'branch' | 'paytype' | 'start-time' | 'end-time' | 'birthdate' | 'absend' | 'delete' | 'payment' | null
+    | 'name'
+    | 'branch'
+    | 'paytype'
+    | 'start-time'
+    | 'end-time'
+    | 'birthdate'
+    | 'absend'
+    | 'delete'
+    | 'payment'
+    | 'score'
+    | 'attend'
+    | null
   >(null)
   const [error, setError] = useState<any>({})
   const [errorMessage, setErrorMessage] = useState<null | string>(null)
@@ -68,7 +79,21 @@ export default function AllSettings() {
   const birthday_text = localStorage.getItem('birthday_text')
   const absent_text = localStorage.getItem('absent_text')
   const payment_text = localStorage.getItem('payment_text')
+  const score_text = localStorage.getItem('score_text')
+  const attend_text = localStorage.getItem('attend_text')
 
+  async function getSettingsList() {
+    api.get('common/settings/list/').then(res => {
+      console.log(res)
+    })
+  }
+
+  useEffect(() => {
+    getSettingsList()
+  }, [])
+
+  console.log(companyInfo);
+  
 
   const inputRef = useRef<any | null>(null)
 
@@ -163,7 +188,11 @@ export default function AllSettings() {
         key === 'on_absent' ||
         key === 'absent_text' ||
         key === 'payment_warning' ||
-        key === 'payment_text'
+        key === 'payment_text' ||
+        key === 'on_score' ||
+        key === 'score_text' ||
+        key === 'on_attend' ||
+        key === 'attend_text'
       ) {
         if (key === 'on_birthday') {
           setLoading('birthdate')
@@ -172,6 +201,10 @@ export default function AllSettings() {
           formData.append('absent_text', companyInfo?.auto_sms?.absent_text)
           formData.append('payment_warning', companyInfo?.auto_sms?.payment_warning)
           formData.append('payment_text', companyInfo?.auto_sms?.payment_text)
+          formData.append('on_score', companyInfo?.auto_sms?.on_score)
+          formData.append('score_text', companyInfo?.auto_sms?.score_text)
+          formData.append('on_attend', companyInfo?.auto_sms?.on_attend)
+          formData.append('attend_text', companyInfo?.auto_sms?.attend_text)
         } else if (key === 'birthday_text') {
           setLoading('birthdate')
           formData.append('on_birthday', true)
@@ -179,6 +212,10 @@ export default function AllSettings() {
           formData.append('absent_text', companyInfo?.auto_sms?.absent_text)
           formData.append('payment_warning', companyInfo?.auto_sms?.payment_warning)
           formData.append('payment_text', companyInfo?.auto_sms?.payment_text)
+          formData.append('on_score', companyInfo?.auto_sms?.on_score)
+          formData.append('score_text', companyInfo?.auto_sms?.score_text)
+          formData.append('on_attend', companyInfo?.auto_sms?.on_attend)
+          formData.append('attend_text', companyInfo?.auto_sms?.attend_text)
         } else if (key === 'payment_warning') {
           setLoading('payment')
           formData.append('payment_text', companyInfo?.auto_sms?.payment_text)
@@ -186,6 +223,10 @@ export default function AllSettings() {
           formData.append('absent_text', companyInfo?.auto_sms?.absent_text)
           formData.append('on_birthday', companyInfo?.auto_sms?.on_birthday)
           formData.append('birthday_text', birthday_text || companyInfo?.auto_sms?.birthday_text)
+          formData.append('on_score', companyInfo?.auto_sms?.on_score)
+          formData.append('score_text', companyInfo?.auto_sms?.score_text)
+          formData.append('on_attend', companyInfo?.auto_sms?.on_attend)
+          formData.append('attend_text', companyInfo?.auto_sms?.attend_text)
         } else if (key === 'payment_text') {
           setLoading('payment')
           formData.append('payment_warning', true)
@@ -193,6 +234,52 @@ export default function AllSettings() {
           formData.append('absent_text', companyInfo?.auto_sms?.absent_text)
           formData.append('on_birthday', companyInfo?.auto_sms?.on_birthday)
           formData.append('birthday_text', birthday_text || companyInfo?.auto_sms?.birthday_text)
+          formData.append('on_score', companyInfo?.auto_sms?.on_score)
+          formData.append('score_text', companyInfo?.auto_sms?.score_text)
+          formData.append('on_attend', companyInfo?.auto_sms?.on_attend)
+          formData.append('attend_text', companyInfo?.auto_sms?.attend_text)
+        } else if (key === 'on_score') {
+          setLoading('score')
+          formData.append('payment_warning', companyInfo?.auto_sms?.payment_warning)
+          formData.append('payment_text', companyInfo?.auto_sms?.payment_text)
+          formData.append('on_absent', companyInfo?.auto_sms?.on_absent)
+          formData.append('absent_text', companyInfo?.auto_sms?.absent_text)
+          formData.append('on_birthday', companyInfo?.auto_sms?.on_birthday)
+          formData.append('birthday_text', birthday_text || companyInfo?.auto_sms?.birthday_text)
+          formData.append('score_text', companyInfo?.auto_sms?.score_text)
+          formData.append('on_attend', companyInfo?.auto_sms?.on_attend)
+          formData.append('attend_text', companyInfo?.auto_sms?.attend_text)
+        } else if (key === 'score_text') {
+          setLoading('score')
+          formData.append('on_score', true)
+          formData.append('payment_warning', companyInfo?.auto_sms?.payment_warning)
+          formData.append('payment_text', companyInfo?.auto_sms?.payment_text)
+          formData.append('on_absent', companyInfo?.auto_sms?.on_absent)
+          formData.append('absent_text', companyInfo?.auto_sms?.absent_text)
+          formData.append('on_birthday', companyInfo?.auto_sms?.on_birthday)
+          formData.append('birthday_text', birthday_text || companyInfo?.auto_sms?.birthday_text)
+          formData.append('on_attend', companyInfo?.auto_sms?.on_attend)
+          formData.append('attend_text', companyInfo?.auto_sms?.attend_text)
+        } else if (key === 'on_attend') {
+          setLoading('attend')
+          formData.append('payment_warning', companyInfo?.auto_sms?.payment_warning)
+          formData.append('payment_text', companyInfo?.auto_sms?.payment_text)
+          formData.append('on_absent', companyInfo?.auto_sms?.on_absent)
+          formData.append('absent_text', companyInfo?.auto_sms?.absent_text)
+          formData.append('on_birthday', companyInfo?.auto_sms?.on_birthday)
+          formData.append('birthday_text', birthday_text || companyInfo?.auto_sms?.birthday_text)
+          formData.append('score_text', companyInfo?.auto_sms?.score_text)
+          formData.append('attend_text', companyInfo?.auto_sms?.attend_text)
+        } else if (key === 'attend_text') {
+          setLoading('attend')
+          formData.append('on_attend', true)
+          formData.append('payment_warning', companyInfo?.auto_sms?.payment_warning)
+          formData.append('payment_text', companyInfo?.auto_sms?.payment_text)
+          formData.append('on_absent', companyInfo?.auto_sms?.on_absent)
+          formData.append('absent_text', companyInfo?.auto_sms?.absent_text)
+          formData.append('on_birthday', companyInfo?.auto_sms?.on_birthday)
+          formData.append('birthday_text', birthday_text || companyInfo?.auto_sms?.birthday_text)
+          formData.append('on_score', companyInfo?.auto_sms?.on_score)
         } else if (key === 'on_absent') {
           setLoading('absend')
           formData.append(
@@ -203,6 +290,10 @@ export default function AllSettings() {
           formData.append('birthday_text', birthday_text || companyInfo?.auto_sms?.birthday_text)
           formData.append('payment_warning', companyInfo?.auto_sms?.payment_warning)
           formData.append('payment_text', companyInfo?.auto_sms?.payment_text)
+          formData.append('on_score', companyInfo?.auto_sms?.on_score)
+          formData.append('score_text', companyInfo?.auto_sms?.score_text)
+          formData.append('on_attend', companyInfo?.auto_sms?.on_attend)
+          formData.append('attend_text', companyInfo?.auto_sms?.attend_text)
         } else {
           setLoading('absend')
           formData.append('on_absent', true)
@@ -210,16 +301,19 @@ export default function AllSettings() {
           formData.append('birthday_text', birthday_text || companyInfo?.auto_sms?.birthday_text)
           formData.append('payment_warning', companyInfo?.auto_sms?.payment_warning)
           formData.append('payment_text', companyInfo?.auto_sms?.payment_text)
+          formData.append('on_score', companyInfo?.auto_sms?.on_score)
+          formData.append('score_text', companyInfo?.auto_sms?.score_text)
+          formData.append('on_attend', companyInfo?.auto_sms?.on_attend)
+          formData.append('attend_text', companyInfo?.auto_sms?.attend_text)
         }
 
         await api.put('common/auto-sms/update/', formData)
         setName('')
       } else {
-        await api.patch(key === 'on_birthday' ? 'common/auto-sms/update/' : 'common/settings/update/', formData)
+        await api.patch('common/settings/update/', formData)
       }
 
       const getresp = await api.get('common/settings/list/')
-      console.log(getresp)
 
       dispatch(setCompanyInfo(getresp.data[0]))
       setEditable(null)
@@ -716,21 +810,21 @@ export default function AllSettings() {
               </Box>
             </CardContent>
           </Card>
-          {/* <Card>
+          <Card>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
                 <Typography sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}>
                   {t('Darsga kelganlarga sms yuborish')}:
                 </Typography>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  {loading === 'absend' ? (
+                  {loading === 'attend' ? (
                     <CircularProgress disableShrink size={'20px'} sx={{ margin: '10px 0', marginLeft: '15px' }} />
                   ) : (
                     <Switch
-                      checked={Boolean(companyInfo?.auto_sms?.on_absent)}
+                      checked={companyInfo?.auto_sms?.on_attend}
                       onChange={async (e, i) => {
-                        setLoading('absend')
-                        await updateSettings('on_absent', i)
+                        setLoading('attend')
+                        await updateSettings('on_attend', i)
                       }}
                     />
                   )}
@@ -741,30 +835,30 @@ export default function AllSettings() {
               </Typography>
               <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: '20px', flexDirection: 'column' }}>
                 <Typography sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}>
-                  {t(`SMS matnini kiriting (kelmagan o'quvchiga ertasi kuni yuboriladi)`)}
+                  {t(`SMS matnini kiriting (kelgan o'quvchiga ertasi kuni yuboriladi)`)}
                 </Typography>
                 <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: '10px', width: '100%' }}>
-                  {editable === 'absend' ? (
+                  {editable === 'attend' ? (
                     <>
                       <TextField
                         multiline
                         rows={4}
                         size='small'
                         focused
-                        defaultValue={absent_text || companyInfo?.auto_sms?.absent_text}
+                        defaultValue={attend_text || companyInfo?.auto_sms?.attend_text}
                         onBlur={e => {
-                          updateSettings('absent_text', e.target.value)
+                          updateSettings('attend_text', e.target.value)
                         }}
                         onChange={e => {
-                          setName(e.target.value), localStorage.setItem('absent_text', e.target.value)
+                          setName(e.target.value), localStorage.setItem('attend_text', e.target.value)
                         }}
                         fullWidth
                       />
                       <IconifyIcon
-                        icon={loading === 'absend' ? 'line-md:loading-loop' : 'ic:baseline-check'}
+                        icon={loading === 'attend' ? 'line-md:loading-loop' : 'ic:baseline-check'}
                         style={{ cursor: 'pointer' }}
                         onClick={() => {
-                          updateSettings('absent_text', name)
+                          updateSettings('attend_text', name)
                         }}
                       />
                     </>
@@ -775,7 +869,7 @@ export default function AllSettings() {
                         multiline
                         rows={4}
                         type='text'
-                        value={`${absent_text || companyInfo?.auto_sms?.absent_text}`}
+                        value={attend_text || companyInfo?.auto_sms?.attend_text}
                         size='small'
                         placeholder={t('Boshlanish vaqti')}
                         onBlur={e => console.log(e.target.value)}
@@ -783,14 +877,14 @@ export default function AllSettings() {
                       <IconifyIcon
                         icon={'basil:edit-outline'}
                         style={{ cursor: 'pointer' }}
-                        onClick={() => setEditable('absend')}
+                        onClick={() => setEditable('attend')}
                       />
                     </>
                   )}
                 </Box>
               </Box>
             </CardContent>
-          </Card> */}
+          </Card>
           <Card>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
@@ -884,21 +978,21 @@ export default function AllSettings() {
               </Box>
             </CardContent>
           </Card>
-          {/* <Card>
+          <Card>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
                 <Typography sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}>
                   {t('Imtihon natijalarini sms yuborish')}:
                 </Typography>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  {loading === 'absend' ? (
+                  {loading === 'score' ? (
                     <CircularProgress disableShrink size={'20px'} sx={{ margin: '10px 0', marginLeft: '15px' }} />
                   ) : (
                     <Switch
-                      checked={Boolean(companyInfo?.auto_sms?.on_absent)}
+                      checked={Boolean(companyInfo?.auto_sms?.on_score)}
                       onChange={async (e, i) => {
-                        setLoading('absend')
-                        await updateSettings('on_absent', i)
+                        setLoading('score')
+                        await updateSettings('on_score', i)
                       }}
                     />
                   )}
@@ -912,27 +1006,27 @@ export default function AllSettings() {
                   {t(`SMS matnini kiriting (kelmagan o'quvchiga ertasi kuni yuboriladi)`)}
                 </Typography>
                 <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: '10px', width: '100%' }}>
-                  {editable === 'absend' ? (
+                  {editable === 'score' ? (
                     <>
                       <TextField
                         multiline
                         rows={4}
                         size='small'
                         focused
-                        defaultValue={absent_text || companyInfo?.auto_sms?.absent_text}
+                        defaultValue={score_text || companyInfo?.auto_sms?.score_text}
                         onBlur={e => {
-                          updateSettings('absent_text', e.target.value)
+                          updateSettings('score_text', e.target.value)
                         }}
                         onChange={e => {
-                          setName(e.target.value), localStorage.setItem('absent_text', e.target.value)
+                          setName(e.target.value), localStorage.setItem('score_text', e.target.value)
                         }}
                         fullWidth
                       />
                       <IconifyIcon
-                        icon={loading === 'absend' ? 'line-md:loading-loop' : 'ic:baseline-check'}
+                        icon={loading === 'score' ? 'line-md:loading-loop' : 'ic:baseline-check'}
                         style={{ cursor: 'pointer' }}
                         onClick={() => {
-                          updateSettings('absent_text', name)
+                          updateSettings('score_text', name)
                         }}
                       />
                     </>
@@ -943,7 +1037,7 @@ export default function AllSettings() {
                         multiline
                         rows={4}
                         type='text'
-                        value={`${absent_text || companyInfo?.auto_sms?.absent_text}`}
+                        value={score_text || companyInfo?.auto_sms?.score_text}
                         size='small'
                         placeholder={t('Boshlanish vaqti')}
                         onBlur={e => console.log(e.target.value)}
@@ -951,14 +1045,14 @@ export default function AllSettings() {
                       <IconifyIcon
                         icon={'basil:edit-outline'}
                         style={{ cursor: 'pointer' }}
-                        onClick={() => setEditable('absend')}
+                        onClick={() => setEditable('score')}
                       />
                     </>
                   )}
                 </Box>
               </Box>
             </CardContent>
-          </Card> */}
+          </Card>
         </Box>
 
         <Dialog open={deleteId?.open === 'payment-type'} onClose={() => setDeleteId(null)}>

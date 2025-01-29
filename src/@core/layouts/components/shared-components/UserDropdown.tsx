@@ -28,6 +28,7 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton }
 import UserIcon from 'src/layouts/components/UserIcon'
 import StudentEditProfileModal from 'src/pages/student-profile/studentEditModal'
 import { GridCloseIcon } from '@mui/x-data-grid'
+import { UserDataType } from 'src/context/types'
 
 interface Props {
   settings: Settings
@@ -53,7 +54,7 @@ const UserDropdown = (props: Props) => {
   const router = useRouter()
   const { logout } = useAuth()
 
-  const { user } = useContext(AuthContext)
+  const { user, setUser } = useContext(AuthContext)
 
   const { direction } = settings
 
@@ -95,24 +96,24 @@ const UserDropdown = (props: Props) => {
     name?: string
   }
 
-  function downloadImage(imageUrl:any, filename:any) {
-    const anchor = document.createElement('a');
-    anchor.href = imageUrl;
-  
-    anchor.download = filename;
-  
-    document.body.appendChild(anchor);
-  
-    anchor.click();
-  
-    document.body.removeChild(anchor);
+  function downloadImage(imageUrl: any, filename: any) {
+    const anchor = document.createElement('a')
+    anchor.href = imageUrl
+
+    anchor.download = filename
+
+    document.body.appendChild(anchor)
+
+    anchor.click()
+
+    document.body.removeChild(anchor)
   }
-  
 
   const handleLogout = () => {
     logout()
     handleDropdownClose()
   }
+
 
   return (
     <Fragment>
@@ -151,9 +152,18 @@ const UserDropdown = (props: Props) => {
               </Badge>
               <Box sx={{ display: 'flex', ml: 3, alignItems: 'flex-start', flexDirection: 'column' }}>
                 <Typography sx={{ fontWeight: 600 }}>{user?.fullName}</Typography>
-                <Typography variant='body2' sx={{ fontSize: '0.8rem', color: 'text.disabled' }}>
-                  {user?.role.join(', ')}
-                </Typography>
+                <div
+                  //  onClick={() => {
+                  //   setUser((prevUser:UserDataType) => ({
+                  //     ...prevUser, 
+                  //     role: ['teacher'], 
+                  //   }));
+                  // }}
+                >
+                  <Typography variant='body2' sx={{ fontSize: '0.8rem', color: 'text.disabled' }}>
+                    {user?.role.join(', ')}
+                  </Typography>
+                </div>
               </Box>
             </Box>
             {user?.qr_code && (
@@ -245,7 +255,7 @@ const UserDropdown = (props: Props) => {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => downloadImage(imageSrc,'qr_code')} fullWidth color='primary' variant='contained'>
+          <Button onClick={() => downloadImage(imageSrc, 'qr_code')} fullWidth color='primary' variant='contained'>
             Yuklab olish
           </Button>
         </DialogActions>

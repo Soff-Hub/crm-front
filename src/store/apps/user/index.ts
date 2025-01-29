@@ -75,6 +75,10 @@ export const appUsersSlice = createSlice({
       work_start_time: '00:00',
       work_end_time: '00:00',
       auto_sms: {
+        on_attend: true,
+        attend_text:"Text",
+        on_score: true,
+        score_text:"Text",
         id: 1,
         on_absent: true,
         birthday_text: 'Text',

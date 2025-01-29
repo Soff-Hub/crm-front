@@ -13,14 +13,14 @@ export type RegisterParams = {
 }
 
 export type UserDataType = {
-  phone:number,
-  id: number
-  gpa:number,
+  phone?:number,
+  id?: number
+  gpa?:number,
   role: string[]
-  fullName: string
-  username: string
-  password: string
-  avatar: string
+  fullName?: string
+  username?: string
+  password?: string
+  avatar?: string
   payment_page?: boolean
   balance?: number
   branches?: any[]
