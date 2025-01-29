@@ -1062,6 +1062,15 @@ export default function AllSettings() {
                     )}
                   </Box>
                 </Box>
+                <Typography sx={{ marginBottom: 2 }} fontSize={12}>
+                  {"Xabar matniga talaba ismini qo'shish uchun ${first_name} kalit so'zi qoldiring."}
+                </Typography>
+                <Typography sx={{ marginBottom: 2 }} fontSize={12}>
+                  {"Xabar matniga kunni  qo'shish uchun ${date} kalit so'zi qoldiring."}
+                </Typography>
+                <Typography sx={{ marginBottom: 5 }} fontSize={12}>
+                  {"Xabar matniga summani  qo'shish uchun ${amount} kalit so'zi qoldiring."}
+                </Typography>
 
                 <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: '20px', flexDirection: 'column' }}>
                   <Typography sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}>
@@ -1134,6 +1143,15 @@ export default function AllSettings() {
                     )}
                   </Box>
                 </Box>
+                <Typography sx={{ marginBottom: 2 }} fontSize={12}>
+                  {"Xabar matniga kunni  qo'shish uchun ${date} kalit so'zi qoldiring."}
+                </Typography>
+                <Typography sx={{ marginBottom: 2 }} fontSize={12}>
+                  {"Xabar matniga talaba ismini qo'shish uchun ${first_name} kalit so'zi qoldiring."}
+                </Typography>
+                <Typography sx={{ marginBottom: 5 }} fontSize={12}>
+                  {"Xabar matniga summani  qo'shish uchun ${amount} kalit so'zi qoldiring."}
+                </Typography>
 
                 <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: '20px', flexDirection: 'column' }}>
                   <Typography sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}>
@@ -1191,7 +1209,7 @@ export default function AllSettings() {
               <CardContent>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
                   <Typography sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}>
-                    {t('Imtihon natijalarini sms yuborish')}:
+                    {t("O'quvchi baholarini yuborish")}:
                   </Typography>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                     {loading === 'score' ? (
@@ -1207,7 +1225,14 @@ export default function AllSettings() {
                     )}
                   </Box>
                 </Box>
-                
+                <Typography sx={{ marginBottom: 2 }} fontSize={12}>
+                  {"Xabar matniga talaba ismini qo'shish uchun ${first_name} kalit so'zi qoldiring."}
+                </Typography>
+
+                <Typography sx={{ marginBottom: 5 }} fontSize={12}>
+                  {"Xabar matniga guruh nomini qo'shish uchun ${group} kalit so'zi qoldiring."}
+                </Typography>
+
                 <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: '20px', flexDirection: 'column' }}>
                   <Typography sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}>
                     {t(`SMS matnini kiriting (kelmagan o'quvchiga ertasi kuni yuboriladi)`)}
