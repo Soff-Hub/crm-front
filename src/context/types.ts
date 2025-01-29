@@ -16,7 +16,7 @@ export type UserDataType = {
   phone?:number,
   id?: number
   gpa?:number,
-  role: string[]
+  role: any,
   fullName?: string
   username?: string
   password?: string
@@ -33,7 +33,7 @@ export type AuthValuesType = {
   logout: () => void
   user: UserDataType | null
   setLoading: (value: boolean) => void
-  setUser: (value: UserDataType | null) => void
+  setUser: (value: any | null) => void
   login: (params: LoginParams, errorCallback?: ErrCallbackType) => void
   register: (params: RegisterParams, errorCallback?: ErrCallbackType) => void
   initAuth: () => void

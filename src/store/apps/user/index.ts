@@ -75,7 +75,7 @@ export const deleteUser = createAsyncThunk(
 export const appUsersSlice = createSlice({
   name: 'appUsers',
   initialState: {
-    userRoles: null,
+    userRoles: [],
     data: [],
     notifications: [],
     isGettingNotification: false,

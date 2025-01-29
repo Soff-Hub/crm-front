@@ -156,13 +156,13 @@ const UserDropdown = (props: Props) => {
                 <Typography sx={{ fontWeight: 600 }}>{user?.fullName}</Typography>
                 <div
                   onClick={() => {
-                    setUser((prevUser: any) => ({
+                    setUser((prevUser: UserDataType) => ({
                       ...prevUser,
-                      role: [role]
+                      role: [String(role)]
                     }))
                   }}
                 >
-                  {userRoles?.map((item: string) => (
+                  { userRoles?.map((item: string) => (
                     <div onClick={() => setRole(item)}>
                       <Typography
                         variant='body2'

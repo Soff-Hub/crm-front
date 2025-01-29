@@ -13,7 +13,7 @@ import authConfig from 'src/configs/auth'
 // ** Types
 import { AuthValuesType, RegisterParams, LoginParams, ErrCallbackType, UserDataType } from './types'
 import api from 'src/@core/utils/api'
-import { setCompanyInfo } from 'src/store/apps/user'
+import { setCompanyInfo, setRoles } from 'src/store/apps/user'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch } from 'src/store'
 import { useSettings } from 'src/@core/hooks/useSettings'
@@ -64,6 +64,7 @@ const AuthProvider = ({ children }: Props) => {
         })
         .then(async response => {
           setLoading(false)
+          dispatch(setRoles(response.data.roles.filter((el: any) => el.exists).map((el: any) => el.name?.toLowerCase())))
           setUser({
             phone:response.data.phone,
             gpa:response.data.gpa,
