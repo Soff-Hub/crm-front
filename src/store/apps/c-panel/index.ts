@@ -137,6 +137,7 @@ const initialState: CPanelTypes = {
   isGettingOwnPayments: false,
   isOpenClientSMSModal: false,
   editClientPayment: null,
+  queryParams:{page:"1"},
   clientQueryParams: { page: 1 }
 }
 
@@ -170,6 +171,9 @@ export const cPanelSlice = createSlice({
     },
     updateClientParams: (state, action) => {
       state.clientQueryParams = { ...state.clientQueryParams, ...action.payload }
+    },
+    updateParams: (state, action) => {
+      state.queryParams = { ...state.queryParams, ...action.payload }
     }
   },
 
@@ -217,6 +221,7 @@ export const {
   updateClientParams,
   handleEditMonthlyPlan,
   handleOpenClientSMSModal,
+  updateParams,
   setOpenModal,
   handleOpenSMSModal,
   handleEditSMSTariff

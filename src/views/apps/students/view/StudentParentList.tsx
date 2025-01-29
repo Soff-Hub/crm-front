@@ -29,7 +29,6 @@ export default function StudentParentList() {
     await api
       .delete(`student/parent/destroy/${id}`)
       .then(res => {
-        console.log(res)
         dispatch(fetchStudentDetail(Number(query.student)))
         toast.success("O'chirildi")
       })

@@ -137,7 +137,7 @@ export default function PaymentsList() {
         if (userData.payment_page) {
             window.localStorage.removeItem('userData')
             window.localStorage.removeItem(authConfig.storageTokenKeyName)
-            router.push('/login')
+            router.push('/login') 
         } else router.back()
     }
 

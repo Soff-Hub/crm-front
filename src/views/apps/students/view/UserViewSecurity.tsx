@@ -272,7 +272,6 @@ const UserViewSecurity = () => {
     setLoading(true)
     try {
       await api.delete(`common/group-student-delete/${group_data?.id}/`).then(res => {
-        console.log(res)
       })
       // await dispatch(fetchStudentDetail(Number(query?.student)))
       await dispatch(fetchStudentGroups(query.student))
@@ -291,7 +290,6 @@ const UserViewSecurity = () => {
     await api
       .patch(`common/group-student-update/status/${statusId}/`, { status: statusValue })
       .then(res => {
-        console.log(res)
         dispatch(fetchStudentGroups(query?.student))
         dispatch(fetchStudentPayment(query?.student))
       })
