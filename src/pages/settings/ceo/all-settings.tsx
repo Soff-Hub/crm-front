@@ -8,6 +8,7 @@ import {
   Dialog,
   DialogContent,
   IconButton,
+  Skeleton,
   Switch,
   TextField,
   Tooltip,
@@ -46,7 +47,17 @@ export default function AllSettings() {
   const { isMobile } = useResponsive()
 
   const [editable, setEditable] = useState<
-    null | 'title' | 'logo' | 'start-time' | 'end-time' | 'birthdate' | 'absend' | 'payment' | 'score' | 'attend'
+    | null
+    | 'title'
+    | 'logo'
+    | 'start-time'
+    | 'end-time'
+    | 'birthdate'
+    | 'absend'
+    | 'payment'
+    | 'score'
+    | 'attend'
+    | 'debtor'
   >(null)
   const [createble, setCreatable] = useState<null | 'branch' | 'payment-type'>(null)
   const [id, setId] = useState<null | { key: 'branch' | 'payment-type'; id: any }>(null)
@@ -64,6 +75,7 @@ export default function AllSettings() {
     | 'payment'
     | 'score'
     | 'attend'
+    | 'debtor'
     | null
   >(null)
   const [error, setError] = useState<any>({})
@@ -75,25 +87,25 @@ export default function AllSettings() {
   const dispatch = useAppDispatch()
   const { companyInfo } = useAppSelector((state: any) => state.user)
   const { t } = useTranslation()
+  const [settinsLoading, setSettingsLoading] = useState(false)
   const { setUser, user } = useContext(AuthContext)
-  const birthday_text = localStorage.getItem('birthday_text')
-  const absent_text = localStorage.getItem('absent_text')
-  const payment_text = localStorage.getItem('payment_text')
-  const score_text = localStorage.getItem('score_text')
-  const attend_text = localStorage.getItem('attend_text')
+  // const birthday_text = localStorage.getItem('birthday_text')
+  // const absent_text = localStorage.getItem('absent_text')
+  // const payment_text = localStorage.getItem('payment_text')
+  // const score_text = localStorage.getItem('score_text')
+  // const attend_text = localStorage.getItem('attend_text')
 
   async function getSettingsList() {
-    api.get('common/settings/list/').then(res => {
-      console.log(res)
+    setSettingsLoading(true)
+    await api.get('common/settings/list/').then(res => {
+      dispatch(setCompanyInfo(res.data[0]))
     })
+    setSettingsLoading(false)
   }
 
   useEffect(() => {
     getSettingsList()
   }, [])
-
-  console.log(companyInfo);
-  
 
   const inputRef = useRef<any | null>(null)
 
@@ -169,6 +181,8 @@ export default function AllSettings() {
     }
   }
 
+  console.log(loading)
+
   const updateSettings = async (key: any, value: any) => {
     if (key === 'training_center_name') {
       setLoading('name')
@@ -181,6 +195,7 @@ export default function AllSettings() {
     try {
       const formData: any = new FormData()
       formData.append(key, value)
+      console.log(key, value)
 
       if (
         key === 'on_birthday' ||
@@ -192,11 +207,13 @@ export default function AllSettings() {
         key === 'on_score' ||
         key === 'score_text' ||
         key === 'on_attend' ||
-        key === 'attend_text'
+        key === 'attend_text' ||
+        key === 'debt_text' ||
+        key === 'for_debtor'
       ) {
         if (key === 'on_birthday') {
           setLoading('birthdate')
-          formData.append('birthday_text', birthday_text || companyInfo?.auto_sms?.birthday_text)
+          formData.append('birthday_text', companyInfo?.auto_sms?.birthday_text)
           formData.append('on_absent', companyInfo?.auto_sms?.on_absent)
           formData.append('absent_text', companyInfo?.auto_sms?.absent_text)
           formData.append('payment_warning', companyInfo?.auto_sms?.payment_warning)
@@ -205,6 +222,8 @@ export default function AllSettings() {
           formData.append('score_text', companyInfo?.auto_sms?.score_text)
           formData.append('on_attend', companyInfo?.auto_sms?.on_attend)
           formData.append('attend_text', companyInfo?.auto_sms?.attend_text)
+          formData.append('for_debtor', companyInfo?.auto_sms?.for_debtor)
+          formData.append('debt_text', companyInfo?.auto_sms?.debt_text)
         } else if (key === 'birthday_text') {
           setLoading('birthdate')
           formData.append('on_birthday', true)
@@ -216,28 +235,34 @@ export default function AllSettings() {
           formData.append('score_text', companyInfo?.auto_sms?.score_text)
           formData.append('on_attend', companyInfo?.auto_sms?.on_attend)
           formData.append('attend_text', companyInfo?.auto_sms?.attend_text)
+          formData.append('for_debtor', companyInfo?.auto_sms?.for_debtor)
+          formData.append('debt_text', companyInfo?.auto_sms?.debt_text)
         } else if (key === 'payment_warning') {
           setLoading('payment')
           formData.append('payment_text', companyInfo?.auto_sms?.payment_text)
           formData.append('on_absent', companyInfo?.auto_sms?.on_absent)
           formData.append('absent_text', companyInfo?.auto_sms?.absent_text)
           formData.append('on_birthday', companyInfo?.auto_sms?.on_birthday)
-          formData.append('birthday_text', birthday_text || companyInfo?.auto_sms?.birthday_text)
+          formData.append('birthday_text', companyInfo?.auto_sms?.birthday_text)
           formData.append('on_score', companyInfo?.auto_sms?.on_score)
           formData.append('score_text', companyInfo?.auto_sms?.score_text)
           formData.append('on_attend', companyInfo?.auto_sms?.on_attend)
           formData.append('attend_text', companyInfo?.auto_sms?.attend_text)
+          formData.append('for_debtor', companyInfo?.auto_sms?.for_debtor)
+          formData.append('debt_text', companyInfo?.auto_sms?.debt_text)
         } else if (key === 'payment_text') {
           setLoading('payment')
           formData.append('payment_warning', true)
           formData.append('on_absent', companyInfo?.auto_sms?.on_absent)
           formData.append('absent_text', companyInfo?.auto_sms?.absent_text)
           formData.append('on_birthday', companyInfo?.auto_sms?.on_birthday)
-          formData.append('birthday_text', birthday_text || companyInfo?.auto_sms?.birthday_text)
+          formData.append('birthday_text', companyInfo?.auto_sms?.birthday_text)
           formData.append('on_score', companyInfo?.auto_sms?.on_score)
           formData.append('score_text', companyInfo?.auto_sms?.score_text)
           formData.append('on_attend', companyInfo?.auto_sms?.on_attend)
           formData.append('attend_text', companyInfo?.auto_sms?.attend_text)
+          formData.append('for_debtor', companyInfo?.auto_sms?.for_debtor)
+          formData.append('debt_text', companyInfo?.auto_sms?.debt_text)
         } else if (key === 'on_score') {
           setLoading('score')
           formData.append('payment_warning', companyInfo?.auto_sms?.payment_warning)
@@ -245,10 +270,12 @@ export default function AllSettings() {
           formData.append('on_absent', companyInfo?.auto_sms?.on_absent)
           formData.append('absent_text', companyInfo?.auto_sms?.absent_text)
           formData.append('on_birthday', companyInfo?.auto_sms?.on_birthday)
-          formData.append('birthday_text', birthday_text || companyInfo?.auto_sms?.birthday_text)
+          formData.append('birthday_text', companyInfo?.auto_sms?.birthday_text)
           formData.append('score_text', companyInfo?.auto_sms?.score_text)
           formData.append('on_attend', companyInfo?.auto_sms?.on_attend)
           formData.append('attend_text', companyInfo?.auto_sms?.attend_text)
+          formData.append('for_debtor', companyInfo?.auto_sms?.for_debtor)
+          formData.append('debt_text', companyInfo?.auto_sms?.debt_text)
         } else if (key === 'score_text') {
           setLoading('score')
           formData.append('on_score', true)
@@ -257,9 +284,11 @@ export default function AllSettings() {
           formData.append('on_absent', companyInfo?.auto_sms?.on_absent)
           formData.append('absent_text', companyInfo?.auto_sms?.absent_text)
           formData.append('on_birthday', companyInfo?.auto_sms?.on_birthday)
-          formData.append('birthday_text', birthday_text || companyInfo?.auto_sms?.birthday_text)
+          formData.append('birthday_text', companyInfo?.auto_sms?.birthday_text)
           formData.append('on_attend', companyInfo?.auto_sms?.on_attend)
           formData.append('attend_text', companyInfo?.auto_sms?.attend_text)
+          formData.append('for_debtor', companyInfo?.auto_sms?.for_debtor)
+          formData.append('debt_text', companyInfo?.auto_sms?.debt_text)
         } else if (key === 'on_attend') {
           setLoading('attend')
           formData.append('payment_warning', companyInfo?.auto_sms?.payment_warning)
@@ -267,9 +296,11 @@ export default function AllSettings() {
           formData.append('on_absent', companyInfo?.auto_sms?.on_absent)
           formData.append('absent_text', companyInfo?.auto_sms?.absent_text)
           formData.append('on_birthday', companyInfo?.auto_sms?.on_birthday)
-          formData.append('birthday_text', birthday_text || companyInfo?.auto_sms?.birthday_text)
+          formData.append('birthday_text', companyInfo?.auto_sms?.birthday_text)
           formData.append('score_text', companyInfo?.auto_sms?.score_text)
           formData.append('attend_text', companyInfo?.auto_sms?.attend_text)
+          formData.append('for_debtor', companyInfo?.auto_sms?.for_debtor)
+          formData.append('debt_text', companyInfo?.auto_sms?.debt_text)
         } else if (key === 'attend_text') {
           setLoading('attend')
           formData.append('on_attend', true)
@@ -278,7 +309,33 @@ export default function AllSettings() {
           formData.append('on_absent', companyInfo?.auto_sms?.on_absent)
           formData.append('absent_text', companyInfo?.auto_sms?.absent_text)
           formData.append('on_birthday', companyInfo?.auto_sms?.on_birthday)
-          formData.append('birthday_text', birthday_text || companyInfo?.auto_sms?.birthday_text)
+          formData.append('birthday_text', companyInfo?.auto_sms?.birthday_text)
+          formData.append('on_score', companyInfo?.auto_sms?.on_score)
+          formData.append('for_debtor', companyInfo?.auto_sms?.for_debtor)
+          formData.append('debt_text', companyInfo?.auto_sms?.debt_text)
+        } else if (key === 'for_debtor') {
+          setLoading('debtor')
+          formData.append('debt_text', companyInfo?.auto_sms?.attend_text)
+          formData.append('payment_warning', companyInfo?.auto_sms?.payment_warning)
+          formData.append('payment_text', companyInfo?.auto_sms?.payment_text)
+          formData.append('on_absent', companyInfo?.auto_sms?.on_absent)
+          formData.append('absent_text', companyInfo?.auto_sms?.absent_text)
+          formData.append('on_birthday', companyInfo?.auto_sms?.on_birthday)
+          formData.append('birthday_text', companyInfo?.auto_sms?.birthday_text)
+          formData.append('score_text', companyInfo?.auto_sms?.score_text)
+          formData.append('attend_text', companyInfo?.auto_sms?.attend_text)
+          formData.append('on_attend', companyInfo?.auto_sms?.on_attend)
+        } else if (key === 'debt_text') {
+          setLoading('debtor')
+          formData.append('for_debtor', true)
+          formData.append('on_attend', companyInfo?.auto_sms?.on_attend)
+          formData.append('attend_text', companyInfo?.auto_sms?.attend_text)
+          formData.append('payment_warning', companyInfo?.auto_sms?.payment_warning)
+          formData.append('payment_text', companyInfo?.auto_sms?.payment_text)
+          formData.append('on_absent', companyInfo?.auto_sms?.on_absent)
+          formData.append('absent_text', companyInfo?.auto_sms?.absent_text)
+          formData.append('on_birthday', companyInfo?.auto_sms?.on_birthday)
+          formData.append('birthday_text', companyInfo?.auto_sms?.birthday_text)
           formData.append('on_score', companyInfo?.auto_sms?.on_score)
         } else if (key === 'on_absent') {
           setLoading('absend')
@@ -287,24 +344,28 @@ export default function AllSettings() {
             'Assalomu Alaykum, siz kecha dars qoldirdingiz iltimos sababini bildirishni unurtmang'
           )
           formData.append('on_birthday', companyInfo?.auto_sms?.on_birthday)
-          formData.append('birthday_text', birthday_text || companyInfo?.auto_sms?.birthday_text)
+          formData.append('birthday_text', companyInfo?.auto_sms?.birthday_text)
           formData.append('payment_warning', companyInfo?.auto_sms?.payment_warning)
           formData.append('payment_text', companyInfo?.auto_sms?.payment_text)
           formData.append('on_score', companyInfo?.auto_sms?.on_score)
           formData.append('score_text', companyInfo?.auto_sms?.score_text)
           formData.append('on_attend', companyInfo?.auto_sms?.on_attend)
           formData.append('attend_text', companyInfo?.auto_sms?.attend_text)
+          formData.append('for_debtor', companyInfo?.auto_sms?.for_debtor)
+          formData.append('debt_text', companyInfo?.auto_sms?.debt_text)
         } else {
           setLoading('absend')
           formData.append('on_absent', true)
           formData.append('on_birthday', companyInfo?.auto_sms?.on_birthday)
-          formData.append('birthday_text', birthday_text || companyInfo?.auto_sms?.birthday_text)
+          formData.append('birthday_text', companyInfo?.auto_sms?.birthday_text)
           formData.append('payment_warning', companyInfo?.auto_sms?.payment_warning)
           formData.append('payment_text', companyInfo?.auto_sms?.payment_text)
           formData.append('on_score', companyInfo?.auto_sms?.on_score)
           formData.append('score_text', companyInfo?.auto_sms?.score_text)
           formData.append('on_attend', companyInfo?.auto_sms?.on_attend)
           formData.append('attend_text', companyInfo?.auto_sms?.attend_text)
+          formData.append('for_debtor', companyInfo?.auto_sms?.for_debtor)
+          formData.append('debt_text', companyInfo?.auto_sms?.debt_text)
         }
 
         await api.put('common/auto-sms/update/', formData)
@@ -417,643 +478,790 @@ export default function AllSettings() {
             </CardContent>
           </Card>
 
-          <Card>
-            <CardContent>
-              <Box sx={{ display: 'flex', gap: '20px' }}>
-                <Typography sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}>
-                  {t('Filiallar')}:
-                </Typography>
-                <Box sx={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
-                  {branches.map((branch: any) => (
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }} key={branch.id}>
-                      {id?.id === branch.id && id?.key === 'branch' ? (
-                        <TextField
-                          size='small'
-                          focused
-                          defaultValue={branch.name}
-                          onChange={e => setName(e.target.value)}
-                          onBlur={updateBranch}
-                        />
-                      ) : (
-                        <TextField size='small' value={branch.name} />
-                      )}
-                      {id?.id === branch.id && id?.key === 'branch' ? (
-                        <IconifyIcon
-                          icon={loading === 'branch' ? 'line-md:loading-loop' : 'ic:baseline-check'}
-                          style={{ cursor: 'pointer' }}
-                          onClick={updateBranch}
-                        />
-                      ) : (
-                        <IconifyIcon
-                          icon={'basil:edit-outline'}
-                          style={{ cursor: 'pointer' }}
-                          onClick={() => setId({ id: branch.id, key: 'branch' })}
-                        />
-                      )}
-                      <IconifyIcon
-                        icon={'fluent:delete-20-regular'}
-                        style={{ cursor: 'pointer' }}
-                        onClick={() => setDeleteId({ open: 'branch', id: branch.id })}
-                      />
-                    </Box>
-                  ))}
-                  {createble === 'branch' && (
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                      <TextField
-                        size='small'
-                        inputRef={inputRef}
-                        placeholder={t('Yangi filial')}
-                        onChange={e => setName(e.target.value)}
-                      />
-                      <IconifyIcon
-                        icon={loading === 'branch' ? 'line-md:loading-loop' : 'ic:baseline-check'}
-                        style={{ cursor: 'pointer' }}
-                        onClick={createBranch}
-                      />
-                      <IconifyIcon
-                        icon={'ic:outline-close'}
-                        style={{ cursor: 'pointer' }}
-                        onClick={() => setCreatable(null)}
-                      />
-                    </Box>
-                  )}
-                  <Button
-                    size='small'
-                    startIcon={<IconifyIcon icon={'ic:outline-add'} />}
-                    variant='outlined'
-                    onClick={() => setCreatable('branch')}
-                  >
-                    {t('Yangi')}
-                  </Button>
+          {settinsLoading ? (
+            <>
+              <Box
+                sx={{
+                  display: 'flex',
+                  maxHeight: 200,
+                  borderRadius: '8px',
+                  flexDirection: 'column',
+                  gap: '15px',
+                  width: '100%'
+                }}
+                className='p-4  rounded-lg bg-white shadow-sm'
+              >
+                <Box display='flex' alignItems='center' gap={2} mb={1}>
+                  <Skeleton variant='text' width={180} />
+                  <Skeleton variant='circular' width={34} />
                 </Box>
-              </Box>
-            </CardContent>
-          </Card>
 
-          <Card>
-            <CardContent>
-              <Box sx={{ display: 'flex', gap: '20px' }}>
-                <Typography sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}>
-                  {t('Tolov usullari')}:
-                </Typography>
-                <Box sx={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
-                  {paymentMethods.map((method: any) => (
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }} key={method.id}>
-                      {id?.id === method.id && id?.key === 'payment-type' ? (
+                <Skeleton variant='text' width='90%' height={16} sx={{ mb: 2 }} />
+
+                <Skeleton variant='text' width={120} height={20} sx={{ mb: 1 }} />
+
+                <Skeleton variant='rectangular' width='100%' height={80} sx={{ borderRadius: '8px' }} />
+              </Box>
+              <Box
+                sx={{
+                  display: 'flex',
+                  maxHeight: 200,
+                  borderRadius: '8px',
+                  flexDirection: 'column',
+                  gap: '15px',
+                  width: '100%'
+                }}
+                className='p-4  rounded-lg bg-white shadow-sm'
+              >
+                <Box display='flex' alignItems='center' gap={2} mb={1}>
+                  <Skeleton variant='text' width={180} />
+                  <Skeleton variant='circular' width={34} />
+                </Box>
+
+                <Skeleton variant='text' width='90%' height={16} sx={{ mb: 2 }} />
+
+                <Skeleton variant='text' width={120} height={20} sx={{ mb: 1 }} />
+
+                <Skeleton variant='rectangular' width='100%' height={80} sx={{ borderRadius: '8px' }} />
+              </Box>
+            </>
+          ) : (
+            <>
+              <Card>
+                <CardContent>
+                  <Box sx={{ display: 'flex', gap: '20px' }}>
+                    <Typography sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}>
+                      {t('Filiallar')}:
+                    </Typography>
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                      {branches.map((branch: any) => (
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }} key={branch.id}>
+                          {id?.id === branch.id && id?.key === 'branch' ? (
+                            <TextField
+                              size='small'
+                              focused
+                              defaultValue={branch.name}
+                              onChange={e => setName(e.target.value)}
+                              onBlur={updateBranch}
+                            />
+                          ) : (
+                            <TextField size='small' value={branch.name} />
+                          )}
+                          {id?.id === branch.id && id?.key === 'branch' ? (
+                            <IconifyIcon
+                              icon={loading === 'branch' ? 'line-md:loading-loop' : 'ic:baseline-check'}
+                              style={{ cursor: 'pointer' }}
+                              onClick={updateBranch}
+                            />
+                          ) : (
+                            <IconifyIcon
+                              icon={'basil:edit-outline'}
+                              style={{ cursor: 'pointer' }}
+                              onClick={() => setId({ id: branch.id, key: 'branch' })}
+                            />
+                          )}
+                          <IconifyIcon
+                            icon={'fluent:delete-20-regular'}
+                            style={{ cursor: 'pointer' }}
+                            onClick={() => setDeleteId({ open: 'branch', id: branch.id })}
+                          />
+                        </Box>
+                      ))}
+                      {createble === 'branch' && (
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                          <TextField
+                            size='small'
+                            inputRef={inputRef}
+                            placeholder={t('Yangi filial')}
+                            onChange={e => setName(e.target.value)}
+                          />
+                          <IconifyIcon
+                            icon={loading === 'branch' ? 'line-md:loading-loop' : 'ic:baseline-check'}
+                            style={{ cursor: 'pointer' }}
+                            onClick={createBranch}
+                          />
+                          <IconifyIcon
+                            icon={'ic:outline-close'}
+                            style={{ cursor: 'pointer' }}
+                            onClick={() => setCreatable(null)}
+                          />
+                        </Box>
+                      )}
+                      <Button
+                        size='small'
+                        startIcon={<IconifyIcon icon={'ic:outline-add'} />}
+                        variant='outlined'
+                        onClick={() => setCreatable('branch')}
+                      >
+                        {t('Yangi')}
+                      </Button>
+                    </Box>
+                  </Box>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent>
+                  <Box sx={{ display: 'flex', gap: '20px' }}>
+                    <Typography sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}>
+                      {t('Tolov usullari')}:
+                    </Typography>
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                      {paymentMethods.map((method: any) => (
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }} key={method.id}>
+                          {id?.id === method.id && id?.key === 'payment-type' ? (
+                            <TextField
+                              size='small'
+                              focused
+                              defaultValue={method.name}
+                              onBlur={async e => {
+                                setLoading('paytype')
+                                await updatePaymentMethod(method.id, { name: e.target.value })
+                                setLoading(null)
+                              }}
+                            />
+                          ) : (
+                            <TextField size='small' value={method.name} onBlur={e => console.log(e.target.value)} />
+                          )}
+                          {id?.id === method.id && id?.key === 'payment-type' ? (
+                            <IconifyIcon
+                              icon={loading === 'paytype' ? 'line-md:loading-loop' : 'ic:baseline-check'}
+                              style={{ cursor: 'pointer' }}
+                              onClick={() => setId(null)}
+                            />
+                          ) : (
+                            <IconifyIcon
+                              icon={'basil:edit-outline'}
+                              style={{ cursor: 'pointer' }}
+                              onClick={() => setId({ id: method.id, key: 'payment-type' })}
+                            />
+                          )}
+                          <IconifyIcon
+                            icon={'fluent:delete-20-regular'}
+                            style={{ cursor: 'pointer' }}
+                            onClick={() => setDeleteId({ open: 'payment-type', id: method.id })}
+                          />
+                        </Box>
+                      ))}
+                      {createble === 'payment-type' && (
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                          <TextField
+                            size='small'
+                            inputRef={inputRef}
+                            placeholder="To'lov turi"
+                            onChange={e => setName(e.target.value)}
+                          />
+                          <IconifyIcon
+                            icon={loading === 'paytype' ? 'line-md:loading-loop' : 'ic:baseline-check'}
+                            style={{ cursor: 'pointer' }}
+                            onClick={createPaymentType}
+                          />
+                          <IconifyIcon
+                            icon={'ic:outline-close'}
+                            style={{ cursor: 'pointer' }}
+                            onClick={() => setCreatable(null)}
+                          />
+                        </Box>
+                      )}
+                      <Button
+                        size='small'
+                        startIcon={<IconifyIcon icon={'ic:outline-add'} />}
+                        variant='outlined'
+                        onClick={() => setCreatable('payment-type')}
+                      >
+                        {t('Yangi')}
+                      </Button>
+                    </Box>
+                  </Box>
+                </CardContent>
+              </Card>
+            </>
+          )}
+        </Box>
+        {settinsLoading ? (
+          <>
+            <Box
+              sx={{
+                display: 'flex',
+                maxHeight: 250,
+                borderRadius: '8px',
+                flexDirection: 'column',
+                gap: '15px',
+                width: '100%'
+              }}
+              className='p-4  rounded-lg bg-white shadow-sm'
+            >
+              <Box display='flex' alignItems='center' gap={2} mb={1}>
+                <Skeleton variant='text' width={180} />
+                <Skeleton variant='circular' width={34} />
+              </Box>
+
+              <Skeleton variant='text' width='90%' height={16} sx={{ mb: 2 }} />
+
+              <Skeleton variant='text' width={120} height={20} sx={{ mb: 1 }} />
+
+              <Skeleton variant='rectangular' width='100%' height={80} sx={{ borderRadius: '8px' }} />
+            </Box>
+          </>
+        ) : (
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: '15px', width: '100%' }}>
+            <Card>
+              <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+                  <Typography sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}>
+                    {t('Ish boshlanish vaqti')}:
+                  </Typography>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    {editable === 'start-time' ? (
+                      <>
                         <TextField
+                          type='time'
                           size='small'
                           focused
-                          defaultValue={method.name}
-                          onBlur={async e => {
-                            setLoading('paytype')
-                            await updatePaymentMethod(method.id, { name: e.target.value })
-                            setLoading(null)
+                          defaultValue={companyInfo?.work_start_time}
+                          onChange={e => setName(e.target.value)}
+                          onBlur={e => {
+                            updateSettings('work_start_time', e.target.value)
                           }}
                         />
-                      ) : (
-                        <TextField size='small' value={method.name} onBlur={e => console.log(e.target.value)} />
-                      )}
-                      {id?.id === method.id && id?.key === 'payment-type' ? (
                         <IconifyIcon
-                          icon={loading === 'paytype' ? 'line-md:loading-loop' : 'ic:baseline-check'}
+                          icon={loading === 'start-time' ? 'line-md:loading-loop' : 'ic:baseline-check'}
                           style={{ cursor: 'pointer' }}
-                          onClick={() => setId(null)}
+                          onClick={() => {
+                            updateSettings('work_start_time', name)
+                          }}
                         />
-                      ) : (
+                      </>
+                    ) : (
+                      <>
+                        <TextField
+                          type='text'
+                          value={`${companyInfo?.work_start_time}`}
+                          size='small'
+                          placeholder={t('Ish boshlanish vaqti')}
+                          onBlur={e => console.log(e.target.value)}
+                        />
                         <IconifyIcon
                           icon={'basil:edit-outline'}
                           style={{ cursor: 'pointer' }}
-                          onClick={() => setId({ id: method.id, key: 'payment-type' })}
+                          onClick={() => setEditable('start-time')}
                         />
-                      )}
-                      <IconifyIcon
-                        icon={'fluent:delete-20-regular'}
-                        style={{ cursor: 'pointer' }}
-                        onClick={() => setDeleteId({ open: 'payment-type', id: method.id })}
-                      />
-                    </Box>
-                  ))}
-                  {createble === 'payment-type' && (
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                      <TextField
-                        size='small'
-                        inputRef={inputRef}
-                        placeholder="To'lov turi"
-                        onChange={e => setName(e.target.value)}
-                      />
-                      <IconifyIcon
-                        icon={loading === 'paytype' ? 'line-md:loading-loop' : 'ic:baseline-check'}
-                        style={{ cursor: 'pointer' }}
-                        onClick={createPaymentType}
-                      />
-                      <IconifyIcon
-                        icon={'ic:outline-close'}
-                        style={{ cursor: 'pointer' }}
-                        onClick={() => setCreatable(null)}
-                      />
-                    </Box>
-                  )}
-                  <Button
-                    size='small'
-                    startIcon={<IconifyIcon icon={'ic:outline-add'} />}
-                    variant='outlined'
-                    onClick={() => setCreatable('payment-type')}
-                  >
-                    {t('Yangi')}
-                  </Button>
+                      </>
+                    )}
+                  </Box>
                 </Box>
-              </Box>
-            </CardContent>
-          </Card>
-        </Box>
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: '15px', width: '100%' }}>
-          <Card>
-            <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-                <Typography sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}>
-                  {t('Ish boshlanish vaqti')}:
-                </Typography>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  {editable === 'start-time' ? (
-                    <>
-                      <TextField
-                        type='time'
-                        size='small'
-                        focused
-                        defaultValue={companyInfo?.work_start_time}
-                        onChange={e => setName(e.target.value)}
-                        onBlur={e => {
-                          updateSettings('work_start_time', e.target.value)
-                        }}
-                      />
-                      <IconifyIcon
-                        icon={loading === 'start-time' ? 'line-md:loading-loop' : 'ic:baseline-check'}
-                        style={{ cursor: 'pointer' }}
-                        onClick={() => {
-                          updateSettings('work_start_time', name)
-                        }}
-                      />
-                    </>
-                  ) : (
-                    <>
-                      <TextField
-                        type='text'
-                        value={`${companyInfo?.work_start_time}`}
-                        size='small'
-                        placeholder={t('Ish boshlanish vaqti')}
-                        onBlur={e => console.log(e.target.value)}
-                      />
-                      <IconifyIcon
-                        icon={'basil:edit-outline'}
-                        style={{ cursor: 'pointer' }}
-                        onClick={() => setEditable('start-time')}
-                      />
-                    </>
-                  )}
-                </Box>
-              </Box>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-                <Typography sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}>
-                  {t('Ish tugash vaqti')}:
-                </Typography>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  {editable === 'end-time' ? (
-                    <>
-                      <TextField
-                        type='time'
-                        size='small'
-                        focused
-                        defaultValue={companyInfo?.work_end_time}
-                        onBlur={e => {
-                          updateSettings('work_end_time', e.target.value)
-                        }}
-                      />
-                      <IconifyIcon
-                        icon={loading === 'end-time' ? 'line-md:loading-loop' : 'ic:baseline-check'}
-                        style={{ cursor: 'pointer' }}
-                        onClick={() => {
-                          updateSettings('work_end_time', name)
-                        }}
-                      />
-                    </>
-                  ) : (
-                    <>
-                      <TextField
-                        type='text'
-                        value={`${companyInfo?.work_end_time}`}
-                        size='small'
-                        placeholder={t('Boshlanish vaqti')}
-                        onBlur={e => console.log(e.target.value)}
-                      />
-                      <IconifyIcon
-                        icon={'basil:edit-outline'}
-                        style={{ cursor: 'pointer' }}
-                        onClick={() => setEditable('end-time')}
-                      />
-                    </>
-                  )}
-                </Box>
-              </Box>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-                <Box>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
                   <Typography sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}>
-                    {t("Tug'ilgan kunda sms bilan tabriklash")}:
+                    {t('Ish tugash vaqti')}:
                   </Typography>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    {editable === 'end-time' ? (
+                      <>
+                        <TextField
+                          type='time'
+                          size='small'
+                          focused
+                          defaultValue={companyInfo?.work_end_time}
+                          onBlur={e => {
+                            updateSettings('work_end_time', e.target.value)
+                          }}
+                        />
+                        <IconifyIcon
+                          icon={loading === 'end-time' ? 'line-md:loading-loop' : 'ic:baseline-check'}
+                          style={{ cursor: 'pointer' }}
+                          onClick={() => {
+                            updateSettings('work_end_time', name)
+                          }}
+                        />
+                      </>
+                    ) : (
+                      <>
+                        <TextField
+                          type='text'
+                          value={`${companyInfo?.work_end_time}`}
+                          size='small'
+                          placeholder={t('Boshlanish vaqti')}
+                          onBlur={e => console.log(e.target.value)}
+                        />
+                        <IconifyIcon
+                          icon={'basil:edit-outline'}
+                          style={{ cursor: 'pointer' }}
+                          onClick={() => setEditable('end-time')}
+                        />
+                      </>
+                    )}
+                  </Box>
                 </Box>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  {loading === 'birthdate' ? (
-                    <CircularProgress disableShrink size={'20px'} sx={{ margin: '10px 0', marginLeft: '15px' }} />
-                  ) : (
-                    <Switch
-                      checked={Boolean(companyInfo?.auto_sms?.on_birthday)}
-                      onChange={async (e, i) => {
-                        await updateSettings('on_birthday', i)
-                      }}
-                    />
-                  )}
-                </Box>
-              </Box>
-              <Typography sx={{ marginBottom: 5 }} fontSize={12}>
-                {"Xabar matniga talaba ismini qo'shish uchun ${first_name} kalit so'zi qoldiring."}
-              </Typography>
+              </CardContent>
+            </Card>
 
-              <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: '20px', flexDirection: 'column' }}>
-                <Typography sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}>
-                  {t('SMS Matni')}:
-                </Typography>
-                <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: '10px', width: '100%' }}>
-                  {editable === 'birthdate' ? (
-                    <>
-                      <TextField
-                        multiline
-                        rows={4}
-                        size='small'
-                        focused
-                        value={birthday_text || companyInfo?.auto_sms?.birthday_text}
-                        onBlur={e => {
-                          updateSettings('birthday_text', e.target.value)
-                        }}
-                        onChange={e => {
-                          setName(e.target.value), localStorage.setItem('birthday_text', e.target.value)
-                        }}
-                        fullWidth
-                      />
-                      <IconifyIcon
-                        icon={loading === 'birthdate' ? 'line-md:loading-loop' : 'ic:baseline-check'}
-                        style={{ cursor: 'pointer' }}
-                        onClick={() => {
-                          updateSettings('birthday_text', name)
+            <Card>
+              <CardContent>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+                  <Box>
+                    <Typography sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}>
+                      {t("Tug'ilgan kunda sms bilan tabriklash")}:
+                    </Typography>
+                  </Box>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    {loading === 'birthdate' ? (
+                      <CircularProgress disableShrink size={'20px'} sx={{ margin: '10px 0', marginLeft: '15px' }} />
+                    ) : (
+                      <Switch
+                        checked={Boolean(companyInfo?.auto_sms?.on_birthday)}
+                        onChange={async (e, i) => {
+                          await updateSettings('on_birthday', i)
                         }}
                       />
-                    </>
-                  ) : (
-                    <>
-                      <TextField
-                        fullWidth
-                        multiline
-                        rows={4}
-                        type='text'
-                        value={`${birthday_text || companyInfo?.auto_sms?.birthday_text}`}
-                        size='small'
-                        placeholder={t('SMS Matni')}
-                        onBlur={e => console.log(e.target.value)}
-                      />
-                      <IconifyIcon
-                        icon={'basil:edit-outline'}
-                        style={{ cursor: 'pointer' }}
-                        onClick={() => setEditable('birthdate')}
-                      />
-                    </>
-                  )}
+                    )}
+                  </Box>
                 </Box>
-              </Box>
-            </CardContent>
-          </Card>
+                <Typography sx={{ marginBottom: 5 }} fontSize={12}>
+                  {"Xabar matniga talaba ismini qo'shish uchun ${first_name} kalit so'zi qoldiring."}
+                </Typography>
 
-          <Card>
-            <CardContent>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-                <Typography sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}>
-                  {t('Darsga kelmaganlarga sms yuborish')}:
-                </Typography>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  {loading === 'absend' ? (
-                    <CircularProgress disableShrink size={'20px'} sx={{ margin: '10px 0', marginLeft: '15px' }} />
-                  ) : (
-                    <Switch
-                      checked={Boolean(companyInfo?.auto_sms?.on_absent)}
-                      onChange={async (e, i) => {
-                        setLoading('absend')
-                        await updateSettings('on_absent', i)
-                      }}
-                    />
-                  )}
+                <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: '20px', flexDirection: 'column' }}>
+                  <Typography sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}>
+                    {t('SMS Matni')}:
+                  </Typography>
+                  <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: '10px', width: '100%' }}>
+                    {editable === 'birthdate' ? (
+                      <>
+                        <TextField
+                          multiline
+                          rows={4}
+                          size='small'
+                          focused
+                          value={companyInfo?.auto_sms?.birthday_text}
+                          onBlur={e => {
+                            updateSettings('birthday_text', e.target.value)
+                          }}
+                          onChange={e => {
+                            setName(e.target.value), localStorage.setItem('birthday_text', e.target.value)
+                          }}
+                          fullWidth
+                        />
+                        <IconifyIcon
+                          icon={loading === 'birthdate' ? 'line-md:loading-loop' : 'ic:baseline-check'}
+                          style={{ cursor: 'pointer' }}
+                          onClick={() => {
+                            updateSettings('birthday_text', name)
+                          }}
+                        />
+                      </>
+                    ) : (
+                      <>
+                        <TextField
+                          fullWidth
+                          multiline
+                          rows={4}
+                          type='text'
+                          value={`${companyInfo?.auto_sms?.birthday_text}`}
+                          size='small'
+                          placeholder={t('SMS Matni')}
+                          onBlur={e => console.log(e.target.value)}
+                        />
+                        <IconifyIcon
+                          icon={'basil:edit-outline'}
+                          style={{ cursor: 'pointer' }}
+                          onClick={() => setEditable('birthdate')}
+                        />
+                      </>
+                    )}
+                  </Box>
                 </Box>
-              </Box>
-              <Typography sx={{ marginBottom: 5 }} fontSize={12}>
-                {"Xabar matniga talaba ismini qo'shish uchun ${first_name} kalit so'zi qoldiring."}
-              </Typography>
-              <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: '20px', flexDirection: 'column' }}>
-                <Typography sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}>
-                  {t(`SMS matnini kiriting (kelmagan o'quvchiga ertasi kuni yuboriladi)`)}
-                </Typography>
-                <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: '10px', width: '100%' }}>
-                  {editable === 'absend' ? (
-                    <>
-                      <TextField
-                        multiline
-                        rows={4}
-                        size='small'
-                        focused
-                        defaultValue={absent_text || companyInfo?.auto_sms?.absent_text}
-                        onBlur={e => {
-                          updateSettings('absent_text', e.target.value)
-                        }}
-                        onChange={e => {
-                          setName(e.target.value), localStorage.setItem('absent_text', e.target.value)
-                        }}
-                        fullWidth
-                      />
-                      <IconifyIcon
-                        icon={loading === 'absend' ? 'line-md:loading-loop' : 'ic:baseline-check'}
-                        style={{ cursor: 'pointer' }}
-                        onClick={() => {
-                          updateSettings('absent_text', name)
-                        }}
-                      />
-                    </>
-                  ) : (
-                    <>
-                      <TextField
-                        fullWidth
-                        multiline
-                        rows={4}
-                        type='text'
-                        value={`${absent_text || companyInfo?.auto_sms?.absent_text}`}
-                        size='small'
-                        placeholder={t('Boshlanish vaqti')}
-                        onBlur={e => console.log(e.target.value)}
-                      />
-                      <IconifyIcon
-                        icon={'basil:edit-outline'}
-                        style={{ cursor: 'pointer' }}
-                        onClick={() => setEditable('absend')}
-                      />
-                    </>
-                  )}
-                </Box>
-              </Box>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-                <Typography sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}>
-                  {t('Darsga kelganlarga sms yuborish')}:
-                </Typography>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  {loading === 'attend' ? (
-                    <CircularProgress disableShrink size={'20px'} sx={{ margin: '10px 0', marginLeft: '15px' }} />
-                  ) : (
-                    <Switch
-                      checked={companyInfo?.auto_sms?.on_attend}
-                      onChange={async (e, i) => {
-                        setLoading('attend')
-                        await updateSettings('on_attend', i)
-                      }}
-                    />
-                  )}
-                </Box>
-              </Box>
-              <Typography sx={{ marginBottom: 5 }} fontSize={12}>
-                {"Xabar matniga talaba ismini qo'shish uchun ${first_name} kalit so'zi qoldiring."}
-              </Typography>
-              <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: '20px', flexDirection: 'column' }}>
-                <Typography sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}>
-                  {t(`SMS matnini kiriting (kelgan o'quvchiga ertasi kuni yuboriladi)`)}
-                </Typography>
-                <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: '10px', width: '100%' }}>
-                  {editable === 'attend' ? (
-                    <>
-                      <TextField
-                        multiline
-                        rows={4}
-                        size='small'
-                        focused
-                        defaultValue={attend_text || companyInfo?.auto_sms?.attend_text}
-                        onBlur={e => {
-                          updateSettings('attend_text', e.target.value)
-                        }}
-                        onChange={e => {
-                          setName(e.target.value), localStorage.setItem('attend_text', e.target.value)
-                        }}
-                        fullWidth
-                      />
-                      <IconifyIcon
-                        icon={loading === 'attend' ? 'line-md:loading-loop' : 'ic:baseline-check'}
-                        style={{ cursor: 'pointer' }}
-                        onClick={() => {
-                          updateSettings('attend_text', name)
-                        }}
-                      />
-                    </>
-                  ) : (
-                    <>
-                      <TextField
-                        fullWidth
-                        multiline
-                        rows={4}
-                        type='text'
-                        value={attend_text || companyInfo?.auto_sms?.attend_text}
-                        size='small'
-                        placeholder={t('Boshlanish vaqti')}
-                        onBlur={e => console.log(e.target.value)}
-                      />
-                      <IconifyIcon
-                        icon={'basil:edit-outline'}
-                        style={{ cursor: 'pointer' }}
-                        onClick={() => setEditable('attend')}
-                      />
-                    </>
-                  )}
-                </Box>
-              </Box>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-                <Typography sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}>
-                  {t("To'lovi yaqin qolganlarni ogohlantirish")}:{' '}
-                  <Tooltip
-                    title={
-                      <Typography
-                        color='white'
-                        sx={{
-                          minWidth: isMobile ? '90px' : '180px',
-                          fontSize: isMobile ? '10px' : '13px'
-                        }}
-                      >
-                        {t("Xabar to'lovga 7 kun qolganda yuboriladi")}
-                      </Typography>
-                    }
-                    arrow
-                  >
-                    <span style={{ cursor: 'pointer' }}>
-                      <Icon
-                        icon='mdi:help-circle-outline'
-                        style={{ fontSize: isMobile ? '16px' : '20px', marginLeft: '5px' }}
-                      />
-                    </span>
-                  </Tooltip>
-                </Typography>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  {loading === 'payment' ? (
-                    <CircularProgress disableShrink size={'20px'} sx={{ margin: '10px 0', marginLeft: '15px' }} />
-                  ) : (
-                    <Switch
-                      checked={Boolean(companyInfo?.auto_sms?.payment_warning)}
-                      onChange={async (e, i) => {
-                        await updateSettings('payment_warning', i)
-                      }}
-                    />
-                  )}
-                </Box>
-              </Box>
+              </CardContent>
+            </Card>
 
-              <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: '20px', flexDirection: 'column' }}>
-                <Typography sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}>
-                  {t('SMS Matni')}:
-                </Typography>
-                <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: '10px', width: '100%' }}>
-                  {editable === 'payment' ? (
-                    <>
-                      <TextField
-                        multiline
-                        rows={4}
-                        size='small'
-                        focused
-                        defaultValue={companyInfo?.auto_sms?.payment_text || ''}
-                        onBlur={e => {
-                          updateSettings('payment_text', e.target.value)
-                        }}
-                        onChange={e => {
-                          setName(e.target.value), localStorage.setItem('payment_text', e.target.value)
-                        }}
-                        fullWidth
-                      />
-                      <IconifyIcon
-                        icon={loading === 'payment' ? 'line-md:loading-loop' : 'ic:baseline-check'}
-                        style={{ cursor: 'pointer' }}
-                        onClick={() => {
-                          updateSettings('payment_text', name)
+            <Card>
+              <CardContent>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+                  <Typography sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}>
+                    {t('Darsga kelmaganlarga sms yuborish')}:
+                  </Typography>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    {loading === 'absend' ? (
+                      <CircularProgress disableShrink size={'20px'} sx={{ margin: '10px 0', marginLeft: '15px' }} />
+                    ) : (
+                      <Switch
+                        checked={Boolean(companyInfo?.auto_sms?.on_absent)}
+                        onChange={async (e, i) => {
+                          setLoading('absend')
+                          await updateSettings('on_absent', i)
                         }}
                       />
-                    </>
-                  ) : (
-                    <>
-                      <TextField
-                        fullWidth
-                        multiline
-                        rows={4}
-                        type='text'
-                        value={`${payment_text || companyInfo?.auto_sms?.payment_text}`}
-                        size='small'
-                        placeholder={t('SMS Matni')}
-                        onBlur={e => console.log(e.target.value)}
-                      />
-                      <IconifyIcon
-                        icon={'basil:edit-outline'}
-                        style={{ cursor: 'pointer' }}
-                        onClick={() => setEditable('payment')}
-                      />
-                    </>
-                  )}
+                    )}
+                  </Box>
                 </Box>
-              </Box>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-                <Typography sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}>
-                  {t('Imtihon natijalarini sms yuborish')}:
+                <Typography sx={{ marginBottom: 5 }} fontSize={12}>
+                  {"Xabar matniga talaba ismini qo'shish uchun ${first_name} kalit so'zi qoldiring."}
                 </Typography>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  {loading === 'score' ? (
-                    <CircularProgress disableShrink size={'20px'} sx={{ margin: '10px 0', marginLeft: '15px' }} />
-                  ) : (
-                    <Switch
-                      checked={Boolean(companyInfo?.auto_sms?.on_score)}
-                      onChange={async (e, i) => {
-                        setLoading('score')
-                        await updateSettings('on_score', i)
-                      }}
-                    />
-                  )}
+                <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: '20px', flexDirection: 'column' }}>
+                  <Typography sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}>
+                    {t(`SMS matnini kiriting (kelmagan o'quvchiga ertasi kuni yuboriladi)`)}
+                  </Typography>
+                  <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: '10px', width: '100%' }}>
+                    {editable === 'absend' ? (
+                      <>
+                        <TextField
+                          multiline
+                          rows={4}
+                          size='small'
+                          focused
+                          defaultValue={companyInfo?.auto_sms?.absent_text}
+                          onBlur={e => {
+                            updateSettings('absent_text', e.target.value)
+                          }}
+                          onChange={e => {
+                            setName(e.target.value), localStorage.setItem('absent_text', e.target.value)
+                          }}
+                          fullWidth
+                        />
+                        <IconifyIcon
+                          icon={loading === 'absend' ? 'line-md:loading-loop' : 'ic:baseline-check'}
+                          style={{ cursor: 'pointer' }}
+                          onClick={() => {
+                            updateSettings('absent_text', name)
+                          }}
+                        />
+                      </>
+                    ) : (
+                      <>
+                        <TextField
+                          fullWidth
+                          multiline
+                          rows={4}
+                          type='text'
+                          value={`${companyInfo?.auto_sms?.absent_text}`}
+                          size='small'
+                          placeholder={t('Boshlanish vaqti')}
+                          onBlur={e => console.log(e.target.value)}
+                        />
+                        <IconifyIcon
+                          icon={'basil:edit-outline'}
+                          style={{ cursor: 'pointer' }}
+                          onClick={() => setEditable('absend')}
+                        />
+                      </>
+                    )}
+                  </Box>
                 </Box>
-              </Box>
-              <Typography sx={{ marginBottom: 5 }} fontSize={12}>
-                {"Xabar matniga talaba ismini qo'shish uchun ${first_name} kalit so'zi qoldiring."}
-              </Typography>
-              <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: '20px', flexDirection: 'column' }}>
-                <Typography sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}>
-                  {t(`SMS matnini kiriting (kelmagan o'quvchiga ertasi kuni yuboriladi)`)}
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+                  <Typography sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}>
+                    {t('Darsga kelganlarga sms yuborish')}:
+                  </Typography>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    {loading === 'attend' ? (
+                      <CircularProgress disableShrink size={'20px'} sx={{ margin: '10px 0', marginLeft: '15px' }} />
+                    ) : (
+                      <Switch
+                        checked={companyInfo?.auto_sms?.on_attend}
+                        onChange={async (e, i) => {
+                          setLoading('attend')
+                          await updateSettings('on_attend', i)
+                        }}
+                      />
+                    )}
+                  </Box>
+                </Box>
+                <Typography sx={{ marginBottom: 5 }} fontSize={12}>
+                  {"Xabar matniga talaba ismini qo'shish uchun ${first_name} kalit so'zi qoldiring."}
                 </Typography>
-                <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: '10px', width: '100%' }}>
-                  {editable === 'score' ? (
-                    <>
-                      <TextField
-                        multiline
-                        rows={4}
-                        size='small'
-                        focused
-                        defaultValue={score_text || companyInfo?.auto_sms?.score_text}
-                        onBlur={e => {
-                          updateSettings('score_text', e.target.value)
-                        }}
-                        onChange={e => {
-                          setName(e.target.value), localStorage.setItem('score_text', e.target.value)
-                        }}
-                        fullWidth
-                      />
-                      <IconifyIcon
-                        icon={loading === 'score' ? 'line-md:loading-loop' : 'ic:baseline-check'}
-                        style={{ cursor: 'pointer' }}
-                        onClick={() => {
-                          updateSettings('score_text', name)
-                        }}
-                      />
-                    </>
-                  ) : (
-                    <>
-                      <TextField
-                        fullWidth
-                        multiline
-                        rows={4}
-                        type='text'
-                        value={score_text || companyInfo?.auto_sms?.score_text}
-                        size='small'
-                        placeholder={t('Boshlanish vaqti')}
-                        onBlur={e => console.log(e.target.value)}
-                      />
-                      <IconifyIcon
-                        icon={'basil:edit-outline'}
-                        style={{ cursor: 'pointer' }}
-                        onClick={() => setEditable('score')}
-                      />
-                    </>
-                  )}
+                <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: '20px', flexDirection: 'column' }}>
+                  <Typography sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}>
+                    {t(`SMS matnini kiriting (kelgan o'quvchiga ertasi kuni yuboriladi)`)}
+                  </Typography>
+                  <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: '10px', width: '100%' }}>
+                    {editable === 'attend' ? (
+                      <>
+                        <TextField
+                          multiline
+                          rows={4}
+                          size='small'
+                          focused
+                          defaultValue={companyInfo?.auto_sms?.attend_text}
+                          onBlur={e => {
+                            updateSettings('attend_text', e.target.value)
+                          }}
+                          onChange={e => {
+                            setName(e.target.value), localStorage.setItem('attend_text', e.target.value)
+                          }}
+                          fullWidth
+                        />
+                        <IconifyIcon
+                          icon={loading === 'attend' ? 'line-md:loading-loop' : 'ic:baseline-check'}
+                          style={{ cursor: 'pointer' }}
+                          onClick={() => {
+                            updateSettings('attend_text', name)
+                          }}
+                        />
+                      </>
+                    ) : (
+                      <>
+                        <TextField
+                          fullWidth
+                          multiline
+                          rows={4}
+                          type='text'
+                          value={companyInfo?.auto_sms?.attend_text || 'Text'}
+                          size='small'
+                          placeholder={t('Boshlanish vaqti')}
+                          onBlur={e => console.log(e.target.value)}
+                        />
+                        <IconifyIcon
+                          icon={'basil:edit-outline'}
+                          style={{ cursor: 'pointer' }}
+                          onClick={() => setEditable('attend')}
+                        />
+                      </>
+                    )}
+                  </Box>
                 </Box>
-              </Box>
-            </CardContent>
-          </Card>
-        </Box>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+                  <Typography sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}>
+                    {t("To'lovi yaqin qolganlarni ogohlantirish")}:{' '}
+                    <Tooltip
+                      title={
+                        <Typography
+                          color='white'
+                          sx={{
+                            minWidth: isMobile ? '90px' : '180px',
+                            fontSize: isMobile ? '10px' : '13px'
+                          }}
+                        >
+                          {t("Xabar to'lovga 7 kun qolganda yuboriladi")}
+                        </Typography>
+                      }
+                      arrow
+                    >
+                      <span style={{ cursor: 'pointer' }}>
+                        <Icon
+                          icon='mdi:help-circle-outline'
+                          style={{ fontSize: isMobile ? '16px' : '20px', marginLeft: '5px' }}
+                        />
+                      </span>
+                    </Tooltip>
+                  </Typography>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    {loading === 'payment' ? (
+                      <CircularProgress disableShrink size={'20px'} sx={{ margin: '10px 0', marginLeft: '15px' }} />
+                    ) : (
+                      <Switch
+                        checked={Boolean(companyInfo?.auto_sms?.payment_warning)}
+                        onChange={async (e, i) => {
+                          await updateSettings('payment_warning', i)
+                        }}
+                      />
+                    )}
+                  </Box>
+                </Box>
+
+                <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: '20px', flexDirection: 'column' }}>
+                  <Typography sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}>
+                    {t('SMS Matni')}:
+                  </Typography>
+                  <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: '10px', width: '100%' }}>
+                    {editable === 'payment' ? (
+                      <>
+                        <TextField
+                          multiline
+                          rows={4}
+                          size='small'
+                          focused
+                          defaultValue={companyInfo?.auto_sms?.payment_text || ''}
+                          onBlur={e => {
+                            updateSettings('payment_text', e.target.value)
+                          }}
+                          onChange={e => {
+                            setName(e.target.value), localStorage.setItem('payment_text', e.target.value)
+                          }}
+                          fullWidth
+                        />
+                        <IconifyIcon
+                          icon={loading === 'payment' ? 'line-md:loading-loop' : 'ic:baseline-check'}
+                          style={{ cursor: 'pointer' }}
+                          onClick={() => {
+                            updateSettings('payment_text', name)
+                          }}
+                        />
+                      </>
+                    ) : (
+                      <>
+                        <TextField
+                          fullWidth
+                          multiline
+                          rows={4}
+                          type='text'
+                          value={`${companyInfo?.auto_sms?.payment_text}`}
+                          size='small'
+                          placeholder={t('SMS Matni')}
+                          onBlur={e => console.log(e.target.value)}
+                        />
+                        <IconifyIcon
+                          icon={'basil:edit-outline'}
+                          style={{ cursor: 'pointer' }}
+                          onClick={() => setEditable('payment')}
+                        />
+                      </>
+                    )}
+                  </Box>
+                </Box>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+                  <Typography sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}>
+                    {t('Qarzdorlarni ogohlantirish')}:{' '}
+                  </Typography>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    {loading === 'debtor' ? (
+                      <CircularProgress disableShrink size={'20px'} sx={{ margin: '10px 0', marginLeft: '15px' }} />
+                    ) : (
+                      <Switch
+                        checked={Boolean(companyInfo?.auto_sms?.for_debtor)}
+                        onChange={async (e, i) => {
+                          await updateSettings('for_debtor', i)
+                        }}
+                      />
+                    )}
+                  </Box>
+                </Box>
+
+                <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: '20px', flexDirection: 'column' }}>
+                  <Typography sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}>
+                    {t('SMS Matni')}:
+                  </Typography>
+                  <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: '10px', width: '100%' }}>
+                    {editable === 'debtor' ? (
+                      <>
+                        <TextField
+                          multiline
+                          rows={4}
+                          size='small'
+                          focused
+                          defaultValue={companyInfo?.auto_sms?.debt_text || ''}
+                          onBlur={e => {
+                            updateSettings('debt_text', e.target.value)
+                          }}
+                          onChange={e => {
+                            setName(e.target.value), localStorage.setItem('debt_text', e.target.value)
+                          }}
+                          fullWidth
+                        />
+                        <IconifyIcon
+                          icon={loading === 'debtor' ? 'line-md:loading-loop' : 'ic:baseline-check'}
+                          style={{ cursor: 'pointer' }}
+                          onClick={() => {
+                            updateSettings('debt_text', name)
+                          }}
+                        />
+                      </>
+                    ) : (
+                      <>
+                        <TextField
+                          fullWidth
+                          multiline
+                          rows={4}
+                          type='text'
+                          value={companyInfo?.auto_sms?.debt_text || 'Text'}
+                          size='small'
+                          placeholder={t('SMS Matni')}
+                          onBlur={e => console.log(e.target.value)}
+                        />
+                        <IconifyIcon
+                          icon={'basil:edit-outline'}
+                          style={{ cursor: 'pointer' }}
+                          onClick={() => setEditable('debtor')}
+                        />
+                      </>
+                    )}
+                  </Box>
+                </Box>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+                  <Typography sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}>
+                    {t('Imtihon natijalarini sms yuborish')}:
+                  </Typography>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    {loading === 'score' ? (
+                      <CircularProgress disableShrink size={'20px'} sx={{ margin: '10px 0', marginLeft: '15px' }} />
+                    ) : (
+                      <Switch
+                        checked={Boolean(companyInfo?.auto_sms?.on_score)}
+                        onChange={async (e, i) => {
+                          setLoading('score')
+                          await updateSettings('on_score', i)
+                        }}
+                      />
+                    )}
+                  </Box>
+                </Box>
+                
+                <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: '20px', flexDirection: 'column' }}>
+                  <Typography sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}>
+                    {t(`SMS matnini kiriting (kelmagan o'quvchiga ertasi kuni yuboriladi)`)}
+                  </Typography>
+                  <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: '10px', width: '100%' }}>
+                    {editable === 'score' ? (
+                      <>
+                        <TextField
+                          multiline
+                          rows={4}
+                          size='small'
+                          focused
+                          defaultValue={companyInfo?.auto_sms?.score_text}
+                          onBlur={e => {
+                            updateSettings('score_text', e.target.value)
+                          }}
+                          onChange={e => {
+                            setName(e.target.value), localStorage.setItem('score_text', e.target.value)
+                          }}
+                          fullWidth
+                        />
+                        <IconifyIcon
+                          icon={loading === 'score' ? 'line-md:loading-loop' : 'ic:baseline-check'}
+                          style={{ cursor: 'pointer' }}
+                          onClick={() => {
+                            updateSettings('score_text', name)
+                          }}
+                        />
+                      </>
+                    ) : (
+                      <>
+                        <TextField
+                          fullWidth
+                          multiline
+                          rows={4}
+                          type='text'
+                          value={companyInfo?.auto_sms?.score_text}
+                          size='small'
+                          placeholder={t('Boshlanish vaqti')}
+                          onBlur={e => console.log(e.target.value)}
+                        />
+                        <IconifyIcon
+                          icon={'basil:edit-outline'}
+                          style={{ cursor: 'pointer' }}
+                          onClick={() => setEditable('score')}
+                        />
+                      </>
+                    )}
+                  </Box>
+                </Box>
+              </CardContent>
+            </Card>
+          </Box>
+        )}
 
         <Dialog open={deleteId?.open === 'payment-type'} onClose={() => setDeleteId(null)}>
           <DialogContent>

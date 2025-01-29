@@ -197,7 +197,6 @@ const UserViewSecurity = () => {
         new_date: dayjs(selectedNewDate).format('YYYY-MM-DD')
       })
       .then(res => {
-        console.log(res)
         toast.success("Dars kuni o'zgartirildi")
         setSelectedNewDate(null)
         setSelectedOldDate(null)
@@ -249,7 +248,6 @@ const UserViewSecurity = () => {
         topic: formik.values.newTopic
       })
       .then(res => {
-        console.log(res)
         toast.success("Dars nomi o'zgartirildi")
         formik.resetForm()
         setUpdateTopic(false)

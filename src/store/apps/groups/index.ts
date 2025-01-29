@@ -112,6 +112,7 @@ const initialState: IGroupsState = {
     page: 1,
     limit: 10
   },
+  
   queryParams: {
     status: 'active',
     offset:'0',

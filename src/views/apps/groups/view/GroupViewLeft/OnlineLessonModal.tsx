@@ -79,7 +79,6 @@ export default function OnlineLessonModal() {
     api
       .get(`meets/google/create/?access_token=${access_token}`)
       .then(res => {
-        console.log(res)
         dispatch(setMeetLink(res.data.meet_link))
       })
       .catch(err => {

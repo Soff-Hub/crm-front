@@ -54,7 +54,6 @@ const AmoCrmPage = () => {
       await api
         .post('/amocrm/init-tokens/', values)
         .then(res => {
-          console.log(res)
           setLoading(false)
           toast.success('Tekshiruvdan otdingiz')
           getAmoCrmData()

@@ -29,6 +29,7 @@ import UserIcon from 'src/layouts/components/UserIcon'
 import StudentEditProfileModal from 'src/pages/student-profile/studentEditModal'
 import { GridCloseIcon } from '@mui/x-data-grid'
 import { UserDataType } from 'src/context/types'
+import { useAppSelector } from 'src/store'
 
 interface Props {
   settings: Settings
@@ -53,8 +54,9 @@ const UserDropdown = (props: Props) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const router = useRouter()
   const { logout } = useAuth()
-
+  const { userRoles } = useAppSelector(state => state.user)
   const { user, setUser } = useContext(AuthContext)
+  const [role, setRole] = useState('')
 
   const { direction } = settings
 
@@ -153,16 +155,31 @@ const UserDropdown = (props: Props) => {
               <Box sx={{ display: 'flex', ml: 3, alignItems: 'flex-start', flexDirection: 'column' }}>
                 <Typography sx={{ fontWeight: 600 }}>{user?.fullName}</Typography>
                 <div
-                  //  onClick={() => {
-                  //   setUser((prevUser:UserDataType) => ({
-                  //     ...prevUser, 
-                  //     role: ['teacher'], 
-                  //   }));
-                  // }}
+                  onClick={() => {
+                    setUser((prevUser: UserDataType) => ({
+                      ...prevUser,
+                      role: [role]
+                    }))
+                  }}
                 >
-                  <Typography variant='body2' sx={{ fontSize: '0.8rem', color: 'text.disabled' }}>
-                    {user?.role.join(', ')}
-                  </Typography>
+                  {userRoles?.map((item: string) => (
+                    <div onClick={() => setRole(item)}>
+                      <Typography
+                        variant='body2'
+                        sx={{
+                          cursor: 'pointer',
+                          fontSize: '0.8rem',
+                          color: 'text.disabled',
+                          '&:hover': {
+                            color: 'text.primary', // Change color on hover
+                            textDecoration: 'underline' // Optional: underline on hover
+                          }
+                        }}
+                      >
+                        {item}
+                      </Typography>
+                    </div>
+                  ))}
                 </div>
               </Box>
             </Box>
