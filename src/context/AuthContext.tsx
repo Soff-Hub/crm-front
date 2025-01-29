@@ -98,6 +98,7 @@ const AuthProvider = ({ children }: Props) => {
       ) {
         const resp = await api.get('common/settings/list/')
         dispatch(setCompanyInfo(resp.data[0]))
+        
       }
     } else {
       setLoading(false)
