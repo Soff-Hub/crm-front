@@ -121,6 +121,22 @@ export const deleteCRMPayment = createAsyncThunk(
   }
 )
 
+export const deleteCRM = createAsyncThunk(
+  'deleteCRM',
+  async (id: number | string, { rejectWithValue }) => {
+    try {
+      const response = await api.delete(`/owner/client/${id}/`)
+      return response.data
+    } catch (err: any) {
+      if (err.response) {
+        return rejectWithValue(err.response.data)
+      }
+      return rejectWithValue(err.message)
+    }
+  }
+)
+
+
 const initialState: CPanelTypes = {
   tariffs: [],
   smsTariffs: [],
@@ -137,7 +153,7 @@ const initialState: CPanelTypes = {
   isGettingOwnPayments: false,
   isOpenClientSMSModal: false,
   editClientPayment: null,
-  queryParams:{page:"1"},
+  queryParams:{page:"1",paid:'true'},
   clientQueryParams: { page: 1 }
 }
 

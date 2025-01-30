@@ -15,7 +15,7 @@ import { AuthValuesType, RegisterParams, LoginParams, ErrCallbackType, UserDataT
 import api from 'src/@core/utils/api'
 import { setCompanyInfo, setRoles } from 'src/store/apps/user'
 import { useTranslation } from 'react-i18next'
-import { useAppDispatch } from 'src/store'
+import { useAppDispatch, useAppSelector } from 'src/store'
 import { useSettings } from 'src/@core/hooks/useSettings'
 
 // ** Defaults
@@ -38,6 +38,7 @@ type Props = {
 
 const AuthProvider = ({ children }: Props) => {
   // ** States
+
   const [user, setUser] = useState<UserDataType | null>(defaultProvider.user)
   const [loading, setLoading] = useState<boolean>(defaultProvider.loading)
   const { i18n } = useTranslation()
@@ -64,10 +65,14 @@ const AuthProvider = ({ children }: Props) => {
         })
         .then(async response => {
           setLoading(false)
-          dispatch(setRoles(response.data.roles.filter((el: any) => el.exists).map((el: any) => el.name?.toLowerCase())))
+          if (response?.data) {
+            dispatch(
+              setRoles(response.data.roles.filter((el: any) => el.exists).map((el: any) => el.name?.toLowerCase()))
+            )
+          }
           setUser({
-            phone:response.data.phone,
-            gpa:response.data.gpa,
+            phone: response.data.phone,
+            gpa: response.data.gpa,
             id: response.data.id,
             // role: response.data.roles.find((el: any) => el.name === "Teacher").exists && !response.data.roles.find((el: any) => el.name === "Admin").exists && !response.data.roles.find((el: any) => el.name === "CEO").exists ? 'teacher' : 'admin',
             fullName: response.data.first_name,
@@ -99,7 +104,6 @@ const AuthProvider = ({ children }: Props) => {
       ) {
         const resp = await api.get('common/settings/list/')
         dispatch(setCompanyInfo(resp.data[0]))
-        
       }
     } else {
       setLoading(false)
@@ -111,6 +115,8 @@ const AuthProvider = ({ children }: Props) => {
   useEffect(() => {
     initAuth()
   }, [])
+
+
 
   useEffect(() => {
     router.push({ pathname, query }, asPath)
@@ -143,19 +149,15 @@ const AuthProvider = ({ children }: Props) => {
 
           const returnUrl = router.query.returnUrl
 
-          const redirectURL = isMarketolog
-            ? '/lids' 
-            : returnUrl && returnUrl !== '/'
-            ? returnUrl
-            : '/'
+          const redirectURL = isMarketolog ? '/lids' : returnUrl && returnUrl !== '/' ? returnUrl : '/'
           router.replace(redirectURL as string)
         } else {
           router.replace('/crm-payments')
         }
 
         setUser({
-          phone:response.data.phone,
-          gpa:response.data.gpa,
+          phone: response.data.phone,
+          gpa: response.data.gpa,
           id: response.data.id,
           fullName: response.data.first_name,
           username: response.data.phone,

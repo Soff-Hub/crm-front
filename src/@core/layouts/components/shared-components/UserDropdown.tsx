@@ -29,7 +29,8 @@ import UserIcon from 'src/layouts/components/UserIcon'
 import StudentEditProfileModal from 'src/pages/student-profile/studentEditModal'
 import { GridCloseIcon } from '@mui/x-data-grid'
 import { UserDataType } from 'src/context/types'
-import { useAppSelector } from 'src/store'
+import { useAppDispatch, useAppSelector } from 'src/store'
+import { setRoles } from 'src/store/apps/user'
 
 interface Props {
   settings: Settings
@@ -46,7 +47,7 @@ const BadgeContentSpan = styled('span')(({ theme }) => ({
 
 const UserDropdown = (props: Props) => {
   const [imageSrc, setImageSrc] = useState('')
-
+  
   const { settings } = props
   const [open, setOpen] = useState(false)
   const { t } = useTranslation()
@@ -59,6 +60,9 @@ const UserDropdown = (props: Props) => {
   const [role, setRole] = useState('')
 
   const { direction } = settings
+
+  const dispatch = useAppDispatch()
+
 
   const handleClickOpen = (src: any) => {
     setImageSrc(src)
@@ -113,9 +117,12 @@ const UserDropdown = (props: Props) => {
 
   const handleLogout = () => {
     logout()
+    dispatch(setRoles([]))
     handleDropdownClose()
   }
 
+  console.log(userRoles);
+  
 
   return (
     <Fragment>

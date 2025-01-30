@@ -60,7 +60,7 @@ const StaticsModal = () => {
     setTypingComplete(true)
     setShowFireworks(true)
     setTriggerConfetti(true)
-    setTimeout(() => setShowFireworks(false), 3000) // Fireworks animation lasts for 3 seconds
+    setTimeout(() => setShowFireworks(false), 3000) 
   }
   
   
