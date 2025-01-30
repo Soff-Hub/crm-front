@@ -81,6 +81,8 @@ const FixedIcon = styled('img')(
   })
 )
 
+
+
 const HorizontalLayout = (props: LayoutProps) => {
   // ** Props
   const {
@@ -93,6 +95,8 @@ const HorizontalLayout = (props: LayoutProps) => {
     contentHeightFixed,
     horizontalLayoutProps
   } = props
+
+  
 
   // ** Vars
   const { skin, appBar, navHidden, appBarBlur, contentWidth } = settings
@@ -259,7 +263,8 @@ const HorizontalLayout = (props: LayoutProps) => {
         {themeConfig.disableCustomizer || hidden ? null : (
           <>
             {user?.role.includes('admin') && <DraggableIcon />}
-            {user?.role.includes('ceo') && <DraggableIcon />}
+            {/* {user?.role.includes('ceo') && <DraggableIcon />} */}
+            {!window.location.pathname.includes('/c-panel') && <DraggableIcon /> && user?.role.includes('ceo') && <DraggableIcon />}
 
             <Customizer />
           </>

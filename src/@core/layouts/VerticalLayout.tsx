@@ -133,7 +133,7 @@ const VerticalLayout = (props: LayoutProps) => {
           {/* Footer Component */}
           <Footer footerStyles={footerProps?.sx} footerContent={footerProps?.content} {...props} />
           {user?.role.includes('admin') && <DraggableIcon />}
-          {user?.role.includes('ceo') && <DraggableIcon />}
+          {!window.location.pathname.includes('/c-panel') && <DraggableIcon /> && user?.role.includes('ceo') && <DraggableIcon />}
         </MainContentWrapper>
       </VerticalLayoutWrapper>
 

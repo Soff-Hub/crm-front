@@ -2,6 +2,7 @@
 export interface QueryParams {
   page?: string
   search?: string
+  paid?:string
   payment_status_nearly?: string
   debtor?: string
 }
@@ -83,6 +84,8 @@ export interface CompanyDetailsPageTypes {
       students_count: number
       employees_count: number
     }
+    salary_service:string
+    domain:string
     date: string
     expiration_date: string
     name: string

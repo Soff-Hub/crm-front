@@ -5,11 +5,14 @@ import { formatCurrency } from 'src/@core/utils/format-currency'
 import { useAppSelector } from 'src/store'
 import CompanyCardActions from './CompanyCardActions'
 import RowOptions from 'src/views/apps/crm-payments/RowOptions'
+import CrmRowOptions from 'src/views/apps/c-panel/CrmRowOptions'
+import { useRouter } from 'next/router'
 
 export default function Details() {
   const { t } = useTranslation()
   const { isMobile } = useResponsive()
   const { details, isLoading } = useAppSelector(state => state.companyDetails)
+  const { query } = useRouter()
 
   const statsFields = {
     student_count: {
@@ -51,6 +54,26 @@ export default function Details() {
     next_payment: {
       name: "Keyingi to'lov",
       value: details?.expiration_date
+    },
+    payment_type: {
+      name: "To'lov turi",
+      value:
+        details?.payment_service == 'by_coming_date'
+          ? 'Har oy boshida'
+          : details?.payment_service == 'by_added_at'
+          ? 'Qoshilgan sanadan pul yechish'
+          : details?.payment_service == 'by_lesson_price'
+          ? 'Xar dars uchun pul yechish'
+          : 'Har nechtadur darsda'
+    },
+    salary_type: {
+      name: 'Oylik turi',
+      value:
+        details?.salary_service == 'by_course_price'
+          ? 'Kurs narxidan oylik hisoblash'
+          : details?.salary_service == 'by_student_arrears'
+          ? 'Yechilgan puldan oylik hisoblash'
+          : "To'langan puldan oylik hisoblash"
     }
   }
 
@@ -60,9 +83,9 @@ export default function Details() {
         {isLoading ? (
           <Skeleton variant='rounded' height={20} width='70%' animation='wave' />
         ) : (
-          <Box sx={{display:'flex',justifyContent:'space-between',alignItems:'center'}}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <Typography variant='h6'>{details?.name}</Typography>
-            <RowOptions id={1} />
+            <CrmRowOptions id={String(query?.slug)} />
           </Box>
         )}
         {isLoading ? (
@@ -150,6 +173,22 @@ export default function Details() {
             ) : (
               <Typography color={'red'}>Tarifsiz</Typography>
             )}
+          </Box>
+        )}
+        {isLoading ? (
+          <Skeleton variant='rounded' height={20} animation='wave' />
+        ) : (
+          <Box sx={{ display: 'flex', gap: '10px' }}>
+            <Typography>{t(statsFields.payment_type.name)}</Typography>
+            <Typography color={'green'}>{statsFields.payment_type.value}</Typography>
+          </Box>
+        )}
+         {isLoading ? (
+          <Skeleton variant='rounded' height={20} animation='wave' />
+        ) : (
+          <Box sx={{ display: 'flex', gap: '10px' }}>
+            <Typography>{t(statsFields.salary_type.name)}</Typography>
+            <Typography color={'green'}>{statsFields.salary_type.value}</Typography>
           </Box>
         )}
         {isLoading ? (

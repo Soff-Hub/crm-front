@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import {
   Box,
   Button,
+  Chip,
   CircularProgress,
   FormControl,
   InputAdornment,
@@ -77,8 +78,6 @@ export default function CompanyList() {
     }
     setCenterId(null)
   }
-
-  console.log(queryParams)
 
   const column: customTableDataProps[] = [
     {
@@ -183,6 +182,7 @@ export default function CompanyList() {
         const queryString = new URLSearchParams({
           ...queryParams,
           debtor: 'true',
+          paid: '',
           payment_status_nearly: '',
           page: '1'
         }).toString()
@@ -192,20 +192,32 @@ export default function CompanyList() {
         const queryString = new URLSearchParams({
           ...queryParams,
           payment_status_nearly: 'true',
+          paid: '',
           debtor: '',
           page: '1'
         }).toString()
         await getData(queryString)
         dispatch(updateParams({ payment_status_nearly: 'true', debtor: '', page: '1' }))
+      } else if (value === 'paid') {
+        const queryString = new URLSearchParams({
+          ...queryParams,
+          paid: 'true',
+          payment_status_nearly: '',
+          debtor: '',
+          page: '1'
+        }).toString()
+        await getData(queryString)
+        dispatch(updateParams({ paid: 'true', payment_status_nearly: '', debtor: '', page: '1' }))
       } else if (value === 'all') {
         const queryString = new URLSearchParams({
           ...queryParams,
           debtor: '',
+          paid: '',
           payment_status_nearly: '',
           page: '1'
         }).toString()
         await getData(queryString)
-        dispatch(updateParams({ debtor: '', payment_status_nearly: '', page: '1' }))
+        dispatch(updateParams({ debtor: '',paid:'', payment_status_nearly: '', page: '1' }))
       }
       return
     }
@@ -239,7 +251,7 @@ export default function CompanyList() {
             label={t('Qidirish')}
           />
         </FormControl>
-        <Box sx={{ width: '300px', ml: 3 }}>
+        <Box display='flex' alignItems='center' gap={3} sx={{ width: '300px', ml: 3 }}>
           <FormControl fullWidth>
             <InputLabel size='small' id='demo-simple-select-outlined-label'>
               {t("To'lov holati")}
@@ -252,6 +264,8 @@ export default function CompanyList() {
                   ? 'debtor'
                   : Boolean(queryParams.payment_status_nearly)
                   ? 'payment_status_nearly'
+                  : Boolean(queryParams.paid)
+                  ? 'paid'
                   : ''
               }
               id='demo-simple-select-outlined'
@@ -261,6 +275,8 @@ export default function CompanyList() {
                   handleFilter('amount', 'debtor')
                 } else if (e.target.value === 'payment_status_nearly') {
                   handleFilter('amount', 'payment_status_nearly')
+                } else if (e.target.value === 'paid') {
+                  handleFilter('amount', 'paid')
                 } else {
                   handleFilter('amount', 'all')
                 }
@@ -271,8 +287,10 @@ export default function CompanyList() {
               </MenuItem>
               <MenuItem value={'payment_status_nearly'}>{t("To'lov vaqti yaqinlashgan")}</MenuItem>
               <MenuItem value={'debtor'}>{t('Qarzdor')}</MenuItem>
+              <MenuItem value={'paid'}>{t("To'lov qilgan")}</MenuItem>
             </Select>
           </FormControl>
+          <Chip label={data?.count} variant='outlined' color='success' />
         </Box>
         <Button onClick={() => Router.push('/c-panel/company/create')} sx={{ marginLeft: 'auto' }} variant='contained'>
           {t('Yaratish')}
