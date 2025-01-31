@@ -143,11 +143,13 @@ export default function TeacherGroupsModal() {
                       <TableCell sx={bodyStyle}>{formatCurrency(item.condition)} UZS</TableCell>
                       <TableCell sx={bodyStyle}>{item.calculated_date}</TableCell>
 
-                      <TableCell>
-                        <IconButton>
-                          <ExpandMore className={openDropdown !== item.obj_id ? 'rotate-180' : ''} />
-                        </IconButton>
-                      </TableCell>
+                      {item.obj_id && (
+                        <TableCell>
+                          <IconButton>
+                            <ExpandMore className={openDropdown !== item.obj_id ? 'rotate-180' : ''} />
+                          </IconButton>
+                        </TableCell>
+                      )}
                     </TableRow>
                     {loading ? (
                       <Typography width={'100%'} textAlign={'center'}>
