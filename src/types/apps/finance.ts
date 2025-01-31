@@ -40,6 +40,7 @@ export interface AllNumbersParams {
 }
 
 export type GroupFinance = {
+  obj_id:number
   allowed_lessons: number
   attended_lessons: number
   calculated_date: string
