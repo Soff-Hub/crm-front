@@ -78,7 +78,7 @@ const UserView = ({ slug }: InferGetStaticPropsType<typeof getServerSideProps>) 
             xs: 0.13,
             title: `${t("Jarimalar soni")}`,
             dataIndex: 'fines_count',
-            render: (fines_count) => `${fines_count} ta`
+            render: (fines_count) => `${fines_count || 0} ta`
         },
         {
             xs: 0.13,
