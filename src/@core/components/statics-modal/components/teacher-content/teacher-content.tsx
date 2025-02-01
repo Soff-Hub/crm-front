@@ -1,4 +1,5 @@
 import { DialogContent } from '@mui/material'
+import { useEffect, useState } from 'react'
 import getMonthName from 'src/@core/utils/gwt-month-name'
 import Typewriter from 'typewriter-effect'
 
@@ -8,10 +9,19 @@ interface TeacherContentProps {
 }
 
 export const TeacherContent = ({ soffBotText, setTypingComplete }: TeacherContentProps) => {
+
+   const [key, setKey] = useState(0)
+  
+    useEffect(() => {
+      setKey(prevKey => prevKey + 1)
+      setTypingComplete(false) 
+    }, [soffBotText])
+
   return (
     <DialogContent sx={{ textAlign: 'justify', padding: '20px' }}>
       {soffBotText?.role && (
         <Typewriter
+          key={key}
           onInit={typewriter => {
             const teacherSubtitle = '<h3 style="color: #333; font-size: 20px; margin-top: 10px; margin-bottom: 10px;"></DialogContent>📊 Sizning ohirgi ish kuningizdagi natijangiz</h3>'
             const goodWorkText = soffBotText.missed_attendance === 0 ? `${teacherSubtitle}<br/> Barakalla siz zo'r ishladizngiz🥳` : ''

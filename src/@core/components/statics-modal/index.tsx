@@ -1,7 +1,7 @@
 import { useState, useContext, useEffect } from 'react'
-import { Dialog, DialogTitle, DialogContent, Button } from '@mui/material'
+import { Dialog, DialogTitle, DialogContent, Button, Select, MenuItem } from '@mui/material'
 import { useDispatch, useSelector } from 'react-redux'
-import { toggleModal } from 'src/store/apps/page'
+import { setSoffBotText, toggleModal } from 'src/store/apps/page'
 import Typewriter from 'typewriter-effect'
 import { AuthContext } from 'src/context/AuthContext'
 import useRoles from 'src/hooks/useRoles'
@@ -9,6 +9,7 @@ import { CeoContent } from './components/ceo-content/ceo-content'
 import { TeacherContent } from './components/teacher-content/teacher-content'
 import { AdminContent } from './components/admin-content/admin-content'
 import confetti from 'canvas-confetti'
+import api from 'src/@core/utils/api'
 
 function randomInRange(min: number, max: number): number {
   return Math.random() * (max - min) + min
@@ -20,52 +21,59 @@ const StaticsModal = () => {
   const [showFireworks, setShowFireworks] = useState(false)
   const dispatch = useDispatch()
   const { user } = useContext(AuthContext)
-  const currentDate = new Date().toISOString()
   const isModalOpen = useSelector((state: any) => state.page.isModalOpen)
+  const [selectedDate, setSelectedDate] = useState('today')
+  const currentDate = new Date().toISOString().split('T')[0]
+  const yesterdayDate = new Date(new Date().setDate(new Date().getDate() - 1)).toISOString().split('T')[0]
   const soffBotText = useSelector((state: any) => state.page.soffBotText)
   const soffBotStatus = useSelector((state: any) => state.page.soffBotStatus)
   const userRole = localStorage.getItem('userRole')
   const [triggerConfetti, setTriggerConfetti] = useState(false)
 
+  const fetchAnalytics = async (date: string) => {
+    try {
+      const response = await api.get('auth/analytics/', {
+        params: { date }
+      })
+      dispatch(setSoffBotText(response.data))
+    } catch (error) {
+      console.error('Analyticsni yuklashda xatolik:', error)
+    }
+  }
+
+  useEffect(() => {
+    if (selectedDate) {
+      const selectedApiDate = selectedDate === 'yesterday' ? yesterdayDate : currentDate
+      fetchAnalytics(selectedApiDate)
+    }
+  }, [selectedDate])
+
   useEffect(() => {
     if (triggerConfetti) {
-      const launchConfetti = () => {
-        confetti({
-          angle: randomInRange(55, 125),
-          spread: randomInRange(50, 70),
-          particleCount: randomInRange(50, 100),
-          origin: { x: 0.5, y: 0.5 },
-          zIndex: 99999
-        })
-      }
-
-      launchConfetti()
-
+      confetti({
+        angle: randomInRange(55, 125),
+        spread: randomInRange(50, 70),
+        particleCount: randomInRange(50, 100),
+        origin: { x: 0.5, y: 0.5 },
+        zIndex: 99999
+      })
       setTriggerConfetti(false)
     }
   }, [triggerConfetti])
 
   const handleClose = () => {
-    const last_login = localStorage.getItem('last_login')
-    if (last_login !== currentDate) {
-      localStorage.setItem('last_login', currentDate)
-      dispatch(toggleModal(false))
-      setDisplayedMessage('')
-    }
-    if (userRole !== user?.role.join(', ')) localStorage.setItem('userRole', String(user?.role.join(', ')))
     dispatch(toggleModal(false))
     setTypingComplete(false)
   }
+
   const handleTypingComplete = () => {
     setTypingComplete(true)
     setShowFireworks(true)
     setTriggerConfetti(true)
-    setTimeout(() => setShowFireworks(false), 3000) 
+    setTimeout(() => setShowFireworks(false), 3000)
   }
-  
-  
 
-  return  soffBotText.not_using_platform == true ? (
+  return soffBotText?.not_using_platform == true ? (
     <Dialog fullWidth maxWidth='xs' open={isModalOpen} onClose={handleClose}>
       <DialogContent>
         <div className='d-flex mb-4 justify-content-center align-items-center'>
@@ -137,6 +145,10 @@ const StaticsModal = () => {
           style={{ color: 'black', position: 'absolute', top: 8, right: 8 }}
         />
       </DialogTitle>
+      <Select value={selectedDate} onChange={e => setSelectedDate(e.target.value)} size='small' sx={{ margin: 5 }}>
+        <MenuItem value='yesterday'>Kechagi kun</MenuItem>
+        <MenuItem value='today'>Hozirgi kun</MenuItem>
+      </Select>
       {soffBotText?.role === 'admin' ? (
         <AdminContent setTypingComplete={setTypingComplete} soffBotText={soffBotText} />
       ) : soffBotText?.role === 'ceo' ? (

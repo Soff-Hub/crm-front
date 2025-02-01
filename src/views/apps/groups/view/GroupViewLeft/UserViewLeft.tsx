@@ -17,6 +17,7 @@ import Delete from './Delete'
 import UserViewStudentsList from '../ViewStudents/UserViewStudentsList'
 import useResponsive from 'src/@core/hooks/useResponsive'
 import OnlineLessonModal from './OnlineLessonModal'
+import { status } from 'nprogress'
 
 const UserViewLeft = () => {
   const { studentsQueryParams, isGettingStudents } = useAppSelector(state => state.groupDetails)
@@ -29,6 +30,8 @@ const UserViewLeft = () => {
     dispatch(getStudents({ id: query.id, queryString: queryString }))
   }, [studentsQueryParams.status])
 
+  console.log(studentsQueryParams);
+
 
   return (
     <Grid container spacing={6}>
@@ -36,7 +39,7 @@ const UserViewLeft = () => {
         <GroupDetails />
       </Grid>
       <Grid item xs={12}>
-        <CardContent sx={{ p: 0 }} >
+        <CardContent sx={{ p: 0 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '20px', marginBottom: '10px' }}>
             {['new', 'active', 'archive', 'frozen'].map(el => (
               <div key={el} style={{ display: 'flex', alignItems: 'center', gap: '3px', cursor: 'pointer' }}>
@@ -74,7 +77,7 @@ const UserViewLeft = () => {
         </CardContent>
       </Grid>
       <SendSMS />
-      <OnlineLessonModal/>
+      <OnlineLessonModal />
       <AddNote />
       <AddStudents />
       <Delete />

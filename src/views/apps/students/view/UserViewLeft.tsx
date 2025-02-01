@@ -54,7 +54,6 @@ import StudentCard from './card'
 export type ModalTypes = 'group' | 'withdraw' | 'payment' | 'sms' | 'delete' | 'edit' | 'notes' | 'parent'
 
 const UserViewLeft = ({ userData }: { userData: any }) => {
-  
   // ** States
   const [openEdit, setOpenEdit] = useState<ModalTypes | null>(null)
   const [data, setData] = useState<StudentTypes | null>(null)
@@ -112,7 +111,6 @@ const UserViewLeft = ({ userData }: { userData: any }) => {
         is_discount: isDiscount
       }
 
-
       await mergeStudentToGroup({ ...data, ...discountConfig })
       setLoading(false)
       setOpenEdit(null)
@@ -151,21 +149,27 @@ const UserViewLeft = ({ userData }: { userData: any }) => {
       setError(err?.response?.data)
     }
   }
-  
 
   useEffect(() => {
     setData(userData)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userData, studentData])
 
-  
-
   if (data) {
     return (
       <Grid container spacing={6}>
-        <Grid item xs={12} >
-          <StudentCard userData={userData} name={data?.first_name} gpa={data.gpa} balance={data.balance} id={data.id} phone={data.phone} school={data?.school_data?.name}   />
-         
+        <Grid item xs={12}>
+          {userData && (
+            <StudentCard
+              userData={userData}
+              name={data?.first_name}
+              gpa={data.gpa}
+              balance={data.balance}
+              id={data.id}
+              phone={data.phone}
+              school={data?.school_data?.name}
+            />
+          )}
         </Grid>
         <Grid item gap={2} xs={12}>
           {userData && userData?.comments?.length > 0 ? (
@@ -460,8 +464,8 @@ export const SendSMSModal = ({ handleEditClose, openEdit, setOpenEdit, userData,
   const [loading, setLoading] = useState(false)
   const [isErrorText, setIsErrorText] = useState<null | string>(null)
   const [isActive, setIsActive] = useState(false)
-  const {sms_list ,smschild_list} = useAppSelector(state => state.settings)
-  const [parent_id,setParentId] = useState<number|null>(null)
+  const { sms_list, smschild_list } = useAppSelector(state => state.settings)
+  const [parent_id, setParentId] = useState<number | null>(null)
   const formik: any = useFormik({
     initialValues: {
       message: ''
@@ -508,12 +512,12 @@ export const SendSMSModal = ({ handleEditClose, openEdit, setOpenEdit, userData,
       }
     }
   }
- 
+
   useEffect(() => {
     if (parent_id) {
       dispatch(fetchSmsListQuery(parent_id))
     }
-  },[parent_id])
+  }, [parent_id])
 
   return (
     <Dialog
@@ -528,43 +532,46 @@ export const SendSMSModal = ({ handleEditClose, openEdit, setOpenEdit, userData,
       </DialogTitle>
       <DialogContent>
         <form style={{ marginTop: 10 }} onSubmit={formik.handleSubmit}>
-        <FormControl sx={{ width: '100%' ,marginBottom:5}}>
-          <InputLabel size='small' id='demo-simple-select-outlined-label'>
-            {t('Kategoriya')}
-          </InputLabel>
-          <Select
-            size='small'
-            label={t('Kategoriya')}
-            name='parent'
-            onChange={(e:any)=>setParentId(e.target.value)}
-            id='demo-simple-select-outlined'
-            labelId='demo-simple-select-outlined-label'
-          >
-            {sms_list.map(item => (
-              <MenuItem value={item.id}>{item.description}</MenuItem>
-            ))}
-          </Select>
-
-        </FormControl>
-           {parent_id && <FormControl sx={{ maxWidth: '100%' }} fullWidth>
+          <FormControl sx={{ width: '100%', marginBottom: 5 }}>
             <InputLabel size='small' id='demo-simple-select-outlined-label'>
-              {t('Shablonlar')}
+              {t('Kategoriya')}
             </InputLabel>
             <Select
               size='small'
-              label={t('Shablonlar')}
-              value={formik.values.message}
+              label={t('Kategoriya')}
+              name='parent'
+              onChange={(e: any) => setParentId(e.target.value)}
               id='demo-simple-select-outlined'
               labelId='demo-simple-select-outlined-label'
-              onChange={e => formik?.setFieldValue('message', e.target.value)}
             >
-              {smschild_list.map((el: any) => (
-                <MenuItem value={el.description} sx={{ wordBreak: 'break-word' }}>
-                  <span style={{ maxWidth: '250px', wordBreak: 'break-word', fontSize: '10px' }}>{el.description}</span>
-                </MenuItem>
+              {sms_list.map(item => (
+                <MenuItem value={item.id}>{item.description}</MenuItem>
               ))}
             </Select>
-          </FormControl>}
+          </FormControl>
+          {parent_id && (
+            <FormControl sx={{ maxWidth: '100%' }} fullWidth>
+              <InputLabel size='small' id='demo-simple-select-outlined-label'>
+                {t('Shablonlar')}
+              </InputLabel>
+              <Select
+                size='small'
+                label={t('Shablonlar')}
+                value={formik.values.message}
+                id='demo-simple-select-outlined'
+                labelId='demo-simple-select-outlined-label'
+                onChange={e => formik?.setFieldValue('message', e.target.value)}
+              >
+                {smschild_list.map((el: any) => (
+                  <MenuItem value={el.description} sx={{ wordBreak: 'break-word' }}>
+                    <span style={{ maxWidth: '250px', wordBreak: 'break-word', fontSize: '10px' }}>
+                      {el.description}
+                    </span>
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          )}
           <p style={{ fontSize: 12 }} className='mb-3 mt-2'>
             {"Xabar matniga talaba ismini qo'shish uchun ${first_name} kalit so'zi qoldiring"}
           </p>
@@ -597,7 +604,12 @@ export const SendSMSModal = ({ handleEditClose, openEdit, setOpenEdit, userData,
               type='button'
               color='secondary'
               onClick={() => (
-                handleEditClose(), formik.resetForm(), setLoading(false), setIsErrorText(null),setParentId(null), setIsActive(false)
+                handleEditClose(),
+                formik.resetForm(),
+                setLoading(false),
+                setIsErrorText(null),
+                setParentId(null),
+                setIsActive(false)
               )}
             >
               {t('Bekor qilish')}

@@ -121,7 +121,6 @@ const UserDropdown = (props: Props) => {
     handleDropdownClose()
   }
 
-  console.log(userRoles);
   
 
   return (

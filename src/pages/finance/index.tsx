@@ -61,6 +61,7 @@ const CardStatistics = () => {
   const [deleteCategory, setDeleteCategory] = useState<any>(null)
   const [salaries, setSalaries] = useState<any>([])
   const { isMobile } = useResponsive()
+  const [salariesLoading, setSalariesLoading] = useState(false)
 
   const withdrawCol: customTableDataProps[] = [
     {
@@ -178,8 +179,10 @@ const CardStatistics = () => {
   }
 
   const getSalaries = async () => {
+    setSalariesLoading(true)
     const resp = await api.get(`finance/monthly-report/`)
     setSalaries(resp.data)
+    setSalariesLoading(false)
   }
 
   const confirmDeleteCategory = async () => {
@@ -233,7 +236,7 @@ const CardStatistics = () => {
       <KeenSliderWrapper>
         <Grid container spacing={4} columnSpacing={6}>
           <Grid item xs={12}>
-              <FinanceAllNumber />
+            <FinanceAllNumber />
           </Grid>
 
           <Grid item xs={12} sm={12} md={4}>
@@ -317,13 +320,15 @@ const CardStatistics = () => {
                                 <Button variant='contained'>{t("Oylik ishlash")}</Button>
                             </Link> */}
             </Box>
-            <DataTable
-              maxWidth='100%'
-              minWidth={'800px'}
-              columns={withdrawCol}
-              data={salaries}
-              rowClick={clickSalaryDetail}
-            />
+           
+              <DataTable
+                  maxWidth='100%'
+                  loading={true}
+                minWidth={'800px'}
+                columns={withdrawCol}
+                data={salaries}
+                rowClick={clickSalaryDetail}
+              />
           </Grid>
         </Grid>
       </KeenSliderWrapper>

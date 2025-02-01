@@ -22,6 +22,7 @@ import { disablePage } from 'src/store/apps/page'
 import { toast } from 'react-hot-toast'
 import Excel from 'src/@core/components/excelButton/Excel'
 import axios from 'axios'
+import { studentsUpdateParams } from 'src/store/apps/groupDetails'
 
 const RowOptions = ({ id }: { id: number | string }) => {
   const { queryParams, groups } = useAppSelector(state => state.groups)
@@ -123,7 +124,8 @@ const RowOptions = ({ id }: { id: number | string }) => {
         <MenuItem
           component={Link}
           sx={{ '& svg': { mr: 2 } }}
-          onClick={() => setAnchorEl(null)}
+          onClick={() => { setAnchorEl(null), dispatch(studentsUpdateParams({ status: 'active,new' })) }
+          }
           href={`/groups/view/security?id=${id}&month=${getMontName(null)}`}
         >
           <IconifyIcon icon='mdi:eye-outline' fontSize={20} />

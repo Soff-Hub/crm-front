@@ -48,6 +48,8 @@ import ceoConfigs from 'src/configs/ceo'
 import { Icon } from '@iconify/react'
 import Excel from 'src/@core/components/excelButton/Excel'
 import OnlineLessonModal from 'src/views/apps/groups/view/GroupViewLeft/OnlineLessonModal'
+import { studentsUpdateParams } from 'src/store/apps/groupDetails'
+import { status } from 'nprogress'
 
 const IconifyIcon = dynamic(() => import('src/@core/components/icon'))
 const DataTable = dynamic(() => import('src/@core/components/table'))
@@ -219,6 +221,7 @@ export default function GroupsPage() {
 
   const rowClick = (id: any) => {
     router.push(`/groups/view/security?id=${id}&month=${getMonthName(null)}`)
+    dispatch(studentsUpdateParams({status:'active,new'}))
   }
 
   const pageLoad = async () => {
