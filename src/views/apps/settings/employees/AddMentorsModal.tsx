@@ -325,10 +325,11 @@ export default function CreateEmployeeForm() {
                         </FormHelperText>
                     </FormControl>
                     {formik.values.roles.length == 1 && formik.values.roles[0] == 3 &&
-                     <FormControl sx={{ width: '100%' }}>
+                        <FormControl sx={{ width: '100%' }}>
+                            
                      <AmountInput
                          // type='number'
-                         label={t("Darslar soni")}
+                         label={t("Xar bir dars bo'yicha")}
                          name='lesson_amount'
                          onChange={formik.handleChange}
                          onBlur={formik.handleBlur}

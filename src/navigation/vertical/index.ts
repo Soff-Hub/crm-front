@@ -176,10 +176,10 @@ const Navigation = (t: any): VerticalNavItemsType => {
           title: t('Davomatlar'),
           path: '/reports/attendances'
         },
-        // {
-        //   title: t('Bitiruvchilar'),
-        //   path: '/reports/graduates'
-        // }
+        {
+          title: t('Bitiruvchilar'),
+          path: '/reports/graduates'
+        }
       ]
     }
 
@@ -306,10 +306,10 @@ const Navigation = (t: any): VerticalNavItemsType => {
           title: t('Davomatlar'),
           path: '/reports/attendances'
         },
-        // {
-        //   title: t('Bitiruvchilar'),
-        //   path: '/reports/graduates'
-        // }
+        {
+          title: t('Bitiruvchilar'),
+          path: '/reports/graduates'
+        }
       ]
     }
   ]

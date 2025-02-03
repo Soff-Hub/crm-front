@@ -1,7 +1,17 @@
-import { Box, Typography, Checkbox, Pagination } from '@mui/material'
-import { ReactNode, useState } from 'react'
+import { 
+  Box, 
+  Typography, 
+  Pagination, 
+  Select, 
+  MenuItem, 
+  InputLabel, 
+  FormControl, 
+  SelectChangeEvent 
+} from '@mui/material'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import DataTable from 'src/@core/components/table'
+import api from 'src/@core/utils/api'
 
 export interface customTableProps {
   xs: number
@@ -15,117 +25,156 @@ export interface customTableProps {
 
 export default function GraduatesPage() {
   const { t } = useTranslation()
-
-  // State to hold the data with the updated `is_awarded` status
-  const [graduatesData, setGraduatesData] = useState([
-    {
-      id: 1,
-      name: 'John Doe',
-      group: 'Group A',
-      end_date: '2025-06-15',
-      is_awarded: true
-    },
-    {
-      id: 2,
-      name: 'Jane Smith',
-      group: 'Group B',
-      end_date: '2024-12-20',
-      is_awarded: false
-    },
-    {
-      id: 3,
-      name: 'Mark Wilson',
-      group: 'Group A',
-      end_date: '2025-03-30',
-      is_awarded: true
-    },
-    {
-      id: 4,
-      name: 'Emily Davis',
-      group: 'Group C',
-      end_date: '2024-08-19',
-      is_awarded: false
-    }
-  ])
-
-  // Pagination state
-  const [page, setPage] = useState(0)
+  const [graduatesData, setGraduatesData] = useState<any[]>([])
+  const [loading, setLoading] = useState(false)
+  const [page, setPage] = useState(1) // Set initial page to 1
   const [rowsPerPage, setRowsPerPage] = useState(5)
+  const [groups, setGroups] = useState<any[]>([])
+  const [selectedGroup, setSelectedGroup] = useState<string>('all')
+
+  // Fetch graduates with optional group filter
+  async function getGraduates() {
+    setLoading(true)
+    const offset = (page - 1) * rowsPerPage
+    const limit = rowsPerPage
+
+    let url = `common/group/students/?status=graduates`
+
+    if (selectedGroup !== 'all') {
+      url += `&group=${encodeURIComponent(selectedGroup)}`
+    }
+
+    try {
+      const res = await api.get(url)
+      setGraduatesData(res.data.response)
+    } catch (error) {
+      console.error('Error fetching graduates:', error)
+    }
+    setLoading(false)
+  }
+
+  async function getGroups() {
+    try {
+      const res = await api.get('common/group-check-list/')
+      setGroups(res.data) 
+    } catch (error) {
+      console.error('Error fetching groups:', error)
+    }
+  }
+
+  useEffect(() => {
+    getGraduates()
+  }, [page, rowsPerPage, selectedGroup])
+
+  useEffect(() => {
+    getGroups()
+  }, [])
 
   const handleChangePage = (event: React.ChangeEvent<unknown>, newPage: number) => {
     setPage(newPage)
   }
 
-  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setRowsPerPage(parseInt(event.target.value, 10))
-    setPage(1)
+  const handleChangeRowsPerPage = (event: SelectChangeEvent<number>) => {
+    setRowsPerPage(Number(event.target.value))
+    setPage(1) // Reset to first page when rows per page changes
+  }
+
+  const handleChangeGroupFilter = (event: SelectChangeEvent<string>) => {
+    setSelectedGroup(event.target.value)
+    setPage(1) // Reset to first page when the group filter changes
   }
 
   const columns: customTableProps[] = [
     {
       title: 'Ism',
-      dataIndex: 'name',
-      xs: 3
+      dataIndex: 'student',
+      xs: 3,
+      render: (student: any) => <>{student.first_name}</>
     },
     {
       title: 'Guruhi',
-      dataIndex: 'group',
+      dataIndex: 'group_name',
       xs: 3
     },
     {
-      title: 'Tugatkan sanasi',
-      dataIndex: 'end_date',
-      render: (end_date: string) => {
-        return <span>{end_date}</span>
-      },
+      title: "Qo'shilgan sanasi",
+      dataIndex: 'added_at',
+      render: (added_at: string) => <span>{added_at}</span>,
       xs: 2
     },
     {
-      title: 'Taqdirlangan',
-      dataIndex: 'is_awarded',
-      renderSource: (is_awarded: boolean, item: any) => {
-          const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-            console.log(event.target.checked);
-            
-          const updatedData = graduatesData.map(graduate =>
-            graduate.id === item.id ? { ...graduate, is_awarded: event.target.checked } : graduate
-          )
-          setGraduatesData(updatedData)
-        }
-
-        return <Checkbox checked={is_awarded == true ? true : false} onChange={handleChange} color='primary' />
-      },
+      title: 'Tugatkan sanasi',
+      dataIndex: 'deleted_at',
+      render: (deleted_at: string) => <span>{deleted_at}</span>,
       xs: 2
     }
   ]
 
-  console.log(graduatesData)
-
-  // Slice the data according to pagination
-  const paginatedData = graduatesData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-
   return (
     <div>
+      {/* Header */}
       <Box
         className='groups-page-header'
         sx={{ display: 'flex', justifyContent: 'space-between', margin: '10px 0' }}
         py={2}
       >
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-          <Typography variant='h5'>{t('Bitiruvchilar')}</Typography>
-        </Box>
+        <Typography variant='h5'>{t('Bitiruvchilar')}</Typography>
       </Box>
 
-      <DataTable columns={columns} data={paginatedData} loading={false} minWidth='1200px' maxWidth='1500px' />
+      {/* Group Filter */}
+      <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', marginBottom: 2 }}>
+        <FormControl sx={{ minWidth: 150 }}>
+          <InputLabel id="group-filter-label">Guruhlar</InputLabel>
+          <Select
+            labelId="group-filter-label"
+            value={selectedGroup}
+            label="Guruhlar"
+            onChange={handleChangeGroupFilter}
+          >
+            <MenuItem value="all">Barchasi</MenuItem>
+            {groups.map((group: any) => (
+              <MenuItem key={group.id} value={group.id}>
+                {group.name}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      </Box>
 
-      {/* Pagination controls */}
-      <Pagination
-        count={Math.ceil(graduatesData.length / rowsPerPage)} // Total number of pages
-        page={page}
-        onChange={handleChangePage}
-        color='primary'
-        shape='rounded'
+      {/* Data Table */}
+      <DataTable
+        columns={columns}
+        data={graduatesData}
+        loading={loading}
+        minWidth="1200px"
+        maxWidth="1500px"
       />
+
+      {/* Controls for rows per page and pagination */}
+      {/* <Box sx={{ marginTop: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <FormControl sx={{ minWidth: 120 }}>
+          <InputLabel id="rows-per-page-label">Rows per page</InputLabel>
+          <Select
+            labelId="rows-per-page-label"
+            value={rowsPerPage}
+            label="Rows per page"
+            onChange={handleChangeRowsPerPage}
+          >
+            <MenuItem value={5}>5</MenuItem>
+            <MenuItem value={10}>10</MenuItem>
+            <MenuItem value={25}>25</MenuItem>
+            <MenuItem value={50}>50</MenuItem>
+          </Select>
+        </FormControl>
+
+        <Pagination
+          count={Math.ceil(graduatesData.length / rowsPerPage)}
+          page={page}
+          onChange={handleChangePage}
+          color="primary"
+          shape="rounded"
+        />
+      </Box> */}
     </div>
   )
 }
