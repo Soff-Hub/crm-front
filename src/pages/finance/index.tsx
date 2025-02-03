@@ -323,7 +323,7 @@ const CardStatistics = () => {
            
               <DataTable
                   maxWidth='100%'
-                  loading={true}
+                  loading={salariesLoading}
                 minWidth={'800px'}
                 columns={withdrawCol}
                 data={salaries}

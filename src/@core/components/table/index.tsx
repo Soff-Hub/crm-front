@@ -125,7 +125,7 @@ export default function DataTable({
                       : el.renderItem
                       ? el.renderItem(item)
                       : el.renderSource
-                      ? el.renderSource(item.id, item)
+                      ? el.renderSource(item[`${el.dataIndex}`], item)
                       : el.renderId
                       ? el.renderId(item.id, item[`${el.dataIndex}`])
                       : el.dataIndex === 'index'
@@ -136,6 +136,12 @@ export default function DataTable({
                   </Box>
                 </Box>
               ))}
+               {rowClick && (
+                <Box
+                  sx={{ width: '75%', zIndex: 1, height: '36px', position: 'absolute' }}
+                  onClick={() => handleClick(item.id)}
+                ></Box>
+              )}
             </Box>
           )
         })

@@ -26,7 +26,7 @@ import toast from 'react-hot-toast'
 import SubLoader from '../loaders/SubLoader'
 import UserSuspendDialog from '../mentors/view/UserSuspendDialog'
 
-const headerStyle = { color: '#000', fontWeight: 'bold' }
+const headerStyle = { color: '#000', fontWeight: 'bold', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '150px'  }
 const bodyStyle = { borderRight: '1px solid #e2e8f0 !important', padding: '10px !important', textAlign: 'center' }
 
 interface GroupStudentsType {
@@ -47,6 +47,8 @@ export default function TeacherGroupsModal() {
   const [groupStudents, setGroupStudents] = useState<GroupStudentsType[] | null>(null)
   const { query } = useRouter()
   const [loading, setLoading] = useState(false)
+  const [deleteLoading, setDeleteLoading] = useState(false)
+
   const [openDeleteModal, setOpenDeleteModal] = useState(false)
   const [studentId, setStudentId] = useState<number | null>(null)
   async function getGroupsStudents(id: number) {
@@ -64,6 +66,7 @@ export default function TeacherGroupsModal() {
   }
 
   async function handleDelete() {
+    setLoading(true)
     if (studentId) {
       await api
         .delete(`finance/calculated-salary/destroy/${studentId}/`)
@@ -77,20 +80,25 @@ export default function TeacherGroupsModal() {
           console.log(err)
           toast.error(err.response.data.msg)
         })
-    }
+    } 
+    setLoading(false)
   }
 
   const toggleDropdown = (id: number) => {
-    if (openDropdown !== id) {
-      getGroupsStudents(id)
+    if (id) {
+      
+      if (openDropdown !== id) {
+        getGroupsStudents(id)
+      }
+      
+      setOpenDropdown(openDropdown === id ? null : id)
     }
-
-    setOpenDropdown(openDropdown === id ? null : id)
   }
 
   return (
     <Modal
       open={!!calculatedSalary}
+
       onClose={() => {
         dispatch(setCalculatedSalary(null)), setOpenDropdown(null)
       }}
@@ -108,10 +116,10 @@ export default function TeacherGroupsModal() {
           maxWidth: '90%'
         }}
       >
-        <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 650 }} size='small' aria-label='a dense table'>
+        <TableContainer  sx={{ maxHeight: '80vh', overflow: 'auto' }} component={Paper}>
+          <Table  sx={{ minWidth: 650 }} size='small' aria-label='a dense table'>
             <TableHead sx={{ padding: '10px 0' }}>
-              <TableRow>
+              <TableRow >
                 <TableCell sx={headerStyle}>Guruhi</TableCell>
                 <TableCell sx={headerStyle}>O'quvchilar soni</TableCell>
                 <TableCell sx={headerStyle}>Darslar soni</TableCell>
@@ -125,7 +133,7 @@ export default function TeacherGroupsModal() {
               </TableRow>
             </TableHead>
             {calculatedSalary?.length ? (
-              <TableBody>
+              <TableBody >
                 {calculatedSalary?.map((item: GroupFinance, index: number) => (
                   <>
                     <TableRow
@@ -151,16 +159,16 @@ export default function TeacherGroupsModal() {
                         </TableCell>
                       )}
                     </TableRow>
-                    {loading ? (
+                    {loading && openDropdown == item.obj_id ? (
                       <Typography width={'100%'} textAlign={'center'}>
                         Yuklanmoqda...
                       </Typography>
-                    ) : openDropdown && groupStudents?.length == 0 ? (
-                      <EmptyContent />
+                    ) : openDropdown == item.obj_id && groupStudents?.length == 0 ? (
+                      <EmptyContent/>
                     ) : (
-                      <TableRow>
+                      <TableRow >
                         <TableCell colSpan={10}>
-                          <Collapse in={openDropdown === item?.obj_id} timeout='auto' unmountOnExit>
+                          <Collapse in={item.obj_id &&  openDropdown === item?.obj_id || undefined} timeout='auto' unmountOnExit>
                             <Table size='small'>
                               <TableHead>
                                 <TableRow>
@@ -216,7 +224,7 @@ export default function TeacherGroupsModal() {
             )}
           </Table>
         </TableContainer>
-        <UserSuspendDialog open={openDeleteModal} setOpen={setOpenDeleteModal} handleOk={handleDelete} />
+        <UserSuspendDialog loading={deleteLoading} open={openDeleteModal} setOpen={setOpenDeleteModal} handleOk={handleDelete} />
       </Box>
     </Modal>
   )
