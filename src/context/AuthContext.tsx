@@ -72,6 +72,7 @@ const AuthProvider = ({ children }: Props) => {
           }
           setUser({
             phone: response.data.phone,
+            last_login:response.data?.last_login,
             gpa: response.data.gpa,
             id: response.data.id,
             // role: response.data.roles.find((el: any) => el.name === "Teacher").exists && !response.data.roles.find((el: any) => el.name === "Admin").exists && !response.data.roles.find((el: any) => el.name === "CEO").exists ? 'teacher' : 'admin',
@@ -156,6 +157,7 @@ const AuthProvider = ({ children }: Props) => {
         }
 
         setUser({
+          last_login:response.data?.last_login,
           phone: response.data.phone,
           gpa: response.data.gpa,
           id: response.data.id,
