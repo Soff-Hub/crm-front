@@ -71,7 +71,7 @@ const statsData: StatsDataType[] = [
 ]
 
 export const fetchStatistics = createAsyncThunk('dashboard/fetchStatistics', async () => {
-  const response = await api.get('common/dashboard/statistic-list/')
+  const response = await api.get('common/dashboard/statistic-list/')  
   return response.data
 })
 

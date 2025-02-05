@@ -32,6 +32,7 @@ const Layout = (props: LayoutProps) => {
     setLoading(true)
     await api.get('auth/profile/').then(async response => {
       setUser({
+        last_login:response.data.last_login,
         phone: response.data?.phone,
         gpa:response.data?.gpa,
         id: response.data.id,
@@ -56,12 +57,13 @@ const Layout = (props: LayoutProps) => {
   
 
   const formattedCurrentDate = getYearMonthDay(currentDate)
-  const formattedLastLogin = getYearMonthDay(last_login)
+  const formattedLastLogin = getYearMonthDay(user?.last_login)
+
+  
 
   useEffect(() => {
     if (
-      formattedCurrentDate !== formattedLastLogin || 
-      userRole !== user?.role.join(', ')
+      (formattedCurrentDate !== formattedLastLogin ) && formattedLastLogin     
     ) {
       if (window.location.pathname !== '/c-panel' || !user?.role.includes('student')) {
         dispatch(toggleModal(true));

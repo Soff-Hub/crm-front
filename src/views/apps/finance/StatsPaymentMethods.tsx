@@ -13,7 +13,6 @@ export default function StatsPaymentMethods() {
   const { isMobile } = useResponsive()
   const { settings } = useSettings()
 
-  console.log(settings.mode)
 
   const { t } = useTranslation()
   const props: any = {
@@ -72,9 +71,9 @@ export default function StatsPaymentMethods() {
           <Box>
             <ReactApexcharts options={props.options} series={props.series} type='pie' width={isMobile ? '100%' : 380} />
 
-            <Grid container spacing={2}>
+            <Box sx={{marginTop:10}}>
               {all_numbers?.payment_types.map((item, index) => (
-                <Grid item xs={12} sm={6} key={index}>
+                <Box sx={{marginBottom:5}}>
                   {settings.mode === 'light' ? (
                     <div className='d-flex align-items-center justify-content-between p-2 bg-success bg-opacity-10 rounded px-3'>
                       <div className='d-flex align-items-center gap-2'>
@@ -114,9 +113,9 @@ export default function StatsPaymentMethods() {
                       </div>
                     </div>
                   )}
-                </Grid>
+                </Box>
               ))}
-            </Grid>
+            </Box>
           </Box>
         ) : (
           <EmptyContent title="To'lovlar mavjud emas" />

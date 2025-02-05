@@ -193,6 +193,7 @@ const initialState: ILeadsState = {
   openLid: null,
   sectionId: null,
   addSource: false,
+  leadItems:null,
   loading: false,
   search: '',
   queryParams: {
@@ -213,6 +214,9 @@ export const appLeadsSlice = createSlice({
     },
     setOpen: (state, action) => {
       state.open = action.payload
+    },
+    setLeadItems: (state, action) => {
+      state.leadItems = action.payload
     },
     setOpenItem: (state, action) => {
       state.openItem = action.payload
@@ -346,7 +350,8 @@ export const {
   setAddSource,
   updateLeadParams,
   setOpenActionModal,
-  setPageLoader
+  setPageLoader,
+  setLeadItems
 } = appLeadsSlice.actions
 
 export default appLeadsSlice.reducer

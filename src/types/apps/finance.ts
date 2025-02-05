@@ -76,7 +76,12 @@ export interface IFinanceState {
         expense: YearlyStats
         benefit: YearlyStats
     difference: YearlyStats
-    active_balance:YearlyStats
+    active_balance: YearlyStats
+    plans: {
+      done_amount: number
+      percentage: number
+      planned_amount:number
+    },
 
         payment_types: {
           id: number

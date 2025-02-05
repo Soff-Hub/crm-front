@@ -1,7 +1,12 @@
+import { Box } from '@mui/material'
 import Grid from '@mui/material/Grid'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useContext, useEffect } from 'react'
 import { toast } from 'react-hot-toast'
+import Excel from 'src/@core/components/excelButton/Excel'
+import ExcelGrades from 'src/@core/components/excelButton/ExcelGrades'
+import ExcelStudents from 'src/@core/components/excelButton/ExcelStudents'
 import VideoHeader, { videoUrls } from 'src/@core/components/video-header/video-header'
 import api from 'src/@core/utils/api'
 import { getMontNumber } from 'src/@core/utils/gwt-month-name'
@@ -31,7 +36,6 @@ const UserView = () => {
     await api
       .get('auth/employees-check-list/?role=teacher')
       .then(data => {
-        
         dispatch(setTeacherData(data.data))
       })
       .catch(error => {
@@ -49,7 +53,7 @@ const UserView = () => {
   useEffect(() => {
     getTeachers()
     getRooms()
-  },[])
+  }, [])
 
   useEffect(() => {
     if (user?.role.includes('student') && !user?.role.includes('watcher')) {
@@ -89,7 +93,12 @@ const UserView = () => {
 
   return (
     <div>
-      <VideoHeader item={videoUrls.group} />
+      <Box display={'flex'} justifyContent={'end'} gap={5}>
+        <Box sx={{ marginBottom: '10px', display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
+          <ExcelGrades url={`/common/ratings/export/${router.query.id}`} />
+        </Box>
+        <VideoHeader item={videoUrls.group} />
+      </Box>
       <Grid container spacing={6}>
         <Grid item xs={12} md={5}>
           <UserViewLeft />
