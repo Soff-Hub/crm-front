@@ -77,7 +77,7 @@ const Kanban = () => {
       updatedLeads.splice(destination.index, 0, movedLead)
 
       const newData = [...data]
-      newData[sourceColIndex] = { ...sourceCol, leads: updatedLeads }
+      // newData[sourceColIndex] = { ...sourceCol, leads: updatedLeads }
 
       setData(newData)
     } else {
@@ -88,8 +88,8 @@ const Kanban = () => {
       destinationLeads.splice(destination.index, 0, movedLead)
 
       const newData = [...data]
-      newData[sourceColIndex] = { ...sourceCol, leads: sourceLeads }
-      newData[destinationColIndex] = { ...destinationCol, leads: destinationLeads }
+      // newData[sourceColIndex] = { ...sourceCol, leads: sourceLeads }
+      // newData[destinationColIndex] = { ...destinationCol, leads: destinationLeads }
 
       setData(newData)
 

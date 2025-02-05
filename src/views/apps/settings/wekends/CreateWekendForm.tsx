@@ -89,7 +89,7 @@ export default function CreateWekendForm() {
                 }}
             >
                 {/* Multiple Dates Selection */}
-                <FormControl fullWidth error={!!errors.dates && touched.dates}>
+                <FormControl fullWidth>
                     <DatePicker
                         name='dates'
                         
