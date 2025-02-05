@@ -4,12 +4,12 @@ import { useDispatch, useSelector } from 'react-redux'
 import { setSoffBotText, toggleModal } from 'src/store/apps/page'
 import Typewriter from 'typewriter-effect'
 import { AuthContext } from 'src/context/AuthContext'
-import useRoles from 'src/hooks/useRoles'
 import { CeoContent } from './components/ceo-content/ceo-content'
 import { TeacherContent } from './components/teacher-content/teacher-content'
 import { AdminContent } from './components/admin-content/admin-content'
 import confetti from 'canvas-confetti'
 import api from 'src/@core/utils/api'
+import { useAppSelector } from 'src/store'
 
 function randomInRange(min: number, max: number): number {
   return Math.random() * (max - min) + min
@@ -21,7 +21,7 @@ const StaticsModal = () => {
   const [showFireworks, setShowFireworks] = useState(false)
   const dispatch = useDispatch()
   const { user } = useContext(AuthContext)
-  const isModalOpen = useSelector((state: any) => state.page.isModalOpen)
+  const { isModalOpen } = useAppSelector(state => state.page)
   const [selectedDate, setSelectedDate] = useState('today')
   const currentDate = new Date().toISOString().split('T')[0]
   const yesterdayDate = new Date(new Date().setDate(new Date().getDate() - 1)).toISOString().split('T')[0]
@@ -47,6 +47,7 @@ const StaticsModal = () => {
       fetchAnalytics(selectedApiDate)
     }
   }, [selectedDate])
+
 
   useEffect(() => {
     if (triggerConfetti) {

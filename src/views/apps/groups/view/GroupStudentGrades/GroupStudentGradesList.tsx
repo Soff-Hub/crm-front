@@ -98,7 +98,6 @@ const Item = ({
     }
   }, [opened_id])
 
-  console.log(value)
 
   return (
     <Box sx={{ position: 'relative' }}>

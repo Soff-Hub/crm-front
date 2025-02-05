@@ -490,7 +490,7 @@ const KanbanItem = (props: KanbarItemProps) => {
 
       <Dialog open={open === 'merge-to' || open === 'merge-to-amo'} onClose={() => setOpen(null)}>
         <DialogTitle sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <Typography>{t(open == "merge-to" ? "Soff crmga o'tkazish":"Boshqa bo'limga o'tkazish")}</Typography>
+          <Typography>{t(open == "merge-to" ? "Boshqa bo'limga o'tkazish":"Soff crmga o'tkazish")}</Typography>
           <IconifyIcon icon={'material-symbols:close'} onClick={() => setOpen(null)} />
         </DialogTitle>
         <DialogContent>

@@ -1,21 +1,7 @@
-import {
-  Box,
-  Button,
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  FormControl,
-  IconButton,
-  InputLabel,
-  MenuItem,
-  Select,
-  TextField,
-  Typography
-} from '@mui/material'
+import { Box, Button, Dialog, DialogContent, IconButton, MenuItem, Typography } from '@mui/material'
 import IconifyIcon from 'src/@core/components/icon'
 import LoadingButton from '@mui/lab/LoadingButton'
 import toast from 'react-hot-toast'
-import { useRouter } from 'next/router'
 import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
 import { RootState, useAppDispatch } from 'src/store'
@@ -24,6 +10,7 @@ import {
   editDepartment,
   fetchAmoCrmPipelines,
   fetchDepartmentList,
+  setLeadItems,
   setOpenActionModal,
   setOpenItem,
   setOpenLid
@@ -32,8 +19,8 @@ import dynamic from 'next/dynamic'
 import api from 'src/@core/utils/api'
 import { useState } from 'react'
 import Form from 'src/@core/components/form'
-import { fetchSmsList } from 'src/store/apps/settings'
-import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd'
+import { Draggable } from 'react-beautiful-dnd'
+import Link from 'next/link'
 
 const AccordionCustom = dynamic(() => import('src/@core/components/accordion'))
 const EditDepartmentDialog = dynamic(() => import('./department/edit-dialog'))
@@ -48,41 +35,20 @@ interface Props {
 
 export default function HomeKanban({ title, items, id, is_amocrm }: Props) {
   //** Hooks
-  const { loading, openActionModal: open, queryParams, actionId } = useSelector((state: RootState) => state.leads)
+  const {
+    loading,
+    openActionModal: open,
+    queryParams,
+    actionId,
+    leadItems
+  } = useSelector((state: RootState) => state.leads)
   const dispatch = useAppDispatch()
-  const { query } = useRouter()
   const [openDialog, setOpenDialog] = useState<'sms' | 'edit' | 'delete' | 'recover' | null>(null)
   const { t } = useTranslation()
   const [data, setData] = useState(items)
   const [error, setError] = useState<any>({})
   const [recoverLoading, setRecoverLoading] = useState(false)
   //** Main Funcitons
-  const [leadData, setLeadData] = useState<any[]>([])
-
-
-  const onDragEnd = (result: any) => {
-    if (!result.destination) return
-    const { source, destination } = result
-
-    if (source.droppableId !== destination.droppableId) {
-      const sourceColIndex = data.findIndex(e => e.id === source.droppableId)
-      const destinationColIndex = data.findIndex(e => e.id === destination.droppableId)
-
-      const sourceCol = data[sourceColIndex]
-      const destinationCol = data[destinationColIndex]
-
-      const sourceTask = [...sourceCol.tasks]
-      const destinationTask = [...destinationCol.tasks]
-
-      const [removed] = sourceTask.splice(source.index, 1)
-      destinationTask.splice(destination.index, 0, removed)
-
-      data[sourceColIndex].tasks = sourceTask
-      data[destinationColIndex].tasks = destinationTask
-
-      setData(data)
-    }
-  }
 
   const recoverAmoDataItem = async () => {
     setRecoverLoading(true)
@@ -148,10 +114,13 @@ export default function HomeKanban({ title, items, id, is_amocrm }: Props) {
             )}
           </div>
         )}
-        {!is_amocrm && (
-          <Typography style={{ width: '50%', overflow: 'hidden', textOverflow: 'ellipsis' }} fontSize={22}>
-            {title}
-          </Typography>
+        {!is_amocrm && id != null && (
+          
+            // <Link href={id ? `/lids/dragon/${id}` : "#"} style={{ width: '100%' }}>
+              <Typography style={{ cursor: 'pointer', overflow: 'hidden', textOverflow: 'ellipsis' }} fontSize={22}>
+                {title}
+              </Typography>
+            // </Link>
         )}
         {queryParams.is_active ? (
           <Box sx={{ display: 'flex', gap: '5px', alignItems: 'center' }}>
@@ -218,32 +187,20 @@ export default function HomeKanban({ title, items, id, is_amocrm }: Props) {
             {t("Bo'sh")}
           </Typography>
         )}
-        <DragDropContext onDragEnd={onDragEnd}>
-          <div className="w-100  space-y-3">
-          {items.map(lead => (
-            <Droppable key={lead?.id} droppableId={`${lead?.id}`}>
-              {provided => (
-                <div  {...provided.droppableProps} ref={provided.innerRef} className='w-100' style={{marginBottom:10}}>
-
-                  <div  className="kanban__section__title">
-                  <AccordionCustom
-                    student_count={lead.student_count}
-                    is_amocrm={is_amocrm}
-                    parentId={id}
-                    item={lead}
-                    key={lead.id}
-                    onView={() => null}
-                  />
-
-                  </div>
-                  
-                </div>
-              )}
-            </Droppable>
+        <div className='w-100  space-y-3'>
+          {items.map((lead, index) => (
+            <div>
+              <AccordionCustom
+                student_count={lead.student_count}
+                is_amocrm={is_amocrm}
+                parentId={id}
+                item={lead}
+                key={lead.id}
+                onView={() => null}
+              />
+            </div>
           ))}
-
-          </div>
-        </DragDropContext>
+        </div>
       </Box>
 
       <Dialog open={open === 'delete' && actionId === id}>

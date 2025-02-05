@@ -31,6 +31,8 @@ import { useAppDispatch, useAppSelector } from 'src/store'
 import { fetchAmoCrmPipelines, fetchDepartmentList, setOpenLid, setSectionId } from 'src/store/apps/leads'
 import dynamic from 'next/dynamic'
 import { Draggable } from 'react-beautiful-dnd'
+import { useFormik } from 'formik'
+import * as Yup from 'yup'
 
 const DepartmentSendSmsForm = dynamic(() => import('src/views/apps/lids/departmentItem/DepartmentSendSmsForm'), {
   ssr: false // Disable server-side rendering if required
@@ -75,16 +77,53 @@ export default function AccordionCustom({ onView, parentId, item, is_amocrm, stu
   const [open, setOpen] = useState<boolean>(false)
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const [loading, setLoading] = useState<boolean>(false)
-  const [leadData, setLeadData] = useState<any[]>([])
-  const [openDialog, setOpenDialog] = useState<'sms' | 'edit' | 'delete' | 'recover' | null>(null)
+  const [departmentLoading, setDepartmentLoading] = useState(false)
+  const { leadData:leadsData, pipelines } = useAppSelector(state => state.leads)
+  const [openDialog, setOpenDialog] = useState<'sms' | 'edit' | 'delete' | 'recover' | 'merge' | null>(null)
   const [error, setError] = useState<any>({})
   const [count, setCount] = useState<any>(item.student_count)
   const { t } = useTranslation()
   const { departmentsState } = useAppSelector(state => state.user)
   const { queryParams } = useAppSelector(state => state.leads)
-
   const { smsTemps, getSMSTemps } = useSMS()
   const dispatch = useAppDispatch()
+  const [leadData, setLeadData] = useState<any[]>([])
+
+
+  const validationSchema = Yup.object({
+    department: Yup.number().required("Bo'limni tanlang")
+  })
+
+  const initialValues: {
+    department: number | null
+  } = {
+    department: null
+  }
+
+  const formik = useFormik({
+    initialValues,
+    validationSchema,
+    onSubmit: async values => {
+      setDepartmentLoading(true)
+      await api
+        .patch(`leads/department-update/${item.id}`, { parent: values.department })
+        .then(res => {
+          console.log(res)
+          setOpenDialog(null)
+          toast.success('Muvaffaqiyatli kochirildi')
+          dispatch(fetchAmoCrmPipelines({}))
+          dispatch(fetchDepartmentList())
+
+          formik.resetForm()
+        })
+        .catch((err: any) => {
+          console.log(err)
+          formik.setErrors(err.response.data)
+          toast.error(err.response.data.msg)
+        })
+      setDepartmentLoading(false)
+    }
+  })
 
   const handleClick = (event: any) => {
     setAnchorEl(event.currentTarget)
@@ -199,7 +238,11 @@ export default function AccordionCustom({ onView, parentId, item, is_amocrm, stu
   }
 
   return (
-    <Card sx={{ width: '100%', boxShadow: 'rgba(148, 163, 184, 0.1) 0px 3px 12px' }} id={item.id} draggable>
+    <Card
+      sx={{ width: '100%', marginBottom: 2, boxShadow: 'rgba(148, 163, 184, 0.1) 0px 3px 12px' }}
+      id={item.id}
+      draggable
+    >
       <Box sx={{ width: '100%', display: 'flex', alignItems: 'center' }}>
         <Typography
           fontSize={16}
@@ -262,33 +305,21 @@ export default function AccordionCustom({ onView, parentId, item, is_amocrm, stu
               </div> */}
             </Box>
           ) : leadData.length > 0 ? (
-            leadData.map(lead => (
-              <Draggable key={lead.id} draggableId={`${lead?.id}`} index={lead?.id}>
-                {(provided, snapshot) => (
-                  <div
-                    ref={provided.innerRef}
-                    {...provided.draggableProps}
-                    {...provided.dragHandleProps}
-                    style={{
-                      ...provided.draggableProps.style,
-                      opacity: snapshot.isDragging ? '0.5' : '1'
-                    }}
-                  >
-                    <KanbanItem
-                      is_amocrm={is_amocrm}
-                      reRender={handleGetLeads}
-                      is_view={lead.is_view}
-                      last_activity={lead.last_activity}
-                      id={lead.id}
-                      handleEditLead={handleEditLead}
-                      key={lead.id}
-                      status={'success'}
-                      title={lead.first_name}
-                      phone={lead.phone}
-                    />
-                  </div>
-                )}
-              </Draggable>
+            leadData.map((lead: any) => (
+              <div>
+                <KanbanItem
+                  is_amocrm={is_amocrm}
+                  reRender={handleGetLeads}
+                  is_view={lead.is_view}
+                  last_activity={lead.last_activity}
+                  id={lead.id}
+                  handleEditLead={handleEditLead}
+                  key={lead.id}
+                  status={'success'}
+                  title={lead.first_name}
+                  phone={lead.phone}
+                />
+              </div>
             ))
           ) : (
             <Typography variant='body2' sx={{ fontStyle: 'italic', textAlign: 'center' }}>
@@ -339,6 +370,13 @@ export default function AccordionCustom({ onView, parentId, item, is_amocrm, stu
                   <IconifyIcon icon='mdi:edit' fontSize={20} />
                   {t('Tahrirlash')}
                 </MenuItem>
+                <MenuItem
+                  onClick={() => (setOpenDialog('merge'), handleGetLeads(false), setAnchorEl(null))}
+                  sx={{ '& svg': { mr: 2 } }}
+                >
+                  <IconifyIcon icon='subway:round-arrow-2' fontSize={17} />
+                  {t("Boshqa bo'limga o'tkazish")}
+                </MenuItem>
                 <MenuItem onClick={() => newLids()} sx={{ '& svg': { mr: 2 } }}>
                   <IconifyIcon icon='mdi:leads' fontSize={20} />
                   {t("Yangi lid qo'shish")}
@@ -371,6 +409,51 @@ export default function AccordionCustom({ onView, parentId, item, is_amocrm, stu
           </>
         )}
       </Menu>
+
+      <Dialog open={openDialog === 'merge'} onClose={() => { setOpenDialog(null), formik.resetForm() }}>
+        <DialogTitle sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <Typography>{t(openDialog == 'merge' ? "Boshqa bo'limga o'tkazish" : "Soff crmga o'tkazish")}</Typography>
+          <IconifyIcon icon={'material-symbols:close'} onClick={() => setOpenDialog(null)} />
+        </DialogTitle>
+        <DialogContent>
+          <form
+            onSubmit={formik.handleSubmit}
+            style={{
+              minWidth: '280px',
+              maxWidth: '350px',
+              width: '100%',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '15px',
+              marginTop: '5px'
+            }}
+          >
+            <FormControl fullWidth>
+              <InputLabel>{t("Bo'lim")}</InputLabel>
+              <Select
+                placeholder="Bo'lim"
+                name='department'
+                label={t("Bo'lim")}
+                error={!!formik.errors.department && formik.touched.department}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.department && String(formik.values?.department)}
+                defaultValue={''}
+              >
+                {leadsData?.map((el: any) => (
+                  <MenuItem key={el.id} value={el.id}>
+                    {el.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+
+            <LoadingButton loading={departmentLoading} type='submit' variant='outlined'>
+              {t("Ko'chirish")}
+            </LoadingButton>
+          </form>{' '}
+        </DialogContent>
+      </Dialog>
 
       {/* EDIT Item*/}
       <Dialog open={openDialog === 'edit'} onClose={() => setOpenDialog(null)}>
