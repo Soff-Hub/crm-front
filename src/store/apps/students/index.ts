@@ -65,6 +65,7 @@ export const searchStudent = createAsyncThunk('students/searchStudent', async (s
 const initialState: IStudentState = {
   openEdit: null,
   groups: [],
+  studentDetailLoading:false,
   comments:[],
   studentGroups:[],
   studentId:null,
@@ -127,9 +128,14 @@ export const studentsSlice = createSlice({
       .addCase(createStudent.fulfilled, state => {
         state.openEdit = null
       })
+      .addCase(fetchStudentDetail.pending, state => {
+        state.studentDetailLoading = true
+      })
       .addCase(fetchStudentDetail.fulfilled, (state, action) => {
         state.studentData = action.payload
+        state.studentDetailLoading = false
       })
+      
       .addCase(fetchStudentPayment.pending, state => {
         state.isLoading = true
       })

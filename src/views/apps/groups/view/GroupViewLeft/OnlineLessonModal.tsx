@@ -55,7 +55,6 @@ export default function OnlineLessonModal() {
       .catch(error => console.log(error))
   }
 
-  console.log(groupId)
 
   // Function to send access_token to backend
   const sendAccessTokenToBackend = async (token: string) => {

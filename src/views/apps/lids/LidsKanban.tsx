@@ -120,7 +120,7 @@ export default function HomeKanban({ title, items, id, is_amocrm }: Props) {
               <Typography style={{ cursor: 'pointer', overflow: 'hidden', textOverflow: 'ellipsis' }} fontSize={22}>
                 {title}
               </Typography>
-            // </Link>
+            //  </Link>
         )}
         {queryParams.is_active ? (
           <Box sx={{ display: 'flex', gap: '5px', alignItems: 'center' }}>

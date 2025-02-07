@@ -58,10 +58,13 @@ export default function CreateStudentForm() {
   const [isGroup, setIsGroup] = useState<boolean>(false)
   const [loading, setLoading] = useState<boolean>(false)
   const [isDiscount, setIsDiscount] = useState<boolean>(false)
+  const { public_settings } = useAppSelector(state => state.page)
 
   const getGroups = async () => {
     await dispatch(fetchGroupCheckList())
   }
+
+  
 
   const validationSchema = Yup.object({
     first_name: Yup.string().required('Ismingizni kiriting'),
@@ -76,6 +79,7 @@ export default function CreateStudentForm() {
     first_name: '',
     phone: '',
     school: '',
+    contract_amount: 0,
     birth_date: today,
     gender: 'male',
     start_at: today,
@@ -184,6 +188,24 @@ export default function CreateStudentForm() {
         {errors.phone && touched.phone && <FormHelperText error={true}>{errors.phone}</FormHelperText>}
       </FormControl>
 
+      {public_settings?.type == 'private_school' && (
+        <FormControl sx={{ width: '100%' }}>
+          <TextField
+            size='small'
+            type='number'
+            label={t('Kelishilgan summa')}
+            name='contract_amount'
+            error={!!errors.contract_amount && touched.contract_amount}
+            value={values.contract_amount}
+            onChange={handleChange}
+            onBlur={handleBlur}
+          />
+          {errors.contract_amount && touched.contract_amount && (
+            <FormHelperText error={true}>{errors.contract_amount}</FormHelperText>
+          )}
+        </FormControl>
+      )}
+
       <FormControl sx={{ width: '100%' }}>
         <TextField
           size='small'
@@ -279,13 +301,13 @@ export default function CreateStudentForm() {
         //     value={formik.values.school}
         //   getOptionLabel={(option: any) => (typeof option === 'string' ? option : option.name)}
         //     onChange={(event, newValue:{name:string,id:number|string}) => {
-              
+
         //     if (newValue?.id == 'add-group') {
         //       // Handle adding a new group
         //       console.log('Add Group clicked');
         //     } else {
         //       console.log('fwefewf');
-              
+
         //     }
         //   }}
         //   // onInputChange={(event, value, reason) => {
@@ -314,7 +336,7 @@ export default function CreateStudentForm() {
         //   )}
         // />
         // </FormControl>
-          <FormControl fullWidth>
+        <FormControl fullWidth>
           <InputLabel size='small' id='user-view-language-label'>
             {t('Maktab')}
           </InputLabel>
@@ -329,7 +351,7 @@ export default function CreateStudentForm() {
             value={values.school || ''}
             sx={{ mb: 3 }}
           >
-            {schools.map((school:{id:number|string,name:string}) => (
+            {schools.map((school: { id: number | string; name: string }) => (
               <MenuItem key={school.id} value={Number(school.id)}>
                 {school.name}
               </MenuItem>
@@ -353,7 +375,6 @@ export default function CreateStudentForm() {
           />
           <FormHelperText error={true}>{errors.start_at}</FormHelperText>
         </FormControl>
-      
       )}
       <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
         {!isGroup && (
@@ -421,6 +442,5 @@ export default function CreateStudentForm() {
         {t('Saqlash')}
       </LoadingButton>
     </form>
-    
   )
 }

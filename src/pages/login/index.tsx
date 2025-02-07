@@ -37,7 +37,7 @@ import PhoneInput from 'src/@core/components/phone-input'
 import { useTranslation } from 'react-i18next'
 import { reversePhone } from 'src/@core/components/phone-input/format-phone-number'
 import api from 'src/@core/utils/api'
-import { toggleModal } from 'src/store/apps/page'
+import { setPublicSettings, toggleModal } from 'src/store/apps/page'
 import { useAppDispatch } from 'src/store'
 import { AuthContext } from 'src/context/AuthContext'
 
@@ -83,14 +83,16 @@ const LoginPage = () => {
   const { t } = useTranslation()
   let currentDate = new Date().toISOString()
   const { setUser, user } = useContext(AuthContext)
-
+   
 
 
   const pageLoad = async () => {
     try {
       const response = await api.get('common/public-settings/')
       if (response.status == 200) {
+        dispatch(setPublicSettings(response.data))
         setData(response.data)
+
       }
     } catch {
       toast.error("Markaz ma'lumotini olib bo'lmadi")

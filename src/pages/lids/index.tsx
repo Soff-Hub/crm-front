@@ -1,6 +1,6 @@
 'use client'
 // ** MUI Imports
-import { Box } from '@mui/material'
+import { Box, Skeleton } from '@mui/material'
 import dynamic from 'next/dynamic'
 import { useContext, useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast'
@@ -30,7 +30,6 @@ const Lids = () => {
   const dispatch = useAppDispatch()
   const [data, setData] = useState(leadData)
 
-  
 
   useEffect(() => {
     if (
@@ -39,7 +38,7 @@ const Lids = () => {
       !user?.role.includes('watcher') &&
       !user?.role.includes('marketolog')
     ) {
-       window.location.assign('/')
+      window.location.assign('/')
       toast.error('Sahifaga kirish huquqingiz yoq!')
     }
     dispatch(fetchSmsList())
@@ -55,35 +54,57 @@ const Lids = () => {
       <LidsHeader />
       {!bigLoader ? (
         <Box
-            padding={'10px 0'}
-            display={'flex'}
-            gap={5}
-            sx={{ minHeight: 600, alignItems: isMobile ? 'center' : 'flex-start', overflowX: 'auto' }}
-            flexDirection={isMobile ? 'column' : 'row'}
-          >
-            {pipelines?.map((lead: any) => (
-                    <LidsKanban
-                      is_amocrm={lead.is_amocrm}
-                      id={lead.id}
-                      key={lead.id}
-                      items={lead.children}
-                      title={lead.name}
-                      status='success'
-                    />
-            ))}
-            {leadData.map((lead: any) => (
-                    <LidsKanban
-                      is_amocrm={lead.is_amocrm}
-                      id={lead.id}
-                      key={lead.id}
-                      items={lead.children}
-                      title={lead.name}
-                      status='success'
-                    />
-            ))}
-          </Box>
+          padding={'10px 0'}
+          display={'flex'}
+          gap={5}
+          sx={{ minHeight: 600, alignItems: isMobile ? 'center' : 'flex-start', overflowX: 'auto' }}
+          flexDirection={isMobile ? 'column' : 'row'}
+        >
+          {pipelines?.map((lead: any) => (
+            <LidsKanban
+              is_amocrm={lead.is_amocrm}
+              id={lead.id}
+              key={lead.id}
+              items={lead.children}
+              title={lead.name}
+              status='success'
+            />
+          ))}
+          {leadData.map((lead: any) => (
+            <LidsKanban
+              is_amocrm={lead.is_amocrm}
+              id={lead.id}
+              key={lead.id}
+              items={lead.children}
+              title={lead.name}
+              status='success'
+            />
+          ))}
+        </Box>
       ) : (
-        <SubLoader />
+        <Box>
+          <Box display='flex' gap={5} marginTop={10}>
+            <Skeleton variant='rounded' width={300} height={50} />
+            <Skeleton variant='rounded' width={300} height={50} />
+            <Skeleton variant='rounded' width={300} height={50} />
+            <Skeleton variant='rounded' width={300} height={50} />
+            <Skeleton variant='rounded' width={300} height={50} />
+          </Box>
+          <Box display='flex' gap={5} marginTop={5}>
+            <Skeleton variant='rounded' width={300} height={70} />
+            <Skeleton variant='rounded' width={300} height={70} />
+            <Skeleton variant='rounded' width={300} height={70} />
+            <Skeleton variant='rounded' width={300} height={70} />
+            <Skeleton variant='rounded' width={300} height={70} />
+          </Box>
+          <Box display='flex' gap={5} marginTop={5}>
+            <Skeleton variant='rounded' width={300} height={70} />
+            <Skeleton variant='rounded' width={300} height={70} />
+            <Skeleton variant='rounded' width={300} height={70} />
+            <Skeleton variant='rounded' width={300} height={70} />
+            <Skeleton variant='rounded' width={300} height={70} />
+          </Box>
+        </Box>
       )}
 
       <CreateDepartmentDialog />

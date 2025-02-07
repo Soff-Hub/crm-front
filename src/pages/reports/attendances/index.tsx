@@ -5,11 +5,11 @@ import VideoHeader, { videoUrls } from 'src/@core/components/video-header/video-
 import { customTableProps } from '../../groups'
 import { useRouter } from 'next/router'
 import getMonthName from 'src/@core/utils/gwt-month-name'
-import DataTable from 'src/@core/components/table'
 import { fetchAttendances } from 'src/store/apps/attandance'
 import { useAppDispatch, useAppSelector } from 'src/store'
 import useResponsive from 'src/@core/hooks/useResponsive'
 import { AttandanceFilters } from 'src/views/apps/attandances/AttandanceFilters'
+import AttandanceDataTable from 'src/@core/components/table/attandanceTable'
 export default function Attandences() {
   const { t } = useTranslation()
   const { isMobile } = useResponsive()
@@ -25,7 +25,10 @@ export default function Attandences() {
     {
       xs: 1,
       title: t('Guruh nomi'),
-      dataIndex: 'name'
+      dataIndex: 'name',
+      renderId: (id,name) => (
+        <div onClick={() => router.push(`/groups/view/security?id=${id}&month=${getMonthName(null)}`)}>{name}</div>
+      )
     },
     {
       xs: 1.4,
@@ -40,14 +43,28 @@ export default function Attandences() {
     },
     {
       xs: 1,
-      title: t('Qilingan davomadlar'),
+      title: t("Kelgan o'quvchilar"),
       renderItem: (record: any) => (
         <div>
           <Chip
-            variant='outlined'
+            sx={{background:'lightgreen'}}
+            variant='filled'
             size='medium'
-            color='success'
-            label={`${record?.attended_attendances} / ${record?.allowed_attendances}`}
+            label={`${record?.available_students} / ${record?.allowed_attendances}`}
+          />
+        </div>
+      )
+    },
+    {
+      xs: 1,
+      title: t("Kelmagan o'quvchilar"),
+      renderItem: (record: any) => (
+        <div>
+          <Chip
+            sx={{background:'lightcoral'}}
+            variant='filled'
+            size='medium'
+            label={`${record?.not_available_students} / ${record?.allowed_attendances}`}
           />
         </div>
       )
@@ -80,7 +97,7 @@ export default function Attandences() {
         </Box>
       </Box>
       {!isMobile && <AttandanceFilters isMobile={isMobile} />}
-      <DataTable columns={columns} loading={isLoading} data={attandance || []} rowClick={rowClick} color text_color />
+      <AttandanceDataTable columns={columns} loading={isLoading} data={attandance || []}  color text_color />
     </div>
   )
 }

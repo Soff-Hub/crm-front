@@ -1,34 +1,59 @@
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd'
 import { useEffect, useState } from 'react'
 import Pagination from '@mui/material/Pagination'
-import { Box, Dialog, DialogContent, DialogTitle, IconButton, Menu, MenuItem, Skeleton, TextField, Typography } from '@mui/material'
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  IconButton,
+  Menu,
+  MenuItem,
+  Skeleton,
+  TextField,
+  Typography
+} from '@mui/material'
 import MoreVertIcon from '@mui/icons-material/MoreVert'
 import { useSelector } from 'react-redux'
 import { RootState, useAppDispatch } from 'src/store'
 import api from 'src/@core/utils/api'
-import { fetchDepartmentList, fetchSources, setLeadItems } from 'src/store/apps/leads'
+import {
+  fetchDepartmentList,
+  fetchSources,
+  setAddSource,
+  setDragonLoading,
+  setLeadItems,
+  setOpenLid,
+  setSectionId
+} from 'src/store/apps/leads'
 import { useRouter } from 'next/router'
 import EmptyContent from 'src/@core/components/empty-content'
-import { EyeIcon } from 'lucide-react'
+import { EyeIcon, Phone, User } from 'lucide-react'
 import { LidsDragonModal } from 'src/views/apps/lids/LidsDragonModal'
-
-const ITEMS_PER_PAGE = 10
+import IconifyIcon from 'src/@core/components/icon'
+import CreateAnonimUserForm from 'src/views/apps/lids/anonimUser/CreateAnonimUserForm'
+import { useTranslation } from 'react-i18next'
+import { PersonAddAlt } from '@mui/icons-material'
+import useResponsive from 'src/@core/hooks/useResponsive'
 
 const Kanban = () => {
   const [anchorEl, setAnchorEl] = useState(null)
   const [pageMap, setPageMap] = useState<any>({})
   const [selectedLead, setSelectedLead] = useState<any | null>(null)
   const [editTaskTitle, setEditTaskTitle] = useState('')
-  const { leadItems, leadData } = useSelector((state: RootState) => state.leads)
+  const { leadItems, leadData, openLid, dragonLoading } = useSelector((state: RootState) => state.leads)
   const [data, setData] = useState(leadItems)
-  const [studentModalOpen,setStudentModalOpen] = useState(false)
-  const [loading, setLoading] = useState(false)
+  const [source, setSource] = useState<any>(null)
+  const [studentModalOpen, setStudentModalOpen] = useState(false)
   const dispatch = useAppDispatch()
+  const { t } = useTranslation()
   const { query } = useRouter()
+  const { isMobile } = useResponsive()
   const [leadTitle, setLeadTitle] = useState('')
   async function handleGetLealdItems() {
     if (!query.id) return
-    setLoading(true)
+    dispatch(setDragonLoading(true))
 
     try {
       const res = await api.get(`leads/department/${query.id}`)
@@ -37,24 +62,33 @@ const Kanban = () => {
     } catch (err) {
       console.error('Error fetching leads:', err)
     } finally {
-      setLoading(false)
+      dispatch(setDragonLoading(false))
     }
   }
 
   useEffect(() => {
+    setData(leadItems)
+  }, [leadItems])
+
+  useEffect(() => {
     if (leadData) {
-      let leadtitle = leadData?.find((item) => item.id == Number(query?.id)) 
-      
+      let leadtitle = leadData?.find(item => item.id == Number(query?.id))
+
       setLeadTitle(String(leadtitle?.name))
     }
   }, [leadData])
 
-  
-
   useEffect(() => {
     handleGetLealdItems()
     dispatch(fetchDepartmentList())
+    dispatch(fetchSources())
   }, [query?.id])
+
+  const closeCreateLid = () => {
+    dispatch(setOpenLid(null))
+    dispatch(setAddSource(false))
+    dispatch(setSectionId(null))
+  }
 
   const onDragEnd = async (result: any) => {
     if (!result.destination || !data) return
@@ -77,7 +111,7 @@ const Kanban = () => {
       updatedLeads.splice(destination.index, 0, movedLead)
 
       const newData = [...data]
-      // newData[sourceColIndex] = { ...sourceCol, leads: updatedLeads }
+      newData[sourceColIndex] = { ...sourceCol, leads: updatedLeads }
 
       setData(newData)
     } else {
@@ -88,8 +122,8 @@ const Kanban = () => {
       destinationLeads.splice(destination.index, 0, movedLead)
 
       const newData = [...data]
-      // newData[sourceColIndex] = { ...sourceCol, leads: sourceLeads }
-      // newData[destinationColIndex] = { ...destinationCol, leads: destinationLeads }
+      newData[sourceColIndex] = { ...sourceCol, leads: sourceLeads }
+      newData[destinationColIndex] = { ...destinationCol, leads: destinationLeads }
 
       setData(newData)
 
@@ -107,11 +141,8 @@ const Kanban = () => {
     setPageMap((prev: any) => ({ ...prev, [sectionId]: page }))
   }
 
-  
-
   const handleMenuOpen = (event: any, lead: any) => {
-    
-     setStudentModalOpen(true)
+    setStudentModalOpen(true)
     setSelectedLead(lead)
   }
 
@@ -152,11 +183,14 @@ const Kanban = () => {
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      <Typography variant='h4' marginY={10}>
-        {leadTitle ? leadTitle :'leadData'}
+      <Typography variant='h4' marginY={5}>
+        {leadTitle ? leadTitle : 'leadData'}
       </Typography>
-      <div className='kanban' style={{ overflow: 'auto', display: 'flex', gap: 10 }}>
-        {loading ? (
+      <div
+        className='kanban'
+        style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', alignItems: 'start', gap: 20 }}
+      >
+        {dragonLoading ? (
           <Box display={'flex'} flexDirection={'column'} marginBottom={10} gap={5}>
             <Box display={'flex'} gap={5}>
               <Skeleton variant='rounded' width={300} height={50} />
@@ -173,35 +207,35 @@ const Kanban = () => {
           </Box>
         ) : data?.length ? (
           data?.map(section => {
-            const currentPage = pageMap[section?.id] || 1
-            const startIndex = (currentPage - 1) * ITEMS_PER_PAGE
-            const paginatedLeads = section?.leads.slice(startIndex, startIndex + ITEMS_PER_PAGE)
-
             return (
               <Droppable key={section?.id} droppableId={String(section?.id)}>
                 {provided => (
-                  <div {...provided.droppableProps} className='kanban__section' ref={provided.innerRef}>
+                  <div
+                    {...provided.droppableProps}
+                    className='kanban__section'
+                    ref={provided.innerRef}
+                    style={{ width: isMobile ? '100%' : 'auto', padding: 20, background: 'white', borderRadius: 10 }}
+                  >
                     <div
-                      className='shadow-sm p-3  bg-white rounded'
                       style={{
                         background: 'white',
                         borderRadius: 10,
                         marginBottom: 20,
-                        display: 'flex',
-                        padding: 10,
                         minWidth: 300,
-                        overflow: 'auto',
-                        textAlign: 'center'
+                        fontSize: 25
                       }}
                     >
                       {section.name}
                     </div>
-                    <div className='kanban__section__content'>
-                      {paginatedLeads?.map((lead: any, index: any) => (
+                    <div
+                      style={{ marginBottom: 10, maxHeight: '50vh', paddingRight: 10, overflow: 'auto' }}
+                      className='kanban__section__content'
+                    >
+                      {section.leads?.map((lead: any, index: any) => (
                         <Draggable key={lead?.id} draggableId={String(lead.id)} index={index}>
                           {(provided, snapshot) => (
                             <div
-                              className='shadow-sm p-3  bg-white rounded'
+                              className='shadow-sm p-3 bg-light  rounded'
                               ref={provided.innerRef}
                               {...provided.draggableProps}
                               {...provided.dragHandleProps}
@@ -214,12 +248,21 @@ const Kanban = () => {
                                 borderRadius: 10,
                                 marginBottom: 10,
                                 textAlign: 'center',
-                                padding: '10px'
+                                padding: '5px'
                               }}
                             >
-                              {lead.first_name}
+                              <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+                                  <User width={20} height={20} color='blue' />
+                                  {lead.first_name}
+                                </div>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+                                  <Phone width={18} height={18} color='blue' />
+                                  <Typography fontSize={12}>{lead?.phone}</Typography>
+                                </div>
+                              </div>
                               <IconButton onClick={event => handleMenuOpen(event, lead)}>
-                                <EyeIcon/>
+                                <EyeIcon />
                               </IconButton>
                             </div>
                           )}
@@ -227,14 +270,28 @@ const Kanban = () => {
                       ))}
                       {provided.placeholder}
                     </div>
-                    {section.leads.length > ITEMS_PER_PAGE && (
+                    {/* {section.leads.length > ITEMS_PER_PAGE && (
                       <Pagination
                         count={Math.ceil(section.leads.length / ITEMS_PER_PAGE)}
                         page={currentPage}
                         onChange={(event, page) => handlePageChange(section.id, event, page)}
-                        style={{ marginTop: 10, textAlign: 'center' }}
+                        style={{ textAlign: 'center' ,marginBottom:10}}
                       />
-                    )}
+                    )} */}
+                    <Box>
+                      <Button
+                        size='medium'
+                        fullWidth
+                        onClick={() => {
+                          setSource(section?.id), dispatch(setOpenLid(query?.id))
+                        }}
+                        variant='outlined'
+                        startIcon={<PersonAddAlt />}
+                        // sx={{ position: 'absolute', bottom: 0, margin: 5 }}
+                      >
+                        Yangi lid qo'shish
+                      </Button>
+                    </Box>
                   </div>
                 )}
               </Droppable>
@@ -246,6 +303,19 @@ const Kanban = () => {
       </div>
 
       <LidsDragonModal handleClose={handleClose} openModal={studentModalOpen} selectedLead={selectedLead} />
+      <Dialog onClose={closeCreateLid} open={openLid !== null}>
+        <DialogTitle sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <Typography variant='h6' component='span'>
+            {t('Yangi Lid')}
+          </Typography>
+          <IconButton aria-label='close' onClick={closeCreateLid}>
+            <IconifyIcon icon='mdi:close' />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent sx={{ minWidth: '320px' }}>
+          <CreateAnonimUserForm source={source ? source : null} />
+        </DialogContent>
+      </Dialog>
     </DragDropContext>
   )
 }

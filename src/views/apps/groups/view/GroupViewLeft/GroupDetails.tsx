@@ -43,7 +43,6 @@ export default function GroupDetails() {
     await dispatch(getSMSTemp())
   }
 
-  console.log(id,month);
   
 
   const handleEdit = async (id: any) => {
