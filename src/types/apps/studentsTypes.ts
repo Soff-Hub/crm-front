@@ -42,11 +42,13 @@ export interface StudentItemType {
   phone: string
   gender: genderTypes
   birth_date: null | string
+  contract_amount?:number
 
 }
 
 export interface CreateStudentDto extends StudentItemType {
   password?: string | null
+  contract_amount?:number,
   school?:string,
   group?: number | string
   start_at?: string
@@ -59,7 +61,8 @@ export interface UpdateStudentDto extends StudentItemType {
 }
 
 export interface IStudentState {
-  total_debts?:number
+  total_debts?: number
+  studentDetailLoading:boolean,
   isGettingStudentsGroups?:boolean,
   studentId?: any,
   comments?:any,
@@ -82,6 +85,7 @@ export interface StudentDetailType {
   birth_date: string
   balance: string
   phone: string
+  contract_amount?:number
   gender: genderTypes
   created_at: string
   school_data:{id:number,name:string},

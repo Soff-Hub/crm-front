@@ -21,6 +21,7 @@ import { AuthContext } from 'src/context/AuthContext'
 import { setDays, setResultId } from 'src/store/apps/groupDetails'
 import { useAppDispatch } from 'src/store'
 import GroupStudentGrades from './GroupStudentGrades/GroupStudentGradesList'
+import AttendanceTable from './GroupAttandance'
 
 interface Props {
   tab: string
@@ -82,6 +83,7 @@ const UserViewRight = ({ tab }: Props) => {
       <Box sx={{ mt: 2 }}>
         <TabPanel sx={{ p: 0 }} value='security'>
           <UserViewSecurity />
+          {/* <AttendanceTable/> */}
         </TabPanel>
         <TabPanel sx={{ p: 0 }} value='grade'>
           <GroupStudentGrades />

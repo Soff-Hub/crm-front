@@ -30,7 +30,6 @@ const UserViewLeft = () => {
     dispatch(getStudents({ id: query.id, queryString: queryString }))
   }, [studentsQueryParams.status])
 
-  console.log(studentsQueryParams);
 
 
   return (

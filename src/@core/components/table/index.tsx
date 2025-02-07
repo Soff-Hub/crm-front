@@ -1,4 +1,4 @@
-import { Box } from '@mui/material'
+import { Box, Skeleton } from '@mui/material'
 import { useRouter } from 'next/router'
 import { ReactNode } from 'react'
 import { Placeholder } from 'react-bootstrap' // Import Placeholder from react-bootstrap
@@ -62,7 +62,7 @@ export default function DataTable({
           <Box key={i} sx={{ textAlign: 'start', flex: el.xs }} pt={'0 !important'} pl={'0 !important'}>
             <Box sx={{ fontSize: 14, fontWeight: 700 }}>
               {loading ? (
-                <Placeholder as='span' animation='glow' style={{ width: '100px', height: '20px' }} />
+                <Placeholder as='span' animation='glow' style={{ width: '100px', height: '30px' }} />
               ) : (
                 el.title
               )}
@@ -72,32 +72,16 @@ export default function DataTable({
       </Box>
 
       {loading ? (
-        <div>
-          {/* Skeleton loader for table rows */}
-          {[...Array(5)].map((_, index) => (
-            <Box
-              minWidth={minWidth || '1200px'}
-              key={index}
-              my={2}
-              sx={{
-                padding: '15px 15px',
-                boxShadow: 'rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px',
-                borderRadius: '8px',
-                display: 'flex',
-                alignItems: 'center',
-                gap: 1,
-                width: '100%',
-                maxWidth: maxWidth || null
-              }}
-            >
-              {columns.map((el: any, i) => (
-                <Box key={i} sx={{ textAlign: 'start', flex: el.xs, pb: '5px' }}>
-                  <Placeholder as='span' animation='glow' style={{ width: '100%', height: '20px' }} />
-                </Box>
-              ))}
-            </Box>
-          ))}
-        </div>
+        <Box sx={{display:'flex', flexDirection:'column', gap:2}}>
+          <Skeleton variant='rounded' height={40} width='100%' />
+          <Skeleton variant='rounded' height={40} width='100%' />
+          <Skeleton variant='rounded' height={40} width='100%' />
+          <Skeleton variant='rounded' height={40} width='100%' />
+          <Skeleton variant='rounded' height={40} width='100%' />
+          <Skeleton variant='rounded' height={40} width='100%' />
+          <Skeleton variant='rounded' height={40} width='100%' />
+          <Skeleton variant='rounded' height={40} width='100%' />
+        </Box>
       ) : data?.length > 0 ? (
         data?.map((item, index) => {
           return (
@@ -114,11 +98,11 @@ export default function DataTable({
                 gap: 1,
                 width: '100%',
                 maxWidth: maxWidth || null,
-                cursor: 'pointer'
+                cursor: 'pointer',
               }}
             >
               {columns.map((el: any, i) => (
-                <Box key={i} sx={{ textAlign: 'start', flex: el.xs, pb: '5px' }}>
+                <Box  key={i} sx={{ textAlign: 'start', flex: el.xs, pb: '5px' }}>
                   <Box sx={{ fontSize: 12, fontWeight: 500 }}>
                     {el.render
                       ? el.render(el.dataIndex === 'index' ? index + 1 : item[`${el.dataIndex}`])
@@ -136,7 +120,7 @@ export default function DataTable({
                   </Box>
                 </Box>
               ))}
-               {rowClick && (
+              {rowClick && (
                 <Box
                   sx={{ width: '75%', zIndex: 1, height: '36px', position: 'absolute' }}
                   onClick={() => handleClick(item.id)}

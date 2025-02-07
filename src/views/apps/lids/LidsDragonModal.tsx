@@ -23,6 +23,7 @@ import { setOpen } from 'src/store/apps/leads'
 import SendSmsAnonimUserForm from './anonimUser/SendSmsAnonimUserForm'
 import { useAppSelector } from 'src/store'
 import { HelpOutline, QuestionAnswer, QuestionAnswerOutlined } from '@mui/icons-material'
+import useResponsive from 'src/@core/hooks/useResponsive'
 
 type InfoItemProps = {
   icon: React.ReactNode
@@ -50,6 +51,7 @@ export function LidsDragonModal({ selectedLead, openModal, handleClose }: LidsDr
   const { sms_list } = useAppSelector(state => state.settings)
   const [smsModal, setSmsModalOpen] = useState(false)
   const [detailLoading, setDetailLoading] = useState(false)
+  const { isMobile } = useResponsive()
   const [nodeModal, setNodeModal] = useState(false)
   const { t } = useTranslation()
   async function handleGetUserDetails(value: string, id: number) {
@@ -118,17 +120,14 @@ export function LidsDragonModal({ selectedLead, openModal, handleClose }: LidsDr
         </div>
         <Box sx={{ width: '100%', marginTop: 2 }}>
           <Tabs
+            variant={isMobile ? 'scrollable' : 'fullWidth'} // Scrollable for small screens
+            scrollButtons={isMobile ? 'auto' : false} // Show scroll buttons if needed
             value={value}
             onChange={handleChange}
             aria-label='user tabs'
-            variant='fullWidth'
             sx={{
-              '@media (max-width: 600px)': {
-                // Stack the tabs on smaller screens
-                flexDirection: 'column',
-                '& .MuiTab-root': {
-                  justifyContent: 'flex-start'
-                }
+              '& .MuiTabs-flexContainer': {
+                flexDirection: isMobile ? 'column' : 'row' // Stack tabs vertically on small screens
               }
             }}
           >

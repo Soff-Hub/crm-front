@@ -25,7 +25,6 @@ const CardWidgetsWeeklyOverview = () => {
 
   const { all_numbers, numbersLoad: loading } = useAppSelector(state => state.finance)
 
-  console.log(all_numbers?.plans);
   
 
   const data = all_numbers

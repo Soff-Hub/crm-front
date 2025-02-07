@@ -7,6 +7,7 @@ import {
   DialogTitle,
   FormControl,
   FormHelperText,
+  InputLabel,
   TextField,
   Typography
 } from '@mui/material'
@@ -30,7 +31,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 import { setLoading } from 'src/store/apps/leads'
-import { useFormik } from 'formik'
+import { ErrorMessage, Field, Form, Formik, useFormik } from 'formik'
 import * as Yup from 'yup'
 
 interface Result {
@@ -71,11 +72,42 @@ const Item = ({
 }) => {
   const [value, setValue] = useState<true | false | null | 0>(defaultValue)
   const [open, setOpen] = useState<boolean>(false)
+  const [description, setDescription] = useState<true | false | null | 0>(0)
+  const [openTooltip, setOpenTooltip] = useState(false)
+  const [descriptionText, setDescriptionText] = useState('')
+
+  const handleSubmit = async (values: { description: string }) => {
+    const data = {
+      group: groupId,
+      student: userId,
+      date: date,
+      is_available: description,
+      description: values.description
+    }
+    try {
+      const response = await api.patch(`common/attendance/update/${currentDate?.id}/`, data)
+      console.log(response)
+      if (response.data.description) {
+        setDescriptionText(response.data.description)
+      }
+      onClose()
+    } catch (e: any) {
+      console.log(e)
+
+      toast.error(e.response?.data.msg?.[0] || "Saqlab bo'lmadi qayta urinib ko'ring")
+      setValue(defaultValue)
+    }
+  }
+
+  function onClose() {
+    setDescription(0)
+  }
 
   const handleClick = async (status: any) => {
     setOpenedId(null)
     if (value !== status) {
       setValue(status)
+      setDescription(status)
       const data = {
         group: groupId,
         student: userId,
@@ -143,18 +175,71 @@ const Item = ({
           </Box>
         )}
         {!open && (
-          <span onClick={() => setOpenedId(`${userId}-${date}`)}>
+          <span>
             {value === true ? (
-              <IconifyIcon icon={'game-icons:check-mark'} fontSize={18} color='#4be309' />
+              <span onClick={() => setOpenedId(`${userId}-${date}`)}>
+                <IconifyIcon icon={'game-icons:check-mark'} fontSize={18} color='#4be309' />
+              </span>
             ) : value === false ? (
-              <IconifyIcon icon={'mdi:cancel-bold'} fontSize={18} color='#e31309' />
+              <span onClick={() => setOpenTooltip(true)} onDoubleClick={() => setOpenedId(`${userId}-${date}`)}>
+                {descriptionText || currentDate.description ? (
+                  <Tooltip open={openTooltip} onClose={() => setOpenTooltip(false)} title={descriptionText || currentDate.description}>
+                    <Typography fontSize={13}>{descriptionText || currentDate.description.slice(0, 3)}</Typography>
+                  </Tooltip>
+                ) : (
+                  <IconifyIcon icon='mdi:cancel-bold' fontSize={18} color='#e31309' />
+                )}
+              </span>
             ) : value === null ? (
-              <IconifyIcon icon={'fluent:square-20-regular'} fontSize={18} color='#9e9e9e' />
+              <span onClick={() => setOpenedId(`${userId}-${date}`)}>
+                <IconifyIcon icon={'fluent:square-20-regular'} fontSize={18} color='#9e9e9e' />
+              </span>
             ) : (
               ''
             )}
           </span>
         )}
+
+        <Dialog open={description === false} onClose={onClose}>
+          <DialogTitle>Izoh yozish</DialogTitle>
+          <DialogContent>
+            <Formik
+              initialValues={{ description: '' }}
+              validationSchema={Yup.object({
+                description: Yup.string().required('Izohni kiriting')
+              })}
+              onSubmit={handleSubmit}
+            >
+              {({ handleChange, handleBlur, values }) => (
+                <Form>
+                  <FormControl sx={{ marginTop: 2, width: '100%' }}>
+                    <Field
+                      as={TextField}
+                      label='Izoh'
+                      placeholder='Izoh kiriting'
+                      name='description'
+                      fullWidth
+                      variant='outlined'
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      value={values.description}
+                      error={!!values.description && !values.description.trim()}
+                      helperText={<ErrorMessage name='description' />}
+                    />
+                  </FormControl>
+                  <DialogActions>
+                    <Button variant='outlined' onClick={onClose} color='primary'>
+                      Bekor qilish
+                    </Button>
+                    <Button type='submit' variant='contained' color='primary'>
+                      Saqlash
+                    </Button>
+                  </DialogActions>
+                </Form>
+              )}
+            </Formik>
+          </DialogContent>
+        </Dialog>
       </Box>
     )
   } else {
@@ -218,7 +303,7 @@ const UserViewSecurity = () => {
       })
       .catch(err => {
         console.log(err)
-        toast.error(t(err.response.data.new_date) || 'Xatolik',{style:{zIndex:99999}})
+        toast.error(t(err.response.data.new_date) || 'Xatolik', { style: { zIndex: 99999 } })
       })
     setChangeDateLoader(false)
     // setOpenDialog(false)
@@ -801,7 +886,7 @@ const UserViewSecurity = () => {
               variant='outlined'
               color='error'
               onClick={() => {
-                formik.resetForm(), setUpdateTopic(false),setTopic(null)
+                formik.resetForm(), setUpdateTopic(false), setTopic(null)
               }}
             >
               Bekor qilish

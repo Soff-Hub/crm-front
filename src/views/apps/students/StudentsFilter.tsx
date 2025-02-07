@@ -152,7 +152,6 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
     }
   }
 
-  console.log(queryString,queryParams);
   
 
   if (isMobile) {

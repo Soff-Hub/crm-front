@@ -48,6 +48,8 @@ export default function EditStudentForm() {
   const [isPassword, setIsPassword] = useState<boolean>(false)
   const [loading, setLoading] = useState<boolean>(false)
   const [isSchool, setIsSchool] = useState(false)
+  const { public_settings } = useAppSelector(state => state.page)
+
   const validationSchema = Yup.object({
     first_name: Yup.string().required('Ismingizni kiriting'),
     phone: Yup.string().required('Telefon raqam kiriting'),
@@ -58,6 +60,7 @@ export default function EditStudentForm() {
 
   const initialValues: UpdateStudentDto = {
     id: studentData?.id,
+    contract_amount: studentData?.contract_amount || 0,
     school: studentData?.school_data?.id,
     first_name: studentData?.first_name || '',
     phone: studentData?.phone?.replace('+998', '') || '',
@@ -189,6 +192,23 @@ export default function EditStudentForm() {
               />
             )}
           />
+        </FormControl>
+      )}
+       {public_settings?.type == 'private_school' && (
+        <FormControl sx={{ width: '100%' }}>
+          <TextField
+            size='small'
+            type='number'
+            label={t('contract_amount')}
+            name='contract_amount'
+            error={!!errors.contract_amount && touched.contract_amount}
+            value={values.contract_amount}
+            onChange={handleChange}
+            onBlur={handleBlur}
+          />
+          {errors.contract_amount && touched.contract_amount && (
+            <FormHelperText error={true}>{errors.contract_amount}</FormHelperText>
+          )}
         </FormControl>
       )}
 

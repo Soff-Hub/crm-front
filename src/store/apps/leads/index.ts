@@ -184,6 +184,7 @@ export const updateAmoCrmStudent = createAsyncThunk(
 const initialState: ILeadsState = {
   sourceData: [],
   groups: [],
+  dragonLoading:false,
   pipelines: [],
   leadData: [],
   departmentLoading: false,
@@ -227,6 +228,9 @@ export const appLeadsSlice = createSlice({
     setSectionId: (state, action) => {
       state.sectionId = action.payload
     },
+    setDragonLoading: (state, action) => {
+      state.dragonLoading = action.payload
+    },
     setAddSource: (state, action) => {
       state.addSource = action.payload
     },
@@ -245,29 +249,29 @@ export const appLeadsSlice = createSlice({
     builder
       .addCase(fetchDepartmentList.pending, state => {
         state.departmentLoading = true
-        // state.bigLoader = true // Enable bigLoader when any action starts
+        state.bigLoader = true // Enable bigLoader when any action starts
       })
       .addCase(fetchDepartmentList.fulfilled, (state, action) => {
         state.leadData = action.payload
         state.departmentLoading = false
-        // state.bigLoader = state.pipelinesLoading // Check if pipelines are still loading
+        state.bigLoader = state.pipelinesLoading // Check if pipelines are still loading
       })
       .addCase(fetchDepartmentList.rejected, state => {
         state.departmentLoading = false
-        // state.bigLoader = state.pipelinesLoading // Check if pipelines are still loading
+        state.bigLoader = state.pipelinesLoading // Check if pipelines are still loading
       })
       .addCase(fetchAmoCrmPipelines.pending, state => {
         state.pipelinesLoading = true
-        // state.bigLoader = true // Enable bigLoader when any action starts
+        state.bigLoader = true // Enable bigLoader when any action starts
       })
       .addCase(fetchAmoCrmPipelines.fulfilled, (state, action) => {
         state.pipelines = action.payload
         state.pipelinesLoading = false
-        // state.bigLoader = state.departmentLoading // Check if department data is still loading
+        state.bigLoader = state.departmentLoading // Check if department data is still loading
       })
       .addCase(fetchAmoCrmPipelines.rejected, state => {
         state.pipelinesLoading = false
-        // state.bigLoader = state.departmentLoading // Check if department data is still loading
+        state.bigLoader = state.departmentLoading // Check if department data is still loading
       })
       .addCase(createDepartment.pending, state => {
         state.loading = true
@@ -351,6 +355,7 @@ export const {
   updateLeadParams,
   setOpenActionModal,
   setPageLoader,
+  setDragonLoading,
   setLeadItems
 } = appLeadsSlice.actions
 

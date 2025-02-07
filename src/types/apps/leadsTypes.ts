@@ -25,19 +25,20 @@ export interface LeadsQueryParamsTypes {
 export interface DepartmentItemsType {
   id: number
   name: string
-  leads: [
+  leads: 
     {
       created_at: string
       first_name: string
       id: number
       last_activity: string
       phone: string
-    }
-  ]
+    }[]
+  
 }
 
 export interface ILeadsState {
   leadData: DepartmentListType
+  dragonLoading:boolean
   groups: []
   departmentLoading: boolean
   pipelinesLoading: boolean

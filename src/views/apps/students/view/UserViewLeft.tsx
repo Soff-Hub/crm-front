@@ -25,7 +25,7 @@ import CustomAvatar from 'src/@core/components/mui/avatar'
 import { useTranslation } from 'react-i18next'
 import IconifyIcon from 'src/@core/components/icon'
 
-import { ButtonGroup, Checkbox, Chip, FormHelperText, Radio, RadioGroup, Tooltip } from '@mui/material'
+import { ButtonGroup, Checkbox, Chip, FormHelperText, Radio, RadioGroup, Skeleton, Tooltip } from '@mui/material'
 import Form from 'src/@core/components/form'
 import { addPeriodToThousands } from 'src/pages/settings/office/courses'
 import UserViewStudentsList from './UserViewStudentsList'
@@ -61,7 +61,7 @@ const UserViewLeft = ({ userData }: { userData: any }) => {
   const [error, setError] = useState<any>({})
   const [groupDate, setGroupDate] = useState<any>(null)
   const [isDiscount, setIsDiscount] = useState<boolean>(false)
-
+  const { studentDetailLoading } = useAppSelector(state => state.students)
   // Hooks
   const { t } = useTranslation()
   const { mergeStudentToGroup, getGroupShort, groupShort } = useGroups()
@@ -159,20 +159,26 @@ const UserViewLeft = ({ userData }: { userData: any }) => {
     return (
       <Grid container spacing={6}>
         <Grid item xs={12}>
-          {userData && (
-            <StudentCard
-              userData={userData}
-              name={data?.first_name}
-              gpa={data.gpa}
-              balance={data.balance}
-              id={data.id}
-              phone={data.phone}
-              school={data?.school_data?.name}
-            />
+          {studentDetailLoading ? (
+            <Skeleton height={380} variant='rounded' />
+          ) : (
+            userData && (
+              <StudentCard
+                userData={userData}
+                name={data?.first_name}
+                gpa={data.gpa}
+                balance={data.balance}
+                id={data.id}
+                phone={data.phone}
+                school={data?.school_data?.name}
+              />
+            )
           )}
         </Grid>
         <Grid item gap={2} xs={12}>
-          {userData && userData?.comments?.length > 0 ? (
+          {studentDetailLoading ? (
+            <Skeleton  height={300}/>
+          ) : userData && userData?.comments?.length > 0 ? (
             <Card>
               <CardContent>
                 <UserViewStudentsList setOpenEdit={setOpenEdit} comment={userData?.comments[0]} />
