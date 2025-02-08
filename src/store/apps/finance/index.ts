@@ -50,7 +50,7 @@ const initialState: IFinanceState = {
   groupsFinance: [],
   calculatedSalary: null,
   isGettingCalculatedSalary: false,
-  all_numbers: undefined,
+  all_numbers:null,
   numbersLoad: false,
   isGettingExpenseCategories: false,
   isGettingIncomeCategories: false,
