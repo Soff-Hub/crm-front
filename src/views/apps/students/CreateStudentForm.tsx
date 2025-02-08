@@ -58,12 +58,12 @@ export default function CreateStudentForm() {
   const [isGroup, setIsGroup] = useState<boolean>(false)
   const [loading, setLoading] = useState<boolean>(false)
   const [isDiscount, setIsDiscount] = useState<boolean>(false)
-  const { public_settings } = useAppSelector(state => state.page)
-
+  const school_type = localStorage.getItem('school_type')
   const getGroups = async () => {
     await dispatch(fetchGroupCheckList())
   }
 
+  
   
 
   const validationSchema = Yup.object({
@@ -188,7 +188,7 @@ export default function CreateStudentForm() {
         {errors.phone && touched.phone && <FormHelperText error={true}>{errors.phone}</FormHelperText>}
       </FormControl>
 
-      {public_settings?.type == 'private_school' && (
+      {school_type == 'private_school' && (
         <FormControl sx={{ width: '100%' }}>
           <TextField
             size='small'

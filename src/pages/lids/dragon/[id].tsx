@@ -24,24 +24,25 @@ import {
   setAddSource,
   setDragonLoading,
   setLeadItems,
+  setOpenItem,
   setOpenLid,
   setSectionId
 } from 'src/store/apps/leads'
 import { useRouter } from 'next/router'
 import EmptyContent from 'src/@core/components/empty-content'
-import { EyeIcon, Phone, User } from 'lucide-react'
+import { EyeIcon, Phone, PlusIcon, User } from 'lucide-react'
 import { LidsDragonModal } from 'src/views/apps/lids/LidsDragonModal'
 import IconifyIcon from 'src/@core/components/icon'
 import CreateAnonimUserForm from 'src/views/apps/lids/anonimUser/CreateAnonimUserForm'
 import { useTranslation } from 'react-i18next'
 import { PersonAddAlt } from '@mui/icons-material'
 import useResponsive from 'src/@core/hooks/useResponsive'
+import CreateDepartmentItemDialog from 'src/views/apps/lids/departmentItem/Dialog'
 
 const Kanban = () => {
   const [anchorEl, setAnchorEl] = useState(null)
   const [pageMap, setPageMap] = useState<any>({})
   const [selectedLead, setSelectedLead] = useState<any | null>(null)
-  const [editTaskTitle, setEditTaskTitle] = useState('')
   const { leadItems, leadData, openLid, dragonLoading } = useSelector((state: RootState) => state.leads)
   const [data, setData] = useState(leadItems)
   const [source, setSource] = useState<any>(null)
@@ -52,11 +53,11 @@ const Kanban = () => {
   const { isMobile } = useResponsive()
   const [leadTitle, setLeadTitle] = useState('')
   async function handleGetLealdItems() {
-    if (!query.id) return
+    if (!query?.id) return
     dispatch(setDragonLoading(true))
 
     try {
-      const res = await api.get(`leads/department/${query.id}`)
+      const res = await api.get(`leads/department/${query?.id}`)
       dispatch(setLeadItems(res.data))
       setData(res.data)
     } catch (err) {
@@ -155,40 +156,27 @@ const Kanban = () => {
     setSelectedLead(null)
   }
 
-  const handleEditTask = () => {
-    setData((prevData: any) =>
-      prevData.map((section: any) => ({
-        ...section,
-        tasks: section.tasks.map((task: any) =>
-          task.id === selectedLead?.id ? { ...task, title: editTaskTitle } : task
-        ),
-        visibleTasks: section?.visibleTasks?.map((task: any) =>
-          task.id === selectedLead?.id ? { ...task, title: editTaskTitle } : task
-        )
-      }))
-    )
-    handleMenuClose()
-  }
 
-  const handleDeleteTask = () => {
-    setData((prevData: any) =>
-      prevData.map((section: any) => ({
-        ...section,
-        tasks: section.tasks.filter((task: any) => task.id !== selectedLead?.id),
-        visibleTasks: section?.visibleTasks?.filter((task: any) => task.id !== selectedLead?.id)
-      }))
-    )
-    handleMenuClose()
-  }
+
+
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      <Typography variant='h4' marginY={5}>
-        {leadTitle ? leadTitle : 'leadData'}
-      </Typography>
+      <Box display='flex' justifyContent='space-between' marginY={5} alignItems='center'>
+        <Typography variant='h5'>{leadTitle ? leadTitle : 'leadData'}</Typography>
+        <Button variant='contained' onClick={() => dispatch(setOpenItem(query?.id))} startIcon={<PlusIcon />}>
+          Yangi bo'lim qo'shish
+        </Button>
+      </Box>
       <div
         className='kanban'
-        style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', alignItems: 'start', gap: 20 }}
+        style={{
+          display: 'flex',
+          overflow: 'auto',
+          flexDirection: isMobile ? 'column' : 'row',
+          alignItems: 'start',
+          gap: 20
+        }}
       >
         {dragonLoading ? (
           <Box display={'flex'} flexDirection={'column'} marginBottom={10} gap={5}>
@@ -316,6 +304,7 @@ const Kanban = () => {
           <CreateAnonimUserForm source={source ? source : null} />
         </DialogContent>
       </Dialog>
+      <CreateDepartmentItemDialog />
     </DragDropContext>
   )
 }

@@ -162,7 +162,7 @@ export default function StudentWithDrawForm({ openEdit, setOpenEdit }: Props) {
                 onChange={handleChange}
                 onBlur={handleBlur}
               >
-                {userData?.groups.map((branch: any) => (
+                {userData?.groups?.map((branch: any) => (
                   <MenuItem key={branch.id} value={branch.group_data.id}>
                     {branch.group_data.name}
                   </MenuItem>

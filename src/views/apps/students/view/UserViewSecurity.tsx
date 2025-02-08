@@ -82,7 +82,7 @@ const UserViewSecurity = () => {
   const { studentGroups } = useAppSelector(state => state.students)
   const [group_data, setGroupData] = useState<any>()
   const { deletePayment } = usePayment()
-
+  const school_type = localStorage.getItem('school_type')
   const { getBranches, branches } = useBranches()
   const [changeStatusLoader, setChangeStatusLoader] = useState(false)
   const handleEditClickOpen = (value: ModalTypes) => {
@@ -271,8 +271,7 @@ const UserViewSecurity = () => {
   const handleLeft = async () => {
     setLoading(true)
     try {
-      await api.delete(`common/group-student-delete/${group_data?.id}/`).then(res => {
-      })
+      await api.delete(`common/group-student-delete/${group_data?.id}/`).then(res => {})
       // await dispatch(fetchStudentDetail(Number(query?.student)))
       await dispatch(fetchStudentGroups(query.student))
       toast.success("O'quvchi guruhdan chetlatildi", { position: 'top-center' })
@@ -333,12 +332,18 @@ const UserViewSecurity = () => {
                 aria-haspopup='true'
                 aria-expanded={open ? 'true' : undefined}
                 sx={{
+                  color: 'white',
+                  fontSize: 25,
                   position: 'absolute',
-                  top: 15,
+                  top: 10,
                   right: 5,
                   cursor: 'pointer',
                   display: 'flex',
-                  alignItems: 'center'
+                  alignItems: 'center',
+                  transition: 'color 0.3s ease',
+                  '&:hover': {
+                    color: 'gray' // Change this color as needed
+                  }
                 }}
                 onClick={e =>
                   !(user?.role.length === 1 && user?.role.includes('teacher')) ? handleClick(e, group) : undefined
@@ -409,99 +414,104 @@ const UserViewSecurity = () => {
                           py: '10px'
                         }}
                       >
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                          <Icon color='lightgreen' icon={'mdi:wallet'} />
-                          <Chip
-                            sx={{ backgroundColor: 'white' }}
-                            label={`${formatCurrency(group.student_group_balance)} so'm`}
-                            size='small'
-                            variant='outlined'
-                            color={group.student_group_balance >= 0 ? 'success' : 'error'}
-                          />
-                        </Box>
-                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                          {group.status == 'archive' ? (
-                            <Chip
-                              label={t('archive')}
-                              color='error'
-                              variant='outlined'
-                              size='small'
-                              sx={{
-                                backgroundColor: 'white',
-                                cursor: 'pointer',
-                                fontWeight: 500,
-                                fontSize: '10px',
-                                padding: 0
-                              }}
-                            />
-                          ) : group.status == 'new' ? (
-                            <Select
-                              placeholder='Statusni tanlang'
-                              value={group?.status}
-                              disabled={changeStatusLoader}
-                              onChange={e => handleChangeStatus(e.target.value, group.id)}
-                              sx={{ height: 30, width: 'auto', backgroundColor: 'white', color: 'orange' }}
-                            >
-                              {group.choices?.map((status: any) =>
-                                status == 'active' ? (
-                                  <MenuItem sx={{ color: 'green' }} value={status}>
-                                    {t(status)}
-                                  </MenuItem>
-                                ) : status == 'new' ? (
-                                  <MenuItem sx={{ color: 'orange' }} value={status}>
-                                    {t(status)}
-                                  </MenuItem>
-                                ) : (
-                                  <MenuItem value={status}>{t(status)}</MenuItem>
-                                )
+                        {school_type !== 'private_school' && (
+                          <>
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                              <Icon color='lightgreen' icon={'mdi:wallet'} />
+                              <Chip
+                                sx={{ backgroundColor: 'white' }}
+                                label={`${formatCurrency(group.student_group_balance)} so'm`}
+                                size='small'
+                                variant='outlined'
+                                color={group.student_group_balance >= 0 ? 'success' : 'error'}
+                              />
+                            </Box>
+
+                            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                              {group.status == 'archive' ? (
+                                <Chip
+                                  label={t('archive')}
+                                  color='error'
+                                  variant='outlined'
+                                  size='small'
+                                  sx={{
+                                    backgroundColor: 'white',
+                                    cursor: 'pointer',
+                                    fontWeight: 500,
+                                    fontSize: '10px',
+                                    padding: 0
+                                  }}
+                                />
+                              ) : group.status == 'new' ? (
+                                <Select
+                                  placeholder='Statusni tanlang'
+                                  value={group?.status}
+                                  disabled={changeStatusLoader}
+                                  onChange={e => handleChangeStatus(e.target.value, group.id)}
+                                  sx={{ height: 30, width: 'auto', backgroundColor: 'white', color: 'orange' }}
+                                >
+                                  {group.choices?.map((status: any) =>
+                                    status == 'active' ? (
+                                      <MenuItem sx={{ color: 'green' }} value={status}>
+                                        {t(status)}
+                                      </MenuItem>
+                                    ) : status == 'new' ? (
+                                      <MenuItem sx={{ color: 'orange' }} value={status}>
+                                        {t(status)}
+                                      </MenuItem>
+                                    ) : (
+                                      <MenuItem value={status}>{t(status)}</MenuItem>
+                                    )
+                                  )}
+                                </Select>
+                              ) : group.status == 'active' ? (
+                                <Select
+                                  placeholder='Statusni tanlang'
+                                  value={group?.status}
+                                  disabled={changeStatusLoader}
+                                  onChange={e => handleChangeStatus(e.target.value, group.id)}
+                                  sx={{ height: 30, width: 'auto', backgroundColor: 'white', color: 'green' }}
+                                >
+                                  {group.choices?.map((status: any) =>
+                                    status == 'active' ? (
+                                      <MenuItem sx={{ color: 'green' }} value={status}>
+                                        {t(status)}
+                                      </MenuItem>
+                                    ) : status == 'new' ? (
+                                      <MenuItem sx={{ color: 'orange' }} value={status}>
+                                        {t(status)}
+                                      </MenuItem>
+                                    ) : (
+                                      <MenuItem value={status}>{t(status)}</MenuItem>
+                                    )
+                                  )}
+                                </Select>
+                              ) : (
+                                <Select
+                                  placeholder='Statusni tanlang'
+                                  value={group?.status}
+                                  disabled={changeStatusLoader}
+                                  onChange={e => handleChangeStatus(e.target.value, group.id)}
+                                  sx={{ height: 30, width: 'auto', backgroundColor: 'white' }}
+                                >
+                                  {group.choices?.map((status: any) =>
+                                    status == 'active' ? (
+                                      <MenuItem sx={{ color: 'green' }} value={status}>
+                                        {t(status)}
+                                      </MenuItem>
+                                    ) : status == 'new' ? (
+                                      <MenuItem sx={{ color: 'orange' }} value={status}>
+                                        {t(status)}
+                                      </MenuItem>
+                                    ) : (
+                                      <MenuItem value={status}>{t(status)}</MenuItem>
+                                    )
+                                  )}
+                                </Select>
                               )}
-                            </Select>
-                          ) : group.status == 'active' ? (
-                            <Select
-                              placeholder='Statusni tanlang'
-                              value={group?.status}
-                              disabled={changeStatusLoader}
-                              onChange={e => handleChangeStatus(e.target.value, group.id)}
-                              sx={{ height: 30, width: 'auto', backgroundColor: 'white', color: 'green' }}
-                            >
-                              {group.choices?.map((status: any) =>
-                                status == 'active' ? (
-                                  <MenuItem sx={{ color: 'green' }} value={status}>
-                                    {t(status)}
-                                  </MenuItem>
-                                ) : status == 'new' ? (
-                                  <MenuItem sx={{ color: 'orange' }} value={status}>
-                                    {t(status)}
-                                  </MenuItem>
-                                ) : (
-                                  <MenuItem value={status}>{t(status)}</MenuItem>
-                                )
-                              )}
-                            </Select>
-                          ) : (
-                            <Select
-                              placeholder='Statusni tanlang'
-                              value={group?.status}
-                              disabled={changeStatusLoader}
-                              onChange={e => handleChangeStatus(e.target.value, group.id)}
-                              sx={{ height: 30, width: 'auto', backgroundColor: 'white' }}
-                            >
-                              {group.choices?.map((status: any) =>
-                                status == 'active' ? (
-                                  <MenuItem sx={{ color: 'green' }} value={status}>
-                                    {t(status)}
-                                  </MenuItem>
-                                ) : status == 'new' ? (
-                                  <MenuItem sx={{ color: 'orange' }} value={status}>
-                                    {t(status)}
-                                  </MenuItem>
-                                ) : (
-                                  <MenuItem value={status}>{t(status)}</MenuItem>
-                                )
-                              )}
-                            </Select>
-                          )}
-                        </Box>
+                            </Box>
+                          </>
+                        )}
                       </CardContent>
                     </div>
                     <CardContent>
@@ -572,23 +582,25 @@ const UserViewSecurity = () => {
                           </Box>
                         </Box>
                       </Box>
-                      <Box
-                        sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 5 }}
-                      >
-                        <Box>
-                          <Typography color={'black'}>Keyingi to'lov</Typography>
-                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                            <Icon icon={'mdi:clock'} />
-                            <Typography fontSize={13}>{group.next_payment}</Typography>
+                      {school_type != 'private_school' && (
+                        <Box
+                          sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 5 }}
+                        >
+                          <Box>
+                            <Typography color={'black'}>Keyingi to'lov</Typography>
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                              <Icon icon={'mdi:clock'} />
+                              <Typography fontSize={13}>{group.next_payment}</Typography>
+                            </Box>
+                          </Box>
+                          <Box>
+                            <Typography color={'black'}>To'lov narxi</Typography>
+                            <Typography color='green' fontSize={13}>
+                              {formatCurrency(group.payment_amount)} so'm
+                            </Typography>
                           </Box>
                         </Box>
-                        <Box>
-                          <Typography color={'black'}>To'lov narxi</Typography>
-                          <Typography color='green' fontSize={13}>
-                            {formatCurrency(group.payment_amount)} so'm
-                          </Typography>
-                        </Box>
-                      </Box>
+                      )}
                     </CardContent>
                   </Card>
                 </Box>
