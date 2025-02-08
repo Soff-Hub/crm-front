@@ -35,11 +35,9 @@ export default function StudentPaymentEditForm({ openEdit, setOpenEdit }: Props)
   const { t } = useTranslation()
   const { studentData } = useAppSelector(state => state.students)
   const userData: any = { ...studentData }
-  const { updatePayment,paymentMethods,getPaymentMethod } = usePayment()
+  const { updatePayment, paymentMethods, getPaymentMethod } = usePayment()
   const { query } = useRouter()
   const dispatch = useAppDispatch()
-  console.log(openEdit);
-  
 
   const validationSchema = Yup.object({
     payment_type: openEdit?.amount > 0 ? Yup.string().required('Tanlash majburiy') : Yup.string(),
@@ -57,7 +55,7 @@ export default function StudentPaymentEditForm({ openEdit, setOpenEdit }: Props)
     payment_date: today
   }
 
-  const formik: any = useFormik({
+  const formik = useFormik({
     initialValues,
     validationSchema,
     onSubmit: async values => {
@@ -76,7 +74,7 @@ export default function StudentPaymentEditForm({ openEdit, setOpenEdit }: Props)
         formik.resetForm()
 
         await dispatch(fetchStudentDetail(userData.id))
-      
+
         await dispatch(fetchStudentPayment(userData.id))
       } catch (err: any) {
         if (err?.response?.data) {
@@ -87,11 +85,14 @@ export default function StudentPaymentEditForm({ openEdit, setOpenEdit }: Props)
     }
   })
 
+  console.log(formik.errors)
+
   const { errors, values, handleSubmit, handleBlur, touched, handleChange } = formik
 
   const handleEditClose = () => {
     setOpenEdit(null)
     setOpen(false)
+    formik.resetForm()
   }
 
   useEffect(() => {
@@ -109,7 +110,7 @@ export default function StudentPaymentEditForm({ openEdit, setOpenEdit }: Props)
         payment_date: openEdit.payment_date,
         payment_type: openEdit.payment_type || '',
         description: openEdit.description,
-        group: openEdit.group,
+        group: openEdit.group
       })
       setTimeout(() => {
         setOpen(true)
@@ -136,65 +137,63 @@ export default function StudentPaymentEditForm({ openEdit, setOpenEdit }: Props)
               style={{ marginTop: 10, display: 'flex', flexDirection: 'column', gap: '10px' }}
               id='edifsdt-employee-pay'
             >
-              {Number(openEdit?.amount) > 0 && (
-                <FormControl fullWidth>
-                  <InputLabel size='small' id='user-view-language-label' error={!!errors.group && touched.group}>
-                    {t('Qaysi guruh uchun?')}
-                  </InputLabel>
-                  <Select
-                    size='small'
-                    label={t('Qaysi guruh uchun?')}
-                    id='user-view-language'
-                    labelId='user-view-language-label'
-                    name='group'
-                    error={!!errors.group && touched.group}
-                    value={values.group}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                  >
-                    {userData?.groups.map((branch: any) => (
-                      <MenuItem key={branch.id} value={branch.group_data.id}>
-                        {branch.group_data.name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                  {!!errors.group && touched.group && <FormHelperText error>{errors.group}</FormHelperText>}
-                </FormControl>
-              )}
+              <FormControl fullWidth>
+                <InputLabel size='small' id='user-view-language-label' error={!!errors.group && touched.group}>
+                  {t('Qaysi guruh uchun?')}
+                </InputLabel>
+                <Select
+                  size='small'
+                  label={t('Qaysi guruh uchun?')}
+                  id='user-view-language'
+                  labelId='user-view-language-label'
+                  name='group'
+                  error={!!errors.group && touched.group}
+                  value={values.group}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                >
+                  {userData?.groups.map((branch: any) => (
+                    <MenuItem key={branch.id} value={branch.group_data.id}>
+                      {branch.group_data.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+                {!!errors.group && touched.group && <FormHelperText error>{errors.group}</FormHelperText>}
+              </FormControl>
 
-<FormControl fullWidth>
-              <InputLabel
-                size='small'
-                id='user-view-language-label'
-                error={!!errors.payment_type && touched.payment_type}
-              >
-                {t("To'lov usulini tanlang")}
-              </InputLabel>
-              <Select
-                size='small'
-                label={t("To'lov usulini tanlang")}
-                id='user-view-language'
-                labelId='user-view-language-label'
-                name='payment_type'
-                value={values.payment_type}
-                onChange={handleChange}
-                onBlur={handleBlur}
-              >
-                {paymentMethods.map((branch: any) => (
-                  <MenuItem key={branch.id} value={branch.id}>
-                    {branch.name}
+              <FormControl fullWidth>
+                <InputLabel
+                  size='small'
+                  id='user-view-language-label'
+                  error={!!errors.payment_type && touched.payment_type}
+                >
+                  {t("To'lov usulini tanlang")}
+                </InputLabel>
+                <Select
+                  size='small'
+                  label={t("To'lov usulini tanlang")}
+                  id='user-view-language'
+                  labelId='user-view-language-label'
+                  name='payment_type'
+                  value={values.payment_type}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                >
+                  {paymentMethods.map((branch: any) => (
+                    <MenuItem key={branch.id} value={branch.id}>
+                      {branch.name}
+                    </MenuItem>
+                  ))}
+                  <MenuItem sx={{ fontWeight: 600 }} onClick={() => Router.push('/settings/ceo/all-settings')}>
+                    {t('Yangi yaratish')}
+                    <IconifyIcon icon={'ion:add-sharp'} />
                   </MenuItem>
-                ))}
-                <MenuItem sx={{ fontWeight: 600 }} onClick={() => Router.push('/settings/ceo/all-settings')}>
-                  {t('Yangi yaratish')}
-                  <IconifyIcon icon={'ion:add-sharp'} />
-                </MenuItem>
-              </Select>
-              {!!errors.payment_type && touched.payment_type && (
-                <FormHelperText error>{errors.payment_type}</FormHelperText>
-              )}
-            </FormControl>
-              
+                </Select>
+                {!!errors.payment_type && touched.payment_type && (
+                  <FormHelperText error>{errors.payment_type}</FormHelperText>
+                )}
+              </FormControl>
+
               <FormControl fullWidth>
                 <AmountInput
                   label={t('Summa')}

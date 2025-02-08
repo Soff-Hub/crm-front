@@ -83,16 +83,14 @@ const LoginPage = () => {
   const { t } = useTranslation()
   let currentDate = new Date().toISOString()
   const { setUser, user } = useContext(AuthContext)
-   
-
 
   const pageLoad = async () => {
     try {
       const response = await api.get('common/public-settings/')
       if (response.status == 200) {
         dispatch(setPublicSettings(response.data))
+        localStorage.setItem('school_type', response.data?.type)
         setData(response.data)
-
       }
     } catch {
       toast.error("Markaz ma'lumotini olib bo'lmadi")
@@ -118,8 +116,6 @@ const LoginPage = () => {
     setLoading(true)
     const { phone, password } = data
     await auth.login({ phone: reversePhone(phone), password }, (resp: any) => {
-     
-      
       if (resp?.response) {
         setLoading(false)
         Object.keys(resp?.response?.data).map((el: any) => {

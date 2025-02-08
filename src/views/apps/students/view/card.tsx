@@ -45,6 +45,7 @@ import { SendSMSModal } from './UserViewLeft'
 import { fetchSmsList } from 'src/store/apps/settings'
 import useStudent from 'src/hooks/useStudents'
 import { formatCurrency } from 'src/@core/utils/format-currency'
+import { Icon } from '@iconify/react'
 
 interface StudentCardProps {
   photo?: string
@@ -88,15 +89,12 @@ export default function StudentCard({
   const [isDiscount, setIsDiscount] = useState<boolean>(false)
   const router = useRouter()
   const { updateStudent, studentData } = useStudent()
-  const { public_settings } = useAppSelector(state => state.page)
   const [groupDate, setGroupDate] = useState<any>(null)
-  const { smsTemps, getSMSTemps } = useSMS()
+  const school_type = localStorage.getItem('school_type')
 
   const { t } = useTranslation()
 
   const dispatch = useAppDispatch()
-
-  console.log(userData)
 
   const handleMergeToGroup = async (value: any) => {
     setLoading(true)
@@ -217,7 +215,7 @@ export default function StudentCard({
             </Typography>
             <Typography variant='body1'>{phone}</Typography>
           </Grid>
-          
+
           {school && (
             <Grid item xs={6}>
               <Typography variant='body2' color='text.secondary'>
@@ -227,16 +225,23 @@ export default function StudentCard({
             </Grid>
           )}
         </Grid>
-        {userData?.contract_amount && (
-            <Box sx={{marginTop:5}} display='flex' alignItems='center' gap={3}>
-              <Typography variant='body2' color='text.secondary'>
-                Kelishilgan summa :
-              </Typography>
-              <Typography variant='body1'>
-                {<Chip color='primary' label={formatCurrency(userData.contract_amount) + " so'm"} />}
+        {school_type == 'private_school' && (
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 5 }}>
+            <Box>
+              <Typography color={'black'}>Keyingi to'lov</Typography>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <Icon icon={'mdi:clock'} />
+                <Typography fontSize={13}>{userData?.next_payment}</Typography>
+              </Box>
+            </Box>
+            <Box>
+              <Typography color={'black'}>To'lov narxi</Typography>
+              <Typography color='green' fontSize={13}>
+                {formatCurrency(userData?.contract_amount)} so'm
               </Typography>
             </Box>
-          )}
+          </Box>
+        )}
       </CardContent>
       <Box
         sx={{

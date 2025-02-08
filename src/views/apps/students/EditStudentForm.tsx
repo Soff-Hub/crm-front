@@ -38,7 +38,6 @@ export default function EditStudentForm() {
   const { t } = useTranslation()
   const error: any = {}
   const dispatch = useAppDispatch()
-  const { groups, getGroups } = useGroups()
   const { isMobile } = useResponsive()
   const { studentData, queryParams } = useAppSelector(state => state.students)
   const { schools } = useAppSelector(state => state.settings)
@@ -48,7 +47,7 @@ export default function EditStudentForm() {
   const [isPassword, setIsPassword] = useState<boolean>(false)
   const [loading, setLoading] = useState<boolean>(false)
   const [isSchool, setIsSchool] = useState(false)
-  const { public_settings } = useAppSelector(state => state.page)
+  const school_type = localStorage.getItem('school_type')
 
   const validationSchema = Yup.object({
     first_name: Yup.string().required('Ismingizni kiriting'),
@@ -194,7 +193,7 @@ export default function EditStudentForm() {
           />
         </FormControl>
       )}
-       {public_settings?.type == 'private_school' && (
+       {school_type == 'private_school' && (
         <FormControl sx={{ width: '100%' }}>
           <TextField
             size='small'

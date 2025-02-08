@@ -6,7 +6,9 @@ import { FormControl, FormHelperText, TextField } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from 'src/store';
-import { createDepartmentItem, fetchDepartmentList } from 'src/store/apps/leads';
+import { createDepartmentItem, fetchDepartmentList, setDragonLoading, setLeadItems } from 'src/store/apps/leads';
+import { useRouter } from 'next/router';
+import api from 'src/@core/utils/api';
 
 
 type Props = {}
@@ -16,12 +18,26 @@ export default function CreateDepartmentItemForm({ }: Props) {
     const { t } = useTranslation()
     const dispatch = useAppDispatch()
     const { loading, leadData, openItem } = useAppSelector((state) => state.leads)
-
+    const {query} = useRouter()
     const validationSchema = Yup.object({
         name: Yup.string().required("Nom kiriting"),
     });
 
     const initialValues: CreatesDepartmentState = { name: '', order: leadData.length + 1 }
+
+    async function handleGetLealdItems() {
+        if (!query?.id) return
+        dispatch(setDragonLoading(true))
+    
+        try {
+          const res = await api.get(`leads/department/${query?.id}`)
+          dispatch(setLeadItems(res.data))
+        } catch (err) {
+          console.error('Error fetching leads:', err)
+        } finally {
+          dispatch(setDragonLoading(false))
+        }
+      }
 
     const formik: any = useFormik({
         initialValues,
@@ -34,6 +50,9 @@ export default function CreateDepartmentItemForm({ }: Props) {
             if (resp.meta.requestStatus === 'rejected') {
                 formik.setErrors(resp.payload)
             } else {
+                if (query.id) {
+                    await handleGetLealdItems()
+                }
                 await dispatch(fetchDepartmentList())
                 formik.resetForm()
             }
