@@ -10,11 +10,14 @@ import ReactApexcharts from 'src/@core/components/react-apexcharts'
 
 // ** Util Import
 import { formatCurrency } from 'src/@core/utils/format-currency'
-import { Box, Grid, LinearProgress, Skeleton, Typography } from '@mui/material'
+import { Box, Grid, LinearProgress, Paper, Skeleton, Typography } from '@mui/material'
 import { useTranslation } from 'react-i18next'
 import EmptyContent from 'src/@core/components/empty-content'
 import { useAppSelector } from 'src/store'
 import useResponsive from 'src/@core/hooks/useResponsive'
+import { Container, ProgressBar } from 'react-bootstrap'
+import { useEffect, useState } from 'react'
+import { motion } from 'framer-motion'
 
 const CardWidgetsWeeklyOverview = () => {
   // ** Hook
@@ -24,8 +27,6 @@ const CardWidgetsWeeklyOverview = () => {
   const { t } = useTranslation()
 
   const { all_numbers, numbersLoad: loading } = useAppSelector(state => state.finance)
-
-  
 
   const data = all_numbers
     ? [
@@ -136,6 +137,29 @@ const CardWidgetsWeeklyOverview = () => {
       enabled: true
     }
   }
+  const [datas, setData] = useState<any>({
+    totalPaymentsReceived: all_numbers?.plans.done_amount ?? 0,
+    outstandingDebt: (all_numbers?.plans.planned_amount ?? 0) - (all_numbers?.plans.done_amount ?? 0),
+    totalExpected: all_numbers?.plans.planned_amount ?? 0,
+    percentage: all_numbers?.plans.percentage ?? 0
+  })
+
+  const [fillWidth, setFillWidth] = useState(0)
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const newData = {
+        totalPaymentsReceived: all_numbers?.plans.done_amount,
+        outstandingDebt: (all_numbers?.plans.planned_amount ?? 0) - (all_numbers?.plans.done_amount ?? 0),
+        totalExpected: all_numbers?.plans.planned_amount,
+        percentage: all_numbers?.plans.percentage
+      }
+      setData(newData)
+      setFillWidth(((all_numbers?.plans.done_amount ?? 0) / (all_numbers?.plans.planned_amount ?? 0)) * 100)
+    }, 1000)
+
+    return () => clearInterval(interval)
+  }, [all_numbers?.plans])
 
   return (
     <>
@@ -163,90 +187,8 @@ const CardWidgetsWeeklyOverview = () => {
           )}
         </Box>
       </Card>
-      {/* <Typography sx={{ marginTop: 5, marginBottom: 5 }} variant='h6' gutterBottom>
-        Moliyaviy Ma'lumotlar
-      </Typography> */}
-
-      {/* <div className='container'>
-        <div className='row row-cols-1 row-cols-md-3 g-4'>
-          <div className='col'>
-            <div className='card d-flex flex-column p-4 text-white shadow-lg h-100' style={{ background: '#007bff' }}>
-              <div className='d-flex align-items-center mb-3'>
-                <svg
-                  className='w-6 h-6 me-2'
-                  fill='none'
-                  stroke='currentColor'
-                  viewBox='0 0 24 24'
-                  xmlns='http://www.w3.org/2000/svg'
-                >
-                  <path
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                    strokeWidth={2}
-                    d='M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z'
-                  />
-                </svg>
-                <span className='fs-6 fw-semibold'>Reja qilingan summa</span>
-              </div>
-              <p className='fs-3 fw-bold'>$5000</p>
-            </div>
-          </div>
-
-          <div className='col'>
-            <div className='card d-flex flex-column p-4 text-white shadow-lg h-100' style={{ background: '#28a745' }}>
-              <div className='d-flex align-items-center mb-3'>
-                <svg
-                  className='w-6 h-6 me-2'
-                  fill='none'
-                  stroke='currentColor'
-                  viewBox='0 0 24 24'
-                  xmlns='http://www.w3.org/2000/svg'
-                >
-                  <path
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                    strokeWidth={2}
-                    d='M13 7h8m0 0v8m0-8l-8 8-4-4-6 6'
-                  />
-                </svg>
-                <span className='fs-6 fw-semibold'>Foyda</span>
-              </div>
-              <p className='fs-3 fw-bold'>$2000</p>
-            </div>
-          </div>
-
-          <div className='col'>
-            <div className='card d-flex flex-column p-4 text-white shadow-lg h-100' style={{ background: '#f39c12' }}>
-              <div className='d-flex align-items-center mb-3'>
-                <svg
-                  className='w-6 h-6 me-2'
-                  fill='none'
-                  stroke='currentColor'
-                  viewBox='0 0 24 24'
-                  xmlns='http://www.w3.org/2000/svg'
-                >
-                  <path
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                    strokeWidth={2}
-                    d='M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z'
-                  />
-                  <path
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                    strokeWidth={2}
-                    d='M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z'
-                  />
-                </svg>
-                <span className='fs-6 fw-semibold'>Bajarilgan foiz</span>
-              </div>
-              <p className='fs-3 fw-bold'>40%</p>
-            </div>
-          </div>
-        </div>
 
      
-      </div> */}
     </>
   )
 }

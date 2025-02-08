@@ -28,8 +28,9 @@ type Props = {
 export default function CreateAnonimUserForm({ source }: Props) {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
+  const query = window.location?.search?.split('?slug=')[1]
+
   const { sectionId, loading, leadData, openLid, sourceData } = useAppSelector(state => state.leads)
-  const { query } = useRouter()
   console.log(leadData, openLid)
 
   const validationSchema = Yup.object({
@@ -61,11 +62,11 @@ export default function CreateAnonimUserForm({ source }: Props) {
     user: null
   }
   async function handleGetLealdItems() {
-    if (!query.id) return
+    if (!query) return
     dispatch(setDragonLoading(true))
 
     try {
-      const res = await api.get(`leads/department/${query?.id}`)
+      const res = await api.get(`leads/department/${query}`)
       dispatch(setLeadItems(res.data))
     } catch (err) {
       console.error('Error fetching leads:', err)

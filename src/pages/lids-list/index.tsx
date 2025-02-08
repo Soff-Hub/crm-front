@@ -168,6 +168,7 @@ const Kanban = () => {
       <div
         className='kanban'
         style={{
+          paddingBottom:20,
           display: 'flex',
           overflow: 'auto',
           flexDirection: isMobile ? 'column' : 'row',

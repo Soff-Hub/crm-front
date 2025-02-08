@@ -71,7 +71,7 @@ export default function StatsPaymentMethods() {
           <Box>
             <ReactApexcharts options={props.options} series={props.series} type='pie' width={isMobile ? '100%' : 380} />
 
-            <Box sx={{marginTop:10}}>
+            <Box sx={{marginTop:5}}>
               {all_numbers?.payment_types.map((item, index) => (
                 <Box sx={{marginBottom:5}}>
                   {settings.mode === 'light' ? (
@@ -83,9 +83,9 @@ export default function StatsPaymentMethods() {
                         >
                           <Wallet className='text-white' style={{ width: '0.75rem', height: '0.75rem' }} />
                         </div>
-                        <div>
-                          <div className='fw-medium small'>{item?.name}</div>
-                          <div className='text-muted small'>{item?.count || '1 операция'}</div>
+                        <div style={{display:'flex', alignItems:'center' ,gap:5}}>
+                          <div className='fw-medium small'>{item?.name} : </div>
+                          <div className='text-muted small'>{item?.count || "1 ta tolov"}</div>
                         </div>
                       </div>
                       <div className='text-end fw-medium text-success small'>
