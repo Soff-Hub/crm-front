@@ -49,15 +49,16 @@ const Kanban = () => {
   const [studentModalOpen, setStudentModalOpen] = useState(false)
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
-  const { query } = useRouter()
+  const query = window.location?.search?.split('?slug=')[1]
   const { isMobile } = useResponsive()
   const [leadTitle, setLeadTitle] = useState('')
+
   async function handleGetLealdItems() {
-    if (!query?.id) return
+    if (!query) return
     dispatch(setDragonLoading(true))
 
     try {
-      const res = await api.get(`leads/department/${query?.id}`)
+      const res = await api.get(`leads/department/${query}`)
       dispatch(setLeadItems(res.data))
       setData(res.data)
     } catch (err) {
@@ -73,7 +74,7 @@ const Kanban = () => {
 
   useEffect(() => {
     if (leadData) {
-      let leadtitle = leadData?.find(item => item.id == Number(query?.id))
+      let leadtitle = leadData?.find(item => item.id == Number(query))
 
       setLeadTitle(String(leadtitle?.name))
     }
@@ -83,7 +84,7 @@ const Kanban = () => {
     handleGetLealdItems()
     dispatch(fetchDepartmentList())
     dispatch(fetchSources())
-  }, [query?.id])
+  }, [query])
 
   const closeCreateLid = () => {
     dispatch(setOpenLid(null))
@@ -156,15 +157,11 @@ const Kanban = () => {
     setSelectedLead(null)
   }
 
-
-
-
-
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <Box display='flex' justifyContent='space-between' marginY={5} alignItems='center'>
-        <Typography variant='h5'>{leadTitle ? leadTitle : 'leadData'}</Typography>
-        <Button variant='contained' onClick={() => dispatch(setOpenItem(query?.id))} startIcon={<PlusIcon />}>
+        {leadTitle == "undefined" ? <Skeleton width={200} height={70}/> : <Typography variant='h5'>{leadTitle}</Typography>}
+        <Button variant='contained' onClick={() => dispatch(setOpenItem(query))} startIcon={<PlusIcon />}>
           Yangi bo'lim qo'shish
         </Button>
       </Box>
@@ -271,7 +268,7 @@ const Kanban = () => {
                         size='medium'
                         fullWidth
                         onClick={() => {
-                          setSource(section?.id), dispatch(setOpenLid(query?.id))
+                          setSource(section?.id), dispatch(setOpenLid(query))
                         }}
                         variant='outlined'
                         startIcon={<PersonAddAlt />}

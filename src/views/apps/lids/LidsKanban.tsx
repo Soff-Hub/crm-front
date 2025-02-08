@@ -116,11 +116,11 @@ export default function HomeKanban({ title, items, id, is_amocrm }: Props) {
         )}
         {!is_amocrm &&
           (id ? (
-            // <Link href={`/lids/dragon/${id}`} style={{ width: '100%' }}>
+            <Link href={`/lids-list/?slug=${id}`} style={{ width: '100%' }}>
               <Typography style={{ cursor: 'pointer', overflow: 'hidden', textOverflow: 'ellipsis' }} fontSize={22}>
                 {title}
               </Typography>
-            // </Link>
+            </Link>
           ) : (
             <Typography style={{ cursor: 'pointer', overflow: 'hidden', textOverflow: 'ellipsis' }} fontSize={22}>
               {title}
