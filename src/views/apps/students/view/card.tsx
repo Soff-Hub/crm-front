@@ -91,7 +91,7 @@ export default function StudentCard({
   const { updateStudent, studentData } = useStudent()
   const [groupDate, setGroupDate] = useState<any>(null)
   const school_type = localStorage.getItem('school_type')
-
+  const [openModal, setOpenModal] = useState(false)
   const { t } = useTranslation()
 
   const dispatch = useAppDispatch()
@@ -133,6 +133,14 @@ export default function StudentCard({
       setLoading(false)
     }
   }
+  const handleDownload = () => {
+    const link = document.createElement('a')
+    link.href = userData?.qr_code
+    link.download = 'qr_code.png'
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+  }
 
   const handleEditSubmit = async (value: any) => {
     setLoading(true)
@@ -159,6 +167,8 @@ export default function StudentCard({
     }
     setOpenEdit(value)
   }
+
+  console.log(userData)
 
   return (
     <StyledCard>
@@ -190,7 +200,7 @@ export default function StudentCard({
             <Typography variant='h6' component='h3' gutterBottom>
               {name}
             </Typography>
-            {
+            <Box sx={{ display: 'flex', gap: 5, alignItems: 'center' }}>
               <Chip
                 color='error'
                 label={`Baho: ${gpa?.toFixed(2)}`}
@@ -201,7 +211,17 @@ export default function StudentCard({
                   borderColor: Number(gpa) >= 4 ? 'green' : Number(gpa) >= 3 ? 'orange' : 'red'
                 }}
               />
-            }
+              {userData?.qr_code && (
+                <img
+                  src={userData?.qr_code}
+                  alt=''
+                  style={{cursor:'pointer'}}
+                  onClick={() => setOpenModal(true)}
+                  width={50}
+                  height={50}
+                />
+              )}
+            </Box>
             <Typography variant='body2' color='text.secondary' mt={1}>
               ID: {id}
             </Typography>
@@ -491,6 +511,18 @@ export default function StudentCard({
             </Form>
           )}
         </DialogContent>
+      </Dialog>
+      <Dialog open={openModal} onClose={() => setOpenModal(false)}>
+        <DialogTitle>QR Code</DialogTitle>
+        <DialogContent className='flex justify-center p-4'>
+          <img src={userData?.qr_code} alt='QR Code' className='w-40 h-40' />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDownload} fullWidth variant='contained' color='primary'>
+            Qr Codeni yuklash
+          </Button>
+        
+        </DialogActions>
       </Dialog>
       <StudentPaymentForm openEdit={openEdit} setOpenEdit={setOpenEdit} />
       <StudentWithDrawForm openEdit={openEdit} setOpenEdit={setOpenEdit} />

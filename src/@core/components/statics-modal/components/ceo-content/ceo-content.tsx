@@ -5,16 +5,20 @@ import Typewriter from 'typewriter-effect'
 
 interface CeoContentProps {
   soffBotText: any
+  date:string
   setTypingComplete: (status: boolean) => void
 }
 
-export const CeoContent = ({ soffBotText, setTypingComplete }: CeoContentProps) => {
+export const CeoContent = ({ soffBotText,date, setTypingComplete }: CeoContentProps) => {
   const [key, setKey] = useState(0)
 
   useEffect(() => {
     setKey(prevKey => prevKey + 1)
     setTypingComplete(false) 
   }, [soffBotText])
+
+  console.log(soffBotText);
+  
 
   return (
     <DialogContent sx={{ textAlign: 'justify', padding: '20px', fontFamily: 'Inter, sans-serif' }}>
@@ -23,8 +27,8 @@ export const CeoContent = ({ soffBotText, setTypingComplete }: CeoContentProps) 
           key={key} 
           onInit={typewriter => {
             const missedStudentsText =
-              Array.isArray(soffBotText?.groups) && soffBotText.groups.length > 0
-                ? soffBotText.groups
+              Array.isArray(soffBotText?.detail) && soffBotText.detail.length > 0
+                ? soffBotText.detail
                     .map(
                       (group: { group: string; count: number; group_id: number }) =>
                         `. <a href="/groups/view/security/?id=${group.group_id}&month=${getMonthName(null)}" style="color: #0077FF; text-decoration: none;">${group.group}</a>: ${group.count} ta o'quvchi`
@@ -34,7 +38,7 @@ export const CeoContent = ({ soffBotText, setTypingComplete }: CeoContentProps) 
 
             const message = `
        <div style="font-family: 'Inter', sans-serif; color: #333; line-height: 1.6;">
-        <h3 style="color: #333; font-size: 20px; margin-top: 10px; margin-bottom: 20px;">📊 O'quv markazingizning kechagi statistikasi</h3>
+        <h3 style="color: #333; font-size: 20px; margin-top: 10px; margin-bottom: 20px;">📊 O'quv markazingizning ${date == "today"?"bugungi":"kechagi"}  statistikasi</h3>
 
         <div class="space-y-2">
           <p style="font-size: 16px;">

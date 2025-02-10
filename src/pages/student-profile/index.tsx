@@ -62,7 +62,6 @@ export default function StudentProfile() {
     Promise.all([getGroups(), getSmsHistory()])
   }, [])
 
-  console.log(user)
 
   return (
     <div>

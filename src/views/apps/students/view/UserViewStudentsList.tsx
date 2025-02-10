@@ -56,7 +56,6 @@ export const UserViewStudentsItem = ({ item }: ItemChildTypes) => {
       }
 
     const { t } = useTranslation()
-    console.log(item);
     
 
     return (

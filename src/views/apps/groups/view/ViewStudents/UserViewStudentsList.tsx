@@ -42,6 +42,7 @@ import { useSettings } from 'src/@core/hooks/useSettings'
 import { formatDateTime } from 'src/@core/utils/date-formatter'
 import { Icon } from '@iconify/react'
 import { formatCurrency } from 'src/@core/utils/format-currency'
+import { AuthContext } from 'src/context/AuthContext'
 export interface customTableProps {
   xs: number
   title: string
@@ -72,10 +73,13 @@ export default function UserViewStudentsList() {
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
   const [loading, setLoading] = useState<boolean>(false)
-
+  const { user } = useContext(AuthContext)
   const [search, setSearch] = useState('')
   const debounce = useDebounce(search, 500)
   const { query, push } = useRouter()
+
+  console.log(user?.role[0])
+
   const columns: customTableProps[] = [
     {
       xs: 0.2,
@@ -332,8 +336,7 @@ export default function UserViewStudentsList() {
       xs: 0.8,
       dataIndex: 'id',
       title: t('Harakatlar'),
-
-      render: actions => <GroupDetailRowOptions id={actions} />
+      render: actions => user?.role[0] != 'teacher' && <GroupDetailRowOptions id={actions} />
     }
   ]
   const formik = useFormik({

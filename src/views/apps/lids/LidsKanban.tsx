@@ -155,7 +155,7 @@ export default function HomeKanban({ title, items, id, is_amocrm }: Props) {
                     onClick={() => dispatch(setOpenItem(id))}
                   />
                 </IconButton>
-                {title?.toLowerCase() !== 'leads' && (
+                {(
                   <IconButton sx={{ cursor: 'pointer', marginLeft: 'auto' }}>
                     <IconifyIcon
                       icon={'fluent:text-bullet-list-square-edit-20-filled'}

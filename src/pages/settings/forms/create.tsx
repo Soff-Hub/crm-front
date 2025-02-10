@@ -76,7 +76,7 @@ export default function CreateForm({}: Props) {
   const [components, setComponents] = useState<any>([])
   const [variants, setVariants] = useState<any>([])
   const [name, setName] = useState<any>(null)
-  const [successText,setSuccessText] = useState<string|null>(null)
+  const [successText, setSuccessText] = useState<string | null>(null)
   const [departments, setDepartments] = useState<any[]>([])
   const [selectedDepartment, setSelectedDepartment] = useState<any>(null)
   const [sourceData, setSourceData] = useState<any>([])
@@ -119,7 +119,7 @@ export default function CreateForm({}: Props) {
       await api.post(`leads/forms/create/`, {
         title: fields,
         department,
-        success_text:successText,
+        success_text: successText,
         source: addSource,
         type: 'lead_form',
         application_form_types: [...components]
@@ -134,7 +134,7 @@ export default function CreateForm({}: Props) {
   }
 
   async function getDepartments() {
-    const resp = await api.get(`leads/department/list/?lead=true`)
+    const resp = await api.get(`leads/department/list/`)
     setDepartments(resp.data)
   }
 
@@ -195,28 +195,26 @@ export default function CreateForm({}: Props) {
               {
                 <FormControl fullWidth>
                   <InputLabel size='small' id='user-view-language-label'>
-                    {t("Quyi bo'lim")}
+                    {t("Bo'lim")}
                   </InputLabel>
                   <Select
                     size='small'
-                    label={t("Quyi bo'lim")}
+                    label={t("Bo'lim")}
                     id='user-view-language'
                     labelId='user-view-language-label'
                     name='department'
                     defaultValue={''}
                     onChange={e => setDepartment(e.target.value)}
                   >
-                    {departments[0]?.children?.map((item: any) => (
+                    {departments?.map((item: any) => (
                       <MenuItem key={item.id} value={item.id}>
                         {item.name}
                       </MenuItem>
-
-                    ))
-                    }
+                    ))}
                     <MenuItem sx={{ fontWeight: 600 }} onClick={() => push('/lids')}>
-                    {t('Yangi yaratish')}
-                    <IconifyIcon icon={'ion:add-sharp'} />
-                  </MenuItem>
+                      {t('Yangi yaratish')}
+                      <IconifyIcon icon={'ion:add-sharp'} />
+                    </MenuItem>
                   </Select>
                 </FormControl>
               }
@@ -239,6 +237,10 @@ export default function CreateForm({}: Props) {
                       {lead.name}
                     </MenuItem>
                   ))}
+                  <MenuItem sx={{ fontWeight: 600 }} onClick={() => push('/lids/stats')}>
+                    {t('Yangi yaratish')}
+                    <IconifyIcon icon={'ion:add-sharp'} />
+                  </MenuItem>
                 </Select>
               </FormControl>
 
@@ -252,13 +254,7 @@ export default function CreateForm({}: Props) {
                 />
               </FormControl>
               <FormControl>
-                <TextField
-                  label={t('Yakuniy text')}
-                  size='small'
-                  onChange={e =>
-                    setSuccessText(e.target.value)
-                  }
-                />
+                <TextField label={t('Yakuniy text')} size='small' onChange={e => setSuccessText(e.target.value)} />
               </FormControl>
 
               {components.map((el: any, i: number) => (

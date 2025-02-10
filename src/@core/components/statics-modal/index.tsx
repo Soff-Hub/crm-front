@@ -22,7 +22,7 @@ const StaticsModal = () => {
   const dispatch = useDispatch()
   const { user } = useContext(AuthContext)
   const { isModalOpen } = useAppSelector(state => state.page)
-  const [selectedDate, setSelectedDate] = useState('today')
+  const [selectedDate, setSelectedDate] = useState('yesterday')
   const currentDate = new Date().toISOString().split('T')[0]
   const yesterdayDate = new Date(new Date().setDate(new Date().getDate() - 1)).toISOString().split('T')[0]
   const soffBotText = useSelector((state: any) => state.page.soffBotText)
@@ -148,12 +148,12 @@ const StaticsModal = () => {
       </DialogTitle>
       <Select value={selectedDate} onChange={e => setSelectedDate(e.target.value)} size='small' sx={{ margin: 5 }}>
         <MenuItem value='yesterday'>Kechagi kun</MenuItem>
-        <MenuItem value='today'>Hozirgi kun</MenuItem>
+        <MenuItem value='today'>Bugungi kun</MenuItem>
       </Select>
       {soffBotText?.role === 'admin' ? (
-        <AdminContent setTypingComplete={setTypingComplete} soffBotText={soffBotText} />
+        <AdminContent date={selectedDate} setTypingComplete={setTypingComplete} soffBotText={soffBotText} />
       ) : soffBotText?.role === 'ceo' ? (
-        <CeoContent setTypingComplete={setTypingComplete} soffBotText={soffBotText} />
+        <CeoContent date={selectedDate} setTypingComplete={setTypingComplete} soffBotText={soffBotText} />
       ) : (
         <TeacherContent setTypingComplete={setTypingComplete} soffBotText={soffBotText} />
       )}

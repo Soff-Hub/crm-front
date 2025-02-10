@@ -5,18 +5,17 @@ import Typewriter from 'typewriter-effect'
 
 interface AdminContentProps {
   soffBotText: any
+  date: string
   setTypingComplete: (status: boolean) => void
 }
 
-export const AdminContent = ({ soffBotText, setTypingComplete }: AdminContentProps) => {
+export const AdminContent = ({ soffBotText, date, setTypingComplete }: AdminContentProps) => {
+  const [key, setKey] = useState(0)
 
-    const [key, setKey] = useState(0)
-  
-
-    useEffect(() => {
-      setKey(prevKey => prevKey + 1)
-      setTypingComplete(false) 
-    }, [soffBotText])
+  useEffect(() => {
+    setKey(prevKey => prevKey + 1)
+    setTypingComplete(false)
+  }, [soffBotText])
   return (
     <DialogContent sx={{ textAlign: 'justify', padding: '20px', fontFamily: 'Inter, sans-serif' }}>
       {soffBotText?.role && (
@@ -24,8 +23,8 @@ export const AdminContent = ({ soffBotText, setTypingComplete }: AdminContentPro
           key={key}
           onInit={typewriter => {
             const missedStudentsText =
-              Array.isArray(soffBotText?.groups) && soffBotText.groups.length > 0
-                ? soffBotText.groups
+              Array.isArray(soffBotText?.detail) && soffBotText.detail.length > 0
+                ? soffBotText.detail
                     .map(
                       (group: { group: string; count: number; group_id: number }) =>
                         `. <a href="/groups/view/security/?id=${group.group_id}&month=${getMonthName(
@@ -38,7 +37,9 @@ export const AdminContent = ({ soffBotText, setTypingComplete }: AdminContentPro
                 : "Hozircha hech qanday guruh ma'lumotlari mavjud emas."
             const message = `
        <div style="font-family: 'Inter', sans-serif; color: #333; line-height: 1.6;">
-<h3 style="color: #333; font-size: 20px; margin-top: 10px; margin-bottom: 20px;">📊Kechagi tizimda ishlash bo'yicha ko'rsatkichlaringiz statistikasi</h3>
+<h3 style="color: #333; font-size: 20px; margin-top: 10px; margin-bottom: 20px;">📊${
+              date == 'today' ? 'Bugungi' : 'Kechagi'
+            } tizimda ishlash bo'yicha ko'rsatkichlaringiz statistikasi</h3>
 
 <div class="space-y-2">
   <p style="font-size: 16px;">
