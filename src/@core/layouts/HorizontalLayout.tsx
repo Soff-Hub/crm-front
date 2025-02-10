@@ -1,27 +1,21 @@
-// ** MUI Imports
 import Fab from '@mui/material/Fab'
 import AppBar from '@mui/material/AppBar'
 import { styled } from '@mui/material/styles'
 import Box, { BoxProps } from '@mui/material/Box'
 import MuiToolbar, { ToolbarProps } from '@mui/material/Toolbar'
 
-// ** Icon Imports
 import Icon from 'src/@core/components/icon'
 
-// ** Theme Config Import
 import themeConfig from 'src/configs/themeConfig'
 
-// ** Type Import
 import { LayoutProps } from 'src/@core/layouts/types'
 
-// ** Components
 import Customizer from 'src/@core/components/customizer'
 import Footer from './components/shared-components/footer'
 import Navigation from './components/horizontal/navigation'
 import ScrollToTop from 'src/@core/components/scroll-to-top'
 import AppBarContent from './components/horizontal/app-bar-content'
 
-// ** Util Import
 import { hexToRGBA } from 'src/@core/utils/hex-to-rgba'
 import { useAuth } from 'src/hooks/useAuth'
 import DraggableIcon from '../components/soffBotIcon'
@@ -81,10 +75,7 @@ const FixedIcon = styled('img')(
   })
 )
 
-
-
 const HorizontalLayout = (props: LayoutProps) => {
-  // ** Props
   const {
     hidden,
     children,
@@ -96,18 +87,11 @@ const HorizontalLayout = (props: LayoutProps) => {
     horizontalLayoutProps
   } = props
 
-  
-
-  // ** Vars
   const { skin, appBar, navHidden, appBarBlur, contentWidth } = settings
   const appBarProps = horizontalLayoutProps?.appBar?.componentProps
   const userNavMenuContent = horizontalLayoutProps?.navMenu?.content
   const auth = useAuth()
   const { user } = useContext(AuthContext)
-
-
-  
-  
 
   let userAppBarStyle = {}
   if (appBarProps && appBarProps.sx) {
@@ -116,11 +100,10 @@ const HorizontalLayout = (props: LayoutProps) => {
   const userAppBarProps = Object.assign({}, appBarProps)
   delete userAppBarProps.sx
 
+
   return (
     <HorizontalLayoutWrapper className='layout-wrapper'>
       <MainContentWrapper className='layout-content-wrapper' sx={{ ...(contentHeightFixed && { maxHeight: '100vh' }) }}>
-        {/* Navbar (or AppBar) and Navigation Menu Wrapper */}
-
         {!auth?.user?.payment_page && (
           <AppBar
             color='default'
@@ -146,7 +129,6 @@ const HorizontalLayout = (props: LayoutProps) => {
             }}
             {...userAppBarProps}
           >
-            {/* Navbar / AppBar */}
             <Box
               className='layout-navbar'
               sx={{
@@ -173,7 +155,6 @@ const HorizontalLayout = (props: LayoutProps) => {
               </Toolbar>
             </Box>
 
-            {/* Navigation Menu */}
             {navHidden ? null : (
               <Box
                 className='layout-horizontal-nav'
@@ -187,19 +168,19 @@ const HorizontalLayout = (props: LayoutProps) => {
                   sx={{
                     mx: 'auto',
                     display: 'flex',
-                    justifyContent: 'space-between', // Ensures spacing between items
-                    alignItems: 'center', // Centers items vertically
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
                     ...(contentWidth === 'boxed' && {
                       '@media (min-width:1440px)': { maxWidth: 1440 }
                     }),
                     minHeight: theme =>
                       `${(theme.mixins.toolbar.minHeight as number) - (skin === 'bordered' ? 1 : 0)}px !important`,
-                    px: 2, // Add horizontal padding for better spacing
+                    px: 2,
                     '@media (max-width: 1440px)': {
-                      px: 1 // Adjust padding for MacBook widths
+                      px: 1
                     },
                     '@media (max-width: 768px)': {
-                      flexDirection: 'column', // Stack items vertically for smaller screens
+                      flexDirection: 'column',
                       alignItems: 'flex-start'
                     }
                   }}
@@ -210,9 +191,9 @@ const HorizontalLayout = (props: LayoutProps) => {
                         sx={{
                           display: 'flex',
                           alignItems: 'center',
-                          gap: 2, // Adds spacing between nav items
+                          gap: 2,
                           '@media (max-width: 768px)': {
-                            flexDirection: 'column', // Stack navigation items vertically
+                            flexDirection: 'column',
                             gap: 1.5
                           }
                         }}
@@ -225,11 +206,11 @@ const HorizontalLayout = (props: LayoutProps) => {
                           }
                         />
                       </Box>
-                      {user?.role.includes('admin') && <StaticsModal />}
-                      {user?.role.includes('ceo') && <StaticsModal />}
+                      {(user?.role.includes('admin') || user?.role.includes('ceo')) &&
+                        !window.location.pathname.includes('/c-panel') && <StaticsModal />}
 
                       <QrCodeModal />
-                       <QRCodeScanner />
+                      <QRCodeScanner />
                     </>
                   )}
                 </Toolbar>
@@ -251,25 +232,16 @@ const HorizontalLayout = (props: LayoutProps) => {
         >
           {children}
         </ContentWrapper>
-        {/* Footer */}
         <Footer {...props} footerStyles={footerProps?.sx} footerContent={footerProps?.content} />
-        {/* Customizer */}
-        {/* <img
-          src='/images/avatars/happybot.webp'
-          width='50'
-          height='50'
-          alt='Happy Bot'
-        />{' '} */}
+
         {themeConfig.disableCustomizer || hidden ? null : (
           <>
-            {user?.role.includes('admin') && <DraggableIcon />}
-            {/* {user?.role.includes('ceo') && <DraggableIcon />} */}
-            {!window.location.pathname.includes('/c-panel') && <DraggableIcon /> && user?.role.includes('ceo') && <DraggableIcon />}
+            {(user?.role.includes('ceo') || user?.role.includes('admin')) &&
+              !window.location.pathname.includes('/c-panel') && <DraggableIcon />}
 
             <Customizer />
           </>
         )}
-        {/* Scroll to top button */}
         {scrollToTop ? (
           scrollToTop(props)
         ) : (

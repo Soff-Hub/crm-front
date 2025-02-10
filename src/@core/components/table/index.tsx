@@ -122,7 +122,7 @@ export default function DataTable({
               ))}
               {rowClick && (
                 <Box
-                  sx={{ width: '75%', zIndex: 1, height: '36px', position: 'absolute' }}
+                  sx={{ width: '55%', zIndex: 1, height: '36px', position: 'absolute' }}
                   onClick={() => handleClick(item.id)}
                 ></Box>
               )}

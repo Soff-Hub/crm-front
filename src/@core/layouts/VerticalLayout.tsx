@@ -53,10 +53,8 @@ const ContentWrapper = styled(Box)(({ theme }) => ({
 }))
 
 const VerticalLayout = (props: LayoutProps) => {
-  // ** Props
   const { hidden, settings, children, scrollToTop, footerProps, contentHeightFixed, verticalLayoutProps } = props
 
-  // ** Vars
   const { skin, navHidden, contentWidth } = settings
   const { navigationSize, disableCustomizer, collapsedNavigationSize } = themeConfig
   const navWidth = navigationSize
@@ -65,16 +63,13 @@ const VerticalLayout = (props: LayoutProps) => {
   const auth = useAuth()
   const { user } = useContext(AuthContext)
 
-  // ** States
   const [navVisible, setNavVisible] = useState<boolean>(false)
 
-  // ** Toggle Functions
   const toggleNavVisibility = () => setNavVisible(!navVisible)
 
   return (
     <>
       <VerticalLayoutWrapper className='layout-wrapper'>
-        {/* Navigation Menu */}
         {navHidden && !(navHidden && settings.lastLayout === 'horizontal')
           ? null
           : !auth.user?.payment_page && (
@@ -100,7 +95,6 @@ const VerticalLayout = (props: LayoutProps) => {
           className='layout-content-wrapper'
           sx={{ ...(contentHeightFixed && { maxHeight: '100vh' }) }}
         >
-          {/* AppBar Component */}
           {!auth?.user?.payment_page && (
             <AppBar
               toggleNavVisibility={toggleNavVisibility}
@@ -110,7 +104,6 @@ const VerticalLayout = (props: LayoutProps) => {
             />
           )}
 
-          {/* Content */}
           <ContentWrapper
             className='layout-page-content'
             sx={{
@@ -130,17 +123,14 @@ const VerticalLayout = (props: LayoutProps) => {
             {children}
           </ContentWrapper>
 
-          {/* Footer Component */}
           <Footer footerStyles={footerProps?.sx} footerContent={footerProps?.content} {...props} />
-          {user?.role.includes('admin') && <DraggableIcon />}
-          {!window.location.pathname.includes('/c-panel') && <DraggableIcon /> && user?.role.includes('ceo') && <DraggableIcon />}
+          {(user?.role.includes('ceo') || user?.role.includes('admin')) &&
+            !window.location.pathname.includes('/c-panel') && <DraggableIcon />}
         </MainContentWrapper>
       </VerticalLayoutWrapper>
 
-      {/* Customizer */}
       {disableCustomizer || hidden ? null : <Customizer />}
 
-      {/* Scroll to top button */}
       {scrollToTop ? (
         scrollToTop(props)
       ) : (
@@ -151,8 +141,8 @@ const VerticalLayout = (props: LayoutProps) => {
         </ScrollToTop>
       )}
 
-      {user?.role.includes('admin') && <StaticsModal />}
-      {user?.role.includes('ceo') && <StaticsModal />}
+      {(user?.role.includes('admin') || user?.role.includes('ceo')) &&
+        !window.location.pathname.includes('/c-panel') && <StaticsModal />}
       <QrCodeModal />
       <QRCodeScanner />
     </>

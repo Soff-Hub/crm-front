@@ -77,12 +77,22 @@ const Item = ({
   const [descriptionText, setDescriptionText] = useState('')
 
   const handleSubmit = async (values: { description: string }) => {
-    const data = {
-      group: groupId,
-      student: userId,
-      date: date,
-      is_available: description,
-      description: values.description
+    let data = {}
+    if (values.description == '') {
+      data = {
+        group: groupId,
+        student: userId,
+        date: date,
+        is_available: description
+      }
+    } else {
+      data = {
+        group: groupId,
+        student: userId,
+        date: date,
+        is_available: description,
+        description: values.description
+      }
     }
     try {
       const response = await api.patch(`common/attendance/update/${currentDate?.id}/`, data)
@@ -183,7 +193,11 @@ const Item = ({
             ) : value === false ? (
               <span onClick={() => setOpenTooltip(true)} onDoubleClick={() => setOpenedId(`${userId}-${date}`)}>
                 {descriptionText || currentDate.description ? (
-                  <Tooltip open={openTooltip} onClose={() => setOpenTooltip(false)} title={descriptionText || currentDate.description}>
+                  <Tooltip
+                    open={openTooltip}
+                    onClose={() => setOpenTooltip(false)}
+                    title={descriptionText || currentDate.description}
+                  >
                     <Typography fontSize={13}>{descriptionText || currentDate.description.slice(0, 3)}</Typography>
                   </Tooltip>
                 ) : (
@@ -206,7 +220,7 @@ const Item = ({
             <Formik
               initialValues={{ description: '' }}
               validationSchema={Yup.object({
-                description: Yup.string().required('Izohni kiriting')
+                description: Yup.string().nullable()
               })}
               onSubmit={handleSubmit}
             >
@@ -228,10 +242,7 @@ const Item = ({
                     />
                   </FormControl>
                   <DialogActions>
-                    <Button variant='outlined' onClick={onClose} color='primary'>
-                      Bekor qilish
-                    </Button>
-                    <Button type='submit' variant='contained' color='primary'>
+                    <Button fullWidth type='submit' variant='contained' color='primary'>
                       Saqlash
                     </Button>
                   </DialogActions>

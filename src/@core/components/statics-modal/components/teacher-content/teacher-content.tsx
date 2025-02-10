@@ -27,8 +27,8 @@ export const TeacherContent = ({ soffBotText, setTypingComplete }: TeacherConten
             const goodWorkText = soffBotText.missed_attendance === 0 ? `${teacherSubtitle}<br/> Barakalla siz zo'r ishladizngiz🥳` : ''
 
             const missedStudentsText =
-              Array.isArray(soffBotText?.groups) && soffBotText.groups.length > 0
-                ? soffBotText.groups
+              Array.isArray(soffBotText?.detail) && soffBotText.detail.length > 0
+                ? soffBotText.detail
                     .map(
                       (group: { group: string; count: number; group_id: number }) =>
                         `- <a href="/groups/view/security/?id=${group.group_id}&month=${getMonthName(null)}" style="color: #0077FF; text-decoration: none;">${group.group}</a>: ${group.count} ta o'quvchi`

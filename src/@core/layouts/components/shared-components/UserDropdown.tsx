@@ -47,7 +47,7 @@ const BadgeContentSpan = styled('span')(({ theme }) => ({
 
 const UserDropdown = (props: Props) => {
   const [imageSrc, setImageSrc] = useState('')
-  
+
   const { settings } = props
   const [open, setOpen] = useState(false)
   const { t } = useTranslation()
@@ -62,7 +62,6 @@ const UserDropdown = (props: Props) => {
   const { direction } = settings
 
   const dispatch = useAppDispatch()
-
 
   const handleClickOpen = (src: any) => {
     setImageSrc(src)
@@ -101,6 +100,7 @@ const UserDropdown = (props: Props) => {
     data: any
     name?: string
   }
+  
 
   function downloadImage(imageUrl: any, filename: any) {
     const anchor = document.createElement('a')
@@ -120,8 +120,6 @@ const UserDropdown = (props: Props) => {
     dispatch(setRoles([]))
     handleDropdownClose()
   }
-
-  
 
   return (
     <Fragment>
@@ -168,14 +166,15 @@ const UserDropdown = (props: Props) => {
                     }))
                   }}
                 >
-                  { userRoles?.map((item: string) => (
+                  {userRoles?.map((item: string) => (
                     <div onClick={() => setRole(item)}>
                       <Typography
                         variant='body2'
                         sx={{
+                          textDecoration:role == item ? 'underline':"",
                           cursor: 'pointer',
                           fontSize: '0.8rem',
-                          color: 'text.disabled',
+                          color: role == item ? 'text.primary' : 'text.disabled',
                           '&:hover': {
                             color: 'text.primary', // Change color on hover
                             textDecoration: 'underline' // Optional: underline on hover

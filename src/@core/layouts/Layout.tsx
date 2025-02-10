@@ -63,7 +63,7 @@ const Layout = (props: LayoutProps) => {
 
   useEffect(() => {
     if (
-      (formattedCurrentDate !== formattedLastLogin ) && formattedLastLogin     
+      (formattedCurrentDate !== formattedLastLogin )   
     ) {
       if (window.location.pathname !== '/c-panel' || !user?.role.includes('student')) {
         dispatch(toggleModal(true));

@@ -1,16 +1,11 @@
-// ** React Imports
 import { createContext, useEffect, useState, ReactNode } from 'react'
 
-// ** Next Import
 import { useRouter } from 'next/router'
 
-// ** Axios
 import axios from 'axios'
 
-// ** Config
 import authConfig from 'src/configs/auth'
 
-// ** Types
 import { AuthValuesType, RegisterParams, LoginParams, ErrCallbackType, UserDataType } from './types'
 import api from 'src/@core/utils/api'
 import { setCompanyInfo, setRoles } from 'src/store/apps/user'
@@ -18,7 +13,6 @@ import { useTranslation } from 'react-i18next'
 import { useAppDispatch, useAppSelector } from 'src/store'
 import { useSettings } from 'src/@core/hooks/useSettings'
 
-// ** Defaults
 const defaultProvider: AuthValuesType = {
   user: null,
   loading: true,
@@ -37,7 +31,6 @@ type Props = {
 }
 
 const AuthProvider = ({ children }: Props) => {
-  // ** States
 
   const [user, setUser] = useState<UserDataType | null>(defaultProvider.user)
   const [loading, setLoading] = useState<boolean>(defaultProvider.loading)
@@ -46,7 +39,6 @@ const AuthProvider = ({ children }: Props) => {
   const router = useRouter()
   const { locales, locale: activeLocale, pathname, query, asPath } = router
 
-  // ** Hooks
   const dispatch = useAppDispatch()
 
   const initAuth = async (): Promise<void> => {
@@ -156,6 +148,7 @@ const AuthProvider = ({ children }: Props) => {
           router.replace('/crm-payments')
         }
 
+        dispatch(setRoles(userRoles))
         setUser({
           last_login:response.data?.last_login,
           phone: response.data.phone,

@@ -85,7 +85,6 @@ export default function StudentPaymentEditForm({ openEdit, setOpenEdit }: Props)
     }
   })
 
-  console.log(formik.errors)
 
   const { errors, values, handleSubmit, handleBlur, touched, handleChange } = formik
 
