@@ -150,7 +150,7 @@ export default function ExportStudent({
             </FormHelperText>
           </FormControl>
 
-          {formik.values?.new_group && (
+          {/* {formik.values?.new_group && (
             <Box className='w-100'>
               {isDiscount && (
                 <div>
@@ -181,7 +181,7 @@ export default function ExportStudent({
                 {isDiscount ? "Alohida narxni o'chirish" : 'Alohida narx kiritish'}
               </Button>
             </Box>
-          )}
+          )} */}
 
           {/* <FormControl sx={{ maxWidth: '100%', mb: 3 }} fullWidth>
                         <InputLabel error={!!formik.errors.status && formik.touched.status} size='small' id='demo-simple-select-outlined-label'>Guruhdagi holati</InputLabel>
