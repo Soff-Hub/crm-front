@@ -170,6 +170,7 @@ const initialState: SettingsState = {
   isGettingSchools:false,
   employee_id: null,
   openSms: null,
+  logins:null,
   is_childpending: false,
   sms_list: [],
   smschild_list: [],
@@ -263,7 +264,10 @@ export const settingsSlice = createSlice({
         title: '',
         url: ''
       }
-    }
+    },
+    setLogins: (state, action) => {
+      state.logins = action.payload
+    },
   },
   extraReducers: builder => {
     builder
@@ -349,6 +353,7 @@ export const {
   setWekendData,
   setEmployeeData,
   updateParams,
+  setLogins,
   updateQueryParams,
   closeVideoModal,
   openVideoModal,

@@ -2,9 +2,9 @@ import { useEffect, useState } from 'react'
 
 // ** Components
 import {
-  Autocomplete,
   Box,
   Button,
+  Checkbox,
   FormControl,
   FormControlLabel,
   FormHelperText,
@@ -42,7 +42,6 @@ import { reversePhone } from 'src/@core/components/phone-input/format-phone-numb
 import { disablePage } from 'src/store/apps/page'
 import toast from 'react-hot-toast'
 import Router from 'next/router'
-import api from 'src/@core/utils/api'
 
 export default function CreateStudentForm() {
   // ** Hooks
@@ -54,19 +53,17 @@ export default function CreateStudentForm() {
 
   const { isMobile } = useResponsive()
   const [isSchool, setIsSchool] = useState(false)
-  // ** States
   const [isGroup, setIsGroup] = useState<boolean>(false)
   const [loading, setLoading] = useState<boolean>(false)
   const [isDiscount, setIsDiscount] = useState<boolean>(false)
+  const [checked, setChecked] = useState(false)
   const school_type = localStorage.getItem('school_type')
   const getGroups = async () => {
     await dispatch(fetchGroupCheckList())
   }
 
-  
-  
-
   const validationSchema = Yup.object({
+
     first_name: Yup.string().required('Ismingizni kiriting'),
     phone: Yup.string().required('Telefon raqam kiriting'),
     birth_date: Yup.string(),
@@ -145,6 +142,10 @@ export default function CreateStudentForm() {
       formik.resetForm()
     }
   }, [])
+  const handleChangeCheck = (event: any) => {
+    setChecked(event.target.checked)
+    console.log('Checkbox Value:', event.target.checked)
+  }
 
   return (
     <form
@@ -171,6 +172,7 @@ export default function CreateStudentForm() {
         />
         {errors.first_name && touched.first_name && <FormHelperText error={true}>{errors.first_name}</FormHelperText>}
       </FormControl>
+    
 
       <FormControl sx={{ width: '100%' }}>
         <InputLabel error={!!errors.phone && touched.phone} htmlFor='outlined-adornment-password'>
@@ -187,7 +189,15 @@ export default function CreateStudentForm() {
         />
         {errors.phone && touched.phone && <FormHelperText error={true}>{errors.phone}</FormHelperText>}
       </FormControl>
-
+      {/* {formik.errors?.phone == '"phone" foydalanuvchi allaqachon mavjud.' && (
+        <FormControl>
+          <FormControlLabel
+            sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+            control={<Checkbox checked={checked} onChange={handleChangeCheck} />}
+            label='Aka ukami'
+          />
+        </FormControl>
+      )} */}
       {school_type == 'private_school' && (
         <FormControl sx={{ width: '100%' }}>
           <TextField

@@ -53,7 +53,6 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
     setOpenEdit(value)
   }
 
-
   const handleEditClose = () => {
     setError({})
     setOpenEdit(null)
@@ -131,7 +130,6 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
 
   const queryString = new URLSearchParams({ ...queryParams } as Record<string, string>).toString()
 
-  
 
   const uzLocale = {
     DatePicker: {
@@ -151,8 +149,6 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
       ]
     }
   }
-
-  
 
   if (isMobile) {
     return (
@@ -210,21 +206,17 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
             <Select
               size='small'
               label={t('Maktab')}
-              defaultValue={''}
+              value={queryParams.school}
               id='demo-simple-select-outlined'
               labelId='demo-simple-select-outlined-label'
               onChange={(e: any) => {
-                if (e.target.value === '') {
-                  handleFilter('school', null)
-                } else {
-                  handleFilter('school', e.target.value)
-                }
+                handleFilter('school', e.target.value)
               }}
             >
               <MenuItem value={''}>
                 <b>{t('Barchasi')}</b>
               </MenuItem>
-              {schools.map((school:any) => (
+              {schools.map((school: any) => (
                 <MenuItem key={school.id} value={school.id}>
                   {school.name}
                 </MenuItem>
@@ -287,7 +279,6 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
 
           {queryParams.is_debtor && (
             <DatePicker
-            
               size='lg'
               label={`${queryParams.debt_date ? queryParams.debt_date : 'Yil va Oy'}`}
               value={queryParams.debt_date ? new Date(queryParams.debt_date) : null}
@@ -427,7 +418,7 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
               <MenuItem value={''}>
                 <b>{t('Barchasi')}</b>
               </MenuItem>
-              {schools.map((school:any) => (
+              {schools.map((school: any) => (
                 <MenuItem key={school.id} value={school.id}>
                   {school.name}
                 </MenuItem>
@@ -556,7 +547,7 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
               />
             </Box>
           )}
-          <ExcelStudents  size='medium' url='/student/offset-list/' queryString={queryString} />
+          <ExcelStudents size='medium' url='/student/offset-list/' queryString={queryString} />
           <Button
             onClick={() => (getSMSTemps(), handleEditClickOpen('sms'))}
             variant='outlined'

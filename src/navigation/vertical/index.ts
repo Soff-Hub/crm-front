@@ -112,7 +112,8 @@ const Navigation = (t: any): VerticalNavItemsType => {
             {
               title: 'Dam olish kunlari',
               path: '/settings/office/free-days'
-            }, {
+            },
+            {
               title: 'Maktablar',
               path: '/settings/office/schools'
             }
@@ -128,8 +129,7 @@ const Navigation = (t: any): VerticalNavItemsType => {
             {
               title: 'Xodimlar',
               path: '/settings/ceo/users'
-            },
-            
+            }
           ]
         },
         {
@@ -138,6 +138,10 @@ const Navigation = (t: any): VerticalNavItemsType => {
             {
               title: t("To'lovlar"),
               path: '/settings/logs/payment-history'
+            },
+            {
+              title: t('Tizimga kirishlar'),
+              path: '/settings/logs/logins'
             },
             {
               title: t('Bot xabarnoma'),
@@ -190,7 +194,6 @@ const Navigation = (t: any): VerticalNavItemsType => {
     // }
   ]
   const marketologItems = [
-    
     {
       title: t('Lidlar'),
       icon: 'mdi:receipt-text-edit-outline',

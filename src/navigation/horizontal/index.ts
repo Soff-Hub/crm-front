@@ -94,6 +94,10 @@ const Navigation = (t: any): HorizontalNavItemsType => {
               path: '/settings/logs/payment-history'
             },
             {
+              title: t("Tizimga kirishlar"),
+              path: '/settings/logs/logins'
+            },
+            {
               title: t('Bot xabarnoma'),
               path: '/settings/logs/bot-notification'
             },

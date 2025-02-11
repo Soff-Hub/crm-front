@@ -145,7 +145,13 @@ export const AttandanceFilters = ({ isMobile }: AttandanceFiltersProps) => {
     } else {
       dispatch(updateQueryParam({ date_month: '' }))
     }
-
+  }
+  const handleChangeAttandanceStatus = async (e: SelectChangeEvent<string>) => {
+    if (e.target.value) {
+      dispatch(updateQueryParam({ is_available: e.target.value }))
+    } else {
+      dispatch(updateQueryParam({ is_available: '' }))
+    }
     const updatedQueryParams = store.getState().attendance.queryParams
 
     const queryString = new URLSearchParams({ ...updatedQueryParams }).toString()
@@ -161,8 +167,6 @@ export const AttandanceFilters = ({ isMobile }: AttandanceFiltersProps) => {
     const queryString = new URLSearchParams({ ...updatedQueryParams }).toString()
     await dispatch(fetchAttendances(queryString))
   }
-
-  const queryString = new URLSearchParams({ ...queryParams }).toString()
 
   const options =
     teachersData?.map(item => ({
@@ -255,13 +259,39 @@ export const AttandanceFilters = ({ isMobile }: AttandanceFiltersProps) => {
               onChange={handleChangeDateMonth}
             >
               <MenuItem value=''>
-                <b>{t('Barchasi')}</b>
+                <b>Barchasi</b>
               </MenuItem>
               {monthOptions.map((month, index) => (
                 <MenuItem key={index} value={index + 1}>
                   {month}
                 </MenuItem>
               ))}
+            </Select>
+          </FormControl>
+          <FormControl sx={{ width: '100%' }}>
+            <InputLabel size='small' id='month-select-label'>
+              {t('Davomat Holati')}
+            </InputLabel>
+            <Select
+              size='small'
+              label={t('Davomat Holati')}
+              id='month-select'
+              labelId='month-select-label'
+              value={queryParams.is_available}
+              onChange={handleChangeAttandanceStatus}
+            >
+              <MenuItem value=''>
+                <b>Barchasi</b>
+              </MenuItem>
+              <MenuItem value='1'>
+                Kelgan
+              </MenuItem>
+              <MenuItem value='-1'>
+                Kelmagan
+              </MenuItem>
+              <MenuItem value='0'>
+                Davomat qilinmagan
+              </MenuItem>
             </Select>
           </FormControl>
 

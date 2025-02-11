@@ -35,7 +35,23 @@ const StaticsModal = () => {
       const response = await api.get('auth/analytics/', {
         params: { date }
       })
-      dispatch(setSoffBotText(response.data))
+      dispatch(
+        setSoffBotText({
+          missed_attendance: response.data.missed_attendance,
+          groups: response.data.detail,
+          absent_students: response.data.absent_students,
+          income: response.data.income,
+          new_leads: response.data.new_leads,
+          robot_mood: response.data.robot_mood,
+          sms_limit: response.data.sms_limit,
+          unconnected_leads: response.data.unconnected_leads,
+          summary: response.data?.summary,
+          role: response?.data?.role,
+          added_students: response.data?.added_students,
+          left_students: response.data?.left_students,
+          not_using_platform: response.data.not_using_platform
+        })
+      )
     } catch (error) {
       console.error('Analyticsni yuklashda xatolik:', error)
     }
@@ -47,7 +63,6 @@ const StaticsModal = () => {
       fetchAnalytics(selectedApiDate)
     }
   }, [selectedDate])
-
 
   useEffect(() => {
     if (triggerConfetti) {
@@ -73,6 +88,8 @@ const StaticsModal = () => {
     setTriggerConfetti(true)
     setTimeout(() => setShowFireworks(false), 3000)
   }
+
+
 
   return soffBotText?.not_using_platform == true ? (
     <Dialog fullWidth maxWidth='xs' open={isModalOpen} onClose={handleClose}>
