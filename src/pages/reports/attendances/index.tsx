@@ -47,33 +47,13 @@ export default function Attandences() {
       renderItem: (record: any) => (
         <div>
           <Chip
-            sx={{background:'lightgreen'}}
+            sx={{ background:queryParams.is_available == 1 ? 'lightgreen':queryParams.is_available == 0 ? '':queryParams.is_available == -1 ?'lightcoral':'' }}
             variant='filled'
             size='medium'
-            label={`${record?.available_students} / ${record?.allowed_attendances}`}
+            label={`${record?.allowed_attendances} / ${record?.attendances}`}
           />
         </div>
       )
-    },
-    {
-      xs: 1,
-      title: t("Kelmagan o'quvchilar"),
-      renderItem: (record: any) => (
-        <div>
-          <Chip
-            sx={{background:'lightcoral'}}
-            variant='filled'
-            size='medium'
-            label={`${record?.not_available_students} / ${record?.allowed_attendances}`}
-          />
-        </div>
-      )
-    },
-    {
-      xs: 1,
-      title: t('Qilinmagan davomatlar soni'),
-      dataIndex: 'not_attended_attendances',
-      render: recors => (Number(recors) > 0 ? <Chip size='medium' color='error' label={`${recors}`} /> : recors)
     }
   ]
   const rowClick = (id: any) => {
