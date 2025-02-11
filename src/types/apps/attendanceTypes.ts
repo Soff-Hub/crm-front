@@ -5,6 +5,7 @@ export interface AttendanceQueryType {
   date_year: string
   date_month: string
   status: string
+  is_available:any
 }
 
 export interface AttendanceInitialType {

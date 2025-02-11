@@ -24,6 +24,7 @@ const initialState: AttendanceInitialType = {
   attandance: [],
   queryParams: {
     branch: '',
+    is_available:'',
     teacher: '',
     ...getCurrentDate(),
     date: '',
@@ -43,6 +44,7 @@ export const attendanceSlice = createSlice({
     resetQueryParams: state => {
       state.queryParams = {
         branch: '',
+        is_available:'',
         teacher: '',
         date: '',
         ...getCurrentDate(),

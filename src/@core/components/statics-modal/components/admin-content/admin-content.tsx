@@ -23,8 +23,8 @@ export const AdminContent = ({ soffBotText, date, setTypingComplete }: AdminCont
           key={key}
           onInit={typewriter => {
             const missedStudentsText =
-              Array.isArray(soffBotText?.detail) && soffBotText.detail.length > 0
-                ? soffBotText.detail
+              Array.isArray(soffBotText?.groups) && soffBotText.groups.length > 0
+                ? soffBotText.groups
                     .map(
                       (group: { group: string; count: number; group_id: number }) =>
                         `. <a href="/groups/view/security/?id=${group.group_id}&month=${getMonthName(

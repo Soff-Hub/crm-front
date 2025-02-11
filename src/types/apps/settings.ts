@@ -54,7 +54,13 @@ export interface EmployeeItemType {
 export interface SettingsState {
   employee_id: number | null
   schools: any
-  openEditSchool:any,
+  logins: {
+    count: number
+    next: string
+    previous: any
+    results: { date: string; id: number; user_name: string; user_phone: string }[]
+  } | null
+  openEditSchool: any
   school_count: number
   schoolQueryParams: { search?: string; page?: number }
   isGettingSchools: boolean

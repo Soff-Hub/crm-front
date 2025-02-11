@@ -49,7 +49,7 @@ export interface StudentItemType {
 export interface CreateStudentDto extends StudentItemType {
   password?: string | null
   contract_amount?:number,
-  school?:string,
+  school?: string,
   group?: number | string
   start_at?: string
   fixed_price: string
@@ -122,6 +122,7 @@ export interface StudentDetailType {
 
 export interface StudentsQueryParamsTypes {
   search?: string
+  school?:string,
   start_date?: string,
   end_date?:string,
   limit?: string

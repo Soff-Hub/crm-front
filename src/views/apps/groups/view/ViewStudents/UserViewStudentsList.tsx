@@ -78,7 +78,6 @@ export default function UserViewStudentsList() {
   const debounce = useDebounce(search, 500)
   const { query, push } = useRouter()
 
-  console.log(user?.role[0])
 
   const columns: customTableProps[] = [
     {
