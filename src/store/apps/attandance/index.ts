@@ -24,7 +24,7 @@ const initialState: AttendanceInitialType = {
   attandance: [],
   queryParams: {
     branch: '',
-    is_available:'',
+    is_available:'-1',
     teacher: '',
     ...getCurrentDate(),
     date: '',

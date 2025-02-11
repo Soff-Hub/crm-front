@@ -2,10 +2,8 @@ import {
   Autocomplete,
   Box,
   FormControl,
-  InputAdornment,
   InputLabel,
   MenuItem,
-  OutlinedInput,
   Select,
   SelectChangeEvent,
   TextField
@@ -14,7 +12,6 @@ import { useEffect, useState } from 'react'
 
 import 'react-datepicker/dist/react-datepicker.css'
 import { useTranslation } from 'react-i18next'
-import Excel from 'src/@core/components/excelButton/Excel'
 import api from 'src/@core/utils/api'
 import useBranches from 'src/hooks/useBranch'
 import { store, useAppDispatch, useAppSelector } from 'src/store'
@@ -138,13 +135,16 @@ export const AttandanceFilters = ({ isMobile }: AttandanceFiltersProps) => {
     setSelectedDate(null)
     const year = queryParams.date_year ? queryParams.date_year.split('-')[0] : queryParams.date_year || currentYear
     const day = String(now.getDate()).padStart(2, '0')
-    console.log(e.target.value)
 
     if (e.target.value) {
       dispatch(updateQueryParam({ date_month: `${year}-${e.target.value}-${day}`, date: '' }))
     } else {
       dispatch(updateQueryParam({ date_month: '' }))
     }
+    const updatedQueryParams = store.getState().attendance.queryParams
+    const queryString = new URLSearchParams({ ...updatedQueryParams }).toString()
+    await dispatch(fetchAttendances(queryString))
+
   }
   const handleChangeAttandanceStatus = async (e: SelectChangeEvent<string>) => {
     if (e.target.value) {
@@ -255,7 +255,7 @@ export const AttandanceFilters = ({ isMobile }: AttandanceFiltersProps) => {
               label={t('Oy')}
               id='month-select'
               labelId='month-select-label'
-              value={queryParams.date_month.split('-')[1]}
+              value={String(parseInt(queryParams.date_month.split('-')[1], 10))}
               onChange={handleChangeDateMonth}
             >
               <MenuItem value=''>
@@ -280,9 +280,7 @@ export const AttandanceFilters = ({ isMobile }: AttandanceFiltersProps) => {
               value={queryParams.is_available}
               onChange={handleChangeAttandanceStatus}
             >
-              <MenuItem value=''>
-                <b>Barchasi</b>
-              </MenuItem>
+            
               <MenuItem value='1'>
                 Kelgan
               </MenuItem>

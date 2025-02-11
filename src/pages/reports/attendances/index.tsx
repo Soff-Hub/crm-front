@@ -26,7 +26,7 @@ export default function Attandences() {
       xs: 1,
       title: t('Guruh nomi'),
       dataIndex: 'name',
-      renderId: (id,name) => (
+      renderId: (id, name) => (
         <div onClick={() => router.push(`/groups/view/security?id=${id}&month=${getMonthName(null)}`)}>{name}</div>
       )
     },
@@ -43,14 +43,29 @@ export default function Attandences() {
     },
     {
       xs: 1,
-      title: t("Kelgan o'quvchilar"),
+      title: t(
+        queryParams.is_available == 1
+          ? "Kelgan o'quvchilar"
+          : queryParams.is_available == 0
+          ? "Davomat qilinmagan o'quvchilar"
+          : "Kelmagan o'quvchilar"
+      ),
       renderItem: (record: any) => (
         <div>
           <Chip
-            sx={{ background:queryParams.is_available == 1 ? 'lightgreen':queryParams.is_available == 0 ? '':queryParams.is_available == -1 ?'lightcoral':'' }}
+            sx={{
+              background:
+                queryParams.is_available == 1
+                  ? 'lightgreen'
+                  : queryParams.is_available == 0
+                  ? ''
+                  : queryParams.is_available == -1
+                  ? 'lightcoral'
+                  : ''
+            }}
             variant='filled'
             size='medium'
-            label={`${record?.allowed_attendances} / ${record?.attendances}`}
+            label={` ${record?.attendances}/${record?.allowed_attendances} `}
           />
         </div>
       )
@@ -77,7 +92,7 @@ export default function Attandences() {
         </Box>
       </Box>
       {!isMobile && <AttandanceFilters isMobile={isMobile} />}
-      <AttandanceDataTable columns={columns} loading={isLoading} data={attandance || []}  color text_color />
+      <AttandanceDataTable columns={columns} loading={isLoading} data={attandance || []} color text_color />
     </div>
   )
 }
