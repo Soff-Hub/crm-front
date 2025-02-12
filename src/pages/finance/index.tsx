@@ -294,7 +294,7 @@ const CardStatistics = () => {
                   <Paper elevation={3} sx={{ p: 3, borderRadius: 1 }}>
                     {all_numbers.month ? (
                       <Typography variant='h6' align='center' gutterBottom>
-                        {all_numbers.year} - {month[all_numbers.month]} - yildagi natijalar
+                        {all_numbers.year} - {month[all_numbers.month]}  oyidagi natijalar
                       </Typography>
                     ) : (
                       <Typography variant='h6' align='center' gutterBottom>
@@ -344,7 +344,7 @@ const CardStatistics = () => {
                           >
                             Qarzdorlik summasi:
                             <br /> {formatNumber(
-                              all_numbers.plans.planned_amount - all_numbers.plans.done_amount || 0
+                              all_numbers.plans?.debt_amount || 0
                             )}{' '}
                             so'm
                           </Typography>
