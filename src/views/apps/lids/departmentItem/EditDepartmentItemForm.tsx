@@ -6,12 +6,12 @@ import { FormControl, FormHelperText, TextField } from '@mui/material'
 import LoadingButton from '@mui/lab/LoadingButton'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch } from 'src/store'
-import { fetchDepartmentList } from 'src/store/apps/leads'
+import { fetchDepartmentList, setDragonLoading, setLeadItems } from 'src/store/apps/leads'
 import api from 'src/@core/utils/api'
 import toast from 'react-hot-toast'
 
 type Props = {
-  setLoading: any
+  setLoading: (status: boolean) => void,
   loading: boolean
   setOpenDialog: any
   id: number
@@ -21,12 +21,26 @@ type Props = {
 export default function EditDepartmentItemForm({ setLoading, setOpenDialog, loading, id, defaultName }: Props) {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
-
+  const query = window.location?.search?.split('?slug=')[1]
   const validationSchema = Yup.object({
     name: Yup.string().required('Nom kiriting')
   })
 
   const initialValues: CreatesDepartmentState = { name: defaultName }
+
+  async function handleGetLealdItems() {
+    if (!query) return
+    dispatch(setDragonLoading(true))
+
+    try {
+      const res = await api.get(`leads/department/${query}`)
+      dispatch(setLeadItems(res.data))
+    } catch (err) {
+      console.error('Error fetching leads:', err)
+    } finally {
+      dispatch(setDragonLoading(false))
+    }
+  }
 
   const formik = useFormik({
     initialValues,
@@ -39,6 +53,7 @@ export default function EditDepartmentItemForm({ setLoading, setOpenDialog, load
           setLoading(false)
           setOpenDialog(null)
           await dispatch(fetchDepartmentList())
+          await handleGetLealdItems()
           formik.resetForm()
         }
       } catch (err: any) {
@@ -48,6 +63,9 @@ export default function EditDepartmentItemForm({ setLoading, setOpenDialog, load
       }
     }
   })
+
+  console.log(loading);
+  
 
   useEffect(() => {
     return () => {

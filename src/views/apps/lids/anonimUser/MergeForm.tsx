@@ -26,7 +26,7 @@ export default function MergeToDepartment({ setOpen,open, is_amocrm, item, reRen
   const dispatch = useAppDispatch()
   const { loading, leadData, pipelines } = useAppSelector(state => state.leads)
   const [department, setDepartment] = useState<any>(null)
-
+  const [loadingAmo,setLoading] = useState(false)
   const validationSchema = Yup.object({
     department: Yup.number().required("Bo'limni tanlang")
   })
@@ -61,6 +61,7 @@ export default function MergeToDepartment({ setOpen,open, is_amocrm, item, reRen
             })
 
       if (action) {
+        setLoading(true)
         const resp = await dispatch(action)
         if (resp.meta.requestStatus === 'rejected') {
           formik.setErrors(resp.payload)
@@ -72,6 +73,7 @@ export default function MergeToDepartment({ setOpen,open, is_amocrm, item, reRen
 
           formik.resetForm()
         }
+        setLoading(false)
       }
     }
   })
@@ -145,7 +147,7 @@ export default function MergeToDepartment({ setOpen,open, is_amocrm, item, reRen
         </FormControl>
       )}
 
-      <LoadingButton loading={loading} type='submit' variant='outlined'>
+      <LoadingButton loading={loading || loadingAmo} type='submit' variant='outlined'>
         {t("Ko'chirish")}
       </LoadingButton>
     </form>

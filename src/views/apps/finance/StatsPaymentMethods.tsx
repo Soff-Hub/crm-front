@@ -85,7 +85,7 @@ export default function StatsPaymentMethods() {
                         </div>
                         <div style={{display:'flex', alignItems:'center' ,gap:5}}>
                           <div className='fw-medium small'>{item?.name} : </div>
-                          <div className='text-muted small'>{item?.count || "1 ta tolov"}</div>
+                          <div className='text-muted small'>{item?.count || "1 to'lov"}</div>
                         </div>
                       </div>
                       <div className='text-end fw-medium text-success small'>

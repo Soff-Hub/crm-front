@@ -297,7 +297,7 @@ export default function GroupsPage() {
       <VideoHeader item={videoUrls.employees} />
       <Box
         className='groups-page-header'
-        sx={{ display: 'flex', justifyContent: 'space-between', margin: '10px 0' }}
+        sx={{ display: 'flex', justifyContent: 'space-between', margin: '10px 0',width:'100%' }}
         py={2}
       >
         <Typography variant='h5'>{t('Xodimlar')}</Typography>
@@ -313,6 +313,7 @@ export default function GroupsPage() {
 
       <Box
         sx={{
+          alignItems: isMobile?'start':'center',
           display: 'flex',
           gap: '10px',
           '& > *': {
@@ -322,7 +323,8 @@ export default function GroupsPage() {
       >
         <ButtonGroup
       size="small"
-      aria-label="Small button group"
+          aria-label="Small button group"
+          sx={{display:'flex',flexDirection:isMobile ? 'column':'row'}}
       orientation={isMobile ? 'vertical' : 'horizontal'} 
       fullWidth={isMobile} 
     >

@@ -144,7 +144,6 @@ export const AttandanceFilters = ({ isMobile }: AttandanceFiltersProps) => {
     const updatedQueryParams = store.getState().attendance.queryParams
     const queryString = new URLSearchParams({ ...updatedQueryParams }).toString()
     await dispatch(fetchAttendances(queryString))
-
   }
   const handleChangeAttandanceStatus = async (e: SelectChangeEvent<string>) => {
     if (e.target.value) {
@@ -174,6 +173,145 @@ export const AttandanceFilters = ({ isMobile }: AttandanceFiltersProps) => {
       value: item?.id
     })) || []
 
+  if (isMobile) {
+    return (
+      <Box display={'flex'} gap={2} flexDirection={'column'} paddingTop={isMobile ? 3 : 0} rowGap={isMobile ? 4 : 0}>
+        <FormControl sx={{ width: '100%' }}>
+          <InputLabel size='small' id='branch-select-label'>
+            {t('Filial')}
+          </InputLabel>
+          <Select
+            size='small'
+            label={t('Filial')}
+            id='branch-select'
+            labelId='branch-select-label'
+            value={queryParams.branch || ''}
+            onChange={handleChangeBranch}
+          >
+            <MenuItem value=''>
+              <b>Barchasi</b>
+            </MenuItem>
+            {branches?.map(branch => (
+              <MenuItem key={branch.id} value={branch.id}>
+                {branch.name}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
+        <FormControl size='small' sx={{ width: '100%' }}>
+          <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <DesktopDatePicker
+              sx={{
+                '& .MuiInputBase-input': {
+                  padding: '8px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }
+              }}
+              value={selectedDate}
+              onChange={newValue => {
+                handleChangeDate(newValue)
+              }}
+            />
+          </LocalizationProvider>
+        </FormControl>
+
+        <FormControl sx={{ width: '100%' }}>
+          <InputLabel size='small' placeholder='yilni tanlang' id='year-select-label'>
+            {t('Yil')}
+          </InputLabel>
+          <Select
+            size='small'
+            label={t('Yil')}
+            id='year-select'
+            labelId='year-select-label'
+            value={queryParams.date_year?.split('-')[0]}
+            onChange={handleChangeDateYear}
+          >
+            {years.map(year => (
+              <MenuItem key={year} value={`${year}`}>
+                {year}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
+        <FormControl sx={{ width: '100%' }}>
+          <InputLabel size='small' id='month-select-label'>
+            {t('Oy')}
+          </InputLabel>
+          <Select
+            size='small'
+            label={t('Oy')}
+            id='month-select'
+            labelId='month-select-label'
+            value={String(parseInt(queryParams.date_month.split('-')[1], 10))}
+            onChange={handleChangeDateMonth}
+          >
+            <MenuItem value=''>
+              <b>Barchasi</b>
+            </MenuItem>
+            {monthOptions.map((month, index) => (
+              <MenuItem key={index} value={index + 1}>
+                {month}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+        <FormControl sx={{ width: '100%' }}>
+          <InputLabel size='small' id='month-select-label'>
+            {t('Davomat Holati')}
+          </InputLabel>
+          <Select
+            size='small'
+            label={t('Davomat Holati')}
+            id='month-select'
+            labelId='month-select-label'
+            value={queryParams.is_available}
+            onChange={handleChangeAttandanceStatus}
+          >
+            <MenuItem value='1'>Kelgan</MenuItem>
+            <MenuItem value='-1'>Kelmagan</MenuItem>
+            <MenuItem value='0'>Davomat qilinmagan</MenuItem>
+          </Select>
+        </FormControl>
+
+        <FormControl sx={{ width: '100%' }}>
+          <InputLabel size='small' id='month-select-label'>
+            {t('Status')}
+          </InputLabel>
+          <Select
+            size='small'
+            label={t('Oy')}
+            id='month-select'
+            labelId='month-select-label'
+            value={queryParams.status}
+            onChange={handleChangeStatus}
+          >
+            <MenuItem value=''>
+              <b>{t('Barchasi')}</b>
+            </MenuItem>
+            <MenuItem value='active'>{t('active')}</MenuItem>
+            <MenuItem value='archived'>{t('archived')}</MenuItem>
+            <MenuItem value='new'>{t('new')}</MenuItem>
+          </Select>
+        </FormControl>
+
+        <FormControl sx={{ width: '100%' }}>
+          <Autocomplete
+            onChange={(e: any, v) => handleChangeTeacher(String(v?.value))}
+            size='small'
+            placeholder={"O'qituvchi"}
+            disablePortal
+            options={options}
+            renderInput={params => <TextField {...params} label={t("O'qituvchi")} />}
+          />
+        </FormControl>
+      </Box>
+    )
+  }
   return (
     <Box>
       <form id='filter-form'>
@@ -280,16 +418,9 @@ export const AttandanceFilters = ({ isMobile }: AttandanceFiltersProps) => {
               value={queryParams.is_available}
               onChange={handleChangeAttandanceStatus}
             >
-            
-              <MenuItem value='1'>
-                Kelgan
-              </MenuItem>
-              <MenuItem value='-1'>
-                Kelmagan
-              </MenuItem>
-              <MenuItem value='0'>
-                Davomat qilinmagan
-              </MenuItem>
+              <MenuItem value='1'>Kelgan</MenuItem>
+              <MenuItem value='-1'>Kelmagan</MenuItem>
+              <MenuItem value='0'>Davomat qilinmagan</MenuItem>
             </Select>
           </FormControl>
 

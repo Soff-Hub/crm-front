@@ -38,9 +38,11 @@ export const fetchGroupCheckList = createAsyncThunk('fetchGroupCheckList', async
   return (await api.get(`common/group-check-list/`)).data
 })
 
-export const updateStudent = createAsyncThunk('students/updateStudent', async (valuess: any, { rejectWithValue }) => {
+export const updateStudent = createAsyncThunk('students/updateStudent', async ({ data, id }: any, { rejectWithValue }) => {
+  
   try {
-    const response = await api.patch(`student/update/${valuess.id}`, valuess)
+
+    const response = await api.patch(`student/update/${id}`, data)
     return response.data
   } catch (err: any) {
     if (err.response) {

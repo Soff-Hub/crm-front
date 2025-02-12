@@ -155,6 +155,7 @@ export default function AddMentorsModal() {
                             width={100}
                             height={100}
                             style={{ objectFit: 'cover', objectPosition: 'center' }}
+                      
                             src={URL.createObjectURL(image)} alt="" /> :
                         <IconifyIcon fontSize={40} icon={'material-symbols-light:add-a-photo-outline'} />
                     }

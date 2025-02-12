@@ -43,6 +43,7 @@ import { formatDateTime } from 'src/@core/utils/date-formatter'
 import { Icon } from '@iconify/react'
 import { formatCurrency } from 'src/@core/utils/format-currency'
 import { AuthContext } from 'src/context/AuthContext'
+import { Eye, EyeOff } from 'lucide-react'
 export interface customTableProps {
   xs: number
   title: string
@@ -77,11 +78,11 @@ export default function UserViewStudentsList() {
   const [search, setSearch] = useState('')
   const debounce = useDebounce(search, 500)
   const { query, push } = useRouter()
-
+  const [showBalance, setShowBalance] = useState(false)
 
   const columns: customTableProps[] = [
     {
-      xs: 0.2,
+      xs: 0.5,
       title: t('ID'),
       dataIndex: 'index',
       render: index => {
@@ -256,7 +257,7 @@ export default function UserViewStudentsList() {
       }
     },
     {
-      xs: 1.1,
+      xs: 1.8,
       title: t('Telefon raqam'),
       dataIndex: 'student',
       render: (student: any) => {
@@ -272,7 +273,7 @@ export default function UserViewStudentsList() {
     },
 
     {
-      xs: 1.3,
+      xs: 1.8,
       title: t('Status'),
       dataIndex: 'id',
       renderItem: (status: any) => {
@@ -318,7 +319,7 @@ export default function UserViewStudentsList() {
     },
 
     {
-      xs: 0.7,
+      xs: 1.7,
       title: t('Balans'),
       dataIndex: 'student',
       render: (student: any) => {
@@ -326,7 +327,7 @@ export default function UserViewStudentsList() {
           <Chip
             variant='outlined'
             color={student.balance >= 0 ? 'success' : 'error'}
-            label={formatCurrency(student.balance) + " so'm"}
+            label={showBalance ? <EyeOff width={15} height={15}/> : formatCurrency(student.balance) + " so'm"}
           />
         )
       }
@@ -416,6 +417,11 @@ export default function UserViewStudentsList() {
           gap: '2px'
         }}
       >
+        <Button startIcon={!showBalance ? <EyeOff/>:<Eye/>} variant='outlined' onClick={() => setShowBalance(!showBalance)}>
+          {!showBalance ? 'Balansni yopish' : "Balansni ko'rish"}
+        </Button>
+        <StudentsDataTable loading={isGettingStudents} columns={columns} data={students || []} />
+
         <Dialog open={updateStatusModal != null} onClose={() => dispatch(setUpdateStatusModal(null))}>
           <form onSubmit={formik.handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
             <DialogContent sx={{ maxWidth: '350px' }}>
@@ -471,7 +477,7 @@ export default function UserViewStudentsList() {
             </DialogContent>
           </form>
         </Dialog>
-        <StudentsDataTable loading={isGettingStudents} columns={columns} data={students || []} />
+
         {/* <Box sx={{ paddingX: '50px' }}>
           <EmptyContent />
         </Box> */}

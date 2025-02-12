@@ -32,6 +32,7 @@ import { toast } from 'react-hot-toast'
 import useResponsive from 'src/@core/hooks/useResponsive'
 import IconifyIcon from 'src/@core/components/icon'
 import ExcelStudents from 'src/@core/components/excelButton/ExcelStudents'
+import { TeacherAvatar } from 'src/views/apps/mentors/AddMentorsModal'
 
 export interface customTableProps {
   xs: number
@@ -61,6 +62,20 @@ export default function GroupsPage() {
       render: index => {
         return `${Number(queryParams?.offset || 0) + Number(index)}`
       }
+    },
+    {
+      xs: 0.4,
+      title: t('Rasm'),
+      dataIndex: 'image',
+      render: actions => (
+        <TeacherAvatar skin='light' color={'info'} variant='rounded' sx={{ width: 33, height: 33 }}>
+          {actions ? (
+            <img style={{ width: '100%', height: '100%', objectFit: 'cover' }} src={actions} alt='user' />
+          ) : (
+            <IconifyIcon icon={'et:profile-male'} />
+          )}
+        </TeacherAvatar>
+      )
     },
     {
       xs: 1.4,

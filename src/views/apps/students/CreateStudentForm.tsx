@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 // ** Components
 import {
@@ -42,6 +42,8 @@ import { reversePhone } from 'src/@core/components/phone-input/format-phone-numb
 import { disablePage } from 'src/store/apps/page'
 import toast from 'react-hot-toast'
 import Router from 'next/router'
+import { TeacherAvatar, VisuallyHiddenInput } from '../mentors/AddMentorsModal'
+import { revereAmount } from 'src/@core/components/amount-input'
 
 export default function CreateStudentForm() {
   // ** Hooks
@@ -50,6 +52,8 @@ export default function CreateStudentForm() {
   const dispatch = useAppDispatch()
   const { groups } = useAppSelector(state => state.students)
   const { schools } = useAppSelector(state => state.settings)
+  const [image, setImage] = useState<any>(null)
+  const profilePhoto: any = useRef(null)
 
   const { isMobile } = useResponsive()
   const [isSchool, setIsSchool] = useState(false)
@@ -63,7 +67,6 @@ export default function CreateStudentForm() {
   }
 
   const validationSchema = Yup.object({
-
     first_name: Yup.string().required('Ismingizni kiriting'),
     phone: Yup.string().required('Telefon raqam kiriting'),
     birth_date: Yup.string(),
@@ -75,6 +78,7 @@ export default function CreateStudentForm() {
   const initialValues: CreateStudentDto = {
     first_name: '',
     phone: '',
+    image: '',
     school: '',
     contract_amount: 0,
     birth_date: today,
@@ -97,14 +101,20 @@ export default function CreateStudentForm() {
         is_discount: isDiscount
       }
 
-      const newVlaues = {
-        ...valuess,
-        phone: reversePhone(values.phone),
-        group: values?.group ? [values.group] : [],
-        ...discountConfig
+      const newValues = new FormData()
+
+      for (const [key, value] of Object.entries({ ...values })) {
+        if (key === 'phone') {
+          newValues.append(key, reversePhone(value as any))
+        } else {
+          newValues.append(key, value as any)
+        }
+      }
+      if (image) {
+        newValues.append('image', image)
       }
 
-      const resp = await dispatch(createStudent(newVlaues))
+      const resp = await dispatch(createStudent(newValues))
 
       if (resp.meta.requestStatus === 'rejected') {
         formik.setErrors(resp.payload)
@@ -160,6 +170,31 @@ export default function CreateStudentForm() {
         minWidth: isMobile ? '330px' : '400px'
       }}
     >
+      <TeacherAvatar
+        onClick={() => profilePhoto?.current?.click()}
+        skin='light'
+        color={'info'}
+        variant='rounded'
+        sx={{ cursor: 'pointer', margin: '0 auto 10px' }}
+      >
+        {image ? (
+          <img
+            width={100}
+            height={100}
+            style={{ objectFit: 'cover', objectPosition: 'center' }}
+            src={URL.createObjectURL(image)}
+            alt=''
+          />
+        ) : (
+          <IconifyIcon fontSize={40} icon={'material-symbols-light:add-a-photo-outline'} />
+        )}
+        <VisuallyHiddenInput
+          onChange={e => setImage(e.target?.files?.[0])}
+          ref={profilePhoto}
+          type='file'
+          accept='.png, .jpg, .jpeg, .webp, .HEIC, .heic'
+        />
+      </TeacherAvatar>
       <FormControl sx={{ width: '100%' }}>
         <TextField
           size='small'
@@ -172,7 +207,6 @@ export default function CreateStudentForm() {
         />
         {errors.first_name && touched.first_name && <FormHelperText error={true}>{errors.first_name}</FormHelperText>}
       </FormControl>
-    
 
       <FormControl sx={{ width: '100%' }}>
         <InputLabel error={!!errors.phone && touched.phone} htmlFor='outlined-adornment-password'>
@@ -302,90 +336,7 @@ export default function CreateStudentForm() {
       ) : (
         ''
       )}
-      {isSchool && (
-        // <FormControl sx={{ width: '100%' }}>
-        // <Autocomplete
-        //   noOptionsText="Ma'lumot yo'q"
-        //   size="small"
-        //     options={schools || []}
-        //     value={formik.values.school}
-        //   getOptionLabel={(option: any) => (typeof option === 'string' ? option : option.name)}
-        //     onChange={(event, newValue:{name:string,id:number|string}) => {
 
-        //     if (newValue?.id == 'add-group') {
-        //       // Handle adding a new group
-        //       console.log('Add Group clicked');
-        //     } else {
-        //       console.log('fwefewf');
-
-        //     }
-        //   }}
-        //   // onInputChange={(event, value, reason) => {
-        //   //   if (reason === 'input') {
-        //   //     setCustomOptions([{ id: 'add-group', name: 'Add Group' }, ...(schools || [])]);
-        //   //   }
-        //   // }}
-        //   filterOptions={(options, state) => {
-        //     const filtered = options.filter(option => option.name?.toLowerCase().includes(state.inputValue.toLowerCase()));
-        //     return [{ id: 'add-group', name: 'Add Group' }, ...filtered];
-        //   }}
-        //   onBlur={handleBlur}
-        //   renderInput={params => (
-        //     <TextField
-        //       {...params}
-        //       label={t('Maktab nomi')}
-        //       placeholder="Maktab"
-        //       error={!!errors.school}
-        //       helperText={errors.school}
-        //     />
-        //   )}
-        //   renderOption={(props, option) => (
-        //     <li {...props}>
-        //       {option.id === 'add-group' ? 'Maktab qoshish +' : option.name}
-        //     </li>
-        //   )}
-        // />
-        // </FormControl>
-        <FormControl fullWidth>
-          <InputLabel size='small' id='user-view-language-label'>
-            {t('Maktab')}
-          </InputLabel>
-          <Select
-            size='small'
-            error={!!errors.school && touched.school}
-            label={t('Maktab')}
-            id='user-view-language'
-            labelId='user-view-language-label'
-            name='school'
-            onChange={handleChange}
-            value={values.school || ''}
-            sx={{ mb: 3 }}
-          >
-            {schools.map((school: { id: number | string; name: string }) => (
-              <MenuItem key={school.id} value={Number(school.id)}>
-                {school.name}
-              </MenuItem>
-            ))}
-            <MenuItem sx={{ fontWeight: 600 }} onClick={() => Router.push('/settings/office/schools')}>
-              {t('Yangi yaratish')}
-              <IconifyIcon icon={'ion:add-sharp'} />
-            </MenuItem>
-          </Select>
-          {errors.school && <FormHelperText error={!!errors.school}>{errors.school}</FormHelperText>}
-
-          <TextField
-            size='small'
-            label={t("Qo'shilish sanasi")}
-            name='start_at'
-            type='date'
-            error={!!errors.start_at && touched.start_at}
-            value={values.start_at}
-            onChange={handleChange}
-            onBlur={handleBlur}
-          />
-          <FormHelperText error={true}>{errors.start_at}</FormHelperText>
-        </FormControl>
-      )}
       <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
         {!isGroup && (
           <Button

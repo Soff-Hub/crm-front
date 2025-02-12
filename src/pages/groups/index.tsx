@@ -371,6 +371,7 @@ export default function GroupsPage() {
       <EditGroupModal />
       <GroupChangeBranchModal />
 
+      
       <Dialog fullScreen onClose={() => setOpen(false)} aria-labelledby='full-screen-dialog-title' open={open}>
         <DialogTitle id='full-screen-dialog-title'>
           <Typography variant='h6' component='span'>

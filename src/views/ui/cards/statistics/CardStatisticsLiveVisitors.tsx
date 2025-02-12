@@ -10,14 +10,12 @@ import ReactApexcharts from 'src/@core/components/react-apexcharts'
 
 // ** Util Import
 import { formatCurrency } from 'src/@core/utils/format-currency'
-import { Box, Grid, LinearProgress, Paper, Skeleton, Typography } from '@mui/material'
+import { Box, Skeleton, Typography } from '@mui/material'
 import { useTranslation } from 'react-i18next'
 import EmptyContent from 'src/@core/components/empty-content'
 import { useAppSelector } from 'src/store'
 import useResponsive from 'src/@core/hooks/useResponsive'
-import { Container, ProgressBar } from 'react-bootstrap'
 import { useEffect, useState } from 'react'
-import { motion } from 'framer-motion'
 
 const CardWidgetsWeeklyOverview = () => {
   // ** Hook
@@ -144,22 +142,7 @@ const CardWidgetsWeeklyOverview = () => {
     percentage: all_numbers?.plans.percentage ?? 0
   })
 
-  const [fillWidth, setFillWidth] = useState(0)
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const newData = {
-        totalPaymentsReceived: all_numbers?.plans.done_amount,
-        outstandingDebt: (all_numbers?.plans.planned_amount ?? 0) - (all_numbers?.plans.done_amount ?? 0),
-        totalExpected: all_numbers?.plans.planned_amount,
-        percentage: all_numbers?.plans.percentage
-      }
-      setData(newData)
-      setFillWidth(((all_numbers?.plans.done_amount ?? 0) / (all_numbers?.plans.planned_amount ?? 0)) * 100)
-    }, 1000)
-
-    return () => clearInterval(interval)
-  }, [all_numbers?.plans])
 
   return (
     <>
@@ -187,8 +170,7 @@ const CardWidgetsWeeklyOverview = () => {
           )}
         </Box>
       </Card>
-
-     
+      
     </>
   )
 }

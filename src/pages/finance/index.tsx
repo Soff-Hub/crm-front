@@ -7,7 +7,19 @@ import CardStatisticsLiveVisitors from 'src/views/ui/cards/statistics/CardStatis
 // ** Styled Component Import
 import KeenSliderWrapper from 'src/@core/styles/libs/keen-slider'
 import ApexChartWrapper from 'src/@core/styles/libs/react-apexcharts'
-import { Box, Button, Chip, Dialog, DialogContent, DialogTitle, TextField, Typography } from '@mui/material'
+import {
+  Box,
+  Button,
+  Chip,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  LinearProgress,
+  Paper,
+  Skeleton,
+  TextField,
+  Typography
+} from '@mui/material'
 import GroupFinanceTable from 'src/views/apps/finance/GroupTable'
 import IconifyIcon from 'src/@core/components/icon'
 import 'react-datepicker/dist/react-datepicker.css'
@@ -42,6 +54,17 @@ export function formatDateString(date: Date) {
 
   return `${year}-${month}-${day}`
 }
+interface Plan {
+  done_amount: number
+  percentage: number
+  planned_amount: number
+}
+
+interface FinancialData {
+  all_numbers: {
+    plans: Plan
+  }
+}
 
 const CardStatistics = () => {
   const { t } = useTranslation()
@@ -52,7 +75,8 @@ const CardStatistics = () => {
     allNumbersParams,
     incomeCategoriesData,
     isGettingExpenseCategories,
-    isGettingIncomeCategories
+    isGettingIncomeCategories,
+    all_numbers
   } = useAppSelector(state => state.finance)
   const { user } = useContext(AuthContext)
   const router = useRouter()
@@ -217,7 +241,6 @@ const CardStatistics = () => {
     Promise.all([getSalaries()])
   }, [])
 
-  const groupsFilterTitle = user?.branches?.find(item => item.id == allNumbersParams.branch)
 
   return (
     <ApexChartWrapper>
@@ -244,25 +267,62 @@ const CardStatistics = () => {
           </Grid>
           <Grid item xs={12} md={8} mb={10}>
             <CardStatisticsLiveVisitors />
+            {!all_numbers ? (
+              <Skeleton width={'100%'} height={250} />
+            ) : (
+              all_numbers && (
+                <Box width='100%' mx='auto' pt={5}>
+                  <Paper elevation={3} sx={{ p: 3, borderRadius: 1 }}>
+                    <Typography variant='h6' align='center' gutterBottom>
+                      {all_numbers.year} - yildagi natijalar
+                    </Typography>
+
+                    <Box position='relative' display='flex' flexDirection='column' alignItems='center'>
+                      <LinearProgress
+                        variant='determinate'
+                        value={all_numbers.plans.percentage}
+                        sx={{ p: 4, height: 200, borderRadius: 2, mt: 1, width: '100%' }}
+                      />
+                      <Box
+                        position='absolute'
+                        top={'50%'}
+                        px={5}
+                        display='flex'
+                        width={'100%'}
+                        alignItems={'center'}
+                        justifyContent={'space-between'}
+                        left={'50%'}
+                        sx={{ transform: 'translate(-50%, -50%)', textAlign: 'center' }}
+                      >
+                        <Box>
+                          <Typography textAlign={'start'} color={'white'} variant='body1'>
+                            Erishilgan summa:
+                            <br /> {formatCurrency(all_numbers.plans.done_amount)} so'm
+                          </Typography>
+                          <Typography color={'white'} textAlign={'start'}>{all_numbers.plans.percentage.toFixed(1)}%</Typography>
+                        </Box>
+                          <Box>
+                          <Typography textAlign={'end'} color={'gray'} variant='body1' mt={2}>
+                          Qarzdorlik summasi:
+                          <br /> {formatCurrency(all_numbers.plans.planned_amount - all_numbers.plans.done_amount)} so'm
+                          </Typography>
+                          <Typography color={'gray'} textAlign={'end'}>{100% - all_numbers.plans.percentage.toFixed(1)}%</Typography>
+
+                       </Box>
+                      </Box>
+                    </Box>
+                 
+
+                    <Box mt={3} textAlign='center'>
+                      <Typography variant='h6' color='primary'>
+                        Kutilgan summa: {formatCurrency(all_numbers.plans.planned_amount)} so'm
+                      </Typography>
+                    </Box>
+                  </Paper>
+                </Box>
+              )
+            )}
           </Grid>
-
-          <div id='tushumlar'></div>
-          {/* <Grid item xs={12}>
-                        <Typography sx={{ fontSize: '20px' }}>
-                            {t("Guruh to'lovlari")}{"  "}
-                            {allNumbersParams.start_date ? (
-                                (`(${allNumbersParams?.start_date}/${allNumbersParams.end_date}  ${groupsFilterTitle?.name || t("Barcha filiallar")})`)
-                            ) : (
-                                `(${allNumbersParams?.date_year.slice(0, 4)}-yil ${getMonthName(allNumbersParams?.date_month)} ${groupsFilterTitle?.name || t("Barcha filiallar")})`
-                            )}
-                        </Typography>
-
-                    </Grid> */}
-
-          {/* <Grid item xs={12} md={12} mb={10} sx={{ position: "relative" }}>
-                        {isGettingGroupsFinance && <Box sx={{ position: "absolute", borderRadius: "10px", bgcolor: "rgba(0,0,0,0.1)", top: "16px", left: "24px", right: 0, bottom: 0 }}><SubLoader /></Box>}
-                        {groupsFinance ? <GroupFinanceTable data={groupsFinance} /> : <EmptyContent />}
-                    </Grid> */}
 
           <Grid item xs={12}>
             <Box sx={{ display: 'flex', gap: '10px' }}>
@@ -320,15 +380,15 @@ const CardStatistics = () => {
                                 <Button variant='contained'>{t("Oylik ishlash")}</Button>
                             </Link> */}
             </Box>
-           
-              <DataTable
-                  maxWidth='100%'
-                  loading={salariesLoading}
-                minWidth={'800px'}
-                columns={withdrawCol}
-                data={salaries}
-                rowClick={clickSalaryDetail}
-              />
+
+            <DataTable
+              maxWidth='100%'
+              loading={salariesLoading}
+              minWidth={'800px'}
+              columns={withdrawCol}
+              data={salaries}
+              rowClick={clickSalaryDetail}
+            />
           </Grid>
         </Grid>
       </KeenSliderWrapper>

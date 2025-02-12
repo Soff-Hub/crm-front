@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 // ** Components
 import {
@@ -32,6 +32,7 @@ import PhoneInput from 'src/@core/components/phone-input'
 import { reversePhone } from 'src/@core/components/phone-input/format-phone-number'
 import { disablePage } from 'src/store/apps/page'
 import toast from 'react-hot-toast'
+import { TeacherAvatar, VisuallyHiddenInput } from '../mentors/AddMentorsModal'
 
 export default function EditStudentForm() {
   // ** Hooks
@@ -47,6 +48,8 @@ export default function EditStudentForm() {
   const [isPassword, setIsPassword] = useState<boolean>(false)
   const [loading, setLoading] = useState<boolean>(false)
   const [isSchool, setIsSchool] = useState(false)
+  const [image, setImage] = useState<any>(null)
+  const profilePhoto: any = useRef(null)
   const school_type = localStorage.getItem('school_type')
 
   const validationSchema = Yup.object({
@@ -59,6 +62,7 @@ export default function EditStudentForm() {
 
   const initialValues: UpdateStudentDto = {
     id: studentData?.id,
+    image: studentData?.image,
     contract_amount: studentData?.contract_amount || 0,
     school: studentData?.school_data?.id,
     first_name: studentData?.first_name || '',
@@ -70,12 +74,37 @@ export default function EditStudentForm() {
   const formik: any = useFormik({
     initialValues,
     validationSchema,
-    onSubmit: async (valuess: UpdateStudentDto) => {
+    onSubmit: async (values: UpdateStudentDto) => {
       setLoading(true)
       dispatch(disablePage(true))
-      const newVlaues = { ...valuess, phone: reversePhone(valuess.phone) }
+      const newValues = new FormData();
 
-      const resp = await dispatch(updateStudent(newVlaues))
+      for (const [key, value] of Object.entries(values)) {
+        if (!['image'].includes(key)) {
+          if (key === "phone") {
+            newValues.append(key, reversePhone(value as any));
+          } else if (key === "school") {
+            newValues.append(key, value || ''); 
+          } else if (Array.isArray(value) || typeof value === "object") {
+            newValues.append(key, JSON.stringify(value)); 
+          } else {
+            newValues.append(key, value as any);
+          }
+        }
+      }
+      
+      if (image) {
+        newValues.append("image", image);
+      } else {
+        console.error("Invalid image type:", image);
+      }
+      
+      for (let pair of newValues.entries()) {
+        console.log(pair[0], pair[1]);
+      }
+      
+      const resp = await dispatch(updateStudent({ data: newValues, id: studentData?.id }));
+      
 
       if (resp.meta.requestStatus === 'rejected') {
         formik.setErrors(resp.payload)
@@ -93,8 +122,6 @@ export default function EditStudentForm() {
   })
 
   const { values, errors, touched, handleBlur, handleChange } = formik
-
-  console.log(values)
 
   useEffect(() => {
     return () => {
@@ -115,6 +142,32 @@ export default function EditStudentForm() {
         minWidth: isMobile ? '330px' : '400px'
       }}
     >
+      <TeacherAvatar
+        onClick={() => profilePhoto?.current?.click()}
+        skin='light'
+        color={'info'}
+        variant='rounded'
+        sx={{ cursor: 'pointer', margin: '0 auto 10px' }}
+      >
+        {profilePhoto.current?.files?.[0] || formik.values?.image ? (
+          <img
+            width={100}
+            height={100}
+            style={{ objectFit: 'cover', objectPosition: 'center' }}
+            src={image ? URL.createObjectURL(image) : formik.values?.image ? formik.values?.image : ''}
+            alt=''
+          />
+        ) : (
+          <IconifyIcon fontSize={40} icon={'material-symbols-light:add-a-photo-outline'} />
+        )}
+        <VisuallyHiddenInput
+          ref={profilePhoto}
+          name='image'
+          onChange={e => setImage(e.target?.files?.[0])}
+          type='file'
+          accept='.png, .jpg, .jpeg, .webp, .HEIC, .heic'
+        />
+      </TeacherAvatar>
       <FormControl sx={{ width: '100%' }}>
         <TextField
           size='small'
@@ -193,7 +246,7 @@ export default function EditStudentForm() {
           />
         </FormControl>
       )}
-       {school_type == 'private_school' && (
+      {school_type == 'private_school' && (
         <FormControl sx={{ width: '100%' }}>
           <TextField
             size='small'

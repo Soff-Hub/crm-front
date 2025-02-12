@@ -65,6 +65,7 @@ export default function EditTeacherModal() {
         percentage: teacherData?.percentage,
         amount: teacherData?.amount
     }
+    
 
     const validationSchema = () => {
         return Yup.object().shape(

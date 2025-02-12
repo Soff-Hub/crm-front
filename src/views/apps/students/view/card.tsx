@@ -46,6 +46,7 @@ import { fetchSmsList } from 'src/store/apps/settings'
 import useStudent from 'src/hooks/useStudents'
 import { formatCurrency } from 'src/@core/utils/format-currency'
 import { Icon } from '@iconify/react'
+import { TeacherAvatar } from '../../mentors/AddMentorsModal'
 
 interface StudentCardProps {
   photo?: string
@@ -186,15 +187,21 @@ export default function StudentCard({
       />
       <CardContent>
         <Box display='flex' gap={2} mb={3}>
-          {name && (
-            <CustomAvatar
-              skin='light'
-              variant='rounded'
-              color={'primary'}
-              sx={{ width: 70, height: 70, fontWeight: 600, mb: 1, fontSize: '2rem' }}
-            >
-              {getInitials(name)}
-            </CustomAvatar>
+          {userData?.image ? (
+            <TeacherAvatar skin='light' color={'info'} variant='rounded' sx={{ width: 70, height: 70 }}>
+              <img style={{ width: '100%', height: '100%', objectFit: 'cover' }} src={userData?.image} alt='user' />
+            </TeacherAvatar>
+          ) : (
+            name && (
+              <CustomAvatar
+                skin='light'
+                variant='rounded'
+                color={'primary'}
+                sx={{ width: 70, height: 70, fontWeight: 600, mb: 1, fontSize: '2rem' }}
+              >
+                {getInitials(name)}
+              </CustomAvatar>
+            )
           )}
           <Box>
             <Typography variant='h6' component='h3' gutterBottom>
@@ -215,7 +222,7 @@ export default function StudentCard({
                 <img
                   src={userData?.qr_code}
                   alt=''
-                  style={{cursor:'pointer'}}
+                  style={{ cursor: 'pointer' }}
                   onClick={() => setOpenModal(true)}
                   width={50}
                   height={50}
@@ -521,7 +528,6 @@ export default function StudentCard({
           <Button onClick={handleDownload} fullWidth variant='contained' color='primary'>
             Qr Codeni yuklash
           </Button>
-        
         </DialogActions>
       </Dialog>
       <StudentPaymentForm openEdit={openEdit} setOpenEdit={setOpenEdit} />

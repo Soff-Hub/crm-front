@@ -4,6 +4,7 @@ import Pagination from '@mui/material/Pagination'
 import {
   Box,
   Button,
+  Chip,
   Dialog,
   DialogContent,
   DialogTitle,
@@ -38,6 +39,7 @@ import { useTranslation } from 'react-i18next'
 import { PersonAddAlt } from '@mui/icons-material'
 import useResponsive from 'src/@core/hooks/useResponsive'
 import CreateDepartmentItemDialog from 'src/views/apps/lids/departmentItem/Dialog'
+import EditDepartmentItemForm from 'src/views/apps/lids/departmentItem/EditDepartmentItemForm'
 
 const Kanban = () => {
   const [anchorEl, setAnchorEl] = useState(null)
@@ -49,10 +51,12 @@ const Kanban = () => {
   const [studentModalOpen, setStudentModalOpen] = useState(false)
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
+  const [loading, setLoading] = useState<boolean>(false)
+  const [item,setItem] = useState<any>(null)
   const query = window.location?.search?.split('?slug=')[1]
   const { isMobile } = useResponsive()
   const [leadTitle, setLeadTitle] = useState('')
-
+  const [openDialog, setOpenDialog] = useState<'sms' | 'edit' | 'delete' | 'recover' | 'merge' | null>(null)
   async function handleGetLealdItems() {
     if (!query) return
     dispatch(setDragonLoading(true))
@@ -67,6 +71,9 @@ const Kanban = () => {
       dispatch(setDragonLoading(false))
     }
   }
+
+  console.log(item);
+  
 
   useEffect(() => {
     setData(leadItems)
@@ -160,7 +167,11 @@ const Kanban = () => {
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <Box display='flex' justifyContent='space-between' marginY={5} alignItems='center'>
-        {leadTitle == "undefined" ? <Skeleton width={200} height={70}/> : <Typography variant='h5'>{leadTitle}</Typography>}
+        {leadTitle == 'undefined' ? (
+          <Skeleton width={200} height={70} />
+        ) : (
+          <Typography variant='h5'>{leadTitle}</Typography>
+        )}
         <Button variant='contained' onClick={() => dispatch(setOpenItem(query))} startIcon={<PlusIcon />}>
           Yangi bo'lim qo'shish
         </Button>
@@ -168,7 +179,7 @@ const Kanban = () => {
       <div
         className='kanban'
         style={{
-          paddingBottom:20,
+          paddingBottom: 20,
           display: 'flex',
           overflow: 'auto',
           flexDirection: isMobile ? 'column' : 'row',
@@ -202,17 +213,30 @@ const Kanban = () => {
                     ref={provided.innerRef}
                     style={{ width: isMobile ? '100%' : 'auto', padding: 20, background: 'white', borderRadius: 10 }}
                   >
-                    <div
-                      style={{
-                        background: 'white',
-                        borderRadius: 10,
-                        marginBottom: 20,
-                        minWidth: 300,
-                        fontSize: 25
-                      }}
-                    >
-                      {section.name}
-                    </div>
+                    <Box display='flex' alignItems='center' marginBottom={2} gap={3}>
+                      <div
+                        style={{
+                          display: 'flex', 
+                          alignItems: 'center',
+                          gap:5,
+                          background: 'white',
+                          borderRadius: 10,
+                          // marginBottom: 20,
+                          minWidth: 300,
+                          fontSize: 25
+                        }}
+                      >
+                        {section.name}
+                        <Chip color='primary' variant='outlined' label={section.leads.length} />
+                      </div>
+                      <IconButton onClick={()=>setItem(section)} sx={{ cursor: 'pointer', marginLeft: 'auto' }}>
+                        <IconifyIcon
+                          icon={'fluent:text-bullet-list-square-edit-20-filled'}
+                          color='orange'
+                          onClick={() => setOpenDialog('edit')}
+                        />
+                      </IconButton>
+                    </Box>
                     <div
                       style={{ marginBottom: 10, maxHeight: '50vh', paddingRight: 10, overflow: 'auto' }}
                       className='kanban__section__content'
@@ -303,6 +327,23 @@ const Kanban = () => {
         </DialogContent>
       </Dialog>
       <CreateDepartmentItemDialog />
+
+      <Dialog open={openDialog === 'edit'} onClose={() => setOpenDialog(null)}>
+        <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Typography>{t('Tahrirlash')}</Typography>
+          <IconifyIcon onClick={() => setOpenDialog(null)} icon={'material-symbols:close'} />
+        </DialogTitle>
+        <DialogContent sx={{ minWidth: '300px' }}>
+          <EditDepartmentItemForm
+            loading={loading}
+            setLoading={setLoading}
+            id={item?.id}
+            setOpenDialog={setOpenDialog}
+            defaultName={item?.name}
+          />
+        </DialogContent>
+      </Dialog>
+
     </DragDropContext>
   )
 }

@@ -37,6 +37,8 @@ export type StudentsListType = StudentListItemType[]
 
 export interface StudentItemType {
   id?: number
+  
+  image?:string,
   first_name: string
   school?:any
   phone: string
@@ -81,6 +83,7 @@ export interface IStudentState {
 
 export interface StudentDetailType {
   id: number
+  image?:string
   first_name: string
   birth_date: string
   balance: string
