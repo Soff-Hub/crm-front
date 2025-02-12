@@ -78,6 +78,7 @@ export interface IFinanceState {
     difference: YearlyStats
     active_balance: YearlyStats
     plans: {
+      debt_amount:number
       done_amount: number
       percentage: number
       planned_amount: number
