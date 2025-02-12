@@ -76,7 +76,8 @@ const CardStatistics = () => {
     incomeCategoriesData,
     isGettingExpenseCategories,
     isGettingIncomeCategories,
-    all_numbers
+    all_numbers,
+    numbersLoad
   } = useAppSelector(state => state.finance)
   const { user } = useContext(AuthContext)
   const router = useRouter()
@@ -86,6 +87,21 @@ const CardStatistics = () => {
   const [salaries, setSalaries] = useState<any>([])
   const { isMobile } = useResponsive()
   const [salariesLoading, setSalariesLoading] = useState(false)
+
+  const month: any = {
+    '01': 'Yanvar',
+    '02': 'Fevral',
+    '03': 'Mart',
+    '04': 'Aprel',
+    '05': 'May',
+    '06': 'Iyun',
+    '07': 'Iyul',
+    '08': 'Avgust',
+    '09': 'Sentabr',
+    '10': 'Oktabr',
+    '11': 'Noyabr',
+    '12': 'Dekabr'
+  }
 
   const withdrawCol: customTableDataProps[] = [
     {
@@ -227,6 +243,10 @@ const CardStatistics = () => {
     const date = salaries.find((el: any) => el.id === id)
     Router.push(`/finance/salary-detail/${date.date}`)
   }
+  const formatNumber = (num: number): string => {
+    const [wholePart] = num.toString().split('.')
+    return new Intl.NumberFormat('en-US').format(Number.parseInt(wholePart))
+  }
 
   useEffect(() => {
     if (
@@ -240,7 +260,6 @@ const CardStatistics = () => {
     }
     Promise.all([getSalaries()])
   }, [])
-
 
   return (
     <ApexChartWrapper>
@@ -267,15 +286,21 @@ const CardStatistics = () => {
           </Grid>
           <Grid item xs={12} md={8} mb={10}>
             <CardStatisticsLiveVisitors />
-            {!all_numbers ? (
+            {numbersLoad ? (
               <Skeleton width={'100%'} height={250} />
             ) : (
               all_numbers && (
                 <Box width='100%' mx='auto' pt={5}>
                   <Paper elevation={3} sx={{ p: 3, borderRadius: 1 }}>
-                    <Typography variant='h6' align='center' gutterBottom>
-                      {all_numbers.year} - yildagi natijalar
-                    </Typography>
+                    {all_numbers.month ? (
+                      <Typography variant='h6' align='center' gutterBottom>
+                        {all_numbers.year} - {month[all_numbers.month]} - yildagi natijalar
+                      </Typography>
+                    ) : (
+                      <Typography variant='h6' align='center' gutterBottom>
+                        {all_numbers.year} - yildagi natijalar
+                      </Typography>
+                    )}
 
                     <Box position='relative' display='flex' flexDirection='column' alignItems='center'>
                       <LinearProgress
@@ -295,23 +320,40 @@ const CardStatistics = () => {
                         sx={{ transform: 'translate(-50%, -50%)', textAlign: 'center' }}
                       >
                         <Box>
-                          <Typography textAlign={'start'} color={'white'} variant='body1'>
+                          <Typography
+                            textAlign={'start'}
+                            color={all_numbers.plans.percentage >= 25 ? 'white' : 'black'}
+                            variant='h6'
+                          >
                             Erishilgan summa:
-                            <br /> {formatCurrency(all_numbers.plans.done_amount)} so'm
+                            <br /> {formatNumber(all_numbers.plans.done_amount)} so'm
                           </Typography>
-                          <Typography color={'white'} textAlign={'start'}>{all_numbers.plans.percentage.toFixed(1)}%</Typography>
+                          <Typography
+                            color={all_numbers.plans.percentage >= 25 ? 'white' : 'black'}
+                            textAlign={'start'}
+                          >
+                            {all_numbers.plans.percentage.toFixed(1)}%
+                          </Typography>
                         </Box>
-                          <Box>
-                          <Typography textAlign={'end'} color={'gray'} variant='body1' mt={2}>
-                          Qarzdorlik summasi:
-                          <br /> {formatCurrency(all_numbers.plans.planned_amount - all_numbers.plans.done_amount)} so'm
+                        <Box>
+                          <Typography
+                            textAlign={'end'}
+                            color={all_numbers.plans.percentage >= 65 ? 'white' : 'black'}
+                            variant='h6'
+                            mt={2}
+                          >
+                            Qarzdorlik summasi:
+                            <br /> {formatNumber(
+                              all_numbers.plans.planned_amount - all_numbers.plans.done_amount || 0
+                            )}{' '}
+                            so'm
                           </Typography>
-                          <Typography color={'gray'} textAlign={'end'}>{100% - all_numbers.plans.percentage.toFixed(1)}%</Typography>
-
-                       </Box>
+                          <Typography color={all_numbers.plans.percentage >= 65 ? 'white' : 'black'} textAlign={'end'}>
+                            {100 % -all_numbers.plans.percentage.toFixed(1) || 0}%
+                          </Typography>
+                        </Box>
                       </Box>
                     </Box>
-                 
 
                     <Box mt={3} textAlign='center'>
                       <Typography variant='h6' color='primary'>

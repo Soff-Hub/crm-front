@@ -71,6 +71,7 @@ export interface IFinanceState {
       difference: string
       active_balance: string
     }
+    month:string
     year: number
     expense: YearlyStats
     benefit: YearlyStats
