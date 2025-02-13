@@ -85,8 +85,8 @@ export default function StatsPaymentMethods() {
                         </div>
                         <div style={{display:'flex', alignItems:'center' ,gap:5}}>
                           <div className='fw-medium small'>{item?.name} : </div>
-                          <div className='text-muted small'>{item?.count + "to'lov" || "1 to'lov"}</div>
                         </div>
+                          <div className='text-muted small'>{item?.count + " to'lov" || "1 to'lov"}</div>
                       </div>
                       <div className='text-end fw-medium text-success small'>
                         {formatCurrency(item?.amount) + " so'm"}
@@ -104,7 +104,7 @@ export default function StatsPaymentMethods() {
                         <div>
                           <Typography fontSize={15}>{item?.name}</Typography>
                           <div className='small text-light'>
-                              <Typography fontSize={12}>{item?.count||"1 операция"}</Typography>
+                              <Typography fontSize={12}>{item?.count + " to'lov"||"1 to'lov"}</Typography>
                           </div>
                         </div>
                       </div>
