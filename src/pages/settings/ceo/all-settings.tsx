@@ -1249,8 +1249,11 @@ export default function AllSettings() {
                     {"Xabar matniga talaba ismini qo'shish uchun ${first_name} kalit so'zi qoldiring."}
                   </Typography>
 
-                  <Typography sx={{ marginBottom: 5 }} fontSize={12}>
+                  <Typography sx={{ marginBottom: 2 }} fontSize={12}>
                     {"Xabar matniga guruh nomini qo'shish uchun ${group} kalit so'zi qoldiring."}
+                    </Typography>
+                    <Typography sx={{ marginBottom: 5 }} fontSize={12}>
+                    {"Xabar matniga talaba bahosini qo'shish uchun ${score} kalit so'zi qoldiring."}
                   </Typography>
 
                   <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: '20px', flexDirection: 'column' }}>

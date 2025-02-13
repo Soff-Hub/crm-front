@@ -28,7 +28,7 @@ export default function AddNote({ id, modalRef, setModalRef }: { id: string, mod
         onSubmit: async (values) => {
             setLoading(true)
             try {
-                const response = await api.post('authcription/', { user: id, ...values })
+                const response = await api.post('student/description/', { user: id, ...values })
                 if (response.status == 200) {
                     toast.success(t("Eslatma qo'shildi") as string)
                 }

@@ -152,19 +152,86 @@ export default function DataTable({
                     padding: '10px 15px',
                     background: '#f9f9f9',
                     borderRadius: '8px',
+                    borderBottom: '1px solid #ddd',
                     marginTop: '5px',
                     boxShadow: 'rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px'
                   }}
                 >
-                  <Box sx={{ fontSize: 14, fontWeight: 600, marginBottom: '5px' }}>O'quvchilar</Box>
-                  {item.students && item.students.length > 0 ? (
-                    item.students.map((student: any, idx: number) => (
-                      <div onClick={() => router.push(`/students/view/security?student=${student?.student_id}`)}>
-                        <Box key={idx} sx={{cursor:'pointer', fontSize: 12, padding: '5px 0', borderBottom: '1px solid #ddd' }}>
-                          {idx + 1}. {student.first_name}
-                        </Box>
-                      </div>
-                    ))
+                  {item?.students.length ? (
+                    <Box sx={{ display: 'grid', gridTemplateColumns: '40px 1fr 2fr', border: '1px solid #ddd' }}>
+                      {/* Table Header */}
+                      <Box
+                        sx={{ fontWeight: 600, padding: '5px', background: '#e0e0e0', borderBottom: '1px solid #ddd' }}
+                      >
+                        #
+                      </Box>
+                      <Box
+                        sx={{
+                          fontWeight: 500,
+                          fontSize: 15,
+                          padding: '5px',
+                          background: '#e0e0e0',
+                          borderBottom: '1px solid #ddd'
+                        }}
+                      >
+                        Ism
+                      </Box>
+                      <Box
+                        sx={{
+                          fontWeight: 600,
+                          fontSize: 15,
+                          padding: '5px',
+                          background: '#e0e0e0',
+                          borderBottom: '1px solid #ddd'
+                        }}
+                      >
+                        Izoh
+                      </Box>
+
+                      {/* Table Body */}
+                      {item.students.map((student: any, idx: number) => (
+                        <>
+                          <Box
+                            key={`index-${idx}`}
+                            sx={{
+                              fontSize: 12,
+                              padding: '5px',
+                              borderBottom: '1px solid #ddd',
+                              textAlign: 'center',
+                              cursor: 'pointer'
+                            }}
+                            onClick={() => router.push(`/students/view/security?student=${student?.student_id}`)}
+                          >
+                            {idx + 1}
+                          </Box>
+                          <Box
+                            fontSize={13}
+                            key={`name-${idx}`}
+                            sx={{
+                              padding: '5px',
+                              borderBottom: '1px solid #ddd',
+                              cursor: 'pointer'
+                            }}
+                            onClick={() => router.push(`/students/view/security?student=${student?.student_id}`)}
+                          >
+                            {student.first_name}
+                          </Box>
+                          <Box
+                            
+                            key={`desc-${idx}`}
+                            sx={{
+                              fontSize:13,
+                              padding: '5px',
+                              borderBottom: '1px solid #ddd',
+                              cursor: 'pointer'
+                            }}
+                            onClick={() => router.push(`/students/view/security?student=${student?.student_id}`)}
+                          >
+                            {student.description || "Izoh yo'q"}
+                          </Box>
+                        </>
+                      ))}
+                    </Box>
                   ) : (
                     <Box sx={{ fontSize: 12, color: 'gray' }}>O'quvchi yo'q.</Box>
                   )}

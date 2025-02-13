@@ -198,7 +198,10 @@ const Item = ({
                     onClose={() => setOpenTooltip(false)}
                     title={descriptionText || currentDate.description}
                   >
-                    <Typography fontSize={13}>{descriptionText || currentDate.description.slice(0, 3)}</Typography>
+                    <Typography fontSize={13}>
+                      {' '}
+                      <IconifyIcon icon='mdi:cancel-bold' fontSize={18} color='#e31309' />
+                    </Typography>
                   </Tooltip>
                 ) : (
                   <IconifyIcon icon='mdi:cancel-bold' fontSize={18} color='#e31309' />

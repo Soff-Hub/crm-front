@@ -34,8 +34,8 @@ export const createStudent = createAsyncThunk('students/createStudent', async (v
   }
 })
 
-export const fetchGroupCheckList = createAsyncThunk('fetchGroupCheckList', async () => {
-  return (await api.get(`common/group-check-list/`)).data
+export const fetchGroupCheckList = createAsyncThunk('fetchGroupCheckList', async (search?:string) => {
+  return (await api.get(`common/group-check-list/`,{params:{search}})).data
 })
 
 export const updateStudent = createAsyncThunk('students/updateStudent', async ({ data, id }: any, { rejectWithValue }) => {

@@ -273,7 +273,7 @@ const UserViewSecurity = () => {
     try {
       await api.delete(`common/group-student-delete/${group_data?.id}/`).then(res => {})
       // await dispatch(fetchStudentDetail(Number(query?.student)))
-      await dispatch(fetchStudentGroups(query.student))
+      await dispatch(fetchStudentGroups(query?.student))
       toast.success("O'quvchi guruhdan chetlatildi", { position: 'top-center' })
       setLoading(false)
     } catch (err: any) {
@@ -307,8 +307,15 @@ const UserViewSecurity = () => {
     await dispatch(fetchStudentDetail(Number(query?.student)))
   }
 
+  console.log(query.student);
+  
+
+  
+
   useEffect(() => {
-    dispatch(fetchStudentGroups(query?.student))
+    if (query?.student) {
+      dispatch(fetchStudentGroups(query?.student))
+    }
     dispatch(fetchStudentPayment(query?.student))
   }, [query?.student])
 
