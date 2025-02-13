@@ -59,7 +59,9 @@ const UserViewOverview = ({ data }: ItemTypes) => {
   }
   useEffect(() => {
     dispatch(fetchStudentComments(query.student))
-  },[])
+  }, [])
+  
+  
 
   return (
     <Box>

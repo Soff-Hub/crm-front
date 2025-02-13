@@ -31,9 +31,9 @@ const UserView = ({ tab, student }: any) => {
       router.push("/")
       toast.error("Sizda bu sahifaga kirish huquqi yo'q!")
     }
-    dispatch(fetchStudentDetail(studentId || student))
+    dispatch(fetchStudentDetail(student || studentId))
     
-  }, [studentId])
+  }, [studentId,student])
 
   return (
     <div>

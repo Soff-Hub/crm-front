@@ -1,4 +1,4 @@
-import { Box, Button, Dialog, DialogContent, DialogTitle, Skeleton, Tab, Tabs, Typography } from '@mui/material'
+import { Box, Button, Checkbox, Dialog, DialogContent, DialogTitle, FormControlLabel, FormGroup, Skeleton, Tab, Tabs, Typography } from '@mui/material'
 import { Bell, Clock, Info, MessageSquare, Phone, PlusIcon, User, UserIcon } from 'lucide-react'
 
 interface LidsDragonModalProps {
@@ -190,6 +190,19 @@ export function LidsDragonModal({ selectedLead, openModal, handleClose }: LidsDr
                       <Box display='flex' alignItems='center'>
                         <div className='text-primary me-3'>{<QuestionAnswerOutlined />}</div>
                         <Typography>{item?.answer}</Typography>
+                        <FormGroup>
+                          {item.variants.map((variant:any) => (
+                            <FormControlLabel
+                              key={variant.id}
+                              control={
+                                <Checkbox
+                                  checked={variant.is_checked}
+                                />
+                              }
+                              label={variant.value}
+                            />
+                          ))}
+                        </FormGroup>
                       </Box>
                     </Box>
                   ))

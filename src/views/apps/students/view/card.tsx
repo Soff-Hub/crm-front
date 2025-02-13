@@ -169,7 +169,6 @@ export default function StudentCard({
     setOpenEdit(value)
   }
 
-  console.log(userData)
 
   return (
     <StyledCard>

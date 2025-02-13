@@ -52,6 +52,8 @@ export interface CreateStudentDto extends StudentItemType {
   password?: string | null
   contract_amount?:number,
   school?: string,
+  parent_first_name?: string,
+  parent_phone?:string
   group?: number | string
   start_at?: string
   fixed_price: string

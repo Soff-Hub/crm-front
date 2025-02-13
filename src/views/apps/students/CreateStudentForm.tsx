@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 
 // ** Components
 import {
+  Autocomplete,
   Box,
   Button,
   Checkbox,
@@ -30,6 +31,7 @@ import { CreateStudentDto } from 'src/types/apps/studentsTypes'
 import {
   createStudent,
   fetchGroupCheckList,
+  fetchStudentGroups,
   fetchStudentsList,
   setOpenEdit,
   updateStudentParams
@@ -44,6 +46,7 @@ import toast from 'react-hot-toast'
 import Router from 'next/router'
 import { TeacherAvatar, VisuallyHiddenInput } from '../mentors/AddMentorsModal'
 import { revereAmount } from 'src/@core/components/amount-input'
+import api from 'src/@core/utils/api'
 
 export default function CreateStudentForm() {
   // ** Hooks
@@ -58,18 +61,28 @@ export default function CreateStudentForm() {
   const { isMobile } = useResponsive()
   const [isSchool, setIsSchool] = useState(false)
   const [isGroup, setIsGroup] = useState<boolean>(false)
+  const [isParent, setIsParent] = useState<boolean>(false)
+
   const [loading, setLoading] = useState<boolean>(false)
   const [isDiscount, setIsDiscount] = useState<boolean>(false)
   const [checked, setChecked] = useState(false)
+  const [parents, setParents] = useState([])
   const school_type = localStorage.getItem('school_type')
   const getGroups = async () => {
     await dispatch(fetchGroupCheckList())
   }
 
+  // async function fetchParentsCheckList(search?: string) {
+  //   api.get(`auth/parents-check-list/?search=${search || ''}`).then(res => {
+  //     setParents(res.data)
+  //   })
+  // }
+
   const validationSchema = Yup.object({
     first_name: Yup.string().required('Ismingizni kiriting'),
     phone: Yup.string().required('Telefon raqam kiriting'),
     birth_date: Yup.string(),
+    parent_phone: Yup.string().nullable(),
     gender: Yup.string().required('Jinsini tanlang'),
     password: Yup.string(),
     fixed_price: Yup.number().required("To'ldiring")
@@ -80,6 +93,7 @@ export default function CreateStudentForm() {
     phone: '',
     image: '',
     school: '',
+    parent_phone: '',
     contract_amount: 0,
     birth_date: today,
     gender: 'male',
@@ -87,12 +101,13 @@ export default function CreateStudentForm() {
     fixed_price: '0'
   }
 
-  const formik: any = useFormik({
+  const formik = useFormik({
     initialValues,
     validationSchema,
-    onSubmit: async (valuess: CreateStudentDto) => {
+    onSubmit: async (values: CreateStudentDto) => {
       setLoading(true)
       dispatch(disablePage(true))
+      console.log(values)
 
       const discountConfig = {
         discount_amount: values?.fixed_price,
@@ -106,6 +121,10 @@ export default function CreateStudentForm() {
       for (const [key, value] of Object.entries({ ...values })) {
         if (key === 'phone') {
           newValues.append(key, reversePhone(value as any))
+        } else if (key === 'parent_phone') {
+          if (String(value).length > 5) {
+            newValues.append(key, reversePhone(value as any))
+          }
         } else {
           newValues.append(key, value as any)
         }
@@ -136,6 +155,8 @@ export default function CreateStudentForm() {
         dispatch(setOpenEdit(null))
         formik.resetForm()
         setIsGroup(false)
+        setIsSchool(false)
+        setIsParent(false)
       }
       dispatch(disablePage(false))
       setIsDiscount(false)
@@ -147,14 +168,16 @@ export default function CreateStudentForm() {
 
   useEffect(() => {
     getGroups()
-
     return () => {
       formik.resetForm()
     }
   }, [])
   const handleChangeCheck = (event: any) => {
     setChecked(event.target.checked)
-    console.log('Checkbox Value:', event.target.checked)
+  }
+
+  async function handleSearch(val: string) {
+    await dispatch(fetchGroupCheckList(val))
   }
 
   return (
@@ -263,6 +286,18 @@ export default function CreateStudentForm() {
         />
         <FormHelperText error={true}>{errors.birth_date}</FormHelperText>
       </FormControl>
+      <FormControl sx={{ width: '100%' }}>
+        <TextField
+          size='small'
+          label={t('password')}
+          name='password'
+          error={!!errors.password && touched.password}
+          value={values.password}
+          onChange={handleChange}
+          onBlur={handleBlur}
+        />
+        <FormHelperText error={true}>{errors.password}</FormHelperText>
+      </FormControl>
 
       <FormControl sx={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 1 }}>
         <FormLabel>{t('Jinsini tanlang')}</FormLabel>
@@ -280,18 +315,74 @@ export default function CreateStudentForm() {
         </RadioGroup>
       </FormControl>
 
-      <FormControl sx={{ width: '100%' }}>
-        <TextField
-          size='small'
-          label={t('password')}
-          name='password'
-          error={!!errors.password && touched.password}
-          value={values.password}
-          onChange={handleChange}
-          onBlur={handleBlur}
-        />
-        <FormHelperText error={true}>{errors.password}</FormHelperText>
-      </FormControl>
+      {isParent && (
+        <>
+          <FormControl sx={{ width: '100%' }}>
+            <InputLabel htmlFor='outlined-adornment-phone'>{t('Ota-ona telefon raqami')}</InputLabel>
+            <PhoneInput
+              id='outlined-adornment-phone'
+              label={t('Ota-ona telefon raqami')}
+              name='parent_phone'
+              value={values.parent_phone}
+              onChange={handleChange}
+              onBlur={handleBlur}
+            />
+          </FormControl>
+          <FormControl sx={{ width: '100%' }}>
+            <TextField
+              size='small'
+              label={t('Ota-ona ismi')}
+              name='parent_first_name'
+              error={!!errors.parent_first_name && touched.parent_first_name}
+              value={values.parent_first_name}
+              onChange={handleChange}
+              onBlur={handleBlur}
+            />
+          </FormControl>
+        </>
+      )}
+   
+      {isSchool && (
+        <FormControl fullWidth>
+          <InputLabel size='small' id='user-view-language-label'>
+            {t('Maktab')}
+          </InputLabel>
+          <Select
+            size='small'
+            error={!!errors.school && touched.school}
+            label={t('Maktab')}
+            id='user-view-language'
+            labelId='user-view-language-label'
+            name='school'
+            onChange={handleChange}
+            value={values.school || ''}
+            sx={{ mb: 3 }}
+          >
+            {schools.map((school: { id: number | string; name: string }) => (
+              <MenuItem key={school.id} value={Number(school.id)}>
+                {school.name}
+              </MenuItem>
+            ))}
+            <MenuItem sx={{ fontWeight: 600 }} onClick={() => Router.push('/settings/office/schools')}>
+              {t('Yangi yaratish')}
+              <IconifyIcon icon={'ion:add-sharp'} />
+            </MenuItem>
+          </Select>
+          {errors.school && <FormHelperText error={!!errors.school}>{errors.school}</FormHelperText>}
+
+          <TextField
+            size='small'
+            label={t("Qo'shilish sanasi")}
+            name='start_at'
+            type='date'
+            error={!!errors.start_at && touched.start_at}
+            value={values.start_at}
+            onChange={handleChange}
+            onBlur={handleBlur}
+          />
+          <FormHelperText error={true}>{errors.start_at}</FormHelperText>
+        </FormControl>
+      )}
 
       {isGroup ? (
         <FormControl fullWidth>
@@ -309,6 +400,9 @@ export default function CreateStudentForm() {
             value={values.group || ''}
             sx={{ mb: 3 }}
           >
+            <MenuItem className='hover:bg-gray-100 cursor-not-allowed'>
+              <TextField onChange={e => handleSearch(e.target.value)} label={'Qidiruv'} fullWidth size='small' />
+            </MenuItem>
             {groups.map(group => (
               <MenuItem key={group.id} value={Number(group.id)}>
                 {group.name}
@@ -348,6 +442,20 @@ export default function CreateStudentForm() {
             startIcon={<IconifyIcon icon={'material-symbols:add'} />}
           >
             {t("Guruhga qo'shish")}
+          </Button>
+        )}
+      </Box>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+        {!isParent && (
+          <Button
+            fullWidth
+            onClick={async () => setIsParent(true)}
+            type='button'
+            variant='outlined'
+            size='small'
+            startIcon={<IconifyIcon icon={'material-symbols:add'} />}
+          >
+            {t("Ota-ona telefon raqami qo'shish")}
           </Button>
         )}
       </Box>
