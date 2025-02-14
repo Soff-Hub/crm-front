@@ -4,9 +4,11 @@ import {
   Button,
   Card,
   CardContent,
+  Checkbox,
   CircularProgress,
   Dialog,
   DialogContent,
+  FormControlLabel,
   Grid,
   IconButton,
   Skeleton,
@@ -79,6 +81,7 @@ export default function AllSettings() {
     | 'score'
     | 'attend'
     | 'debtor'
+    | 'extra_settings'
     | null
   >(null)
   const [error, setError] = useState<any>({})
@@ -105,6 +108,10 @@ export default function AllSettings() {
       dispatch(setCompanyInfo(res.data[0]))
     })
     setSettingsLoading(false)
+  }
+
+  async function handleChangeExtraSettings(event: any) {
+    updateSettings('extra_settings', event.target.checked)
   }
 
   useEffect(() => {
@@ -185,8 +192,6 @@ export default function AllSettings() {
     }
   }
 
-  console.log(loading)
-
   const updateSettings = async (key: any, value: any) => {
     if (key === 'training_center_name') {
       setLoading('name')
@@ -194,12 +199,13 @@ export default function AllSettings() {
       setLoading('start-time')
     } else if (key === 'work_end_time') {
       setLoading('end-time')
+    } else if (key === 'extra_settings') {
+      setLoading('extra_settings')
     }
 
     try {
       const formData: any = new FormData()
       formData.append(key, value)
-      console.log(key, value)
 
       if (
         key === 'on_birthday' ||
@@ -375,6 +381,11 @@ export default function AllSettings() {
         await api.put('common/auto-sms/update/', formData)
         setName('')
       } else {
+        if (key === 'extra_settings') {
+          console.log('ishladi')
+
+          formData.append('extra_settings', JSON.stringify({ allow_debt_editing_on_payment: value }))
+        }
         await api.patch('common/settings/update/', formData)
       }
 
@@ -608,7 +619,7 @@ export default function AllSettings() {
 
                 {/* Card 3 (next row) */}
                 <Grid item xs={12} sm={6} md={6}>
-                  <Card >
+                  <Card>
                     <CardContent>
                       <Box sx={{ display: 'flex', gap: '20px' }}>
                         <Typography
@@ -780,6 +791,21 @@ export default function AllSettings() {
                           )}
                         </Box>
                       </Box>
+                    </CardContent>
+                  </Card>
+                </Grid>
+                <Grid item xs={12} sm={6} md={6}>
+                  <Card>
+                    <CardContent>
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            checked={companyInfo?.extra_settings?.allow_debt_editing_on_payment}
+                            onChange={handleChangeExtraSettings}
+                          />
+                        }
+                        label="O'quvchi to'lovida kurs narxini tahrirlash"
+                      />
                     </CardContent>
                   </Card>
                 </Grid>
@@ -1251,8 +1277,8 @@ export default function AllSettings() {
 
                   <Typography sx={{ marginBottom: 2 }} fontSize={12}>
                     {"Xabar matniga guruh nomini qo'shish uchun ${group} kalit so'zi qoldiring."}
-                    </Typography>
-                    <Typography sx={{ marginBottom: 5 }} fontSize={12}>
+                  </Typography>
+                  <Typography sx={{ marginBottom: 5 }} fontSize={12}>
                     {"Xabar matniga talaba bahosini qo'shish uchun ${score} kalit so'zi qoldiring."}
                   </Typography>
 

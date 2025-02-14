@@ -12,6 +12,7 @@ export interface DashboardStats {
 export interface IDashboardState {
   stats: null | DashboardStats
   tabValue: string
+  interval:string,
   open: string | null
   eyeVisible:boolean,
   isStatsLoading: boolean

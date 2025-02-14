@@ -71,14 +71,16 @@ const statsData: StatsDataType[] = [
 ]
 
 export const fetchStatistics = createAsyncThunk('dashboard/fetchStatistics', async () => {
-  const response = await api.get('common/dashboard/statistic-list/')  
+  const response = await api.get('common/dashboard/statistic-list/')
   return response.data
 })
 
-export const fetchLessons = createAsyncThunk('dashboard/fetchLessons', async (queryWeeks: string[]) => {
+export const fetchLessons = createAsyncThunk('dashboard/fetchLessons', async ({queryWeeks, interval}:{queryWeeks?:string[],interval?:string}) => {
   const queryString = new URLSearchParams({
-    day_of_week: queryWeeks.toString()
+    day_of_week: queryWeeks?.toString() || '',
+    interval: interval?.toString() || ''
   }).toString()
+  
 
   const response = await api.get(`common/dashboard/?` + queryString)
   return response.data
@@ -86,12 +88,13 @@ export const fetchLessons = createAsyncThunk('dashboard/fetchLessons', async (qu
 
 const initialState: IDashboardState = {
   stats: null,
-  eyeVisible:false,
+  eyeVisible: false,
   open: null,
   isLessonLoading: false,
   isStatsLoading: false,
   events: [],
   workTime: [],
+  interval:'15',
   statsData: statsData,
   tabValue: currentWeek === 'mon' || currentWeek === 'wed' || currentWeek === 'fri' ? '2' : '1',
   weekDays: ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'],
@@ -116,6 +119,9 @@ export const dashboardSlice = createSlice({
     },
     updateWeeks: (state, action) => {
       state.weeks = action.payload
+    },
+    updateInterval: (state, action) => {
+      state.interval = action.payload
     },
     handleChangeWeeks: (state, action) => {
       if (state.weeks.includes(action.payload)) {
@@ -151,5 +157,5 @@ export const dashboardSlice = createSlice({
   }
 })
 
-export const { handleTabValue,updateEyeVisible, updateWeeks, handleOpen, handleChangeWeeks } = dashboardSlice.actions
+export const {updateInterval, handleTabValue, updateEyeVisible, updateWeeks, handleOpen, handleChangeWeeks } = dashboardSlice.actions
 export default dashboardSlice.reducer

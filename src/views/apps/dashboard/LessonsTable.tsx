@@ -10,7 +10,7 @@ import EmptyContent from 'src/@core/components/empty-content'
 import { useTranslation } from 'react-i18next'
 
 const LessonsTable = () => {
-  const { events, workTime, isLessonLoading } = useAppSelector(state => state.dashboard)
+  const { events, workTime, isLessonLoading, interval } = useAppSelector(state => state.dashboard)
   const { push } = useRouter()
   const { t } = useTranslation()
 
@@ -70,7 +70,10 @@ const LessonsTable = () => {
                         onClick={() => push(`/groups/view/security?id=${item.id}&month=${getMonthName(null)}`)}
                         key={item.id}
                         sx={{
-                          width: `${(generateTimeSlots(item.start_at, item.end_at).length - 1) * 50}px`,
+                          width:
+                            interval == '15'
+                              ? `${(generateTimeSlots(item.start_at, item.end_at).length - 1) * 50}px`
+                              : `${(generateTimeSlots(item.start_at, item.end_at).length - 1) * 25}px`,
                           height: '45px',
                           position: 'absolute',
                           padding: '5px',
