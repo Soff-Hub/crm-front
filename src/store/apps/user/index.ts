@@ -85,6 +85,9 @@ export const appUsersSlice = createSlice({
     allData: [],
     companyInfo: {
       id: 1,
+      extra_settings: {
+        allow_debt_editing_on_payment: false
+      },
       training_center_name: 'SOFF CRM',
       logo: '/images/default-logo.jpg',
       work_start_time: '00:00',

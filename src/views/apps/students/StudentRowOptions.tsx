@@ -62,15 +62,17 @@ export default function StudentRowOptions({ id }: Props) {
   async function submitDelete() {
     setLoading(true)
     dispatch(disablePage(true))
-    await api.delete(`student/destroy/${id}/`).then((res) => {
-      toast.success("O'quvchi muvaffaqiyatli o'chirildi")
-      dispatch(fetchStudentsList({ status: queryParams.status }))
-    }).catch((err) => {
-      toast.error(err.response.data.msg||"O'quvchini o'chirib bo'lmadi")
-      console.log(err);
-      
-    })
-   
+    await api
+      .delete(`student/destroy/${id}/`)
+      .then(res => {
+        toast.success("O'quvchi muvaffaqiyatli o'chirildi")
+        dispatch(fetchStudentsList({ ...queryParams }))
+      })
+      .catch(err => {
+        toast.error(err.response.data.msg || "O'quvchini o'chirib bo'lmadi")
+        console.log(err)
+      })
+
     dispatch(disablePage(false))
     setLoading(false)
   }
@@ -119,10 +121,12 @@ export default function StudentRowOptions({ id }: Props) {
             {t("O'chirish")}
           </MenuItem>
         )}
-        {queryParams.status === 'archive' && <MenuItem onClick={handleDelete} sx={{ '& svg': { mr: 2 } }}>
-          <IconifyIcon icon='mdi:delete-outline' fontSize={20} />
-          {t("Butunlay o'chirish")}
-        </MenuItem>}
+        {queryParams.status === 'archive' && (
+          <MenuItem onClick={handleDelete} sx={{ '& svg': { mr: 2 } }}>
+            <IconifyIcon icon='mdi:delete-outline' fontSize={20} />
+            {t("Butunlay o'chirish")}
+          </MenuItem>
+        )}
       </Menu>
       <UserSuspendDialog
         loading={loading}
