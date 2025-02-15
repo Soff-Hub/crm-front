@@ -28,6 +28,7 @@ import { DatePicker } from 'rsuite'
 import { format } from 'date-fns'
 import { fetchSchoolList, fetchSchoolsList } from 'src/store/apps/settings'
 import ExcelStudents from 'src/@core/components/excelButton/ExcelStudents'
+import ceoConfigs from 'src/configs/ceo'
 
 type StudentsFilterProps = {
   isMobile: boolean
@@ -66,7 +67,7 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
   }
   async function getTeachers() {
     await api
-      .get('auth/employees-check-list/?role=teacher')
+      .get(`${ceoConfigs.employee_checklist}?role=teacher`)
       .then(res => setTeachers(res.data))
       .catch(error => console.log(error))
   }

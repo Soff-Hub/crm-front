@@ -30,6 +30,7 @@ import Link from 'next/link'
 import useSMS from 'src/hooks/useSMS'
 import { SendSMSModal } from 'src/views/apps/students/view/UserViewLeft'
 import useResponsive from 'src/@core/hooks/useResponsive'
+import ceoConfigs from 'src/configs/ceo'
 
 export interface customTableProps {
   xs: number
@@ -81,7 +82,7 @@ export default function GroupsPage() {
       setSmallLoading(true)
       dispatch(disablePage(true))
       try {
-        await api.delete(`auth/delete/employee/${id}/`)
+        await api.delete(`${ceoConfigs.employee_delete}${id}/`)
         toast.success("Xodim muvaffaqiyatli o'chirildi")
         dispatch(fetchEmployees(queryParams))
       } catch (err: any) {

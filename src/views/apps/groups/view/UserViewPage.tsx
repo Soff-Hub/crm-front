@@ -10,6 +10,7 @@ import ExcelStudents from 'src/@core/components/excelButton/ExcelStudents'
 import VideoHeader, { videoUrls } from 'src/@core/components/video-header/video-header'
 import api from 'src/@core/utils/api'
 import { getMontNumber } from 'src/@core/utils/gwt-month-name'
+import ceoConfigs from 'src/configs/ceo'
 import { AuthContext } from 'src/context/AuthContext'
 import { useAppDispatch, useAppSelector } from 'src/store'
 import {
@@ -34,7 +35,7 @@ const UserView = () => {
 
   const getTeachers = async () => {
     await api
-      .get('auth/employees-check-list/?role=teacher')
+      .get(`${ceoConfigs.employee_checklist}?role=teacher`)
       .then(data => {
         dispatch(setTeacherData(data.data))
       })

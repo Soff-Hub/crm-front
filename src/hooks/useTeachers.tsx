@@ -50,7 +50,7 @@ export default function useTeachers() {
     const createTeacher = async (data: any) => {
         setLoading(true)
         try {
-            const resp = await api.post('auth/create/teacher/', data)
+            const resp = await api.post(ceoConfigs.create_teacher, data)
             setLoading(false)
 
             return resp.data

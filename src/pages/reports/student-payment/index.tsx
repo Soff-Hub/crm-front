@@ -15,6 +15,7 @@ import PaymentTable from 'src/@core/components/table/paymentTable'
 import { fetchTeachersList } from 'src/store/apps/mentors'
 import { fetchCoursesList } from 'src/store/apps/settings'
 import api from 'src/@core/utils/api'
+import ceoConfigs from 'src/configs/ceo'
 
 const DataTable = dynamic(() => import('src/@core/components/table'))
 
@@ -111,7 +112,7 @@ export default function StudentPaymentsPage() {
   ]
   const getTeachers = async () => {
     await api
-      .get('auth/employees-check-list/?role=teacher')
+      .get(`${ceoConfigs.employee_checklist}?role=teacher`)
       .then(data => {
         dispatch(setTeacherData(data.data))
       })

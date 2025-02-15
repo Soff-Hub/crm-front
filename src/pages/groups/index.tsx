@@ -257,7 +257,7 @@ export default function GroupsPage() {
   })
   const getTeachers = async () => {
     await api
-      .get('auth/employees-check-list/?role=teacher')
+      .get(`${ceoConfigs.employee_checklist}?role=teacher`)
       .then(data => {
         dispatch(setTeacherData(data.data))
       })

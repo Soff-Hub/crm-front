@@ -1,6 +1,7 @@
 // ** Redux Imports
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import api from 'src/@core/utils/api'
+import ceoConfigs from 'src/configs/ceo'
 import { RoomType, SettingsState, SmsItemType } from 'src/types/apps/settings'
 
 export const fetchSmsListQuery = createAsyncThunk('settings/fetchSmsListQuery', async (queryString?: number) => {
@@ -60,7 +61,7 @@ export const editEmployeeStatus = createAsyncThunk(
   'settings/editEmployeeStatus',
   async (data: any, { rejectWithValue }) => {
     try {
-      const response = await api.patch(`auth/update/employee/status/${data.id}`, data.data)
+      const response = await api.patch(ceoConfigs.update_employee_status + data.id, data.data)
       return response.data
     } catch (err: any) {
       if (err.response) {
@@ -137,13 +138,13 @@ export const updateWekend = createAsyncThunk('settings/updateWekend', async (dat
 export const fetchEmployees = createAsyncThunk(
   'settings/fetchEmployees',
   async (params: { search: string; page: number; role: number | string; status: string }) => {
-    return (await api.get('auth/employees/', { params })).data
+    return (await api.get(ceoConfigs.employee, { params })).data
   }
 )
 
 export const createEmployee = createAsyncThunk('settings/createEmployee', async (data: any, { rejectWithValue }) => {
   try {
-    const response = await api.post(`auth/create/employee/`, data)
+    const response = await api.post(`employee/create/`, data)
     return response.data
   } catch (err: any) {
     if (err.response) {
@@ -155,7 +156,7 @@ export const createEmployee = createAsyncThunk('settings/createEmployee', async 
 
 export const editEmployee = createAsyncThunk('settings/editEmployee', async (data: any, { rejectWithValue }) => {
   try {
-    const response = await api.patch(`auth/update/employee/${data.id}`, data.data)
+    const response = await api.patch(ceoConfigs.employee_update + data.id, data.data)
     return response.data
   } catch (err: any) {
     if (err.response) {

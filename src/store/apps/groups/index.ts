@@ -74,7 +74,7 @@ export const fetchGroupChecklist = createAsyncThunk('groups/fetchGroupChecklist'
 export const fetchTeacherSalaries = createAsyncThunk(
   'groups/fetchTeacherSalaries',
   async (queryString: string = '') => {
-    const resp = await api.get('/auth/employee/salaries/' + '?' + queryString)
+    const resp = await api.get(ceoConfigs.employee_salaries + '?' + queryString)
     return resp.data
   }
 )
