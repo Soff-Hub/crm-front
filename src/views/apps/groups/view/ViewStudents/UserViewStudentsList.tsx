@@ -1,4 +1,4 @@
-import React, { ReactNode, useContext, useEffect, useState } from 'react'
+import React, { ReactNode, useContext, useEffect, useMemo, useState } from 'react'
 import {
   Box,
   Button,
@@ -386,13 +386,14 @@ export default function UserViewStudentsList() {
     }
   }, [updateStatusModal])
 
+  const queryString = useMemo(() => {
+    return new URLSearchParams({ ...studentsQueryParams, search: debounce }).toString();
+  }, [studentsQueryParams, debounce]);
+  
   useEffect(() => {
-    ;(function () {
-      const queryString = new URLSearchParams({ ...studentsQueryParams, search: debounce }).toString()
-      dispatch(getStudents({ id: query.id, queryString: queryString }))
-      dispatch(studentsUpdateParams({ search: debounce }))
-    })()
-  }, [debounce])
+    dispatch(getStudents({ id: query.id, queryString }));
+    dispatch(studentsUpdateParams({ search: debounce }));
+  }, [queryString]);
 
   const rowClick = (id: any, item: any) => {
     push(`/students/view/security/?student=${item?.student?.id}`)

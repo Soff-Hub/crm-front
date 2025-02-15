@@ -42,7 +42,6 @@ const EditCompany = ({ slug }: { slug?: any }) => {
     expiration_date: Yup.date().required(t('Majburiy maydon') || 'Majburiy maydon')
   })
 
-  console.log(details)
 
   const formik = useFormik({
     initialValues: {
@@ -56,7 +55,6 @@ const EditCompany = ({ slug }: { slug?: any }) => {
     },
     validationSchema,
     onSubmit: async values => {
-      console.log(values)
 
       setLoading(true)
       try {

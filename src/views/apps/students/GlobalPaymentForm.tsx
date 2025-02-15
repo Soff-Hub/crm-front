@@ -329,17 +329,25 @@ export default function GlobalPaymentForm({}: Props) {
           )}
           {companyInfo.extra_settings.allow_debt_editing_on_payment == true && groupData && (
             <FormControl fullWidth>
-              <AmountInput
+              {/* <InputLabel
                 size='small'
-                placeholder={t('Qarzdorlik summasi')}
+                id='user-view-language-label'
+                error={!!payform.errors.debt_amount && Boolean(payform.touched.debt_amount)}
+              >
+                {t("Qarzdorlik summasi")}
+              </InputLabel> */}
+              <AmountInput
+                id='user-view-language'
+                size='small'
+                label={t('Qarzdorlik summasi')}
                 error={!!payform.errors.debt_amount && Boolean(payform.touched.debt_amount)}
                 name='debt_amount'
                 value={payform.values.debt_amount}
                 onChange={payform.handleChange}
                 onBlur={payform.handleBlur}
               />
-              {!!payform.errors.amount && payform.touched.amount && (
-                <FormHelperText error>{payform.errors.amount}</FormHelperText>
+              {!!payform.errors.debt_amount && payform.touched.debt_amount && (
+                <FormHelperText error>{Boolean(payform.errors.debt_amount)}</FormHelperText>
               )}
             </FormControl>
           )}

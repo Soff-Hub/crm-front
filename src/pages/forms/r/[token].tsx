@@ -56,7 +56,6 @@ export function CreatedComponent({
     }
   }, [error])
 
-  // console.log(response);
 
   if (type === 'varchar') {
     return (
@@ -186,7 +185,6 @@ function RequestForm({ uuid }: InferGetStaticPropsType<typeof getServerSideProps
       setComponents(resp.data?.response?.[0]?.questions)
       setFormData(resp.data?.response?.[0])
         setSuccessText(resp.data.response?.[0].success_text)
-        console.log(resp);
         
     } catch (err: any) {
       console.log(err)

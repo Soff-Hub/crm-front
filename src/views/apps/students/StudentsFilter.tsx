@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import {
   Autocomplete,
   Box,
@@ -124,12 +124,15 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
     label: item?.first_name,
     value: item?.id
   }))
+  const memoizedParams = useMemo(() => {
+    return { ...queryParams, search: searchVal }
+  }, [queryParams, searchVal])
+
   useEffect(() => {
-    dispatch(fetchStudentsList({ ...queryParams, search: searchVal }))
-  }, [searchVal])
+    dispatch(fetchStudentsList(memoizedParams))
+  }, [memoizedParams])
 
   const queryString = new URLSearchParams({ ...queryParams } as Record<string, string>).toString()
-
 
   const uzLocale = {
     DatePicker: {

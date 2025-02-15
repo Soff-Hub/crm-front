@@ -29,7 +29,6 @@ import {
   setOpenLid,
   setSectionId
 } from 'src/store/apps/leads'
-import { useRouter } from 'next/router'
 import EmptyContent from 'src/@core/components/empty-content'
 import { EyeIcon, Phone, PlusIcon, User } from 'lucide-react'
 import { LidsDragonModal } from 'src/views/apps/lids/LidsDragonModal'
@@ -40,10 +39,10 @@ import { PersonAddAlt } from '@mui/icons-material'
 import useResponsive from 'src/@core/hooks/useResponsive'
 import CreateDepartmentItemDialog from 'src/views/apps/lids/departmentItem/Dialog'
 import EditDepartmentItemForm from 'src/views/apps/lids/departmentItem/EditDepartmentItemForm'
+import { useSettings } from 'src/@core/hooks/useSettings'
+import { settings } from 'nprogress'
 
 const Kanban = () => {
-  const [anchorEl, setAnchorEl] = useState(null)
-  const [pageMap, setPageMap] = useState<any>({})
   const [selectedLead, setSelectedLead] = useState<any | null>(null)
   const { leadItems, leadData, openLid, dragonLoading } = useSelector((state: RootState) => state.leads)
   const [data, setData] = useState(leadItems)
@@ -51,8 +50,12 @@ const Kanban = () => {
   const [studentModalOpen, setStudentModalOpen] = useState(false)
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
+
+  const { settings } = useSettings()
+
+
   const [loading, setLoading] = useState<boolean>(false)
-  const [item,setItem] = useState<any>(null)
+  const [item, setItem] = useState<any>(null)
   const query = window.location?.search?.split('?slug=')[1]
   const { isMobile } = useResponsive()
   const [leadTitle, setLeadTitle] = useState('')
@@ -72,8 +75,7 @@ const Kanban = () => {
     }
   }
 
-  console.log(item);
-  
+  console.log(item)
 
   useEffect(() => {
     setData(leadItems)
@@ -146,10 +148,6 @@ const Kanban = () => {
     }
   }
 
-  const handlePageChange = (sectionId: any, event: any, page: any) => {
-    setPageMap((prev: any) => ({ ...prev, [sectionId]: page }))
-  }
-
   const handleMenuOpen = (event: any, lead: any) => {
     setStudentModalOpen(true)
     setSelectedLead(lead)
@@ -157,11 +155,6 @@ const Kanban = () => {
 
   function handleClose() {
     setStudentModalOpen(false)
-  }
-
-  const handleMenuClose = () => {
-    setAnchorEl(null)
-    setSelectedLead(null)
   }
 
   return (
@@ -211,15 +204,20 @@ const Kanban = () => {
                     {...provided.droppableProps}
                     className='kanban__section'
                     ref={provided.innerRef}
-                    style={{ width: isMobile ? '100%' : 'auto', padding: 20, background: 'white', borderRadius: 10 }}
+                    style={{
+                      width: isMobile ? '100%' : 'auto',
+                      padding: 20,
+                      background: settings.mode == 'dark' ? '#282A42' : 'white',
+                      borderRadius: 10
+                    }}
                   >
                     <Box display='flex' alignItems='center' marginBottom={2} gap={3}>
                       <div
                         style={{
-                          display: 'flex', 
+                          display: 'flex',
                           alignItems: 'center',
-                          gap:5,
-                          background: 'white',
+                          gap: 5,
+                          background: settings.mode == 'dark' ? '#282A42' : 'white',
                           borderRadius: 10,
                           // marginBottom: 20,
                           minWidth: 300,
@@ -229,7 +227,7 @@ const Kanban = () => {
                         {section.name}
                         <Chip color='primary' variant='outlined' label={section.leads.length} />
                       </div>
-                      <IconButton onClick={()=>setItem(section)} sx={{ cursor: 'pointer', marginLeft: 'auto' }}>
+                      <IconButton onClick={() => setItem(section)} sx={{ cursor: 'pointer', marginLeft: 'auto' }}>
                         <IconifyIcon
                           icon={'fluent:text-bullet-list-square-edit-20-filled'}
                           color='orange'
@@ -245,7 +243,7 @@ const Kanban = () => {
                         <Draggable key={lead?.id} draggableId={String(lead.id)} index={index}>
                           {(provided, snapshot) => (
                             <div
-                              className='shadow-sm p-3 bg-light  rounded'
+                              className={`shadow-sm p-3 ${settings.mode == "dark" ? "bg-#282A42":'bg-light'}   rounded`}
                               ref={provided.innerRef}
                               {...provided.draggableProps}
                               {...provided.dragHandleProps}
@@ -343,7 +341,6 @@ const Kanban = () => {
           />
         </DialogContent>
       </Dialog>
-
     </DragDropContext>
   )
 }

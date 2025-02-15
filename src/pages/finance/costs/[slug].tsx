@@ -71,10 +71,8 @@ function Slug(props: { slug: string }) {
   const onEdit = (id: any) => {
     const find = data.find(el => el.id === id)
     setOpen(find)
-    console.log(id)
   }
 
-  console.log(selectedYear, selectedMonth)
 
   const columns: customTableDataProps[] = [
     {

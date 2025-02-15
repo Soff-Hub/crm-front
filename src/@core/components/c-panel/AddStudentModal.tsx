@@ -56,12 +56,10 @@ import {
       formData.append('branches', values.branches.join(','))
       formData.append('file', values.file)
   
-      console.log('Form submitted:', Object.fromEntries(formData))
   
       await api
         .post(`/owner/tenant/students/import/${id}`, formData)
         .then(res => {
-          console.log(res)
           setOpenModal(false)
           toast.success("Fayl muvaffaqiyatli yuklandi")
         })

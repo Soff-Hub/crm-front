@@ -14,7 +14,7 @@ import {
 import { useRouter } from 'next/router'
 import IconifyIcon from 'src/@core/components/icon'
 import Tooltip, { TooltipProps, tooltipClasses } from '@mui/material/Tooltip'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import api from 'src/@core/utils/api'
 import getMontName, { getMontNumber } from 'src/@core/utils/gwt-month-name'
 import { styled } from '@mui/material/styles'
@@ -453,28 +453,29 @@ const UserViewSecurity = () => {
     }
   }
 
-  useEffect(() => {
-    ;(async function () {
-      const queryString = new URLSearchParams(queryParams).toString()
-      dispatch(setGettingAttendance(true))
-      if (query?.month && query?.id) {
-        await dispatch(
-          getAttendance({
-            date: `${query?.year || new Date().getFullYear()}-${getMontNumber(query?.month)}`,
-            group: query?.id,
-            queryString: queryString
-          })
-        )
-        await dispatch(
-          getDays({
-            date: `${query?.year || new Date().getFullYear()}-${getMontNumber(query?.month)}`,
-            group: query?.id
-          })
-        )
-      }
-      dispatch(setGettingAttendance(false))
-    })()
-  }, [queryParams.status])
+const queryString = useMemo(() => {
+  return new URLSearchParams(queryParams).toString();
+}, [queryParams]);
+
+const attendanceDate = useMemo(() => {
+  const year = query?.year || new Date().getFullYear();
+  const monthNumber = getMontNumber(query?.month);
+  return `${year}-${monthNumber}`;
+}, [query?.year, query?.month]);
+
+useEffect(() => {
+  const fetchAttendance = async () => {
+    dispatch(setGettingAttendance(true));
+    if (query?.month && query?.id) {
+      await dispatch(getAttendance({ date: attendanceDate, group: query?.id, queryString }));
+      await dispatch(getDays({ date: attendanceDate, group: query?.id }));
+    }
+    dispatch(setGettingAttendance(false));
+  };
+
+  fetchAttendance();
+}, [queryParams.status, attendanceDate, queryString]);
+
 
   return isGettingAttendance ? (
     <SubLoader />

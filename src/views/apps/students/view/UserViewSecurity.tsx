@@ -307,10 +307,7 @@ const UserViewSecurity = () => {
     await dispatch(fetchStudentDetail(Number(query?.student)))
   }
 
-  console.log(query.student);
-  
-
-  
+  console.log(query.student)
 
   useEffect(() => {
     if (query?.student) {
@@ -322,17 +319,9 @@ const UserViewSecurity = () => {
   return (
     <Box className='demo-space-y'>
       {studentGroups && studentGroups.length > 0 ? (
-        <Box
-          sx={{
-            width: isMobile ? '100%' : 'auto',
-            display: 'flex',
-            flexWrap: 'wrap',
-            alignItems: 'center',
-            gap: '15px'
-          }}
-        >
+        <div className='row w-100 row-gap-3'>
           {studentGroups.map((group: any) => (
-            <Box key={group.id} sx={{ width: isMobile ? '100%' : 'auto', position: 'relative' }}>
+            <div className='col-12 col-md-6 position-relative'>
               <Typography
                 id='fade-button'
                 aria-controls={open ? 'fade-menu' : undefined}
@@ -343,20 +332,24 @@ const UserViewSecurity = () => {
                   fontSize: 25,
                   position: 'absolute',
                   top: 10,
-                  right: 5,
+                  right: 20,
                   cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
-                  transition: 'color 0.3s ease',
+                  transition: 'color 0.3s ease, background-color 0.3s ease',
+                  padding:'5px',
+                  borderRadius: '50%',
                   '&:hover': {
-                    color: 'gray' // Change this color as needed
+                    color: 'gray',
+                    backgroundColor: '#f0f0f0'
+                    // Change to your preferred hover background color
                   }
                 }}
                 onClick={e =>
                   !(user?.role.length === 1 && user?.role.includes('teacher')) ? handleClick(e, group) : undefined
                 }
               >
-                <IconifyIcon icon={'charm:menu-kebab'} fontSize={11} />
+                <IconifyIcon icon={'charm:menu-kebab'} fontSize={15} />
               </Typography>
 
               <Menu
@@ -411,7 +404,7 @@ const UserViewSecurity = () => {
                 style={{ textDecoration: 'none' }}
               >
                 <Box sx={{ width: '100%', display: 'flex', gap: '20px' }}>
-                  <Card sx={{ width: isMobile ? '100%' : '400px', minHeight: 380 }}>
+                  <Card sx={{ width: '100%' }}>
                     <div onClick={e => e.stopPropagation()}>
                       <CardContent
                         sx={{
@@ -434,7 +427,7 @@ const UserViewSecurity = () => {
                               />
                             </Box>
 
-                            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                            <Box sx={{ marginRight: 4, display: 'flex', alignItems: 'center' }}>
                               {group.status == 'archive' ? (
                                 <Chip
                                   label={t('archive')}
@@ -525,7 +518,18 @@ const UserViewSecurity = () => {
                       <Box sx={{ marginBottom: 2 }}>
                         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                           <Typography sx={{ fontSize: '20px', color: 'black' }}>{group.group_name} </Typography>
-                          {group?.gpa && (
+                          {group?.gpa ? (
+                            <Chip
+                              color='success'
+                              label={`Baho: ${group.gpa?.toFixed(2)}`}
+                              variant='outlined'
+                              size='small'
+                              sx={{
+                                color: group.gpa >= 4 ? 'green' : group.gpa >= 3 ? 'orange' : 'red',
+                                borderColor: group.gpa >= 4 ? 'green' : group.gpa >= 3 ? 'orange' : 'red'
+                              }}
+                            />
+                          ) : (
                             <Chip
                               color='error'
                               label={`Baho: ${group.gpa?.toFixed(2)}`}
@@ -552,7 +556,7 @@ const UserViewSecurity = () => {
                           <Typography sx={{ color: 'black' }}>Dars kunlari :</Typography>
                           <Typography fontSize={12}>{group.lesson_time}</Typography>
                         </Box>
-                        <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
+                        <Box sx={{ display: 'flex', gap: 2, overflowX: 'auto', paddingBottom: 2 }}>
                           {group?.lesson_days?.map((day: any) => (
                             <Typography
                               sx={{
@@ -612,9 +616,9 @@ const UserViewSecurity = () => {
                   </Card>
                 </Box>
               </Link>
-            </Box>
+            </div>
           ))}
-        </Box>
+        </div>
       ) : (
         <EmptyContent />
       )}

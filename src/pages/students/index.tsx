@@ -167,7 +167,13 @@ export default function GroupsPage() {
             sx={{ fontWeight: 700 }}
           />
         ) : (
-          `${formatCurrency(+balance)} so'm`
+          <Chip
+          label={`${formatCurrency(+balance)} so'm`}
+          color='success'
+          variant='outlined'
+          size='small'
+          sx={{ fontWeight: 700 }}
+        />
         )
     },
     {
@@ -215,7 +221,7 @@ export default function GroupsPage() {
       router.push('/')
       toast.error("Sizda bu sahifaga kirish huquqi yo'q!")
     }
-    pageLoad()
+    // pageLoad()
     return () => {
       dispatch(setOpenEdit(null))
     }
