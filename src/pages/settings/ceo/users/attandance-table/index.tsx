@@ -17,6 +17,7 @@ import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSettings } from 'src/@core/hooks/useSettings'
 import api from 'src/@core/utils/api'
+import ceoConfigs from 'src/configs/ceo'
 import SubLoader from 'src/views/apps/loaders/SubLoader'
 
 export default function EmployeesAttendanceTable() {
@@ -38,7 +39,7 @@ export default function EmployeesAttendanceTable() {
     setLoading(true)
     const date = `${year}-${month}-01`
     await api
-      .get(`auth/attendance/employees/?date=${date}`)
+      .get(`${ceoConfigs.employee_attendances}?date=${date}`)
       .then(res => {
         setAttendances(res.data.result)
         setDates(res.data.dates)

@@ -47,6 +47,7 @@ import Router from 'next/router'
 import { TeacherAvatar, VisuallyHiddenInput } from '../mentors/AddMentorsModal'
 import { revereAmount } from 'src/@core/components/amount-input'
 import api from 'src/@core/utils/api'
+import ceoConfigs from 'src/configs/ceo'
 
 export default function CreateStudentForm() {
   // ** Hooks
@@ -72,11 +73,11 @@ export default function CreateStudentForm() {
     await dispatch(fetchGroupCheckList())
   }
 
-  // async function fetchParentsCheckList(search?: string) {
-  //   api.get(`auth/parents-check-list/?search=${search || ''}`).then(res => {
-  //     setParents(res.data)
-  //   })
-  // }
+  async function fetchParentsCheckList(search?: string) {
+    api.get(`${ceoConfigs.parents_checklist}?search=${search || ''}`).then(res => {
+      setParents(res.data)
+    })
+  }
 
   const validationSchema = Yup.object({
     first_name: Yup.string().required('Ismingizni kiriting'),

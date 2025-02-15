@@ -32,6 +32,7 @@ import api from 'src/@core/utils/api'
 import { setGlobalPay, setStudentId } from 'src/store/apps/students'
 import GlobalPaymentModal from 'src/views/apps/students/GlobalPaymentModal'
 import { toggleQrCodeModal } from 'src/store/apps/page'
+import ceoConfigs from 'src/configs/ceo'
 
 interface Props {
   hidden: boolean
@@ -70,7 +71,7 @@ const AppBarContent = (props: Props) => {
   }
 
   async function handleSearch(search: string) {
-    await api.get(`auth/employees-check-list/?search=${search}`).then(res => {
+    await api.get(`${ceoConfigs.employee_checklist}?search=${search}`).then(res => {
       setEmployees(res.data)
     })
   }

@@ -240,7 +240,7 @@ const Kanban = () => {
                       className='kanban__section__content'
                     >
                       {section.leads?.map((lead: any, index: any) => (
-                        <Draggable key={lead?.id} draggableId={String(lead.id)} index={index}>
+                        <Draggable key={lead?.id} draggableId={String(lead?.id)} index={index}>
                           {(provided, snapshot) => (
                             <div
                               className={`shadow-sm p-3 ${settings.mode == "dark" ? "bg-#282A42":'bg-light'}   rounded`}

@@ -3,6 +3,7 @@ import { today } from 'src/@core/components/card-statistics/kanban-item';
 import { customTableDataProps } from 'src/@core/components/table';
 import api from 'src/@core/utils/api';
 import { formatCurrency } from 'src/@core/utils/format-currency';
+import ceoConfigs from 'src/configs/ceo';
 import { IAdvanceFormState, IAdvanceResponseData } from 'src/types/apps/finance';
 import { EmployeeItemType } from 'src/types/apps/settings';
 import AdvanceRowActions from 'src/views/apps/finance/advance/AdvanceRowActions';
@@ -13,7 +14,7 @@ export const getAdvanceList = createAsyncThunk('getAdvanceList', async (params?:
 })
 
 export const getStaffs = createAsyncThunk('getStaffs', async (params?: string) => {
-    return (await api.get('/auth/employees/')).data
+    return (await api.get(ceoConfigs.employee)).data
 })
 
 export const createAdvance = createAsyncThunk('createAdvance', async (values: Partial<IAdvanceFormState>, { rejectWithValue }) => {

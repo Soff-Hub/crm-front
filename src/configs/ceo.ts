@@ -1,20 +1,25 @@
 const ceoConfigs = {
-  employee: 'auth/employees/',
-  employee_detail: 'auth/detail/employee/',
-  employee_create: 'auth/create/employee/',
-  employee_update: 'auth/update/employee/',
-  employee_delete: 'auth/delete/employee/',
-
+  employee: 'employee/list/',
+  employee_detail: 'employee/detail/',
+  employee_create: 'employee/create/',
+  employee_update: 'employee/update/',
+  employee_delete: 'employee/delete/',
+  employee_salaries: "employee/salaries/",
+  update_employee_status: 'employee/update/status/',
+  employee_checklist:'employee/check-list/',
   courses: 'common/courses/',
   courses_posts: 'common/course/create',
   courses_delete: 'common/course/delete',
   courses_update: 'common/course/update',
   courses_detail: 'common/course/detail',
+  employee_attendances:'employee/attendances/',
 
   barnchs: 'common/branches/',
+  parents_checklist : 'employee/parents-check-list/',
+  teachers: 'employee/teachers/',
+  teachers_update: 'employee/teachers/update/',
 
-  teachers: 'auth/teachers/',
-
+  create_teacher:'employee/create/teacher/',
   rooms_posts: 'common/room/create',
   rooms_update: 'common/room/update',
   rooms: 'common/rooms/',

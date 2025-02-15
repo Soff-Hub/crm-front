@@ -21,6 +21,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker'
 import { format, parseISO } from 'date-fns'
+import ceoConfigs from 'src/configs/ceo'
 type AttandanceFiltersProps = {
   isMobile: boolean
 }
@@ -63,7 +64,7 @@ export const AttandanceFilters = ({ isMobile }: AttandanceFiltersProps) => {
 
   const getTeachers = async () => {
     await api
-      .get('auth/employees-check-list/?role=teacher')
+      .get(`${ceoConfigs.employee_checklist}?role=teacher`)
       .then(data => {
         setTeachersData(data.data)
       })
