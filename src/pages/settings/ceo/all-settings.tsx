@@ -382,8 +382,6 @@ export default function AllSettings() {
         setName('')
       } else {
         if (key === 'extra_settings') {
-          console.log('ishladi')
-
           formData.append('extra_settings', JSON.stringify({ allow_debt_editing_on_payment: value }))
         }
         await api.patch('common/settings/update/', formData)
@@ -434,7 +432,7 @@ export default function AllSettings() {
         <Tab label='🏢 Markaz Sozlamalari' />
         <Tab label='📩 SMS Sozlamalari' />
       </Tabs>
-      <Box sx={{ display: 'flex', width: '100%', gap: '15px', flexDirection: isMobile ? 'column' : 'row', px: 4 }}>
+      <>
         {tabIndex === 0 &&
           (settinsLoading ? (
             <>
@@ -462,10 +460,10 @@ export default function AllSettings() {
               </Box>
             </>
           ) : (
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '15px', width: '100%' }}>
-              <Grid container spacing={2}>
+            <div className='row  w-100  mx-auto '>
+              <div className='col-12 d-flex flex-column gap-4 col-md-6'>
                 {/* Card 1 */}
-                <Grid item xs={12} sm={6} md={6}>
+                <div className='w-100'>
                   <Card>
                     <CardContent>
                       <Box
@@ -537,88 +535,10 @@ export default function AllSettings() {
                       </Box>
                     </CardContent>
                   </Card>
-                </Grid>
+                </div>
 
-                {/* Card 2 */}
-                <Grid item xs={12} sm={6} md={6}>
-                  <Card>
-                    <CardContent>
-                      <Box sx={{ display: 'flex', gap: '20px' }}>
-                        <Typography
-                          sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}
-                        >
-                          {t('Filiallar')}:
-                        </Typography>
-                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
-                          {branches.map((branch: any) => (
-                            <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }} key={branch.id}>
-                              {id?.id === branch.id && id?.key === 'branch' ? (
-                                <TextField
-                                  size='small'
-                                  focused
-                                  defaultValue={branch.name}
-                                  onChange={e => setName(e.target.value)}
-                                  onBlur={updateBranch}
-                                />
-                              ) : (
-                                <TextField size='small' value={branch.name} />
-                              )}
-                              {id?.id === branch.id && id?.key === 'branch' ? (
-                                <IconifyIcon
-                                  icon={loading === 'branch' ? 'line-md:loading-loop' : 'ic:baseline-check'}
-                                  style={{ cursor: 'pointer' }}
-                                  onClick={updateBranch}
-                                />
-                              ) : (
-                                <IconifyIcon
-                                  icon={'basil:edit-outline'}
-                                  style={{ cursor: 'pointer' }}
-                                  onClick={() => setId({ id: branch.id, key: 'branch' })}
-                                />
-                              )}
-                              <IconifyIcon
-                                icon={'fluent:delete-20-regular'}
-                                style={{ cursor: 'pointer' }}
-                                onClick={() => setDeleteId({ open: 'branch', id: branch.id })}
-                              />
-                            </Box>
-                          ))}
-                          {createble === 'branch' && (
-                            <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                              <TextField
-                                size='small'
-                                inputRef={inputRef}
-                                placeholder={t('Yangi filial')}
-                                onChange={e => setName(e.target.value)}
-                              />
-                              <IconifyIcon
-                                icon={loading === 'branch' ? 'line-md:loading-loop' : 'ic:baseline-check'}
-                                style={{ cursor: 'pointer' }}
-                                onClick={createBranch}
-                              />
-                              <IconifyIcon
-                                icon={'ic:outline-close'}
-                                style={{ cursor: 'pointer' }}
-                                onClick={() => setCreatable(null)}
-                              />
-                            </Box>
-                          )}
-                          <Button
-                            size='small'
-                            startIcon={<IconifyIcon icon={'ic:outline-add'} />}
-                            variant='outlined'
-                            onClick={() => setCreatable('branch')}
-                          >
-                            {t('Yangi')}
-                          </Button>
-                        </Box>
-                      </Box>
-                    </CardContent>
-                  </Card>
-                </Grid>
-
-                {/* Card 3 (next row) */}
-                <Grid item xs={12} sm={6} md={6}>
+                {/* Card 3*/}
+                <div className='w-100'>
                   <Card>
                     <CardContent>
                       <Box sx={{ display: 'flex', gap: '20px' }}>
@@ -696,10 +616,104 @@ export default function AllSettings() {
                       </Box>
                     </CardContent>
                   </Card>
-                </Grid>
-
+                </div>
+                {/* Card 5 */}
+                <div className='w-100'>
+                  <Card>
+                    <CardContent>
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            checked={companyInfo?.extra_settings?.allow_debt_editing_on_payment}
+                            onChange={handleChangeExtraSettings}
+                          />
+                        }
+                        label="O'quvchi to'lovida kurs narxini tahrirlash"
+                      />
+                    </CardContent>
+                  </Card>
+                </div>
+              </div>
+              <div className='col-12 d-flex flex-column gap-4 col-md-6 '>
+                {/* Card 2 */}
+                <div className='w-100'>
+                  <Card>
+                    <CardContent>
+                      <Box sx={{ display: 'flex', gap: '20px' }}>
+                        <Typography
+                          sx={{ minWidth: isMobile ? '90px' : '180px', fontSize: isMobile ? '13px' : '16px' }}
+                        >
+                          {t('Filiallar')}:
+                        </Typography>
+                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                          {branches.map((branch: any) => (
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }} key={branch.id}>
+                              {id?.id === branch.id && id?.key === 'branch' ? (
+                                <TextField
+                                  size='small'
+                                  focused
+                                  defaultValue={branch.name}
+                                  onChange={e => setName(e.target.value)}
+                                  onBlur={updateBranch}
+                                />
+                              ) : (
+                                <TextField size='small' value={branch.name} />
+                              )}
+                              {id?.id === branch.id && id?.key === 'branch' ? (
+                                <IconifyIcon
+                                  icon={loading === 'branch' ? 'line-md:loading-loop' : 'ic:baseline-check'}
+                                  style={{ cursor: 'pointer' }}
+                                  onClick={updateBranch}
+                                />
+                              ) : (
+                                <IconifyIcon
+                                  icon={'basil:edit-outline'}
+                                  style={{ cursor: 'pointer' }}
+                                  onClick={() => setId({ id: branch.id, key: 'branch' })}
+                                />
+                              )}
+                              <IconifyIcon
+                                icon={'fluent:delete-20-regular'}
+                                style={{ cursor: 'pointer' }}
+                                onClick={() => setDeleteId({ open: 'branch', id: branch.id })}
+                              />
+                            </Box>
+                          ))}
+                          {createble === 'branch' && (
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                              <TextField
+                                size='small'
+                                inputRef={inputRef}
+                                placeholder={t('Yangi filial')}
+                                onChange={e => setName(e.target.value)}
+                              />
+                              <IconifyIcon
+                                icon={loading === 'branch' ? 'line-md:loading-loop' : 'ic:baseline-check'}
+                                style={{ cursor: 'pointer' }}
+                                onClick={createBranch}
+                              />
+                              <IconifyIcon
+                                icon={'ic:outline-close'}
+                                style={{ cursor: 'pointer' }}
+                                onClick={() => setCreatable(null)}
+                              />
+                            </Box>
+                          )}
+                          <Button
+                            size='small'
+                            startIcon={<IconifyIcon icon={'ic:outline-add'} />}
+                            variant='outlined'
+                            onClick={() => setCreatable('branch')}
+                          >
+                            {t('Yangi')}
+                          </Button>
+                        </Box>
+                      </Box>
+                    </CardContent>
+                  </Card>
+                </div>
                 {/* Card 4 */}
-                <Grid item xs={12} sm={6} md={6}>
+                <div className='w-100'>
                   <Card>
                     <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
@@ -793,24 +807,9 @@ export default function AllSettings() {
                       </Box>
                     </CardContent>
                   </Card>
-                </Grid>
-                <Grid item xs={12} sm={6} md={6}>
-                  <Card>
-                    <CardContent>
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            checked={companyInfo?.extra_settings?.allow_debt_editing_on_payment}
-                            onChange={handleChangeExtraSettings}
-                          />
-                        }
-                        label="O'quvchi to'lovida kurs narxini tahrirlash"
-                      />
-                    </CardContent>
-                  </Card>
-                </Grid>
-              </Grid>
-            </Box>
+                </div>
+              </div>
+            </div>
           ))}
         {settinsLoading ? (
           <>
@@ -1408,7 +1407,7 @@ export default function AllSettings() {
             </Box>
           </DialogContent>
         </Dialog>
-      </Box>
+      </>
     </div>
   )
 }

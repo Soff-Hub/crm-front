@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect } from 'react'
+import { useState, useContext, useEffect, useMemo } from 'react'
 import { Dialog, DialogTitle, DialogContent, Button, Select, MenuItem } from '@mui/material'
 import { useDispatch, useSelector } from 'react-redux'
 import { setSoffBotText, toggleModal } from 'src/store/apps/page'
@@ -57,12 +57,20 @@ const StaticsModal = () => {
     }
   }
 
-  useEffect(() => {
+  const selectedApiDate = useMemo(() => {
     if (selectedDate) {
-      const selectedApiDate = selectedDate === 'yesterday' ? yesterdayDate : currentDate
+      return selectedDate === 'yesterday' ? yesterdayDate : currentDate
+    }
+    return null
+  }, [selectedDate, yesterdayDate, currentDate])
+
+  
+
+  useEffect(() => {
+    if (selectedApiDate) {
       fetchAnalytics(selectedApiDate)
     }
-  }, [selectedDate])
+  }, [selectedApiDate])
 
   useEffect(() => {
     if (triggerConfetti) {
@@ -88,8 +96,6 @@ const StaticsModal = () => {
     setTriggerConfetti(true)
     setTimeout(() => setShowFireworks(false), 3000)
   }
-
-
 
   return soffBotText?.not_using_platform == true ? (
     <Dialog fullWidth maxWidth='xs' open={isModalOpen} onClose={handleClose}>

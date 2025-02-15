@@ -52,7 +52,6 @@ export function StudentsPaymentsModal({
       ...values,
       branches: values.branches.join(',')
     }
-    console.log('Form submitted:', formattedValues)
     await api
       .post(`/owner/tenant/student-payments/delete/${id}`, formattedValues)
       .then(res => {

@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
 import Button from '@mui/material/Button'
@@ -25,12 +25,14 @@ const UserViewLeft = () => {
   const { t } = useTranslation()
   const { query } = useRouter()
   const { isTablet, isDesktop, isMobile } = useResponsive()
+
+  const queryString = useMemo(() => {
+    return new URLSearchParams(studentsQueryParams).toString()
+  }, [studentsQueryParams])
+
   useEffect(() => {
-    const queryString = new URLSearchParams(studentsQueryParams).toString()
-    dispatch(getStudents({ id: query.id, queryString: queryString }))
-  }, [studentsQueryParams.status])
-
-
+    dispatch(getStudents({ id: query.id, queryString }))
+  }, [queryString])
 
   return (
     <Grid container spacing={6}>
@@ -49,7 +51,7 @@ const UserViewLeft = () => {
               </div>
             ))}
           </div>
-          
+
           <UserViewStudentsList />
           {!isGettingStudents && (
             <Box sx={{ width: '100%', display: 'flex', pt: '10px' }}>

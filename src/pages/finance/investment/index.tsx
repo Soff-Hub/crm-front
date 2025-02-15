@@ -39,7 +39,6 @@ const InvestmentPage = () => {
     const queryString = new URLSearchParams(
       Object.fromEntries(Object.entries(queryParams).map(([key, value]) => [key, String(value)]))
     ).toString()
-    console.log(queryString);
     
     dispatch(fetchInvestments(queryString))
   }, [])

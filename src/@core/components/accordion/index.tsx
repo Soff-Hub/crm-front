@@ -108,7 +108,6 @@ export default function AccordionCustom({ onView, parentId, item, is_amocrm, stu
       await api
         .patch(`leads/department-update/${item.id}`, { parent: values.department })
         .then(res => {
-          console.log(res)
           setOpenDialog(null)
           toast.success('Muvaffaqiyatli kochirildi')
           dispatch(fetchAmoCrmPipelines({}))

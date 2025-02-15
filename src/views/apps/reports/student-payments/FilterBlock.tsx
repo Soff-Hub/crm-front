@@ -9,7 +9,7 @@ import {
     Select,
     SelectChangeEvent,
   } from "@mui/material";
-  import { useEffect, useState } from "react";
+  import { useEffect, useMemo, useState } from "react";
   import { useTranslation } from "react-i18next";
   import { DateRangePicker } from "rsuite";
 import ExcelStudents from "src/@core/components/excelButton/ExcelStudents";
@@ -36,11 +36,14 @@ import usePayment from "src/hooks/usePayment";
     const [date, setDate] = useState<any>('');
     const searchVal = useDebounce(search, 800);
   
+    const memoizedQueryString = useMemo(() => {
+      return new URLSearchParams({ ...queryParams, search: searchVal, page: "1" }).toString();
+    }, [queryParams, searchVal]);
+    
     useEffect(() => {
       dispatch(updateParams({ search: searchVal, page: "1" }));
-      const queryString = new URLSearchParams({ ...queryParams, search: searchVal, page: "1" }).toString();
-      dispatch(fetchStudentPaymentsList(queryString));
-    }, [searchVal]);
+      dispatch(fetchStudentPaymentsList(memoizedQueryString));
+    }, [memoizedQueryString]);
   
     const handleChangeDate = async (e: any) => {
       if (e) {
@@ -82,7 +85,6 @@ import usePayment from "src/hooks/usePayment";
       getPaymentMethod()
     }, [])
     
-    console.log(paymentMethods);
     
   
   

@@ -1,4 +1,17 @@
-import { Box, Button, Checkbox, Dialog, DialogContent, DialogTitle, FormControlLabel, FormGroup, Skeleton, Tab, Tabs, Typography } from '@mui/material'
+import {
+  Box,
+  Button,
+  Checkbox,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  FormControlLabel,
+  FormGroup,
+  Skeleton,
+  Tab,
+  Tabs,
+  Typography
+} from '@mui/material'
 import { Bell, Clock, Info, MessageSquare, Phone, PlusIcon, User, UserIcon } from 'lucide-react'
 
 interface LidsDragonModalProps {
@@ -24,6 +37,7 @@ import SendSmsAnonimUserForm from './anonimUser/SendSmsAnonimUserForm'
 import { useAppSelector } from 'src/store'
 import { HelpOutline, QuestionAnswer, QuestionAnswerOutlined } from '@mui/icons-material'
 import useResponsive from 'src/@core/hooks/useResponsive'
+import { useSettings } from 'src/@core/hooks/useSettings'
 
 type InfoItemProps = {
   icon: React.ReactNode
@@ -32,12 +46,17 @@ type InfoItemProps = {
 }
 
 const InfoItem: React.FC<InfoItemProps> = ({ icon, label, value }) => {
+  const { settings } = useSettings()
   return (
-    <div className='d-flex align-items-center p-3 bg-light rounded-3 shadow-sm hover:bg-secondary transition-all duration-200'>
+    <div
+      className={`d-flex align-items-center p-3 ${
+        settings.mode == 'dark' ? 'bg-#282A42' : 'bg-light'
+      } rounded-3 shadow-sm hover:bg-secondary transition-all duration-200`}
+    >
       <div className='text-primary me-3'>{icon}</div>
       <div>
-        <p className='mb-1 text-muted'>{label}</p>
-        <p className='mb-0 font-weight-bold text-dark'>{value}</p>
+        <p className={`mb-1 ${settings.mode == 'dark' ? 'text-ligt' : 'text-muted'}`}>{label}</p>
+        <p className={`mb-0 font-weight-bold ${settings.mode == 'dark' ? 'text-ligt' : 'text-dark'}`}>{value}</p>
       </div>
     </div>
   )
@@ -51,6 +70,7 @@ export function LidsDragonModal({ selectedLead, openModal, handleClose }: LidsDr
   const { sms_list } = useAppSelector(state => state.settings)
   const [smsModal, setSmsModalOpen] = useState(false)
   const [detailLoading, setDetailLoading] = useState(false)
+  const { settings } = useSettings()
   const { isMobile } = useResponsive()
   const [nodeModal, setNodeModal] = useState(false)
   const { t } = useTranslation()
@@ -106,7 +126,7 @@ export function LidsDragonModal({ selectedLead, openModal, handleClose }: LidsDr
           </div>
         </Box>
         <div className='row g-4 mt-2'>
-          <div className='col-6'>
+          <div className='col-6 '>
             <InfoItem icon={<User />} label='Ism' value={`${selectedLead?.first_name}`} />
           </div>
 
@@ -160,7 +180,14 @@ export function LidsDragonModal({ selectedLead, openModal, handleClose }: LidsDr
             />
           </Tabs>
 
-          <Box sx={{ padding: 2, backgroundColor: '#f8f9fa', borderRadius: 1, marginTop: 2 }}>
+          <Box
+            sx={{
+              padding: 2,
+              backgroundColor: settings.mode == 'dark' ? '#282A42' : '#f8f9fa',
+              borderRadius: 1,
+              marginTop: 2
+            }}
+          >
             {value === 'anonim-user' && (
               <div>
                 {detailLoading ? (
@@ -191,14 +218,10 @@ export function LidsDragonModal({ selectedLead, openModal, handleClose }: LidsDr
                         <div className='text-primary me-3'>{<QuestionAnswerOutlined />}</div>
                         <Typography>{item?.answer}</Typography>
                         <FormGroup>
-                          {item.variants.map((variant:any) => (
+                          {item?.variants?.map((variant: any) => (
                             <FormControlLabel
                               key={variant.id}
-                              control={
-                                <Checkbox
-                                  checked={variant.is_checked}
-                                />
-                              }
+                              control={<Checkbox checked={variant.is_checked} />}
                               label={variant.value}
                             />
                           ))}
@@ -238,7 +261,7 @@ export function LidsDragonModal({ selectedLead, openModal, handleClose }: LidsDr
                         display='flex'
                         flexDirection='column'
                         gap={2}
-                        sx={{ background: 'white', borderRadius: 1 }}
+                        sx={{ background: settings.mode == 'dark' ? '#282A42' : 'white', borderRadius: 1 }}
                         margin={4}
                         padding={3}
                       >
