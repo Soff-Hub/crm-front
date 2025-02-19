@@ -34,7 +34,7 @@ export default function OnlineLessonModal() {
   const { t } = useTranslation()
   const [parent_id, setParentId] = useState<number | null>(null)
   const router = useRouter()
-  const [openModal,setOpenModal] = useState<any>(null)
+  const [openModal, setOpenModal] = useState<any>(null)
   const [groupId, setGroupId] = useState<number | null>(null)
 
   // Extract access_token from URL
@@ -54,7 +54,6 @@ export default function OnlineLessonModal() {
       .then(res => setGroups(res.data))
       .catch(error => console.log(error))
   }
-
 
   // Function to send access_token to backend
   const sendAccessTokenToBackend = async (token: string) => {
@@ -84,8 +83,7 @@ export default function OnlineLessonModal() {
         toast.error(err.response.data.msg)
         console.log(err)
       })
-      dispatch(setOnlineLessonLoading(false))
-
+    dispatch(setOnlineLessonLoading(false))
   }
 
   const formik = useFormik({
@@ -118,8 +116,10 @@ export default function OnlineLessonModal() {
   })
 
   useEffect(() => {
-    dispatch(fetchSmsList())
-    getGroups()
+    if (openModal) {
+      dispatch(fetchSmsList())
+      getGroups()
+    }
   }, [])
 
   useEffect(() => {
@@ -178,7 +178,7 @@ export default function OnlineLessonModal() {
             </Typography>
           </Tooltip>
         )}
-        <Box sx={{ width: '100%',marginTop:5 }}>
+        <Box sx={{ width: '100%', marginTop: 5 }}>
           <Autocomplete
             disablePortal
             options={groupOptions}
@@ -219,7 +219,7 @@ export default function OnlineLessonModal() {
           </Box>
 
           <DialogActions sx={{ justifyContent: 'center' }}>
-            {!isSentSms  ? (
+            {!isSentSms ? (
               <LoadingButton
                 type='button'
                 color='warning'

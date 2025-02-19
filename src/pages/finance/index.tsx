@@ -198,7 +198,7 @@ const CardStatistics = () => {
     try {
       await api.post(`finance/budget-category/create/`, { name: nameVal, status: 'expense' })
       setOpen(null)
-      dispatch(getExpenseCategories(''))
+      dispatch(getExpenseCategories({...allNumbersParams}))
     } catch (err) {
       console.log(err)
     } finally {
@@ -210,7 +210,7 @@ const CardStatistics = () => {
     try {
       await api.post(`finance/budget-category/create/`, { name: nameVal, status: 'income' })
       setOpen(null)
-      dispatch(getIncomeCategories(''))
+      dispatch(getIncomeCategories({...allNumbersParams}))
     } catch (err) {
       console.log(err)
     } finally {

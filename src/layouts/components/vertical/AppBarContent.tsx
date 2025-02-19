@@ -33,6 +33,7 @@ import { setGlobalPay, setStudentId } from 'src/store/apps/students'
 import GlobalPaymentModal from 'src/views/apps/students/GlobalPaymentModal'
 import { toggleQrCodeModal } from 'src/store/apps/page'
 import ceoConfigs from 'src/configs/ceo'
+import useDebounce from 'src/hooks/useDebounce'
 
 interface Props {
   hidden: boolean
@@ -45,7 +46,9 @@ const AppBarContent = (props: Props) => {
   const { hidden, settings, saveSettings, toggleNavVisibility } = props
   const { companyInfo, notifications } = useAppSelector(state => state.user)
   const { user } = useContext(AuthContext)
-
+  const [search, setSearch] = useState('')
+  const [searchLoading, setSearchLoading] = useState(false)
+  const debouncedSearch = useDebounce(search, 1000)
   const { isMobile } = useResponsive()
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
@@ -70,29 +73,38 @@ const AppBarContent = (props: Props) => {
     }
   }
 
-  async function handleSearch(search: string) {
-    await api.get(`${ceoConfigs.employee_checklist}?search=${search}`).then(res => {
-      setEmployees(res.data)
-    })
+  async function handleSearch(query: string) {
+    if (!query) {
+      setEmployees([])
+      return
+    }
+    setSearchLoading(true)
+    const res = await api.get(`${ceoConfigs.employee_checklist}?search=${query}`)
+    setEmployees(res.data)
+    setSearchLoading(false)
   }
+
+  useEffect(() => {
+    handleSearch(debouncedSearch)
+  }, [debouncedSearch])
 
   function clickGlobalPay() {
     dispatch(setGlobalPay(true))
   }
 
-  useEffect(() => {
-    const socket = new WebSocket(`wss://test.api-soffcrm.uz/ws/notifications/${user?.id}/`)
-    socket.onopen = () => {
-      socket.send(JSON.stringify({ subscribe: `notifications/${user?.id}/` }))
-    }
-    socket.onmessage = event => {
-      const data = JSON.parse(event.data)
-      dispatch(setNotifications(data?.notifications?.length || 0))
-    }
-    return () => {
-      socket.close()
-    }
-  }, [user?.id])
+  // useEffect(() => {
+  //   const socket = new WebSocket(`wss://test.api-soffcrm.uz/ws/notifications/${user?.id}/`)
+  //   socket.onopen = () => {
+  //     socket.send(JSON.stringify({ subscribe: `notifications/${user?.id}/` }))
+  //   }
+  //   socket.onmessage = event => {
+  //     const data = JSON.parse(event.data)
+  //     dispatch(setNotifications(data?.notifications?.length || 0))
+  //   }
+  //   return () => {
+  //     socket.close()
+  //   }
+  // }, [user?.id])
 
   return (
     <div style={{ width: '100%', display: 'block' }}>
@@ -120,6 +132,8 @@ const AppBarContent = (props: Props) => {
                   onClose={() => {
                     setEmployees([])
                   }}
+                  loading={searchLoading}
+                  loadingText={'Yuklanmoqda..'}
                   options={employees || []}
                   fullWidth
                   noOptionsText="Ma'lumot yo'q.."
@@ -152,7 +166,7 @@ const AppBarContent = (props: Props) => {
                     </li>
                   )}
                   renderInput={params => (
-                    <TextField {...params} placeholder='Qidirish...' onChange={e => handleSearch(e.target.value)} />
+                    <TextField {...params} placeholder='Qidirish...' onChange={e => setSearch(e.target.value)} />
                   )}
                 />
                 <Tooltip title='Davomat' arrow>
@@ -231,7 +245,7 @@ const AppBarContent = (props: Props) => {
             </li>
           )}
           renderInput={params => (
-            <TextField {...params} placeholder='Qidirish...' onChange={e => handleSearch(e.target.value)} />
+            <TextField {...params} placeholder='Qidirish...' onChange={e => setSearch(e.target.value)} />
           )}
         />
       )}

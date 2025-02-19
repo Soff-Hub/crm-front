@@ -72,7 +72,8 @@ const initialState: IStudentState = {
   studentGroups:[],
   studentId:null,
   students: [],
-  total_debts:0,
+  total_debts: 0,
+  groupsChecklist:[],
   studentsCount: 0,
   studentData: null,
   isGettingStudentsGroups:false,
@@ -89,6 +90,9 @@ export const studentsSlice = createSlice({
   reducers: {
     setOpenLeadModal: (state, action) => {
       state.openLeadModal = action.payload
+    },
+    setGroupChecklist: (state, action) => {
+      state.groupsChecklist = action.payload
     },
     setIsGettingStudentGroups: (state, action) => {
       state.isGettingStudentsGroups = action.payload
@@ -161,7 +165,7 @@ export const studentsSlice = createSlice({
   }
 })
 
-export const { setOpenEdit,setIsGettingStudentGroups,setOpenLeadModal,setStudentId, setStudentData, updateStudentParams, clearStudentParams, setGlobalPay } =
+export const {setGroupChecklist, setOpenEdit,setIsGettingStudentGroups,setOpenLeadModal,setStudentId, setStudentData, updateStudentParams, clearStudentParams, setGlobalPay } =
   studentsSlice.actions
 
 export default studentsSlice.reducer

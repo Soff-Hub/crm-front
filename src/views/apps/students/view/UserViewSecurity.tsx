@@ -307,7 +307,6 @@ const UserViewSecurity = () => {
     await dispatch(fetchStudentDetail(Number(query?.student)))
   }
 
-  console.log(query.student)
 
   useEffect(() => {
     if (query?.student) {

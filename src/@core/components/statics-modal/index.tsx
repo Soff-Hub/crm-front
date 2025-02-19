@@ -16,7 +16,6 @@ function randomInRange(min: number, max: number): number {
 }
 
 const StaticsModal = () => {
-  const [displayedMessage, setDisplayedMessage] = useState('')
   const [typingComplete, setTypingComplete] = useState(false)
   const [showFireworks, setShowFireworks] = useState(false)
   const dispatch = useDispatch()
@@ -57,20 +56,15 @@ const StaticsModal = () => {
     }
   }
 
-  const selectedApiDate = useMemo(() => {
-    if (selectedDate) {
-      return selectedDate === 'yesterday' ? yesterdayDate : currentDate
+  async function handleChangeDate(date: string) {
+    if (date == 'yesterday') {
+      setSelectedDate('yesterday')
+      fetchAnalytics(yesterdayDate)
+    } else {
+      setSelectedDate('today')
+      fetchAnalytics(currentDate)
     }
-    return null
-  }, [selectedDate, yesterdayDate, currentDate])
-
-  
-
-  useEffect(() => {
-    if (selectedApiDate) {
-      fetchAnalytics(selectedApiDate)
-    }
-  }, [selectedApiDate])
+  }
 
   useEffect(() => {
     if (triggerConfetti) {
@@ -169,7 +163,7 @@ const StaticsModal = () => {
           style={{ color: 'black', position: 'absolute', top: 8, right: 8 }}
         />
       </DialogTitle>
-      <Select value={selectedDate} onChange={e => setSelectedDate(e.target.value)} size='small' sx={{ margin: 5 }}>
+      <Select value={selectedDate} onChange={e => handleChangeDate(e.target.value)} size='small' sx={{ margin: 5 }}>
         <MenuItem value='yesterday'>Kechagi kun</MenuItem>
         <MenuItem value='today'>Bugungi kun</MenuItem>
       </Select>

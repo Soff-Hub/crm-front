@@ -183,6 +183,7 @@ export default function GroupsPage() {
       render: actions => <StudentRowOptions id={actions} />
     }
   ]
+  
   const handleRowsPerPageChange = async (value: number) => {
     const limit = value
     setRowsPerPage(Number(value))
@@ -201,15 +202,7 @@ export default function GroupsPage() {
     dispatch(updateStudentParams({ offset: adjustedPage }))
   }
 
-  const pageLoad = async () => {
-    if (!queryParams.limit) {
-      dispatch(updateStudentParams({ limit: rowsPerPage }))
-
-      await dispatch(fetchStudentsList({ ...queryParams, limit: String(rowsPerPage) }))
-    } else {
-      await dispatch(fetchStudentsList(queryParams))
-    }
-  }
+ 
 
   const rowClick = (id: any) => {
     dispatch(setStudentId(id))
@@ -221,7 +214,6 @@ export default function GroupsPage() {
       router.push('/')
       toast.error("Sizda bu sahifaga kirish huquqi yo'q!")
     }
-    // pageLoad()
     return () => {
       dispatch(setOpenEdit(null))
     }
