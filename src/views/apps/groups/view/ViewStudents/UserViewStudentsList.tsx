@@ -91,6 +91,7 @@ export default function UserViewStudentsList() {
     },
     {
       xs: 1.4,
+
       title: t('first_name'),
       dataIndex: 'id',
       renderItem: (student: any) => {
@@ -175,7 +176,13 @@ export default function UserViewStudentsList() {
               style={{ textDecoration: 'none', color: '#4C4E64' }}
               href={`/students/view/security/?student=${student?.student.id}`}
             >
-              <Typography fontSize={12}>{student?.student.first_name}</Typography>
+              <Typography sx={{
+                whiteSpace: "normal", 
+                wordBreak: "break-word",
+                overflowWrap: "break-word",
+                textAlign: "center", 
+                maxWidth: "100px"
+              }} fontSize={12}>{student?.student.first_name}</Typography>
             </Link>
           </HtmlTooltip>
         ) : (
@@ -257,7 +264,7 @@ export default function UserViewStudentsList() {
       }
     },
     {
-      xs: 1.8,
+      xs: 1.6,
       title: t('Telefon raqam'),
       dataIndex: 'student',
       render: (student: any) => {
@@ -266,14 +273,19 @@ export default function UserViewStudentsList() {
             style={{ textDecoration: 'none', color: '#4C4E64' }}
             href={`/students/view/security/?student=${student?.id}`}
           >
-            <Typography fontSize={12}>{student?.phone}</Typography>
+            <Typography
+              sx={{ whiteSpace: 'normal', wordBreak: 'break-word', overflowWrap: 'break-word', width: '100%' }}
+              fontSize={12}
+            >
+              {student?.phone}
+            </Typography>
           </Link>
         )
       }
     },
 
     {
-      xs: 1.8,
+      xs: 1.0,
       title: t('Status'),
       dataIndex: 'id',
       renderItem: (status: any) => {
@@ -319,16 +331,28 @@ export default function UserViewStudentsList() {
     },
 
     {
-      xs: 1.7,
+      xs: 1.5,
       title: t('Balans'),
       dataIndex: 'student',
       render: (student: any) => {
-        return (
-          <Chip
-            variant='outlined'
-            color={student.balance >= 0 ? 'success' : 'error'}
-            label={showBalance ? <EyeOff width={15} height={15}/> : formatCurrency(student.balance) + " so'm"}
-          />
+        const balanceText = formatCurrency(student.balance) + " so'm";
+        
+        return(
+
+          <Tooltip title={balanceText}>
+            <Chip
+               sx={{
+                maxWidth: "100px", 
+                overflow: "hidden",
+                whiteSpace: "nowrap", 
+                textOverflow: "ellipsis", 
+                cursor: "pointer", 
+              }}
+              variant='outlined'
+              color={student.balance >= 0 ? 'success' : 'error'}
+              label={showBalance ? <EyeOff width={15} height={15} /> : formatCurrency(student.balance) + " so'm"}
+            />
+          </Tooltip>
         )
       }
     },
@@ -387,13 +411,13 @@ export default function UserViewStudentsList() {
   }, [updateStatusModal])
 
   const queryString = useMemo(() => {
-    return new URLSearchParams({ ...studentsQueryParams, search: debounce }).toString();
-  }, [studentsQueryParams, debounce]);
-  
+    return new URLSearchParams({ ...studentsQueryParams, search: debounce }).toString()
+  }, [studentsQueryParams, debounce])
+
   useEffect(() => {
-    dispatch(getStudents({ id: query.id, queryString }));
-    dispatch(studentsUpdateParams({ search: debounce }));
-  }, [queryString]);
+    dispatch(getStudents({ id: query.id, queryString }))
+    dispatch(studentsUpdateParams({ search: debounce }))
+  }, [queryString])
 
   const rowClick = (id: any, item: any) => {
     push(`/students/view/security/?student=${item?.student?.id}`)
@@ -418,7 +442,11 @@ export default function UserViewStudentsList() {
           gap: '2px'
         }}
       >
-        <Button startIcon={!showBalance ? <EyeOff/>:<Eye/>} variant='outlined' onClick={() => setShowBalance(!showBalance)}>
+        <Button
+          startIcon={!showBalance ? <EyeOff /> : <Eye />}
+          variant='outlined'
+          onClick={() => setShowBalance(!showBalance)}
+        >
           {!showBalance ? 'Balansni yopish' : "Balansni ko'rish"}
         </Button>
         <StudentsDataTable loading={isGettingStudents} columns={columns} data={students || []} />

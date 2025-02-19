@@ -55,7 +55,7 @@ export default function StudentRowOptions({ id }: Props) {
     await dispatch(updateStudent({ id, status: 'active' }))
     dispatch(disablePage(false))
     toast.success("O'quvchi muvaffaqiyatli aktivlashtirildi")
-    await dispatch(fetchStudentsList({ status: 'archive' }))
+    await dispatch(fetchStudentsList({ status: 'active' }))
     setLoading(false)
   }
 

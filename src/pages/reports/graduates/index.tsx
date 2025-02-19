@@ -86,6 +86,11 @@ export default function GraduatesPage() {
 
   const columns: customTableProps[] = [
     {
+      title: 'ID',
+      dataIndex: 'index',
+      xs:0.3,
+  },
+    {
       title: 'Ism',
       dataIndex: 'student',
       xs: 3,
@@ -126,6 +131,7 @@ export default function GraduatesPage() {
         <FormControl sx={{ minWidth: 150 }}>
           <InputLabel id="group-filter-label">Guruhlar</InputLabel>
           <Select
+            size='small'
             labelId="group-filter-label"
             value={selectedGroup}
             label="Guruhlar"

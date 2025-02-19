@@ -22,24 +22,26 @@ import { fetchStudentDetail, fetchStudentGroups, fetchStudentPayment } from 'src
 import AmountInput, { revereAmount } from 'src/@core/components/amount-input'
 import IconifyIcon from 'src/@core/components/icon'
 import { getStudents } from 'src/store/apps/groupDetails'
+import api from 'src/@core/utils/api'
 
 type Props = {
   openEdit: any
   setOpenEdit: any
   student_id?: any
-  group?: any,
-  active_id?:any
+  group?: any
+  active_id?: any
 }
 
-export default function StudentPaymentForm({ openEdit, setOpenEdit, student_id, group,active_id }: Props) {
+export default function StudentPaymentForm({ openEdit, setOpenEdit, student_id, group, active_id }: Props) {
   const [loading, setLoading] = useState<boolean>(false)
   const [showWarning, setShowWarning] = useState<boolean>(false)
-  const { studentsQueryParams} = useAppSelector(state => state.groupDetails)
+  const { studentsQueryParams } = useAppSelector(state => state.groupDetails)
   const { t } = useTranslation()
-  const { studentData } = useAppSelector(state => state.students)
+  const { studentData,groupsChecklist } = useAppSelector(state => state.students)
   const userData: any = { ...studentData }
   const { getPaymentMethod, paymentMethods, createPayment } = usePayment()
   const { query } = useRouter()
+  const [groups, setGroups] = useState([])
   const dispatch = useAppDispatch()
 
   const validationSchema = Yup.object({
@@ -57,8 +59,6 @@ export default function StudentPaymentForm({ openEdit, setOpenEdit, student_id, 
     description: '',
     payment_date: today
   }
-
-  
 
   const formik: any = useFormik({
     initialValues,
@@ -82,7 +82,7 @@ export default function StudentPaymentForm({ openEdit, setOpenEdit, student_id, 
         } else {
           const queryString = new URLSearchParams(studentsQueryParams).toString()
 
-          await dispatch(getStudents( {id:query.id, queryString:queryString }))
+          await dispatch(getStudents({ id: query.id, queryString: queryString }))
         }
       } catch (err: any) {
         // showResponseError(err.response.data, setError)
@@ -106,7 +106,7 @@ export default function StudentPaymentForm({ openEdit, setOpenEdit, student_id, 
     setShowWarning(false)
   }
 
-  
+
 
   useEffect(() => {
     if (studentData) {
@@ -126,6 +126,9 @@ export default function StudentPaymentForm({ openEdit, setOpenEdit, student_id, 
       getPaymentMethod()
     }
   }, [openEdit])
+
+  
+ 
 
   return (
     <div>
@@ -198,9 +201,9 @@ export default function StudentPaymentForm({ openEdit, setOpenEdit, student_id, 
                 onChange={handleChange}
                 onBlur={handleBlur}
               >
-                {userData?.groups?.map((branch: any) => (
-                  <MenuItem key={branch.id} value={branch.group_data.id}>
-                    {branch.group_data.name}
+                {groupsChecklist?.map((group: any) => (
+                  <MenuItem key={group.id} value={group.id}>
+                    {group.name}
                   </MenuItem>
                 ))}
               </Select>

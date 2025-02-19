@@ -18,10 +18,12 @@ import UserViewSecurity from 'src/views/apps/groups/view/UserViewSecurity'
 import GroupExamsList from './GroupExamList/GroupExamsList'
 import { useTranslation } from 'react-i18next'
 import { AuthContext } from 'src/context/AuthContext'
-import { setDays, setResultId } from 'src/store/apps/groupDetails'
-import { useAppDispatch } from 'src/store'
+import { getAttendance, getAttendanceTeacher, setDays, setResultId } from 'src/store/apps/groupDetails'
+import { useAppDispatch, useAppSelector } from 'src/store'
 import GroupStudentGrades from './GroupStudentGrades/GroupStudentGradesList'
 import AttendanceTable from './GroupAttandance'
+import { Button, ButtonGroup } from '@mui/material'
+import dayjs from 'dayjs'
 
 interface Props {
   tab: string
@@ -42,10 +44,11 @@ const UserViewRight = ({ tab }: Props) => {
   const { user } = useContext(AuthContext)
   const router = useRouter()
   const dispatch = useAppDispatch()
-
+  const [buttonActive, setButtonActive] = useState(true)
+  const today = dayjs().format('YYYY-MM-DD')
+  const { attendance } = useAppSelector(state => state.groupDetails)
   const handleChange = (event: SyntheticEvent, value: string) => {
     setActiveTab(value)
-    // dispatch(setDays(null))
     const path = router.route.replace('[tab]', value.toLowerCase())
     dispatch(setResultId(null))
     router.push({
@@ -54,37 +57,74 @@ const UserViewRight = ({ tab }: Props) => {
     })
   }
 
+  async function handleChangeButton(status: boolean) {
+    if (status === false) {
+      dispatch(
+        getAttendanceTeacher({ date: today, group: router.query.id, queryString: 'status=active&is_teacher=true' })
+      )
+    }
+    setButtonActive(status)
+  }
+
   useEffect(() => {
     if (tab && tab !== activeTab) {
       setActiveTab(tab)
     }
   }, [tab])
 
+  
+
   return (
     <TabContext value={activeTab}>
-      <TabList
-        variant='scrollable'
-        scrollButtons='auto'
-        onChange={handleChange}
-        aria-label='forced scroll tabs example'
-        sx={{ borderBottom: theme => `1px solid ${theme.palette.divider}` }}
-      >
-        <Tab value='security' label={t('Davomat')} icon={<Icon icon='tabler:user-check' />} />
-          <Tab value='grade' label={t('Baho')} icon={<Icon icon='mdi:school' />} />
-        {!(user?.role.length === 1 && user?.role.includes('teacher')) && (
-          <Tab value='notes' label={t('Eslatmalar')} icon={<Icon icon='fluent:note-add-48-regular' />} />
-        )}
-        <Tab value='exams' label={t('Imtixon')} icon={<Icon icon='maki:racetrack' />} />
-        {!(user?.role.length === 1 && user?.role.includes('teacher')) && (
-          <Tab value='discount' label={t('Chegirmalar')} icon={<Icon icon='mdi:sale' />} />
-        )}
-        {/* {!(user?.role.length === 1 && user?.role.includes('teacher')) && <Tab value='money' label={t("Maosh")} icon={<Icon icon='mdi:money' />} />} */}
-      </TabList>
+      <Box>
+        {/* {user?.role.length == 1 && user.role.includes('teacher') && (
+          <ButtonGroup fullWidth aria-label='Basic button group'>
+            <Button
+              variant={buttonActive ? 'contained' : 'outlined'}
+              onClick={() => {
+                handleChangeButton(true), setActiveTab('security')
+              }}
+            >
+              Oylik
+            </Button>
+            <Button
+              variant={!buttonActive ? 'contained' : 'outlined'}
+              onClick={() => {
+                handleChangeButton(false), setActiveTab('attendance')
+              }}
+            >
+              Kunlik
+            </Button>
+          </ButtonGroup>
+        )} */}
+        <TabList
+          variant='scrollable'
+          scrollButtons='auto'
+          onChange={handleChange}
+          aria-label='forced scroll tabs example'
+          sx={{ borderBottom: theme => `1px solid ${theme.palette.divider}` }}
+        >
+          {buttonActive && <Tab value='security' label={t('Davomat')} icon={<Icon icon='tabler:user-check' />} />}
+          {!buttonActive && <Tab value='attendance' label={t('Davomatlar')} icon={<Icon icon='tabler:user-check' />} />}
+          {buttonActive && <Tab value='grade' label={t('Baho')} icon={<Icon icon='mdi:school' />} />}
+          {!(user?.role.length === 1 && user?.role.includes('teacher')) && (
+            <Tab value='notes' label={t('Eslatmalar')} icon={<Icon icon='fluent:note-add-48-regular' />} />
+          )}
+          {<Tab value='exams' label={t('Imtixon')} icon={<Icon icon='maki:racetrack' />} />}
+          {!(user?.role.length === 1 && user?.role.includes('teacher')) && (
+            <Tab value='discount' label={t('Chegirmalar')} icon={<Icon icon='mdi:sale' />} />
+          )}
+        </TabList>
+      </Box>
       <Box sx={{ mt: 2 }}>
         <TabPanel sx={{ p: 0 }} value='security'>
           <UserViewSecurity />
-          {/* <AttendanceTable/> */}
         </TabPanel>
+        {!buttonActive && (
+          <TabPanel sx={{ p: 0 }} value='attendance'>
+            <AttendanceTable attendance={attendance} />
+          </TabPanel>
+        )}
         <TabPanel sx={{ p: 0 }} value='grade'>
           <GroupStudentGrades />
         </TabPanel>

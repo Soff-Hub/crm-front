@@ -33,6 +33,13 @@ export const getAttendance = createAsyncThunk(
     return resp.data
   }
 )
+export const getAttendanceTeacher = createAsyncThunk(
+  'getAttendanceTeacher/getAttendanceTeacher',
+  async ({ date, group, queryString }: { date: string; group: string | string[] | undefined; queryString: string }) => {
+    const resp = await api.get(`common/attendance-list/${date}/group/${group}/?` + queryString)
+    return resp.data
+  }
+)
 export const getStudentsGrades = createAsyncThunk(
   'getStudentsGrades/getStudentsGrades',
   async ({ id, queryString }: { id: any; queryString?: string }) => {
@@ -236,6 +243,16 @@ export const groupDetailsSlice = createSlice({
       state.isGettingAttendance = false
     })
     builder.addCase(getAttendance.rejected, (state, action) => {
+      state.isGettingAttendance = false
+    })
+    builder.addCase(getAttendanceTeacher.pending, (state, action) => {
+      state.isGettingAttendance = true
+    })
+    builder.addCase(getAttendanceTeacher.fulfilled, (state, action) => {
+      state.attendance = action.payload
+      state.isGettingAttendance = false
+    })
+    builder.addCase(getAttendanceTeacher.rejected, (state, action) => {
       state.isGettingAttendance = false
     })
     builder.addCase(getStudentsGrades.pending, (state, action) => {

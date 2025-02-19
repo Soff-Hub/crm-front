@@ -876,12 +876,12 @@ export default function AllSettings() {
                             rows={4}
                             size='small'
                             focused
-                            value={companyInfo?.auto_sms?.birthday_text}
+                            defaultValue={companyInfo?.auto_sms?.birthday_text}
                             onBlur={e => {
                               updateSettings('birthday_text', e.target.value)
                             }}
                             onChange={e => {
-                              setName(e.target.value), localStorage.setItem('birthday_text', e.target.value)
+                              setName(e.target.value)
                             }}
                             fullWidth
                           />
@@ -957,7 +957,7 @@ export default function AllSettings() {
                               updateSettings('absent_text', e.target.value)
                             }}
                             onChange={e => {
-                              setName(e.target.value), localStorage.setItem('absent_text', e.target.value)
+                              setName(e.target.value)
                             }}
                             fullWidth
                           />
@@ -1032,7 +1032,7 @@ export default function AllSettings() {
                               updateSettings('attend_text', e.target.value)
                             }}
                             onChange={e => {
-                              setName(e.target.value), localStorage.setItem('attend_text', e.target.value)
+                              setName(e.target.value)
                             }}
                             fullWidth
                           />
@@ -1134,7 +1134,7 @@ export default function AllSettings() {
                               updateSettings('payment_text', e.target.value)
                             }}
                             onChange={e => {
-                              setName(e.target.value), localStorage.setItem('payment_text', e.target.value)
+                              setName(e.target.value)
                             }}
                             fullWidth
                           />
@@ -1215,7 +1215,7 @@ export default function AllSettings() {
                               updateSettings('debt_text', e.target.value)
                             }}
                             onChange={e => {
-                              setName(e.target.value), localStorage.setItem('debt_text', e.target.value)
+                              setName(e.target.value)
                             }}
                             fullWidth
                           />
@@ -1298,7 +1298,7 @@ export default function AllSettings() {
                               updateSettings('score_text', e.target.value)
                             }}
                             onChange={e => {
-                              setName(e.target.value), localStorage.setItem('score_text', e.target.value)
+                              setName(e.target.value)
                             }}
                             fullWidth
                           />

@@ -26,7 +26,7 @@ import useSMS from 'src/hooks/useSMS'
 import 'rsuite/DateRangePicker/styles/index.css'
 import { DatePicker } from 'rsuite'
 import { format } from 'date-fns'
-import { fetchSchoolList, fetchSchoolsList } from 'src/store/apps/settings'
+import { fetchSchoolsList, fetchSmsList } from 'src/store/apps/settings'
 import ExcelStudents from 'src/@core/components/excelButton/ExcelStudents'
 import ceoConfigs from 'src/configs/ceo'
 
@@ -39,7 +39,7 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
   const dispatch = useAppDispatch()
   const { students, queryParams } = useAppSelector(state => state.students)
   const { schools } = useAppSelector(state => state.settings)
-
+  const [key, setKey] = useState<string>('')
   const { getCourses, courses } = useCourses()
   const [groups, setGroups] = useState<any>()
   const [teachers, setTeachers] = useState<any>()
@@ -53,6 +53,8 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
   const handleEditClickOpen = (value: ModalTypes) => {
     setOpenEdit(value)
   }
+  const queryString = new URLSearchParams({ ...queryParams } as Record<string, string>).toString()
+  
 
   const handleEditClose = () => {
     setError({})
@@ -74,48 +76,42 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
 
   async function handleFilter(key: string, value: string | number | null) {
     dispatch(updateStudentParams({ [key]: value }))
-
     if (key === 'debt_date') {
       setIsActive(false)
       dispatch(updateStudentParams({ is_debtor: true, last_payment: '', not_in_debt: '', debt_date: `${value}` }))
-      await dispatch(
-        fetchStudentsList({ ...queryParams, is_debtor: true, last_payment: '', not_in_debt: '', debt_date: `${value}` })
-      )
     } else if (key === 'amount') {
       if (value === 'is_debtor') {
         setIsActive(false)
         dispatch(updateStudentParams({ is_debtor: true, last_payment: '', not_in_debt: '' }))
-        await dispatch(fetchStudentsList({ ...queryParams, is_debtor: true, last_payment: '', not_in_debt: '' }))
       } else if (value === 'not_in_debt') {
         setIsActive(false)
         dispatch(updateStudentParams({ is_debtor: '', last_payment: '', not_in_debt: true }))
-        await dispatch(fetchStudentsList({ ...queryParams, is_debtor: '', last_payment: '', not_in_debt: true }))
       }
       if (value === 'last_payment') {
         setIsActive(true)
         dispatch(updateStudentParams({ last_payment: true, is_debtor: '', not_in_debt: '' }))
-        await dispatch(fetchStudentsList({ ...queryParams, last_payment: true, is_debtor: '', not_in_debt: '' }))
       } else if (value === 'all') {
         setIsActive(true)
         dispatch(updateStudentParams({ is_debtor: '', last_payment: '', not_in_debt: '' }))
-        await dispatch(fetchStudentsList({ ...queryParams, is_debtor: '', last_payment: '', not_in_debt: '' }))
       }
       return
     }
     if (key === 'status') {
       dispatch(updateStudentParams({ group_status: '', status: value }))
-      await dispatch(fetchStudentsList({ ...queryParams, [key]: value }))
-    } else {
-      await dispatch(fetchStudentsList({ ...queryParams, [key]: value }))
-    }
+    } 
   }
 
   useEffect(() => {
-    getCourses()
-    getGroups()
-    getTeachers()
-    dispatch(fetchSchoolsList())
-  }, [])
+    if (key == 'course') {
+      getCourses()
+    } else if (key == 'group') {
+      getGroups()
+    } else if (key == 'teacher') {
+      getTeachers()
+    } else if (key == 'school') {
+      dispatch(fetchSchoolsList())
+    }
+  }, [key])
 
   const groupOptions = groups?.map((item: MetaTypes) => ({
     label: item?.name,
@@ -125,34 +121,14 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
     label: item?.first_name,
     value: item?.id
   }))
-  const memoizedParams = useMemo(() => {
-    return { ...queryParams, search: searchVal }
-  }, [queryParams, searchVal])
+  
 
   useEffect(() => {
-    dispatch(fetchStudentsList(memoizedParams))
-  }, [memoizedParams])
+    dispatch(fetchStudentsList(queryParams as any));
+  }, [queryParams])
 
-  const queryString = new URLSearchParams({ ...queryParams } as Record<string, string>).toString()
+   
 
-  const uzLocale = {
-    DatePicker: {
-      months: [
-        'Yanvar',
-        'Fevral',
-        'Mart',
-        'Aprel',
-        'May',
-        'Iyun',
-        'Iyul',
-        'Avgust',
-        'Sentabr',
-        'Oktabr',
-        'Noyabr',
-        'Dekabr'
-      ]
-    }
-  }
 
   if (isMobile) {
     return (
@@ -180,6 +156,8 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
               {t('Kurslar')}
             </InputLabel>
             <Select
+              onClick={() => setKey('course')}
+              key={'course'}
               size='small'
               label={t('Kurslar')}
               defaultValue={''}
@@ -208,6 +186,7 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
               {t('Maktab')}
             </InputLabel>
             <Select
+              onClick={() => setKey('school')}
               size='small'
               label={t('Maktab')}
               value={queryParams.school}
@@ -232,6 +211,7 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
               {t('Guruhdagi holati')}
             </InputLabel>
             <Select
+              onClick={() => setKey('group_status')}
               size='small'
               label={t('Guruhdagi holati')}
               value={queryParams.group_status}
@@ -299,24 +279,26 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
             />
           )}
 
-          <Box sx={{ width: '100%' }}>
+          <div onClick={() => setKey('group')} style={{ width: '100%' }}>
             <Autocomplete
+              loading={!groupOptions}
               disablePortal
-              options={groupOptions}
+              options={groupOptions || []}
               onChange={(e: any, v: any) => handleFilter('group', v?.value)}
               size='small'
               renderInput={params => <TextField {...params} label={t('Guruh')} />}
             />
-          </Box>
-          <Box sx={{ width: '100%' }}>
+          </div>
+          <div onClick={() => setKey('group')} style={{ width: '100%' }}>
             <Autocomplete
+              loading={!teacherOptions}
               disablePortal
-              options={teacherOptions}
+              options={teacherOptions || []}
               onChange={(e: any, v: any) => handleFilter('teacher', v?.value)}
               size='small'
               renderInput={params => <TextField {...params} label={t('Ustoz')} />}
             />
-          </Box>
+          </div>
 
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Toggle
@@ -344,13 +326,15 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
             {t('Sms yuborish')}
           </Button>
         </Box>
-        <SendSMSModal
-          handleEditClose={handleEditClose}
-          openEdit={openEdit}
-          smsTemps={smsTemps}
-          setOpenEdit={setOpenEdit}
-          usersData={studentIds}
-        />
+        <div onClick={() => dispatch(fetchSmsList())}>
+          <SendSMSModal
+            handleEditClose={handleEditClose}
+            openEdit={openEdit}
+            smsTemps={smsTemps}
+            setOpenEdit={setOpenEdit}
+            usersData={studentIds}
+          />
+        </div>
       </form>
     )
   } else
@@ -378,8 +362,12 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
             <InputLabel size='small' id='demo-simple-select-outlined-label'>
               {t('Kurslar')}
             </InputLabel>
+
             <Select
+              
               size='small'
+              onClick={() => setKey('course')}
+              key={'course'}
               label={t('Kurslar')}
               defaultValue={''}
               id='demo-simple-select-outlined'
@@ -407,6 +395,7 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
               {t('Maktab')}
             </InputLabel>
             <Select
+              onClick={() => setKey('school')}
               size='small'
               label={t('Maktab')}
               id='demo-simple-select-outlined'
@@ -422,7 +411,7 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
               <MenuItem value={''}>
                 <b>{t('Barchasi')}</b>
               </MenuItem>
-              {schools.map((school: any) => (
+              {schools?.map((school: any) => (
                 <MenuItem key={school.id} value={school.id}>
                   {school.name}
                 </MenuItem>
@@ -436,6 +425,7 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
             </InputLabel>
             <Select
               size='small'
+              onClick={() => setKey('group_status')}
               label={t('Guruhdagi holati')}
               value={queryParams.group_status}
               id='demo-simple-select-outlined'
@@ -460,6 +450,7 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
             </InputLabel>
             <Select
               size='small'
+              onClick={() => setKey('payment_status')}
               label={t("To'lov holati")}
               value={
                 queryParams.is_debtor
@@ -512,27 +503,29 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
             />
           )}
 
-          <Box sx={{ width: '100%' }}>
+          <div onClick={() => setKey('group')} style={{ width: '100%' }}>
             <Autocomplete
+              loading={!groupOptions}
               sx={{ maxWidth: 180, width: '100%' }}
               disablePortal
-              options={groupOptions}
+              options={groupOptions || []}
               onChange={(e: any, v: any) => handleFilter('group', v?.value)}
               size='small'
               renderInput={params => <TextField {...params} label={t('Guruh')} />}
             />
-          </Box>
-          <Box sx={{ width: '100%' }}>
+          </div>
+          <div onClick={() => setKey('teacher')} style={{ width: '100%' }}>
             <Autocomplete
+              loading={!teacherOptions}
               sx={{ maxWidth: 180, width: '100%' }}
               disablePortal
               value={teacherOptions?.find((option: any) => option.value === queryParams.teacher) || null}
-              options={teacherOptions}
+              options={teacherOptions || []}
               onChange={(e: any, v: any) => handleFilter('teacher', v?.value)}
               size='small'
               renderInput={params => <TextField {...params} label={t('Ustoz')} />}
             />
-          </Box>
+          </div>
 
           {isActive && (
             <Box sx={{ display: 'flex', alignItems: 'center', width: 180 }}>
@@ -564,13 +557,15 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
           </Button>
         </Box>
 
-        <SendSMSModal
-          handleEditClose={handleEditClose}
-          openEdit={openEdit}
-          smsTemps={smsTemps}
-          setOpenEdit={setOpenEdit}
-          usersData={studentIds}
-        />
+        <div onClick={() => dispatch(fetchSmsList())}>
+          <SendSMSModal
+            handleEditClose={handleEditClose}
+            openEdit={openEdit}
+            smsTemps={smsTemps}
+            setOpenEdit={setOpenEdit}
+            usersData={studentIds}
+          />
+        </div>
       </Box>
     )
 }

@@ -66,6 +66,7 @@ export interface UpdateStudentDto extends StudentItemType {
 
 export interface IStudentState {
   total_debts?: number
+  groupsChecklist?:[]
   studentDetailLoading:boolean,
   isGettingStudentsGroups?:boolean,
   studentId?: any,

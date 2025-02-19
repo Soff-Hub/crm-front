@@ -69,7 +69,7 @@ const Layout = (props: LayoutProps) => {
         dispatch(toggleModal(true));
       }
     }
-    reloadProfile()
+    // reloadProfile()
     api
       .get('auth/analytics/')
       .then(res => {

@@ -7,7 +7,7 @@ import VideoHeader, { videoUrls } from 'src/@core/components/video-header/video-
 import api from 'src/@core/utils/api'
 import { AuthContext } from 'src/context/AuthContext'
 import { useAppDispatch, useAppSelector } from 'src/store'
-import { fetchStudentDetail, setStudentId } from 'src/store/apps/students'
+import { fetchStudentDetail, setGroupChecklist, setStudentId } from 'src/store/apps/students'
 
 // ** Demo Components Imports
 import UserViewLeft from 'src/views/apps/students/view/UserViewLeft'
@@ -16,24 +16,37 @@ import UserViewRight from 'src/views/apps/students/view/UserViewRight'
 const UserView = ({ tab, student }: any) => {
   const url = tab
 
-  const { studentData ,studentId} = useAppSelector(state => state.students)
+  const { studentData, studentId } = useAppSelector(state => state.students)
   const dispatch = useAppDispatch()
   const router = useRouter()
+
   const { user } = useContext(AuthContext)
 
- 
-  
-  
-  
+  async function getGroups() {
+    await api
+      .get(`common/group-check-list/?student=${studentData?.id}`)
+      .then(res => dispatch(setGroupChecklist(res.data)))
+      .catch(error => console.log(error))
+  }
 
   useEffect(() => {
-    if (!user?.role.includes('ceo') && !user?.role.includes('admin') && !user?.role.includes('watcher')&& !user?.role.includes('marketolog')) {
-      router.push("/")
+    if (studentData?.id) {
+      getGroups()
+    }
+  }, [studentData?.id])
+
+  useEffect(() => {
+    if (
+      !user?.role.includes('ceo') &&
+      !user?.role.includes('admin') &&
+      !user?.role.includes('watcher') &&
+      !user?.role.includes('marketolog')
+    ) {
+      router.push('/')
       toast.error("Sizda bu sahifaga kirish huquqi yo'q!")
     }
     dispatch(fetchStudentDetail(student || studentId))
-    
-  }, [studentId,student])
+  }, [studentId, student])
 
   return (
     <div>

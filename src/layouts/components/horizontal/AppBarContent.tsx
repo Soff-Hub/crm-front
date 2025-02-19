@@ -38,6 +38,7 @@ import Link from 'next/link'
 import { updateQueryParams } from 'src/store/apps/settings'
 import { toggleQrCodeModal } from 'src/store/apps/page'
 import ceoConfigs from 'src/configs/ceo'
+import useDebounce from 'src/hooks/useDebounce'
 
 interface Props {
   hidden: boolean
@@ -52,7 +53,10 @@ const AppBarContent = (props: Props) => {
   const dispatch = useAppDispatch()
   const [employees, setEmployees] = useState<any>([])
   const { t } = useTranslation()
-  const [searchOption, setSearchOption] = useState<any>(null)
+  const [search, setSearch] = useState('')
+  const [searchLoading, setSearchLoading] = useState(false)
+  const debouncedSearch = useDebounce(search, 1000) // 2 sekund debounce
+
   function clickGlobalPay() {
     dispatch(setGlobalPay(true))
   }
@@ -74,11 +78,20 @@ const AppBarContent = (props: Props) => {
     }
   }
 
-  async function handleSearch(search: string) {
-    await api.get(`${ceoConfigs.employee_checklist}?search=${search}`).then(res => {
-      setEmployees(res.data)
-    })
+  async function handleSearch(query: string) {
+    if (!query) {
+      setEmployees([])
+      return
+    }
+    setSearchLoading(true)
+    const res = await api.get(`${ceoConfigs.employee_checklist}?search=${query}`)
+    setEmployees(res.data)
+    setSearchLoading(false)
   }
+
+  useEffect(() => {
+    handleSearch(debouncedSearch)
+  }, [debouncedSearch])
 
   const subdomain = location.hostname.split('.')
   const baseURL = subdomain.length < 3 ? `test` : `${subdomain[0]}`
@@ -98,7 +111,6 @@ const AppBarContent = (props: Props) => {
     }
   }, [user?.id])
 
-
   return (
     <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'end' }}>
       {(user?.role.includes('admin') ||
@@ -116,7 +128,9 @@ const AppBarContent = (props: Props) => {
               options={employees || []}
               fullWidth
               size='small'
-              noOptionsText="Ma'lumot yo'q.."
+              loadingText={'Yuklanmoqda..'}
+              loading={searchLoading}
+              noOptionsText={"Ma'lumot yo'q.."}
               getOptionLabel={(option: any) => option?.first_name || ''}
               filterOptions={options => options}
               renderOption={(props, option: any) => (
@@ -146,7 +160,7 @@ const AppBarContent = (props: Props) => {
                 </li>
               )}
               renderInput={params => (
-                <TextField {...params} placeholder='Qidirish...' onChange={e => handleSearch(e.target.value)} />
+                <TextField {...params} placeholder='Qidirish...' onChange={e => setSearch(e.target.value)} />
               )}
             />
 

@@ -1,74 +1,142 @@
-"use client"
+'use client'
 
-import { useState } from "react"
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Checkbox, TextField } from "@mui/material"
-import Button from "react-bootstrap/Button"
-import "bootstrap/dist/css/bootstrap.min.css"
+import { useState } from 'react'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  TextField,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel
+} from '@mui/material'
+import Button from 'react-bootstrap/Button'
+import 'bootstrap/dist/css/bootstrap.min.css'
+import { DatePicker } from '@mui/lab'
+import dayjs from 'dayjs'
+import api from 'src/@core/utils/api'
+import toast from 'react-hot-toast'
 
 interface Student {
   id: number
   name: string
-  present: boolean
+  attendance: 'attend' | 'not_come' | null
   description: string
+  grade: string
 }
 
-const initialStudents: Student[] = [
-  { id: 1, name: "Alice Johnson", present: false, description: "" },
-  { id: 2, name: "Bob Smith", present: false, description: "" },
-  { id: 3, name: "Charlie Brown", present: false, description: "" },
-  { id: 4, name: "Diana Ross", present: false, description: "" },
-  { id: 5, name: "Ethan Hunt", present: false, description: "" },
-]
-
-export default function AttendanceTable() {
-  const [students, setStudents] = useState<Student[]>(initialStudents)
-
-  const handleAttendanceChange = (id: number, present: boolean) => {
-    setStudents(
-      students.map((student) =>
-        student.id === id ? { ...student, present, description: present ? "" : student.description } : student,
-      ),
-    )
+export default function AttendanceTable({ attendance }: any) {
+  const [students, setStudents] = useState(attendance)
+  
+  const handleAttendanceChange = async (data: {
+    id: number
+    is_available: string
+    group: string | number
+    date: any
+  }) => {
+    const payload = {
+      ...data,
+      is_available: data.is_available === 'attend' ? true : data.is_available === 'not_come' ? false : null
+    }
+    
+   setStudents(students.students)
+    await api
+      .patch(`common/attendance/update/${data?.id}/`, payload)
+      .then(res => {
+        console.log(res)
+      })
+      .catch(err => {
+        toast.error(err.response?.data.msg?.[0] || "Saqlab bo'lmadi qayta urinib ko'ring")
+      })
   }
 
-  const handleDescriptionChange = (id: number, description: string) => {
-    setStudents(students.map((student) => (student.id === id ? { ...student, description } : student)))
-  }
+  // const handleDescriptionChange = (id: number, description: string) => {
+  //   setStudents(students.map(student => (student.id === id ? { ...student, description } : student)))
+  // }
 
-  const handleSave = () => {
-    console.log("Saving attendance:", students)
-  }
+  // const handleGradeChange = (id: number, grade: string) => {
+  //   setStudents(students.map(student => (student.id === id ? { ...student, grade } : student)))
+  // }
+
+  // const handleSave = () => {
+  //   console.log('Saving attendance:', students)
+  // }
 
   return (
-    <div className="container mt-4">
+    <div className='container mt-4'>
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell><b>Student Name</b></TableCell>
-              <TableCell><b>Present</b></TableCell>
-              <TableCell><b>Description (if absent)</b></TableCell>
+              <TableCell>
+                <b>Ism</b>
+              </TableCell>
+              <TableCell>
+                <b>Davomati</b>
+              </TableCell>
+              <TableCell>
+                <b>Izoh (kelmagan bo'lsa)</b>
+              </TableCell>
+              <TableCell>
+                <b>Baho</b>
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {students.map((student) => (
+            {students?.students.map((student: any) => (
               <TableRow key={student.id}>
-                <TableCell>{student.name}</TableCell>
+                <TableCell>{student.first_name}</TableCell>
                 <TableCell>
-                  <Checkbox
-                    checked={student.present}
-                    onChange={(e) => handleAttendanceChange(student.id, e.target.checked)}
+                  <FormControl fullWidth size='small'>
+                    <InputLabel id={`attendance-label-${student.id}`}>Davomat</InputLabel>
+                    <Select
+                      labelId={`attendance-label-${student.id}`}
+                      value={
+                        student.attendance[0]?.is_available
+                          ? 'attend'
+                          : student.attendance[0]?.is_available === false
+                          ? 'not_come'
+                          : ''
+                      }
+                      label='Davomat'
+                      onChange={e =>
+                        handleAttendanceChange({
+                          id: student.attendance[0]?.id,
+                          is_available: e.target.value,
+                          group: student.attendance[0]?.group,
+                          date: student.attendance[0]?.date
+                        })
+                      }
+                    >
+                      <MenuItem value='attend'>Keldi</MenuItem>
+                      <MenuItem value='not_come'>Kelmagan</MenuItem>
+                    </Select>
+                  </FormControl>
+                </TableCell>
+                <TableCell>
+                  <TextField
+                    variant='outlined'
+                    size='small'
+                    fullWidth
+                    placeholder='Kelmagani uchun izoh'
+                    value={student.attendance.description}
+                    // onChange={e => handleDescriptionChange(student.id, e.target.value)}
+                    disabled={student.attendance.is_available == 'attend'}
                   />
                 </TableCell>
                 <TableCell>
                   <TextField
-                    variant="outlined"
-                    size="small"
+                    variant='outlined'
+                    size='small'
                     fullWidth
-                    placeholder="Reason for absence"
-                    value={student.description}
-                    onChange={(e) => handleDescriptionChange(student.id, e.target.value)}
-                    disabled={student.present}
+                    placeholder='Baho kiriting'
+                    value={student.grade}
+                    // onChange={e => handleGradeChange(student.id, e.target.value)}
                   />
                 </TableCell>
               </TableRow>
@@ -76,10 +144,8 @@ export default function AttendanceTable() {
           </TableBody>
         </Table>
       </TableContainer>
-      <div className="text-center mt-4">
-        <Button variant="primary" onClick={handleSave}>
-          Save Attendance
-        </Button>
+      <div className='text-center mt-4'>
+        <Button variant='primary'>Davomatni saqlash</Button>
       </div>
     </div>
   )

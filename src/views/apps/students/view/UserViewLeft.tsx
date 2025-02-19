@@ -62,7 +62,6 @@ const UserViewLeft = ({ userData }: { userData: any }) => {
   const [groupDate, setGroupDate] = useState<any>(null)
   const [isDiscount, setIsDiscount] = useState<boolean>(false)
   const { studentDetailLoading } = useAppSelector(state => state.students)
-  // Hooks
   const { t } = useTranslation()
   const { mergeStudentToGroup, getGroupShort, groupShort } = useGroups()
   const { updateStudent, studentData } = useStudent()
@@ -71,14 +70,6 @@ const UserViewLeft = ({ userData }: { userData: any }) => {
   const { smsTemps, getSMSTemps } = useSMS()
   const dispatch = useAppDispatch()
   const router = useRouter()
-
-  // Handle Edit dialog
-  const handleEditClickOpen = (value: ModalTypes) => {
-    if (value === 'group') {
-      getBranches()
-    }
-    setOpenEdit(value)
-  }
 
   const handleEditClose = () => {
     setError({})
@@ -152,7 +143,6 @@ const UserViewLeft = ({ userData }: { userData: any }) => {
 
   useEffect(() => {
     setData(userData)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userData, studentData])
 
   if (data) {
@@ -177,7 +167,7 @@ const UserViewLeft = ({ userData }: { userData: any }) => {
         </Grid>
         <Grid item gap={2} xs={12}>
           {studentDetailLoading ? (
-            <Skeleton  height={300}/>
+            <Skeleton height={300} />
           ) : userData && userData?.comments?.length > 0 ? (
             <Card>
               <CardContent>
@@ -534,7 +524,7 @@ export const SendSMSModal = ({ handleEditClose, openEdit, setOpenEdit, userData,
       aria-describedby='user-view-edit-description'
     >
       <DialogTitle id='user-view-edit' sx={{ textAlign: 'center', fontSize: '1.5rem !important' }}>
-        {t('Xabar (sms)')}
+        <Typography>{t(`Xabar (${`smslar soni:${usersData?.length}` || 'sms'})`)}</Typography>
       </DialogTitle>
       <DialogContent>
         <form style={{ marginTop: 10 }} onSubmit={formik.handleSubmit}>

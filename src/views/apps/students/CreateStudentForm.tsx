@@ -410,8 +410,8 @@ export default function CreateStudentForm() {
               </MenuItem>
             ))}
             <MenuItem sx={{ fontWeight: 600 }} onClick={() => Router.push('/groups')}>
-              {t('Yangi yaratish')}
               <IconifyIcon icon={'ion:add-sharp'} />
+              {t('Yangi yaratish')}
             </MenuItem>
           </Select>
           {errors.group && <FormHelperText error={!!errors.group}>{errors.group}</FormHelperText>}
