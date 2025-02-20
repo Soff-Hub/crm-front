@@ -117,7 +117,7 @@ export default function AddStudents() {
 
       <DialogContent>
         <form style={{ marginTop: 10 }} onSubmit={formik.handleSubmit}>
-          <AutoComplete formik={formik} setSelectedStudents={setSelectedStudents} />
+          <AutoComplete formik={formik} selectedStudent={selectedStudents} setSelectedStudents={setSelectedStudents} />
 
           {selectedStudents && (
             <>
