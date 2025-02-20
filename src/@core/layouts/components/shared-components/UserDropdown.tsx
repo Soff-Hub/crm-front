@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState, SyntheticEvent, Fragment, useContext } from 'react'
+import { useState, SyntheticEvent, Fragment, useContext, useEffect } from 'react'
 
 // ** Next Import
 import { useRouter } from 'next/router'
@@ -116,6 +116,13 @@ const UserDropdown = (props: Props) => {
     handleDropdownClose()
   }
 
+  useEffect(() => {
+    setUser((prevUser: UserDataType) => ({
+      ...prevUser,
+      role: [String(role)]
+    }))
+  }, [role])
+
   return (
     <div>
       <Badge
@@ -153,34 +160,25 @@ const UserDropdown = (props: Props) => {
               </Badge>
               <Box sx={{ display: 'flex', ml: 3, alignItems: 'flex-start', flexDirection: 'column' }}>
                 <Typography sx={{ fontWeight: 600 }}>{user?.fullName}</Typography>
-                <div
-                  onClick={() => {
-                    setUser((prevUser: UserDataType) => ({
-                      ...prevUser,
-                      role: [String(role)]
-                    }))
-                  }}
-                >
-                  {userRoles?.map((item, index) => (
-                    <div key={`${index}-${item}`} onClick={() => setRole(item)}>
-                      <Typography
-                        variant='body2'
-                        sx={{
-                          textDecoration: role == item ? 'underline' : '',
-                          cursor: 'pointer',
-                          fontSize: '0.8rem',
-                          color: role == item ? 'text.primary' : 'text.disabled',
-                          '&:hover': {
-                            color: 'text.primary',
-                            textDecoration: 'underline'
-                          }
-                        }}
-                      >
-                        {item}
-                      </Typography>
-                    </div>
-                  ))}
-                </div>
+                {userRoles?.map((item, index) => (
+                  <div key={`${index}-${item}`} onClick={() => setRole(item)}>
+                    <Typography
+                      variant='body2'
+                      sx={{
+                        textDecoration: role == item ? 'underline' : '',
+                        cursor: 'pointer',
+                        fontSize: '0.8rem',
+                        color: role == item ? 'text.primary' : 'text.disabled',
+                        '&:hover': {
+                          color: 'text.primary',
+                          textDecoration: 'underline'
+                        }
+                      }}
+                    >
+                      {item}
+                    </Typography>
+                  </div>
+                ))}
               </Box>
             </Box>
 
