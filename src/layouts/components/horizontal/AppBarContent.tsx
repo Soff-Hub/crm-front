@@ -120,6 +120,7 @@ const AppBarContent = (props: Props) => {
         !window.location.hostname.split('.').includes('c-panel') && (
           <>
             <Autocomplete
+              open={search == '' ? false : true}
               sx={{ paddingX: 10 }}
               disablePortal
               onClose={() => {

@@ -47,7 +47,6 @@ export default function GroupsPage() {
     state => state.settings
   )
 
-  console.log(openSms);
   const {isMobile} = useResponsive()
 
   const dispatch = useAppDispatch()

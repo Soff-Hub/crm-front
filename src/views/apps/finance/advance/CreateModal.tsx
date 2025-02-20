@@ -22,7 +22,6 @@ export default function CreateModal() {
 
     async function getEmployee() {
         await api.get(`${ceoConfigs.employee_checklist}?type=employee`).then((res) => {
-            console.log(res.data)
             setEmployes(res.data)
         }).catch((err) => {
             console.log(err)

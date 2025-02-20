@@ -75,7 +75,6 @@ export default function SendSmsAnonimUserForm({ smsTemps, user, closeModal, reRe
     }
   }, [])
 
-  console.log(smschild_list)
 
   return (
     <form

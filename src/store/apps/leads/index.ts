@@ -166,7 +166,6 @@ export const updateAmoCrmStudent = createAsyncThunk(
     try {
       let response
 
-      console.log('Sending data:', data)
 
         response = await api.patch(`amocrm/lead/update/${data.id}/`, {status_id:data.data.department})
 

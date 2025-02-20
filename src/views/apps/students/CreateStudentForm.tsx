@@ -109,7 +109,6 @@ export default function CreateStudentForm() {
     onSubmit: async (values: CreateStudentDto) => {
       setLoading(true)
       dispatch(disablePage(true))
-      console.log(values)
 
       const discountConfig = {
         discount_amount: values?.fixed_price,

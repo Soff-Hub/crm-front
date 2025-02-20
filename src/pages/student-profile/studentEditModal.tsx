@@ -65,7 +65,6 @@ export default function StudentEditProfileModal({ isModalOpen, setIsModalOpen }:
                   password2: values.password2
                 })
                 setLoading(false)
-                console.log('Password changed successfully:', response.data)
                 resetForm()
                 handleClose()
                 toast.success("Muvaffaqiyatli o'zgartirildi", {

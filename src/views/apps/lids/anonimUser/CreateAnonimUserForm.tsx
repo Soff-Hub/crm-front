@@ -31,7 +31,6 @@ export default function CreateAnonimUserForm({ source }: Props) {
   const query = window.location?.search?.split('?slug=')[1]
 
   const { sectionId, loading, leadData, openLid, sourceData } = useAppSelector(state => state.leads)
-  console.log(leadData, openLid)
 
   const validationSchema = Yup.object({
     department: Yup.string().required("Bo'lim tanlang"),
