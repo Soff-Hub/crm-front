@@ -4,7 +4,7 @@ import { ILogsState } from 'src/types/apps/logs'
 
 // ** Fetch All Departments
 export const fetchPaymetLogs = createAsyncThunk('logs/fetchPaymetLogs', async (queryString?: any) => {
-    return (await api.get(`auth/student/logs/?` + queryString)).data
+    return (await api.get(`student/logs/?` + queryString)).data
 })
 
 export const fetBotOwners = createAsyncThunk('logs/fetBotOwners', async () => {

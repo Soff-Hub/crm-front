@@ -3,6 +3,7 @@ import { genderTypes } from './userTypes'
 export interface SmsItemType {
   id: number
   description: string
+  parent: number
 }
 
 export interface RoomType {
@@ -24,7 +25,7 @@ export interface CourseItemType {
   description: string
   lesson_duration: string
   lesson_duration_seconds: number
-  color: string,
+  color: string
   text_color?: string
   is_delete: boolean
   branch: {
@@ -51,7 +52,23 @@ export interface EmployeeItemType {
 }
 
 export interface SettingsState {
+  employee_id: number | null
+  schools: any
+  logins: {
+    count: number
+    next: string
+    previous: any
+    results: { date: string; id: number; user_name: string; user_phone: string }[]
+  } | null
+  openEditSchool: any
+  school_count: number
+  schoolQueryParams: { search?: string; page?: number }
+  isGettingSchools: boolean
+  openSms: string | null
   is_pending: boolean
+  is_childpending: boolean
+  smschild_list: SmsItemType[]
+  openCreateSmsCategory: boolean
   sms_list: SmsItemType[]
   openCreateSms: boolean
   openEditSms: null | SmsItemType

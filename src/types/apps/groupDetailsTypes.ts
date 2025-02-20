@@ -3,10 +3,14 @@ import { BranchTypes } from 'src/hooks/useRooms'
 import { TeacherType } from 'src/hooks/useTeachers'
 import { SmsItemType } from './settings'
 
-type ActionTypes = 'delete' | 'send-sms' | 'add-student' | 'notes' | 'edit'
+type ActionTypes = 'delete' | 'send-sms' | 'add-student' | 'notes' | 'edit' | 'online-lesson'
 
 export interface IGroupDetailsState {
   groupData: null | any
+  gradeQueryParams: any,
+  updateStatusModal: any,
+  onlineLessonLoading:boolean,
+  meet_link:string|null,
   days: null | any
   exams: null | any
   open: 'add' | 'edit' | 'delete' | 'result' | null
@@ -23,7 +27,9 @@ export interface IGroupDetailsState {
   teachers: TeacherType[] | null
   students: StudentDetailType[] | null
   attendance: any
+  grades:any
   results: any
+  isGettingGrades:boolean,
   examStudentId: any
   editData: any
   resultId: any

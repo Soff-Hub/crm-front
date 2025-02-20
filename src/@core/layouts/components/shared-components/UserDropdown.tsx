@@ -24,9 +24,15 @@ import { useAuth } from 'src/hooks/useAuth'
 import { Settings } from 'src/@core/context/settingsContext'
 import { AuthContext } from 'src/context/AuthContext'
 import { useTranslation } from 'react-i18next'
-import { Button } from '@mui/material'
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton } from '@mui/material'
+import UserIcon from 'src/layouts/components/UserIcon'
+import StudentEditProfileModal from 'src/pages/student-profile/studentEditModal'
+import { GridCloseIcon } from '@mui/x-data-grid'
+import { UserDataType } from 'src/context/types'
+import { useAppDispatch, useAppSelector } from 'src/store'
+import { setRoles } from 'src/store/apps/user'
 
-interface Props {
+type Props = {
   settings: Settings
 }
 
@@ -40,21 +46,31 @@ const BadgeContentSpan = styled('span')(({ theme }) => ({
 }))
 
 const UserDropdown = (props: Props) => {
-  // ** Props
-  const { settings } = props
-  const { t } = useTranslation()
-  // ** States
-  const [anchorEl, setAnchorEl] = useState<Element | null>(null)
+  const [imageSrc, setImageSrc] = useState('')
 
-  // ** Hooks
+  const { settings } = props
+  const [open, setOpen] = useState(false)
+  const { t } = useTranslation()
+  const [anchorEl, setAnchorEl] = useState<Element | null>(null)
+  const [isModalOpen, setIsModalOpen] = useState(false)
   const router = useRouter()
   const { logout } = useAuth()
+  const { userRoles } = useAppSelector(state => state.user)
+  const { user, setUser } = useContext(AuthContext)
+  const [role, setRole] = useState('')
 
-  // ** Context
-  const { user } = useContext(AuthContext)
-
-  // ** Vars
   const { direction } = settings
+
+  const dispatch = useAppDispatch()
+
+  const handleClickOpen = (src: any) => {
+    setImageSrc(src)
+    setOpen(true)
+  }
+
+  const handleClose = () => {
+    setOpen(false)
+  }
 
   const handleDropdownOpen = (event: SyntheticEvent) => {
     setAnchorEl(event.currentTarget)
@@ -71,26 +87,37 @@ const UserDropdown = (props: Props) => {
     py: 2,
     px: 4,
     m: 0,
-    borderRadius: "0",
+    borderRadius: '0',
     width: '100%',
     display: 'flex',
-    justifyContent: "flex-start",
+    justifyContent: 'flex-start',
     alignItems: 'center',
-    // color: 'text.primary',
-    // textDecoration: 'none',
     '& svg': {
-      mr: 2,
-      // fontSize: '1.375rem',
-      // color: 'text.primary'
+      mr: 2
     }
   }
+
+  const downloadImage = (imageUrl: any, filename: any) => {
+    const anchor = document.createElement('a')
+    anchor.href = imageUrl
+
+    anchor.download = filename
+
+    document.body.appendChild(anchor)
+
+    anchor.click()
+
+    document.body.removeChild(anchor)
+  }
+
   const handleLogout = () => {
     logout()
+    dispatch(setRoles([]))
     handleDropdownClose()
   }
 
   return (
-    <Fragment>
+    <div>
       <Badge
         overlap='circular'
         onClick={handleDropdownOpen}
@@ -101,12 +128,7 @@ const UserDropdown = (props: Props) => {
           horizontal: 'right'
         }}
       >
-        <Avatar
-          alt={user?.fullName}
-          onClick={handleDropdownOpen}
-          sx={{ width: 40, height: 40 }}
-          src={user?.avatar}
-        />
+        <Avatar alt={user?.fullName} onClick={handleDropdownOpen} sx={{ width: 40, height: 40 }} src={user?.avatar} />
       </Badge>
       <Menu
         anchorEl={anchorEl}
@@ -117,51 +139,147 @@ const UserDropdown = (props: Props) => {
         transformOrigin={{ vertical: 'top', horizontal: direction === 'ltr' ? 'right' : 'left' }}
       >
         <Box sx={{ pt: 2, pb: 3, px: 4 }}>
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Badge
-              overlap='circular'
-              badgeContent={<BadgeContentSpan />}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'right'
-              }}
-            >
-              <Avatar alt={user?.fullName} src={user?.avatar} sx={{ width: '2.5rem', height: '2.5rem' }} />
-            </Badge>
-            <Box sx={{ display: 'flex', ml: 3, alignItems: 'flex-start', flexDirection: 'column' }}>
-              <Typography sx={{ fontWeight: 600 }}>{user?.fullName}</Typography>
-              <Typography variant='body2' sx={{ fontSize: '0.8rem', color: 'text.disabled' }}>
-                {user?.role.join(', ')}
-              </Typography>
+          <Box sx={{ display: 'flex', alignItems: 'start', justifyContent: 'space-between' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Badge
+                overlap='circular'
+                badgeContent={<BadgeContentSpan />}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'right'
+                }}
+              >
+                <Avatar alt={user?.fullName} src={user?.avatar} sx={{ width: '2.5rem', height: '2.5rem' }} />
+              </Badge>
+              <Box sx={{ display: 'flex', ml: 3, alignItems: 'flex-start', flexDirection: 'column' }}>
+                <Typography sx={{ fontWeight: 600 }}>{user?.fullName}</Typography>
+                <div
+                  onClick={() => {
+                    setUser((prevUser: UserDataType) => ({
+                      ...prevUser,
+                      role: [String(role)]
+                    }))
+                  }}
+                >
+                  {userRoles?.map((item, index) => (
+                    <div key={`${index}-${item}`} onClick={() => setRole(item)}>
+                      <Typography
+                        variant='body2'
+                        sx={{
+                          textDecoration: role == item ? 'underline' : '',
+                          cursor: 'pointer',
+                          fontSize: '0.8rem',
+                          color: role == item ? 'text.primary' : 'text.disabled',
+                          '&:hover': {
+                            color: 'text.primary',
+                            textDecoration: 'underline'
+                          }
+                        }}
+                      >
+                        {item}
+                      </Typography>
+                    </div>
+                  ))}
+                </div>
+              </Box>
             </Box>
+
+            {user?.qr_code && (
+              <img
+                width={30}
+                height={30}
+                src={user?.qr_code}
+                style={{
+                  cursor: 'pointer',
+                  marginLeft: 5,
+                  transition: 'transform 0.3s, opacity 0.3s'
+                }}
+                onMouseEnter={(e: any) => {
+                  e.target.style.transform = 'scale(1.1)'
+                  e.target.style.opacity = '0.8'
+                }}
+                onMouseLeave={(e: any) => {
+                  e.target.style.transform = 'scale(1)'
+                  e.target.style.opacity = '1'
+                }}
+                onClick={() => handleClickOpen(user?.qr_code)} // Open modal on image click
+              />
+            )}
+
+            <button className='border-0 bg-transparent cursor-pointer'>
+              <UserIcon onClick={() => setIsModalOpen(true)} icon='lucide:edit' />
+            </button>
           </Box>
         </Box>
         <Typography variant='body2' sx={{ fontSize: '0.8rem', color: 'black', paddingLeft: '20px' }}>
           {user?.username}
         </Typography>
-        <Divider sx={{ mb: '0 !important', mt: "1 !important" }} />
-        {(user?.role.includes('ceo')) && !window.location.hostname.split('.').includes('c-panel') && <>
-          <Button color="success" sx={styles} onClick={() => router.push('/crm-payments')}>
+
+        <Divider sx={{ mb: '0 !important', mt: '1 !important' }} />
+        {user?.role.includes('ceo') && !window.location.hostname.split('.').includes('c-panel') && (
+          <Button color='success' sx={styles} onClick={() => router.push('/crm-payments')}>
             <Icon icon='material-symbols-light:payments-sharp' />
-            {t("CRM sozlamalari")}
+            {t('CRM sozlamalari')}
           </Button>
-        </>}
-        {(user?.role.includes('admin') || user?.role.includes('ceo')) && !window.location.hostname.split('.').includes('c-panel') && <>
-          <Button color="secondary" sx={styles} onClick={() => router.push('/video-tutorials')}>
-            <Icon icon='ph:video-bold' />
-            {t("Video qo'llanmalar")}
-          </Button>
-        </>}
+        )}
+
+        {(user?.role.includes('admin') || user?.role.includes('ceo')) &&
+          !window.location.hostname.split('.').includes('c-panel') && (
+            <Button color='secondary' sx={styles} onClick={() => router.push('/video-tutorials')}>
+              <Icon icon='ph:video-bold' />
+              {t("Video qo'llanmalar")}
+            </Button>
+          )}
         <Divider sx={{ m: '0 !important' }} />
         <MenuItem
           onClick={handleLogout}
           sx={{ py: 2, '& svg': { mr: 2, fontSize: '1.375rem', color: 'text.primary' } }}
         >
           <Icon icon='mdi:logout-variant' />
-          {t("Logout")}
+          {t('Logout')}
         </MenuItem>
       </Menu>
-    </Fragment>
+
+      <StudentEditProfileModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
+      <Dialog open={open} onClose={handleClose}>
+        <DialogTitle>
+          <IconButton
+            edge='end'
+            color='inherit'
+            onClick={handleClose}
+            aria-label='close'
+            sx={{
+              position: 'absolute',
+              right: 20,
+              top: 8,
+              color: theme => theme.palette.grey[500]
+            }}
+          >
+            <GridCloseIcon />
+          </IconButton>
+          <div>QR Code</div>
+        </DialogTitle>
+
+        <DialogContent>
+          <img
+            src={imageSrc}
+            alt='QR Code'
+            style={{
+              width: '100%',
+              height: 'auto',
+              maxWidth: '500px',
+              margin: '0 auto'
+            }}
+          />
+        </DialogContent>
+
+        <DialogActions>
+          <Button onClick={() => downloadImage(imageSrc, 'qr_code')} fullWidth color='primary' variant='contained'>
+            Yuklab olish
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </div>
   )
 }
 

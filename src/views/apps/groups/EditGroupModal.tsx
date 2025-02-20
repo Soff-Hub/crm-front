@@ -1,5 +1,4 @@
 //@ts-nocheck
-
 import { Autocomplete, Box, Drawer, FormHelperText, IconButton, InputLabel, TextField, Typography } from '@mui/material'
 import IconifyIcon from 'src/@core/components/icon'
 import MenuItem from '@mui/material/MenuItem'
@@ -27,6 +26,7 @@ import Calendar from './Calendar'
 import { disablePage } from 'src/store/apps/page'
 import toast from 'react-hot-toast'
 import { useRouter } from 'next/router'
+import Router from 'next/router'
 import {
   getAttendance,
   getDays,
@@ -38,49 +38,20 @@ import { getMontNumber } from 'src/@core/utils/gwt-month-name'
 import api from 'src/@core/utils/api'
 
 export default function EditGroupModal() {
-  const {
-    isOpenEdit,
-    groupData,
-    courses,
-    initialValues,
-    formParams,
-    queryParams,
-    isGettingGroupDetails
-  } = useAppSelector(state => state.groups)
+  const { isOpenEdit,teachersData,roomsData, groupData, courses, initialValues, formParams, queryParams, isGettingGroupDetails } =
+    useAppSelector(state => state.groups)
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
   const [loading, setLoading] = useState(false)
   const [customWeekdays, setCustomWeekDays] = useState<string[]>([])
   const { query } = useRouter()
-  const [roomsData, setRoomsData] = useState<any[] | null>(null)
-  const [teachersData, setTeachersData] = useState<TacherItemType[] | null>(null)
-
-  const getTeachers = async () => {
-    await api
-       .get('auth/employees-check-list/?role=teacher')
-       .then(data => {
-         setTeachersData(data.data)
-       })
-       .catch(error => {
-         console.log(error)
-       })
-   }
- 
 
 
-  const getRooms = async () => {
-    await api
-      .get('common/room-check-list/')
-      .then(data => setRoomsData(data.data))
-      .catch(error => {
-        console.log(error)
-      })
-  }
+  
+  
 
-  useEffect(() => {
-    getRooms()
-    getTeachers()
-  }, [groupData])
+
+  
 
   const options = roomsData?.map(item => ({
     label: item?.name,
@@ -122,10 +93,15 @@ export default function EditGroupModal() {
 
       if (response.meta.requestStatus === 'rejected') {
         formik.setErrors(response.payload)
+        console.log(response.payload);
+        
+        toast.error(response.payload.msg)
+        
       } else {
         dispatch(updateParams({ is_recovery: false }))
         toast.success(t("O'zgrishlar muvafaqqiyati saqlandi"))
         const queryString = new URLSearchParams(queryParams).toString()
+
         if (query?.id) {
           dispatch(setGettingAttendance(true))
           dispatch(setGettingGroupDetails(true))
@@ -148,7 +124,7 @@ export default function EditGroupModal() {
           dispatch(setGettingAttendance(false))
           dispatch(setGettingGroupDetails(false))
         } else {
-          await dispatch(fetchGroups(queryString))
+          await dispatch(fetchGroups(queryParams))
         }
         formik.resetForm()
       }
@@ -159,7 +135,7 @@ export default function EditGroupModal() {
 
   const handleChangeField = async (
     name: string,
-    event: SelectChangeEvent<string> | ChangeEvent<HTMLInputElement> | string
+    event: SelectChangeEvent<string> | ChangeEvent<HTMLInputElement> | string 
   ) => {
     formik.setFieldValue(name, event?.target?.value || event)
     if (name == 'teacher') {
@@ -242,6 +218,7 @@ export default function EditGroupModal() {
       dispatch(updateParams({ is_recovery: false }))
     }
   }, [])
+  
 
   return (
     <Drawer open={isOpenEdit} hideBackdrop anchor='right' variant='temporary' sx={{ width: '100%' }}>
@@ -341,7 +318,7 @@ export default function EditGroupModal() {
                   </InputLabel>
                   <Select
                     size='small'
-                    label='Hafta kunlari'
+                    label={t('Hafta kunlari')}
                     id='demo-simple-select-outlined'
                     name='day_of_week'
                     labelId='demo-simple-select-outlined-label'
@@ -350,10 +327,10 @@ export default function EditGroupModal() {
                     error={!!formik.errors.day_of_week && formik.touched.day_of_week}
                     value={formik.values.day_of_week}
                   >
-                    <MenuItem value={`tuesday,thursday,saturday`}>Juft kunlari</MenuItem>
-                    <MenuItem value={`monday,wednesday,friday`}>Toq kunlari</MenuItem>
-                    <MenuItem value={`tuesday,thursday,saturday,monday,wednesday,friday`}>Har kuni</MenuItem>
-                    <MenuItem value={'0'}>Boshqa</MenuItem>
+                    <MenuItem value={`tuesday,thursday,saturday`}>{t('Juft kunlari')}</MenuItem>
+                    <MenuItem value={`monday,wednesday,friday`}>{t('Toq kunlari')}</MenuItem>
+                    <MenuItem value={`tuesday,thursday,saturday,monday,wednesday,friday`}>{t('Har kuni')}</MenuItem>
+                    <MenuItem value={'0'}>{t('Boshqa')}</MenuItem>
                   </Select>
                   <FormHelperText error={!!formik.errors.day_of_week && formik.touched.day_of_week}>
                     {!!formik.errors.day_of_week && formik.touched.day_of_week && formik.errors.day_of_week}
@@ -391,23 +368,53 @@ export default function EditGroupModal() {
                   </Box>
                 ) : (
                   ''
-                )}
+                  )}
+                   <FormControl fullWidth>
+              <InputLabel size='small' id='user-view-language-label'>
+                  {t("Xona")}
+                </InputLabel>
+                <Select
+                  size='small'
+                  label={t("Xona")}
+                  id='user-view-language'
+                  labelId='user-view-language-label'
+                  name='room'
+                  onChange={e => handleChangeField('room', e)}
+                  onBlur={formik.handleBlur}
+                  value={formik.values?.room}
+                  error={!!formik.errors.room && !!formik.touched.room}
+                >
+                  {roomsData?.map(room => (
+                    <MenuItem key={room.id} value={+room.id}>
+                      {room.name}
+                    </MenuItem>
+                  ))}
+                  <MenuItem sx={{ fontWeight: 600 }} onClick={() => Router?.push('/settings/office/rooms')}>
+                    {t('Yangi yaratish')}
+                    <IconifyIcon icon={'ion:add-sharp'} />
+                  </MenuItem>
+                </Select>
+                <FormHelperText error={!!formik.errors.room && !!formik.touched.room}>
+                  {!!formik.errors.room && !!formik.touched.room && formik.errors.room}
+                </FormHelperText>
+              </FormControl>
 
-                <FormControl fullWidth>
+
+                {/* <FormControl fullWidth>
                   <Autocomplete
-                    placeholder={'Xonalar'}
+                    placeholder={t('Xonalar')}
                     size='small'
                     onBlur={formik.handleBlur}
                     disablePortal
-                    onChange={(e,v) => handleChangeField('room', v?.value)}
-                    value={options?.length > 0 && options.find(option => option.value === formik.values.room) || null}
+                    onChange={(e, v) => handleChangeField('room', v?.value)}
+                    value={(options?.length > 0 && options.find(option => option.value === formik.values.room)) || null}
                     options={options}
-                    renderInput={params => <TextField {...params} label='Xonalar' />}
+                    renderInput={params => <TextField {...params} label={t('Xonalar')} />}
                   />
                   <FormHelperText error={!!formik.errors.room && formik.touched.room}>
                     {!!formik.errors.room && formik.touched.room && formik.errors.room}
                   </FormHelperText>
-                </FormControl>
+                </FormControl> */}
 
                 <FormControl fullWidth>
                   <InputLabel size='small' id='user-view-language-label'>
@@ -426,7 +433,7 @@ export default function EditGroupModal() {
                     error={!!formik.errors.teacher && formik.touched.teacher}
                   >
                     {teachersData?.map(teacher => (
-                      <MenuItem key={teacher.id} value={+teacher.id}>
+                      <MenuItem key={teacher.id} value={+teacher?.id}>
                         {teacher.first_name}
                       </MenuItem>
                     ))}

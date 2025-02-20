@@ -25,6 +25,7 @@ import groupDetails from 'src/store/apps/groupDetails'
 import finance from './apps/finance'
 import page from './apps/page'
 import logs from './apps/logs'
+import investmentSlice from 'src/store/apps/finance/investments';
 
 export const store = configureStore({
   reducer: {
@@ -49,7 +50,8 @@ export const store = configureStore({
     studentPayments,
     employeeAttendance,
     logs,
-    attendance
+    attendance,
+    investmentSlice
     
   },
   middleware: getDefaultMiddleware =>

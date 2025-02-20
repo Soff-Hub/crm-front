@@ -15,6 +15,7 @@ import { useTranslation } from 'react-i18next'
 import EmptyContent from 'src/@core/components/empty-content'
 import { useAppSelector } from 'src/store'
 import useResponsive from 'src/@core/hooks/useResponsive'
+import { useEffect, useState } from 'react'
 
 const CardWidgetsWeeklyOverview = () => {
   // ** Hook
@@ -25,18 +26,22 @@ const CardWidgetsWeeklyOverview = () => {
 
   const { all_numbers, numbersLoad: loading } = useAppSelector(state => state.finance)
 
-  const data = all_numbers ? [
-    {
-      name: t('Chiqimlar'),
-      data: Object.values(all_numbers.expense),
-    }, {
-      name: t('Tushumlar'),
-      data: Object.values(all_numbers.benefit),
-    }, {
-      name: t('Foyda'),
-      data: Object.values(all_numbers.difference),
-    }
-  ] : []
+  const data = all_numbers
+    ? [
+        {
+          name: t('Chiqimlar'),
+          data: Object.values(all_numbers.expense)
+        },
+        {
+          name: t('Tushumlar'),
+          data: Object.values(all_numbers.benefit)
+        },
+        {
+          name: t('Foyda'),
+          data: Object.values(all_numbers.difference)
+        }
+      ]
+    : []
 
   const options: ApexOptions = {
     chart: {
@@ -52,7 +57,7 @@ const CardWidgetsWeeklyOverview = () => {
         left: 5,
         blur: 10,
         opacity: 0.1
-      },
+      }
     },
     plotOptions: {
       bar: {
@@ -89,62 +94,84 @@ const CardWidgetsWeeklyOverview = () => {
       type: 'gradient',
       gradient: {
         opacityFrom: 0,
-        opacityTo: 0,
-      },
+        opacityTo: 0
+      }
     },
     grid: {
       show: true,
-      borderColor: "#f3f4f6"
+      borderColor: '#f3f4f6'
     },
     xaxis: {
-      categories: ['Yan', 'Fev', 'Mart', 'Apr', 'May', 'Iyun', 'Iyul', 'Avg', 'Sen', 'Okt', 'Noy', 'Dek'].map(month => t([month])),
+      categories: ['Yan', 'Fev', 'Mart', 'Apr', 'May', 'Iyun', 'Iyul', 'Avg', 'Sen', 'Okt', 'Noy', 'Dek'].map(month =>
+        t([month])
+      ),
       tickPlacement: 'on',
       axisTicks: { show: false },
       axisBorder: { show: false },
       labels: {
         show: true,
         style: {
-          fontFamily: "Inter,Verdana",
-          fontSize: "12px",
-          colors: "#9ca3af"
+          fontFamily: 'Inter,Verdana',
+          fontSize: '12px',
+          colors: '#9ca3af'
         }
-      },
+      }
     },
     yaxis: {
       show: true,
       tickAmount: 5,
       labels: {
-        formatter: (value) => `${formatCurrency(value)}`,
+        formatter: value => `${formatCurrency(value)}`,
         rotate: isMobile ? -45 : 0,
         style: {
-          fontFamily: "Inter,Verdana",
-          fontSize: "12px",
-          colors: "#9ca3af"
+          fontFamily: 'Inter,Verdana',
+          fontSize: '12px',
+          colors: '#9ca3af'
         }
       },
       forceNiceScale: true
     },
     tooltip: {
       enabled: true
-    },
+    }
   }
+  const [datas, setData] = useState<any>({
+    totalPaymentsReceived: all_numbers?.plans.done_amount ?? 0,
+    outstandingDebt: (all_numbers?.plans.planned_amount ?? 0) - (all_numbers?.plans.done_amount ?? 0),
+    totalExpected: all_numbers?.plans.planned_amount ?? 0,
+    percentage: all_numbers?.plans.percentage ?? 0
+  })
+
 
 
   return (
-    <Card sx={{ p: '20px' }}>
-      <Box sx={{ display: 'flex', alignItems: 'center' }}>
-        {loading ? <Skeleton variant='text' width={'200px'} /> : <Typography sx={{ fontSize: '22px', fontFamily: "Inter" }}>{all_numbers?.year} {t('yildagi aylanmalar')}</Typography>}
-      </Box>
-      <Box>
-        {loading ? (
-          <Box sx={{ display: 'flex', alignItems: 'flex-end', gap: '20px' }}>
-            {
-              [10, 12, 7, 20, 30, 13, 45, 33, 12, 41, 18, 9, 21].map(el => <Skeleton variant="rounded" width={'50px'} height={el * 5} />)
-            }
-          </Box>
-        ) : all_numbers ? <ReactApexcharts type='area' height={208} series={data} options={options} /> : <EmptyContent />}
-      </Box>
-    </Card>
+    <>
+      <Card sx={{ p: '20px' }}>
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          {loading ? (
+            <Skeleton variant='text' width={'200px'} />
+          ) : (
+            <Typography sx={{ fontSize: '22px', fontFamily: 'Inter' }}>
+              {all_numbers?.year} {t('yildagi aylanmalar')}
+            </Typography>
+          )}
+        </Box>
+        <Box>
+          {loading ? (
+            <Box sx={{ display: 'flex', alignItems: 'flex-end', gap: '20px' }}>
+              {[10, 12, 7, 20, 30, 13, 45, 33, 12, 41, 18, 9, 21].map(el => (
+                <Skeleton variant='rounded' width={'50px'} height={el * 5} />
+              ))}
+            </Box>
+          ) : all_numbers ? (
+            <ReactApexcharts type='area' height={208} series={data} options={options} />
+          ) : (
+            <EmptyContent />
+          )}
+        </Box>
+      </Card>
+      
+    </>
   )
 }
 

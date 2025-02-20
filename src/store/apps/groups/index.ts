@@ -74,7 +74,7 @@ export const fetchGroupChecklist = createAsyncThunk('groups/fetchGroupChecklist'
 export const fetchTeacherSalaries = createAsyncThunk(
   'groups/fetchTeacherSalaries',
   async (queryString: string = '') => {
-    const resp = await api.get('/auth/employee/salaries/' + '?' + queryString)
+    const resp = await api.get(ceoConfigs.employee_salaries + '?' + queryString)
     return resp.data
   }
 )
@@ -88,8 +88,10 @@ const currentDay: string = `${new Date()}`.split(' ')[0].toLocaleLowerCase()
 
 const initialState: IGroupsState = {
   groups: null,
+  teachersData:null,
   groupChecklist: null,
   groupData: null,
+  roomsData:null,
   courses: null,
   teachers: null,
   teacherSalaries: null,
@@ -100,6 +102,7 @@ const initialState: IGroupsState = {
   groupCount: 0,
   isTableLoading: false,
   isOpenEdit: false,
+  isChangeBranchEdit:false,
   isOpenAddGroup: false,
   isDeleting: false,
   isUpdatingDashboard: false,
@@ -109,10 +112,13 @@ const initialState: IGroupsState = {
     page: 1,
     limit: 10
   },
+  
   queryParams: {
     status: 'active',
+    offset:'0',
     is_recovery: false,
-    limit: 10
+
+
   },
   formParams: {
     day_of_week:
@@ -142,11 +148,20 @@ export const groupsSlice = createSlice({
     handleOpenEdit: (state, action) => {
       state.isOpenEdit = action.payload
     },
+    handleChangeBranchOpenEdit: (state, action) => {
+      state.isChangeBranchEdit = action.payload
+    },
     handleOpenAddModal: (state, action) => {
       state.isOpenAddGroup = action.payload
     },
     setGroupData: (state, action) => {
       state.groupData = action.payload
+    },
+    setTeacherData: (state, action) => {
+      state.teachersData = action.payload
+    },
+    setRoomsData: (state, action) => {
+      state.roomsData = action.payload
     },
     updateParams: (state, action) => {
       state.queryParams = { ...state.queryParams, ...action.payload }
@@ -241,11 +256,14 @@ export const groupsSlice = createSlice({
 
 export const {
   handleOpenEdit,
+  handleChangeBranchOpenEdit,
   resetFormParams,
   updateFormParams,
   handleOpenAddModal,
   updateParams,
   setGroupData,
+  setTeacherData,
+  setRoomsData,
   resetGroupParams,
   updateMyGroupParams
 } = groupsSlice.actions

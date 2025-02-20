@@ -1,77 +1,102 @@
 import React, { useEffect } from 'react'
 import { CreatesDepartmentState } from 'src/types/apps/leadsTypes'
-import * as Yup from "yup";
-import { useFormik } from 'formik';
-import { FormControl, FormHelperText, TextField } from '@mui/material';
-import LoadingButton from '@mui/lab/LoadingButton';
-import { useTranslation } from 'react-i18next';
-import { useAppDispatch } from 'src/store';
-import { fetchDepartmentList } from 'src/store/apps/leads';
-import api from 'src/@core/utils/api';
-
+import * as Yup from 'yup'
+import { useFormik } from 'formik'
+import { FormControl, FormHelperText, TextField } from '@mui/material'
+import LoadingButton from '@mui/lab/LoadingButton'
+import { useTranslation } from 'react-i18next'
+import { useAppDispatch } from 'src/store'
+import { fetchDepartmentList, setDragonLoading, setLeadItems } from 'src/store/apps/leads'
+import api from 'src/@core/utils/api'
+import toast from 'react-hot-toast'
 
 type Props = {
-    setLoading: any
-    loading: boolean
-    setOpenDialog: any
-    id: number
-    defaultName: string
+  setLoading: (status: boolean) => void,
+  loading: boolean
+  setOpenDialog: any
+  id: number
+  defaultName: string
 }
 
 export default function EditDepartmentItemForm({ setLoading, setOpenDialog, loading, id, defaultName }: Props) {
+  const { t } = useTranslation()
+  const dispatch = useAppDispatch()
+  const query = window.location?.search?.split('?slug=')[1]
+  const validationSchema = Yup.object({
+    name: Yup.string().required('Nom kiriting')
+  })
 
-    const { t } = useTranslation()
-    const dispatch = useAppDispatch()
+  const initialValues: CreatesDepartmentState = { name: defaultName }
 
-    const validationSchema = Yup.object({
-        name: Yup.string().required("Nom kiriting"),
-    });
+  async function handleGetLealdItems() {
+    if (!query) return
+    dispatch(setDragonLoading(true))
 
-    const initialValues: CreatesDepartmentState = { name: defaultName }
+    try {
+      const res = await api.get(`leads/department/${query}`)
+      dispatch(setLeadItems(res.data))
+    } catch (err) {
+      console.error('Error fetching leads:', err)
+    } finally {
+      dispatch(setDragonLoading(false))
+    }
+  }
 
-    const formik: any = useFormik({
-        initialValues,
-        validationSchema,
-        onSubmit: async (values) => {
-            setLoading(true)
-            try {
-                await api.patch(`leads/department-update/${id}`, values)
-                setLoading(false)
-                setOpenDialog(null)
-                await dispatch(fetchDepartmentList())
-                formik.resetForm()
-            } catch {
-                setLoading(false)
-                // formik.setErrors(resp.payload)
-            }
+  const formik = useFormik({
+    initialValues,
+    validationSchema,
+    onSubmit: async values => {
+      setLoading(true)
+      try {
+        const response = await api.patch(`leads/department-update/${id}`, values)
+        if (response.status == 200) {
+          setLoading(false)
+          setOpenDialog(null)
+          await dispatch(fetchDepartmentList())
+          await handleGetLealdItems()
+          formik.resetForm()
         }
-    });
+      } catch (err: any) {
+        formik.setErrors(err.response.data)
+        toast.error(err.response.data.name[0])
+        setLoading(false)
+      }
+    }
+  })
 
-    useEffect(() => {
+  
 
-        return () => {
-            formik.resetForm()
-        }
-    }, [])
+  useEffect(() => {
+    return () => {
+      formik.resetForm()
+    }
+  }, [])
 
 
-    return (
-        <form onSubmit={formik.handleSubmit} style={{ padding: '5px 0', width: '100%', display: 'flex', flexDirection: 'column', gap: '15px' }}>
-            <FormControl fullWidth>
-                <TextField
-                    fullWidth
-                    size='small'
-                    label={t("Bo'lim nomi")}
-                    name='name'
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.name}
-                    error={!!formik.errors.name && formik.touched.name}
-                />
-                {formik.errors.name && formik.touched.name && <FormHelperText error={true}>{formik.errors.name}</FormHelperText>}
-            </FormControl>
+  return (
+    <form
+      onSubmit={formik.handleSubmit}
+      style={{ padding: '5px 0', width: '100%', display: 'flex', flexDirection: 'column', gap: '15px' }}
+    >
+      <FormControl fullWidth>
+        <TextField
+          fullWidth
+          size='small'
+          label={t("Bo'lim nomi")}
+          name='name'
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          value={formik.values.name}
+          error={!!formik.errors.name && formik.touched.name}
+        />
+        {formik.errors.name && formik.touched.name && (
+          <FormHelperText error={true}>{formik.errors.name}</FormHelperText>
+        )}
+      </FormControl>
 
-            <LoadingButton loading={loading} type='submit' variant='outlined'>{t("Saqlash")}</LoadingButton>
-        </form>
-    )
+      <LoadingButton loading={loading} type='submit' variant='outlined'>
+        {t('Saqlash')}
+      </LoadingButton>
+    </form>
+  )
 }

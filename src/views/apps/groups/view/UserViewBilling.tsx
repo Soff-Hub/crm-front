@@ -28,12 +28,10 @@ import { formatCurrency } from 'src/@core/utils/format-currency'
 import showResponseError from 'src/@core/utils/show-response-error'
 import { customTableProps } from 'src/pages/groups'
 import * as Yup from 'yup'
-import { getStudents, studentsUpdateParams } from 'src/store/apps/groupDetails';
+import { getStudents, studentsUpdateParams } from 'src/store/apps/groupDetails'
 import { useAppDispatch, useAppSelector } from 'src/store'
-import { ModalTypes } from './ViewStudents/UserViewStudentsList'
 import useBranches from 'src/hooks/useBranch'
-
-
+import AmountInput, { revereAmount } from 'src/@core/components/amount-input'
 
 export const getFormattedDate = () => {
   const today = new Date()
@@ -61,7 +59,7 @@ export interface ExamType {
 }
 
 const UserViewBilling = () => {
-  const { push,query } = useRouter()
+  const { push, query } = useRouter()
   const { t } = useTranslation()
   const { isMobile } = useResponsive()
   const [error, setError] = useState<any>({})
@@ -74,25 +72,21 @@ const UserViewBilling = () => {
   const [openLeft, setOpenLeft] = useState<boolean>(false)
   const { groupData, studentsQueryParams, isGettingStudents } = useAppSelector(state => state.groupDetails)
   const { getBranches, branches } = useBranches()
-  const [openEdit, setOpenEdit] = useState<ModalTypes | null>(null)
-  const [modalRef, setModalRef] = useState<'sms' | 'note' | 'export' | null>(null)
 
   const getExams = async () => {
     try {
-      const resp = await api.get('common/group/students/' + query.id)
+      const resp = await api.get('common/group/students/?group=' + query.id + '&')
       setExams(resp.data?.response)
     } catch (err) {
       console.log(err)
     }
   }
 
-
-
-  const handleEditOpen = async (id: any) => {
-    const findedItem: any = await exams.find((el: any) => el.student.id === id)
-    await setEditData(findedItem.student)
-    setOpen('edit')
+  const handleCreateOpen = (id: any) => {
+    setEditData(id)
+    setOpen('add')
   }
+
 
   const handleDeleteOpen = async (id: any) => {
     setEditData(id)
@@ -104,7 +98,6 @@ const UserViewBilling = () => {
     setEditData(null)
     setOpen(null)
   }
- 
 
   const handleDelete = async () => {
     setLoading(true)
@@ -116,18 +109,6 @@ const UserViewBilling = () => {
       await dispatch(getStudents({ id: query.id, queryString: queryString }))
       handleClose()
     } catch (err: any) {
-      setLoading(false)
-    }
-  }
-
-  const handleEditSubmit = async (values: any) => {
-    setLoading(true)
-    try {
-      await api.post('common/personal-payment/', { ...values, group: query.id, student: Number(editData.id) })
-      await getExams()
-      handleClose()
-    } catch (err: any) {
-      showResponseError(err.response.data, setError)
       setLoading(false)
     }
   }
@@ -174,7 +155,7 @@ const UserViewBilling = () => {
       xs: 0.12,
       title: t('Amallar'),
       dataIndex: 'student',
-      render: (student: any) => (
+      renderId: (id: any, student: any) => (
         <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
           {student?.personal_amount ? (
             <IconifyIcon
@@ -183,7 +164,7 @@ const UserViewBilling = () => {
               onClick={() => handleDeleteOpen(student?.personal_amount?.id)}
             />
           ) : (
-            <IconifyIcon icon='mdi:add' fontSize={20} onClick={() => handleEditOpen(student.id)} />
+            <IconifyIcon icon='mdi:add' fontSize={20} onClick={() => handleCreateOpen(id)} />
           )}
         </div>
       )
@@ -196,24 +177,32 @@ const UserViewBilling = () => {
     description: Yup.string().required(t("To'ldirish majburiy") as string)
   })
 
-  const formik: any = useFormik({
+  const formik = useFormik({
     initialValues: {
       amount: 0,
       discount_count: '0',
-      description: ''
+      description: '',
+      group_student: editData
     },
     validationSchema,
     onSubmit: async values => {
+      console.log(values)
+
       setLoading(true)
       try {
-        await api.post('common/personal-payment/', { ...values, group: query.id, student: Number(editData.id) })
+        await api.post('common/personal-payment/', {
+          ...values,
+          amount: revereAmount(String(values.amount)),
+          group_student: editData
+        })
         await dispatch(studentsUpdateParams({ status: 'active,new' }))
         const queryString = new URLSearchParams(studentsQueryParams).toString()
         await dispatch(getStudents({ id: query.id, queryString: queryString }))
         await getExams()
-        
+
         handleClose()
       } catch (err: any) {
+        formik.setErrors(err.response.data)
         showResponseError(err.response.data, setError)
         setLoading(false)
       }
@@ -236,7 +225,7 @@ const UserViewBilling = () => {
     <Box className='demo-space-y'>
       <DataTable maxWidth='100%' minWidth='450px' data={exams} columns={columns} />
 
-      <Drawer open={open === 'edit'} anchor='right' variant='persistent'>
+      <Drawer open={open === 'add'} anchor='right' variant='persistent'>
         <Box
           className='customizer-header'
           sx={{
@@ -262,81 +251,79 @@ const UserViewBilling = () => {
             <IconifyIcon icon='mdi:close' fontSize={20} />
           </IconButton>
         </Box>
-     
-        {editData && (
-          <form
-            onSubmit={formik.handleSubmit}
-            style={{ padding: '15px', display: 'flex', flexDirection: 'column', gap: 12 }}
-          >
-            <FormControl>
-              <TextField
-                size='small'
-                label={t('Chegirmadagi kurs narxi')}
-                type='number'
-                name='amount'
-                error={!!formik.errors.amount && !!formik.touched.amount}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                value={formik.values.amount}
-              />
-              {!!formik.errors.amount && !!formik.touched.amount && (
-                <FormHelperText error>{formik.errors.amount}</FormHelperText>
-              )}
-            </FormControl>
 
-            <FormControl>
-              <InputLabel
-                error={!!formik.errors.discount_count && !!formik.touched.discount_count}
-                size='small'
-                id='sale-count'
-              >
-                {t('Chegirma soni')}
-              </InputLabel>
-              <OutlinedInput
-                id='sale-count'
-                size='small'
-                label={t('Chegirma soni')}
-                name='discount_count'
-                error={!!formik.errors.discount_count && !!formik.touched.discount_count}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                value={formik.values.discount_count}
-                endAdornment={
-                  <Tooltip
-                    placement='left'
-                    title="Chegirma soni - bu necha oy uchun chegirma amalda bo'lishi hisoblanadi. M-u: 4 sonini kiritsangiz, keyingi 4 oy uchun talabaga chegirma berildi deb hisoblanadi."
-                  >
-                    <span style={{ fontSize: '20px', fontWeight: 700, cursor: 'pointer' }}>?</span>
-                  </Tooltip>
-                }
-              />
-              {!!formik.errors.discount_count && !!formik.touched.discount_count && (
-                <FormHelperText error>{formik.errors.discount_count}</FormHelperText>
-              )}
-            </FormControl>
+        <form
+          onSubmit={formik.handleSubmit}
+          style={{ padding: '15px', display: 'flex', flexDirection: 'column', gap: 12 }}
+        >
+          <FormControl>
+            <AmountInput
+              size='small'
+              label={t('Chegirmadagi kurs narxi')}
+              name='amount'
+              error={!!formik.errors.amount && !!formik.touched.amount}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.amount}
+            />
+            {!!formik.errors.amount && !!formik.touched.amount && (
+              <FormHelperText error>{formik.errors.amount}</FormHelperText>
+            )}
+          </FormControl>
 
-            <FormControl>
-              <TextField
-                size='small'
-                multiline
-                rows={4}
-                label={t('Izoh')}
-                name='description'
-                error={!!formik.errors.description && !!formik.touched.description}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                value={formik.values.description}
-              />
-              {!!formik.errors.description && !!formik.touched.description && (
-                <FormHelperText error>{formik.errors.description}</FormHelperText>
-              )}
-            </FormControl>
+          <FormControl>
+            <InputLabel
+              error={!!formik.errors.discount_count && !!formik.touched.discount_count}
+              size='small'
+              id='sale-count'
+            >
+              {t('Necha oyga chegirma bermoqchisiz')}
+            </InputLabel>
+            <OutlinedInput
+              id='sale-count'
+              size='small'
+              type='number'
+              label={t('Necha oyga chegirma bermoqchisiz')}
+              name='discount_count'
+              error={!!formik.errors.discount_count && !!formik.touched.discount_count}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.discount_count}
+              endAdornment={
+                <Tooltip
+                  placement='left'
+                  title="Chegirma soni - bu necha oy uchun chegirma amalda bo'lishi hisoblanadi. M-u: 4 sonini kiritsangiz, keyingi 4 oy uchun talabaga chegirma berildi deb hisoblanadi."
+                >
+                  <span style={{ fontSize: '20px', fontWeight: 700, cursor: 'pointer' }}>?</span>
+                </Tooltip>
+              }
+            />
+            {!!formik.errors.discount_count && !!formik.touched.discount_count && (
+              <FormHelperText error>{formik.errors.discount_count}</FormHelperText>
+            )}
+          </FormControl>
 
-            <LoadingButton loading={loading} variant='outlined' type='submit'>
-              {t('Saqlash')}
-            </LoadingButton>
-          </form>
-        )}
+          <FormControl>
+            <TextField
+              size='small'
+              multiline
+              rows={4}
+              label={t('Izoh')}
+              name='description'
+              error={!!formik.errors.description && !!formik.touched.description}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.description}
+            />
+            {!!formik.errors.description && !!formik.touched.description && (
+              <FormHelperText error>{formik.errors.description}</FormHelperText>
+            )}
+          </FormControl>
+
+          <LoadingButton loading={loading} variant='outlined' type='submit'>
+            {t('Saqlash')}
+          </LoadingButton>
+        </form>
       </Drawer>
 
       <Dialog open={open === 'delete'}>

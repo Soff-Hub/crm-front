@@ -53,7 +53,6 @@ export default function EditMonthlyPlan() {
         }
     });
 
-    console.log(formik.values);
 
     const handleClose = () => {
         formik.resetForm()

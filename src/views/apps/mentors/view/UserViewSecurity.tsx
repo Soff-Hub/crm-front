@@ -48,7 +48,7 @@ const UserViewSecurity = ({ data }: any) => {
                   </Box>
                   <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: ' flex-end', gap: '5px' }}>
                     <Typography sx={{ fontSize: '12px' }}>{t("Ochilgan sana")}: {_.start_date}</Typography>
-                    <Typography sx={{ fontSize: '12px' }}>{t(`${getLessonDays(_.week_days)}`)} / {_.start_at.split(':').splice(0, 2).join(':')} - {_.end_at.split(':').splice(0, 2).join(':')}</Typography>
+                    <Typography sx={{ fontSize: '12px' }}>{t(`${t(getLessonDays(_.week_days))}`)} / {_.start_at.split(':').splice(0, 2).join(':')} - {_.end_at.split(':').splice(0, 2).join(':')}</Typography>
                     <Typography sx={{ fontSize: '12px' }}>{_.student_count}</Typography>
                   </Box>
                 </CardContent>

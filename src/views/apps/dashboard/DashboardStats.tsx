@@ -8,6 +8,7 @@ import { useRouter } from 'next/router'
 import { useTranslation } from 'react-i18next'
 import { Skeleton, Tooltip } from '@mui/material'
 import { updateStudentParams } from 'src/store/apps/students'
+import { formatCurrency } from 'src/@core/utils/format-currency'
 
 export default function DashboardStats() {
   const { stats, statsData, isStatsLoading } = useAppSelector(state => state.dashboard)
@@ -20,7 +21,7 @@ export default function DashboardStats() {
     if (link === 'debtors_amount') {
       dispatch(updateStudentParams({ is_debtor: true, last_payment: '' }))
       return push('/students')
-    } else if (link === 'debtor_users') {
+    } else if (link === 'active_debts_count') {
       dispatch(updateStudentParams({ is_debtor: true, last_payment: '' }))
       return push('/students')
     } else if (link === 'last_payment') {
@@ -43,8 +44,14 @@ export default function DashboardStats() {
   const tooltip = {
     active_groups: 'Ayni vaqtda faol guruhlar soni',
     active_students: "Ayni vaqtda faol o'quvchilar soni",
-    debtor_users: "Qarzdor o'quvchilar soni",
-    debtors_amount: "Kelishi kerak bo'lgan qarzlar",
+    active_debts_count: `Umumiy qarzdor o'quvchilar soni : ${stats?.debtor_users} ta, arxivdagi o'quvchilar soni : ${stats?.active_debts_count} ta (1 ta o'quvchi 2 va undan ortiq guruhda o'qishi mumkin)`,
+    active_debts_amount: `Umumiy o'quvchilar qarzdorligi : ${formatCurrency(stats?.debtors_amount) + " so'm"}
+    ${
+      stats?.archive_debts_amount < 0
+        ? `Arxivdagi o'quvchilar qarzdorligi : ${formatCurrency(stats.archive_debts_amount) + " so'm"}`
+        : ''
+    }
+    `,
     leads_count: "Kurslarga ro'yxatdan o'tgan faol lidlar soni",
     not_activated_students: "Sinov darsiga kelib ketgan o'quvchilar soni",
     payment_approaching: "To'lov qilishiga 7 kundan kam qolgan o'quvchilar soni",
@@ -76,11 +83,12 @@ export default function DashboardStats() {
           ))
         : ''}
       {stats && !isStatsLoading
-        ? stats.payment_approaching
+        ? stats?.payment_approaching
           ? statsData.map((_, index) => (
               <Tooltip arrow title={tooltip[_.key]}>
                 <Box key={index} className='' sx={{ cursor: 'pointer' }} onClick={() => click(_.link)}>
                   <CardStatsVertical
+                    data_key={_.key}
                     title={stats?.[_.key]}
                     stats={t(_.title)}
                     icon={<IconifyIcon fontSize={'4rem'} icon={_.icon} />}
@@ -90,11 +98,12 @@ export default function DashboardStats() {
               </Tooltip>
             ))
           : statsData
-              .filter(el => el.key !== 'payment_approaching')
+              ?.filter(el => el.key !== 'payment_approaching')
               .map((_, index) => (
                 <Tooltip arrow title={tooltip[_.key]}>
                   <Box key={index} className='' sx={{ cursor: 'pointer' }} onClick={() => click(_.link)}>
                     <CardStatsVertical
+                      key={_.key}
                       title={stats?.[_.key]}
                       stats={t(_.title)}
                       icon={<IconifyIcon fontSize={'4rem'} icon={_.icon} />}

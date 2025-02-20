@@ -18,22 +18,26 @@ import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import usePayment from 'src/hooks/usePayment'
 import Router, { useRouter } from 'next/router'
-import { fetchStudentDetail, fetchStudentPayment } from 'src/store/apps/students'
+import { fetchStudentDetail, fetchStudentGroups, fetchStudentPayment } from 'src/store/apps/students'
 import AmountInput, { revereAmount } from 'src/@core/components/amount-input'
 import IconifyIcon from 'src/@core/components/icon'
+import { getStudents } from 'src/store/apps/groupDetails'
+import api from 'src/@core/utils/api'
 
 type Props = {
   openEdit: any
   setOpenEdit: any
   student_id?: any
+  group?: any
+  active_id?: any
 }
 
-export default function StudentPaymentForm({ openEdit, setOpenEdit, student_id }: Props) {
+export default function StudentPaymentForm({ openEdit, setOpenEdit, student_id, group, active_id }: Props) {
   const [loading, setLoading] = useState<boolean>(false)
   const [showWarning, setShowWarning] = useState<boolean>(false)
-
+  const { studentsQueryParams } = useAppSelector(state => state.groupDetails)
   const { t } = useTranslation()
-  const { studentData } = useAppSelector(state => state.students)
+  const { studentData,groupsChecklist } = useAppSelector(state => state.students)
   const userData: any = { ...studentData }
   const { getPaymentMethod, paymentMethods, createPayment } = usePayment()
   const { query } = useRouter()
@@ -70,9 +74,15 @@ export default function StudentPaymentForm({ openEdit, setOpenEdit, student_id }
         await createPayment(data)
         setLoading(false)
         setOpenEdit(null)
+        if (query.student) {
+          await dispatch(fetchStudentGroups(query.student))
+          await dispatch(fetchStudentDetail(userData?.id || student_id))
+          await dispatch(fetchStudentPayment(userData?.id || student_id))
+        } else {
+          const queryString = new URLSearchParams(studentsQueryParams).toString()
 
-        await dispatch(fetchStudentDetail(userData?.id || student_id))
-        await dispatch(fetchStudentPayment(userData?.id || student_id))
+          await dispatch(getStudents({ id: query.id, queryString: queryString }))
+        }
       } catch (err: any) {
         // showResponseError(err.response.data, setError)
         setLoading(false)
@@ -84,29 +94,40 @@ export default function StudentPaymentForm({ openEdit, setOpenEdit, student_id }
 
   const handleEditClose = () => {
     setOpenEdit(null)
-    setShowWarning(true); 
 
+    setShowWarning(true)
   }
   const handleConfirmCancel = () => {
-    setShowWarning(false); 
+    setShowWarning(false)
   }
 
   const handleDismissWarning = () => {
-    setShowWarning(false); 
+    setShowWarning(false)
   }
 
 
-  useEffect(() => {
-    formik.setFieldValue('group', studentData ? `${studentData.groups?.[0]?.group_data?.id}` : '')
-  }, [studentData])
 
   useEffect(() => {
-    if (student_id) {
+    if (studentData) {
+      formik.setFieldValue('group', group || `${studentData.groups?.[0]?.group_data?.id}`)
+    }
+  }, [studentData, group])
+
+  useEffect(() => {
+    if (student_id && openEdit === 'payment') {
       dispatch(fetchStudentDetail(student_id))
       dispatch(fetchStudentPayment(student_id))
     }
-    getPaymentMethod()
-  }, [])
+  }, [openEdit, student_id])
+
+  useEffect(() => {
+    if (openEdit === 'payment' && paymentMethods.length === 0) {
+      getPaymentMethod()
+    }
+  }, [openEdit])
+
+  
+ 
 
   return (
     <div>
@@ -115,7 +136,7 @@ export default function StudentPaymentForm({ openEdit, setOpenEdit, student_id }
         // onClose={handleEditClose}
         onClose={(event, reason) => {
           if (reason !== 'backdropClick') {
-            handleEditClose();
+            handleEditClose()
           }
         }}
         aria-labelledby='user-view-edit'
@@ -179,9 +200,9 @@ export default function StudentPaymentForm({ openEdit, setOpenEdit, student_id }
                 onChange={handleChange}
                 onBlur={handleBlur}
               >
-                {userData?.groups?.map((branch: any) => (
-                  <MenuItem key={branch.id} value={branch.group_data.id}>
-                    {branch.group_data.name}
+                {groupsChecklist?.map((group: any) => (
+                  <MenuItem key={group.id} value={group.id}>
+                    {`${group.name + (` , ${group?.total_payments||'0'} so'm`)}`}
                   </MenuItem>
                 ))}
               </Select>
@@ -260,15 +281,14 @@ export default function StudentPaymentForm({ openEdit, setOpenEdit, student_id }
           {t('Eslatma')}
         </DialogTitle>
         <DialogContent>
-          <Typography  id='warning-dialog-description' sx={{ mt: 2, textAlign: 'center' }}>
-            {t('Are you sure you want to cancel? Unsaved changes will be lost.')}
+          <Typography id='warning-dialog-description' sx={{ mt: 2, textAlign: 'center' }}>
+            {t(`Bekor qilishga ishonchingiz komilmi?`)} <br />
           </Typography>
         </DialogContent>
         <DialogActions sx={{ justifyContent: 'center' }}>
           <Button variant='contained' color='error' onClick={handleConfirmCancel}>
             {t('Bekor qilish')}
           </Button>
-        
         </DialogActions>
       </Dialog>
     </div>

@@ -96,7 +96,7 @@ export default function SalaryConfirm({ }: Props) {
         setLoading(status)
         const update_data = moderation_salaries.map(el => ({ ...el, status }))
         try {
-            await api.patch(`common/finance/employee-salaries/update/`, { update_data })
+            await api.patch(`finance/employee-salaries/update/`, { update_data })
             toast.success("Muvaffaqiyatli saqlandi")
             if (status === 'frozen') {
                 await dispatch(fetchModerationSalaries(''))
@@ -110,7 +110,7 @@ export default function SalaryConfirm({ }: Props) {
     }
 
     useEffect(() => {
-        if (!user?.role.includes('ceo') && !user?.role.includes('casher')) {
+        if (!user?.role.includes('ceo') && !user?.role.includes('casher') && !user?.role.includes('watcher')&& !user?.role.includes('marketolog')) {
             push("/")
             toast.error('Sahifaga kirish huquqingiz yoq!')
         }

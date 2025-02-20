@@ -13,16 +13,20 @@ export type RegisterParams = {
 }
 
 export type UserDataType = {
-  id: number
-  role: string[]
-  fullName: string
-  username: string
-  password: string
-  avatar: string
+  phone?:number,
+  id?: number
+  last_login?:string,
+  gpa?:number,
+  role: any,
+  fullName?: string
+  username?: string
+  password?: string
+  avatar?: string
   payment_page?: boolean
   balance?: number
   branches?: any[]
-  active_branch?: any
+  active_branch?: any,
+  qr_code?:string
 }
 
 export type AuthValuesType = {
@@ -30,7 +34,7 @@ export type AuthValuesType = {
   logout: () => void
   user: UserDataType | null
   setLoading: (value: boolean) => void
-  setUser: (value: UserDataType | null) => void
+  setUser: (value: any | null) => void
   login: (params: LoginParams, errorCallback?: ErrCallbackType) => void
   register: (params: RegisterParams, errorCallback?: ErrCallbackType) => void
   initAuth: () => void

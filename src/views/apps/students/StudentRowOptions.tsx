@@ -4,6 +4,7 @@ import React, { MouseEvent, useState } from 'react'
 import toast from 'react-hot-toast'
 import { useTranslation } from 'react-i18next'
 import IconifyIcon from 'src/@core/components/icon'
+import api from 'src/@core/utils/api'
 import { useAppDispatch, useAppSelector } from 'src/store'
 import { disablePage } from 'src/store/apps/page'
 import {
@@ -54,20 +55,24 @@ export default function StudentRowOptions({ id }: Props) {
     await dispatch(updateStudent({ id, status: 'active' }))
     dispatch(disablePage(false))
     toast.success("O'quvchi muvaffaqiyatli aktivlashtirildi")
-    await dispatch(fetchStudentsList({ status: 'archive' }))
+    await dispatch(fetchStudentsList({ status: 'active' }))
     setLoading(false)
   }
 
   async function submitDelete() {
     setLoading(true)
     dispatch(disablePage(true))
-    const resp = await dispatch(deleteStudent(id))
-    if (resp.meta.requestStatus === 'rejected') {
-      toast.error("Guruhga qo'shilgan o'quvchini o'chirib bo'lmaydi")
-    } else {
-      toast.success("O'quvchi muvaffaqiyatli o'chirildi")
-      await dispatch(fetchStudentsList({ status: 'active' }))
-    }
+    await api
+      .delete(`student/destroy/${id}/`)
+      .then(res => {
+        toast.success("O'quvchi muvaffaqiyatli o'chirildi")
+        dispatch(fetchStudentsList({ ...queryParams }))
+      })
+      .catch(err => {
+        toast.error(err.response.data.msg || "O'quvchini o'chirib bo'lmadi")
+        console.log(err)
+      })
+
     dispatch(disablePage(false))
     setLoading(false)
   }
@@ -116,10 +121,12 @@ export default function StudentRowOptions({ id }: Props) {
             {t("O'chirish")}
           </MenuItem>
         )}
-        <MenuItem onClick={handleDelete} sx={{ '& svg': { mr: 2 } }}>
-          <IconifyIcon icon='mdi:delete-outline' fontSize={20} />
-          {t("Butunlay o'chirish")}
-        </MenuItem>
+        {queryParams.status === 'archive' && (
+          <MenuItem onClick={handleDelete} sx={{ '& svg': { mr: 2 } }}>
+            <IconifyIcon icon='mdi:delete-outline' fontSize={20} />
+            {t("Butunlay o'chirish")}
+          </MenuItem>
+        )}
       </Menu>
       <UserSuspendDialog
         loading={loading}

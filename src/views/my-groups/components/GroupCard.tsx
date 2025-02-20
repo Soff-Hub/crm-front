@@ -18,7 +18,7 @@ export default function GroupCard({ group }: { group: any }) {
                             <Typography sx={{ fontSize: '12px' }}>{group.teacher_name}</Typography>
                         </Box>
                         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: ' flex-end', gap: '5px' }}>
-                            <Typography sx={{ fontSize: '12px' }}>{getLessonDays(group.week_days)} {group.start_at.split(':').splice(0, 2).join(':')} - {group.end_at.split(':').splice(0, 2).join(':')}</Typography>
+                            <Typography sx={{ fontSize: '12px' }}>{t(getLessonDays(group.week_days))} {group.start_at.split(':').splice(0, 2).join(':')} - {group.end_at.split(':').splice(0, 2).join(':')}</Typography>
                             <Typography sx={{ fontSize: '12px' }}>{t("Boshlangan")}: {group.start_date}</Typography>
                             <Typography sx={{ fontSize: '12px' }}>{t("Yakunlanadi")}: {group.end_date}</Typography>
                         </Box>

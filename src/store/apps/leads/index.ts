@@ -18,6 +18,22 @@ export const fetchDepartmentList = createAsyncThunk(
     }
   }
 )
+export const fetchAmoCrmPipelines = createAsyncThunk(
+  'appChat/fetchAmoCrmPipelines',
+  async (queryParams: Record<string, any>, { rejectWithValue }) => {
+    try {
+      const response = await api.get('/amocrm/pipelines/', {
+        params: queryParams
+      })
+      return response.data
+    } catch (err: any) {
+      if (err.response) {
+        return rejectWithValue(err.response.data)
+      }
+      return rejectWithValue(err.message)
+    }
+  }
+)
 
 // ** Fetch All Sources
 export const fetchSources = createAsyncThunk('appChat/fetchSources', async () => {
@@ -58,6 +74,20 @@ export const editDepartment = createAsyncThunk(
     }
   }
 )
+export const editAmoCrmData = createAsyncThunk(
+  'appChat/editAmoCrmData',
+  async (values: { data_id: any; is_delete: boolean; condition: string }, { rejectWithValue }) => {
+    try {
+      const response = await api.post(`amocrm/delete/`, values)
+      return response.data
+    } catch (err: any) {
+      if (err.response) {
+        return rejectWithValue(err.response.data)
+      }
+      return rejectWithValue(err.message)
+    }
+  }
+)
 
 // ** Create Department Item
 export const createDepartmentItem = createAsyncThunk(
@@ -86,10 +116,62 @@ export const updateDepartmentStudent = createAsyncThunk(
   'appChat/updateDepartmentStudent',
   async (data: any, { rejectWithValue }) => {
     try {
-      // const response = await api.patch(`leads/department-user-list/${data.id}/`, data)
-      const response = await api.patch(`leads/anonim-user/update/${data.id}/`, data)
+      let response
+
+
+      if (data.is_amocrm) {
+        response = await api.post(`amocrm/leads/export/`, data.data)
+      } else {
+        response = await api.patch(`leads/anonim-user/update/${data.id}/`, { department: data.data.department })
+      }
+
       return response.data
     } catch (err: any) {
+      console.error('Error:', err.response || err.message)
+      if (err.response) {
+        return rejectWithValue(err.response.data)
+      }
+      return rejectWithValue(err.message)
+    }
+  }
+)
+
+export const editDepartmentStudent = createAsyncThunk(
+  'appChat/editDepartmentStudent',
+  async (data: any, { rejectWithValue }) => {
+    try {
+      let response
+
+
+      if (data.is_amocrm) {
+        response = await api.post(`amocrm/leads/export/`, data.data)
+      } else {
+        response = await api.patch(`leads/anonim-user/update/${data.id}/`, { first_name:data.first_name,phone:data.phone })
+      }
+
+      return response.data
+    } catch (err: any) {
+      console.error('Error:', err.response || err.message)
+      if (err.response) {
+        return rejectWithValue(err.response.data)
+      }
+      return rejectWithValue(err.message)
+    }
+  }
+)
+
+export const updateAmoCrmStudent = createAsyncThunk(
+  'appChat/updateAmoCrmStudent',
+  async (data: any, { rejectWithValue }) => {
+    try {
+      let response
+
+
+        response = await api.patch(`amocrm/lead/update/${data.id}/`, {status_id:data.data.department})
+
+      return response.data
+    } catch (err: any) {
+      console.error('Error:', err.response || err.message)
       if (err.response) {
         return rejectWithValue(err.response.data)
       }
@@ -101,12 +183,17 @@ export const updateDepartmentStudent = createAsyncThunk(
 const initialState: ILeadsState = {
   sourceData: [],
   groups: [],
+  dragonLoading:false,
+  pipelines: [],
   leadData: [],
+  departmentLoading: false,
+  pipelinesLoading: false,
   open: null,
   openItem: null,
   openLid: null,
   sectionId: null,
   addSource: false,
+  leadItems:null,
   loading: false,
   search: '',
   queryParams: {
@@ -128,6 +215,9 @@ export const appLeadsSlice = createSlice({
     setOpen: (state, action) => {
       state.open = action.payload
     },
+    setLeadItems: (state, action) => {
+      state.leadItems = action.payload
+    },
     setOpenItem: (state, action) => {
       state.openItem = action.payload
     },
@@ -136,6 +226,9 @@ export const appLeadsSlice = createSlice({
     },
     setSectionId: (state, action) => {
       state.sectionId = action.payload
+    },
+    setDragonLoading: (state, action) => {
+      state.dragonLoading = action.payload
     },
     setAddSource: (state, action) => {
       state.addSource = action.payload
@@ -154,14 +247,30 @@ export const appLeadsSlice = createSlice({
   extraReducers: builder => {
     builder
       .addCase(fetchDepartmentList.pending, state => {
-        state.bigLoader = true
+        state.departmentLoading = true
+        state.bigLoader = true // Enable bigLoader when any action starts
       })
       .addCase(fetchDepartmentList.fulfilled, (state, action) => {
         state.leadData = action.payload
-        state.bigLoader = false
+        state.departmentLoading = false
+        state.bigLoader = state.pipelinesLoading // Check if pipelines are still loading
       })
       .addCase(fetchDepartmentList.rejected, state => {
-        state.bigLoader = false
+        state.departmentLoading = false
+        state.bigLoader = state.pipelinesLoading // Check if pipelines are still loading
+      })
+      .addCase(fetchAmoCrmPipelines.pending, state => {
+        state.pipelinesLoading = true
+        state.bigLoader = true // Enable bigLoader when any action starts
+      })
+      .addCase(fetchAmoCrmPipelines.fulfilled, (state, action) => {
+        state.pipelines = action.payload
+        state.pipelinesLoading = false
+        state.bigLoader = state.departmentLoading // Check if department data is still loading
+      })
+      .addCase(fetchAmoCrmPipelines.rejected, state => {
+        state.pipelinesLoading = false
+        state.bigLoader = state.departmentLoading // Check if department data is still loading
       })
       .addCase(createDepartment.pending, state => {
         state.loading = true
@@ -222,6 +331,16 @@ export const appLeadsSlice = createSlice({
       .addCase(editDepartment.rejected, state => {
         state.loading = false
       })
+      .addCase(editAmoCrmData.pending, state => {
+        state.loading = true
+      })
+      .addCase(editAmoCrmData.fulfilled, state => {
+        state.loading = false
+        state.openActionModal = null
+      })
+      .addCase(editAmoCrmData.rejected, state => {
+        state.loading = false
+      })
   }
 })
 
@@ -234,7 +353,9 @@ export const {
   setAddSource,
   updateLeadParams,
   setOpenActionModal,
-  setPageLoader
+  setPageLoader,
+  setDragonLoading,
+  setLeadItems
 } = appLeadsSlice.actions
 
 export default appLeadsSlice.reducer

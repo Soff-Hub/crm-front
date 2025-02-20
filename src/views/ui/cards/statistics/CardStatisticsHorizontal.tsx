@@ -32,10 +32,10 @@ const CardStatsHorizontal = ({ data }: Props) => {
             >
               {item.id ? (
                 <a href={item.id} style={{ textDecoration: 'none', cursor: 'pointer' }}>
-                  <CardStatisticsHorizontal {...item} bgColor={item.bgColor} icon={<Icon icon={item.icon as string} />} />
+                  <CardStatisticsHorizontal {...item} bgColor={item.bgColor} iconplus={<Icon icon={item.iconplus as string} />}   icon={<Icon icon={item.icon as string} />} />
                 </a>
               ) : (
-                <CardStatisticsHorizontal {...item} bgColor={item.bgColor} icon={<Icon icon={item.icon as string} />} />
+                <CardStatisticsHorizontal {...item} bgColor={item.bgColor} iconplus={<Icon icon={item.iconplus as string} />}  icon={<Icon icon={item.icon as string} />} />
               )}
             </Grid>
           )

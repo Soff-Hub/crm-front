@@ -25,7 +25,11 @@ const Navigation = (props: Props) => {
         flexWrap: 'wrap',
         alignItems: 'center',
         '& > *': {
-          '&:not(:last-child)': { mr: 2 },
+          '@media (max-width: 1245px)': {
+            maxWidth: 160,
+            flexWrap: 'no-wrap',
+            fontSize:"12px"
+          },
           ...(themeConfig.menuTextTruncate && { maxWidth: 220 })
         }
       }}

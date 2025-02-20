@@ -66,6 +66,7 @@ export default function EditEmployeeForm() {
         activated_at: employeeData.activated_at,
         gender: employeeData.gender,
         image: employeeData.image,
+        lesson_amount:employeeData?.lesson_amount,
         // is_fixed_salary: employeeData.is_fixed_salary,
         percentage: employeeData.percentage,
         amount: employeeData.amount,
@@ -201,7 +202,7 @@ export default function EditEmployeeForm() {
                 <FormControl sx={{ width: '100%' }}>
                     <TextField
                         type='date'
-                        label={"Ishga olingan sana"}
+                        label={t("Ishga olingan sana")}
                         name='activated_at'
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
@@ -224,7 +225,7 @@ export default function EditEmployeeForm() {
                     <FormControl sx={{ width: '100%' }}>
                         <TextField
                             type='number'
-                            label={"Foiz ulushi"}
+                            label={t("Foiz ulushi")}
                             name='percentage'
                             // disabled={formik.values.is_fixed_salary}
                             onChange={formik.handleChange}
@@ -238,7 +239,7 @@ export default function EditEmployeeForm() {
                     </FormControl>
                     <FormControl sx={{ width: '100%' }}>
                         <AmountInput
-                            label={"Oylik ish haqi"}
+                            label={t("Oylik ish haqi")}
                             name='amount'
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
@@ -249,6 +250,22 @@ export default function EditEmployeeForm() {
                             {(!!formik.errors.amount && formik.touched.amount) && formik.errors.amount}
                         </FormHelperText>
                     </FormControl>
+                    {formik.values.roles.length == 1 && formik.values.roles[0] == 3 &&
+                     <FormControl sx={{ width: '100%' }}>
+                     <AmountInput
+                         // type='number'
+                         label={t("Darslar soni")}
+                         name='lesson_amount'
+                         onChange={formik.handleChange}
+                         onBlur={formik.handleBlur}
+                         // disabled={!formik.values.is_fixed_salary}
+                         value={formik.values.lesson_amount}
+                         error={!!formik.errors.lesson_amount && formik.touched.lesson_amount} />
+                     <FormHelperText error>
+                         {(!!formik.errors.lesson_amount && formik.touched.lesson_amount) && formik.errors.lesson_amount}
+                     </FormHelperText>
+                 </FormControl>
+                     }
                 </Box>
 
                 <FormControl fullWidth>

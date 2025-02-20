@@ -5,8 +5,13 @@ import ceoConfigs from "src/configs/ceo"
 
 export interface StudentTypes {
     id: string | number
+    gpa:number,
     first_name: string
     phone: string
+    school_data: {
+        id: number,
+        name:string
+    }
     birth_date: string
     gender: 'male' | 'female'
     body: string

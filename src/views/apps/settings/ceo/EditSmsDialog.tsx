@@ -31,7 +31,7 @@ export default function EditSmsDialog({ }: Props) {
     const { t } = useTranslation()
     const dispatch = useAppDispatch()
     const { openEditSms } = useAppSelector(state => state.settings)
-
+     
     const setOpenAddGroup = () => {
         dispatch(setOpenEditSms(null))
     }
@@ -47,7 +47,7 @@ export default function EditSmsDialog({ }: Props) {
                 }}
             >
                 <Typography variant='h6' sx={{ fontWeight: 600 }}>
-                    {t("Shablonni o'zgartirish")}
+                   {openEditSms?.parent ?"Shablonni o'zgartirish": "Kategoriyani o'zgartirish"} 
                 </Typography>
                 <IconButton
                     onClick={setOpenAddGroup}

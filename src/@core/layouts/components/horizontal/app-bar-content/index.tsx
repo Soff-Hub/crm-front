@@ -1,19 +1,8 @@
-// ** Next Import
 import Link from 'next/link'
-
-// ** MUI Imports
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import { styled, useTheme } from '@mui/material/styles'
-
-// ** Type Import
 import { LayoutProps } from 'src/@core/layouts/types'
-
-// ** Theme Config Import
-
-import Clock from 'src/@core/components/clock'
-import IconifyIcon from 'src/@core/components/icon'
-import { useTranslation } from 'react-i18next'
 import { useAppSelector } from 'src/store'
 
 interface Props {
@@ -32,14 +21,8 @@ const StyledLink = styled(Link)(({ theme }) => ({
 }))
 
 const AppBarContent = (props: Props) => {
-  // ** Props
   const { appBarContent: userAppBarContent, appBarBranding: userAppBarBranding } = props
   const { companyInfo } = useAppSelector((state: any) => state.user)
-
-  const { t } = useTranslation()
-
-  // ** Hooks
-  const theme = useTheme()
 
   return (
     <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -48,19 +31,12 @@ const AppBarContent = (props: Props) => {
       ) : (
         <StyledLink href='/'>
           <img src={companyInfo?.logo} height={35} />
+
           <Typography variant='h6' sx={{ ml: 2, fontWeight: 700, lineHeight: 1.2 }}>
             {companyInfo.training_center_name}
           </Typography>
         </StyledLink>
       )}
-      {!window.location.hostname.split('.').includes('c-panel') && <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-        <Clock />
-        <Typography variant='body2'>|</Typography>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-          <IconifyIcon style={{ fontSize: '18px', color: '#40c0e7' }} icon={'la:user-clock'} />
-          <Typography variant='body2'>{t(`Ish vaqti`)} {companyInfo?.work_start_time} - {companyInfo?.work_end_time}</Typography>
-        </Box>
-      </Box>}
       {userAppBarContent ? userAppBarContent(props) : null}
     </Box>
   )

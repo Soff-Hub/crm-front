@@ -132,7 +132,6 @@ export default function ExamResults() {
         const findedStudent = results?.find((el: any) => el.result.id === examStudentId)
         formik.setFieldValue("score", findedStudent?.result?.score)
         formik.setFieldValue("description", findedStudent?.result?.description)
-        console.log(findedStudent);
     }, [examStudentId])
 
     return (

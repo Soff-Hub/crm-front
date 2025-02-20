@@ -13,6 +13,20 @@ interface DataParams {
   currentPlan: string
 }
 
+interface AutoSmsType {
+  on_attend: boolean
+  attend_text: string
+  on_score: boolean
+  score_text: string
+  id?: any
+  on_absent: boolean
+  birthday_text: string
+  on_birthday: boolean
+  absent_text: string
+  payment_warning: boolean
+  payment_text: string
+}
+
 interface Redux {
   getState: any
   dispatch: Dispatch<any>
@@ -61,6 +75,7 @@ export const deleteUser = createAsyncThunk(
 export const appUsersSlice = createSlice({
   name: 'appUsers',
   initialState: {
+    userRoles: [],
     data: [],
     notifications: [],
     isGettingNotification: false,
@@ -70,18 +85,27 @@ export const appUsersSlice = createSlice({
     allData: [],
     companyInfo: {
       id: 1,
+      extra_settings: {
+        allow_debt_editing_on_payment: false
+      },
       training_center_name: 'SOFF CRM',
       logo: '/images/default-logo.jpg',
       work_start_time: '00:00',
       work_end_time: '00:00',
       auto_sms: {
+        on_attend: null,
+        attend_text: null,
+        debt_text: null,
+        for_debtor: null,
+        on_score: null,
+        score_text: null,
         id: 1,
-        on_absent: true,
-        birthday_text: 'Text',
-        on_birthday: true,
-        absent_text: 'Text',
-        payment_warning: true,
-        payment_text:"Text"
+        on_absent: null,
+        birthday_text: null,
+        on_birthday: null,
+        absent_text: null,
+        payment_warning: null,
+        payment_text: null
       },
       sms_limit: '0/0'
     },
@@ -93,6 +117,9 @@ export const appUsersSlice = createSlice({
     },
     setNotifications: (state, action) => {
       state.notificationsCount = action.payload
+    },
+    setRoles: (state, action) => {
+      state.userRoles = action.payload
     },
     addOpenedUser: (state, action) => {
       state.total = action.payload
@@ -130,6 +157,6 @@ export const appUsersSlice = createSlice({
   }
 })
 
-export const { setNotifications, addUserData, addOpenedUser, setCompanyInfo, setDepartmentsState } =
+export const { setNotifications, addUserData, addOpenedUser, setRoles, setCompanyInfo, setDepartmentsState } =
   appUsersSlice.actions
 export default appUsersSlice.reducer

@@ -29,7 +29,7 @@ export default function EditCostForm({ slug, setOpen, reRender, initials }: any)
         onSubmit: async (values) => {
             setLoading(true)
             try {
-                await api.patch(`common/finance/expense/update/${initials.id}/`, { ...values, amount: revereAmount(values.amount), expense_category: slug })
+                await api.patch(`finance/expense/update/${initials.id}/`, { ...values, amount: revereAmount(values.amount), expense_category: slug })
                 await reRender()
                 setOpen(null)
             } catch (err: any) {

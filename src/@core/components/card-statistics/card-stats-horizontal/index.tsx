@@ -12,6 +12,7 @@ import CustomAvatar from 'src/@core/components/mui/avatar'
 // ** Types Imports
 import { CardStatsHorizontalProps } from 'src/@core/components/card-statistics/types'
 import { formatCurrency } from 'src/@core/utils/format-currency'
+import { Icon } from '@iconify/react'
 
 // ** Styled Avatar component
 const Avatar = styled(CustomAvatar)<AvatarProps>(({ theme }) => ({
@@ -22,11 +23,13 @@ const Avatar = styled(CustomAvatar)<AvatarProps>(({ theme }) => ({
 
 const CardStatsHorizontal = (props: CardStatsHorizontalProps) => {
   // ** Props
-  const { title, icon, stats,bgColor, trendNumber, color = 'primary', trend = 'positive' } = props
+  const { title, icon,iconplus, stats,bgColor, trendNumber, color = 'primary', trend = 'positive' } = props
+
+  
 
   return (
     <Card className={bgColor}>
-      <CardContent sx={{ py: theme => `${theme.spacing(4.125)} !important` }}>
+      <CardContent sx={{display:'flex', justifyContent:'space-between', py: theme => `${theme.spacing(4.125)} !important` }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: '30px' }}>
           <Avatar skin='light' color={color} variant='rounded' sx={{ margin: '0' }}>
             {icon}
@@ -45,7 +48,11 @@ const CardStatsHorizontal = (props: CardStatsHorizontalProps) => {
             </Box>
             <Typography sx={{ fontSize: '14px' }} variant='caption'>{title}</Typography>
           </Box>
+           
         </Box>
+        <Box>
+        {iconplus?.props?.icon && <Icon icon={`${iconplus.props.icon}`} />}
+          </Box>
       </CardContent>
     </Card>
   )

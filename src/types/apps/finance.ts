@@ -40,6 +40,7 @@ export interface AllNumbersParams {
 }
 
 export type GroupFinance = {
+  obj_id: number
   allowed_lessons: number
   attended_lessons: number
   calculated_date: string
@@ -53,35 +54,44 @@ export type GroupFinance = {
 
 export interface IFinanceState {
   isPending: boolean
+  incomeCategoriesData: any[]
   isGettingGroupsFinance: boolean
   numbersLoad: boolean
   isGettingExpenseCategories: boolean
   moderation_salaries: SalaryitemType[]
   categoriesData: any[]
+  isGettingIncomeCategories: boolean
   groupsFinance: any[]
   calculatedSalary: GroupFinance[] | null
   isGettingCalculatedSalary: boolean
-  all_numbers:
-    | {
-        label: {
-          benefit: string
-          expense: string
-        difference: string,
-          active_balance:string
-        }
-        year: number
-        expense: YearlyStats
-        benefit: YearlyStats
+  all_numbers: {
+    label: {
+      benefit: string
+      expense: string
+      difference: string
+      active_balance: string
+    }
+    month:string
+    year: number
+    expense: YearlyStats
+    benefit: YearlyStats
     difference: YearlyStats
-    active_balance:YearlyStats
+    active_balance: YearlyStats
+    plans: {
+      debt_amount:number
+      done_amount: number
+      percentage: number
+      planned_amount: number
+    }
 
-        payment_types: {
-          id: number
-          name: string
-          amount: number
-        }[]
-      }
-    | undefined
+    payment_types: {
+      id: number
+      count?: number
+      name: string
+      amount: number
+    }[]
+  }|null
+
   allNumbersParams: AllNumbersParams
   is_update: boolean
 }

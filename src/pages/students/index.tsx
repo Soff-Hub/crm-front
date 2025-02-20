@@ -13,7 +13,6 @@ import {
   IconButton
 } from '@mui/material'
 
-
 import { ReactNode, useContext, useEffect, useState } from 'react'
 import DataTable from 'src/@core/components/table'
 import { useTranslation } from 'react-i18next'
@@ -23,14 +22,16 @@ import CreateStudentModal from 'src/views/apps/students/CreateStudentModal'
 import EditStudentModal from 'src/views/apps/students/EditStudentModal'
 import StudentRowOptions from 'src/views/apps/students/StudentRowOptions'
 import { useAppDispatch, useAppSelector } from 'src/store'
-import { clearStudentParams, fetchStudentsList, updateStudentParams } from 'src/store/apps/students'
+import { clearStudentParams, fetchStudentsList, setStudentId, updateStudentParams } from 'src/store/apps/students'
 import { formatCurrency } from 'src/@core/utils/format-currency'
-import { setOpenEdit } from 'src/store/apps/students';
+import { setOpenEdit } from 'src/store/apps/students'
 import VideoHeader, { videoUrls } from 'src/@core/components/video-header/video-header'
 import { AuthContext } from 'src/context/AuthContext'
 import { toast } from 'react-hot-toast'
 import useResponsive from 'src/@core/hooks/useResponsive'
 import IconifyIcon from 'src/@core/components/icon'
+import ExcelStudents from 'src/@core/components/excelButton/ExcelStudents'
+import { TeacherAvatar } from 'src/views/apps/mentors/AddMentorsModal'
 
 export interface customTableProps {
   xs: number
@@ -46,9 +47,11 @@ export default function GroupsPage() {
   const { user } = useContext(AuthContext)
   const [open, setOpen] = useState<boolean>(false)
   const dispatch = useAppDispatch()
-  const { students, isLoading, studentsCount, queryParams } = useAppSelector(state => state.students)
+  const { students, isLoading, studentsCount, queryParams, total_debts } = useAppSelector(state => state.students)
   const [page, setPage] = useState<number>(queryParams.page ? Number(queryParams.page) - 1 : 1)
   const [rowsPerPage, setRowsPerPage] = useState<number>(() => Number(localStorage.getItem('rowsPerPage')) || 10)
+
+  const queryString = new URLSearchParams({ ...queryParams } as Record<string, string>).toString()
 
   const columns: customTableProps[] = [
     {
@@ -60,9 +63,43 @@ export default function GroupsPage() {
       }
     },
     {
+      xs: 0.4,
+      title: t('Rasm'),
+      dataIndex: 'image',
+      render: actions => (
+        <TeacherAvatar skin='light' color={'info'} variant='rounded' sx={{ width: 33, height: 33 }}>
+          {actions ? (
+            <img style={{ width: '100%', height: '100%', objectFit: 'cover' }} src={actions} alt='user' />
+          ) : (
+            <IconifyIcon icon={'et:profile-male'} />
+          )}
+        </TeacherAvatar>
+      )
+    },
+    {
       xs: 1.4,
       title: t('first_name'),
       dataIndex: 'first_name'
+    },
+    {
+      xs: 1.1,
+      title: t('Baho'),
+      dataIndex: 'gpa',
+      render: gpa => {
+        return gpa ? (
+          <Chip
+            sx={{
+              color: Number(gpa) >= 4 ? 'green' : Number(gpa) >= 3 ? 'orange' : 'red',
+              borderColor: Number(gpa) >= 4 ? 'green' : Number(gpa) >= 3 ? 'orange' : 'red'
+            }}
+            variant='outlined'
+            color='info'
+            label={gpa}
+          />
+        ) : (
+          "Bahosi yo'q"
+        )
+      }
     },
     {
       xs: 1.1,
@@ -85,8 +122,7 @@ export default function GroupsPage() {
         group.length > 0 ? (
           group.map((item, i) => (
             <Box fontSize={12} key={i} sx={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '4px' }}>
-              {item.lesson_time} {' - '}
-              {item.group_name}
+              {`${item.lesson_time} - ${item.group_name}`}
               <Chip
                 label={t(item.status)}
                 size='small'
@@ -140,7 +176,13 @@ export default function GroupsPage() {
             sx={{ fontWeight: 700 }}
           />
         ) : (
-          `${formatCurrency(+balance)} so'm`
+          <Chip
+            label={`${formatCurrency(+balance)} so'm`}
+            color='success'
+            variant='outlined'
+            size='small'
+            sx={{ fontWeight: 700 }}
+          />
         )
     },
     {
@@ -150,6 +192,7 @@ export default function GroupsPage() {
       render: actions => <StudentRowOptions id={actions} />
     }
   ]
+
   const handleRowsPerPageChange = async (value: number) => {
     const limit = value
     setRowsPerPage(Number(value))
@@ -168,34 +211,20 @@ export default function GroupsPage() {
     dispatch(updateStudentParams({ offset: adjustedPage }))
   }
 
-  const pageLoad = async () => {
-    if (!queryParams.limit) {
-      dispatch(updateStudentParams({ limit: rowsPerPage }))
-
-      await dispatch(fetchStudentsList({ ...queryParams, limit: String(rowsPerPage) }))
-    } else {
-      await dispatch(fetchStudentsList(queryParams))
-    }
-  }
-
   const rowClick = (id: any) => {
+    dispatch(setStudentId(id))
     router.push(`/students/view/security?student=${id}`)
   }
 
   useEffect(() => {
-    if (!user?.role.includes('ceo') && !user?.role.includes('admin')) {
+    if (!user?.role.includes('ceo') && !user?.role.includes('admin') && !user?.role.includes('watcher')) {
       router.push('/')
       toast.error("Sizda bu sahifaga kirish huquqi yo'q!")
     }
-    pageLoad()
     return () => {
       dispatch(setOpenEdit(null))
-      dispatch(clearStudentParams())
     }
   }, [])
-
-
-  
 
   return (
     <div>
@@ -208,9 +237,12 @@ export default function GroupsPage() {
         <Box sx={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
           <Typography variant='h5'>{t("O'quvchilar")}</Typography>
           {!isLoading && <Chip label={`${studentsCount}`} variant='outlined' color='primary' />}
+          {!isLoading && queryParams.is_debtor && (
+            <Chip label={`${formatCurrency(total_debts)}` + " so'm"} variant='outlined' color='error' />
+          )}
         </Box>
         <Button
-          onClick={()=>dispatch(setOpenEdit('create'))}
+          onClick={() => dispatch(setOpenEdit('create'))}
           variant='contained'
           size='small'
           startIcon={<IconifyIcon icon='ic:baseline-plus' />}
@@ -219,14 +251,17 @@ export default function GroupsPage() {
         </Button>
       </Box>
       {isMobile && (
-        <Button
-          size='small'
-          sx={{ marginLeft: 'auto', width: '100%' }}
-          variant='outlined'
-          onClick={() => setOpen(true)}
-        >
-          {t('Filterlash')}
-        </Button>
+        <Box>
+          <Button
+            size='small'
+            sx={{ marginLeft: 'auto', width: '100%', marginBottom: 2 }}
+            variant='outlined'
+            onClick={() => setOpen(true)}
+          >
+            {t('Filterlash')}
+          </Button>
+          <ExcelStudents size='small' url='/student/offset-list/' queryString={queryString} />
+        </Box>
       )}
       {!isMobile && <StudentsFilter isMobile={isMobile} />}
       <DataTable

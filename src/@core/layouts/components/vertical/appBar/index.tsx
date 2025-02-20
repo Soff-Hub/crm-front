@@ -1,16 +1,11 @@
-// ** MUI Imports
 import { styled, useTheme } from '@mui/material/styles'
 import useScrollTrigger from '@mui/material/useScrollTrigger'
 import MuiAppBar, { AppBarProps } from '@mui/material/AppBar'
 import MuiToolbar, { ToolbarProps } from '@mui/material/Toolbar'
-
-// ** Type Import
 import { LayoutProps } from 'src/@core/layouts/types'
-
-// ** Util Import
 import { hexToRGBA } from 'src/@core/utils/hex-to-rgba'
 
-interface Props {
+type Props = {
   hidden: LayoutProps['hidden']
   toggleNavVisibility: () => void
   settings: LayoutProps['settings']
@@ -43,31 +38,23 @@ const Toolbar = styled(MuiToolbar)<ToolbarProps>(({ theme }) => ({
 }))
 
 const LayoutAppBar = (props: Props) => {
-  // ** Props
   const { settings, appBarProps, appBarContent: userAppBarContent } = props
-
-  // ** Hooks
   const theme = useTheme()
   const scrollTrigger = useScrollTrigger({ threshold: 0, disableHysteresis: true })
-
-  // ** Vars
   const { skin, appBar, appBarBlur, contentWidth } = settings
 
-  const appBarFixedStyles = () => {
-    return {
-      px: `${theme.spacing(6)} !important`,
-      boxShadow: skin === 'bordered' ? 0 : 3,
-      ...(appBarBlur && { backdropFilter: 'blur(8px)' }),
-      backgroundColor: hexToRGBA(theme.palette.background.paper, appBarBlur ? 0.9 : 1),
-      ...(skin === 'bordered' && { border: `1px solid ${theme.palette.divider}`, borderTopWidth: 0 })
-    }
-  }
+  const appBarFixedStyles = () => ({
+    px: `${theme.spacing(6)} !important`,
+    boxShadow: skin === 'bordered' ? 0 : 3,
+    ...(appBarBlur && { backdropFilter: 'blur(8px)' }),
+    backgroundColor: hexToRGBA(theme.palette.background.paper, appBarBlur ? 0.9 : 1),
+    ...(skin === 'bordered' && { border: `1px solid ${theme.palette.divider}`, borderTopWidth: 0 })
+  })
 
-  if (appBar === 'hidden') {
-    return null
-  }
+  if (appBar === 'hidden') return null
 
   let userAppBarStyle = {}
+
   if (appBarProps && appBarProps.sx) {
     userAppBarStyle = appBarProps.sx
   }

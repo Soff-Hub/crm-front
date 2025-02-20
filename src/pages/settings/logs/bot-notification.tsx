@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next'
 import { useAppDispatch, useAppSelector } from 'src/store'
 import { fetBotOwners, setBotData, setOpenCreate } from 'src/store/apps/logs'
 import SubLoader from 'src/views/apps/loaders/SubLoader'
-import { customTableProps } from '../sms'
 import DataTable from 'src/@core/components/table'
 import IconifyIcon from 'src/@core/components/icon'
 import CreateBotNotificationModal from 'src/@core/components/logs/create-bot-notification-modal'
@@ -20,7 +19,7 @@ export default function BotNotification() {
 
   const { isLoading, botNotifications } = useAppSelector(state => state.logs)
 
-  const columns: customTableProps[] = [
+  const columns: any[] = [
     {
       xs: 0.2,
       title: t('ID'),
@@ -48,7 +47,7 @@ export default function BotNotification() {
       xs: 1.7,
       title: t('Amallar'),
       dataIndex: 'id',
-      render: id => (
+      render: (id:any) => (
         <div style={{ color: 'red' }} onClick={() => dispatch(setBotData(id))}>
           <IconifyIcon icon={'fluent:delete-20-regular'} />
         </div>

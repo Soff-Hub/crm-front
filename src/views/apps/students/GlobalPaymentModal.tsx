@@ -4,6 +4,8 @@ import { setGlobalPay } from 'src/store/apps/students'
 import GlobalPaymentForm from './GlobalPaymentForm'
 import { disablePage } from 'src/store/apps/page'
 import { useTranslation } from 'react-i18next'
+import api from 'src/@core/utils/api'
+import { useEffect, useState } from 'react'
 
 type Props = {}
 
@@ -11,7 +13,8 @@ export default function GlobalPaymentModal({ }: Props) {
 
     const { global_pay } = useAppSelector(state => state.students)
     const dispatch = useAppDispatch()
-
+  
+    
     function closeModal() {
         dispatch(setGlobalPay(false))
         dispatch(disablePage(false))

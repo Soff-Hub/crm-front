@@ -1,7 +1,7 @@
-import { Box } from '@mui/material'
+import { Box, Skeleton } from '@mui/material'
 import { useRouter } from 'next/router'
 import { ReactNode } from 'react'
-import SubLoader from 'src/views/apps/loaders/SubLoader'
+import { Placeholder } from 'react-bootstrap' // Import Placeholder from react-bootstrap
 import EmptyContent from '../empty-content'
 
 export interface customTableDataProps {
@@ -11,6 +11,7 @@ export interface customTableDataProps {
   renderItem?: (source: any) => any | undefined
   render?: (source: string) => any | undefined
   renderId?: (id: any, source: any) => any | undefined
+  renderSource?: (source: any, item: any) => any | undefined
 }
 
 interface DataTableProps {
@@ -59,12 +60,28 @@ export default function DataTable({
       >
         {columns.map((el, i) => (
           <Box key={i} sx={{ textAlign: 'start', flex: el.xs }} pt={'0 !important'} pl={'0 !important'}>
-            <Box sx={{ fontSize: 14, fontWeight: 700 }}>{el.title}</Box>
+            <Box sx={{ fontSize: 14, fontWeight: 700 }}>
+              {loading ? (
+                <Placeholder as='span' animation='glow' style={{ width: '100px', height: '30px' }} />
+              ) : (
+                el.title
+              )}
+            </Box>
           </Box>
         ))}
       </Box>
+
       {loading ? (
-        <SubLoader />
+        <Box sx={{display:'flex', flexDirection:'column', gap:2}}>
+          <Skeleton variant='rounded' height={40} width='100%' />
+          <Skeleton variant='rounded' height={40} width='100%' />
+          <Skeleton variant='rounded' height={40} width='100%' />
+          <Skeleton variant='rounded' height={40} width='100%' />
+          <Skeleton variant='rounded' height={40} width='100%' />
+          <Skeleton variant='rounded' height={40} width='100%' />
+          <Skeleton variant='rounded' height={40} width='100%' />
+          <Skeleton variant='rounded' height={40} width='100%' />
+        </Box>
       ) : data?.length > 0 ? (
         data?.map((item, index) => {
           return (
@@ -82,27 +99,17 @@ export default function DataTable({
                 width: '100%',
                 maxWidth: maxWidth || null,
                 cursor: 'pointer',
-                ':hover': {
-                  transition: 'all 0.3s ease',
-                  boxShadow: 'rgba(0, 0, 0, 0.16) 0px 0px 0px, rgba(0, 0, 0, 0.23) 0px 0px 5px'
-                },
-                position: 'relative',
-                backgroundColor: color ? item.color?.split?.(',')?.[0] : 'transparent',
-                color: text_color ? item.color?.split?.(',')?.[1] : ''
               }}
             >
               {columns.map((el: any, i) => (
-                <Box
-                  key={i}
-                  sx={{ textAlign: 'start', flex: el.xs, pb: '5px' }}
-                  pt={'5px !important'}
-                  pl={'0 !important'}
-                >
+                <Box  key={i} sx={{ textAlign: 'start', flex: el.xs, pb: '5px' }}>
                   <Box sx={{ fontSize: 12, fontWeight: 500 }}>
                     {el.render
                       ? el.render(el.dataIndex === 'index' ? index + 1 : item[`${el.dataIndex}`])
                       : el.renderItem
                       ? el.renderItem(item)
+                      : el.renderSource
+                      ? el.renderSource(item[`${el.dataIndex}`], item)
                       : el.renderId
                       ? el.renderId(item.id, item[`${el.dataIndex}`])
                       : el.dataIndex === 'index'
@@ -115,7 +122,7 @@ export default function DataTable({
               ))}
               {rowClick && (
                 <Box
-                  sx={{ width: '75%', zIndex: 1, height: '36px', position: 'absolute' }}
+                  sx={{ width: '55%', zIndex: 1, height: '36px', position: 'absolute' }}
                   onClick={() => handleClick(item.id)}
                 ></Box>
               )}

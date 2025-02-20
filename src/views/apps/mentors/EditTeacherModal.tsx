@@ -58,12 +58,14 @@ export default function EditTeacherModal() {
         birth_date: teacherData?.birth_date,
         activated_at: teacherData?.activated_at,
         gender: teacherData?.gender,
+        lesson_amount:teacherData?.lesson_amount,
         image: teacherData?.image,
         // is_fixed_salary: teacherData?.is_fixed_salary,
         password: "",
         percentage: teacherData?.percentage,
         amount: teacherData?.amount
     }
+    
 
     const validationSchema = () => {
         return Yup.object().shape(
@@ -251,6 +253,19 @@ export default function EditTeacherModal() {
                             error={!!formik.errors.amount && formik.touched.amount} />
                         <FormHelperText error>
                             {(!!formik.errors.amount && formik.touched.amount) && formik.errors.amount}
+                        </FormHelperText>
+                    </FormControl>
+                    <FormControl sx={{ width: '100%' }}>
+                        <AmountInput
+                            label={t("Darslar soni")}
+                            name='lesson_amount'
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            // disabled={!formik.values.is_fixed_salary}
+                            value={formik.values.lesson_amount || 0}
+                            error={!!formik.errors.lesson_amount && formik.touched.lesson_amount} />
+                        <FormHelperText error>
+                            {(!!formik.errors.lesson_amount && formik.touched.lesson_amount) && formik.errors.lesson_amount}
                         </FormHelperText>
                     </FormControl>
                 </Box>

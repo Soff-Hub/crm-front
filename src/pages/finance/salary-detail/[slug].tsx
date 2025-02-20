@@ -78,7 +78,7 @@ const UserView = ({ slug }: InferGetStaticPropsType<typeof getServerSideProps>) 
             xs: 0.13,
             title: `${t("Jarimalar soni")}`,
             dataIndex: 'fines_count',
-            render: (fines_count) => `${fines_count} ta`
+            render: (fines_count) => `${fines_count || 0} ta`
         },
         {
             xs: 0.13,
@@ -121,7 +121,7 @@ const UserView = ({ slug }: InferGetStaticPropsType<typeof getServerSideProps>) 
 
 
     useEffect(() => {
-        if (!user?.role.includes('ceo') && !user?.role.includes('casher')) {
+        if (!user?.role.includes('ceo') && !user?.role.includes('casher') && !user?.role.includes('watcher')&& !user?.role.includes('marketolog')) {
             router.push("/")
             toast.error('Sahifaga kirish huquqingiz yoq!')
         }
@@ -132,7 +132,7 @@ const UserView = ({ slug }: InferGetStaticPropsType<typeof getServerSideProps>) 
         setLoading(status)
         const update_data = moderation_salaries.map(el => ({ ...el, status }))
         try {
-            await api.patch(`common/finance/employee-salaries/update/`, { update_data })
+            await api.patch(`finance/employee-salaries/update/`, { update_data })
             toast.success("Ma'lumotlar saqlandi")
             // await dispatch(fetchModerationSalaries(''))
             push('/finance')

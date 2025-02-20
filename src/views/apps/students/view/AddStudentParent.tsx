@@ -46,22 +46,24 @@ const AddStudentParent = ({ open, setOpen }: IAddParentProps) => {
         phone: Yup.string().required(t("Telefon raqamni kiriting")),
     });
 
-    useEffect(() => {
-        // if (open) {
-        formik.setValues(studentData?.parent_data || initialValues);
-        // }
-    }, [open, studentData]);
+    // useEffect(() => {
+    //     // if (open) {
+    //     formik.setValues(studentData?.parent_data || initialValues);
+    //     // }
+    // }, [open, studentData]);
 
     const handleCreateParent = async (values: IParentData, helpers: FormikHelpers<IParentData>) => {
+        
         try {
             setLoading(true);
-            const response = await api.post('/auth/student-parent/create/', { ...values, student: studentData?.id });
+            const response = await api.post('/student/parent/create/', { first_name:values.first_name,phone:values.phone, student: studentData?.id });
             if (response.status === 201) {
                 toast.success(t("Muvaffaqiyatli saqlandi"));
                 studentData?.id && dispatch(fetchStudentDetail(studentData.id));
                 handleClose();
             }
         } catch (err: any) {
+            toast.error('error')
             handleError(err, helpers);
         } finally {
             setLoading(false);
@@ -78,6 +80,7 @@ const AddStudentParent = ({ open, setOpen }: IAddParentProps) => {
                 handleClose();
             }
         } catch (err: any) {
+            toast.error('Xatolik',{style:{zIndex:9999}})
             handleError(err, helpers);
         } finally {
             setLoading(false);
@@ -96,6 +99,7 @@ const AddStudentParent = ({ open, setOpen }: IAddParentProps) => {
         initialValues,
         validationSchema,
         onSubmit: async (values, helpers) => {
+            
             if (open === "create") {
                 await handleCreateParent(values, helpers);
             } else if (open === "edit") {
@@ -108,6 +112,10 @@ const AddStudentParent = ({ open, setOpen }: IAddParentProps) => {
         formik.resetForm();
         setOpen(null);
     };
+
+    
+    
+    
 
     return (
         <Dialog
@@ -128,7 +136,7 @@ const AddStudentParent = ({ open, setOpen }: IAddParentProps) => {
                             name="first_name"
                             error={Boolean(formik.errors.first_name && formik.touched.first_name)}
                             value={formik.values.first_name}
-                            onChange={formik.handleChange}
+                            onChange={(e) => formik.setFieldValue("first_name", e.target.value)}
                             onBlur={formik.handleBlur}
                             size="medium"
                         />

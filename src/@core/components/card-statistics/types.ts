@@ -13,11 +13,13 @@ export type CardStatsHorizontalProps = {
   trendNumber?: string
   trend?: 'positive' | 'negative'
   id?: string,
-  bgColor?:string
+  bgColor?: string,
+  iconplus?:any
 }
 
 export type CardStatsVerticalProps = {
-  title: string
+  title: string,
+  data_key?:any,
   stats: string | undefined
   icon?: ReactNode
   chipText?: string
@@ -47,5 +49,6 @@ export type KanbarItemProps = {
   trend?: 'positive' | 'negative'
   handleEditLead?: any
   reRender?: any
-  last_activity?: string
+  last_activity?: string,
+  is_amocrm?:boolean
 }

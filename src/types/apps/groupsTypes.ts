@@ -1,5 +1,6 @@
 import { GroupType } from 'src/@fake-db/types'
 import { ILessonResponse } from './dashboardTypes'
+import { TacherItemType } from './mentorsTypes'
 
 export interface MetaTypes {
   id: string
@@ -59,8 +60,11 @@ export interface TeacherSalariesResponse {
 }
 
 export interface IGroupsState {
+  roomsData:any,
+  teachersData:TacherItemType[]|null,
   isTableLoading: boolean
   isOpenEdit: boolean
+  isChangeBranchEdit:boolean,
   isUpdatingDashboard: boolean
   dashboardLessons: ILessonResponse[]
   workTime: string[]

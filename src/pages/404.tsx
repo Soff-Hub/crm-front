@@ -1,30 +1,18 @@
-// ** React Imports
 import { ReactNode } from 'react'
-
-// ** Next Import
 import Link from 'next/link'
-import Image from 'next/image'; // Import Next.js Image component
-
-// ** MUI Components
+import Image from 'next/image'
 import Button from '@mui/material/Button'
 import { styled } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
 import Box, { BoxProps } from '@mui/material/Box'
-
-// ** Layout Import
 import BlankLayout from 'src/@core/layouts/BlankLayout'
-
-// ** Demo Imports
 import FooterIllustrations from 'src/views/pages/misc/FooterIllustrations'
 
-// ** Styled Components
 const BoxWrapper = styled(Box)<BoxProps>(({ theme }) => ({
   [theme.breakpoints.down('md')]: {
     width: '90vw'
   }
 }))
-
-// Remove the old styled img component
 
 const Error404 = () => {
   return (
@@ -34,21 +22,16 @@ const Error404 = () => {
           <Typography variant='h1' sx={{ mb: 2.5 }}>
             404
           </Typography>
+
           <Typography variant='h5' sx={{ mb: 2.5, letterSpacing: '0.18px', fontSize: '1.5rem !important' }}>
             Page Not Found ⚠️
           </Typography>
+
           <Typography variant='body2'>We couldn&prime;t find the page you are looking for.</Typography>
         </BoxWrapper>
-        {/* Optimized Image */}
-        {/* Optimized Image */}
+
         <Box sx={{ position: 'relative', width: '100%', maxWidth: '500px', height: '450px' }}>
-          <Image
-            alt='error-illustration'
-            src='/images/pages/404.png'
-            width={300}
-            height={450}
-            priority // Load this image with high priority
-          />
+          <Image alt='error-illustration' src='/images/pages/404.png' width={300} height={450} priority />
         </Box>
         <Button href='/' component={Link} variant='contained' sx={{ px: 5.5 }}>
           Back to Home

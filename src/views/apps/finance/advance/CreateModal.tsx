@@ -6,6 +6,7 @@ import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import AmountInput, { revereAmount } from 'src/@core/components/amount-input';
 import api from 'src/@core/utils/api';
+import ceoConfigs from 'src/configs/ceo';
 import { useAppDispatch, useAppSelector } from 'src/store';
 import { createAdvance, getAdvanceList, setOpenCreateModal } from 'src/store/apps/finance/advanceSlice';
 import { IAdvanceFormState } from 'src/types/apps/finance';
@@ -20,8 +21,7 @@ export default function CreateModal() {
     const [employees,setEmployes] = useState<EmployeeItemType[]|null>(null)
 
     async function getEmployee() {
-        await api.get("auth/employees-check-list/").then((res) => {
-            console.log(res.data)
+        await api.get(`${ceoConfigs.employee_checklist}?type=employee`).then((res) => {
             setEmployes(res.data)
         }).catch((err) => {
             console.log(err)

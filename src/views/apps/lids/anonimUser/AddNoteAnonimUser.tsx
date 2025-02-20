@@ -12,6 +12,7 @@ type Props = {
     closeModal: any
 }
 
+
 export default function AddNoteAnonimUser({
     user,
     closeModal

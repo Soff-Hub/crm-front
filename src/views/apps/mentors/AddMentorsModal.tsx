@@ -85,6 +85,7 @@ export default function AddMentorsModal() {
 
     const initialValues: CreateTeacherDto = {
         first_name: "",
+        lesson_amount:0,
         phone: "",
         birth_date: today,
         activated_at: today,
@@ -154,6 +155,7 @@ export default function AddMentorsModal() {
                             width={100}
                             height={100}
                             style={{ objectFit: 'cover', objectPosition: 'center' }}
+                      
                             src={URL.createObjectURL(image)} alt="" /> :
                         <IconifyIcon fontSize={40} icon={'material-symbols-light:add-a-photo-outline'} />
                     }
@@ -254,6 +256,20 @@ export default function AddMentorsModal() {
                             error={!!formik.errors.amount && formik.touched.amount} />
                         <FormHelperText error>
                             {(!!formik.errors.amount && formik.touched.amount) && formik.errors.amount}
+                        </FormHelperText>
+                    </FormControl>
+                    <FormControl sx={{ width: '100%' }}>
+                        <AmountInput
+                            // type='number'
+                            label={t("Darslar soni")}
+                            name='lesson_amount'
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            // disabled={!formik.values.is_fixed_salary}
+                            value={formik.values.lesson_amount}
+                            error={!!formik.errors.lesson_amount && formik.touched.lesson_amount} />
+                        <FormHelperText error>
+                            {(!!formik.errors.lesson_amount && formik.touched.lesson_amount) && formik.errors.lesson_amount}
                         </FormHelperText>
                     </FormControl>
                 </Box>

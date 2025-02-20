@@ -1,10 +1,15 @@
 // ** Redux Imports
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import api from 'src/@core/utils/api'
+import ceoConfigs from 'src/configs/ceo'
 import { RoomType, SettingsState, SmsItemType } from 'src/types/apps/settings'
 
+export const fetchSmsListQuery = createAsyncThunk('settings/fetchSmsListQuery', async (queryString?: number) => {
+  return (await api.get(`common/sms-form/list/?parent_id=${queryString || ''}`)).data
+})
+
 export const fetchSmsList = createAsyncThunk('settings/fetchSmsList', async () => {
-  return (await api.get('common/sms-form/list/')).data
+  return (await api.get(`common/sms-form/list/`)).data
 })
 
 export const createSms = createAsyncThunk(
@@ -56,7 +61,7 @@ export const editEmployeeStatus = createAsyncThunk(
   'settings/editEmployeeStatus',
   async (data: any, { rejectWithValue }) => {
     try {
-      const response = await api.patch(`auth/update/employee/status/${data.id}`, data.data)
+      const response = await api.patch(ceoConfigs.update_employee_status + data.id, data.data)
       return response.data
     } catch (err: any) {
       if (err.response) {
@@ -69,6 +74,13 @@ export const editEmployeeStatus = createAsyncThunk(
 
 export const fetchRoomList = createAsyncThunk('settings/fetchRoomList', async (params?: any) => {
   return (await api.get('common/rooms/', { params })).data
+})
+export const fetchSchoolList = createAsyncThunk('settings/fetchSchoolList', async (params?: any) => {
+  return (await api.get('common/schools/', { params })).data
+})
+
+export const fetchSchoolsList = createAsyncThunk('settings/fetchSchoolsList', async () => {
+  return (await api.get('common/schools/')).data
 })
 
 export const createRoom = createAsyncThunk('settings/createRoom', async (data: any, { rejectWithValue }) => {
@@ -126,13 +138,13 @@ export const updateWekend = createAsyncThunk('settings/updateWekend', async (dat
 export const fetchEmployees = createAsyncThunk(
   'settings/fetchEmployees',
   async (params: { search: string; page: number; role: number | string; status: string }) => {
-    return (await api.get('auth/employees/', { params })).data
+    return (await api.get(ceoConfigs.employee, { params })).data
   }
 )
 
 export const createEmployee = createAsyncThunk('settings/createEmployee', async (data: any, { rejectWithValue }) => {
   try {
-    const response = await api.post(`auth/create/employee/`, data)
+    const response = await api.post(`employee/create/`, data)
     return response.data
   } catch (err: any) {
     if (err.response) {
@@ -144,7 +156,7 @@ export const createEmployee = createAsyncThunk('settings/createEmployee', async 
 
 export const editEmployee = createAsyncThunk('settings/editEmployee', async (data: any, { rejectWithValue }) => {
   try {
-    const response = await api.patch(`auth/update/employee/${data.id}`, data.data)
+    const response = await api.patch(ceoConfigs.employee_update + data.id, data.data)
     return response.data
   } catch (err: any) {
     if (err.response) {
@@ -156,15 +168,26 @@ export const editEmployee = createAsyncThunk('settings/editEmployee', async (dat
 
 const initialState: SettingsState = {
   is_pending: false,
+  isGettingSchools:false,
+  employee_id: null,
+  openSms: null,
+  logins:null,
+  is_childpending: false,
   sms_list: [],
+  smschild_list: [],
   openCreateSms: false,
+  openCreateSmsCategory: false,
   openEditSms: null,
   course_list: { count: 0, results: [], is_lesson_count: false },
   openEditCourse: null,
   rooms: [],
+  schools: [],
   openEditRoom: null,
+  openEditSchool:null,
   room_count: 0,
+  school_count:0,
   active_page: 1,
+  schoolQueryParams:{page:1},
   wekends: [],
   wekendData: null,
   employees: [],
@@ -191,17 +214,32 @@ export const settingsSlice = createSlice({
   name: 'settings',
   initialState,
   reducers: {
+    setEmployeeId: (state, action) => {
+      state.employee_id = action.payload
+    },
     updateParams: (state, action) => {
       state.courseQueryParams = action.payload
     },
+    updateSchoolParams: (state, action) => {
+      state.schoolQueryParams = action.payload
+    },
+    setOpenSms: (state, action) => {
+      state.openSms = action.payload
+    },
     setOpenCreateSms: (state, action) => {
       state.openCreateSms = action.payload
+    },
+    setOpenCreateSmsCategory: (state, action) => {
+      state.openCreateSmsCategory = action.payload
     },
     setOpenEditSms: (state, action) => {
       state.openEditSms = action.payload
     },
     setOpenEditCourse: (state, action) => {
       state.openEditCourse = action.payload
+    },
+    setOpenEditSchool: (state, action) => {
+      state.openEditSchool = action.payload
     },
     setOpenEditRoom: (state, action) => {
       state.openEditRoom = action.payload
@@ -227,7 +265,10 @@ export const settingsSlice = createSlice({
         title: '',
         url: ''
       }
-    }
+    },
+    setLogins: (state, action) => {
+      state.logins = action.payload
+    },
   },
   extraReducers: builder => {
     builder
@@ -237,6 +278,13 @@ export const settingsSlice = createSlice({
       .addCase(fetchSmsList.fulfilled, (state, action) => {
         state.is_pending = false
         state.sms_list = action.payload.sort((a: SmsItemType, b: SmsItemType) => a.id - b.id)
+      })
+      .addCase(fetchSmsListQuery.pending, state => {
+        state.is_childpending = true
+      })
+      .addCase(fetchSmsListQuery.fulfilled, (state, action) => {
+        state.is_childpending = false
+        state.smschild_list = action.payload.sort((a: SmsItemType, b: SmsItemType) => a.id - b.id)
       })
       .addCase(createSms.fulfilled, (state, action) => {
         state.sms_list.push(action.payload)
@@ -261,6 +309,22 @@ export const settingsSlice = createSlice({
         state.rooms = action.payload?.results.sort((a: RoomType, b: RoomType) => a.id - b.id)
         state.room_count = Math.ceil(action.payload.count / 10)
       })
+      .addCase(fetchSchoolList.pending, state => {
+        state.isGettingSchools = true
+      })
+      .addCase(fetchSchoolList.fulfilled, (state, action) => {
+        state.isGettingSchools = false
+        state.schools = action.payload?.results.sort((a: RoomType, b: RoomType) => a.id - b.id)
+        state.school_count = Math.ceil(action.payload.count / 10)
+      })
+      .addCase(fetchSchoolsList.pending, state => {
+        state.isGettingSchools = true
+      })
+      .addCase(fetchSchoolsList.fulfilled, (state, action) => {
+        state.isGettingSchools = false
+        state.schools = action.payload?.results.sort((a: RoomType, b: RoomType) => a.id - b.id)
+        state.school_count = Math.ceil(action.payload.count / 10)
+      })
       .addCase(fetchWekends.pending, state => {
         state.is_pending = true
       })
@@ -281,6 +345,7 @@ export const settingsSlice = createSlice({
 })
 
 export const {
+  setOpenCreateSmsCategory,
   setOpenCreateSms,
   setOpenEditSms,
   setOpenEditCourse,
@@ -289,9 +354,14 @@ export const {
   setWekendData,
   setEmployeeData,
   updateParams,
+  setLogins,
   updateQueryParams,
   closeVideoModal,
-  openVideoModal
+  openVideoModal,
+  setOpenSms,
+  setEmployeeId,
+  setOpenEditSchool,
+  updateSchoolParams
 } = settingsSlice.actions
 
 export default settingsSlice.reducer

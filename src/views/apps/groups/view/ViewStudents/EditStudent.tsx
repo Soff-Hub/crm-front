@@ -1,4 +1,3 @@
-import MenuItem from '@mui/material/MenuItem'
 import LoadingButton from '@mui/lab/LoadingButton'
 import {
   Alert,
@@ -9,8 +8,8 @@ import {
   DialogContent,
   FormControl,
   FormHelperText,
-  Input,
   InputLabel,
+  MenuItem,
   Select,
   TextField,
   Typography
@@ -18,13 +17,14 @@ import {
 import api from 'src/@core/utils/api'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { getAttendance, getDays, getStudents, setGettingAttendance } from 'src/store/apps/groupDetails'
 import { useRouter } from 'next/router'
 import { useAppDispatch, useAppSelector } from 'src/store'
 import { getMontNumber } from 'src/@core/utils/gwt-month-name'
 import { useTranslation } from 'react-i18next'
+import { fetchStudentDetail, fetchStudentGroups } from 'src/store/apps/students'
 
 export default function EditStudent({
   student,
@@ -44,9 +44,12 @@ export default function EditStudent({
   const [isLoading, setLoading] = useState(false)
   const { query } = useRouter()
   const { t } = useTranslation()
+ 
+  
+  
 
-  const formik: any = useFormik({
-    initialValues: { added_at: student.added_at, status, lesson_count: student.lesson_count },
+  const formik = useFormik({
+    initialValues: { added_at: student?.added_at, status, lesson_count: student?.lesson_count },
     validationSchema: () =>
       Yup.object({
         added_at: Yup.string(),
@@ -60,10 +63,16 @@ export default function EditStudent({
         toast.success("O'quvchi malumotlari o'zgartirildi", { position: 'top-center' })
         setLoading(false)
         setActivate(false)
+        await dispatch(fetchStudentDetail(Number(query?.student || query.id)))
         const queryString = new URLSearchParams({ ...studentsQueryParams }).toString()
         const queryStringAttendance = new URLSearchParams(queryParams).toString()
         dispatch(setGettingAttendance(true))
-        await dispatch(getStudents({ id: query.id, queryString: queryString }))
+        if (query.id) {
+          await dispatch(getStudents({ id:query.id, queryString: queryString }))
+
+        }
+        await dispatch(fetchStudentGroups(query.student||query.id))
+
         if (query.month && query?.id) {
           await dispatch(
             getAttendance({
@@ -82,11 +91,21 @@ export default function EditStudent({
         dispatch(setGettingAttendance(false))
       } catch (err: any) {
         formik.setErrors(err?.response?.data)
-        console.log(err?.response?.data)
         setLoading(false)
       }
     }
   })
+
+  useEffect(() => {
+    formik.resetForm({
+      values: {
+        added_at: student?.added_at,
+        lesson_count: student?.lesson_count,
+        status: status
+      }
+    })
+  }, [student, status])
+  
 
   return (
     <Dialog open={activate} onClose={() => setActivate(false)}>
@@ -95,7 +114,8 @@ export default function EditStudent({
         <form onSubmit={formik.handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
           <Alert severity='error'>
             <AlertTitle>{t('Eslatma')}</AlertTitle>
-            O'quvchi qoshilgan sana tahrirlansa, o'quvchining barcha <br /> qarzdorliklari o'chirilib qayta yaratiladi{isLesson ? " va to'lovgacha qolgan darslar soni ham o'zgaradi" : ''}
+            O'quvchi qoshilgan sana tahrirlansa, o'quvchining barcha <br /> qarzdorliklari o'chirilib qayta yaratiladi
+            {isLesson ? " va to'lovgacha qolgan darslar soni ham o'zgaradi" : ''}
           </Alert>
           {isLesson && (
             <FormControl>

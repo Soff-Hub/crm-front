@@ -23,15 +23,15 @@ const statsData: StatsDataType[] = [
     icon: 'material-symbols-light:warning-outline',
     title: 'Qolgan qarzlar',
     color: 'error',
-    key: 'debtors_amount',
+    key: 'active_debts_amount',
     link: 'debtors_amount'
   },
   {
     icon: 'material-symbols-light:warning-outline',
     title: 'Qarzdorlar',
     color: 'error',
-    key: 'debtor_users',
-    link: 'debtor_users'
+    key: 'active_debts_count',
+    link: 'active_debts_count'
   },
   {
     icon: 'material-symbols-light:warning-outline',
@@ -75,10 +75,12 @@ export const fetchStatistics = createAsyncThunk('dashboard/fetchStatistics', asy
   return response.data
 })
 
-export const fetchLessons = createAsyncThunk('dashboard/fetchLessons', async (queryWeeks: string[]) => {
+export const fetchLessons = createAsyncThunk('dashboard/fetchLessons', async ({queryWeeks, interval}:{queryWeeks?:string[],interval?:string}) => {
   const queryString = new URLSearchParams({
-    day_of_week: queryWeeks.toString()
+    day_of_week: queryWeeks?.toString() || '',
+    interval: interval?.toString() || ''
   }).toString()
+  
 
   const response = await api.get(`common/dashboard/?` + queryString)
   return response.data
@@ -86,11 +88,13 @@ export const fetchLessons = createAsyncThunk('dashboard/fetchLessons', async (qu
 
 const initialState: IDashboardState = {
   stats: null,
+  eyeVisible: false,
   open: null,
   isLessonLoading: false,
   isStatsLoading: false,
   events: [],
   workTime: [],
+  interval:'15',
   statsData: statsData,
   tabValue: currentWeek === 'mon' || currentWeek === 'wed' || currentWeek === 'fri' ? '2' : '1',
   weekDays: ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'],
@@ -107,11 +111,17 @@ export const dashboardSlice = createSlice({
     handleTabValue: (state, action) => {
       state.tabValue = action.payload
     },
+    updateEyeVisible: (state, action) => {
+      state.eyeVisible = action.payload
+    },
     handleOpen: (state, action) => {
       state.open = action.payload
     },
     updateWeeks: (state, action) => {
       state.weeks = action.payload
+    },
+    updateInterval: (state, action) => {
+      state.interval = action.payload
     },
     handleChangeWeeks: (state, action) => {
       if (state.weeks.includes(action.payload)) {
@@ -147,5 +157,5 @@ export const dashboardSlice = createSlice({
   }
 })
 
-export const { handleTabValue, updateWeeks, handleOpen, handleChangeWeeks } = dashboardSlice.actions
+export const {updateInterval, handleTabValue, updateEyeVisible, updateWeeks, handleOpen, handleChangeWeeks } = dashboardSlice.actions
 export default dashboardSlice.reducer

@@ -10,6 +10,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { query, params } = context;
 
   return {
+    
     props: {
       student: Number(query?.student) || null,
       tab: params?.tab

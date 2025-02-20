@@ -1,20 +1,30 @@
-import { Box, Chip, Typography } from '@mui/material'
+import {
+  Box,
+  Button,
+  Chip,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  IconButton,
+  Typography
+} from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import VideoHeader, { videoUrls } from 'src/@core/components/video-header/video-header'
-import api from 'src/@core/utils/api'
 import { customTableProps } from '../../groups'
-import RowOptions from 'src/views/apps/groups/RowOptions'
 import { useRouter } from 'next/router'
 import getMonthName from 'src/@core/utils/gwt-month-name'
-import DataTable from 'src/@core/components/table'
-import { fetchAttendances, updateQueryParam } from 'src/store/apps/attandance'
+import { fetchAttendances } from 'src/store/apps/attandance'
 import { useAppDispatch, useAppSelector } from 'src/store'
 import useResponsive from 'src/@core/hooks/useResponsive'
 import { AttandanceFilters } from 'src/views/apps/attandances/AttandanceFilters'
+import AttandanceDataTable from 'src/@core/components/table/attandanceTable'
+import IconifyIcon from 'src/@core/components/icon'
 export default function Attandences() {
   const { t } = useTranslation()
   const { isMobile } = useResponsive()
+  const [open, setOpen] = useState(false)
   const dispatch = useAppDispatch()
   const { attandance, isLoading, queryParams } = useAppSelector(state => state.attendance)
   const router = useRouter()
@@ -27,7 +37,10 @@ export default function Attandences() {
     {
       xs: 1,
       title: t('Guruh nomi'),
-      dataIndex: 'name'
+      dataIndex: 'name',
+      renderId: (id, name) => (
+        <div onClick={() => router.push(`/groups/view/security?id=${id}&month=${getMonthName(null)}`)}>{name}</div>
+      )
     },
     {
       xs: 1.4,
@@ -42,23 +55,32 @@ export default function Attandences() {
     },
     {
       xs: 1,
-      title: t('Qilingan davomadlar'),
+      title: t(
+        queryParams.is_available == 1
+          ? "Kelgan o'quvchilar"
+          : queryParams.is_available == 0
+          ? "Davomat qilinmagan o'quvchilar"
+          : "Kelmagan o'quvchilar"
+      ),
       renderItem: (record: any) => (
         <div>
           <Chip
-            variant='outlined'
+            sx={{
+              background:
+                queryParams.is_available == 1
+                  ? 'lightgreen'
+                  : queryParams.is_available == 0
+                  ? ''
+                  : queryParams.is_available == -1
+                  ? 'lightcoral'
+                  : ''
+            }}
+            variant='filled'
             size='medium'
-            color='success'
-            label={`${record?.attended_attendances} / ${record?.allowed_attendances}`}
+            label={` ${record?.attendances}/${record?.allowed_attendances} `}
           />
         </div>
       )
-    },
-    {
-      xs: 1,
-      title: t('Qilinmagan davomatlar soni'),
-      dataIndex: 'not_attended_attendances',
-      render: recors => (Number(recors) > 0 ? <Chip size='medium' color='error' label={`${recors}`} /> : recors)
     }
   ]
   const rowClick = (id: any) => {
@@ -74,15 +96,46 @@ export default function Attandences() {
       <VideoHeader item={videoUrls.groups} />
       <Box
         className='groups-page-header'
-        sx={{ display: 'flex', justifyContent: 'space-between', margin: '10px 0' }}
         py={2}
       >
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: '20px',mb:3 }}>
           <Typography variant='h5'>{t('Davomatlar')}</Typography>
         </Box>
+        {isMobile && (
+          <>
+            <Button
+              size='small'
+              sx={{ marginLeft: 'auto', width: '100%', marginBottom: 2 }}
+              variant='outlined'
+              onClick={() => setOpen(true)}
+            >
+              {t('Filterlash')}
+            </Button>
+          </>
+        )}
       </Box>
       {!isMobile && <AttandanceFilters isMobile={isMobile} />}
-      <DataTable columns={columns} loading={isLoading} data={attandance || []} rowClick={rowClick} color text_color />
+      <AttandanceDataTable columns={columns} loading={isLoading} data={attandance || []} color text_color />
+      <Dialog fullScreen onClose={() => setOpen(false)} aria-labelledby='full-screen-dialog-title' open={open}>
+        <DialogTitle id='full-screen-dialog-title'>
+          <Typography variant='h6' component='span'>
+            {t('Modal title')}
+          </Typography>
+          <IconButton
+            aria-label='close'
+            onClick={() => setOpen(false)}
+            sx={{ top: 8, right: 10, position: 'absolute', color: 'grey.500' }}
+          >
+            <IconifyIcon icon='mdi:close' />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent>
+          <AttandanceFilters isMobile={isMobile} />
+        </DialogContent>
+        <DialogActions className='dialog-actions-dense'>
+          <Button onClick={() => setOpen(false)}>{t('Davom etish')}</Button>
+        </DialogActions>
+      </Dialog>
     </div>
   )
 }

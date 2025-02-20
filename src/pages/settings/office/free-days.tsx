@@ -120,7 +120,7 @@ export default function RoomsPage() {
     }
 
     useEffect(() => {
-        if (!user?.role.includes('ceo') && !user?.role.includes('admin')) {
+        if (!user?.role.includes('ceo') && !user?.role.includes('admin') && !user?.role.includes('watcher')&& !user?.role.includes('marketolog')) {
             push("/")
             toast.error("Sizda bu sahifaga kirish huquqi yo'q!")
         }

@@ -22,7 +22,7 @@ export const updateGroup = createAsyncThunk('updateGroup/fetchGroup', async (id:
 export const getStudents = createAsyncThunk(
   'getStudents/getStudents',
   async ({ id, queryString }: { id: string | string[] | undefined; queryString: string }) => {
-    const resp = await api.get(`common/group/students/${id}?` + queryString)
+    const resp = await api.get(`common/group/students/?group=${id}&` + queryString)
     return resp.data
   }
 )
@@ -30,6 +30,20 @@ export const getAttendance = createAsyncThunk(
   'getAttendance/getAttendance',
   async ({ date, group, queryString }: { date: string; group: string | string[] | undefined; queryString: string }) => {
     const resp = await api.get(`common/attendance-list/${date}-01/group/${group}/?` + queryString)
+    return resp.data
+  }
+)
+export const getAttendanceTeacher = createAsyncThunk(
+  'getAttendanceTeacher/getAttendanceTeacher',
+  async ({ date, group, queryString }: { date: string; group: string | string[] | undefined; queryString: string }) => {
+    const resp = await api.get(`common/attendance-list/${date}/group/${group}/?` + queryString)
+    return resp.data
+  }
+)
+export const getStudentsGrades = createAsyncThunk(
+  'getStudentsGrades/getStudentsGrades',
+  async ({ id, queryString }: { id: any; queryString?: string }) => {
+    const resp = await api.get(`common/group-student/rating/list/${id}/?${queryString}`);
     return resp.data
   }
 )
@@ -100,14 +114,19 @@ const initialState: IGroupDetailsState = {
   teachers: null,
   isOpenDelete: null,
   students: null,
+  meet_link:null,
   attendance: null,
+  grades: null,
   days: null,
+  onlineLessonLoading:false,
   rooms: null,
   results: null,
+  updateStatusModal:null,
   resultId: null,
   examStudentId: null,
   editData: null,
   openEdit: null,
+  gradeQueryParams: '',
   queryParams: {
     status: 'active,new'
   },
@@ -119,6 +138,7 @@ const initialState: IGroupDetailsState = {
   isGettingStudents: false,
   isGettingExams: false,
   isGettingAttendance: false,
+  isGettingGrades: false,
   isGettingExamsResults: false,
   openLeadModal: null,
   month_list: [],
@@ -129,8 +149,17 @@ export const groupDetailsSlice = createSlice({
   name: 'groupDetails',
   initialState,
   reducers: {
+    setMeetLink: (state, action) => {
+      state.meet_link = action.payload
+    },
+    setOnlineLessonLoading: (state, action) => {
+      state.onlineLessonLoading = action.payload
+    },
     setResultEdit: (state, action) => {
       state.examStudentId = action.payload
+    },
+    setUpdateStatusModal: (state, action) => {
+      state.updateStatusModal = action.payload
     },
     setDays: (state, action) => {
       state.days = action.payload
@@ -159,11 +188,17 @@ export const groupDetailsSlice = createSlice({
     updateParams: (state, action) => {
       state.queryParams = { ...state.queryParams, ...action.payload }
     },
+    updateGradeParams: (state, action) => {
+      state.gradeQueryParams = { ...state.gradeQueryParams, ...action.payload }
+    },
     studentsUpdateParams: (state, action) => {
       state.studentsQueryParams = { ...state.studentsQueryParams, ...action.payload }
     },
     setGettingAttendance: (state, action) => {
       state.isGettingAttendance = action.payload
+    },
+    setGettingGrades: (state, action) => {
+      state.isGettingGrades = action.payload
     },
     resetStore: state => {
       state.groupData = null
@@ -205,10 +240,30 @@ export const groupDetailsSlice = createSlice({
     })
     builder.addCase(getAttendance.fulfilled, (state, action) => {
       state.attendance = action.payload
-      // state.isGettingAttendance = false
+      state.isGettingAttendance = false
     })
     builder.addCase(getAttendance.rejected, (state, action) => {
       state.isGettingAttendance = false
+    })
+    builder.addCase(getAttendanceTeacher.pending, (state, action) => {
+      state.isGettingAttendance = true
+    })
+    builder.addCase(getAttendanceTeacher.fulfilled, (state, action) => {
+      state.attendance = action.payload
+      state.isGettingAttendance = false
+    })
+    builder.addCase(getAttendanceTeacher.rejected, (state, action) => {
+      state.isGettingAttendance = false
+    })
+    builder.addCase(getStudentsGrades.pending, (state, action) => {
+      state.isGettingGrades = true
+    })
+    builder.addCase(getStudentsGrades.fulfilled, (state, action) => {
+      state.grades = action.payload
+      state.isGettingGrades = false
+    })
+    builder.addCase(getStudentsGrades.rejected, (state, action) => {
+      state.isGettingGrades = false
     })
     builder.addCase(getDays.fulfilled, (state, action) => {
       state.days = action.payload?.result
@@ -239,12 +294,17 @@ export const {
   handleOpenDeleteNote,
   updateParams,
   resetStore,
+  updateGradeParams,
   studentsUpdateParams,
   setGettingAttendance,
+  setGettingGrades,
   setOpen,
+  setUpdateStatusModal,
   setEditData,
+  setMeetLink,
   setResultEdit,
   setResultId,
+  setOnlineLessonLoading,
   setOpenLeadModal,
   setDays,
   setGettingGroupDetails

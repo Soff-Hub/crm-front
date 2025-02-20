@@ -37,16 +37,26 @@ export type StudentsListType = StudentListItemType[]
 
 export interface StudentItemType {
   id?: number
+  
+  image?:string,
   first_name: string
+  school?:any
   phone: string
   gender: genderTypes
   birth_date: null | string
+  contract_amount?:number
+
 }
 
 export interface CreateStudentDto extends StudentItemType {
   password?: string | null
+  contract_amount?:number,
+  school?: string,
+  parent_first_name?: string,
+  parent_phone?:string
   group?: number | string
   start_at?: string
+  fixed_price: string
 }
 
 export interface UpdateStudentDto extends StudentItemType {
@@ -55,6 +65,13 @@ export interface UpdateStudentDto extends StudentItemType {
 }
 
 export interface IStudentState {
+  total_debts?: number
+  groupsChecklist?:[]
+  studentDetailLoading:boolean,
+  isGettingStudentsGroups?:boolean,
+  studentId?: any,
+  comments?:any,
+  studentGroups?:any,
   openEdit: 'edit' | 'create' | 'delete' | null
   students: StudentsListType
   studentsCount: number
@@ -64,16 +81,20 @@ export interface IStudentState {
   groups: any[]
   payments: any[]
   global_pay: boolean
+  openLeadModal: any
 }
 
 export interface StudentDetailType {
   id: number
+  image?:string
   first_name: string
   birth_date: string
   balance: string
   phone: string
+  contract_amount?:number
   gender: genderTypes
   created_at: string
+  school_data:{id:number,name:string},
   parent_data: any[] | null
   roles_list: any[]
   branches: {
@@ -106,13 +127,19 @@ export interface StudentDetailType {
 }
 
 export interface StudentsQueryParamsTypes {
-  search?: string,
-  limit?:string,
-  offset?:string,
+  search?: string
+  school?:string,
+  start_date?: string,
+  end_date?:string,
+  limit?: string
+  offset?: string
   course?: number | null
   status?: string | any
   page?: string
   is_debtor?: any
   last_payment?: any
   group_status?: '' | 'new' | 'frozen' | 'active' | 'archive'
+  not_in_debt?: string | boolean
+  debt_date?: string,
+  teacher?:any
 }

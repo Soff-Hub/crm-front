@@ -1,10 +1,14 @@
+import { Button } from '@mui/material'
+import path from 'path'
 import { useContext } from 'react'
+import { useDispatch } from 'react-redux'
 import { HorizontalNavItemsType } from 'src/@core/layouts/types'
 import { AuthContext } from 'src/context/AuthContext'
+import { toggleAmoModal } from 'src/store/apps/page'
 
 const Navigation = (t: any): HorizontalNavItemsType => {
   const { user } = useContext(AuthContext)
-
+  const dispatch = useDispatch()
   const items = [
     {
       title: t('Bosh sahifa'),
@@ -54,6 +58,10 @@ const Navigation = (t: any): HorizontalNavItemsType => {
             {
               title: 'Dam olish kunlari',
               path: '/settings/office/free-days'
+            },
+            {
+              title: 'Maktablar',
+              path: '/settings/office/schools'
             }
             // {
             //   title: 'Arxiv',
@@ -86,14 +94,26 @@ const Navigation = (t: any): HorizontalNavItemsType => {
               path: '/settings/logs/payment-history'
             },
             {
+              title: t("Tizimga kirishlar"),
+              path: '/settings/logs/logins'
+            },
+            {
               title: t('Bot xabarnoma'),
               path: '/settings/logs/bot-notification'
+            },
+            {
+              title: t('Yuborilgan SMS lar'),
+              path: '/settings/logs/sms-history'
             }
           ]
         },
         {
           title: 'Formalar',
           path: '/settings/forms/'
+        },
+        {
+          title: 'Amo CRM sozlamalari',
+          path: '/settings/amocrm/'
         }
       ]
     },
@@ -113,10 +133,44 @@ const Navigation = (t: any): HorizontalNavItemsType => {
         {
           title: t('Davomatlar'),
           path: '/reports/attendances'
+        },
+        {
+          title: t('Bitiruvchilar'),
+          path: '/reports/graduates'
         }
       ]
-    },
+    }
+
+    // {
+    //   title: t("Video qo'llanmalar"),
+    //   icon: 'ph:video-light',
+    //   path: '/video-tutorials'
+    // }
+  ]
+  const marketologItems = [
    
+    {
+      title: t('Lidlar'),
+      icon: 'mdi:receipt-text-edit-outline',
+      path: '/lids'
+    },
+
+    {
+      title: t('Sozlamalar'),
+      icon: 'mdi:settings',
+      slug: 'settings',
+      children: [
+        {
+          title: 'Formalar',
+          path: '/settings/forms/'
+        },
+        {
+          title: 'Amo CRM sozlamalari',
+          path: '/settings/amocrm/'
+        }
+      ]
+    }
+
     // {
     //   title: t("Video qo'llanmalar"),
     //   icon: 'ph:video-light',
@@ -173,6 +227,9 @@ const Navigation = (t: any): HorizontalNavItemsType => {
             {
               title: 'Dam olish kunlari',
               path: '/settings/office/free-days'
+            }, {
+              title: 'Maktablar',
+              path: '/settings/office/schools'
             }
             // {
             //   title: 'Arxiv',
@@ -187,6 +244,10 @@ const Navigation = (t: any): HorizontalNavItemsType => {
         {
           title: 'Formalar',
           path: '/settings/forms/'
+        },
+        {
+          title: 'Amo CRM sozlamalari',
+          path: '/settings/amocrm/'
         }
       ]
     },
@@ -201,16 +262,25 @@ const Navigation = (t: any): HorizontalNavItemsType => {
         {
           title: t('Davomatlar'),
           path: '/reports/attendances'
+        },
+        {
+          title: t('Bitiruvchilar'),
+          path: '/reports/graduates'
         }
       ]
-    },
-  
+    }
   ]
+
+  const watcherItems = items.filter(el => el.slug !== 'settings')
 
   return user?.role.includes('ceo')
     ? items
     : user?.role.includes('casher')
-    ? items.filter(el => el.path == '/finance')
+    ? items.filter(el => el.path === '/finance')
+    : user?.role.includes('watcher')
+    ? watcherItems
+    : user?.role.includes('marketolog')
+    ? marketologItems
     : adminItems
 }
 

@@ -74,7 +74,7 @@ export default function MyGroups() {
   ]
 
   useEffect(() => {
-    if (!user?.role.includes('teacher')) {
+    if (!user?.role.includes('teacher') && !user?.role.includes('watcher')) {
       push('/')
       toast.error("Sizda bu sahifaga kirish huquqi yo'q!")
     }

@@ -223,6 +223,7 @@ export interface GroupTypeFromList {
 
 export interface GroupType {
   id: any
+  choices:[]
   name: string
   course: CouseType
   start_date: string

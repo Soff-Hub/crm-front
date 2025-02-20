@@ -28,6 +28,7 @@ import DatePickerWrapper from 'src/@core/styles/libs/react-datepicker'
 
 // ** Types
 import { EventDateType, AddEventSidebarType } from 'src/types/apps/calendarTypes'
+import { useTranslation } from 'react-i18next'
 
 interface PickerProps {
   label?: string
@@ -76,6 +77,7 @@ const AddEventSidebar = (props: AddEventSidebarType) => {
 
   // ** States
   const [values, setValues] = useState<DefaultStateType>(defaultState)
+  const { t } = useTranslation()
 
   const {
     control,
@@ -173,29 +175,26 @@ const AddEventSidebar = (props: AddEventSidebarType) => {
   })
 
   const RenderSidebarFooter = () => {
-    if (store.selectedEvent === null || (store.selectedEvent !== null && !store.selectedEvent.title.length)) {
-      return (
-        <Fragment>
-          <Button size='large' type='submit' variant='contained' sx={{ mr: 4 }}>
-            Add
-          </Button>
-          <Button size='large' variant='outlined' color='secondary' onClick={resetToEmptyValues}>
-            Reset
-          </Button>
-        </Fragment>
-      )
-    } else {
-      return (
-        <Fragment>
-          <Button size='large' type='submit' variant='contained' sx={{ mr: 4 }}>
-            Update
-          </Button>
-          <Button size='large' variant='outlined' color='secondary' onClick={resetToStoredValues}>
-            Reset
-          </Button>
-        </Fragment>
-      )
-    }
+    if (store.selectedEvent === null || (store.selectedEvent !== null && !store.selectedEvent.title.length))
+      <Fragment>
+        <Button size='large' type='submit' variant='contained' sx={{ mr: 4 }}>
+          Add
+        </Button>
+        <Button size='large' variant='outlined' color='secondary' onClick={resetToEmptyValues}>
+          Reset
+        </Button>
+      </Fragment>
+
+    return (
+      <Fragment>
+        <Button size='large' type='submit' variant='contained' sx={{ mr: 4 }}>
+          Update
+        </Button>
+        <Button size='large' variant='outlined' color='secondary' onClick={resetToStoredValues}>
+          Reset
+        </Button>
+      </Fragment>
+    )
   }
 
   return (
@@ -259,9 +258,9 @@ const AddEventSidebar = (props: AddEventSidebarType) => {
                 labelId='event-calendar'
                 onChange={e => setValues({ ...values, calendar: e.target.value })}
               >
-                <MenuItem value='Juft kunlar'>Toq kunlar</MenuItem>
-                <MenuItem value='Toq kunlar'>Juft kunlar</MenuItem>
-                <MenuItem value='Boshqa'>Boshqa</MenuItem>
+                <MenuItem value='Juft kunlar'>{t('Toq kunlar')}</MenuItem>
+                <MenuItem value='Toq kunlar'>{t('Juft kunlar')}</MenuItem>
+                <MenuItem value='Boshqa'>{t('Boshqa')}</MenuItem>
               </Select>
             </FormControl>
             <Box sx={{ mb: 6 }}>

@@ -26,41 +26,18 @@ import Router from 'next/router'
 import api from 'src/@core/utils/api'
 
 export default function AddGroupModal() {
-  const { isOpenAddGroup, courses, formParams, queryParams, initialValues } = useAppSelector(
-    state => state.groups
-  )
+  const { isOpenAddGroup,teachersData,roomsData, courses, formParams, queryParams, initialValues } = useAppSelector(state => state.groups)
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
   const [loading, setLoading] = useState(false)
   const [customWeekdays, setCustomWeekDays] = useState<string[]>([])
-  const [roomsData, setRoomsData] = useState<any[] | null>(null)
 
-  const [teachersData, setTeachersData] = useState<TacherItemType[] | null>(null)
 
-  const getTeachers = async () => {
-    await api
-       .get('auth/employees-check-list/?role=teacher')
-       .then(data => {
-         setTeachersData(data.data)
-       })
-       .catch(error => {
-         console.log(error)
-       })
-   }
+ 
 
-  const getRooms = async () => {
-    await api
-      .get('common/room-check-list/')
-      .then(data => setRoomsData(data.data))
-      .catch(error => {
-        console.log(error)
-      })
-  }
+ 
 
-  useEffect(() => {
-    getRooms()
-    getTeachers()
-  }, [isOpenAddGroup])
+  
 
   const options = roomsData?.map(item => ({
     label: item?.name,
@@ -111,18 +88,21 @@ export default function AddGroupModal() {
   ) => {
     formik.setFieldValue(name, event?.target?.value || event)
     if (name == 'teacher') {
-      dispatch(updateFormParams({ teacher: event?.target?.value||event }))
+      dispatch(updateFormParams({ teacher: event?.target?.value || event }))
       const queryString = new URLSearchParams({ ...formParams, teacher: event?.target?.value || event }).toString()
       await dispatch(getDashboardLessons(queryString))
     } else if (name == 'room') {
-      dispatch(updateFormParams({ room: event?.target?.value||event }))
-      const queryString = new URLSearchParams({ ...formParams, room: event?.target?.value ||event}).toString()
+      dispatch(updateFormParams({ room: event?.target?.value || event }))
+      const queryString = new URLSearchParams({ ...formParams, room: event?.target?.value || event }).toString()
       await dispatch(getDashboardLessons(queryString))
     } else if (name == 'day_of_week') {
       if (event.target.value != '0') {
         setCustomWeekDays([])
-        dispatch(updateFormParams({ day_of_week: event?.target?.value||event }))
-        const queryString = new URLSearchParams({ ...formParams, day_of_week: event?.target?.value||event }).toString()
+        dispatch(updateFormParams({ day_of_week: event?.target?.value || event }))
+        const queryString = new URLSearchParams({
+          ...formParams,
+          day_of_week: event?.target?.value || event
+        }).toString()
         await dispatch(getDashboardLessons(queryString))
       }
     }
@@ -251,7 +231,7 @@ export default function AddGroupModal() {
                 </InputLabel>
                 <Select
                   size='small'
-                  label='Hafta kunlari'
+                  label={t('Hafta kunlari')}
                   id='demo-simple-select-outlined'
                   name='day_of_week'
                   labelId='demo-simple-select-outlined-label'
@@ -260,10 +240,10 @@ export default function AddGroupModal() {
                   error={!!formik.errors.day_of_week && !!formik.touched.day_of_week}
                   value={formik.values.day_of_week}
                 >
-                  <MenuItem value={`tuesday,thursday,saturday`}>Juft kunlari</MenuItem>
-                  <MenuItem value={`monday,wednesday,friday`}>Toq kunlari</MenuItem>
-                  <MenuItem value={`tuesday,thursday,saturday,monday,wednesday,friday`}>Har kuni</MenuItem>
-                  <MenuItem value={'0'}>Boshqa</MenuItem>
+                  <MenuItem value={`tuesday,thursday,saturday`}>{t('Juft kunlari')}</MenuItem>
+                  <MenuItem value={`monday,wednesday,friday`}>{t('Toq kunlari')}</MenuItem>
+                  <MenuItem value={`tuesday,thursday,saturday,monday,wednesday,friday`}>{t('Har kuni')}</MenuItem>
+                  <MenuItem value={'0'}>{t('Boshqa')}</MenuItem>
                 </Select>
                 <FormHelperText error={!!formik.errors.day_of_week && !!formik.touched.day_of_week}>
                   {!!formik.errors.day_of_week && !!formik.touched.day_of_week && formik.errors.day_of_week}
@@ -294,16 +274,30 @@ export default function AddGroupModal() {
                 ''
               )}
               <FormControl fullWidth>
-                <Autocomplete
+              <InputLabel size='small' id='user-view-language-label'>
+                  {t("Xona")}
+                </InputLabel>
+                <Select
                   size='small'
-                  placeholder={'Xonalar'}
+                  label={t("Xona")}
+                  id='user-view-language'
+                  labelId='user-view-language-label'
+                  name='room'
+                  onChange={e => handleChangeField('room', e)}
                   onBlur={formik.handleBlur}
-                  disablePortal
-                  onChange={(e, v) => handleChangeField('room', v?.value)}
-                  //   value={formik.values.room}
-                  options={options}
-                  renderInput={params => <TextField {...params} label='Xonalar' />}
-                />
+                  value={formik.values.room}
+                  error={!!formik.errors.room && !!formik.touched.room}
+                >
+                  {roomsData?.map(room => (
+                    <MenuItem key={room.id} value={+room.id}>
+                      {room.name}
+                    </MenuItem>
+                  ))}
+                  <MenuItem sx={{ fontWeight: 600 }} onClick={() => Router.push('/settings/office/rooms')}>
+                    {t('Yangi yaratish')}
+                    <IconifyIcon icon={'ion:add-sharp'} />
+                  </MenuItem>
+                </Select>
                 <FormHelperText error={!!formik.errors.room && !!formik.touched.room}>
                   {!!formik.errors.room && !!formik.touched.room && formik.errors.room}
                 </FormHelperText>
@@ -319,7 +313,7 @@ export default function AddGroupModal() {
                   id='user-view-language'
                   labelId='user-view-language-label'
                   name='teacher'
-                  disabled={!!!formik.values.room}
+                  disabled={!formik.values.room}
                   onChange={e => handleChangeField('teacher', e)}
                   onBlur={formik.handleBlur}
                   value={formik.values.teacher}

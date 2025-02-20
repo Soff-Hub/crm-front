@@ -1,30 +1,23 @@
-// ** MUI Imports
 import Fab from '@mui/material/Fab'
 import AppBar from '@mui/material/AppBar'
 import { styled } from '@mui/material/styles'
 import Box, { BoxProps } from '@mui/material/Box'
 import MuiToolbar, { ToolbarProps } from '@mui/material/Toolbar'
-
-// ** Icon Imports
 import Icon from 'src/@core/components/icon'
-
-// ** Theme Config Import
 import themeConfig from 'src/configs/themeConfig'
-
-// ** Type Import
 import { LayoutProps } from 'src/@core/layouts/types'
-
-// ** Components
 import Customizer from 'src/@core/components/customizer'
 import Footer from './components/shared-components/footer'
 import Navigation from './components/horizontal/navigation'
 import ScrollToTop from 'src/@core/components/scroll-to-top'
 import AppBarContent from './components/horizontal/app-bar-content'
-
-// ** Util Import
 import { hexToRGBA } from 'src/@core/utils/hex-to-rgba'
 import { useAuth } from 'src/hooks/useAuth'
-import StaticsModal from 'src/@core/components/statics-modal'
+import StaticsModal from '../components/statics-modal'
+import QrCodeModal from '../components/qrCode-Modal'
+import { useContext } from 'react'
+import { AuthContext } from 'src/context/AuthContext'
+import DraggableIcon from 'src/pages/soffBotIcon'
 
 const HorizontalLayoutWrapper = styled(Box)({
   height: '100%',
@@ -63,18 +56,8 @@ const ContentWrapper = styled(Box)(({ theme }) => ({
     paddingRight: theme.spacing(4)
   }
 }))
-const FixedIcon = styled('img')(({ top, left, bottom, right }: { top?: string; left?: string; bottom?: string; right?: string }) => ({
-  position: 'fixed',
-  top: top || 'unset',
-  left: left || 'unset',
-  bottom: bottom || 'unset',
-  right: right || 'unset',
-  zIndex: 1000, 
-  cursor: 'pointer',
-}));
 
 const HorizontalLayout = (props: LayoutProps) => {
-  // ** Props
   const {
     hidden,
     children,
@@ -86,13 +69,14 @@ const HorizontalLayout = (props: LayoutProps) => {
     horizontalLayoutProps
   } = props
 
-  // ** Vars
   const { skin, appBar, navHidden, appBarBlur, contentWidth } = settings
   const appBarProps = horizontalLayoutProps?.appBar?.componentProps
   const userNavMenuContent = horizontalLayoutProps?.navMenu?.content
   const auth = useAuth()
+  const { user } = useContext(AuthContext)
 
   let userAppBarStyle = {}
+
   if (appBarProps && appBarProps.sx) {
     userAppBarStyle = appBarProps.sx
   }
@@ -102,7 +86,6 @@ const HorizontalLayout = (props: LayoutProps) => {
   return (
     <HorizontalLayoutWrapper className='layout-wrapper'>
       <MainContentWrapper className='layout-content-wrapper' sx={{ ...(contentHeightFixed && { maxHeight: '100vh' }) }}>
-        {/* Navbar (or AppBar) and Navigation Menu Wrapper */}
         {!auth?.user?.payment_page && (
           <AppBar
             color='default'
@@ -128,7 +111,6 @@ const HorizontalLayout = (props: LayoutProps) => {
             }}
             {...userAppBarProps}
           >
-            {/* Navbar / AppBar */}
             <Box
               className='layout-navbar'
               sx={{
@@ -155,27 +137,61 @@ const HorizontalLayout = (props: LayoutProps) => {
               </Toolbar>
             </Box>
 
-            {/* Navigation Menu */}
-            {navHidden ? null : (
-              <Box className='layout-horizontal-nav' sx={{ width: '100%', ...horizontalLayoutProps?.navMenu?.sx }}>
+            {!navHidden && (
+              <Box
+                className='layout-horizontal-nav'
+                sx={{
+                  width: '100%',
+                  ...horizontalLayoutProps?.navMenu?.sx
+                }}
+              >
                 <Toolbar
                   className='horizontal-nav-content-container'
                   sx={{
                     mx: 'auto',
-                    ...(contentWidth === 'boxed' && { '@media (min-width:1440px)': { maxWidth: 1440 } }),
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    ...(contentWidth === 'boxed' && {
+                      '@media (min-width:1440px)': { maxWidth: 1440 }
+                    }),
                     minHeight: theme =>
-                      `${(theme.mixins.toolbar.minHeight as number) - (skin === 'bordered' ? 1 : 0)}px !important`
+                      `${(theme.mixins.toolbar.minHeight as number) - (skin === 'bordered' ? 1 : 0)}px !important`,
+                    px: 2,
+                    '@media (max-width: 1440px)': {
+                      px: 1
+                    },
+                    '@media (max-width: 768px)': {
+                      flexDirection: 'column',
+                      alignItems: 'flex-start'
+                    }
                   }}
                 >
                   {(userNavMenuContent && userNavMenuContent(props)) || (
                     <>
-                      <Navigation
-                        {...props}
-                        horizontalNavItems={
-                          (horizontalLayoutProps as NonNullable<LayoutProps['horizontalLayoutProps']>).navMenu?.navItems
-                        }
-                      />
-                      <StaticsModal />
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: 2,
+                          '@media (max-width: 768px)': {
+                            flexDirection: 'column',
+                            gap: 1.5
+                          }
+                        }}
+                      >
+                        <Navigation
+                          {...props}
+                          horizontalNavItems={
+                            (horizontalLayoutProps as NonNullable<LayoutProps['horizontalLayoutProps']>).navMenu
+                              ?.navItems
+                          }
+                        />
+                      </Box>
+                      {(user?.role.includes('admin') || user?.role.includes('ceo')) &&
+                        !window.location.pathname.includes('/c-panel') && <StaticsModal />}
+
+                      <QrCodeModal />
                     </>
                   )}
                 </Toolbar>
@@ -183,7 +199,7 @@ const HorizontalLayout = (props: LayoutProps) => {
             )}
           </AppBar>
         )}
-        {/* Content */}
+
         <ContentWrapper
           className='layout-page-content'
           sx={{
@@ -196,19 +212,18 @@ const HorizontalLayout = (props: LayoutProps) => {
           }}
         >
           {children}
-          
         </ContentWrapper>
-        {/* Footer */}
+
         <Footer {...props} footerStyles={footerProps?.sx} footerContent={footerProps?.content} />
-        {/* Customizer */}
-        {/* <img
-          src='/images/avatars/happybot.png'
-          width='50'
-          height='50'
-          alt='Happy Bot'
-        />{' '} */}
-        {themeConfig.disableCustomizer || hidden ? null : <Customizer />}
-        {/* Scroll to top button */}
+
+        {themeConfig.disableCustomizer || hidden ? null : (
+          <>
+            {(user?.role.includes('ceo') || user?.role.includes('admin')) &&
+              !window.location.pathname.includes('/c-panel') && <DraggableIcon />}
+
+            <Customizer />
+          </>
+        )}
         {scrollToTop ? (
           scrollToTop(props)
         ) : (
@@ -218,8 +233,6 @@ const HorizontalLayout = (props: LayoutProps) => {
             </Fab>
           </ScrollToTop>
         )}
-            {/* <DraggableIcon/> */}
-
       </MainContentWrapper>
     </HorizontalLayoutWrapper>
   )

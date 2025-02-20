@@ -18,10 +18,10 @@ export default function Calendar() {
     const { skin } = settings
     const mdAbove = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'))
 
-    const { isLessonLoading } = useAppSelector(state => state.dashboard)
+    const { isLessonLoading,interval } = useAppSelector(state => state.dashboard)
 
     const handleUpdateWeekDays = async (weekDays: string[]) => {
-        await dispatch(fetchLessons(weekDays))
+        await dispatch(fetchLessons({queryWeeks:weekDays,interval:interval}))
         dispatch(updateWeeks(weekDays))
     }
 

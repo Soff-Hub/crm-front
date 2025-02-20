@@ -1,6 +1,7 @@
 // @ts-nocheck
 
 // ** MUI Imports
+import { LoadingButton } from '@mui/lab'
 import {
   Autocomplete,
   Box,
@@ -17,12 +18,14 @@ import { useEffect, useState } from 'react'
 
 // ** Third Party Imports
 import 'react-datepicker/dist/react-datepicker.css' // Import CSS file for react-datepicker
+import toast from 'react-hot-toast'
 import { useTranslation } from 'react-i18next'
 import Excel from 'src/@core/components/excelButton/Excel'
 import IconifyIcon from 'src/@core/components/icon'
 import api from 'src/@core/utils/api'
 import useDebounce from 'src/hooks/useDebounce'
 import { useAppDispatch, useAppSelector } from 'src/store'
+import { setOnlineLessonLoading } from 'src/store/apps/groupDetails'
 import { fetchGroups, updateParams } from 'src/store/apps/groups'
 import { TacherItemType } from 'src/types/apps/mentorsTypes'
 
@@ -31,40 +34,45 @@ type GroupsFilterProps = {
 }
 
 export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
-  const { queryParams, courses } = useAppSelector(state => state.groups)
+  const { queryParams, courses, teachersData } = useAppSelector(state => state.groups)
+  const { onlineLessonLoading } = useAppSelector(state => state.groupDetails)
+
   const dispatch = useAppDispatch()
   const [search, setSearch] = useState<string>('')
   const searchVal = useDebounce(search, 600)
   const [loading, setLoading] = useState<boolean>(false)
-  const [teachersData, setTeachersData] = useState<TacherItemType[] | null>(null)
-
-  const getTeachers = async () => {
-   await api
-      .get('auth/employees-check-list/?role=teacher')
-      .then(data => {
-        setTeachersData(data.data)
-      })
-      .catch(error => {
-        console.log(error)
-      })
-  }
-
-  useEffect(() => {
-    getTeachers()
-  }, [])
 
   const { t } = useTranslation()
 
-  const handleChangeStatus = async(e: SelectChangeEvent<string>) => {
-    dispatch(updateParams({ status: e.target.value }))
-    // const queryString = new URLSearchParams({ ...queryParams, status: e.target.value }).toString()
-   await  dispatch(fetchGroups({ ...queryParams, status: e.target.value }))
+  async function handleGetMeetLink() {
+    dispatch(setOnlineLessonLoading(true))
+    await api
+      .get(`meets/google/login/`)
+      .then(res => {
+        if (res.data.url) {
+          window.location.assign(res.data.url)
+          // console.log(window.location);
+
+          // dispatch(setMeetLink(res.data.url))
+        }
+      })
+      .catch(err => {
+        console.log(err)
+        toast.error(err.response.data.msg)
+      })
+    dispatch(setOnlineLessonLoading(false))
   }
-  const handleChangeTeacher = async(e: SelectChangeEvent<string>) => {
-    dispatch(updateParams({ teacher: e.target.value }))    
+
+  const handleChangeStatus = async (e: SelectChangeEvent<string>) => {
+    dispatch(updateParams({ status: e.target.value }))
+    const queryString = new URLSearchParams({ ...queryParams, status: e.target.value }).toString()
+    await dispatch(fetchGroups({ ...queryParams, status: e.target.value }))
+  }
+  const handleChangeTeacher = async (e: SelectChangeEvent<string>) => {
+    dispatch(updateParams({ teacher: e.target.value }))
     await dispatch(fetchGroups({ ...queryParams, teacher: e.target.value }))
   }
-  const handleChangeCourse = async(e: SelectChangeEvent<string>) => {
+  const handleChangeCourse = async (e: SelectChangeEvent<string>) => {
     dispatch(updateParams({ course: e.target.value }))
     await dispatch(fetchGroups({ ...queryParams, course: e.target.value }))
   }
@@ -73,16 +81,12 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
     dispatch(fetchGroups({ ...queryParams, day_of_week: e.target.value }))
   }
 
-  const handleSearch = async () => {
+  const handleSearch = async (searchVal: string) => {
     setLoading(true)
     dispatch(updateParams({ search: searchVal }))
     await dispatch(fetchGroups({ ...queryParams, search: searchVal }))
     setLoading(false)
   }
-
-  useEffect(() => {
-    handleSearch()
-  }, [searchVal])
 
   const queryString = new URLSearchParams({ ...queryParams }).toString()
 
@@ -100,7 +104,7 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
               {t('Qidirish')}
             </InputLabel>
             <OutlinedInput
-              onChange={e => setSearch(e.target.value)}
+              onChange={e => handleSearch(e.target.value)}
               endAdornment={
                 <InputAdornment position='end'>
                   <IconifyIcon icon={'tabler:search'} />
@@ -112,6 +116,7 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
               size='small'
             />
           </FormControl>
+
           <FormControl sx={{ width: '100%' }}>
             <InputLabel size='small' id='demo-simple-select-outlined-label'>
               {t('Holat')}
@@ -125,22 +130,23 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
               onChange={handleChangeStatus}
             >
               <MenuItem value=''>
-                <b>Barchasi</b>
+                <b>{t('Barchasi')}</b>
               </MenuItem>
-              <MenuItem value={'active'}>{'Aktiv'}</MenuItem>
-              <MenuItem value={'archive'}>{'arxiv'}</MenuItem>
-              <MenuItem value={'new'}>{'Sinov darsida'}</MenuItem>
+              <MenuItem value={'active'}>{t('Aktiv')}</MenuItem>
+              <MenuItem value={'archived'}>{t('archive')}</MenuItem>
+              <MenuItem value={'new'}>{t('Sinov darsida')}</MenuItem>
+              <MenuItem value={'frozen'}>{t('Muzlatilgan')}</MenuItem>
             </Select>
           </FormControl>
           <FormControl sx={{ width: '100%' }}>
-          <Autocomplete
-                onChange={(e, v) => handleChangeTeacher({ ...e, target: { ...e.target, value: v?.value || '' } })}
-                size='small'
-                placeholder={"O'qituvchi"}
-                disablePortal
-                options={options}
-                renderInput={params => <TextField {...params} label='Oqituvchi' />}
-              />
+            <Autocomplete
+              onChange={(e, v) => handleChangeTeacher({ ...e, target: { ...e.target, value: v?.value || '' } })}
+              size='small'
+              placeholder={"O'qituvchi"}
+              disablePortal
+              options={options}
+              renderInput={params => <TextField {...params} label={t("O'qituvchi")} />}
+            />
           </FormControl>
           <FormControl sx={{ width: '100%' }}>
             <InputLabel size='small' id='demo-simple-select-outlined-label'>
@@ -155,7 +161,7 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
               onChange={handleChangeCourse}
             >
               <MenuItem value=''>
-                <b>Barchasi</b>
+                <b>{t('Barchasi')}</b>
               </MenuItem>
               {courses?.map(course => (
                 <MenuItem key={course.id} value={course.id}>
@@ -177,11 +183,11 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
               onChange={handleChangeDateOfWeek}
             >
               <MenuItem value=''>
-                <b>Barchasi</b>
+                <b>{t('Barchasi')}</b>
               </MenuItem>
-              <MenuItem value={'tuesday,thursday,saturday'}>Juft kunlari</MenuItem>
-              <MenuItem value={'monday,wednesday,friday'}>Toq kunlari</MenuItem>
-              <MenuItem value={'monday,tuesday,wednesday,thursday,friday,saturday,sunday'}>Har kuni</MenuItem>
+              <MenuItem value={'tuesday,thursday,saturday'}>{t('Juft kunlari')}</MenuItem>
+              <MenuItem value={'monday,wednesday,friday'}>{t('Toq kunlari')}</MenuItem>
+              <MenuItem value={'monday,tuesday,wednesday,thursday,friday,saturday,sunday'}>{t('Har kuni')}</MenuItem>
             </Select>
           </FormControl>
         </Box>
@@ -190,13 +196,13 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
   } else
     return (
       <Box display={'flex'} gap={2} flexWrap={'nowrap'} alignItems='center' justifyContent='space-between' width='100%'>
-        <Box display={'flex'} width='90%' gap={2} flexWrap={'nowrap'}>
-          <FormControl sx={{ width: '100%', maxWidth: 260 }}>
+        <Box display={'flex'} width='100%' gap={2} flexWrap={'nowrap'}>
+          <FormControl sx={{ width: '100%' }}>
             <InputLabel size='small' id='search-input'>
               {t('Qidirish')}
             </InputLabel>
             <OutlinedInput
-              onChange={e => setSearch(e.target.value)}
+              onChange={e => handleSearch(e.target.value)}
               endAdornment={
                 <InputAdornment position='end'>
                   <IconifyIcon icon={'tabler:search'} />
@@ -208,7 +214,7 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
               size='small'
             />
           </FormControl>
-          <FormControl sx={{ maxWidth: 220, width: '100%' }}>
+          <FormControl sx={{ width: '100%' }}>
             <InputLabel size='small' id='demo-simple-select-outlined-label'>
               {t('Holat')}
             </InputLabel>
@@ -221,26 +227,27 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
               onChange={handleChangeStatus}
             >
               <MenuItem value=''>
-                <b>Barchasi</b>
+                <b>{t('Barchasi')}</b>
               </MenuItem>
-              <MenuItem value={'active'}>{'Aktiv'}</MenuItem>
-              <MenuItem value={'archived'}>{'Arxivlangan'}</MenuItem>
-              <MenuItem value={'new'}>{'Yangi'}</MenuItem>
+              <MenuItem value={'active'}>{t('active')}</MenuItem>
+              <MenuItem value={'archived'}>{t('archive')}</MenuItem>
+              <MenuItem value={'new'}>{t('new')}</MenuItem>
+              <MenuItem value={'frozen'}>{t('frozen')}</MenuItem>
             </Select>
           </FormControl>
           {options?.length > 0 && (
-            <FormControl sx={{ maxWidth: 180, width: '100%' }}>
+            <FormControl sx={{ width: '100%' }}>
               <Autocomplete
                 onChange={(e, v) => handleChangeTeacher({ ...e, target: { ...e.target, value: v?.value || '' } })}
                 size='small'
                 placeholder={"O'qituvchi"}
                 disablePortal
                 options={options}
-                renderInput={params => <TextField {...params} label='Oqituvchi' />}
+                renderInput={params => <TextField {...params} label={t("O'qituvchi")} />}
               />
             </FormControl>
           )}
-          <FormControl sx={{ maxWidth: 180, width: '100%' }}>
+          <FormControl sx={{ width: '100%' }}>
             <InputLabel size='small' id='demo-simple-select-outlined-label'>
               {t('Kurslar')}
             </InputLabel>
@@ -262,7 +269,7 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
               ))}
             </Select>
           </FormControl>
-          <FormControl sx={{ maxWidth: 180, width: '100%' }}>
+          <FormControl sx={{ width: '100%' }}>
             <InputLabel size='small' id='demo-simple-select-outlined-label'>
               {t('Kunlar')}
             </InputLabel>
@@ -275,15 +282,25 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
               onChange={handleChangeDateOfWeek}
             >
               <MenuItem value=''>
-                <b>Barchasi</b>
+                <b>{t('Barchasi')}</b>
               </MenuItem>
-              <MenuItem value={'tuesday,thursday,saturday'}>Juft kunlari</MenuItem>
-              <MenuItem value={'monday,wednesday,friday'}>Toq kunlari</MenuItem>
-              <MenuItem value={'monday,tuesday,wednesday,thursday,friday,saturday,sunday'}>Har kuni</MenuItem>
+              <MenuItem value={'tuesday,thursday,saturday'}>{t('Juft kunlari')}</MenuItem>
+              <MenuItem value={'monday,wednesday,friday'}>{t('Toq kunlari')}</MenuItem>
+              <MenuItem value={'monday,tuesday,wednesday,thursday,friday,saturday,sunday'}>{t('Har kuni')}</MenuItem>
             </Select>
           </FormControl>
+          <Excel url='/common/groups/export/' queryString={queryString} />
+          <LoadingButton
+            loading={onlineLessonLoading}
+            color='success'
+            variant='outlined'
+            onClick={() => {
+              handleGetMeetLink()
+            }}
+          >
+            <IconifyIcon icon='mdi:laptop' />
+          </LoadingButton>
         </Box>
-        <Excel url='/common/groups/export/' queryString={queryString} />
       </Box>
     )
 }

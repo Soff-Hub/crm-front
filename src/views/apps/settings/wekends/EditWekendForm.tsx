@@ -34,7 +34,7 @@ export default function EditWekendForm({ }: Props) {
         validationSchema,
         onSubmit: async (values) => {
             setLoading(true)
-            const resp = await dispatch(updateWekend({ ...wekendData, id: wekendData?.id }))
+            const resp = await dispatch(updateWekend({ ...values, id: wekendData?.id }))
             if (resp.meta.requestStatus === 'rejected') {
                 formik.setErrors(resp.payload)
                 setLoading(false)

@@ -112,7 +112,7 @@ export default function PaymentsList() {
     ]
 
     useEffect(() => {
-        if (!user?.role.includes('ceo') && !user?.role.includes('admin') && !user?.role.includes('casher')) {
+        if (!user?.role.includes('ceo') && !user?.role.includes('admin') && !user?.role.includes('casher') && !user?.role.includes('watcher') && !user?.role.includes('marketolog')) {
             router.push("/")
             toast.error("Sizda bu sahifaga kirish huquqi yo'q!")
         }
@@ -137,7 +137,7 @@ export default function PaymentsList() {
         if (userData.payment_page) {
             window.localStorage.removeItem('userData')
             window.localStorage.removeItem(authConfig.storageTokenKeyName)
-            router.push('/login')
+            router.push('/login') 
         } else router.back()
     }
 

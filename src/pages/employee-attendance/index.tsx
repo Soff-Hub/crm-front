@@ -60,7 +60,6 @@ const EmployeeList = () => {
         dispatch(fetchEmployeeAttendance(""))
     }, [])
 
-    console.log(new Date().toLocaleDateString());
 
     const today = new Date();
     const formattedDate = today.toISOString().split('T')[0];

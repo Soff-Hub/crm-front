@@ -19,11 +19,12 @@ type Props = {
   setOpen: (val: boolean) => void
   handleOk?: () => any
   isDeleting: boolean
+  warning?:string
 }
 
 const UserSuspendDialog = (props: Props) => {
   // ** Props
-  const { open, setOpen, handleOk, isDeleting } = props
+  const { open, setOpen, handleOk, isDeleting ,warning} = props
   const { t } = useTranslation()
   // ** States
   const [userInput, setUserInput] = useState<string>('yes')
@@ -70,7 +71,7 @@ const UserSuspendDialog = (props: Props) => {
                 {t("Ishonchingiz komilmi?")}
               </Typography>
             </Box>
-            <Typography>{t("Siz bu jarayonni ortqa qaytara olmaysiz")}</Typography>
+            <Typography>{t(warning || "Siz bu jarayonni ortqa qaytara olmaysiz")}</Typography>
           </Box>
         </DialogContent>
         <DialogActions sx={{ justifyContent: 'center' }}>

@@ -7,7 +7,10 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  FormControl,
+  FormHelperText,
   IconButton,
+  InputLabel,
   MenuItem,
   Pagination,
   Select,
@@ -24,6 +27,8 @@ import {
   getMetaData,
   handleOpenAddModal,
   resetGroupParams,
+  setRoomsData,
+  setTeacherData,
   updateParams
 } from 'src/store/apps/groups'
 import { useRouter } from 'next/router'
@@ -34,6 +39,17 @@ import dynamic from 'next/dynamic'
 import getMonthName from 'src/@core/utils/gwt-month-name'
 import { AuthContext } from 'src/context/AuthContext'
 import { toast } from 'react-hot-toast'
+import GroupChangeBranchModal from 'src/views/apps/groups/GroupChangeBranchModal'
+import { useFormik } from 'formik'
+import * as Yup from 'yup'
+import api from 'src/@core/utils/api'
+import { LoadingButton } from '@mui/lab'
+import ceoConfigs from 'src/configs/ceo'
+import { Icon } from '@iconify/react'
+import Excel from 'src/@core/components/excelButton/Excel'
+import OnlineLessonModal from 'src/views/apps/groups/view/GroupViewLeft/OnlineLessonModal'
+import { studentsUpdateParams } from 'src/store/apps/groupDetails'
+import { status } from 'nprogress'
 
 const IconifyIcon = dynamic(() => import('src/@core/components/icon'))
 const DataTable = dynamic(() => import('src/@core/components/table'))
@@ -72,6 +88,12 @@ export default function GroupsPage() {
   const { isMobile } = useResponsive()
   const [page, setPage] = useState<number>(queryParams.page ? Number(queryParams.page) - 1 : 0)
   const [rowsPerPage, setRowsPerPage] = useState<number>(() => Number(localStorage.getItem('rowsPerPage')) || 10)
+  const [loading, setLoading] = useState(false)
+  const [updateStatusModal, setUpdateStatusModal] = useState(false)
+  const [groupStatus, setGroupStatus] = useState<string | null>(null)
+  const [group_id, setGroupId] = useState<number | null>(null)
+  const [groupChoices, setGroupChoices] = useState([])
+
   const columns: customTableProps[] = [
     {
       xs: 0.3,
@@ -97,7 +119,7 @@ export default function GroupsPage() {
       xs: 1,
       title: t('Dars Kunlari'),
       dataIndex: 'week_days',
-      render: (week_days: any) => getLessonDays(week_days)
+      render: (week_days: any) => t(getLessonDays(week_days))
     },
     {
       xs: 1,
@@ -124,14 +146,38 @@ export default function GroupsPage() {
     {
       xs: 0.7,
       title: t('Status'),
-      dataIndex: 'status',
-      render: (status: string) => (
-        <Chip
-          label={t(status)}
-          size='small'
-          variant='filled'
-          color={status === 'active' ? 'success' : status === 'archived' ? 'error' : 'warning'}
-        />
+      dataIndex: 'status_data',
+
+      render: (status: any) => (
+        <Box
+          sx={{
+            cursor: 'pointer',
+            pointerEvents: status?.status === 'archived' ? 'auto' : 'pointer' // Ensure clicks work for all statuses
+          }}
+          onClick={() => {
+            if (status?.status !== 'archived') {
+              setGroupStatus(status?.status)
+              setUpdateStatusModal(true)
+              setGroupId(status?.id)
+            } else {
+              console.log('Archived status clicked, but no action triggered.')
+            }
+          }}
+        >
+          <Chip
+            label={t(status?.status)}
+            size='small'
+            variant='filled'
+            color={status?.status === 'active' ? 'success' : status?.status === 'archived' ? 'error' : 'warning'}
+            icon={
+              updateStatusModal ? (
+                <Icon icon='mdi:chevron-up' style={{ fontSize: '12px' }} />
+              ) : (
+                <Icon icon='mdi:chevron-down' style={{ fontSize: '12px' }} />
+              )
+            }
+          />
+        </Box>
       )
     },
     {
@@ -142,15 +188,21 @@ export default function GroupsPage() {
     }
   ]
 
+  const queryString = new URLSearchParams(
+    Object.entries(queryParams).reduce((acc, [key, value]) => {
+      if (value !== undefined && value !== null) {
+        acc[key] = String(value);
+      }
+      return acc;
+    }, {} as Record<string, string>)
+  ).toString();
   const handleRowsPerPageChange = async (value: number) => {
     const limit = value
-    
     setRowsPerPage(Number(value))
     localStorage.setItem('rowsPerPage', `${value}`)
-    console.log({ ...queryParams, limit: `${value}`, offset: `0` });
-    
-    await dispatch(fetchGroups({ ...queryParams, limit: value, offset: `0` }))
+
     dispatch(updateParams({ limit: value }))
+    await dispatch(fetchGroups({ ...queryParams, limit: value, offset: `0` }))
     setPage(0)
   }
 
@@ -158,8 +210,8 @@ export default function GroupsPage() {
     const adjustedPage: any = (Number(page) - 1) * rowsPerPage
     setPage(Number(page))
 
-    await dispatch(fetchGroups({ ...queryParams, limit: rowsPerPage, offset: adjustedPage }))
-     dispatch(updateParams({ offset: adjustedPage }))
+    await dispatch(fetchGroups({ ...queryParams, limit: Number(rowsPerPage), offset: adjustedPage }))
+    dispatch(updateParams({ offset: adjustedPage }))
   }
 
   const handleOpenModal = async () => {
@@ -169,35 +221,89 @@ export default function GroupsPage() {
 
   const rowClick = (id: any) => {
     router.push(`/groups/view/security?id=${id}&month=${getMonthName(null)}`)
+    dispatch(studentsUpdateParams({status:'active,new'}))
   }
 
   const pageLoad = async () => {
     if (!queryParams.limit) {
       dispatch(updateParams({ limit: rowsPerPage }))
 
-      await dispatch(fetchGroups({ ...queryParams}))
+      await dispatch(fetchGroups({ ...queryParams }))
     } else {
-      await dispatch(fetchGroups({...queryParams}))
+      await dispatch(fetchGroups({ ...queryParams }))
     }
     await dispatch(getMetaData())
   }
 
+  const formik = useFormik({
+    initialValues: { status: groupStatus },
+    validationSchema: () =>
+      Yup.object({
+        status: Yup.string().nullable().required('Status kiritilishi shart')
+      }),
+    onSubmit: async values => {
+      setLoading(true)
+      const response = await api.patch(ceoConfigs.groups_updateStatus + group_id, values)
+      if (response.status == 200) {
+        toast.success("Status o'zgartirildi")
+        await dispatch(fetchGroups({ ...queryParams }))
+        setUpdateStatusModal(false)
+        setLoading(false)
+      } else {
+        toast('Xatolik')
+      }
+      setLoading(false)
+    }
+  })
+  const getTeachers = async () => {
+    await api
+      .get(`${ceoConfigs.employee_checklist}?role=teacher`)
+      .then(data => {
+        dispatch(setTeacherData(data.data))
+      })
+      .catch(error => {
+        console.log(error)
+      })
+  }
+  const getRooms = async () => {
+    await api
+      .get('common/room-check-list/')
+      .then(data => dispatch(setRoomsData(data.data)))
+      .catch(error => {
+        console.log(error)
+      })
+  }
+  useEffect(() => {
+    getTeachers()
+    getRooms()
+  }, [])
+
+  useEffect(() => {
+    const group = groups?.find((item: any) => item.id == group_id)
+    if (group) {
+      setGroupChoices(group.choices)
+    }
+  }, [group_id])
+
+  useEffect(() => {
+    formik.setFieldValue('status', groupStatus)
+  }, [groupStatus])
 
   useEffect(() => {
     const initializePage = async () => {
-      if (!user?.role.includes('ceo') && !user?.role.includes('admin')) {
+      if (
+        !user?.role.includes('ceo') &&
+        !user?.role.includes('admin') &&
+        !user?.role.includes('watcher') &&
+        !user?.role.includes('marketolog')
+      ) {
         router.push('/')
         toast.error('Sahifaga kirish huquqingiz yoq!')
-      } 
-        await pageLoad()
-      
+      }
+      await pageLoad()
     }
 
     initializePage()
-
-    return () => {
-      dispatch(resetGroupParams())
-    }
   }, [])
 
   return (
@@ -222,15 +328,19 @@ export default function GroupsPage() {
         </Button>
       </Box>
       {isMobile && (
-        <Button
-          size='small'
-          sx={{ marginLeft: 'auto', width: '100%' }}
-          variant='outlined'
-          onClick={() => setOpen(true)}
-        >
-          {t('Filterlash')}
-        </Button>
+        <>
+          <Button
+            size='small'
+            sx={{ marginLeft: 'auto', width: '100%',marginBottom:2}}
+            variant='outlined'
+            onClick={() => setOpen(true)}
+          >
+            {t('Filterlash')}
+          </Button>
+          <Excel size='small' url='/common/groups/export/' queryString={queryString} />
+        </>
       )}
+
       {!isMobile && <GroupsFilter isMobile={isMobile} />}
       <DataTable columns={columns} loading={isLoading} data={groups || []} rowClick={rowClick} color text_color />
       {Math.ceil(groupCount / 10) > 1 && !isLoading && (
@@ -244,7 +354,7 @@ export default function GroupsPage() {
           />
           <Select
             size='small'
-            onChange={(e) => handleRowsPerPageChange(Number(e.target.value))}
+            onChange={e => handleRowsPerPageChange(Number(e.target.value))}
             value={rowsPerPage}
             className='page-resize'
           >
@@ -259,7 +369,9 @@ export default function GroupsPage() {
 
       <AddGroupModal />
       <EditGroupModal />
+      <GroupChangeBranchModal />
 
+      
       <Dialog fullScreen onClose={() => setOpen(false)} aria-labelledby='full-screen-dialog-title' open={open}>
         <DialogTitle id='full-screen-dialog-title'>
           <Typography variant='h6' component='span'>
@@ -280,6 +392,59 @@ export default function GroupsPage() {
           <Button onClick={() => setOpen(false)}>{t('Davom etish')}</Button>
         </DialogActions>
       </Dialog>
+      <Dialog open={updateStatusModal} onClose={() => setUpdateStatusModal(false)}>
+        <form onSubmit={formik.handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+          <DialogContent sx={{ maxWidth: '350px' }}>
+            <Typography sx={{ fontSize: '20px', textAlign: 'center', mb: 3 }}>
+              {t("O'quvchini statusini ozgartirish")}
+            </Typography>
+
+            <FormControl sx={{ maxWidth: '100%', marginBottom: 3 }} fullWidth>
+              {/* <InputLabel size='small' id='demo-simple-select-outlined-label'>
+                Status (holati)
+              </InputLabel> */}
+              <Select
+                size='small'
+                placeholder='Status (holati)'
+                value={formik.values.status}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                id='demo-simple-select-outlined'
+                labelId='demo-simple-select-outlined-label'
+                name='status'
+                error={!!formik.errors.status && !!formik.touched.status}
+              >
+                {/* <MenuItem value={'active'}>Aktiv</MenuItem>
+                <MenuItem value={'frozen'}>Muzlatish</MenuItem> */}
+                {groupChoices?.map(el => (
+                  <MenuItem value={el} key={el}>
+                    {t(el)}
+                  </MenuItem>
+                ))}
+              </Select>
+              <FormHelperText error>{!!formik.errors.status ? `${formik.errors.status}` : ''}</FormHelperText>
+            </FormControl>
+            <DialogActions>
+              <Box sx={{ display: 'flex', justifyContent: 'center', gap: 4 }}>
+                <Button
+                  onClick={() => {
+                    setUpdateStatusModal(false), formik.resetForm(), setGroupStatus(null)
+                  }}
+                  size='small'
+                  variant='outlined'
+                  color='error'
+                >
+                  {t('Bekor qilish')}
+                </Button>
+                <LoadingButton loading={loading} type='submit' size='small' variant='contained'>
+                  {t('Tasdiqlash')}
+                </LoadingButton>
+              </Box>
+            </DialogActions>
+          </DialogContent>
+        </form>
+      </Dialog>
+      <OnlineLessonModal/>
     </div>
   )
 }

@@ -41,7 +41,7 @@ export default function StudentEditProfileModal({ isModalOpen, setIsModalOpen }:
   const [loading,setLoading] = React.useState(false)
   return (
     <div>
-      <Button onClick={() => setIsModalOpen(true)}>Open modal</Button>
+      {/* <Button onClick={() => setIsModalOpen(true)}>Open modal</Button> */}
       <Modal
         open={isModalOpen}
         onClose={handleClose}
@@ -65,7 +65,6 @@ export default function StudentEditProfileModal({ isModalOpen, setIsModalOpen }:
                   password2: values.password2
                 })
                 setLoading(false)
-                console.log('Password changed successfully:', response.data)
                 resetForm()
                 handleClose()
                 toast.success("Muvaffaqiyatli o'zgartirildi", {

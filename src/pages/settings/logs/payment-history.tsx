@@ -1,9 +1,10 @@
 import { Pagination, TextField } from '@mui/material'
 import React, { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import EmptyContent from 'src/@core/components/empty-content'
 import { formatPhoneNumber } from 'src/@core/components/phone-input/format-phone-number'
 import useResponsive from 'src/@core/hooks/useResponsive'
-import api from 'src/@core/utils/api'
+import { useSettings } from 'src/@core/hooks/useSettings'
 import { useAppDispatch, useAppSelector } from 'src/store'
 import { fetchPaymetLogs, updateQueryParams } from 'src/store/apps/logs'
 import SubLoader from 'src/views/apps/loaders/SubLoader'
@@ -12,8 +13,9 @@ export default function PaymentHistory() {
   const [page, setPage] = useState(1)
   const [search, setSearch] = useState('')
   const dispatch = useAppDispatch()
-  const { isMobile } = useResponsive()
-
+  const { isMobile } = useResponsive();
+  const { t } = useTranslation()
+  const {settings} = useSettings()
   const { paymentCount, paymentLogs, isLoading } = useAppSelector(state => state.logs)
 
   async function handleSearch(search: string) {
@@ -36,7 +38,7 @@ export default function PaymentHistory() {
         className='my-3'
         onChange={e => handleSearch(e.target.value)}
         size='small'
-        label='Qidiruv'
+        label={t('Qidiruv')}
         variant='outlined'
       />
       {isLoading ? <SubLoader /> : ''}
@@ -46,8 +48,9 @@ export default function PaymentHistory() {
         !isLoading && (
           <div
             style={{
-              display: 'flex',
-              flexDirection: 'column',
+                display: 'flex',
+                flexWrap:'wrap',
+              // flexDirection: 'column',
               gap: isMobile ? 10 : 40,
               marginTop: isMobile ? 0 : 30,
               alignItems: 'flex-start'
@@ -57,7 +60,7 @@ export default function PaymentHistory() {
               <div
                 className='payment-history-card'
                 style={{
-                  backgroundColor: 'white',
+                  backgroundColor: settings.mode == 'dark' ?'#30334E':'white',
                   padding: '20px',
                   borderRadius: '14px',
                   position: 'relative',
@@ -73,7 +76,7 @@ export default function PaymentHistory() {
                   style={{
                     position: isMobile ? 'relative' : 'absolute',
                     top: isMobile ? 0 : '-30px',
-                    backgroundColor: 'white',
+                    backgroundColor: settings.mode == 'dark' ?'#30334E':'white',
                     padding: isMobile ? 0 : '6px 20px',
                     left: 0,
                     borderTopLeftRadius: 10,
@@ -82,7 +85,7 @@ export default function PaymentHistory() {
                     margin: '0 0 4px'
                   }}
                 >
-                  {el.title}. XODIM: {formatPhoneNumber(el?.admin_phone)} {el?.admin_name}
+                  {el.title}. {t("XODIM")}: {formatPhoneNumber(el?.admin_phone)} {el?.admin_name}
                 </p>
 
                 <div>

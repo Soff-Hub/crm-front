@@ -46,7 +46,7 @@ export default function AdvanceRowActions({ id }: Props) {
     async function submitDelete() {
         setLoading(true)
         dispatch(disablePage(true))
-        const res = await api.delete(`/common/finance/prepayment/delete/${id}/`)
+        const res = await api.delete(`/finance/prepayment/delete/${id}/`)
         if (res.status == 201 || 200) {
             toast.success("Avans o'chirildi")
             await dispatch(getAdvanceList())
