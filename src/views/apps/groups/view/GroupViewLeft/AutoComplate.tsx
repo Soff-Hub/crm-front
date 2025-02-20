@@ -17,6 +17,7 @@ export default function AutoComplete({ formik, setSelectedStudents }: AutoComple
   const { t } = useTranslation()
   const [searchData, setSearchData] = useState<{ label: string; id: number }[]>([])
   const [search, setSearch] = useState('')
+  const [open, setOpen] = useState(false)
 
   const searchStudent = async () => {
     setSearchData([])
@@ -32,13 +33,14 @@ export default function AutoComplete({ formik, setSelectedStudents }: AutoComple
     }
   }, [search])
 
-  console.log(search);
-  
+  console.log(search)
 
   return (
     <Autocomplete
-      open={search === "" ? false:true}
-      disablePortal
+      open={open}
+      onOpen={() => setOpen(search !== '' && true)}
+      onClose={() => setOpen(false)}
+      disablePortal={false}
       onChange={(
         event: React.SyntheticEvent,
         value: AutocompleteValue<{ label: string; id: number }, false, false, false>,
@@ -47,12 +49,11 @@ export default function AutoComplete({ formik, setSelectedStudents }: AutoComple
       ) => setSelectedStudents(value ? value.id : null)}
       onInputChange={(event: React.SyntheticEvent, value: string) => setSearch(value)}
       id='combo-box-demo'
-      options={searchData }
+      options={searchData}
       noOptionsText={"Ma'lumot yoq"}
       renderInput={params => (
         <TextField
           {...params}
-          
           label={t("O'quvchini qidiring")}
           error={!!formik.errors.student && formik.touched.student}
           helperText={formik.errors.student && formik.touched.student ? formik.errors.student : ''}

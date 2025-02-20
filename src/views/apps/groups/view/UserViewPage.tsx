@@ -98,12 +98,15 @@ const UserView = () => {
         <Box sx={{ marginBottom: '10px', display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
           <ExcelGrades url={`/common/ratings/export/${router.query.id}`} />
         </Box>
+
         <VideoHeader item={videoUrls.group} />
       </Box>
+
       <Grid container spacing={6}>
         <Grid item xs={12} md={5}>
           <UserViewLeft />
         </Grid>
+
         <Grid item xs={12} md={7}>
           <UserViewRight tab={url} />
         </Grid>

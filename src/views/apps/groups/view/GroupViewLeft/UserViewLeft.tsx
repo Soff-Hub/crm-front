@@ -39,6 +39,7 @@ const UserViewLeft = () => {
       <Grid item xs={12}>
         <GroupDetails />
       </Grid>
+
       <Grid item xs={12}>
         <CardContent sx={{ p: 0 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '20px', marginBottom: '10px' }}>
