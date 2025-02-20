@@ -1,10 +1,5 @@
-// ** React Imports
 import { useState, SyntheticEvent, Fragment, useContext, useEffect } from 'react'
-
-// ** Next Import
 import { useRouter } from 'next/router'
-
-// ** MUI Imports
 import Box from '@mui/material/Box'
 import Menu from '@mui/material/Menu'
 import Badge from '@mui/material/Badge'
@@ -13,14 +8,8 @@ import Divider from '@mui/material/Divider'
 import MenuItem from '@mui/material/MenuItem'
 import { styled } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
-
-// ** Icon Imports
 import Icon from 'src/@core/components/icon'
-
-// ** Context
 import { useAuth } from 'src/hooks/useAuth'
-
-// ** Type Imports
 import { Settings } from 'src/@core/context/settingsContext'
 import { AuthContext } from 'src/context/AuthContext'
 import { useTranslation } from 'react-i18next'
@@ -36,7 +25,6 @@ type Props = {
   settings: Settings
 }
 
-// ** Styled Components
 const BadgeContentSpan = styled('span')(({ theme }) => ({
   width: 8,
   height: 8,
@@ -47,7 +35,6 @@ const BadgeContentSpan = styled('span')(({ theme }) => ({
 
 const UserDropdown = (props: Props) => {
   const [imageSrc, setImageSrc] = useState('')
-
   const { settings } = props
   const [open, setOpen] = useState(false)
   const { t } = useTranslation()
@@ -137,6 +124,7 @@ const UserDropdown = (props: Props) => {
       >
         <Avatar alt={user?.fullName} onClick={handleDropdownOpen} sx={{ width: 40, height: 40 }} src={user?.avatar} />
       </Badge>
+
       <Menu
         anchorEl={anchorEl}
         open={Boolean(anchorEl)}
@@ -158,6 +146,7 @@ const UserDropdown = (props: Props) => {
               >
                 <Avatar alt={user?.fullName} src={user?.avatar} sx={{ width: '2.5rem', height: '2.5rem' }} />
               </Badge>
+
               <Box sx={{ display: 'flex', ml: 3, alignItems: 'flex-start', flexDirection: 'column' }}>
                 <Typography sx={{ fontWeight: 600 }}>{user?.fullName}</Typography>
                 {userRoles?.map((item, index) => (
@@ -200,7 +189,7 @@ const UserDropdown = (props: Props) => {
                   e.target.style.transform = 'scale(1)'
                   e.target.style.opacity = '1'
                 }}
-                onClick={() => handleClickOpen(user?.qr_code)} // Open modal on image click
+                onClick={() => handleClickOpen(user?.qr_code)}
               />
             )}
 
