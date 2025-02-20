@@ -91,7 +91,6 @@ export default function EditStudent({
         dispatch(setGettingAttendance(false))
       } catch (err: any) {
         formik.setErrors(err?.response?.data)
-        console.log(err?.response?.data)
         setLoading(false)
       }
     }

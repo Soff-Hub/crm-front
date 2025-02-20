@@ -177,7 +177,6 @@ export default function GlobalPaymentForm({}: Props) {
     setLoading(false)
   }
 
-  console.log(payform)
 
   useEffect(() => {
     setStudentList([])

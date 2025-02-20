@@ -64,7 +64,6 @@ export default function EditDepartmentItemForm({ setLoading, setOpenDialog, load
     }
   })
 
-  console.log(loading);
   
 
   useEffect(() => {

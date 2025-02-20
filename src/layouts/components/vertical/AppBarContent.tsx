@@ -127,6 +127,7 @@ const AppBarContent = (props: Props) => {
             {user?.role.join(', ') !== 'student' && (
               <>
                 <Autocomplete
+                  open={search == '' ? false : true}
                   sx={{ paddingX: 10 }}
                   disablePortal
                   onClose={() => {

@@ -41,7 +41,6 @@ export default function StudentPaymentForm({ openEdit, setOpenEdit, student_id, 
   const userData: any = { ...studentData }
   const { getPaymentMethod, paymentMethods, createPayment } = usePayment()
   const { query } = useRouter()
-  const [groups, setGroups] = useState([])
   const dispatch = useAppDispatch()
 
   const validationSchema = Yup.object({
@@ -203,7 +202,7 @@ export default function StudentPaymentForm({ openEdit, setOpenEdit, student_id, 
               >
                 {groupsChecklist?.map((group: any) => (
                   <MenuItem key={group.id} value={group.id}>
-                    {group.name}
+                    {`${group.name + (` , ${group?.total_payments||'0'} so'm`)}`}
                   </MenuItem>
                 ))}
               </Select>

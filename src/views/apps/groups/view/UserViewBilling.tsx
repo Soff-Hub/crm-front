@@ -87,7 +87,6 @@ const UserViewBilling = () => {
     setOpen('add')
   }
 
-  console.log(editData)
 
   const handleDeleteOpen = async (id: any) => {
     setEditData(id)
