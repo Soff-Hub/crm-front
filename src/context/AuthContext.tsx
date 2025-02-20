@@ -31,13 +31,11 @@ type Props = {
 }
 
 const AuthProvider = ({ children }: Props) => {
-
   const [user, setUser] = useState<UserDataType | null>(defaultProvider.user)
   const [loading, setLoading] = useState<boolean>(defaultProvider.loading)
   const { i18n } = useTranslation()
-  const { settings, saveSettings } = useSettings()
   const router = useRouter()
-  const { locales, locale: activeLocale, pathname, query, asPath } = router
+  const { pathname, query, asPath } = router
 
   const dispatch = useAppDispatch()
 
@@ -64,10 +62,9 @@ const AuthProvider = ({ children }: Props) => {
           }
           setUser({
             phone: response.data.phone,
-            last_login:response.data?.last_login,
+            last_login: response.data?.last_login,
             gpa: response.data.gpa,
             id: response.data.id,
-            // role: response.data.roles.find((el: any) => el.name === "Teacher").exists && !response.data.roles.find((el: any) => el.name === "Admin").exists && !response.data.roles.find((el: any) => el.name === "CEO").exists ? 'teacher' : 'admin',
             fullName: response.data.first_name,
             username: response.data.phone,
             password: 'null',
@@ -109,8 +106,6 @@ const AuthProvider = ({ children }: Props) => {
     initAuth()
   }, [])
 
-
-
   useEffect(() => {
     router.push({ pathname, query }, asPath)
   }, [i18n.language])
@@ -150,7 +145,7 @@ const AuthProvider = ({ children }: Props) => {
 
         dispatch(setRoles(userRoles))
         setUser({
-          last_login:response.data?.last_login,
+          last_login: response.data?.last_login,
           phone: response.data.phone,
           gpa: response.data.gpa,
           id: response.data.id,
