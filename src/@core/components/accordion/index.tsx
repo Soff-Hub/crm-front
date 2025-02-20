@@ -30,7 +30,6 @@ import { useTranslation } from 'react-i18next'
 import { useAppDispatch, useAppSelector } from 'src/store'
 import { fetchAmoCrmPipelines, fetchDepartmentList, setOpenLid, setSectionId } from 'src/store/apps/leads'
 import dynamic from 'next/dynamic'
-import { Draggable } from 'react-beautiful-dnd'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 
@@ -78,7 +77,7 @@ export default function AccordionCustom({ onView, parentId, item, is_amocrm, stu
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const [loading, setLoading] = useState<boolean>(false)
   const [departmentLoading, setDepartmentLoading] = useState(false)
-  const { leadData:leadsData, pipelines } = useAppSelector(state => state.leads)
+  const { leadData: leadsData, pipelines } = useAppSelector(state => state.leads)
   const [openDialog, setOpenDialog] = useState<'sms' | 'edit' | 'delete' | 'recover' | 'merge' | null>(null)
   const [error, setError] = useState<any>({})
   const [count, setCount] = useState<any>(item.student_count)
@@ -88,7 +87,6 @@ export default function AccordionCustom({ onView, parentId, item, is_amocrm, stu
   const { smsTemps, getSMSTemps } = useSMS()
   const dispatch = useAppDispatch()
   const [leadData, setLeadData] = useState<any[]>([])
-
 
   const validationSchema = Yup.object({
     department: Yup.number().required("Bo'limni tanlang")
@@ -110,7 +108,6 @@ export default function AccordionCustom({ onView, parentId, item, is_amocrm, stu
         .then(res => {
           setOpenDialog(null)
           toast.success('Muvaffaqiyatli kochirildi')
-          dispatch(fetchAmoCrmPipelines({}))
           dispatch(fetchDepartmentList())
 
           formik.resetForm()
@@ -276,32 +273,6 @@ export default function AccordionCustom({ onView, parentId, item, is_amocrm, stu
           loading ? (
             <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <CircularProgress disableShrink sx={{ mt: 1, mb: 2, mx: 'auto' }} size={25} />
-              {/* <div className='card p-3 mb-3 border-0 shadow-sm rounded'>
-                <div className='d-flex align-items-center'>
-                  <div
-                    className='rounded-circle bg-secondary placeholder-glow'
-                    style={{ width: 15, height: 15, borderRadius: '50%' }}
-                  ></div>
-
-                  <div className='ms-3 flex-grow-1'>
-                    <div className='placeholder-glow'>
-                      <span className='placeholder col-6 bg-secondary'></span>
-                    </div>
-                    <div className='placeholder-glow mt-2'>
-                      <span className='placeholder col-4 bg-secondary'></span>
-                    </div>
-                  </div>
-
-                  <div>
-                    <div className='placeholder-glow'>
-                      <span
-                        className='placeholder col-1 bg-secondary'
-                        style={{ width: 15, height: 15, borderRadius: '50%' }}
-                      ></span>
-                    </div>
-                  </div>
-                </div>
-              </div> */}
             </Box>
           ) : leadData.length > 0 ? (
             leadData.map((lead: any) => (
@@ -409,7 +380,12 @@ export default function AccordionCustom({ onView, parentId, item, is_amocrm, stu
         )}
       </Menu>
 
-      <Dialog open={openDialog === 'merge'} onClose={() => { setOpenDialog(null), formik.resetForm() }}>
+      <Dialog
+        open={openDialog === 'merge'}
+        onClose={() => {
+          setOpenDialog(null), formik.resetForm()
+        }}
+      >
         <DialogTitle sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <Typography>{t(openDialog == 'merge' ? "Boshqa bo'limga o'tkazish" : "Soff crmga o'tkazish")}</Typography>
           <IconifyIcon icon={'material-symbols:close'} onClick={() => setOpenDialog(null)} />

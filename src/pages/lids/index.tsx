@@ -43,7 +43,6 @@ const Lids = () => {
     }
     dispatch(fetchSmsList())
     dispatch(fetchSources())
-    dispatch(fetchAmoCrmPipelines(queryParams))
   }, [])
 
   return user?.role.length === 1 && user?.role.includes('teacher') ? (

@@ -32,7 +32,7 @@ import { UserDataType } from 'src/context/types'
 import { useAppDispatch, useAppSelector } from 'src/store'
 import { setRoles } from 'src/store/apps/user'
 
-interface Props {
+type Props = {
   settings: Settings
 }
 
@@ -96,13 +96,8 @@ const UserDropdown = (props: Props) => {
       mr: 2
     }
   }
-  type Arg = {
-    data: any
-    name?: string
-  }
-  
 
-  function downloadImage(imageUrl: any, filename: any) {
+  const downloadImage = (imageUrl: any, filename: any) => {
     const anchor = document.createElement('a')
     anchor.href = imageUrl
 
@@ -122,7 +117,7 @@ const UserDropdown = (props: Props) => {
   }
 
   return (
-    <Fragment>
+    <div>
       <Badge
         overlap='circular'
         onClick={handleDropdownOpen}
@@ -166,18 +161,18 @@ const UserDropdown = (props: Props) => {
                     }))
                   }}
                 >
-                  {userRoles?.map((item: string) => (
-                    <div onClick={() => setRole(item)}>
+                  {userRoles?.map((item, index) => (
+                    <div key={`${index}-${item}`} onClick={() => setRole(item)}>
                       <Typography
                         variant='body2'
                         sx={{
-                          textDecoration:role == item ? 'underline':"",
+                          textDecoration: role == item ? 'underline' : '',
                           cursor: 'pointer',
                           fontSize: '0.8rem',
                           color: role == item ? 'text.primary' : 'text.disabled',
                           '&:hover': {
-                            color: 'text.primary', // Change color on hover
-                            textDecoration: 'underline' // Optional: underline on hover
+                            color: 'text.primary',
+                            textDecoration: 'underline'
                           }
                         }}
                       >
@@ -188,6 +183,7 @@ const UserDropdown = (props: Props) => {
                 </div>
               </Box>
             </Box>
+
             {user?.qr_code && (
               <img
                 width={30}
@@ -209,6 +205,7 @@ const UserDropdown = (props: Props) => {
                 onClick={() => handleClickOpen(user?.qr_code)} // Open modal on image click
               />
             )}
+
             <button className='border-0 bg-transparent cursor-pointer'>
               <UserIcon onClick={() => setIsModalOpen(true)} icon='lucide:edit' />
             </button>
@@ -220,21 +217,18 @@ const UserDropdown = (props: Props) => {
 
         <Divider sx={{ mb: '0 !important', mt: '1 !important' }} />
         {user?.role.includes('ceo') && !window.location.hostname.split('.').includes('c-panel') && (
-          <>
-            <Button color='success' sx={styles} onClick={() => router.push('/crm-payments')}>
-              <Icon icon='material-symbols-light:payments-sharp' />
-              {t('CRM sozlamalari')}
-            </Button>
-          </>
+          <Button color='success' sx={styles} onClick={() => router.push('/crm-payments')}>
+            <Icon icon='material-symbols-light:payments-sharp' />
+            {t('CRM sozlamalari')}
+          </Button>
         )}
+
         {(user?.role.includes('admin') || user?.role.includes('ceo')) &&
           !window.location.hostname.split('.').includes('c-panel') && (
-            <>
-              <Button color='secondary' sx={styles} onClick={() => router.push('/video-tutorials')}>
-                <Icon icon='ph:video-bold' />
-                {t("Video qo'llanmalar")}
-              </Button>
-            </>
+            <Button color='secondary' sx={styles} onClick={() => router.push('/video-tutorials')}>
+              <Icon icon='ph:video-bold' />
+              {t("Video qo'llanmalar")}
+            </Button>
           )}
         <Divider sx={{ m: '0 !important' }} />
         <MenuItem
@@ -245,6 +239,7 @@ const UserDropdown = (props: Props) => {
           {t('Logout')}
         </MenuItem>
       </Menu>
+
       <StudentEditProfileModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>
@@ -264,6 +259,7 @@ const UserDropdown = (props: Props) => {
           </IconButton>
           <div>QR Code</div>
         </DialogTitle>
+
         <DialogContent>
           <img
             src={imageSrc}
@@ -276,13 +272,14 @@ const UserDropdown = (props: Props) => {
             }}
           />
         </DialogContent>
+
         <DialogActions>
           <Button onClick={() => downloadImage(imageSrc, 'qr_code')} fullWidth color='primary' variant='contained'>
             Yuklab olish
           </Button>
         </DialogActions>
       </Dialog>
-    </Fragment>
+    </div>
   )
 }
 

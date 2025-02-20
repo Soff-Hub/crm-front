@@ -10,7 +10,6 @@ import {
   editDepartment,
   fetchAmoCrmPipelines,
   fetchDepartmentList,
-  setLeadItems,
   setOpenActionModal,
   setOpenItem,
   setOpenLid
@@ -25,7 +24,7 @@ import Link from 'next/link'
 const AccordionCustom = dynamic(() => import('src/@core/components/accordion'))
 const EditDepartmentDialog = dynamic(() => import('./department/edit-dialog'))
 
-interface Props {
+type Props = {
   title: string
   status: 'pending' | 'new' | 'success'
   items: any[]
@@ -34,21 +33,13 @@ interface Props {
 }
 
 export default function HomeKanban({ title, items, id, is_amocrm }: Props) {
-  //** Hooks
-  const {
-    loading,
-    openActionModal: open,
-    queryParams,
-    actionId,
-    leadItems
-  } = useSelector((state: RootState) => state.leads)
+  const { loading, openActionModal: open, queryParams, actionId } = useSelector((state: RootState) => state.leads)
   const dispatch = useAppDispatch()
   const [openDialog, setOpenDialog] = useState<'sms' | 'edit' | 'delete' | 'recover' | null>(null)
   const { t } = useTranslation()
   const [data, setData] = useState(items)
   const [error, setError] = useState<any>({})
   const [recoverLoading, setRecoverLoading] = useState(false)
-  //** Main Funcitons
 
   const recoverAmoDataItem = async () => {
     setRecoverLoading(true)
@@ -114,6 +105,7 @@ export default function HomeKanban({ title, items, id, is_amocrm }: Props) {
             )}
           </div>
         )}
+
         {!is_amocrm &&
           (id ? (
             <Link href={`/lids-list/?slug=${id}`} style={{ width: '100%' }}>
@@ -126,59 +118,34 @@ export default function HomeKanban({ title, items, id, is_amocrm }: Props) {
               {title}
             </Typography>
           ))}
-        {queryParams.is_active ? (
+
+        {queryParams.is_active && (
           <Box sx={{ display: 'flex', gap: '5px', alignItems: 'center' }}>
             {is_amocrm ? (
               title?.toLowerCase() !== 'leads' && (
-                <IconButton sx={{ cursor: 'pointer', marginLeft: 'auto' }}>
-                  <IconifyIcon
-                    icon={'icon-park-solid:delete-four'}
-                    color='red'
-                    onClick={() => setOpen('delete')}
-                    style={{ padding: 1 }}
-                  />
+                <IconButton onClick={() => setOpen('delete')} sx={{ cursor: 'pointer', marginLeft: 'auto' }}>
+                  <IconifyIcon icon={'icon-park-solid:delete-four'} color='red' style={{ padding: 1 }} />
                 </IconButton>
               )
             ) : (
-              <>
-                <IconButton sx={{ cursor: 'pointer', marginLeft: 'auto' }}>
-                  <IconifyIcon
-                    icon={'fluent:person-add-24-filled'}
-                    color='#84cc16'
-                    onClick={() => dispatch(setOpenLid(id))}
-                  />
+              <div>
+                <IconButton onClick={() => dispatch(setOpenLid(id))} sx={{ cursor: 'pointer', marginLeft: 'auto' }}>
+                  <IconifyIcon icon={'fluent:person-add-24-filled'} color='#84cc16' />
                 </IconButton>
-                <IconButton sx={{ cursor: 'pointer', marginLeft: 'auto' }}>
-                  <IconifyIcon
-                    icon={'heroicons-solid:view-grid-add'}
-                    color='#14b8a6'
-                    onClick={() => dispatch(setOpenItem(id))}
-                  />
+                <IconButton onClick={() => dispatch(setOpenItem(id))} sx={{ cursor: 'pointer', marginLeft: 'auto' }}>
+                  <IconifyIcon icon={'heroicons-solid:view-grid-add'} color='#14b8a6' />
                 </IconButton>
-                {(
-                  <IconButton sx={{ cursor: 'pointer', marginLeft: 'auto' }}>
-                    <IconifyIcon
-                      icon={'fluent:text-bullet-list-square-edit-20-filled'}
-                      color='orange'
-                      onClick={() => setOpen('edit')}
-                    />
-                  </IconButton>
-                )}
+                <IconButton onClick={() => setOpen('edit')} sx={{ cursor: 'pointer', marginLeft: 'auto' }}>
+                  <IconifyIcon icon={'fluent:text-bullet-list-square-edit-20-filled'} color='orange' />
+                </IconButton>
                 {title?.toLowerCase() !== 'leads' && (
-                  <IconButton sx={{ cursor: 'pointer', marginLeft: 'auto' }}>
-                    <IconifyIcon
-                      icon={'icon-park-solid:delete-four'}
-                      color='red'
-                      onClick={() => setOpen('delete')}
-                      style={{ padding: 1 }}
-                    />
+                  <IconButton onClick={() => setOpen('delete')} sx={{ cursor: 'pointer', marginLeft: 'auto' }}>
+                    <IconifyIcon icon={'icon-park-solid:delete-four'} color='red' style={{ padding: 1 }} />
                   </IconButton>
                 )}
-              </>
+              </div>
             )}
           </Box>
-        ) : (
-          ''
         )}
       </Box>
 
@@ -192,14 +159,13 @@ export default function HomeKanban({ title, items, id, is_amocrm }: Props) {
           </Typography>
         )}
         <div className='w-100  space-y-3'>
-          {items.map((lead, index) => (
-            <div>
+          {items.map(lead => (
+            <div key={lead.id}>
               <AccordionCustom
                 student_count={lead.student_count}
                 is_amocrm={is_amocrm}
                 parentId={id}
                 item={lead}
-                key={lead.id}
                 onView={() => null}
               />
             </div>
@@ -213,6 +179,7 @@ export default function HomeKanban({ title, items, id, is_amocrm }: Props) {
             {t("Bo'limni rostdan ham o'chirmoqchimisiz?")}
           </Typography>
         </DialogContent>
+
         <Box sx={{ padding: '0 0 20px', display: 'flex', justifyContent: 'center', gap: '10px' }}>
           <Button color='primary' variant='outlined' onClick={() => setOpen(null)}>
             {t('Bekor qilish')}

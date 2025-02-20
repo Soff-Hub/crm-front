@@ -81,8 +81,8 @@ code[class*='language-'] {
 
 /* Define the width of the scrollbar */
 /* body {
-  scrollbar-width: thin; 
-  scrollbar-color: #888 #f1f1f1; 
+  scrollbar-width: thin;
+  scrollbar-color: #888 #f1f1f1;
 } */
 
 #full-page-overlay {
@@ -128,6 +128,6 @@ code[class*='language-'] {
               margin-top: 10px;
           }
       }
-  } 
+  }
 }
 
