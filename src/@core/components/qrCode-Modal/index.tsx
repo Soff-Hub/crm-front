@@ -40,11 +40,12 @@ const QrCodeModal = () => {
         .catch(err => {
           console.log(err)
           if (err.response.status == 404) {
-            toast.error("Ma'lumot topilmadi", {
-              style: {
-                zIndex: 999999999
-              }
-            })
+            // toast.error("Ma'lumot topilmadi", {
+            //   style: {
+            //     zIndex: 999999999
+            //   }
+            // })
+            console.log("Ma'lumot topilmadi")
           } else {
             toast.error(err.response.data.msg)
           }

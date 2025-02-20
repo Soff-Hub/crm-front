@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 // ** Components
 import {
@@ -178,10 +178,14 @@ export default function CreateStudentForm() {
     setChecked(event.target.checked)
   }
 
-  const handleSearch = debounce(async (val: string) => {
-    await dispatch(fetchGroupCheckList(val))
-  }, 500)
+ 
 
+  const handleSearch = useCallback(
+    debounce(async (val: string) => {
+      await dispatch(fetchGroupCheckList(val));
+    }, 500), 
+    []
+  );
   return (
     <form
       onSubmit={formik.handleSubmit}
