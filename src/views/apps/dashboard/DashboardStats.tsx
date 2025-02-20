@@ -45,12 +45,12 @@ export default function DashboardStats() {
     active_groups: 'Ayni vaqtda faol guruhlar soni',
     active_students: "Ayni vaqtda faol o'quvchilar soni",
     active_debts_count: `Umumiy qarzdor o'quvchilar soni : ${stats?.debtor_users} ta, arxivdagi o'quvchilar soni : ${stats?.active_debts_count} ta (1 ta o'quvchi 2 va undan ortiq guruhda o'qishi mumkin)`,
-    active_debts_amount: `Umumiy o'quvchilar qarzdorligi : ${formatCurrency(stats?.debtors_amount) + " so'm"}    
+    active_debts_amount: `Umumiy o'quvchilar qarzdorligi : ${formatCurrency(stats?.debtors_amount) + " so'm"}
     ${
       stats?.archive_debts_amount < 0
         ? `Arxivdagi o'quvchilar qarzdorligi : ${formatCurrency(stats.archive_debts_amount) + " so'm"}`
         : ''
-    } 
+    }
     `,
     leads_count: "Kurslarga ro'yxatdan o'tgan faol lidlar soni",
     not_activated_students: "Sinov darsiga kelib ketgan o'quvchilar soni",

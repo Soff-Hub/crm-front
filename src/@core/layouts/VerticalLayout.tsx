@@ -23,9 +23,9 @@ import Footer from './components/shared-components/footer'
 import ScrollToTop from 'src/@core/components/scroll-to-top'
 import { useAuth } from 'src/hooks/useAuth'
 import StaticsModal from 'src/@core/components/statics-modal'
-import DraggableIcon from '../components/soffBotIcon'
 import QrCodeModal from '../components/qrCode-Modal'
 import { AuthContext } from 'src/context/AuthContext'
+import DraggableIcon from 'src/pages/soffBotIcon'
 
 const VerticalLayoutWrapper = styled(Box)({
   height: '100%',

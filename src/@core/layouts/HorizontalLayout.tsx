@@ -13,11 +13,11 @@ import ScrollToTop from 'src/@core/components/scroll-to-top'
 import AppBarContent from './components/horizontal/app-bar-content'
 import { hexToRGBA } from 'src/@core/utils/hex-to-rgba'
 import { useAuth } from 'src/hooks/useAuth'
-import DraggableIcon from '../components/soffBotIcon'
 import StaticsModal from '../components/statics-modal'
 import QrCodeModal from '../components/qrCode-Modal'
 import { useContext } from 'react'
 import { AuthContext } from 'src/context/AuthContext'
+import DraggableIcon from 'src/pages/soffBotIcon'
 
 const HorizontalLayoutWrapper = styled(Box)({
   height: '100%',

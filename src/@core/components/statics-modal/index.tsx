@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect, useMemo } from 'react'
+import { useState, useContext, useEffect } from 'react'
 import { Dialog, DialogTitle, DialogContent, Button, Select, MenuItem } from '@mui/material'
 import { useDispatch, useSelector } from 'react-redux'
 import { setSoffBotText, toggleModal } from 'src/store/apps/page'
@@ -16,55 +16,37 @@ function randomInRange(min: number, max: number): number {
 }
 
 const StaticsModal = () => {
-  const [typingComplete, setTypingComplete] = useState(false)
-  const [showFireworks, setShowFireworks] = useState(false)
   const dispatch = useDispatch()
   const { user } = useContext(AuthContext)
   const { isModalOpen } = useAppSelector(state => state.page)
+  const soffBotText = useAppSelector(state => state.page.soffBotText)
+  const soffBotStatus = useAppSelector(state => state.page.soffBotStatus)
+
+  const [typingComplete, setTypingComplete] = useState(false)
+  const [showFireworks, setShowFireworks] = useState(false)
+  const [triggerConfetti, setTriggerConfetti] = useState(false)
   const [selectedDate, setSelectedDate] = useState('yesterday')
+
   const currentDate = new Date().toISOString().split('T')[0]
   const yesterdayDate = new Date(new Date().setDate(new Date().getDate() - 1)).toISOString().split('T')[0]
-  const soffBotText = useSelector((state: any) => state.page.soffBotText)
-  const soffBotStatus = useSelector((state: any) => state.page.soffBotStatus)
-  const userRole = localStorage.getItem('userRole')
-  const [triggerConfetti, setTriggerConfetti] = useState(false)
+  const [userRole, setUserRole] = useState<string | null>(null)
+
+  useEffect(() => {
+    setUserRole(localStorage.getItem('userRole'))
+  }, [])
 
   const fetchAnalytics = async (date: string) => {
     try {
-      const response = await api.get('auth/analytics/', {
-        params: { date }
-      })
-      dispatch(
-        setSoffBotText({
-          missed_attendance: response.data.missed_attendance,
-          groups: response.data.detail,
-          absent_students: response.data.absent_students,
-          income: response.data.income,
-          new_leads: response.data.new_leads,
-          robot_mood: response.data.robot_mood,
-          sms_limit: response.data.sms_limit,
-          unconnected_leads: response.data.unconnected_leads,
-          summary: response.data?.summary,
-          role: response?.data?.role,
-          added_students: response.data?.added_students,
-          left_students: response.data?.left_students,
-          not_using_platform: response.data.not_using_platform
-        })
-      )
+      const response = await api.get('auth/analytics/', { params: { date } })
+      dispatch(setSoffBotText(response.data))
     } catch (error) {
-      console.error('Analyticsni yuklashda xatolik:', error)
+      console.error('Analytics yuklashda xatolik:', error)
     }
   }
 
-  async function handleChangeDate(date: string) {
-    if (date == 'yesterday') {
-      setSelectedDate('yesterday')
-      fetchAnalytics(yesterdayDate)
-    } else {
-      setSelectedDate('today')
-      fetchAnalytics(currentDate)
-    }
-  }
+  useEffect(() => {
+    fetchAnalytics(yesterdayDate)
+  }, [])
 
   useEffect(() => {
     if (triggerConfetti) {
@@ -91,82 +73,35 @@ const StaticsModal = () => {
     setTimeout(() => setShowFireworks(false), 3000)
   }
 
-  return soffBotText?.not_using_platform == true ? (
-    <Dialog fullWidth maxWidth='xs' open={isModalOpen} onClose={handleClose}>
-      <DialogContent>
-        <div className='d-flex mb-4 justify-content-center align-items-center'>
-          <img src='/images/avatars/happybot.webp' width='100' height='100' />
-        </div>
+  const handleChangeDate = (date: string) => {
+    setSelectedDate(date)
+    fetchAnalytics(date === 'yesterday' ? yesterdayDate : currentDate)
+  }
 
-        <div style={{ textAlign: 'center' }}>
-          <Typewriter
-            onInit={typewriter => {
-              const message =
-                "Salom! Men sizning SoffCRM tizimidan foydalanishingizda sodiq yordamchingizman! 🚀 Sizga tizimning qulayliklari,yangi qo'shimchalar haqida muntazam xabar berib turaman. 📊 Bundan tashqari, har kuni tizimdan foydalanish bo'yicha statistik ma'lumotlarni ham taqdim etaman."
-              typewriter.typeString(message).callFunction(handleTypingComplete).pauseFor(5000).start()
-            }}
-            options={{
-              loop: false,
-              delay: 10,
-              cursor: ''
-            }}
-          />
-        </div>
-      </DialogContent>
-      {typingComplete && (
-        <>
-          <Button
-            onClick={handleClose}
-            variant='contained'
-            sx={{
-              m: 2,
-              alignSelf: 'flex-end',
-              borderRadius: '8px', // Match the border-radius in the CSS
-              padding: '5px 10px', // Adjust padding to match the CSS
-              backgroundColor: '#f0f0f0', // Light gray background
-              color: 'blue',
-              fontSize: '0.8rem', // Font size from CSS
-              fontWeight: 'bold', // Font weight from CSS
-              textDecoration: 'none', // Make sure the text decoration is removed
-              transition: 'background-color 0.3s ease', // Transition effect from CSS
-              '&:hover': {
-                backgroundColor: '#e0e0e0' // Darker blue on hover
-              },
-              margin: '15px' // Top margin from CSS
-            }}
-          >
-            Tushunarli
-          </Button>
-        </>
-      )}
-    </Dialog>
-  ) : (
-    <Dialog
-      // onClick={e => e.stopPropagation()}
-      open={isModalOpen}
-      onClose={handleClose}
-      maxWidth={'md'}
-      fullWidth
-    >
+  return (
+    <Dialog fullWidth maxWidth='md' open={isModalOpen} onClose={handleClose}>
       <DialogTitle sx={{ color: 'black', position: 'relative', paddingRight: '30px' }}>
-        Hurmatli {user?.role.join(', ').includes('admin') && 'admin'} {user?.fullName}
+        Hurmatli {user?.role?.includes('admin') ? 'admin' : ''} {user?.fullName}
         <img
           src={
             soffBotStatus === -1
-              ? '/images/avatars/sadbot.webp'
+              ? '/images/avatars/sadbot.png'
               : soffBotStatus === 0
-              ? '/images/avatars/normalbot.webp'
-              : '/images/avatars/happybot.webp'
+              ? '/images/avatars/normalbot.png'
+              : '/images/avatars/happybot.png'
           }
           width={55}
           height={55}
-          style={{ color: 'black', position: 'absolute', top: 8, right: 8 }}
+          style={{ position: 'absolute', top: 8, right: 8 }}
+          alt='Bot Avatar'
         />
       </DialogTitle>
+
       <Select value={selectedDate} onChange={e => handleChangeDate(e.target.value)} size='small' sx={{ margin: 5 }}>
         <MenuItem value='yesterday'>Kechagi kun</MenuItem>
         <MenuItem value='today'>Bugungi kun</MenuItem>
       </Select>
+
       {soffBotText?.role === 'admin' ? (
         <AdminContent date={selectedDate} setTypingComplete={setTypingComplete} soffBotText={soffBotText} />
       ) : soffBotText?.role === 'ceo' ? (
@@ -182,18 +117,18 @@ const StaticsModal = () => {
           sx={{
             m: 2,
             alignSelf: 'flex-end',
-            borderRadius: '8px', // Match the border-radius in the CSS
-            padding: '10px 20px', // Adjust padding to match the CSS
-            backgroundColor: '#007BFF', // Blue button
+            borderRadius: '8px',
+            padding: '10px 20px',
+            backgroundColor: '#007BFF',
             color: 'white',
-            fontSize: '0.9rem', // Font size from CSS
-            fontWeight: 'bold', // Font weight from CSS
-            textDecoration: 'none', // Make sure the text decoration is removed
-            transition: 'background-color 0.3s ease', // Transition effect from CSS
+            fontSize: '0.9rem',
+            fontWeight: 'bold',
+            textDecoration: 'none',
+            transition: 'background-color 0.3s ease',
             '&:hover': {
-              backgroundColor: '#0056b3' // Darker blue on hover
+              backgroundColor: '#0056b3'
             },
-            margin: '15px' // Top margin from CSS
+            margin: '15px'
           }}
         >
           Tushunarli

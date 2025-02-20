@@ -177,10 +177,10 @@ export default function UserViewStudentsList() {
               href={`/students/view/security/?student=${student?.student.id}`}
             >
               <Typography sx={{
-                whiteSpace: "normal", 
+                whiteSpace: "normal",
                 wordBreak: "break-word",
                 overflowWrap: "break-word",
-                textAlign: "center", 
+                textAlign: "center",
                 maxWidth: "100px"
               }} fontSize={12}>{student?.student.first_name}</Typography>
             </Link>
@@ -336,17 +336,17 @@ export default function UserViewStudentsList() {
       dataIndex: 'student',
       render: (student: any) => {
         const balanceText = formatCurrency(student.balance) + " so'm";
-        
+
         return(
 
           <Tooltip title={balanceText}>
             <Chip
                sx={{
-                maxWidth: "100px", 
+                maxWidth: "100px",
                 overflow: "hidden",
-                whiteSpace: "nowrap", 
-                textOverflow: "ellipsis", 
-                cursor: "pointer", 
+                whiteSpace: "nowrap",
+                textOverflow: "ellipsis",
+                cursor: "pointer",
               }}
               variant='outlined'
               color={student.balance >= 0 ? 'success' : 'error'}

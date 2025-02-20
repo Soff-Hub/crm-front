@@ -23,7 +23,7 @@ const DraggableIcon = ({ style, ...props }: { style?: React.CSSProperties }) => 
     e.preventDefault();
   };
 
-  
+
 
   const handleMove = (e: MouseEvent | TouchEvent) => {
     if (isDragging) {
