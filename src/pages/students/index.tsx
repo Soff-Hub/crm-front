@@ -13,7 +13,6 @@ import {
   IconButton
 } from '@mui/material'
 
-
 import { ReactNode, useContext, useEffect, useState } from 'react'
 import DataTable from 'src/@core/components/table'
 import { useTranslation } from 'react-i18next'
@@ -25,7 +24,7 @@ import StudentRowOptions from 'src/views/apps/students/StudentRowOptions'
 import { useAppDispatch, useAppSelector } from 'src/store'
 import { clearStudentParams, fetchStudentsList, setStudentId, updateStudentParams } from 'src/store/apps/students'
 import { formatCurrency } from 'src/@core/utils/format-currency'
-import { setOpenEdit } from 'src/store/apps/students';
+import { setOpenEdit } from 'src/store/apps/students'
 import VideoHeader, { videoUrls } from 'src/@core/components/video-header/video-header'
 import { AuthContext } from 'src/context/AuthContext'
 import { toast } from 'react-hot-toast'
@@ -48,7 +47,7 @@ export default function GroupsPage() {
   const { user } = useContext(AuthContext)
   const [open, setOpen] = useState<boolean>(false)
   const dispatch = useAppDispatch()
-  const { students, isLoading, studentsCount, queryParams,total_debts } = useAppSelector(state => state.students)
+  const { students, isLoading, studentsCount, queryParams, total_debts } = useAppSelector(state => state.students)
   const [page, setPage] = useState<number>(queryParams.page ? Number(queryParams.page) - 1 : 1)
   const [rowsPerPage, setRowsPerPage] = useState<number>(() => Number(localStorage.getItem('rowsPerPage')) || 10)
 
@@ -86,9 +85,20 @@ export default function GroupsPage() {
       xs: 1.1,
       title: t('Baho'),
       dataIndex: 'gpa',
-      render: (gpa) => {
-        return (gpa ? <Chip sx={{ color: Number(gpa) >= 4 ? 'green' : Number(gpa) >= 3 ? 'orange' : 'red',
-          borderColor: Number(gpa) >= 4 ? 'green' : Number(gpa) >= 3 ? 'orange' : 'red'}} variant='outlined' color='info' label={gpa}/> : "Bahosi yo'q")
+      render: gpa => {
+        return gpa ? (
+          <Chip
+            sx={{
+              color: Number(gpa) >= 4 ? 'green' : Number(gpa) >= 3 ? 'orange' : 'red',
+              borderColor: Number(gpa) >= 4 ? 'green' : Number(gpa) >= 3 ? 'orange' : 'red'
+            }}
+            variant='outlined'
+            color='info'
+            label={gpa}
+          />
+        ) : (
+          "Bahosi yo'q"
+        )
       }
     },
     {
@@ -168,12 +178,12 @@ export default function GroupsPage() {
           />
         ) : (
           <Chip
-          label={`${formatCurrency(+balance)} so'm`}
-          color='success'
-          variant='outlined'
-          size='small'
-          sx={{ fontWeight: 700 }}
-        />
+            label={`${formatCurrency(+balance)} so'm`}
+            color='success'
+            variant='outlined'
+            size='small'
+            sx={{ fontWeight: 700 }}
+          />
         )
     },
     {
@@ -183,7 +193,7 @@ export default function GroupsPage() {
       render: actions => <StudentRowOptions id={actions} />
     }
   ]
-  
+
   const handleRowsPerPageChange = async (value: number) => {
     const limit = value
     setRowsPerPage(Number(value))
@@ -202,8 +212,6 @@ export default function GroupsPage() {
     dispatch(updateStudentParams({ offset: adjustedPage }))
   }
 
- 
-
   const rowClick = (id: any) => {
     dispatch(setStudentId(id))
     router.push(`/students/view/security?student=${id}`)
@@ -219,9 +227,6 @@ export default function GroupsPage() {
     }
   }, [])
 
-
-  
-
   return (
     <div>
       <VideoHeader item={videoUrls.students} />
@@ -233,11 +238,12 @@ export default function GroupsPage() {
         <Box sx={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
           <Typography variant='h5'>{t("O'quvchilar")}</Typography>
           {!isLoading && <Chip label={`${studentsCount}`} variant='outlined' color='primary' />}
-          {!isLoading && queryParams.is_debtor && <Chip label={`${formatCurrency(total_debts)}` + " so'm"} variant='outlined' color='error' />}
-
+          {!isLoading && queryParams.is_debtor && (
+            <Chip label={`${formatCurrency(total_debts)}` + " so'm"} variant='outlined' color='error' />
+          )}
         </Box>
         <Button
-          onClick={()=>dispatch(setOpenEdit('create'))}
+          onClick={() => dispatch(setOpenEdit('create'))}
           variant='contained'
           size='small'
           startIcon={<IconifyIcon icon='ic:baseline-plus' />}
@@ -247,19 +253,18 @@ export default function GroupsPage() {
       </Box>
       {isMobile && (
         <Box>
-        <Button
-          size='small'
-          sx={{ marginLeft: 'auto', width: '100%',marginBottom:2 }}
-          variant='outlined'
-          onClick={() => setOpen(true)}
-        >
-          {t('Filterlash')}
-        </Button>
-                  <ExcelStudents  size='small' url='/student/offset-list/' queryString={queryString} />
+          <Button
+            size='small'
+            sx={{ marginLeft: 'auto', width: '100%', marginBottom: 2 }}
+            variant='outlined'
+            onClick={() => setOpen(true)}
+          >
+            {t('Filterlash')}
+          </Button>
+          <ExcelStudents size='small' url='/student/offset-list/' queryString={queryString} />
         </Box>
-        
       )}
-      {!isMobile && <StudentsFilter  isMobile={isMobile} />}
+      {!isMobile && <StudentsFilter isMobile={isMobile} />}
       <DataTable
         color
         loading={isLoading}

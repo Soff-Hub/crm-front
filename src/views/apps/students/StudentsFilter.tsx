@@ -54,7 +54,6 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
     setOpenEdit(value)
   }
   const queryString = new URLSearchParams({ ...queryParams } as Record<string, string>).toString()
-  
 
   const handleEditClose = () => {
     setError({})
@@ -98,7 +97,7 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
     }
     if (key === 'status') {
       dispatch(updateStudentParams({ group_status: '', status: value }))
-    } 
+    }
   }
 
   useEffect(() => {
@@ -121,14 +120,10 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
     label: item?.first_name,
     value: item?.id
   }))
-  
 
   useEffect(() => {
-    dispatch(fetchStudentsList(queryParams as any));
+    dispatch(fetchStudentsList(queryParams as any))
   }, [queryParams])
-
-   
-
 
   if (isMobile) {
     return (
@@ -364,7 +359,6 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
             </InputLabel>
 
             <Select
-              
               size='small'
               onClick={() => setKey('course')}
               key={'course'}

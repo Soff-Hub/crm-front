@@ -22,6 +22,7 @@ export default function SendSmsAnonimUserForm({ smsTemps, user, closeModal, reRe
   const [loading, setLoading] = useState<any>('')
   const { smschild_list } = useAppSelector(state => state.settings)
   const [parent_id, setParentId] = useState<number | null>(null)
+
   const validationSchema = Yup.object({
     message: Yup.string().required('Sms matni kiriting')
   })
@@ -67,6 +68,8 @@ export default function SendSmsAnonimUserForm({ smsTemps, user, closeModal, reRe
     }
   }, [])
 
+  console.log(smschild_list)
+
   return (
     <form
       onSubmit={formik.handleSubmit}
@@ -76,13 +79,14 @@ export default function SendSmsAnonimUserForm({ smsTemps, user, closeModal, reRe
         <InputLabel size='small' id='demo-simple-select-outlined-label'>
           {t('Kategorya')}
         </InputLabel>
+
         <Select
           size='small'
           label='Kategorya'
           defaultValue=''
           id='demo-simple-select-outlined'
           labelId='demo-simple-select-outlined-label'
-          onChange={(e:any) => {
+          onChange={(e: any) => {
             setParentId(e.target.value)
           }}
         >
@@ -93,11 +97,13 @@ export default function SendSmsAnonimUserForm({ smsTemps, user, closeModal, reRe
           ))}
         </Select>
       </FormControl>
+
       {parent_id && (
         <FormControl>
           <InputLabel size='small' id='demo-simple-select-outlined-label'>
             {t('Shablonlar')}
           </InputLabel>
+
           <Select
             size='small'
             label='Shablonlar'

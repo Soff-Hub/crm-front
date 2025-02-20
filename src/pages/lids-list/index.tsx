@@ -331,6 +331,7 @@ const Kanban = () => {
           <Typography>{t('Tahrirlash')}</Typography>
           <IconifyIcon onClick={() => setOpenDialog(null)} icon={'material-symbols:close'} />
         </DialogTitle>
+
         <DialogContent sx={{ minWidth: '300px' }}>
           <EditDepartmentItemForm
             loading={loading}

@@ -74,17 +74,22 @@ export function LidsDragonModal({ selectedLead, openModal, handleClose }: LidsDr
   const { isMobile } = useResponsive()
   const [nodeModal, setNodeModal] = useState(false)
   const { t } = useTranslation()
-  async function handleGetUserDetails(value: string, id: number) {
+
+  const handleGetUserDetails = async (value: string, id: number) => {
     setDetailLoading(true)
-    await api
-      .get(`leads/${value}/${selectedLead?.id}/`)
-      .then(res => {
-        setLeadDetail(res.data)
-      })
-      .catch(err => {
-        console.log(err)
-      })
-    setDetailLoading(false)
+    try {
+      await api
+        .get(`leads/${value}/${selectedLead?.id}/`)
+        .then(res => {
+          setLeadDetail(res.data)
+        })
+        .catch(err => {
+          console.log(err)
+        })
+      setDetailLoading(false)
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   const handleChange = async (
@@ -110,6 +115,7 @@ export function LidsDragonModal({ selectedLead, openModal, handleClose }: LidsDr
       <DialogTitle>
         <Typography variant='h5'>O'quvchi ma'lumotlari</Typography>
       </DialogTitle>
+
       <DialogContent>
         <Box width='100%' display={'flex'} alignItems={'center'} justifyContent={'center'}>
           <div
@@ -351,6 +357,7 @@ export function LidsDragonModal({ selectedLead, openModal, handleClose }: LidsDr
           />
         </DialogContent>
       </Dialog>
+
       <Dialog open={smsModal} onClose={() => setSmsModalOpen(false)}>
         <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <Typography>{t('SMS yuborish')}</Typography>
