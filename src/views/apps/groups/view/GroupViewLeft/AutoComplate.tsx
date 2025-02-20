@@ -11,9 +11,10 @@ import { FormikProps } from 'formik'
 interface AutoCompleteProps {
   formik: FormikProps<{ student: number | null }>
   setSelectedStudents: (id: number | null) => void
+  selectedStudent: any
 }
 
-export default function AutoComplete({ formik, setSelectedStudents }: AutoCompleteProps) {
+export default function AutoComplete({ formik, setSelectedStudents, selectedStudent }: AutoCompleteProps) {
   const { t } = useTranslation()
   const [searchData, setSearchData] = useState<{ label: string; id: number }[]>([])
   const [search, setSearch] = useState('')
@@ -32,12 +33,9 @@ export default function AutoComplete({ formik, setSelectedStudents }: AutoComple
     }
   }, [search])
 
-  console.log(search);
-  
-
   return (
     <Autocomplete
-      open={search === "" ? false:true}
+      open={search === '' || selectedStudent ? false : true}
       disablePortal
       onChange={(
         event: React.SyntheticEvent,
@@ -47,12 +45,11 @@ export default function AutoComplete({ formik, setSelectedStudents }: AutoComple
       ) => setSelectedStudents(value ? value.id : null)}
       onInputChange={(event: React.SyntheticEvent, value: string) => setSearch(value)}
       id='combo-box-demo'
-      options={searchData }
+      options={searchData}
       noOptionsText={"Ma'lumot yoq"}
       renderInput={params => (
         <TextField
           {...params}
-          
           label={t("O'quvchini qidiring")}
           error={!!formik.errors.student && formik.touched.student}
           helperText={formik.errors.student && formik.touched.student ? formik.errors.student : ''}

@@ -74,6 +74,14 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
       .catch(error => console.log(error))
   }
 
+  async function handleSearch(search: string) {
+    dispatch(updateStudentParams({ search:search}))
+    
+  }
+  useEffect(() => {
+    handleSearch(search)
+  },[search])
+
   async function handleFilter(key: string, value: string | number | null) {
     dispatch(updateStudentParams({ [key]: value }))
     if (key === 'debt_date') {
@@ -121,7 +129,8 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
     label: item?.first_name,
     value: item?.id
   }))
-  
+
+
 
   useEffect(() => {
     dispatch(fetchStudentsList(queryParams as any));
