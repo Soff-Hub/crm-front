@@ -99,7 +99,6 @@ const AddStudentParent = ({ open, setOpen }: IAddParentProps) => {
         initialValues,
         validationSchema,
         onSubmit: async (values, helpers) => {
-            console.log(values);
             
             if (open === "create") {
                 await handleCreateParent(values, helpers);

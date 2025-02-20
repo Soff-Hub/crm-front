@@ -33,7 +33,6 @@ export default function EmployeesAttendanceTable() {
   const [loading, setLoading] = useState(false)
   const { settings } = useSettings()
 
-  console.log(selectedYear,selectedMonth);
   
   async function fetchEmployeesAttendance(year: any, month: string) {
     setLoading(true)

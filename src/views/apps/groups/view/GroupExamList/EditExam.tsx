@@ -81,7 +81,6 @@ export default function EditExam() {
                     dispatch(setOpen(null))
                 }
             } catch (e: any) {
-                console.log(e?.response.data);
                 formik.setErrors(e?.response.data)
             }
             setLoading(false)

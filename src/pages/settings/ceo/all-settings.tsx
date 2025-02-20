@@ -497,7 +497,7 @@ export default function AllSettings() {
                                 value={companyInfo?.training_center_name}
                                 size='small'
                                 placeholder={t('Tashkilot nomi')}
-                                onBlur={e => console.log(e.target.value)}
+                                // onBlur={e => console.log(e.target.value)}
                               />
                               <IconifyIcon
                                 icon={'basil:edit-outline'}
@@ -750,7 +750,7 @@ export default function AllSettings() {
                                 value={`${companyInfo?.work_start_time}`}
                                 size='small'
                                 placeholder={t('Ish boshlanish vaqti')}
-                                onBlur={e => console.log(e.target.value)}
+                                // onBlur={e => console.log(e.target.value)}
                               />
                               <IconifyIcon
                                 icon={'basil:edit-outline'}
@@ -794,7 +794,7 @@ export default function AllSettings() {
                                 value={`${companyInfo?.work_end_time}`}
                                 size='small'
                                 placeholder={t('Boshlanish vaqti')}
-                                onBlur={e => console.log(e.target.value)}
+                                // onBlur={e => console.log(e.target.value)}
                               />
                               <IconifyIcon
                                 icon={'basil:edit-outline'}
@@ -903,7 +903,7 @@ export default function AllSettings() {
                             value={`${companyInfo?.auto_sms?.birthday_text}`}
                             size='small'
                             placeholder={t('SMS Matni')}
-                            onBlur={e => console.log(e.target.value)}
+                            // onBlur={e => console.log(e.target.value)}
                           />
                           <IconifyIcon
                             icon={'basil:edit-outline'}
@@ -979,7 +979,7 @@ export default function AllSettings() {
                             value={`${companyInfo?.auto_sms?.absent_text}`}
                             size='small'
                             placeholder={t('Boshlanish vaqti')}
-                            onBlur={e => console.log(e.target.value)}
+                            // onBlur={e => console.log(e.target.value)}
                           />
                           <IconifyIcon
                             icon={'basil:edit-outline'}
@@ -1054,7 +1054,7 @@ export default function AllSettings() {
                             value={companyInfo?.auto_sms?.attend_text || 'Text'}
                             size='small'
                             placeholder={t('Boshlanish vaqti')}
-                            onBlur={e => console.log(e.target.value)}
+                            // onBlur={e => console.log(e.target.value)}
                           />
                           <IconifyIcon
                             icon={'basil:edit-outline'}
@@ -1156,7 +1156,7 @@ export default function AllSettings() {
                             value={`${companyInfo?.auto_sms?.payment_text}`}
                             size='small'
                             placeholder={t('SMS Matni')}
-                            onBlur={e => console.log(e.target.value)}
+                            // onBlur={e => console.log(e.target.value)}
                           />
                           <IconifyIcon
                             icon={'basil:edit-outline'}
@@ -1237,7 +1237,7 @@ export default function AllSettings() {
                             value={companyInfo?.auto_sms?.debt_text || 'Text'}
                             size='small'
                             placeholder={t('SMS Matni')}
-                            onBlur={e => console.log(e.target.value)}
+                            // onBlur={e => console.log(e.target.value)}
                           />
                           <IconifyIcon
                             icon={'basil:edit-outline'}
@@ -1320,7 +1320,7 @@ export default function AllSettings() {
                             value={companyInfo?.auto_sms?.score_text}
                             size='small'
                             placeholder={t('Boshlanish vaqti')}
-                            onBlur={e => console.log(e.target.value)}
+                            // onBlur={e => console.log(e.target.value)}
                           />
                           <IconifyIcon
                             icon={'basil:edit-outline'}
