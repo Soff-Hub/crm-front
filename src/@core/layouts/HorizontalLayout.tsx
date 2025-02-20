@@ -3,28 +3,21 @@ import AppBar from '@mui/material/AppBar'
 import { styled } from '@mui/material/styles'
 import Box, { BoxProps } from '@mui/material/Box'
 import MuiToolbar, { ToolbarProps } from '@mui/material/Toolbar'
-
 import Icon from 'src/@core/components/icon'
-
 import themeConfig from 'src/configs/themeConfig'
-
 import { LayoutProps } from 'src/@core/layouts/types'
-
 import Customizer from 'src/@core/components/customizer'
 import Footer from './components/shared-components/footer'
 import Navigation from './components/horizontal/navigation'
 import ScrollToTop from 'src/@core/components/scroll-to-top'
 import AppBarContent from './components/horizontal/app-bar-content'
-
 import { hexToRGBA } from 'src/@core/utils/hex-to-rgba'
 import { useAuth } from 'src/hooks/useAuth'
 import DraggableIcon from '../components/soffBotIcon'
 import StaticsModal from '../components/statics-modal'
 import QrCodeModal from '../components/qrCode-Modal'
-import { Toaster } from 'react-hot-toast'
 import { useContext } from 'react'
 import { AuthContext } from 'src/context/AuthContext'
-import QRCodeScanner from '../components/qrCodeScanner'
 
 const HorizontalLayoutWrapper = styled(Box)({
   height: '100%',
@@ -63,17 +56,6 @@ const ContentWrapper = styled(Box)(({ theme }) => ({
     paddingRight: theme.spacing(4)
   }
 }))
-const FixedIcon = styled('img')(
-  ({ top, left, bottom, right }: { top?: string; left?: string; bottom?: string; right?: string }) => ({
-    position: 'fixed',
-    top: top || 'unset',
-    left: left || 'unset',
-    bottom: bottom || 'unset',
-    right: right || 'unset',
-    zIndex: 1000,
-    cursor: 'pointer'
-  })
-)
 
 const HorizontalLayout = (props: LayoutProps) => {
   const {
@@ -94,12 +76,12 @@ const HorizontalLayout = (props: LayoutProps) => {
   const { user } = useContext(AuthContext)
 
   let userAppBarStyle = {}
+
   if (appBarProps && appBarProps.sx) {
     userAppBarStyle = appBarProps.sx
   }
   const userAppBarProps = Object.assign({}, appBarProps)
   delete userAppBarProps.sx
-
 
   return (
     <HorizontalLayoutWrapper className='layout-wrapper'>
@@ -155,7 +137,7 @@ const HorizontalLayout = (props: LayoutProps) => {
               </Toolbar>
             </Box>
 
-            {navHidden ? null : (
+            {!navHidden && (
               <Box
                 className='layout-horizontal-nav'
                 sx={{
@@ -210,7 +192,6 @@ const HorizontalLayout = (props: LayoutProps) => {
                         !window.location.pathname.includes('/c-panel') && <StaticsModal />}
 
                       <QrCodeModal />
-                      <QRCodeScanner />
                     </>
                   )}
                 </Toolbar>
@@ -218,7 +199,7 @@ const HorizontalLayout = (props: LayoutProps) => {
             )}
           </AppBar>
         )}
-        {/* Content */}
+
         <ContentWrapper
           className='layout-page-content'
           sx={{
@@ -232,6 +213,7 @@ const HorizontalLayout = (props: LayoutProps) => {
         >
           {children}
         </ContentWrapper>
+
         <Footer {...props} footerStyles={footerProps?.sx} footerContent={footerProps?.content} />
 
         {themeConfig.disableCustomizer || hidden ? null : (

@@ -10,7 +10,6 @@ import { useAppDispatch, useAppSelector } from 'src/store'
 import { updateEyeVisible } from 'src/store/apps/dashboard'
 import { Box, Button, Typography } from '@mui/material'
 import useResponsive from 'src/@core/hooks/useResponsive'
-import QRCodeScanner from 'src/@core/components/qrCodeScanner'
 
 // Dynamic imports
 const Calendar = dynamic(() => import('./Calendar'), { ssr: false })
@@ -65,7 +64,7 @@ export default function DashboardPage() {
         </Button> */}
         <VideoHeader item={videoUrls.dashboard} />
       </Box>
-      {/* <QRCodeScanner /> */}
+
       <DashboardStats />
       <Calendar />
       {(user?.role.includes('ceo') || user?.role.includes('watcher')) && <DashboardNumbers />}

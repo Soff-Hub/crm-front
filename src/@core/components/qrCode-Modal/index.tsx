@@ -1,5 +1,5 @@
 import { Dialog, DialogContent, DialogTitle, TextField, Tooltip } from '@mui/material'
-import toast, { Toaster } from 'react-hot-toast'
+import toast from 'react-hot-toast'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
@@ -14,17 +14,16 @@ const QrCodeModal = () => {
   const dispatch = useDispatch()
   const { t } = useTranslation()
   const [studentId, setStudentId] = useState<any | null>(null)
-  const [timeoutId, setTimeoutId] = useState<any>(null) // To store the timeout ID
+  const [timeoutId, setTimeoutId] = useState<any>(null)
   const { isMobile } = useResponsive()
-  const [asteriskValue, setAsteriskValue] = useState<any>()
-  function handleClose() {
+
+  const handleClose = () => {
     dispatch(toggleQrCodeModal(false))
-    setAsteriskValue('')
     setStudentId('')
   }
 
   const handleSendQrCode = async (id: any) => {
-    if (id) {
+    try {
       await api
         .post(`common/attendance/by-qr-code/${id}/`)
         .then(res => {
@@ -38,19 +37,20 @@ const QrCodeModal = () => {
           }
         })
         .catch(err => {
-          console.log(err)
+          console.error(err)
           if (err.response.status == 404) {
-            // toast.error("Ma'lumot topilmadi", {
-            //   style: {
-            //     zIndex: 999999999
-            //   }
-            // })
-            console.log("Ma'lumot topilmadi")
+            toast.error("Ma'lumot topilmadi", {
+              style: {
+                zIndex: 999999999
+              }
+            })
           } else {
             toast.error(err.response.data.msg)
           }
           setStudentId('')
         })
+    } catch (error) {
+      console.error(error)
     }
   }
 
@@ -70,44 +70,39 @@ const QrCodeModal = () => {
   }
 
   return (
-    <>
-      <Dialog
-        open={isQrCodeModalOpen}
-        onClose={handleClose}
-        sx={{
-          '& .MuiPaper-root': { width: '100%', maxWidth: 450, zIndex: 10000 }
-        }}
-      >
-        <DialogTitle id='user-view-edit' sx={{ textAlign: 'center', fontSize: '1.5rem !important' }}>
-          {t('Skanner orqali davomat qilish')}
-          <Tooltip
-            title="O'quvchini profili orqali olingan QR Code ni apparat yordamida skanerlang va tizim avtomatik davomat qiladi"
-            arrow
-          >
-            <span style={{ cursor: 'pointer' }}>
-              <Icon
-                icon='mdi:help-circle-outline'
-                style={{ fontSize: isMobile ? '16px' : '20px', marginLeft: '5px' }}
-              />
-            </span>
-          </Tooltip>
-        </DialogTitle>
+    <Dialog
+      open={isQrCodeModalOpen}
+      onClose={handleClose}
+      sx={{
+        '& .MuiPaper-root': { width: '100%', maxWidth: 450, zIndex: 10000 }
+      }}
+    >
+      <DialogTitle id='user-view-edit' sx={{ textAlign: 'center', fontSize: '1.5rem !important' }}>
+        {t('Skanner orqali davomat qilish')}
+        <Tooltip
+          title="O'quvchini profili orqali olingan QR Code ni apparat yordamida skanerlang va tizim avtomatik davomat qiladi"
+          arrow
+        >
+          <span style={{ cursor: 'pointer' }}>
+            <Icon icon='mdi:help-circle-outline' style={{ fontSize: isMobile ? '16px' : '20px', marginLeft: '5px' }} />
+          </span>
+        </Tooltip>
+      </DialogTitle>
 
-        <DialogContent>
-          <TextField
-            type='text'
-            size='small'
-            name='message'
-            fullWidth
-            sx={{ marginTop: 1.2 }}
-            value={studentId} // Empty when there's no studentId
-            label={t('Qr code ')}
-            onInput={handleInput}
-            placeholder='Scan or enter QR code' // Optional placeholder text
-          />
-        </DialogContent>
-      </Dialog>
-    </>
+      <DialogContent>
+        <TextField
+          type='text'
+          size='small'
+          name='message'
+          fullWidth
+          sx={{ marginTop: 1.2 }}
+          value={studentId}
+          label={t('Qr code ')}
+          onInput={handleInput}
+          placeholder='Scan or enter QR code'
+        />
+      </DialogContent>
+    </Dialog>
   )
 }
 

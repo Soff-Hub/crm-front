@@ -26,7 +26,6 @@ import StaticsModal from 'src/@core/components/statics-modal'
 import DraggableIcon from '../components/soffBotIcon'
 import QrCodeModal from '../components/qrCode-Modal'
 import { AuthContext } from 'src/context/AuthContext'
-import QRCodeScanner from '../components/qrCodeScanner'
 
 const VerticalLayoutWrapper = styled(Box)({
   height: '100%',
@@ -144,7 +143,6 @@ const VerticalLayout = (props: LayoutProps) => {
       {(user?.role.includes('admin') || user?.role.includes('ceo')) &&
         !window.location.pathname.includes('/c-panel') && <StaticsModal />}
       <QrCodeModal />
-      <QRCodeScanner />
     </>
   )
 }

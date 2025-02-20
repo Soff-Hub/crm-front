@@ -1,16 +1,7 @@
-// ** MUI Imports
 import Box from '@mui/material/Box'
-
-// ** Type Import
 import { Settings } from 'src/@core/context/settingsContext'
-
-// ** Components
-import ModeToggler from 'src/@core/layouts/components/shared-components/ModeToggler'
 import UserDropdown from 'src/@core/layouts/components/shared-components/UserDropdown'
 import LanguageDropdown from 'src/@core/layouts/components/shared-components/LanguageDropdown'
-// import NotificationDropdown, {
-//   NotificationsType
-// } from 'src/@core/layouts/components/shared-components/NotificationDropdown'
 import BranchDropdown from 'src/@core/layouts/components/shared-components/BranchDropdown'
 import { useContext, useEffect, useState } from 'react'
 import { AuthContext } from 'src/context/AuthContext'
@@ -22,15 +13,6 @@ import GlobalPaymentModal from 'src/views/apps/students/GlobalPaymentModal'
 import VideoModal from 'src/@core/components/video-header'
 import { useTranslation } from 'react-i18next'
 import NotificationDropdown from 'src/@core/layouts/components/shared-components/NotificationDropdown'
-// ** Icon Imports
-
-// ** Type Import
-
-// ** Components
-// import NotificationDropdown, {
-//   NotificationsType
-// } from 'src/@core/layouts/components/shared-components/NotificationDropdown'
-import { setNotifications } from 'src/store/apps/user'
 import api from 'src/@core/utils/api'
 
 import { Icon } from '@iconify/react'
@@ -47,7 +29,6 @@ interface Props {
 }
 
 const AppBarContent = (props: Props) => {
-  // ** Props
   const { settings, saveSettings } = props
   const { user } = useContext(AuthContext)
   const dispatch = useAppDispatch()
@@ -55,7 +36,7 @@ const AppBarContent = (props: Props) => {
   const { t } = useTranslation()
   const [search, setSearch] = useState('')
   const [searchLoading, setSearchLoading] = useState(false)
-  const debouncedSearch = useDebounce(search, 1000) // 2 sekund debounce
+  const debouncedSearch = useDebounce(search, 500)
 
   function clickGlobalPay() {
     dispatch(setGlobalPay(true))
@@ -95,21 +76,6 @@ const AppBarContent = (props: Props) => {
 
   const subdomain = location.hostname.split('.')
   const baseURL = subdomain.length < 3 ? `test` : `${subdomain[0]}`
-
-  useEffect(() => {
-    const socket = new WebSocket(`wss://${baseURL}.api-soffcrm.uz/ws/notifications/${user?.id}/`)
-    socket.onopen = () => {
-      console.log('WebSocket connection established')
-      socket.send(JSON.stringify({ subscribe: `notifications/${user?.id}/` }))
-    }
-    socket.onmessage = event => {
-      const data = JSON.parse(event.data)
-      dispatch(setNotifications(data?.notifications.length || 0))
-    }
-    return () => {
-      socket.close()
-    }
-  }, [user?.id])
 
   return (
     <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'end' }}>
