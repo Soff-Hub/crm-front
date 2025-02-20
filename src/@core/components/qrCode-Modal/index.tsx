@@ -31,16 +31,20 @@ const QrCodeModal = () => {
           if (res.status === 200) {
             toast.success('Muvaffaqiyatli', {
               style: {
-                zIndex: 999999999 // Adjust zIndex to ensure it appears above the modal
+                zIndex: 999999999
               }
             })
-            setStudentId('') // Clear input after successful request
+            setStudentId('')
           }
         })
         .catch(err => {
           console.log(err)
           if (err.response.status == 404) {
-            toast.error("Ma'lumot topilmadi")
+            toast.error("Ma'lumot topilmadi", {
+              style: {
+                zIndex: 999999999
+              }
+            })
           } else {
             toast.error(err.response.data.msg)
           }
@@ -52,16 +56,16 @@ const QrCodeModal = () => {
   const handleInput = (e: any) => {
     const value = e.target.value
     setStudentId(value)
-    // Clear previous timeout if any
     if (timeoutId) {
       clearTimeout(timeoutId)
     }
 
-    // Set a new timeout to delay the API call
-    const newTimeoutId = setTimeout(() => {
-      handleSendQrCode(value)
-    }, 1000) // Delay of 1 second before calling handleSendQrCode
-    setTimeoutId(newTimeoutId) // Store the timeout ID to clear later
+    if (value.length) {
+      const newTimeoutId = setTimeout(() => {
+        handleSendQrCode(value)
+      }, 1000)
+      setTimeoutId(newTimeoutId)
+    }
   }
 
   return (
@@ -87,9 +91,10 @@ const QrCodeModal = () => {
             </span>
           </Tooltip>
         </DialogTitle>
+
         <DialogContent>
           <TextField
-            type='text' // Changed to 'text' type to prevent numeric input issues
+            type='text'
             size='small'
             name='message'
             fullWidth
@@ -101,8 +106,6 @@ const QrCodeModal = () => {
           />
         </DialogContent>
       </Dialog>
-
-      {/* Toaster should be outside modal to ensure it can appear on top */}
     </>
   )
 }

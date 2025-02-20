@@ -18,10 +18,10 @@ const Layout = (props: LayoutProps) => {
   let currentDate = new Date().toISOString()
   let last_login = localStorage.getItem('last_login')
   let userRole = localStorage.getItem('userRole')
-  const {setUser, user } = useContext(AuthContext)
+  const { setUser, user } = useContext(AuthContext)
   // ** Ref
   const isCollapsed = useRef(settings.navCollapsed)
-  const [loading,setLoading] = useState(false)
+  const [loading, setLoading] = useState(false)
   function getYearMonthDay(timestamp: any) {
     if (timestamp) {
       const [date] = timestamp.split('T')
@@ -30,43 +30,38 @@ const Layout = (props: LayoutProps) => {
   }
   const reloadProfile = async () => {
     setLoading(true)
-    await api.get('auth/profile/').then(async response => {
-      setUser({
-        last_login:response.data?.last_login,
-        phone: response.data?.phone,
-        gpa:response.data?.gpa,
-        id: response.data.id,
-        fullName: response.data.first_name,
-        username: response.data.phone,
-        password: 'null',
-        avatar: response.data.image,
-        payment_page: response.data.payment_page,
-        role: response.data.roles.filter((el: any) => el.exists).map((el: any) => el.name?.toLowerCase()),
-        balance: response.data?.balance || 0,
-        branches: response.data.branches.filter((item: any) => item.exists === true),
-        active_branch: response.data.active_branch,
-        qr_code: response.data.qr_code
+    await api
+      .get('auth/profile/')
+      .then(async response => {
+        setUser({
+          last_login: response.data?.last_login,
+          phone: response.data?.phone,
+          gpa: response.data?.gpa,
+          id: response.data.id,
+          fullName: response.data.first_name,
+          username: response.data.phone,
+          password: 'null',
+          avatar: response.data.image,
+          payment_page: response.data.payment_page,
+          role: response.data.roles.filter((el: any) => el.exists).map((el: any) => el.name?.toLowerCase()),
+          balance: response.data?.balance || 0,
+          branches: response.data.branches.filter((item: any) => item.exists === true),
+          active_branch: response.data.active_branch,
+          qr_code: response.data.qr_code
+        })
       })
-    }).catch((err) => {
-      console.log(err);
-      
-      
-    })
+      .catch(err => {
+        console.log(err)
+      })
   }
-  
-  
 
   const formattedCurrentDate = getYearMonthDay(currentDate)
   const formattedLastLogin = getYearMonthDay(user?.last_login)
 
-  
-
   useEffect(() => {
-    if (
-      (formattedCurrentDate !== formattedLastLogin )   
-    ) {
+    if (formattedCurrentDate !== formattedLastLogin) {
       if (window.location.pathname !== '/c-panel' || !user?.role.includes('student')) {
-        dispatch(toggleModal(true));
+        dispatch(toggleModal(true))
       }
     }
     // reloadProfile()

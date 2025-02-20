@@ -33,9 +33,6 @@ export default function CreateStudentModal() {
   const dispatch = useAppDispatch()
   const { openEdit } = useAppSelector(state => state.students)
 
- 
-    
-    
   function onClose() {
     dispatch(setOpenEdit(null))
   }
@@ -47,34 +44,32 @@ export default function CreateStudentModal() {
   }, [])
 
   return (
-    <div>
-      <Drawer open={openEdit === 'create'} anchor='right' variant='persistent'>
-        <Box
-          className='customizer-header'
+    <Drawer open={openEdit === 'create'} anchor='right' variant='persistent'>
+      <Box
+        className='customizer-header'
+        sx={{
+          position: 'relative',
+          p: theme => theme.spacing(3.5, 5),
+          borderBottom: theme => `1px solid ${theme.palette.divider}`
+        }}
+      >
+        <Typography variant='h6' sx={{ fontWeight: 600 }}>
+          {t("O'quvchi qo'shish")}
+        </Typography>
+        <IconButton
+          onClick={onClose}
           sx={{
-            position: 'relative',
-            p: theme => theme.spacing(3.5, 5),
-            borderBottom: theme => `1px solid ${theme.palette.divider}`
+            right: 20,
+            top: '50%',
+            position: 'absolute',
+            color: 'text.secondary',
+            transform: 'translateY(-50%)'
           }}
         >
-          <Typography variant='h6' sx={{ fontWeight: 600 }}>
-            {t("O'quvchi qo'shish")}
-          </Typography>
-          <IconButton
-            onClick={onClose}
-            sx={{
-              right: 20,
-              top: '50%',
-              position: 'absolute',
-              color: 'text.secondary',
-              transform: 'translateY(-50%)'
-            }}
-          >
-            <IconifyIcon icon='mdi:close' fontSize={20} />
-          </IconButton>
-        </Box>
-        <Box width={'100%'}>{openEdit === 'create' && <CreateStudentForm />}</Box>
-      </Drawer>
-    </div>
+          <IconifyIcon icon='mdi:close' fontSize={20} />
+        </IconButton>
+      </Box>
+      <Box width={'100%'}>{openEdit === 'create' && <CreateStudentForm />}</Box>
+    </Drawer>
   )
 }

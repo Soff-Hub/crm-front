@@ -122,8 +122,7 @@ export default function GroupsPage() {
         group.length > 0 ? (
           group.map((item, i) => (
             <Box fontSize={12} key={i} sx={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '4px' }}>
-              {item.lesson_time} {' - '}
-              {item.group_name}
+              {`${item.lesson_time} - ${item.group_name}`}
               <Chip
                 label={t(item.status)}
                 size='small'

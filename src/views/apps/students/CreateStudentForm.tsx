@@ -6,6 +6,7 @@ import {
   Box,
   Button,
   Checkbox,
+  debounce,
   FormControl,
   FormControlLabel,
   FormHelperText,
@@ -177,9 +178,9 @@ export default function CreateStudentForm() {
     setChecked(event.target.checked)
   }
 
-  async function handleSearch(val: string) {
+  const handleSearch = debounce(async (val: string) => {
     await dispatch(fetchGroupCheckList(val))
-  }
+  }, 500)
 
   return (
     <form
@@ -342,7 +343,7 @@ export default function CreateStudentForm() {
           </FormControl>
         </>
       )}
-   
+
       {isSchool && (
         <FormControl fullWidth>
           <InputLabel size='small' id='user-view-language-label'>
@@ -385,11 +386,12 @@ export default function CreateStudentForm() {
         </FormControl>
       )}
 
-      {isGroup ? (
+      {isGroup && (
         <FormControl fullWidth>
           <InputLabel size='small' id='user-view-language-label'>
             {t('Guruhlar')}
           </InputLabel>
+
           <Select
             size='small'
             error={!!errors.group && touched.group}
@@ -401,15 +403,17 @@ export default function CreateStudentForm() {
             value={values.group || ''}
             sx={{ mb: 3 }}
           >
-            <MenuItem className='hover:bg-gray-100 cursor-not-allowed'>
+            <MenuItem className='hover:bg-gray-100 cursor-not-allowed' sx={{ width: '500px' }}>
               <TextField onChange={e => handleSearch(e.target.value)} label={'Qidiruv'} fullWidth size='small' />
             </MenuItem>
-            {groups.map(group => (
-              <MenuItem key={group.id} value={Number(group.id)}>
+
+            {groups.map((group: any) => (
+              <MenuItem key={group.id} value={Number(group.id)} sx={{ width: '500px' }}>
                 {group.name}
               </MenuItem>
             ))}
-            <MenuItem sx={{ fontWeight: 600 }} onClick={() => Router.push('/groups')}>
+
+            <MenuItem sx={{ fontWeight: 600, width: '500px' }} onClick={() => Router.push('/groups')}>
               <IconifyIcon icon={'ion:add-sharp'} />
               {t('Yangi yaratish')}
             </MenuItem>
@@ -428,8 +432,6 @@ export default function CreateStudentForm() {
           />
           <FormHelperText error={true}>{errors.start_at}</FormHelperText>
         </FormControl>
-      ) : (
-        ''
       )}
 
       <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
