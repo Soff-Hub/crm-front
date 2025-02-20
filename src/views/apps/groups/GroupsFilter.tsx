@@ -116,6 +116,7 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
               size='small'
             />
           </FormControl>
+
           <FormControl sx={{ width: '100%' }}>
             <InputLabel size='small' id='demo-simple-select-outlined-label'>
               {t('Holat')}
