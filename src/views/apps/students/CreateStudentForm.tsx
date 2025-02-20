@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 // ** Components
 import {
@@ -6,6 +6,7 @@ import {
   Box,
   Button,
   Checkbox,
+  debounce,
   FormControl,
   FormControlLabel,
   FormHelperText,
@@ -173,14 +174,14 @@ export default function CreateStudentForm() {
       formik.resetForm()
     }
   }, [])
-  const handleChangeCheck = (event: any) => {
-    setChecked(event.target.checked)
-  }
+ 
 
-  async function handleSearch(val: string) {
-    await dispatch(fetchGroupCheckList(val))
-  }
-
+  const handleSearch = useCallback(
+    debounce(async (val: string) => {
+      await dispatch(fetchGroupCheckList(val));
+    }, 500), 
+    []
+  );
   return (
     <form
       onSubmit={formik.handleSubmit}

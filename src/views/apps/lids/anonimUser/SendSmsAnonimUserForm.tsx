@@ -7,16 +7,17 @@ import { useTranslation } from 'react-i18next'
 import api from 'src/@core/utils/api'
 import toast from 'react-hot-toast'
 import { useAppDispatch, useAppSelector } from 'src/store'
-import { fetchSmsListQuery } from 'src/store/apps/settings'
+import { fetchSmsList, fetchSmsListQuery } from 'src/store/apps/settings'
 
 type Props = {
   smsTemps: any[]
   user: any
   closeModal: any
   reRender: any
+  open?: boolean
 }
 
-export default function SendSmsAnonimUserForm({ smsTemps, user, closeModal, reRender }: Props) {
+export default function SendSmsAnonimUserForm({ smsTemps, user, closeModal, reRender, open }: Props) {
   const { t } = useTranslation()
   const [sms, setSMS] = useState<any>('')
   const [loading, setLoading] = useState<any>('')
@@ -62,6 +63,12 @@ export default function SendSmsAnonimUserForm({ smsTemps, user, closeModal, reRe
   }, [parent_id])
 
   useEffect(() => {
+    if (open) {
+      dispatch(fetchSmsList())
+    }
+  }, [])
+
+  useEffect(() => {
     return () => {
       formik.resetForm()
     }
@@ -82,7 +89,7 @@ export default function SendSmsAnonimUserForm({ smsTemps, user, closeModal, reRe
           defaultValue=''
           id='demo-simple-select-outlined'
           labelId='demo-simple-select-outlined-label'
-          onChange={(e:any) => {
+          onChange={(e: any) => {
             setParentId(e.target.value)
           }}
         >
