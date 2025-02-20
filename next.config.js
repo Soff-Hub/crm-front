@@ -14,8 +14,8 @@ module.exports = withTM({
   trailingSlash: false,
 
   productionBrowserSourceMaps: false,
-  optimizeFonts: true,
-  swcMinify: true,
+  optimizeFonts: false,
+  swcMinify: false,
 
   experimental: {
     esmExternals: false
