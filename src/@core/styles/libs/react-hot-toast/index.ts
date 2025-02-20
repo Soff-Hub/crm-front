@@ -1,12 +1,10 @@
-// ** MUI Imports
 import { styled } from '@mui/material/styles'
 import Box, { BoxProps } from '@mui/material/Box'
 
-// ** Hook Import
 import { useSettings } from 'src/@core/hooks/useSettings'
+import zIndex from '@mui/material/styles/zIndex'
 
 const ReactHotToast = styled(Box)<BoxProps>(({ theme }) => {
-  // ** Hook & Var
   const { settings } = useSettings()
   const { layout, navHidden } = settings
 
@@ -22,6 +20,7 @@ const ReactHotToast = styled(Box)<BoxProps>(({ theme }) => {
       fontWeight: 400,
       borderRadius: 8,
       fontSize: '1rem',
+      zIndex: 12000,
       letterSpacing: '0.14px',
       color: theme.palette.text.primary,
       background: theme.palette.background.paper,

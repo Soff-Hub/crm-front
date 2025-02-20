@@ -70,7 +70,7 @@ export default function DashboardStats() {
     >
       {isStatsLoading
         ? statsData.map((_, index) => (
-            <Box key={index} className='' sx={{ cursor: 'pointer' }} onClick={() => click(_.link)}>
+            <Box key={`${_.key}-${index}`} className='' sx={{ cursor: 'pointer' }} onClick={() => click(_.link)}>
               <Skeleton
                 sx={{ bgcolor: 'grey.300' }}
                 variant='rectangular'
@@ -85,8 +85,8 @@ export default function DashboardStats() {
       {stats && !isStatsLoading
         ? stats?.payment_approaching
           ? statsData.map((_, index) => (
-              <Tooltip arrow title={tooltip[_.key]}>
-                <Box key={index} className='' sx={{ cursor: 'pointer' }} onClick={() => click(_.link)}>
+              <Tooltip key={`${_.key}-${index}`} arrow title={tooltip[_.key]}>
+                <Box sx={{ cursor: 'pointer' }} onClick={() => click(_.link)}>
                   <CardStatsVertical
                     data_key={_.key}
                     title={stats?.[_.key]}
@@ -100,8 +100,8 @@ export default function DashboardStats() {
           : statsData
               ?.filter(el => el.key !== 'payment_approaching')
               .map((_, index) => (
-                <Tooltip arrow title={tooltip[_.key]}>
-                  <Box key={index} className='' sx={{ cursor: 'pointer' }} onClick={() => click(_.link)}>
+                <Tooltip key={`${_.key}-${index}`} arrow title={tooltip[_.key]}>
+                  <Box sx={{ cursor: 'pointer' }} onClick={() => click(_.link)}>
                     <CardStatsVertical
                       key={_.key}
                       title={stats?.[_.key]}

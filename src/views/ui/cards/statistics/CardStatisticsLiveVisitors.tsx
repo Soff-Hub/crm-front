@@ -142,8 +142,6 @@ const CardWidgetsWeeklyOverview = () => {
     percentage: all_numbers?.plans.percentage ?? 0
   })
 
-
-
   return (
     <>
       <Card sx={{ p: '20px' }}>
@@ -160,7 +158,7 @@ const CardWidgetsWeeklyOverview = () => {
           {loading ? (
             <Box sx={{ display: 'flex', alignItems: 'flex-end', gap: '20px' }}>
               {[10, 12, 7, 20, 30, 13, 45, 33, 12, 41, 18, 9, 21].map(el => (
-                <Skeleton variant='rounded' width={'50px'} height={el * 5} />
+                <Skeleton key={el} variant='rounded' width={'50px'} height={el * 5} />
               ))}
             </Box>
           ) : all_numbers ? (
@@ -170,7 +168,6 @@ const CardWidgetsWeeklyOverview = () => {
           )}
         </Box>
       </Card>
-      
     </>
   )
 }
