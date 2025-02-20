@@ -1,6 +1,4 @@
-// ** React Imports
 import { useState, ReactNode, useEffect, useContext } from 'react'
-
 import InputLabel from '@mui/material/InputLabel'
 import IconButton from '@mui/material/IconButton'
 import Box, { BoxProps } from '@mui/material/Box'
@@ -10,25 +8,13 @@ import { styled } from '@mui/material/styles'
 import FormHelperText from '@mui/material/FormHelperText'
 import InputAdornment from '@mui/material/InputAdornment'
 import Typography, { TypographyProps } from '@mui/material/Typography'
-
-// ** Icon Imports
 import Icon from 'src/@core/components/icon'
-
-// ** Third Party Imports
 import * as yup from 'yup'
 import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
-
-// ** Hooks
 import { useAuth } from 'src/hooks/useAuth'
-
-// ** Configs
 import themeConfig from 'src/configs/themeConfig'
-
-// ** Layout Import
 import BlankLayout from 'src/@core/layouts/BlankLayout'
-
-// ** Demo Imports
 import FooterIllustrationsV2 from 'src/views/pages/auth/FooterIllustrationsV2'
 import LoadingButton from '@mui/lab/LoadingButton'
 import useResponsive from 'src/@core/hooks/useResponsive'
@@ -39,9 +25,7 @@ import { reversePhone } from 'src/@core/components/phone-input/format-phone-numb
 import api from 'src/@core/utils/api'
 import { setPublicSettings, toggleModal } from 'src/store/apps/page'
 import { useAppDispatch } from 'src/store'
-import { AuthContext } from 'src/context/AuthContext'
 
-// ** Styled Components
 const LoginIllustrationWrapper = styled(Box)<BoxProps>(({ theme }) => ({
   padding: theme.spacing(20),
   paddingRight: '0 !important',
@@ -77,12 +61,9 @@ const LoginPage = () => {
   const [loading, setLoading] = useState<boolean>(false)
   const [data, setData] = useState<any>(null)
   const dispatch = useAppDispatch()
-  // ** Hooks
   const auth = useAuth()
   const { isMobile } = useResponsive()
   const { t } = useTranslation()
-  let currentDate = new Date().toISOString()
-  const { setUser, user } = useContext(AuthContext)
 
   const pageLoad = async () => {
     try {
@@ -162,6 +143,7 @@ const LoginPage = () => {
               )}
               <Typography variant='body2'>Iltimos tizimga kirish uchun shaxsiy malumotlaringizni kiriting</Typography>
             </Box>
+
             <form noValidate autoComplete='off' onSubmit={handleSubmit(onSubmit)}>
               <FormControl fullWidth sx={{ mb: 4 }}>
                 <InputLabel error={Boolean(errors.phone)} htmlFor='login-input'>
@@ -180,12 +162,12 @@ const LoginPage = () => {
                       onBlur={onBlur}
                       onChange={onChange}
                       error={Boolean(errors.phone)}
-                      // placeholder='+998 90 000 00 00'
                     />
                   )}
                 />
                 {errors.phone && <FormHelperText sx={{ color: 'error.main' }}>{errors.phone.message}</FormHelperText>}
               </FormControl>
+
               <FormControl fullWidth>
                 <InputLabel htmlFor='auth-login-v2-password' error={Boolean(errors.password)}>
                   Parol
