@@ -11,9 +11,10 @@ import { FormikProps } from 'formik'
 interface AutoCompleteProps {
   formik: FormikProps<{ student: number | null }>
   setSelectedStudents: (id: number | null) => void
+  selectedStudent: any
 }
 
-export default function AutoComplete({ formik, setSelectedStudents }: AutoCompleteProps) {
+export default function AutoComplete({ formik, setSelectedStudents, selectedStudent }: AutoCompleteProps) {
   const { t } = useTranslation()
   const [searchData, setSearchData] = useState<{ label: string; id: number }[]>([])
   const [search, setSearch] = useState('')
@@ -33,14 +34,12 @@ export default function AutoComplete({ formik, setSelectedStudents }: AutoComple
     }
   }, [search])
 
-  console.log(search)
 
+    
   return (
     <Autocomplete
-      open={open}
-      onOpen={() => setOpen(search !== '' && true)}
-      onClose={() => setOpen(false)}
-      disablePortal={false}
+      open={search === '' || selectedStudent ? false : true}
+      disablePortal
       onChange={(
         event: React.SyntheticEvent,
         value: AutocompleteValue<{ label: string; id: number }, false, false, false>,

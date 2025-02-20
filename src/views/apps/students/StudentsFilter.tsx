@@ -40,6 +40,7 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
   const { students, queryParams } = useAppSelector(state => state.students)
   const { schools } = useAppSelector(state => state.settings)
   const [key, setKey] = useState<string>('')
+  const [search,setSearch] = useState('')
   const { getCourses, courses } = useCourses()
   const [groups, setGroups] = useState<any>()
   const [teachers, setTeachers] = useState<any>()
@@ -72,6 +73,14 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
       .then(res => setTeachers(res.data))
       .catch(error => console.log(error))
   }
+
+  async function handleSearch(search: string) {
+    dispatch(updateStudentParams({ search:search}))
+    
+  }
+  useEffect(() => {
+    handleSearch(search)
+  },[search])
 
   async function handleFilter(key: string, value: string | number | null) {
     dispatch(updateStudentParams({ [key]: value }))
@@ -122,12 +131,6 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
     value: item?.id
   }))
 
-  const handleSearch = async (search: string) => {
-    setLoading(true)
-    dispatch(updateStudentParams({ search: search }))
-    // await dispatch(fetchGroups({ ...queryParams, search }))
-    setLoading(false)
-  }
 
   useEffect(() => {
     dispatch(fetchStudentsList(queryParams as any))
@@ -141,7 +144,7 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
             {t('Qidirish')}
           </InputLabel>
           <OutlinedInput
-            onChange={e => handleSearch(e.target.value)}
+            onChange={e => setSearch(e.target.value)}
             endAdornment={
               <InputAdornment position='end'>
                 <IconifyIcon icon={'tabler:search'} />
@@ -348,7 +351,7 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
           </InputLabel>
 
           <OutlinedInput
-            onChange={e => handleSearch(e.target.value)}
+            onChange={e => setSearch(e.target.value)}
             endAdornment={
               <InputAdornment position='end'>
                 <IconifyIcon icon={'tabler:search'} />
