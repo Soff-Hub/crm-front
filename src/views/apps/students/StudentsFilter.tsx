@@ -1,8 +1,9 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import {
   Autocomplete,
   Box,
   Button,
+  debounce,
   FormControl,
   InputAdornment,
   InputLabel,
@@ -74,14 +75,16 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
       .catch(error => console.log(error))
   }
 
-  async function handleSearch(search: string) {
-    dispatch(updateStudentParams({ search:search}))
-    
-  }
+  const handleSearch = useCallback(
+    debounce((search: string) => {
+      dispatch(updateStudentParams({ search }));
+    }, 500), 
+    [dispatch]
+  );
+  
   useEffect(() => {
-    handleSearch(search)
-  },[search])
-
+    handleSearch(search);
+  }, [search, handleSearch]);
   async function handleFilter(key: string, value: string | number | null) {
     dispatch(updateStudentParams({ [key]: value }))
     if (key === 'debt_date') {
