@@ -329,16 +329,13 @@ export default function UserViewStudentsList() {
         )
       }
     },
-
     {
       xs: 1.5,
       title: t('Balans'),
       dataIndex: 'student',
       render: (student: any) => {
         const balanceText = formatCurrency(student.balance) + " so'm";
-
-        return(
-
+      return(
           <Tooltip title={balanceText}>
             <Chip
                sx={{

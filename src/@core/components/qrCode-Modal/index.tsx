@@ -1,4 +1,4 @@
-import { Dialog, DialogContent, DialogTitle, TextField, Tooltip } from '@mui/material'
+import { Dialog, DialogContent, DialogTitle, TextField, Tooltip, Typography } from '@mui/material'
 import toast from 'react-hot-toast'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -16,6 +16,7 @@ const QrCodeModal = () => {
   const [studentId, setStudentId] = useState('')
   const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null)
   const { isMobile } = useResponsive()
+  const [errorText, setErrorText] = useState('')
 
   const handleClose = () => {
     dispatch(toggleQrCodeModal(false))
@@ -41,13 +42,9 @@ const QrCodeModal = () => {
         .catch(err => {
           console.error(err)
           if (err.response.status == 404) {
-            toast.error("Ma'lumot topilmadi", {
-              style: {
-                zIndex: 999999999
-              }
-            })
+            setErrorText("Ma'lumot topilmadi")
           } else {
-            toast.error(err.response.data.msg)
+            setErrorText(err.response.data.msg)
           }
           setStudentId('')
         })
@@ -59,7 +56,10 @@ const QrCodeModal = () => {
   const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
     setStudentId(value)
-    if (timeoutId) clearTimeout(timeoutId)
+    if (timeoutId) {
+      clearTimeout(timeoutId)
+      setErrorText('')
+    }
 
     if (value.length) {
       const newTimeoutId = setTimeout(() => handleSendQrCode(value), 2000)
@@ -104,6 +104,7 @@ const QrCodeModal = () => {
           onKeyDown={handleKeyDown}
           placeholder='Scan or enter QR code'
         />
+        {errorText && <Typography color={'red'} textAlign={'center'} pt={2} fontSize={12}>{errorText}</Typography>}
       </DialogContent>
     </Dialog>
   )

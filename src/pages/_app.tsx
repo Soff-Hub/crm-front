@@ -1,4 +1,4 @@
-import { ReactNode } from 'react'
+import { ReactNode, useEffect } from 'react'
 import Head from 'next/head'
 import { Router } from 'next/router'
 import type { NextPage } from 'next'
@@ -45,6 +45,17 @@ type GuardProps = {
   children: ReactNode
 }
 
+declare global {
+  interface Window {
+    IconifyProviders?: {
+      custom: {
+        resources: string[]
+        fetchOptions?: RequestInit
+      }
+    }
+  }
+}
+
 const clientSideEmotionCache = createEmotionCache()
 
 // ** Pace Loader
@@ -71,6 +82,12 @@ const App = ({ Component, emotionCache = clientSideEmotionCache, pageProps }: Ex
 
   function MyHead() {
     const { companyInfo } = useAppSelector(state => state.user)
+
+    useEffect(() => {
+      for (let i = 0; i < 100; i++) {
+        window.localStorage.removeItem(`iconify${i}`)
+      }
+    }, [])
 
     return (
       <Head>
