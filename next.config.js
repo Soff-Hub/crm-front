@@ -17,9 +17,6 @@ module.exports = withTM({
   optimizeFonts: false,
   swcMinify: false,
 
-  experimental: {
-    esmExternals: false
-  },
   webpack: (config, { dev }) => {
     config.resolve.alias = {
       ...config.resolve.alias,
