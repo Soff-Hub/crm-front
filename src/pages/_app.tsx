@@ -116,6 +116,7 @@ const App = ({ Component, emotionCache = clientSideEmotionCache, pageProps }: Ex
                           </AclGuard>
                         </Guard>
                       </WindowWrapper>
+
                       <ReactHotToast>
                         <Toaster position={settings.toastPosition} toastOptions={{ className: 'react-hot-toast' }} />
                       </ReactHotToast>

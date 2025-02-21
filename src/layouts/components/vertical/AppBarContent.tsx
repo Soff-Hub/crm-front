@@ -1,20 +1,11 @@
-// ** MUI Imports
 import Box from '@mui/material/Box'
 import IconButton from '@mui/material/IconButton'
 import Stomp from 'stompjs'
-// ** Icon Imports
 import Icon from 'src/@core/components/icon'
-
-// ** Type Import
 import { Settings } from 'src/@core/context/settingsContext'
-
-// ** Components
 import ModeToggler from 'src/@core/layouts/components/shared-components/ModeToggler'
 import UserDropdown from 'src/@core/layouts/components/shared-components/UserDropdown'
 import LanguageDropdown from 'src/@core/layouts/components/shared-components/LanguageDropdown'
-// import NotificationDropdown, {
-//   NotificationsType
-// } from 'src/@core/layouts/components/shared-components/NotificationDropdown'
 import BranchDropdown from 'src/@core/layouts/components/shared-components/BranchDropdown'
 import Clock from 'src/@core/components/clock'
 import { Autocomplete, Button, TextField, Tooltip, Typography } from '@mui/material'
@@ -34,6 +25,7 @@ import GlobalPaymentModal from 'src/views/apps/students/GlobalPaymentModal'
 import { toggleQrCodeModal } from 'src/store/apps/page'
 import ceoConfigs from 'src/configs/ceo'
 import useDebounce from 'src/hooks/useDebounce'
+import QRCodeScanner from 'src/@core/components/qrCodeScanner'
 
 interface Props {
   hidden: boolean
@@ -52,6 +44,7 @@ const AppBarContent = (props: Props) => {
   const { isMobile } = useResponsive()
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
+  const [open, setOpen] = useState<boolean>(false)
   const [stompClient, setStompClient] = useState<Stomp.Client | null>(null)
 
   const [employees, setEmployees] = useState<any>([])
@@ -88,23 +81,9 @@ const AppBarContent = (props: Props) => {
     handleSearch(debouncedSearch)
   }, [debouncedSearch])
 
-  function clickGlobalPay() {
+  const clickGlobalPay = () => {
     dispatch(setGlobalPay(true))
   }
-
-  // useEffect(() => {
-  //   const socket = new WebSocket(`wss://test.api-soffcrm.uz/ws/notifications/${user?.id}/`)
-  //   socket.onopen = () => {
-  //     socket.send(JSON.stringify({ subscribe: `notifications/${user?.id}/` }))
-  //   }
-  //   socket.onmessage = event => {
-  //     const data = JSON.parse(event.data)
-  //     dispatch(setNotifications(data?.notifications?.length || 0))
-  //   }
-  //   return () => {
-  //     socket.close()
-  //   }
-  // }, [user?.id])
 
   return (
     <div style={{ width: '100%', display: 'block' }}>
@@ -124,15 +103,14 @@ const AppBarContent = (props: Props) => {
 
         {!isMobile && (
           <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', gap: '10px' }}>
-            {user?.role.join(', ') !== 'student' && (
+            {user?.role !== 'student' && (
               <>
                 <Autocomplete
-                  open={search == '' ? false : true}
+                  open={open}
+                  onOpen={() => setOpen(search !== '' && true)}
                   sx={{ paddingX: 10 }}
                   disablePortal
-                  onClose={() => {
-                    setEmployees([])
-                  }}
+                  onClose={() => setOpen(false)}
                   loading={searchLoading}
                   loadingText={'Yuklanmoqda..'}
                   options={employees || []}
@@ -192,17 +170,10 @@ const AppBarContent = (props: Props) => {
                 </Button>
               </>
             )}
-            {/* <Clock />
-        <Typography variant='body2'>|</Typography>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-        <IconifyIcon style={{ fontSize: '18px', color: '#40c0e7' }} icon={'la:user-clock'} />
-        <Typography variant='body2'>{t(`Ish vaqti`)} {companyInfo?.work_start_time} - {companyInfo?.work_end_time}</Typography>
-        </Box> */}
           </Box>
         )}
         <Box className='actions-right' sx={{ display: 'flex', alignItems: 'center' }}>
           <LanguageDropdown settings={settings} saveSettings={saveSettings} />
-          {/* <ModeToggler settings={settings} saveSettings={saveSettings} /> */}
           <NotificationDropdown settings={settings} />
           <UserDropdown settings={settings} />
         </Box>
@@ -251,6 +222,7 @@ const AppBarContent = (props: Props) => {
         />
       )}
       <GlobalPaymentModal />
+      <QRCodeScanner />
     </div>
   )
 }
