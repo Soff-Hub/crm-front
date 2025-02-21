@@ -113,7 +113,7 @@ const UserDropdown = (props: Props) => {
   useEffect(() => {
     setUser((prevUser: UserDataType) => ({
       ...prevUser,
-      role: [role]
+      role: role ? role : prevUser.role
     }))
   }, [role])
 
@@ -121,6 +121,10 @@ const UserDropdown = (props: Props) => {
     logout()
     dispatch(setRoles([]))
     handleDropdownClose()
+  }
+  const handleRole = (role: string) => {
+    setRole(role)
+    setAnchorEl(null)
   }
 
   return (
@@ -164,7 +168,7 @@ const UserDropdown = (props: Props) => {
                 <Typography sx={{ fontWeight: 600 }}>{user?.fullName}</Typography>
                 <div>
                   {userRoles?.map((item, index) => (
-                    <div key={`${index}-${item}`} onClick={() => setRole(item)}>
+                    <div key={`${index}-${item}`} onClick={() => handleRole(item)}>
                       <Typography
                         variant='body2'
                         sx={{

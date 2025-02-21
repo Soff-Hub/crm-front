@@ -14,7 +14,6 @@ const AppCalendar = () => {
   const { weeks, interval } = useAppSelector(state => state.dashboard)
   const dispatch = useAppDispatch()
   const { user } = useContext(AuthContext)
-  const router = useRouter()
 
   const pageLoad = async () => {
     if (
@@ -28,6 +27,7 @@ const AppCalendar = () => {
     }
     await Promise.all([dispatch(fetchStatistics()), dispatch(fetchLessons({ queryWeeks: weeks, interval: interval }))])
   }
+
 
   useEffect(() => {
     pageLoad()

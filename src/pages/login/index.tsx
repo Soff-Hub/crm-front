@@ -68,6 +68,7 @@ const LoginPage = () => {
   const pageLoad = async () => {
     try {
       const response = await api.get('common/public-settings/')
+
       if (response.status == 200) {
         dispatch(setPublicSettings(response.data))
         localStorage.setItem('school_type', response.data?.type)
