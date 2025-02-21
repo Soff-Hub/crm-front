@@ -1,5 +1,10 @@
+// ** React Imports
 import { useState, SyntheticEvent, Fragment, useContext, useEffect } from 'react'
+
+// ** Next Import
 import { useRouter } from 'next/router'
+
+// ** MUI Imports
 import Box from '@mui/material/Box'
 import Menu from '@mui/material/Menu'
 import Badge from '@mui/material/Badge'
@@ -8,8 +13,14 @@ import Divider from '@mui/material/Divider'
 import MenuItem from '@mui/material/MenuItem'
 import { styled } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
+
+// ** Icon Imports
 import Icon from 'src/@core/components/icon'
+
+// ** Context
 import { useAuth } from 'src/hooks/useAuth'
+
+// ** Type Imports
 import { Settings } from 'src/@core/context/settingsContext'
 import { AuthContext } from 'src/context/AuthContext'
 import { useTranslation } from 'react-i18next'
@@ -25,6 +36,7 @@ type Props = {
   settings: Settings
 }
 
+// ** Styled Components
 const BadgeContentSpan = styled('span')(({ theme }) => ({
   width: 8,
   height: 8,
@@ -35,6 +47,7 @@ const BadgeContentSpan = styled('span')(({ theme }) => ({
 
 const UserDropdown = (props: Props) => {
   const [imageSrc, setImageSrc] = useState('')
+
   const { settings } = props
   const [open, setOpen] = useState(false)
   const { t } = useTranslation()
@@ -97,18 +110,18 @@ const UserDropdown = (props: Props) => {
     document.body.removeChild(anchor)
   }
 
+  useEffect(() => {
+    setUser((prevUser: UserDataType) => ({
+      ...prevUser,
+      role: [role]
+    }))
+  }, [role])
+
   const handleLogout = () => {
     logout()
     dispatch(setRoles([]))
     handleDropdownClose()
   }
-
-  useEffect(() => {
-    setUser((prevUser: UserDataType) => ({
-      ...prevUser,
-      role: [String(role)]
-    }))
-  }, [role])
 
   return (
     <div>
@@ -149,26 +162,27 @@ const UserDropdown = (props: Props) => {
 
               <Box sx={{ display: 'flex', ml: 3, alignItems: 'flex-start', flexDirection: 'column' }}>
                 <Typography sx={{ fontWeight: 600 }}>{user?.fullName}</Typography>
-
-                {userRoles?.map((item, index) => (
-                  <div key={`${index}-${item}`} onClick={() => setRole(item)}>
-                    <Typography
-                      variant='body2'
-                      sx={{
-                        textDecoration: role == item ? 'underline' : '',
-                        cursor: 'pointer',
-                        fontSize: '0.8rem',
-                        color: role == item ? 'text.primary' : 'text.disabled',
-                        '&:hover': {
-                          color: 'text.primary',
-                          textDecoration: 'underline'
-                        }
-                      }}
-                    >
-                      {item}
-                    </Typography>
-                  </div>
-                ))}
+                <div>
+                  {userRoles?.map((item, index) => (
+                    <div key={`${index}-${item}`} onClick={() => setRole(item)}>
+                      <Typography
+                        variant='body2'
+                        sx={{
+                          textDecoration: role === item ? 'underline' : '',
+                          cursor: 'pointer',
+                          fontSize: '0.8rem',
+                          color: role === item ? 'text.primary' : 'text.disabled',
+                          '&:hover': {
+                            color: 'text.primary',
+                            textDecoration: 'underline'
+                          }
+                        }}
+                      >
+                        {item}
+                      </Typography>
+                    </div>
+                  ))}
+                </div>
               </Box>
             </Box>
 
@@ -190,7 +204,7 @@ const UserDropdown = (props: Props) => {
                   e.target.style.transform = 'scale(1)'
                   e.target.style.opacity = '1'
                 }}
-                onClick={() => handleClickOpen(user?.qr_code)}
+                onClick={() => handleClickOpen(user?.qr_code)} // Open modal on image click
               />
             )}
 
