@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState, SyntheticEvent, Fragment, useContext } from 'react'
+import { useState, SyntheticEvent, Fragment, useContext, useEffect } from 'react'
 
 // ** Next Import
 import { useRouter } from 'next/router'
@@ -110,10 +110,21 @@ const UserDropdown = (props: Props) => {
     document.body.removeChild(anchor)
   }
 
+  useEffect(() => {
+    setUser((prevUser: UserDataType) => ({
+      ...prevUser,
+      role: role ? role : prevUser.role
+    }))
+  }, [role])
+
   const handleLogout = () => {
     logout()
     dispatch(setRoles([]))
     handleDropdownClose()
+  }
+  const handleRole = (role: string) => {
+    setRole(role)
+    setAnchorEl(null)
   }
 
   return (
@@ -130,6 +141,7 @@ const UserDropdown = (props: Props) => {
       >
         <Avatar alt={user?.fullName} onClick={handleDropdownOpen} sx={{ width: 40, height: 40 }} src={user?.avatar} />
       </Badge>
+
       <Menu
         anchorEl={anchorEl}
         open={Boolean(anchorEl)}
@@ -151,25 +163,19 @@ const UserDropdown = (props: Props) => {
               >
                 <Avatar alt={user?.fullName} src={user?.avatar} sx={{ width: '2.5rem', height: '2.5rem' }} />
               </Badge>
+
               <Box sx={{ display: 'flex', ml: 3, alignItems: 'flex-start', flexDirection: 'column' }}>
                 <Typography sx={{ fontWeight: 600 }}>{user?.fullName}</Typography>
-                <div
-                  onClick={() => {
-                    setUser((prevUser: UserDataType) => ({
-                      ...prevUser,
-                      role: [String(role)]
-                    }))
-                  }}
-                >
+                <div>
                   {userRoles?.map((item, index) => (
-                    <div key={`${index}-${item}`} onClick={() => setRole(item)}>
+                    <div key={`${index}-${item}`} onClick={() => handleRole(item)}>
                       <Typography
                         variant='body2'
                         sx={{
-                          textDecoration: role == item ? 'underline' : '',
+                          textDecoration: role === item ? 'underline' : '',
                           cursor: 'pointer',
                           fontSize: '0.8rem',
-                          color: role == item ? 'text.primary' : 'text.disabled',
+                          color: role === item ? 'text.primary' : 'text.disabled',
                           '&:hover': {
                             color: 'text.primary',
                             textDecoration: 'underline'

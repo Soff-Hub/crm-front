@@ -13,18 +13,20 @@ const QrCodeModal = () => {
   const { isQrCodeModalOpen } = useAppSelector(state => state.page)
   const dispatch = useDispatch()
   const { t } = useTranslation()
-  const [studentId, setStudentId] = useState<any | null>(null)
-  const [timeoutId, setTimeoutId] = useState<any>(null)
+  const [studentId, setStudentId] = useState('')
+  const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null)
   const { isMobile } = useResponsive()
 
   const handleClose = () => {
     dispatch(toggleQrCodeModal(false))
     setStudentId('')
+    if (timeoutId) clearTimeout(timeoutId)
   }
 
-  const handleSendQrCode = async (id: any) => {
+  const handleSendQrCode = async (id: string) => {
+    if (!id) return
     try {
-      await api
+      const res = await api
         .post(`common/attendance/by-qr-code/${id}/`)
         .then(res => {
           if (res.status === 200) {
@@ -49,23 +51,26 @@ const QrCodeModal = () => {
           }
           setStudentId('')
         })
-    } catch (error) {
-      console.error(error)
+    } catch (err) {
+      throw new Error("Ma'lumot topilmadi")
     }
   }
 
-  const handleInput = (e: any) => {
+  const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
     setStudentId(value)
-    if (timeoutId) {
-      clearTimeout(timeoutId)
-    }
+    if (timeoutId) clearTimeout(timeoutId)
 
     if (value.length) {
-      const newTimeoutId = setTimeout(() => {
-        handleSendQrCode(value)
-      }, 1000)
+      const newTimeoutId = setTimeout(() => handleSendQrCode(value), 2000)
       setTimeoutId(newTimeoutId)
+    }
+  }
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      if (timeoutId) clearTimeout(timeoutId)
+      handleSendQrCode(studentId)
     }
   }
 
@@ -73,9 +78,7 @@ const QrCodeModal = () => {
     <Dialog
       open={isQrCodeModalOpen}
       onClose={handleClose}
-      sx={{
-        '& .MuiPaper-root': { width: '100%', maxWidth: 450, zIndex: 10000 }
-      }}
+      sx={{ '& .MuiPaper-root': { width: '100%', maxWidth: 450, zIndex: 10000 } }}
     >
       <DialogTitle id='user-view-edit' sx={{ textAlign: 'center', fontSize: '1.5rem !important' }}>
         {t('Skanner orqali davomat qilish')}
@@ -93,12 +96,12 @@ const QrCodeModal = () => {
         <TextField
           type='text'
           size='small'
-          name='message'
           fullWidth
           sx={{ marginTop: 1.2 }}
           value={studentId}
           label={t('Qr code ')}
-          onInput={handleInput}
+          onChange={handleInput}
+          onKeyDown={handleKeyDown}
           placeholder='Scan or enter QR code'
         />
       </DialogContent>

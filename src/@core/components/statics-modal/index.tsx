@@ -66,13 +66,6 @@ const StaticsModal = () => {
     setTypingComplete(false)
   }
 
-  const handleTypingComplete = () => {
-    setTypingComplete(true)
-    setShowFireworks(true)
-    setTriggerConfetti(true)
-    setTimeout(() => setShowFireworks(false), 3000)
-  }
-
   const handleChangeDate = (date: string) => {
     setSelectedDate(date)
     fetchAnalytics(date === 'yesterday' ? yesterdayDate : currentDate)

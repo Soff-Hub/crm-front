@@ -26,18 +26,13 @@ import Router from 'next/router'
 import api from 'src/@core/utils/api'
 
 export default function AddGroupModal() {
-  const { isOpenAddGroup,teachersData,roomsData, courses, formParams, queryParams, initialValues } = useAppSelector(state => state.groups)
+  const { isOpenAddGroup, teachersData, roomsData, courses, formParams, queryParams, initialValues } = useAppSelector(
+    state => state.groups
+  )
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
   const [loading, setLoading] = useState(false)
   const [customWeekdays, setCustomWeekDays] = useState<string[]>([])
-
-
- 
-
- 
-
-  
 
   const options = roomsData?.map(item => ({
     label: item?.name,
@@ -125,13 +120,6 @@ export default function AddGroupModal() {
     dispatch(resetFormParams())
     setCustomWeekDays([])
   }
-
-  // useEffect(() => {
-
-  //     return () => {
-  //         // dispatch(se(null))
-  //     }
-  // }, [])
 
   return (
     <Drawer open={isOpenAddGroup} hideBackdrop anchor='right' variant='temporary' sx={{ width: '100%' }}>
@@ -274,12 +262,12 @@ export default function AddGroupModal() {
                 ''
               )}
               <FormControl fullWidth>
-              <InputLabel size='small' id='user-view-language-label'>
-                  {t("Xona")}
+                <InputLabel size='small' id='user-view-language-label'>
+                  {t('Xona')}
                 </InputLabel>
                 <Select
                   size='small'
-                  label={t("Xona")}
+                  label={t('Xona')}
                   id='user-view-language'
                   labelId='user-view-language-label'
                   name='room'

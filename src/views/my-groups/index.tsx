@@ -10,7 +10,6 @@ import { AuthContext } from 'src/context/AuthContext'
 import { useAppDispatch, useAppSelector } from 'src/store'
 import { fetchGroups, fetchTeacherSalaries, updateMyGroupParams } from 'src/store/apps/groups'
 
-// Dynamically import components
 const TeachersDetails = dynamic(() => import('./components/TeachersDetails'), { ssr: false })
 const GroupCard = dynamic(() => import('./components/GroupCard'), { ssr: false })
 const GroupSkeleton = dynamic(() => import('./components/Skeleton'), { ssr: false })
@@ -22,9 +21,8 @@ export default function MyGroups() {
   const { groups, isTableLoading, myGroupParams, isLoading, teacherSalaries } = useAppSelector(state => state.groups)
   const dispatch = useAppDispatch()
   const { push } = useRouter()
-  const {soffBotStatus} = useAppSelector(state => state.page)
-  console.log(soffBotStatus);
-  
+  const { soffBotStatus } = useAppSelector(state => state.page)
+
   const column: customTableDataProps[] = [
     {
       xs: 0.03,
@@ -75,10 +73,9 @@ export default function MyGroups() {
 
   useEffect(() => {
     if (!user?.role.includes('teacher') && !user?.role.includes('watcher')) {
-      push('/')
+      push('/dashboard')
       toast.error("Sizda bu sahifaga kirish huquqi yo'q!")
     }
-    // page=1&status=active&teacher=${user?.id}
     ;(async function () {
       await Promise.all([
         dispatch(
