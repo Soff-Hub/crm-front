@@ -228,7 +228,6 @@ const Customizer = () => {
           <Divider sx={{ m: '0 !important' }} />
 
           <CustomizerSpacing className='customizer-body'>
-
             {/* Content Width */}
             <Box sx={{ mb: 4 }}>
               <Typography>{t("Sahifa o'lchami")}</Typography>
@@ -299,7 +298,6 @@ const Customizer = () => {
           <Divider sx={{ m: '0 !important' }} />
 
           <CustomizerSpacing className='customizer-body'>
-
             {/* Menu Layout */}
             <Box sx={{ mb: layout === 'horizontal' && appBar === 'hidden' ? {} : 4 }}>
               <Typography>{t('Menyu joylashuvi')}</Typography>

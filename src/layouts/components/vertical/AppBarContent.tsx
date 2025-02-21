@@ -1,20 +1,11 @@
-// ** MUI Imports
 import Box from '@mui/material/Box'
 import IconButton from '@mui/material/IconButton'
 import Stomp from 'stompjs'
-// ** Icon Imports
 import Icon from 'src/@core/components/icon'
-
-// ** Type Import
 import { Settings } from 'src/@core/context/settingsContext'
-
-// ** Components
 import ModeToggler from 'src/@core/layouts/components/shared-components/ModeToggler'
 import UserDropdown from 'src/@core/layouts/components/shared-components/UserDropdown'
 import LanguageDropdown from 'src/@core/layouts/components/shared-components/LanguageDropdown'
-// import NotificationDropdown, {
-//   NotificationsType
-// } from 'src/@core/layouts/components/shared-components/NotificationDropdown'
 import BranchDropdown from 'src/@core/layouts/components/shared-components/BranchDropdown'
 import Clock from 'src/@core/components/clock'
 import { Autocomplete, Button, TextField, Tooltip, Typography } from '@mui/material'
@@ -52,6 +43,7 @@ const AppBarContent = (props: Props) => {
   const { isMobile } = useResponsive()
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
+  const [open, setOpen] = useState<boolean>(false)
   const [stompClient, setStompClient] = useState<Stomp.Client | null>(null)
 
   const [employees, setEmployees] = useState<any>([])
@@ -88,23 +80,9 @@ const AppBarContent = (props: Props) => {
     handleSearch(debouncedSearch)
   }, [debouncedSearch])
 
-  function clickGlobalPay() {
+  const clickGlobalPay = () => {
     dispatch(setGlobalPay(true))
   }
-
-  // useEffect(() => {
-  //   const socket = new WebSocket(`wss://test.api-soffcrm.uz/ws/notifications/${user?.id}/`)
-  //   socket.onopen = () => {
-  //     socket.send(JSON.stringify({ subscribe: `notifications/${user?.id}/` }))
-  //   }
-  //   socket.onmessage = event => {
-  //     const data = JSON.parse(event.data)
-  //     dispatch(setNotifications(data?.notifications?.length || 0))
-  //   }
-  //   return () => {
-  //     socket.close()
-  //   }
-  // }, [user?.id])
 
   return (
     <div style={{ width: '100%', display: 'block' }}>
@@ -127,12 +105,11 @@ const AppBarContent = (props: Props) => {
             {user?.role.join(', ') !== 'student' && (
               <>
                 <Autocomplete
-                  open={search == '' ? false : true}
+                  open={open}
+                  onOpen={() => setOpen(search !== '' && true)}
                   sx={{ paddingX: 10 }}
                   disablePortal
-                  onClose={() => {
-                    setEmployees([])
-                  }}
+                  onClose={() => setOpen(false)}
                   loading={searchLoading}
                   loadingText={'Yuklanmoqda..'}
                   options={employees || []}
