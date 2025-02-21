@@ -17,6 +17,7 @@ export default function DashboardPage() {
   const { isMobile } = useResponsive()
   const { eyeVisible } = useAppSelector(state => state.dashboard)
   const dispatch = useAppDispatch()
+
   return (
     <>
       <Box display={!isMobile ? 'flex' : 'block'} alignItems='center' gap={5} justifyContent='flex-end'>
