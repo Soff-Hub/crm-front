@@ -1,7 +1,7 @@
 import { Box, Skeleton } from '@mui/material'
 import { useRouter } from 'next/router'
 import { ReactNode } from 'react'
-import { Placeholder } from 'react-bootstrap' // Import Placeholder from react-bootstrap
+import { Placeholder } from 'react-bootstrap'
 import EmptyContent from '../empty-content'
 
 export interface customTableDataProps {
@@ -25,16 +25,7 @@ interface DataTableProps {
   loading?: boolean
 }
 
-export default function DataTable({
-  columns,
-  loading = false,
-  data,
-  minWidth,
-  maxWidth,
-  rowClick,
-  color,
-  text_color
-}: DataTableProps) {
+export default function DataTable({ columns, loading = false, data, minWidth, maxWidth, rowClick }: DataTableProps) {
   const { query } = useRouter()
 
   const handleClick = (id: any) => {
@@ -72,7 +63,7 @@ export default function DataTable({
       </Box>
 
       {loading ? (
-        <Box sx={{display:'flex', flexDirection:'column', gap:2}}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
           <Skeleton variant='rounded' height={40} width='100%' />
           <Skeleton variant='rounded' height={40} width='100%' />
           <Skeleton variant='rounded' height={40} width='100%' />
@@ -98,11 +89,11 @@ export default function DataTable({
                 gap: 1,
                 width: '100%',
                 maxWidth: maxWidth || null,
-                cursor: 'pointer',
+                cursor: 'pointer'
               }}
             >
               {columns.map((el: any, i) => (
-                <Box  key={i} sx={{ textAlign: 'start', flex: el.xs, pb: '5px' }}>
+                <Box key={i} sx={{ textAlign: 'start', flex: el.xs, pb: '5px' }}>
                   <Box sx={{ fontSize: 12, fontWeight: 500 }}>
                     {el.render
                       ? el.render(el.dataIndex === 'index' ? index + 1 : item[`${el.dataIndex}`])

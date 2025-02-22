@@ -6,9 +6,10 @@ import { toast } from 'react-hot-toast'
 import { AuthContext } from 'src/context/AuthContext'
 import { useAppDispatch, useAppSelector } from 'src/store'
 import { fetchLessons, fetchStatistics } from 'src/store/apps/dashboard'
+import DashboardPage from 'src/views/apps/dashboard/DashboardPage'
 
 const MyGroups = dynamic(() => import('src/views/my-groups'), { ssr: false })
-const DashboardPage = dynamic(() => import('src/views/apps/dashboard/DashboardPage'), { ssr: false })
+// const DashboardPage = dynamic(() => import('src/views/apps/dashboard/DashboardPage'), { ssr: false })
 
 const AppCalendar = () => {
   const { weeks, interval } = useAppSelector(state => state.dashboard)

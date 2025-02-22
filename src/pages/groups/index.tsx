@@ -50,10 +50,9 @@ import Excel from 'src/@core/components/excelButton/Excel'
 import OnlineLessonModal from 'src/views/apps/groups/view/GroupViewLeft/OnlineLessonModal'
 import { studentsUpdateParams } from 'src/store/apps/groupDetails'
 import { status } from 'nprogress'
+import DataTable from 'src/@core/components/table'
 
 const IconifyIcon = dynamic(() => import('src/@core/components/icon'))
-const DataTable = dynamic(() => import('src/@core/components/table'))
-const MuiDrawer = dynamic(() => import('@mui/material/Drawer'))
 const RowOptions = dynamic(() => import('src/views/apps/groups/RowOptions'))
 const EditGroupModal = dynamic(() => import('src/views/apps/groups/EditGroupModal'))
 const AddGroupModal = dynamic(() => import('src/views/apps/groups/AddGroupModal'))

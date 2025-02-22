@@ -30,7 +30,6 @@ import { format } from 'date-fns'
 import { fetchSchoolsList, fetchSmsList } from 'src/store/apps/settings'
 import ExcelStudents from 'src/@core/components/excelButton/ExcelStudents'
 import ceoConfigs from 'src/configs/ceo'
-import { fetchGroups, updateParams } from 'src/store/apps/groups'
 
 type StudentsFilterProps = {
   isMobile: boolean
@@ -41,7 +40,6 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
   const { students, queryParams } = useAppSelector(state => state.students)
   const { schools } = useAppSelector(state => state.settings)
   const [key, setKey] = useState<string>('')
-  const [search, setSearch] = useState('')
   const { getCourses, courses } = useCourses()
   const [groups, setGroups] = useState<any>()
   const [teachers, setTeachers] = useState<any>()
@@ -75,18 +73,11 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
       .catch(error => console.log(error))
   }
 
-  const handleSearch = useCallback(
-    debounce((search: string) => {
-      dispatch(updateStudentParams({ search }))
-    }, 500),
-    [search]
-  )
+  const handleSearch = (value: string) => {
+    dispatch(updateStudentParams({ search: value }))
+  }
 
-  useEffect(() => {
-    handleSearch(search)
-  }, [search, handleSearch])
-
-    async function handleFilter(key: string, value: string | number | null) {
+  async function handleFilter(key: string, value: string | number | null) {
     dispatch(updateStudentParams({ [key]: value }))
     if (key === 'debt_date') {
       setIsActive(false)
@@ -147,7 +138,7 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
             {t('Qidirish')}
           </InputLabel>
           <OutlinedInput
-            onChange={e => setSearch(e.target.value)}
+            onChange={e => handleSearch(e.target.value)}
             endAdornment={
               <InputAdornment position='end'>
                 <IconifyIcon icon={'tabler:search'} />
@@ -355,7 +346,7 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
           </InputLabel>
 
           <OutlinedInput
-            onChange={e => setSearch(e.target.value)}
+            onChange={e => handleSearch(e.target.value)}
             endAdornment={
               <InputAdornment position='end'>
                 <IconifyIcon icon={'tabler:search'} />

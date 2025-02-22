@@ -1,3 +1,5 @@
+'use client'
+
 import { useContext } from 'react'
 import { AuthContext } from 'src/context/AuthContext'
 import VideoHeader, { videoUrls } from 'src/@core/components/video-header/video-header'

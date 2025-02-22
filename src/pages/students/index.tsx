@@ -12,7 +12,6 @@ import {
   DialogTitle,
   IconButton
 } from '@mui/material'
-
 import { ReactNode, useContext, useEffect, useState } from 'react'
 import DataTable from 'src/@core/components/table'
 import { useTranslation } from 'react-i18next'
@@ -33,7 +32,7 @@ import IconifyIcon from 'src/@core/components/icon'
 import ExcelStudents from 'src/@core/components/excelButton/ExcelStudents'
 import { TeacherAvatar } from 'src/views/apps/mentors/AddMentorsModal'
 
-export interface customTableProps {
+export type customTableProps = {
   xs: number
   title: string
   dataIndex?: string | ReactNode
@@ -48,9 +47,7 @@ export default function GroupsPage() {
   const [open, setOpen] = useState<boolean>(false)
   const dispatch = useAppDispatch()
   const { students, isLoading, studentsCount, queryParams, total_debts } = useAppSelector(state => state.students)
-  const [page, setPage] = useState<number>(queryParams.page ? Number(queryParams.page) - 1 : 1)
-  const [rowsPerPage, setRowsPerPage] = useState<number>(() => Number(localStorage.getItem('rowsPerPage')) || 10)
-
+  const [rowsPerPage, setRowsPerPage] = useState<number>(10)
   const queryString = new URLSearchParams({ ...queryParams } as Record<string, string>).toString()
 
   const columns: customTableProps[] = [
@@ -174,18 +171,14 @@ export default function GroupsPage() {
   ]
 
   const handleRowsPerPageChange = async (value: number) => {
-    setRowsPerPage(Number(value))
-    localStorage.setItem('rowsPerPage', `${value}`)
+    setRowsPerPage(value)
 
-    dispatch(updateStudentParams({ limit: value }))
-    await dispatch(fetchStudentsList({ ...queryParams, limit: `${value}`, offset: `0` }))
-    setPage(0)
+    dispatch(updateStudentParams({ limit: value, offset: 0 }))
+    await dispatch(fetchStudentsList({ ...queryParams, limit: String(value), offset: '0' }))
   }
 
   const handlePagination = async (page: string | number) => {
     const adjustedPage: any = (Number(page) - 1) * rowsPerPage
-    setPage(Number(page))
-
     await dispatch(fetchStudentsList({ ...queryParams, limit: String(rowsPerPage), offset: adjustedPage }))
     dispatch(updateStudentParams({ offset: adjustedPage }))
   }
@@ -196,11 +189,41 @@ export default function GroupsPage() {
   }
 
   useEffect(() => {
-    if (!user?.role.includes('ceo') && !user?.role.includes('admin') && !user?.role.includes('watcher')) {
-      router.push('/')
-      toast.error("Sizda bu sahifaga kirish huquqi yo'q!")
+    const initialize = async () => {
+      if (!user?.role.includes('ceo') && !user?.role.includes('admin') && !user?.role.includes('watcher')) {
+        router.push('/')
+        toast.error("Sizda bu sahifaga kirish huquqi yo'q!")
+        return
+      }
+
+      const initialParams = {
+        ...queryParams,
+        offset: '0',
+        limit: String(rowsPerPage)
+      }
+
+      dispatch(updateStudentParams({ offset: 0, limit: rowsPerPage }))
+      await dispatch(fetchStudentsList(initialParams))
     }
+
+    initialize()
+
     return () => {
+      dispatch(updateStudentParams({ offset: 0 }))
+      dispatch(setOpenEdit(null))
+    }
+  }, [])
+
+  useEffect(() => {
+    const resetPagination = async () => {
+      dispatch(updateStudentParams({ offset: 0 }))
+      await dispatch(fetchStudentsList({ ...queryParams, limit: String(rowsPerPage), offset: '0' }))
+    }
+
+    resetPagination()
+
+    return () => {
+      dispatch(updateStudentParams({ offset: 0 }))
       dispatch(setOpenEdit(null))
     }
   }, [])
@@ -229,6 +252,7 @@ export default function GroupsPage() {
           {t("Yangi qo'shish")}
         </Button>
       </Box>
+
       {isMobile && (
         <Box>
           <Button
@@ -242,7 +266,9 @@ export default function GroupsPage() {
           <ExcelStudents size='small' url='/student/offset-list/' queryString={queryString} />
         </Box>
       )}
+
       {!isMobile && <StudentsFilter isMobile={isMobile} />}
+
       <DataTable
         color
         loading={isLoading}
@@ -260,6 +286,7 @@ export default function GroupsPage() {
         ]}
         rowClick={rowClick}
       />
+
       {studentsCount > 10 && !isLoading && (
         <div className='d-flex'>
           <Pagination
@@ -279,27 +306,13 @@ export default function GroupsPage() {
             <MenuItem value={20}>20</MenuItem>
             <MenuItem value={50}>50</MenuItem>
             <MenuItem value={100}>100</MenuItem>
-            <MenuItem value={200}>200</MenuItem>
           </Select>
         </div>
-        // <TablePagination
-        //   component='div'
-        //   count={studentsCount}
-        //   page={page}
-        //   onPageChange={(e: any, page) => handlePagination(String(page))}
-        //   rowsPerPage={rowsPerPage}
-        //   onRowsPerPageChange={(e: any) => handleRowsPerPageChange(e)}
-        //   rowsPerPageOptions={[5, 10, 25, 50]}
-        //   labelDisplayedRows={({ from, to, count }) => {
-        //     const adjustedFrom = from === 0 ? 1 : from
-        //     const adjustedTo = to === 0 ? 1 : to
-
-        //     return `${adjustedFrom} - ${adjustedTo} of ${count !== -1 ? count : `more than ${adjustedTo}`}`
-        //   }}
-        // />
       )}
+
       <CreateStudentModal />
       <EditStudentModal />
+
       <Dialog fullScreen onClose={() => setOpen(false)} aria-labelledby='full-screen-dialog-title' open={open}>
         <DialogTitle id='full-screen-dialog-title'>
           <Typography variant='h6' component='span'>
