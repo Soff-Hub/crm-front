@@ -21,7 +21,7 @@ import CreateStudentModal from 'src/views/apps/students/CreateStudentModal'
 import EditStudentModal from 'src/views/apps/students/EditStudentModal'
 import StudentRowOptions from 'src/views/apps/students/StudentRowOptions'
 import { useAppDispatch, useAppSelector } from 'src/store'
-import { fetchStudentsList, setStudentId, updateStudentParams } from 'src/store/apps/students'
+import { fetchStudentsList, resetStudentsState, setStudentId, updateStudentParams } from 'src/store/apps/students'
 import { formatCurrency } from 'src/@core/utils/format-currency'
 import { setOpenEdit } from 'src/store/apps/students'
 import VideoHeader, { videoUrls } from 'src/@core/components/video-header/video-header'
@@ -46,7 +46,9 @@ export default function GroupsPage() {
   const { user } = useContext(AuthContext)
   const [open, setOpen] = useState<boolean>(false)
   const dispatch = useAppDispatch()
-  const { students, isLoading, studentsCount, queryParams, total_debts } = useAppSelector(state => state.students)
+  const { students, isLoading, studentsCount, queryParams, total_debts } = useAppSelector(
+    state => state.students
+  )
   const [rowsPerPage, setRowsPerPage] = useState<number>(10)
   const queryString = new URLSearchParams({ ...queryParams } as Record<string, string>).toString()
 
@@ -209,6 +211,7 @@ export default function GroupsPage() {
     initialize()
 
     return () => {
+      dispatch(resetStudentsState())
       dispatch(updateStudentParams({ offset: 0 }))
       dispatch(setOpenEdit(null))
     }
