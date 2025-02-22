@@ -1,24 +1,14 @@
-// ** React Imports
-import { ReactNode, ReactElement, useEffect } from 'react'
-
-// ** Next Import
+import { useEffect, FC, PropsWithChildren, Fragment } from 'react'
 import { useRouter } from 'next/router'
-
-// ** Hooks Import
 import { useAuth } from 'src/hooks/useAuth'
+import { Loading } from 'src/shared/ui'
 
-interface GuestGuardProps {
-  children: ReactNode
-  fallback: ReactElement | null
-}
-
-const GuestGuard = (props: GuestGuardProps) => {
-  const { children, fallback } = props
+export const PublicGuard: FC<PropsWithChildren> = ({ children }) => {
   const auth = useAuth()
   const router = useRouter()
 
   if (router.pathname.split('/').includes('r')) {
-    return <>{children}</>
+    return <Fragment>{children}</Fragment>
   }
 
   useEffect(() => {
@@ -32,10 +22,10 @@ const GuestGuard = (props: GuestGuardProps) => {
   }, [router.route])
 
   if (auth.loading || (!auth.loading && auth.user !== null)) {
-    return fallback
+    return <Loading />
   }
 
-  return <>{children}</>
+  return <Fragment>{children}</Fragment>
 }
 
-export default GuestGuard
+PublicGuard.displayName = 'PublicGuard'
