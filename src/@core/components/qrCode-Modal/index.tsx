@@ -1,6 +1,16 @@
-import { Dialog, DialogContent, DialogTitle, TextField, Tooltip, Typography } from '@mui/material'
-import toast from 'react-hot-toast'
-import { useState } from 'react'
+import {
+  Badge,
+  Box,
+  Chip,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  Stack,
+  TextField,
+  Tooltip,
+  Typography
+} from '@mui/material'
+import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import api from 'src/@core/utils/api'
@@ -8,7 +18,8 @@ import { useAppSelector } from 'src/store'
 import { toggleQrCodeModal } from 'src/store/apps/page'
 import { Icon } from '@iconify/react'
 import useResponsive from 'src/@core/hooks/useResponsive'
-import { CheckOutlined } from '@mui/icons-material'
+import { Done } from '@mui/icons-material'
+import useDebounce from 'src/hooks/useDebounce'
 
 const QrCodeModal = () => {
   const { isQrCodeModalOpen } = useAppSelector(state => state.page)
@@ -17,8 +28,14 @@ const QrCodeModal = () => {
   const { isMobile } = useResponsive()
 
   const [studentId, setStudentId] = useState('')
+  const debouncedStudentId = useDebounce(studentId, 500)
   const [errorText, setErrorText] = useState('')
   const [userData, setUserData] = useState<any | null>(null)
+
+  const validateUUID = (id: string) => {
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+    return uuidRegex.test(id)
+  }
 
   const handleClose = () => {
     dispatch(toggleQrCodeModal(false))
@@ -29,17 +46,23 @@ const QrCodeModal = () => {
 
   const handleSendQrCode = async (id: string) => {
     if (!id) return
+
+    if (!validateUUID(id)) {
+      setErrorText("Noto'g'ri ID format")
+      return
+    }
+
     try {
       const res = await api.post(`common/attendance/by-qr-code/${id}/`)
 
       if (res.status === 200) {
-        setUserData(res.data) // Foydalanuvchi ma'lumotlarini saqlash
-      
-
-        setTimeout(() => setUserData(null), 2000)
-
-        setTimeout(() => setStudentId(''), 2000)
+        setUserData(res.data)
         setErrorText('')
+
+        setTimeout(() => {
+          setUserData(null)
+          setStudentId('')
+        }, 7000)
       }
     } catch (err: any) {
       console.error(err)
@@ -48,15 +71,19 @@ const QrCodeModal = () => {
       } else {
         setErrorText(err.response?.data?.msg || 'Bu shaxs topilmadi')
       }
-      setTimeout(() => setStudentId(''), 2000)
-      setTimeout(() => setErrorText(''), 2000)
+
+      setTimeout(() => {
+        setUserData(null)
+        setStudentId('')
+      }, 7000)
     }
   }
 
-  const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setStudentId(e.target.value)
-    handleSendQrCode(e.target.value)
-  }
+  useEffect(() => {
+    if (debouncedStudentId) {
+      handleSendQrCode(debouncedStudentId)
+    }
+  }, [debouncedStudentId])
 
   return (
     <Dialog
@@ -81,29 +108,42 @@ const QrCodeModal = () => {
           type='text'
           size='small'
           fullWidth
+          error={Boolean(errorText)}
           sx={{ marginTop: 1.2 }}
           value={studentId}
           label={t('Qr code ')}
-          onChange={handleInput}
+          onChange={e => setStudentId(e.target.value)}
           placeholder='Scan or enter QR code'
         />
 
         {errorText && (
-          <Typography color={'red'} textAlign={'center'} pt={2} fontSize={14}>
-            {errorText}
-          </Typography>
+          <div className='border rounded mt-2'>
+            <Typography color={'red'} textAlign={'center'} p={4} fontSize={14}>
+              {errorText}
+            </Typography>
+          </div>
         )}
 
-        {userData && (
-          <div className='mt-4 text-center'>
-            <Typography fontSize={14}>
-              <b>FIO:</b> {userData.first_name}
-            </Typography>
-            <Typography fontSize={14}>
-              <b>Telefon:</b> {userData.phone}
-            </Typography>
-            <CheckOutlined color='success'/>
-          </div>
+        {studentId && userData && (
+          <Box
+            className='border rounded mt-2'
+            p={4}
+            display={'flex'}
+            alignItems={'center'}
+            justifyContent={'space-between'}
+          >
+            <Stack display={'flex'}>
+              <Typography fontSize={14}>
+                <b>FIO:</b> {userData.first_name}
+              </Typography>
+
+              <Typography fontSize={14}>
+                <b>Telefon:</b> {userData.phone}
+              </Typography>
+            </Stack>
+
+            <Chip label='Darsga keldi' color='success' variant='outlined' icon={<Done />} />
+          </Box>
         )}
       </DialogContent>
     </Dialog>
