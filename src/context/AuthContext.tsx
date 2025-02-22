@@ -168,8 +168,8 @@ const AuthProvider = ({ children }: Props) => {
 
   const handleLogout = () => {
     setUser(null)
-    window.localStorage.removeItem('userData')
-    window.localStorage.removeItem(authConfig.storageTokenKeyName)
+    localStorage.clear()
+    sessionStorage.clear()
     router.push('/login')
   }
 
