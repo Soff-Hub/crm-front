@@ -1,12 +1,11 @@
-import { useEffect } from 'react'
+import { useLayoutEffect } from 'react'
 import { useRouter } from 'next/router'
 
 const Home = () => {
   const router = useRouter()
+  const role = JSON.parse(localStorage.getItem('role') || '[]')
 
-  useEffect(() => {
-    const role = JSON.parse(localStorage.getItem('role') || '[]')
-
+  useLayoutEffect(() => {
     if (role.includes('student')) {
       router.replace('/student-profile')
     } else if (role.includes('casher') && (!role.includes('ceo') || !role.includes('admin'))) {
