@@ -27,7 +27,7 @@ const GuestGuard = (props: GuestGuardProps) => {
     }
 
     if (window.localStorage.getItem('userData')) {
-      router.replace('/dashboard')
+      router.replace('/')
     }
   }, [router.route])
 
