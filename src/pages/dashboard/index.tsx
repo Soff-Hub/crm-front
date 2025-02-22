@@ -28,6 +28,7 @@ const AppCalendar = () => {
     await Promise.all([dispatch(fetchStatistics()), dispatch(fetchLessons({ queryWeeks: weeks, interval: interval }))])
   }
 
+
   useEffect(() => {
     pageLoad()
   }, [])
