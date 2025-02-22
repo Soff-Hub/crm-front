@@ -278,7 +278,7 @@ export default function StudentPaymentForm({ openEdit, setOpenEdit, student_id, 
           {t('Eslatma')}
         </DialogTitle>
         <DialogContent>
-          <Typography id='warning-dialog-description' sx={{ mt: 2, textAlign: 'center' }}>
+          <Typography id='warning-dialog-description' sx={{ mt: 1, textAlign: 'center' }}>
             {t(`Bekor qilishga ishonchingiz komilmi?`)} <br />
           </Typography>
         </DialogContent>
@@ -292,7 +292,7 @@ export default function StudentPaymentForm({ openEdit, setOpenEdit, student_id, 
           >
             {t('Ortga qaytish')}
           </Button>
-          <Button variant='contained' color='error' onClick={handleConfirmCancel}>
+          <Button    variant='contained' color='error' onClick={handleConfirmCancel}>
             {t('Bekor qilish')}
           </Button>
         </DialogActions>
