@@ -48,7 +48,7 @@ jobs:
             cd /projects/crm-front/${{ secrets.REPO_NAME }}
 
             if [ ! -d ".git" ]; then
-                git clone --branch main https://test.soff.uz/:${{ secrets.TOKEN_GITHUB }}@github.com/Soff-Hub/${{ secrets.REPO_NAME }}.git .
+                git clone --branch main https://test.soffcrm.uz/:${{ secrets.TOKEN_GITHUB }}@github.com/Soff-Hub/${{ secrets.REPO_NAME }}.git .
             else
                 git pull origin test
             fi
@@ -74,7 +74,7 @@ jobs:
             mkdir -p /projects/crm-front/${{ secrets.REPO_NAME }}
             cd /projects/crm-front/${{ secrets.REPO_NAME }}
             if [ ! -d ".git" ]; then
-                git clone --branch dev https://dynamicuz:${{ secrets.TOKEN_GITHUB }}@github.com/Soff-Hub/${{ secrets.REPO_NAME }}.git .
+                git clone --branch dev https://test.soffcrm.uz:${{ secrets.TOKEN_GITHUB }}@github.com/Soff-Hub/${{ secrets.REPO_NAME }}.git .
             else
                 git pull origin dev
             fi
