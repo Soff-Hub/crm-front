@@ -1,4 +1,5 @@
 'use client'
+
 import { Box, Chip, MenuItem, Pagination, Select, Tooltip, Typography } from '@mui/material'
 import { ReactNode, useContext, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -6,7 +7,12 @@ import { useRouter } from 'next/router'
 import { useAppDispatch, useAppSelector } from 'src/store'
 import { formatCurrency } from 'src/@core/utils/format-currency'
 import dynamic from 'next/dynamic'
-import { fetchGroupsList, fetchStudentPaymentsList, setTeacherData, updateParams } from 'src/store/apps/reports/studentPayments'
+import {
+  fetchGroupsList,
+  fetchStudentPaymentsList,
+  setTeacherData,
+  updateParams
+} from 'src/store/apps/reports/studentPayments'
 import FilterBlock from 'src/views/apps/reports/student-payments/FilterBlock'
 import useResponsive from 'src/@core/hooks/useResponsive'
 import { AuthContext } from 'src/context/AuthContext'
@@ -17,22 +23,20 @@ import { fetchCoursesList } from 'src/store/apps/settings'
 import api from 'src/@core/utils/api'
 import ceoConfigs from 'src/configs/ceo'
 
-const DataTable = dynamic(() => import('src/@core/components/table'))
-
-export interface customTableProps {
+export type customTableProps = {
   xs: number
   title: string
   dataIndex?: string | ReactNode
   render?: (source: string) => any | undefined
 }
 
-export default function StudentPaymentsPage() {
+const StudentPaymentsPage = () => {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
   const { push } = useRouter()
   const { user } = useContext(AuthContext)
   const [rowsPerPage, setRowsPerPage] = useState<number>(() => Number(localStorage.getItem('rowsPerPage')) || 10)
-  const { studentsPayment, paymentsCount, total_payments, isLoading, queryParams} = useAppSelector(
+  const { studentsPayment, paymentsCount, total_payments, isLoading, queryParams } = useAppSelector(
     state => state.studentPayments
   )
   const router = useRouter()
@@ -124,10 +128,15 @@ export default function StudentPaymentsPage() {
   useEffect(() => {
     getTeachers()
     dispatch(fetchCoursesList(''))
-  },[])
+  }, [])
 
   useEffect(() => {
-    if (!user?.role.includes('ceo') && !user?.role.includes('admin') && !user?.role.includes('watcher')&& !user?.role.includes('marketolog')) {
+    if (
+      !user?.role.includes('ceo') &&
+      !user?.role.includes('admin') &&
+      !user?.role.includes('watcher') &&
+      !user?.role.includes('marketolog')
+    ) {
       push('/')
       toast.error("Sizda bu sahifaga kirish huquqi yo'q!")
     }
@@ -149,9 +158,9 @@ export default function StudentPaymentsPage() {
       )
     )
   }
-   const rowClick = (student: any) => {
-      router.push(`/students/view/security?student=${student}`)
-    }
+  const rowClick = (student: any) => {
+    router.push(`/students/view/security?student=${student}`)
+  }
   const { isMobile } = useResponsive()
 
   return (
@@ -167,29 +176,30 @@ export default function StudentPaymentsPage() {
         }}
         py={2}
       >
-        <Box gap={5} sx={{display: 'flex', alignItems: 'center', justifyContent:'space-between',marginBottom:5 }}>
-          <Box display='flex' width='100%'  alignItems='center' gap='10px'>
-          <Typography variant='h5'>{t("O'quvchilar to'lovi")}</Typography>
-          {!isLoading && <Chip label={`${paymentsCount}`} variant='outlined' color='primary' size='medium' />}
+        <Box gap={5} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 5 }}>
+          <Box display='flex' width='100%' alignItems='center' gap='10px'>
+            <Typography variant='h5'>{t("O'quvchilar to'lovi")}</Typography>
+            {!isLoading && <Chip label={`${paymentsCount}`} variant='outlined' color='primary' size='medium' />}
+            <Chip
+              variant='outlined'
+              size='medium'
+              sx={{ fontSize: '14px', display: isMobile ? 'flex' : 'none', fontWeight: 'bold' }}
+              color='success'
+              label={`${formatCurrency(total_payments)} UZS`}
+            />
+          </Box>
           <Chip
             variant='outlined'
             size='medium'
-            sx={{ fontSize: '14px', display: isMobile ? 'flex' : 'none', fontWeight: 'bold' }}
+            sx={{ fontSize: '14px', display: isMobile ? 'none' : 'flex', fontWeight: 'bold' }}
             color='success'
             label={`${formatCurrency(total_payments)} UZS`}
           />
         </Box>
-        <Chip
-          variant="outlined"
-          size="medium"
-          sx={{ fontSize: "14px", display: isMobile ? "none" : "flex", fontWeight: "bold" }}
-          color="success"
-          label={`${formatCurrency(total_payments)} UZS`}
-        />
-        </Box>
         <FilterBlock />
       </Box>
       <PaymentTable rowClick={rowClick} loading={isLoading} columns={columns} data={studentsPayment} />
+
       {Math.ceil(paymentsCount / 10) > 1 && !isLoading && (
         <div className='d-flex'>
           <Pagination
@@ -216,3 +226,5 @@ export default function StudentPaymentsPage() {
     </div>
   )
 }
+
+export default StudentPaymentsPage

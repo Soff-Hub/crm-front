@@ -13,7 +13,6 @@ export default function StatsPaymentMethods() {
   const { isMobile } = useResponsive()
   const { settings } = useSettings()
 
-
   const { t } = useTranslation()
   const props: any = {
     series: all_numbers?.payment_types.map(el => el.amount),
@@ -71,9 +70,9 @@ export default function StatsPaymentMethods() {
           <Box>
             <ReactApexcharts options={props.options} series={props.series} type='pie' width={isMobile ? '100%' : 380} />
 
-            <Box sx={{marginTop:5}}>
-              {all_numbers?.payment_types.map((item, index) => (
-                <Box sx={{marginBottom:5}}>
+            <Box sx={{ marginTop: 5 }}>
+              {all_numbers?.payment_types.map(item => (
+                <Box key={item.id} sx={{ marginBottom: 5 }}>
                   {settings.mode === 'light' ? (
                     <div className='d-flex align-items-center justify-content-between p-2 bg-success bg-opacity-10 rounded px-3'>
                       <div className='d-flex align-items-center gap-2'>
@@ -83,10 +82,10 @@ export default function StatsPaymentMethods() {
                         >
                           <Wallet className='text-white' style={{ width: '0.75rem', height: '0.75rem' }} />
                         </div>
-                        <div style={{display:'flex', alignItems:'center' ,gap:5}}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
                           <div className='fw-medium small'>{item?.name} : </div>
                         </div>
-                          <div className='text-muted small'>{item?.count + " to'lov" || "1 to'lov"}</div>
+                        <div className='text-muted small'>{item?.count + " to'lov" || "1 to'lov"}</div>
                       </div>
                       <div className='text-end fw-medium text-success small'>
                         {formatCurrency(item?.amount) + " so'm"}
@@ -104,7 +103,7 @@ export default function StatsPaymentMethods() {
                         <div>
                           <Typography fontSize={15}>{item?.name}</Typography>
                           <div className='small text-light'>
-                              <Typography fontSize={12}>{item?.count + " to'lov"||"1 to'lov"}</Typography>
+                            <Typography fontSize={12}>{item?.count + " to'lov" || "1 to'lov"}</Typography>
                           </div>
                         </div>
                       </div>

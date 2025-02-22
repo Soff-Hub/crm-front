@@ -22,7 +22,7 @@ import CreateStudentModal from 'src/views/apps/students/CreateStudentModal'
 import EditStudentModal from 'src/views/apps/students/EditStudentModal'
 import StudentRowOptions from 'src/views/apps/students/StudentRowOptions'
 import { useAppDispatch, useAppSelector } from 'src/store'
-import { clearStudentParams, fetchStudentsList, setStudentId, updateStudentParams } from 'src/store/apps/students'
+import { fetchStudentsList, setStudentId, updateStudentParams } from 'src/store/apps/students'
 import { formatCurrency } from 'src/@core/utils/format-currency'
 import { setOpenEdit } from 'src/store/apps/students'
 import VideoHeader, { videoUrls } from 'src/@core/components/video-header/video-header'
@@ -58,9 +58,7 @@ export default function GroupsPage() {
       xs: 0.2,
       title: t('ID'),
       dataIndex: 'index',
-      render: index => {
-        return `${Number(queryParams?.offset || 0) + Number(index)}`
-      }
+      render: index => `${Number(queryParams?.offset || 0) + Number(index)}`
     },
     {
       xs: 0.4,
@@ -117,12 +115,13 @@ export default function GroupsPage() {
           status: string
           group_name: string
           lesson_time: string
+          teacher_name: string
         }[]
       ) =>
         group.length > 0 ? (
           group.map((item, i) => (
             <Box fontSize={12} key={i} sx={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '4px' }}>
-              {`${item.lesson_time} - ${item.group_name}`}
+              {`${item.lesson_time} - ${item.group_name} - ${item.teacher_name}`}
               <Chip
                 label={t(item.status)}
                 size='small'
@@ -142,25 +141,6 @@ export default function GroupsPage() {
         ) : (
           <Chip label='Guruhsiz' color='warning' variant='outlined' size='small' sx={{ fontWeight: 700 }} />
         )
-    },
-    {
-      xs: 1.3,
-      title: t("O'qituvchilari"),
-      dataIndex: 'group',
-      render: (
-        group: {
-          teacher: {
-            id: number | string
-            first_name: string
-            phone: string
-          }
-        }[]
-      ) =>
-        group.map(item => (
-          <Typography fontSize={12} key={item.teacher.id}>
-            {item.teacher.first_name}
-          </Typography>
-        ))
     },
     {
       xs: 0.7,
@@ -194,7 +174,6 @@ export default function GroupsPage() {
   ]
 
   const handleRowsPerPageChange = async (value: number) => {
-    const limit = value
     setRowsPerPage(Number(value))
     localStorage.setItem('rowsPerPage', `${value}`)
 

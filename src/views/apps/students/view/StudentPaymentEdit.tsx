@@ -160,7 +160,7 @@ export default function StudentPaymentEditForm({ openEdit, setOpenEdit }: Props)
                 {!!errors.group && touched.group && <FormHelperText error>{errors.group}</FormHelperText>}
               </FormControl>
 
-              <FormControl fullWidth>
+              {/* <FormControl fullWidth>
                 <InputLabel
                   size='small'
                   id='user-view-language-label'
@@ -191,7 +191,7 @@ export default function StudentPaymentEditForm({ openEdit, setOpenEdit }: Props)
                 {!!errors.payment_type && touched.payment_type && (
                   <FormHelperText error>{errors.payment_type}</FormHelperText>
                 )}
-              </FormControl>
+              </FormControl> */}
 
               <FormControl fullWidth>
                 <AmountInput

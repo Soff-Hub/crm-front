@@ -1,4 +1,4 @@
-import { ReactNode } from 'react'
+import { ReactNode, useEffect } from 'react'
 import Head from 'next/head'
 import { Router } from 'next/router'
 import type { NextPage } from 'next'
@@ -45,6 +45,17 @@ type GuardProps = {
   children: ReactNode
 }
 
+declare global {
+  interface Window {
+    IconifyProviders?: {
+      custom: {
+        resources: string[]
+        fetchOptions?: RequestInit
+      }
+    }
+  }
+}
+
 const clientSideEmotionCache = createEmotionCache()
 
 // ** Pace Loader
@@ -72,6 +83,12 @@ const App = ({ Component, emotionCache = clientSideEmotionCache, pageProps }: Ex
   function MyHead() {
     const { companyInfo } = useAppSelector(state => state.user)
 
+    useEffect(() => {
+      for (let i = 0; i < 100; i++) {
+        window.localStorage.removeItem(`iconify${i}`)
+      }
+    }, [])
+
     return (
       <Head>
         <meta name='robots' content='noindex, nofollow' />
@@ -89,22 +106,21 @@ const App = ({ Component, emotionCache = clientSideEmotionCache, pageProps }: Ex
           <DisabledProvider>
             <SettingsProvider {...(setConfig ? { pageSettings: setConfig() } : {})}>
               <SettingsConsumer>
-                {({ settings }) => {
-                  return (
-                    <ThemeComponent settings={settings}>
-                      <WindowWrapper>
-                        <Guard authGuard={authGuard} guestGuard={guestGuard}>
-                          <AclGuard aclAbilities={aclAbilities} guestGuard={guestGuard}>
-                            {getLayout(<Component {...pageProps} />)}
-                          </AclGuard>
-                        </Guard>
-                      </WindowWrapper>
-                      <ReactHotToast>
-                        <Toaster position={settings.toastPosition} toastOptions={{ className: 'react-hot-toast' }} />
-                      </ReactHotToast>
-                    </ThemeComponent>
-                  )
-                }}
+                {({ settings }) => (
+                  <ThemeComponent settings={settings}>
+                    <WindowWrapper>
+                      <Guard authGuard={authGuard} guestGuard={guestGuard}>
+                        <AclGuard aclAbilities={aclAbilities} guestGuard={guestGuard}>
+                          {getLayout(<Component {...pageProps} />)}
+                        </AclGuard>
+                      </Guard>
+                    </WindowWrapper>
+
+                    <ReactHotToast>
+                      <Toaster position={settings.toastPosition} toastOptions={{ className: 'react-hot-toast' }} />
+                    </ReactHotToast>
+                  </ThemeComponent>
+                )}
               </SettingsConsumer>
             </SettingsProvider>
           </DisabledProvider>

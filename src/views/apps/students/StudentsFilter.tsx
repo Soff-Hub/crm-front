@@ -41,7 +41,7 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
   const { students, queryParams } = useAppSelector(state => state.students)
   const { schools } = useAppSelector(state => state.settings)
   const [key, setKey] = useState<string>('')
-  const [search,setSearch] = useState('')
+  const [search, setSearch] = useState('')
   const { getCourses, courses } = useCourses()
   const [groups, setGroups] = useState<any>()
   const [teachers, setTeachers] = useState<any>()
@@ -77,15 +77,16 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
 
   const handleSearch = useCallback(
     debounce((search: string) => {
-      dispatch(updateStudentParams({ search }));
-    }, 500), 
-    [dispatch]
-  );
-  
+      dispatch(updateStudentParams({ search }))
+    }, 500),
+    [search]
+  )
+
   useEffect(() => {
-    handleSearch(search);
-  }, [search, handleSearch]);
-  async function handleFilter(key: string, value: string | number | null) {
+    handleSearch(search)
+  }, [search, handleSearch])
+
+    async function handleFilter(key: string, value: string | number | null) {
     dispatch(updateStudentParams({ [key]: value }))
     if (key === 'debt_date') {
       setIsActive(false)
@@ -133,7 +134,6 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
     label: item?.first_name,
     value: item?.id
   }))
-
 
   useEffect(() => {
     dispatch(fetchStudentsList(queryParams as any))
@@ -193,6 +193,7 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
           <InputLabel size='small' id='demo-simple-select-outlined-label'>
             {t('Maktab')}
           </InputLabel>
+
           <Select
             onClick={() => setKey('school')}
             size='small'

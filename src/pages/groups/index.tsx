@@ -191,15 +191,15 @@ export default function GroupsPage() {
   const queryString = new URLSearchParams(
     Object.entries(queryParams).reduce((acc, [key, value]) => {
       if (value !== undefined && value !== null) {
-        acc[key] = String(value);
+        acc[key] = String(value)
       }
-      return acc;
+      return acc
     }, {} as Record<string, string>)
-  ).toString();
+  ).toString()
   const handleRowsPerPageChange = async (value: number) => {
     const limit = value
     setRowsPerPage(Number(value))
-    localStorage.setItem('rowsPerPage', `${value}`)
+    sessionStorage.setItem('rowsPerPage', `${value}`)
 
     dispatch(updateParams({ limit: value }))
     await dispatch(fetchGroups({ ...queryParams, limit: value, offset: `0` }))
@@ -221,7 +221,7 @@ export default function GroupsPage() {
 
   const rowClick = (id: any) => {
     router.push(`/groups/view/security?id=${id}&month=${getMonthName(null)}`)
-    dispatch(studentsUpdateParams({status:'active,new'}))
+    dispatch(studentsUpdateParams({ status: 'active,new' }))
   }
 
   const pageLoad = async () => {
@@ -331,7 +331,7 @@ export default function GroupsPage() {
         <>
           <Button
             size='small'
-            sx={{ marginLeft: 'auto', width: '100%',marginBottom:2}}
+            sx={{ marginLeft: 'auto', width: '100%', marginBottom: 2 }}
             variant='outlined'
             onClick={() => setOpen(true)}
           >
@@ -371,7 +371,6 @@ export default function GroupsPage() {
       <EditGroupModal />
       <GroupChangeBranchModal />
 
-      
       <Dialog fullScreen onClose={() => setOpen(false)} aria-labelledby='full-screen-dialog-title' open={open}>
         <DialogTitle id='full-screen-dialog-title'>
           <Typography variant='h6' component='span'>
@@ -444,7 +443,7 @@ export default function GroupsPage() {
           </DialogContent>
         </form>
       </Dialog>
-      <OnlineLessonModal/>
+      <OnlineLessonModal />
     </div>
   )
 }

@@ -38,8 +38,9 @@ export default function AutoComplete({ formik, setSelectedStudents, selectedStud
     
   return (
     <Autocomplete
+    
       open={search === '' || selectedStudent ? false : true}
-      disablePortal
+      // disablePortal
       onChange={(
         event: React.SyntheticEvent,
         value: AutocompleteValue<{ label: string; id: number }, false, false, false>,
