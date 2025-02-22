@@ -8,7 +8,7 @@ import { toggleAmoModal } from 'src/store/apps/page'
 
 const Navigation = (t: any): HorizontalNavItemsType => {
   const { user } = useContext(AuthContext)
-  const dispatch = useDispatch()
+
   const items = [
     {
       title: t('Bosh sahifa'),
@@ -63,14 +63,6 @@ const Navigation = (t: any): HorizontalNavItemsType => {
               title: 'Maktablar',
               path: '/settings/office/schools'
             }
-            // {
-            //   title: 'Arxiv',
-            //   path: '/settings/office/archive'
-            // },
-            // {
-            //   title: 'Tark etgan talabalar',
-            //   path: '/settings/office/lefted-students'
-            // }
           ]
         },
         {
@@ -94,7 +86,7 @@ const Navigation = (t: any): HorizontalNavItemsType => {
               path: '/settings/logs/payment-history'
             },
             {
-              title: t("Tizimga kirishlar"),
+              title: t('Tizimga kirishlar'),
               path: '/settings/logs/logins'
             },
             {
@@ -140,15 +132,9 @@ const Navigation = (t: any): HorizontalNavItemsType => {
         }
       ]
     }
-
-    // {
-    //   title: t("Video qo'llanmalar"),
-    //   icon: 'ph:video-light',
-    //   path: '/video-tutorials'
-    // }
   ]
+
   const marketologItems = [
-   
     {
       title: t('Lidlar'),
       icon: 'mdi:receipt-text-edit-outline',
@@ -170,12 +156,6 @@ const Navigation = (t: any): HorizontalNavItemsType => {
         }
       ]
     }
-
-    // {
-    //   title: t("Video qo'llanmalar"),
-    //   icon: 'ph:video-light',
-    //   path: '/video-tutorials'
-    // }
   ]
 
   const adminItems = [
@@ -227,18 +207,11 @@ const Navigation = (t: any): HorizontalNavItemsType => {
             {
               title: 'Dam olish kunlari',
               path: '/settings/office/free-days'
-            }, {
+            },
+            {
               title: 'Maktablar',
               path: '/settings/office/schools'
             }
-            // {
-            //   title: 'Arxiv',
-            //   path: '/settings/office/archive'
-            // },
-            // {
-            //   title: 'Tark etgan talabalar',
-            //   path: '/settings/office/lefted-students'
-            // }
           ]
         },
         {
@@ -273,13 +246,13 @@ const Navigation = (t: any): HorizontalNavItemsType => {
 
   const watcherItems = items.filter(el => el.slug !== 'settings')
 
-  return user?.role.includes('ceo')
+  return user?.currentRole === 'ceo'
     ? items
-    : user?.role.includes('casher')
+    : user?.currentRole === 'casher'
     ? items.filter(el => el.path === '/finance')
-    : user?.role.includes('watcher')
+    : user?.currentRole === 'watcher'
     ? watcherItems
-    : user?.role.includes('marketolog')
+    : user?.currentRole === 'marketolog'
     ? marketologItems
     : adminItems
 }
