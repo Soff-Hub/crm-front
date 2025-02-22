@@ -18,7 +18,7 @@ export type UserDataType = {
   last_login?: string
   gpa?: number
   role: any
-  currentRole: string
+  currentRole?: string
   fullName?: string
   username?: string
   password?: string
