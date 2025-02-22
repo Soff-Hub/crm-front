@@ -14,6 +14,7 @@ import {
   SelectChangeEvent,
   TextField
 } from '@mui/material'
+import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 
 // ** Third Party Imports
@@ -41,7 +42,7 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
   const [search, setSearch] = useState<string>('')
   const searchVal = useDebounce(search, 600)
   const [loading, setLoading] = useState<boolean>(false)
-
+  const router = useRouter()
   const { t } = useTranslation()
 
   async function handleGetMeetLink() {
@@ -50,10 +51,8 @@ export const GroupsFilter = ({ isMobile }: GroupsFilterProps) => {
       .get(`meets/google/login/`)
       .then(res => {
         if (res.data.url) {
-          window.location.assign(res.data.url)
-          // console.log(window.location);
-
-          // dispatch(setMeetLink(res.data.url))
+         router.push(res.data.url)
+       
         }
       })
       .catch(err => {
