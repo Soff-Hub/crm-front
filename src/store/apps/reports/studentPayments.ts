@@ -26,7 +26,7 @@ type Payment = {
 export type GroupsPaymentType = {
   id: number
   name: number
-  teacher?: string
+  teacher: string
   start_date: string
   total_payments: number
 }

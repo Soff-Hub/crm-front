@@ -27,7 +27,7 @@ export default function FilterBlock() {
   const { t } = useTranslation()
   const { groups, queryParams, teachersData } = useAppSelector(state => state.studentPayments)
   const { course_list } = useAppSelector(state => state.settings)
-  const [teacher, setTeacher] = useState<number | null>(null)
+  const [teacher, setTeacher] = useState<string | null>(null)
 
   const queryString = new URLSearchParams({ ...queryParams }).toString()
 
@@ -89,7 +89,7 @@ export default function FilterBlock() {
   }
 
   const filterGroup = (group: GroupsPaymentType[]) => {
-    const teacherGroup: GroupsPaymentType[] = teacher ? group?.filter(e => teacher === e.name) : group
+    const teacherGroup: GroupsPaymentType[] = teacher?.length ? group?.filter(e => teacher === e.teacher) : group
 
     return teacherGroup.map(group => (
       <MenuItem key={group.id} value={group.id}>
@@ -199,7 +199,7 @@ export default function FilterBlock() {
           </MenuItem>
 
           {teachersData?.map((teacher: any) => (
-            <MenuItem key={teacher.id} value={teacher.id} onClick={() => setTeacher(teacher.id)}>
+            <MenuItem key={teacher.id} value={teacher.id} onClick={() => setTeacher(teacher.first_name)}>
               {teacher.first_name}
             </MenuItem>
           ))}
