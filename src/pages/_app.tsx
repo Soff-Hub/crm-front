@@ -106,23 +106,21 @@ const App = ({ Component, emotionCache = clientSideEmotionCache, pageProps }: Ex
           <DisabledProvider>
             <SettingsProvider {...(setConfig ? { pageSettings: setConfig() } : {})}>
               <SettingsConsumer>
-                {({ settings }) => {
-                  return (
-                    <ThemeComponent settings={settings}>
-                      <WindowWrapper>
-                        <Guard authGuard={authGuard} guestGuard={guestGuard}>
-                          <AclGuard aclAbilities={aclAbilities} guestGuard={guestGuard}>
-                            {getLayout(<Component {...pageProps} />)}
-                          </AclGuard>
-                        </Guard>
-                      </WindowWrapper>
+                {({ settings }) => (
+                  <ThemeComponent settings={settings}>
+                    <WindowWrapper>
+                      <Guard authGuard={authGuard} guestGuard={guestGuard}>
+                        <AclGuard aclAbilities={aclAbilities} guestGuard={guestGuard}>
+                          {getLayout(<Component {...pageProps} />)}
+                        </AclGuard>
+                      </Guard>
+                    </WindowWrapper>
 
-                      <ReactHotToast>
-                        <Toaster position={settings.toastPosition} toastOptions={{ className: 'react-hot-toast' }} />
-                      </ReactHotToast>
-                    </ThemeComponent>
-                  )
-                }}
+                    <ReactHotToast>
+                      <Toaster position={settings.toastPosition} toastOptions={{ className: 'react-hot-toast' }} />
+                    </ReactHotToast>
+                  </ThemeComponent>
+                )}
               </SettingsConsumer>
             </SettingsProvider>
           </DisabledProvider>
