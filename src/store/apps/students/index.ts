@@ -6,7 +6,7 @@ import { IStudentState, StudentsQueryParamsTypes } from 'src/types/apps/students
 export const fetchStudentsList = createAsyncThunk(
   'students/fetchStudentsList',
   async (params?: StudentsQueryParamsTypes | undefined) => {
-    return (await api.get(`student/offset-list/`, { params })).data
+    return (await api.get(`student/new-list/`, { params })).data
   }
 )
 
@@ -21,7 +21,6 @@ export const fetchStudentComments = createAsyncThunk('students/fetchStudentComme
   return (await api.get(`student/notes/?user=${id}`)).data
 })
 
-
 export const createStudent = createAsyncThunk('students/createStudent', async (values: any, { rejectWithValue }) => {
   try {
     const response = await api.post(`student/create/`, values)
@@ -34,23 +33,24 @@ export const createStudent = createAsyncThunk('students/createStudent', async (v
   }
 })
 
-export const fetchGroupCheckList = createAsyncThunk('fetchGroupCheckList', async (search?:string) => {
-  return (await api.get(`common/group-check-list/`,{params:{search}})).data
+export const fetchGroupCheckList = createAsyncThunk('fetchGroupCheckList', async (search?: string) => {
+  return (await api.get(`common/group-check-list/`, { params: { search } })).data
 })
 
-export const updateStudent = createAsyncThunk('students/updateStudent', async ({ data, id }: any, { rejectWithValue }) => {
-  
-  try {
-
-    const response = await api.patch(`student/update/${id}`, data)
-    return response.data
-  } catch (err: any) {
-    if (err.response) {
-      return rejectWithValue(err.response.data)
+export const updateStudent = createAsyncThunk(
+  'students/updateStudent',
+  async ({ data, id }: any, { rejectWithValue }) => {
+    try {
+      const response = await api.patch(`student/update/${id}`, data)
+      return response.data
+    } catch (err: any) {
+      if (err.response) {
+        return rejectWithValue(err.response.data)
+      }
+      return rejectWithValue(err.message)
     }
-    return rejectWithValue(err.message)
   }
-})
+)
 
 export const deleteStudent = createAsyncThunk('students/deleteStudent', async (pk: number | any) => {
   return (await api.delete(`student/destroy/${pk}/`)).data
@@ -67,21 +67,21 @@ export const searchStudent = createAsyncThunk('students/searchStudent', async (s
 const initialState: IStudentState = {
   openEdit: null,
   groups: [],
-  studentDetailLoading:false,
-  comments:[],
-  studentGroups:[],
-  studentId:null,
+  studentDetailLoading: false,
+  comments: [],
+  studentGroups: [],
+  studentId: null,
   students: [],
   total_debts: 0,
-  groupsChecklist:[],
+  groupsChecklist: [],
   studentsCount: 0,
   studentData: null,
-  isGettingStudentsGroups:false,
+  isGettingStudentsGroups: false,
   isLoading: false,
-  queryParams: { status: 'active', is_debtor: '', group_status: '', offset: '0',teacher:'' },
+  queryParams: { status: 'active', is_debtor: '', group_status: '', offset: '0', teacher: '' },
   payments: [],
   global_pay: false,
-  openLeadModal: null,
+  openLeadModal: null
 }
 
 export const studentsSlice = createSlice({
@@ -141,7 +141,7 @@ export const studentsSlice = createSlice({
         state.studentData = action.payload
         state.studentDetailLoading = false
       })
-      
+
       .addCase(fetchStudentPayment.pending, state => {
         state.isLoading = true
       })
@@ -165,7 +165,16 @@ export const studentsSlice = createSlice({
   }
 })
 
-export const {setGroupChecklist, setOpenEdit,setIsGettingStudentGroups,setOpenLeadModal,setStudentId, setStudentData, updateStudentParams, clearStudentParams, setGlobalPay } =
-  studentsSlice.actions
+export const {
+  setGroupChecklist,
+  setOpenEdit,
+  setIsGettingStudentGroups,
+  setOpenLeadModal,
+  setStudentId,
+  setStudentData,
+  updateStudentParams,
+  clearStudentParams,
+  setGlobalPay
+} = studentsSlice.actions
 
 export default studentsSlice.reducer

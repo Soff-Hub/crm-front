@@ -192,6 +192,7 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
           <InputLabel size='small' id='demo-simple-select-outlined-label'>
             {t('Maktab')}
           </InputLabel>
+
           <Select
             onClick={() => setKey('school')}
             size='small'

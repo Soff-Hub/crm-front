@@ -61,10 +61,9 @@ export const deleteGroups = createAsyncThunk(
   }
 )
 
-export const fetchGroups = createAsyncThunk('groups/fetchGroups',  async (params?: IQueryParams | undefined) => {
+export const fetchGroups = createAsyncThunk('groups/fetchGroups', async (params?: IQueryParams | undefined) => {
   return (await api.get(ceoConfigs.groups, { params })).data
-}
-)
+})
 
 export const fetchGroupChecklist = createAsyncThunk('groups/fetchGroupChecklist', async () => {
   const resp = await api.get('common/group-check-list/')
@@ -88,10 +87,10 @@ const currentDay: string = `${new Date()}`.split(' ')[0].toLocaleLowerCase()
 
 const initialState: IGroupsState = {
   groups: null,
-  teachersData:null,
+  teachersData: null,
   groupChecklist: null,
   groupData: null,
-  roomsData:null,
+  roomsData: null,
   courses: null,
   teachers: null,
   teacherSalaries: null,
@@ -102,7 +101,7 @@ const initialState: IGroupsState = {
   groupCount: 0,
   isTableLoading: false,
   isOpenEdit: false,
-  isChangeBranchEdit:false,
+  isChangeBranchEdit: false,
   isOpenAddGroup: false,
   isDeleting: false,
   isUpdatingDashboard: false,
@@ -112,13 +111,11 @@ const initialState: IGroupsState = {
     page: 1,
     limit: 10
   },
-  
+
   queryParams: {
     status: 'active',
-    offset:'0',
-    is_recovery: false,
-
-
+    offset: '0',
+    is_recovery: false
   },
   formParams: {
     day_of_week:
