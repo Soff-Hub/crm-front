@@ -68,6 +68,7 @@ const AuthProvider = ({ children }: Props) => {
             fullName: response.data.first_name,
             username: response.data.phone,
             password: 'null',
+            currentRole: response.data.roles[0],
             avatar: response.data.image,
             payment_page: response.data.payment_page,
             role: response.data.roles.filter((el: any) => el.exists).map((el: any) => el.name?.toLowerCase()),
