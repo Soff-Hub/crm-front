@@ -79,13 +79,14 @@ const StudentsFilter = ({ isMobile }: StudentsFilterProps) => {
     debounce((search: string) => {
       dispatch(updateStudentParams({ search }))
     }, 500),
-    [dispatch]
+    [search]
   )
 
   useEffect(() => {
     handleSearch(search)
   }, [search, handleSearch])
-  async function handleFilter(key: string, value: string | number | null) {
+
+    async function handleFilter(key: string, value: string | number | null) {
     dispatch(updateStudentParams({ [key]: value }))
     if (key === 'debt_date') {
       setIsActive(false)
