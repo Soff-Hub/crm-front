@@ -28,11 +28,12 @@ const AppCalendar = () => {
     await Promise.all([dispatch(fetchStatistics()), dispatch(fetchLessons({ queryWeeks: weeks, interval: interval }))])
   }
 
+
   useEffect(() => {
     pageLoad()
   }, [])
 
-  return user?.role.length === 1 && user?.role.includes('teacher') ? <MyGroups /> : <DashboardPage />
+  return user?.role.length && user?.role.includes('teacher') ? <MyGroups /> : <DashboardPage />
 }
 
 export default AppCalendar
