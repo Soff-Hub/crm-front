@@ -391,12 +391,7 @@ const UserViewSecurity = () => {
                   {t('Tahrirlash')}
                 </MenuItem>
               </Menu>
-              <StudentPaymentForm
-                student_id={query.id}
-                group={group_data?.group_id}
-                openEdit={openEdit}
-                setOpenEdit={setOpenEdit}
-              />
+           
 
               <Link
                 href={`/groups/view/security/?id=${group.group_id}&month=${getMontName(null)}`}
@@ -684,6 +679,12 @@ const UserViewSecurity = () => {
       {/*<AddNote id={query.id} modalRef={modalRef} setModalRef={setModalRef} />
       <SentSMS smsTemps={smsTemps} id={query.id} modalRef={modalRef} setModalRef={setModalRef} />*/}
       <ExportDetailStudent id={group_data?.id} modalRef={modalRef} setModalRef={setModalRef} />
+         <StudentPaymentForm
+                student_id={query.id}
+                group={group_data?.group_id}
+                openEdit={openEdit}
+                setOpenEdit={setOpenEdit}
+              />
     </Box>
   )
 }
