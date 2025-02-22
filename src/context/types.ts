@@ -13,11 +13,12 @@ export type RegisterParams = {
 }
 
 export type UserDataType = {
-  phone?:number,
+  phone?: number
   id?: number
-  last_login?:string,
-  gpa?:number,
-  role: any,
+  last_login?: string
+  gpa?: number
+  role: any
+  currentRole: string
   fullName?: string
   username?: string
   password?: string
@@ -25,8 +26,8 @@ export type UserDataType = {
   payment_page?: boolean
   balance?: number
   branches?: any[]
-  active_branch?: any,
-  qr_code?:string
+  active_branch?: any
+  qr_code?: string
 }
 
 export type AuthValuesType = {

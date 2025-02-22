@@ -45,8 +45,10 @@ export default function DashboardPage() {
       </Box>
 
       <DashboardStats />
+
       <Calendar />
-      {(user?.role.includes('ceo') || user?.role.includes('watcher')) && <DashboardNumbers />}
+
+      {(user?.currentRole === 'ceo' || user?.currentRole === 'watcher') && <DashboardNumbers />}
     </>
   )
 }

@@ -113,7 +113,7 @@ const UserDropdown = (props: Props) => {
   useEffect(() => {
     setUser((prevUser: UserDataType) => ({
       ...prevUser,
-      role: role ? role : prevUser.role
+      currentRole: role || prevUser.role[0]
     }))
   }, [role])
 

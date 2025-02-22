@@ -33,7 +33,7 @@ const AppCalendar = () => {
     pageLoad()
   }, [])
 
-  return user?.role.length && user?.role.includes('teacher') ? <MyGroups /> : <DashboardPage />
+  return user?.currentRole === 'teacher' ? <MyGroups /> : <DashboardPage />
 }
 
 export default AppCalendar

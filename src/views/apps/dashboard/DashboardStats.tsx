@@ -82,6 +82,7 @@ export default function DashboardStats() {
             </Box>
           ))
         : ''}
+
       {stats && !isStatsLoading
         ? stats?.payment_approaching
           ? statsData.map((_, index) => (
