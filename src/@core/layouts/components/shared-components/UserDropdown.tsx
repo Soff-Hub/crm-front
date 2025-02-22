@@ -113,7 +113,7 @@ const UserDropdown = (props: Props) => {
   useEffect(() => {
     setUser((prevUser: UserDataType) => ({
       ...prevUser,
-      currentRole: role || prevUser.role[0]
+      currentRole: localStorage.getItem('currentRole') || role || prevUser.role[0]
     }))
   }, [role])
 
@@ -124,6 +124,10 @@ const UserDropdown = (props: Props) => {
   }
   const handleRole = (role: string) => {
     setRole(role)
+    if (role == 'teacher') {
+      router.push('dashboard')
+    }
+    localStorage.setItem('currentRole', role)
     setAnchorEl(null)
   }
 
@@ -172,10 +176,10 @@ const UserDropdown = (props: Props) => {
                       <Typography
                         variant='body2'
                         sx={{
-                          textDecoration: role === item ? 'underline' : '',
+                          textDecoration: item === localStorage.getItem('currentRole') ? 'underline' : 'none',
                           cursor: 'pointer',
                           fontSize: '0.8rem',
-                          color: role === item ? 'text.primary' : 'text.disabled',
+                          color: localStorage.getItem('currentRole') === item ? 'text.primary' : 'text.disabled',
                           '&:hover': {
                             color: 'text.primary',
                             textDecoration: 'underline'
