@@ -117,8 +117,6 @@ const UserDropdown = (props: Props) => {
     }))
   }, [role])
 
-  console.log(user)
-
   const handleLogout = () => {
     logout()
     dispatch(setRoles([]))
