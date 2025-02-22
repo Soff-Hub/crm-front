@@ -37,7 +37,7 @@ export default function StudentPaymentForm({ openEdit, setOpenEdit, student_id, 
   const [showWarning, setShowWarning] = useState<boolean>(false)
   const { studentsQueryParams } = useAppSelector(state => state.groupDetails)
   const { t } = useTranslation()
-  const { studentData,groupsChecklist } = useAppSelector(state => state.students)
+  const { studentData, groupsChecklist } = useAppSelector(state => state.students)
   const userData: any = { ...studentData }
   const { getPaymentMethod, paymentMethods, createPayment } = usePayment()
   const { query } = useRouter()
@@ -51,6 +51,7 @@ export default function StudentPaymentForm({ openEdit, setOpenEdit, student_id, 
     payment_date: Yup.string().required('Tanlash majburiy')
   })
 
+
   const initialValues = {
     payment_type: '',
     group: ``,
@@ -59,7 +60,7 @@ export default function StudentPaymentForm({ openEdit, setOpenEdit, student_id, 
     payment_date: today
   }
 
-  const formik: any = useFormik({
+  const formik = useFormik({
     initialValues,
     validationSchema,
     onSubmit: async values => {
@@ -99,13 +100,12 @@ export default function StudentPaymentForm({ openEdit, setOpenEdit, student_id, 
   }
   const handleConfirmCancel = () => {
     setShowWarning(false)
+    formik.resetForm()
   }
 
   const handleDismissWarning = () => {
     setShowWarning(false)
   }
-
-
 
   useEffect(() => {
     if (studentData) {
@@ -125,9 +125,6 @@ export default function StudentPaymentForm({ openEdit, setOpenEdit, student_id, 
       getPaymentMethod()
     }
   }, [openEdit])
-
-  
- 
 
   return (
     <div>
@@ -202,7 +199,7 @@ export default function StudentPaymentForm({ openEdit, setOpenEdit, student_id, 
               >
                 {groupsChecklist?.map((group: any) => (
                   <MenuItem key={group.id} value={group.id}>
-                    {`${group.name + (` , ${group?.total_payments||'0'} so'm`)}`}
+                    {`${group.name + ` , ${group?.total_payments || '0'} so'm`}`}
                   </MenuItem>
                 ))}
               </Select>
@@ -286,6 +283,15 @@ export default function StudentPaymentForm({ openEdit, setOpenEdit, student_id, 
           </Typography>
         </DialogContent>
         <DialogActions sx={{ justifyContent: 'center' }}>
+          <Button
+            variant='contained'
+            color='primary'
+            onClick={() => {
+              setOpenEdit('payment'), setShowWarning(false)
+            }}
+          >
+            {t('Ortga qaytish')}
+          </Button>
           <Button variant='contained' color='error' onClick={handleConfirmCancel}>
             {t('Bekor qilish')}
           </Button>

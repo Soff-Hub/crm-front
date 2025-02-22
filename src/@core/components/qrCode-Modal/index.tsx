@@ -1,4 +1,4 @@
-import { Dialog, DialogContent, DialogTitle, TextField, Tooltip } from '@mui/material'
+import { Dialog, DialogContent, DialogTitle, TextField, Tooltip, Typography } from '@mui/material'
 import toast from 'react-hot-toast'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -8,70 +8,54 @@ import { useAppSelector } from 'src/store'
 import { toggleQrCodeModal } from 'src/store/apps/page'
 import { Icon } from '@iconify/react'
 import useResponsive from 'src/@core/hooks/useResponsive'
+import { CheckOutlined } from '@mui/icons-material'
 
 const QrCodeModal = () => {
   const { isQrCodeModalOpen } = useAppSelector(state => state.page)
   const dispatch = useDispatch()
   const { t } = useTranslation()
-  const [studentId, setStudentId] = useState('')
-  const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null)
   const { isMobile } = useResponsive()
+
+  const [studentId, setStudentId] = useState('')
+  const [errorText, setErrorText] = useState('')
+  const [userData, setUserData] = useState<any | null>(null)
 
   const handleClose = () => {
     dispatch(toggleQrCodeModal(false))
     setStudentId('')
-    if (timeoutId) clearTimeout(timeoutId)
+    setErrorText('')
+    setUserData(null)
   }
 
   const handleSendQrCode = async (id: string) => {
     if (!id) return
     try {
-      const res = await api
-        .post(`common/attendance/by-qr-code/${id}/`)
-        .then(res => {
-          if (res.status === 200) {
-            toast.success('Muvaffaqiyatli', {
-              style: {
-                zIndex: 999999999
-              }
-            })
-            setStudentId('')
-          }
-        })
-        .catch(err => {
-          console.error(err)
-          if (err.response.status == 404) {
-            toast.error("Ma'lumot topilmadi", {
-              style: {
-                zIndex: 999999999
-              }
-            })
-          } else {
-            toast.error(err.response.data.msg)
-          }
-          setStudentId('')
-        })
-    } catch (err) {
-      throw new Error("Ma'lumot topilmadi")
+      const res = await api.post(`common/attendance/by-qr-code/${id}/`)
+
+      if (res.status === 200) {
+        setUserData(res.data) // Foydalanuvchi ma'lumotlarini saqlash
+      
+
+        setTimeout(() => setUserData(null), 2000)
+
+        setTimeout(() => setStudentId(''), 2000)
+        setErrorText('')
+      }
+    } catch (err: any) {
+      console.error(err)
+      if (err.response?.status === 404) {
+        setErrorText("Ma'lumot topilmadi")
+      } else {
+        setErrorText(err.response?.data?.msg || 'Bu shaxs topilmadi')
+      }
+      setTimeout(() => setStudentId(''), 2000)
+      setTimeout(() => setErrorText(''), 2000)
     }
   }
 
   const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value
-    setStudentId(value)
-    if (timeoutId) clearTimeout(timeoutId)
-
-    if (value.length) {
-      const newTimeoutId = setTimeout(() => handleSendQrCode(value), 2000)
-      setTimeoutId(newTimeoutId)
-    }
-  }
-
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      if (timeoutId) clearTimeout(timeoutId)
-      handleSendQrCode(studentId)
-    }
+    setStudentId(e.target.value)
+    handleSendQrCode(e.target.value)
   }
 
   return (
@@ -101,9 +85,26 @@ const QrCodeModal = () => {
           value={studentId}
           label={t('Qr code ')}
           onChange={handleInput}
-          onKeyDown={handleKeyDown}
           placeholder='Scan or enter QR code'
         />
+
+        {errorText && (
+          <Typography color={'red'} textAlign={'center'} pt={2} fontSize={14}>
+            {errorText}
+          </Typography>
+        )}
+
+        {userData && (
+          <div className='mt-4 text-center'>
+            <Typography fontSize={14}>
+              <b>FIO:</b> {userData.first_name}
+            </Typography>
+            <Typography fontSize={14}>
+              <b>Telefon:</b> {userData.phone}
+            </Typography>
+            <CheckOutlined color='success'/>
+          </div>
+        )}
       </DialogContent>
     </Dialog>
   )
