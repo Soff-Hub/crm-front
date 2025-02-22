@@ -62,10 +62,8 @@ export default function GroupDetails() {
       .get(`meets/google/login/`)
       .then(res => {
         if (res.data.url) {
-          window.location.assign(res.data.url)
-          // console.log(window.location);
-
-          // dispatch(setMeetLink(res.data.url))
+          router.push(res.data.url)
+       
         }
       })
       .catch(err => {

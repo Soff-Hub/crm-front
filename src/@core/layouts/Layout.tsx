@@ -6,6 +6,7 @@ import api from '../utils/api'
 import { useAppDispatch } from 'src/store'
 import { toggleBotStatus, setSoffBotText, toggleModal } from 'src/store/apps/page'
 import { AuthContext } from 'src/context/AuthContext'
+import { useRouter } from 'next/router'
 
 const Layout = (props: LayoutProps) => {
   const { hidden, children, settings, saveSettings } = props
@@ -13,7 +14,7 @@ const Layout = (props: LayoutProps) => {
   let currentDate = new Date().toISOString()
   const { user } = useContext(AuthContext)
   const isCollapsed = useRef(settings.navCollapsed)
-
+  const router = useRouter()
   const getYearMonthDay = (timestamp: any) => {
     if (timestamp) {
       const [date] = timestamp.split('T')
@@ -26,7 +27,7 @@ const Layout = (props: LayoutProps) => {
 
   useEffect(() => {
     if (formattedCurrentDate !== formattedLastLogin) {
-      if (window.location.pathname !== '/c-panel' || !user?.role.includes('student')) {
+      if (router.pathname !== '/c-panel' || !user?.role.includes('student')) {
         dispatch(toggleModal(true))
       }
     }

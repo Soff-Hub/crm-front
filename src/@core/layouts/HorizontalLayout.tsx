@@ -18,6 +18,7 @@ import QrCodeModal from '../components/qrCode-Modal'
 import { useContext } from 'react'
 import { AuthContext } from 'src/context/AuthContext'
 import DraggableIcon from 'src/pages/soffBotIcon'
+import { useRouter } from 'next/router'
 
 const HorizontalLayoutWrapper = styled(Box)({
   height: '100%',
@@ -69,6 +70,7 @@ const HorizontalLayout = (props: LayoutProps) => {
     horizontalLayoutProps
   } = props
 
+  const router = useRouter()
   const { skin, appBar, navHidden, appBarBlur, contentWidth } = settings
   const appBarProps = horizontalLayoutProps?.appBar?.componentProps
   const userNavMenuContent = horizontalLayoutProps?.navMenu?.content
@@ -189,7 +191,7 @@ const HorizontalLayout = (props: LayoutProps) => {
                         />
                       </Box>
                       {(user?.role.includes('admin') || user?.role.includes('ceo')) &&
-                        !window.location.pathname.includes('/c-panel') && <StaticsModal />}
+                        !router.pathname.includes('/c-panel') && <StaticsModal />}
 
                       <QrCodeModal />
                     </>
@@ -218,8 +220,9 @@ const HorizontalLayout = (props: LayoutProps) => {
 
         {themeConfig.disableCustomizer || hidden ? null : (
           <>
-            {(user?.role.includes('ceo') || user?.role.includes('admin')) &&
-              !window.location.pathname.includes('/c-panel') && <DraggableIcon />}
+            {(user?.role.includes('ceo') || user?.role.includes('admin')) && !router.pathname.includes('/c-panel') && (
+              <DraggableIcon />
+            )}
 
             <Customizer />
           </>

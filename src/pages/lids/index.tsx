@@ -2,6 +2,7 @@
 // ** MUI Imports
 import { Box, Skeleton } from '@mui/material'
 import dynamic from 'next/dynamic'
+import { useRouter } from 'next/router'
 import { useContext, useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { useTranslation } from 'react-i18next'
@@ -29,7 +30,7 @@ const Lids = () => {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
   const [data, setData] = useState(leadData)
-
+  const router = useRouter()
 
   useEffect(() => {
     if (
@@ -38,7 +39,7 @@ const Lids = () => {
       !user?.role.includes('watcher') &&
       !user?.role.includes('marketolog')
     ) {
-      window.location.assign('/')
+      router.push('/')
       toast.error('Sahifaga kirish huquqingiz yoq!')
     }
     dispatch(fetchSmsList())
