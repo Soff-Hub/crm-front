@@ -38,7 +38,7 @@ const AppBarContent = (props: Props) => {
   const { user } = useContext(AuthContext)
   const [search, setSearch] = useState('')
   const [searchLoading, setSearchLoading] = useState(false)
-  const debouncedSearch = useDebounce(search, 10000)
+  const debouncedSearch = useDebounce(search, 500)
   const { isMobile } = useResponsive()
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
@@ -47,14 +47,14 @@ const AppBarContent = (props: Props) => {
 
   const [employees, setEmployees] = useState<any>([])
 
-  const renderRoleBasedLink = (role: string, id: string, role_id: string) => {
-    dispatch(updateQueryParams({ role: role_id }))
+  const renderRoleBasedLink = (option: any) => {
+    dispatch(updateQueryParams({ role: option.role_id }))
 
-    switch (role) {
+    switch (option.role) {
       case 'STUDENT':
-        return `/students/view/security?student=${id}`
+        return `/students/view/security?student=${option.id}`
       case 'TEACHER':
-        return `/mentors/view/security?id=${id}`
+        return `/mentors/view/security?id=${option.id}`
       case 'ADMIN':
         return `/settings/ceo/users`
       case 'CEO':
@@ -63,18 +63,29 @@ const AppBarContent = (props: Props) => {
         return `/settings/ceo/users`
     }
   }
-
   async function handleSearch(query: string) {
     if (!query) {
       setEmployees([])
+      setSearchLoading(false)
       return
     }
-    setSearchLoading(true)
-    const res = await api.get(`${ceoConfigs.employee_checklist}?search=${query}`)
-    setEmployees(res.data)
-    setSearchLoading(false)
+
+    try {
+      const res = await api.get(`${ceoConfigs.employee_checklist}?search=${query}`)
+      setEmployees(res.data)
+    } catch (error) {
+      console.error(error)
+      setEmployees([])
+    } finally {
+      setSearchLoading(false)
+    }
   }
 
+  useEffect(() => {
+    if (search) {
+      setSearchLoading(true)
+    }
+  }, [search])
   useEffect(() => {
     handleSearch(debouncedSearch)
   }, [debouncedSearch])
@@ -105,23 +116,28 @@ const AppBarContent = (props: Props) => {
               <>
                 <Autocomplete
                   open={open}
-                  onOpen={() => setOpen(search !== '' && true)}
+                  onOpen={() => setOpen(search.length !== 0)}
                   sx={{ paddingX: 10 }}
                   disablePortal
-                  onClose={() => setOpen(false)}
-                  loading={searchLoading}
-                  loadingText={'Yuklanmoqda..'}
+                  onClose={() => {
+                    if (search === '') setOpen(false)
+                    setEmployees([])
+                    setOpen(false)
+                  }}
                   options={employees || []}
                   fullWidth
-                  noOptionsText="Ma'lumot yo'q.."
                   size='small'
-                  getOptionLabel={(option: any) => option.first_name}
+                  loadingText={'Yuklanmoqda..'}
+                  loading={searchLoading}
+                  noOptionsText={search === '' ? "O'quvchi yoki Teacher Qidirish" : "Malumot yo'q"}
+                  getOptionLabel={(option: any) => option?.first_name || ''}
+                  filterOptions={options => options}
                   renderOption={(props, option: any) => (
                     <li {...props} key={option.id}>
                       <Link
                         style={{ textDecoration: 'none' }}
                         onClick={() => dispatch(setStudentId(option.id))}
-                        href={renderRoleBasedLink(option.role, option.id, option.role_id)}
+                        href={renderRoleBasedLink(option)}
                       >
                         <Icon
                           icon={
@@ -193,7 +209,7 @@ const AppBarContent = (props: Props) => {
               <Link
                 style={{ textDecoration: 'none' }}
                 onClick={() => dispatch(setStudentId(option.id))}
-                href={renderRoleBasedLink(option.role, option.id, option.role_id)}
+                href={renderRoleBasedLink(option)}
               >
                 <Icon
                   icon={

@@ -61,10 +61,6 @@ const AppBarContent = (props: Props) => {
   }
 
   async function handleSearch(query: string) {
-    if (search) {
-      setSearchLoading(true)
-    }
-
     if (!query) {
       setEmployees([])
       setSearchLoading(false)
@@ -83,7 +79,11 @@ const AppBarContent = (props: Props) => {
   }
 
   useEffect(() => {
-    setSearchLoading(true)
+    if (search) {
+      setSearchLoading(true)
+    }
+  }, [search])
+  useEffect(() => {
     handleSearch(debouncedSearch)
   }, [debouncedSearch])
 
@@ -178,7 +178,6 @@ const AppBarContent = (props: Props) => {
       <NotificationDropdown settings={settings} />
       <UserDropdown settings={settings} />
       <GlobalPaymentModal />
-      
     </Box>
   )
 }
