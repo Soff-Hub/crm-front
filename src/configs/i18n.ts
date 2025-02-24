@@ -4,19 +4,12 @@ import { initReactI18next } from 'react-i18next'
 import LanguageDetector from 'i18next-browser-languagedetector'
 
 i18n
-
-  // Enables the i18next backend
   .use(Backend)
-
-  // Enable automatic language detection
   .use(LanguageDetector)
-
-  // Enables the hook initialization module
   .use(initReactI18next)
   .init({
     lng: 'uz',
     backend: {
-      /* translation file path */
       loadPath: '/locales/{{lng}}.json'
     },
     fallbackLng: 'uz',
