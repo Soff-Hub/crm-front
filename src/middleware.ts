@@ -7,7 +7,9 @@ export function middleware(req: NextRequest) {
   const roles: string[] = rolesCookie ? JSON.parse(rolesCookie) : []
 
   const studentRole: any = roles.find((role: any) => role.name === 'STUDENT')
-
+  if (window.location.hostname.includes('c-panel')) {
+    return NextResponse.redirect(new URL('/c-panel', req.url))
+  }
   if (!token) {
     return NextResponse.redirect(new URL('/login', req.url))
   }
