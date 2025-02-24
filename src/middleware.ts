@@ -1,27 +1,46 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
+import { getValidSubdomain } from './@core/utils/getValidSubdomain'
+
+const PUBLIC_FILE = /\.(.*)$/
 
 export function middleware(req: NextRequest) {
   const token = req.cookies.get('token')
   const rolesCookie = req.cookies.get('roles')
-  const roles: string[] = rolesCookie ? JSON.parse(rolesCookie) : []
+  const roles: { id: number; name: string; exists: boolean }[] = rolesCookie ? JSON.parse(rolesCookie) : []
 
-  const studentRole: any = roles.find((role: any) => role.name === 'STUDENT')
-  const financeRole: any = roles.find((role: any) => role.name === 'CASHER')
+  const url = req.nextUrl.clone()
+
+  if (PUBLIC_FILE.test(url.pathname) || url.pathname.includes('_next')) return
+
+  const studentRole = roles.find(role => role.name === 'STUDENT' && role.exists)
+  const financeRole = roles.find(role => role.name === 'CASHER' && role.exists)
+  const dashboardRole = roles.some(role => ['ADMIN', 'TEACHER', 'CEO'].includes(role.name) && role.exists)
+
+  const host = req.headers.get('host')
+  const subdomain = getValidSubdomain(host)
 
   if (!token) {
     return NextResponse.redirect(new URL('/login', req.url))
   }
 
-  if (studentRole && studentRole.exists) {
+  if (subdomain === 'c-panel') {
+    return NextResponse.redirect(new URL('/c-panel', req.url))
+  }
+
+  if (studentRole) {
     return NextResponse.redirect(new URL('/student-profile', req.url))
   }
 
-  if (financeRole && studentRole.exists) {
+  if (financeRole) {
     return NextResponse.redirect(new URL('/finance', req.url))
   }
 
-  return NextResponse.redirect(new URL('/dashboard', req.url))
+  if (dashboardRole) {
+    return NextResponse.redirect(new URL('/dashboard', req.url))
+  }
+
+  return NextResponse.rewrite(url)
 }
 
 export const config = {
