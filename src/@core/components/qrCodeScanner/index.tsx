@@ -1,21 +1,20 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import toast from 'react-hot-toast'
 import api from 'src/@core/utils/api'
 
 export default function QRCodeScanner() {
-  const [scannedCode, setScannedCode] = useState('') // Scanned QR code
-  const [isProcessing, setIsProcessing] = useState(false) // Indicate processing status
+  const [isProcessing, setIsProcessing] = useState(false)
+  const scannedCodeRef = useRef('')
+  const debounceTimer = useRef<NodeJS.Timeout | null>(null)
 
   const handleSendQrCode = async (code: string) => {
-    if (!code) return
+    if (!code || isProcessing) return
 
     try {
       setIsProcessing(true)
       const res = await api.post(`common/attendance/by-qr-code/${code}/`)
       if (res.status === 200) {
-        toast.success('Muvaffaqiyatli', {
-          style: { zIndex: 999999999 }
-        })
+        toast.success('Muvaffaqiyatli', { style: { zIndex: 999999999 } })
       }
     } catch (err: any) {
       console.error(err)
@@ -25,29 +24,27 @@ export default function QRCodeScanner() {
         toast.error(err.response?.data?.msg || 'Xatolik yuz berdi')
       }
     } finally {
-      setScannedCode('') // Reset scanned code after processing
+      scannedCodeRef.current = ''
       setIsProcessing(false)
     }
   }
 
   useEffect(() => {
-    let timer: NodeJS.Timeout
-
     const handleKeyPress = (event: KeyboardEvent) => {
-      if (isProcessing) return // Avoid processing if already handling a code
+      if (isProcessing) return
+
       const key = event.key
-
       if (key === 'Enter') {
-        // Process scanned code
-        handleSendQrCode(scannedCode)
+        handleSendQrCode(scannedCodeRef.current)
       } else {
-        // Add the key to the scanned code
-        setScannedCode(prev => prev + key)
+        scannedCodeRef.current += key
 
-        // Automatically process the code after 500ms of inactivity
-        clearTimeout(timer)
-        timer = setTimeout(() => {
-          handleSendQrCode(scannedCode)
+        if (debounceTimer.current) {
+          clearTimeout(debounceTimer.current)
+        }
+
+        debounceTimer.current = setTimeout(() => {
+          handleSendQrCode(scannedCodeRef.current)
         }, 500)
       }
     }
@@ -56,19 +53,20 @@ export default function QRCodeScanner() {
 
     return () => {
       window.removeEventListener('keypress', handleKeyPress)
-      clearTimeout(timer) // Clear timer on component unmount
+      if (debounceTimer.current) {
+        clearTimeout(debounceTimer.current)
+      }
     }
-  }, [scannedCode, isProcessing])
+  }, [isProcessing])
 
   return (
     <div>
-      {/* Optional UI for debugging or status */}
       {/* <h1>QR Code Scanner</h1>
       <p>
         <strong>Status:</strong> {isProcessing ? 'Processing...' : 'Waiting for input...'}
       </p>
       <p>
-        <strong>Scanned Code:</strong> {scannedCode || 'None'}
+        <strong>Scanned Code:</strong> {scannedCodeRef.current || 'None'}
       </p> */}
     </div>
   )

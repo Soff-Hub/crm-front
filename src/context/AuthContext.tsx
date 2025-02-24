@@ -2,6 +2,7 @@ import { createContext, useEffect, useState, ReactNode } from 'react'
 
 import { useRouter } from 'next/router'
 
+import Cookie from 'js-cookie'
 import axios from 'axios'
 
 import authConfig from 'src/configs/auth'
@@ -79,13 +80,11 @@ const AuthProvider = ({ children }: Props) => {
           })
         })
         .catch(() => {
-          localStorage.removeItem('userData')
-          localStorage.removeItem('refreshToken')
-          localStorage.removeItem('accessToken')
+          localStorage.clear()
           setUser(null)
           setLoading(false)
           if (authConfig.onTokenExpiration === 'logout' && !router.pathname.includes('login')) {
-            router.replace('/login')
+            router.push('/login')
           }
         })
 
@@ -116,6 +115,8 @@ const AuthProvider = ({ children }: Props) => {
       .post(authConfig.loginEndpoint, params)
       .then(async response => {
         if (!params.rememberMe) {
+          Cookie.set('token', response.data.tokens.access)
+          Cookie.set('roles', JSON.stringify(response.data.roles))
           window.localStorage.setItem(authConfig.storageTokenKeyName, response.data.tokens.access)
           window.localStorage.setItem('userData', JSON.stringify({ ...response.data, role: 'admin', tokens: null }))
         }
@@ -170,6 +171,7 @@ const AuthProvider = ({ children }: Props) => {
     setUser(null)
     localStorage.clear()
     sessionStorage.clear()
+    Object.keys(Cookie.get()).forEach(cookie => Cookie.remove(cookie))
     router.push('/login')
   }
 
