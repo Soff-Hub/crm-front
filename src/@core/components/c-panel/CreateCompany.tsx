@@ -53,7 +53,6 @@ export default function CreateCompany({ slug }: Props) {
       Router.push('/c-panel')
     } catch (err: any) {
       showResponseError(err?.response?.data, setError)
-      console.log(err?.response?.data)
     } finally {
       setLoading(false)
     }
