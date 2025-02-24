@@ -26,7 +26,6 @@ import UserIcon from 'src/layouts/components/UserIcon'
 import { useAppDispatch, useAppSelector } from 'src/store'
 import { createClientPayment, fetchCRMPayments, handleOpenClientModal } from 'src/store/apps/c-panel'
 import * as Yup from 'yup'
-// import BackupIcon from '@mui/icons-material/Backup';
 
 const VisuallyHiddenInput = styled('input')({
   clip: 'rect(0 0 0 0)',
