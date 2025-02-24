@@ -1,27 +1,18 @@
-// ** MUI Imports
+'use client'
+
 import Card from '@mui/material/Card'
-import { useTheme } from '@mui/material/styles'
-
-// ** Third Party Imports
 import { ApexOptions } from 'apexcharts'
-
-// ** Custom Components Imports
 import ReactApexcharts from 'src/@core/components/react-apexcharts'
-
-// ** Util Import
 import { formatCurrency } from 'src/@core/utils/format-currency'
 import { Box, Skeleton, Typography } from '@mui/material'
 import { useTranslation } from 'react-i18next'
 import EmptyContent from 'src/@core/components/empty-content'
 import { useAppSelector } from 'src/store'
 import useResponsive from 'src/@core/hooks/useResponsive'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 const CardWidgetsWeeklyOverview = () => {
-  // ** Hook
   const { isMobile } = useResponsive()
-
-  const theme = useTheme()
   const { t } = useTranslation()
 
   const { all_numbers, numbersLoad: loading } = useAppSelector(state => state.finance)
@@ -135,40 +126,33 @@ const CardWidgetsWeeklyOverview = () => {
       enabled: true
     }
   }
-  const [datas, setData] = useState<any>({
-    totalPaymentsReceived: all_numbers?.plans.done_amount ?? 0,
-    outstandingDebt: (all_numbers?.plans.planned_amount ?? 0) - (all_numbers?.plans.done_amount ?? 0),
-    totalExpected: all_numbers?.plans.planned_amount ?? 0,
-    percentage: all_numbers?.plans.percentage ?? 0
-  })
 
   return (
-    <>
-      <Card sx={{ p: '20px' }}>
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          {loading ? (
-            <Skeleton variant='text' width={'200px'} />
-          ) : (
-            <Typography sx={{ fontSize: '22px', fontFamily: 'Inter' }}>
-              {all_numbers?.year} {t('yildagi aylanmalar')}
-            </Typography>
-          )}
-        </Box>
-        <Box>
-          {loading ? (
-            <Box sx={{ display: 'flex', alignItems: 'flex-end', gap: '20px' }}>
-              {[10, 12, 7, 20, 30, 13, 45, 33, 12, 41, 18, 9, 21].map(el => (
-                <Skeleton key={el} variant='rounded' width={'50px'} height={el * 5} />
-              ))}
-            </Box>
-          ) : all_numbers ? (
-            <ReactApexcharts type='area' height={208} series={data} options={options} />
-          ) : (
-            <EmptyContent />
-          )}
-        </Box>
-      </Card>
-    </>
+    <Card sx={{ p: '20px' }}>
+      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+        {loading ? (
+          <Skeleton variant='text' width={'200px'} />
+        ) : (
+          <Typography sx={{ fontSize: '22px', fontFamily: 'Inter' }}>
+            {all_numbers?.year} {t('yildagi aylanmalar')}
+          </Typography>
+        )}
+      </Box>
+
+      <Box>
+        {loading ? (
+          <Box sx={{ display: 'flex', alignItems: 'flex-end', gap: '20px' }}>
+            {[10, 12, 7, 20, 30, 13, 45, 33, 12, 41, 18, 9, 21].map((el, index) => (
+              <Skeleton key={`${el}-${index}`} variant='rounded' width={'50px'} height={el * 5} />
+            ))}
+          </Box>
+        ) : all_numbers ? (
+          <ReactApexcharts type='area' height={208} series={data} options={options} />
+        ) : (
+          <EmptyContent />
+        )}
+      </Box>
+    </Card>
   )
 }
 

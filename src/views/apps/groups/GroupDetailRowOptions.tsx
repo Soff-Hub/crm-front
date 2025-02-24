@@ -50,8 +50,6 @@ import AddNote from './view/ViewStudents/AddNote'
 import SentSMS from './view/ViewStudents/SentSMS'
 import ExportStudent from './view/ViewStudents/ExportStudent'
 import { getMontNumber } from 'src/@core/utils/gwt-month-name'
-import { useFormik } from 'formik'
-import * as Yup from 'yup'
 
 type Props = {
   id: number
@@ -76,8 +74,6 @@ export default function GroupDetailRowOptions({ id }: Props) {
   useEffect(() => {
     setStudent(students?.find(item => item.id == id))
   }, [])
-
-  console.log(student)
 
   const dispatch = useAppDispatch()
 
@@ -105,9 +101,6 @@ export default function GroupDetailRowOptions({ id }: Props) {
   const handleRowOptionsClick = (event: MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget)
   }
-  const handleRowOptionsClose = () => {
-    setAnchorEl(null)
-  }
 
   const handleLeft = async () => {
     if (student?.student?.balance < 0) {
@@ -134,7 +127,7 @@ export default function GroupDetailRowOptions({ id }: Props) {
         }
         dispatch(setGettingAttendance(false))
       } catch (err: any) {
-        console.log(err)
+        console.error(err)
         toast.error(err.response.data.msg)
         setLoading(false)
       }
@@ -156,7 +149,7 @@ export default function GroupDetailRowOptions({ id }: Props) {
     await api
       .get(`common/group-check-list/?student=${student?.student?.id}`)
       .then(res => dispatch(setGroupChecklist(res.data)))
-      .catch(error => console.log(error))
+      .catch(error => console.error(error))
   }
 
   async function submitDelete() {
@@ -170,7 +163,7 @@ export default function GroupDetailRowOptions({ id }: Props) {
       })
       .catch(err => {
         toast.error(err.response.data.msg || "O'quvchini o'chirib bo'lmadi")
-        console.log(err)
+        console.error(err)
       })
 
     dispatch(disablePage(false))

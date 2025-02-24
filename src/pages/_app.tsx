@@ -84,6 +84,7 @@ const App = ({ Component, emotionCache = clientSideEmotionCache, pageProps }: Ex
     <Provider store={store}>
       <CacheProvider value={emotionCache}>
         <MyHead />
+
         <AuthProvider>
           <DisabledProvider>
             <SettingsProvider {...(setConfig ? { pageSettings: setConfig() } : {})}>
