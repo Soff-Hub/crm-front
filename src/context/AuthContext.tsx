@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState, ReactNode } from 'react'
+import { createContext, useEffect, useState, ReactNode, useLayoutEffect } from 'react'
 
 import { useRouter } from 'next/router'
 
@@ -46,7 +46,6 @@ const AuthProvider = ({ children }: Props) => {
       i18n.changeLanguage(JSON.parse(settings)?.locale || 'uz')
 
       setLoading(true)
-
       await api
         .get(authConfig.meEndpoint, {
           headers: {
@@ -78,7 +77,8 @@ const AuthProvider = ({ children }: Props) => {
             qr_code: response.data.qr_code
           })
         })
-        .catch(() => {
+        .catch(error => {
+          console.error('Auth Error:', error)
           localStorage.clear()
           setUser(null)
           setLoading(false)
@@ -102,7 +102,11 @@ const AuthProvider = ({ children }: Props) => {
   }
 
   useEffect(() => {
-    initAuth()
+    const fetchAuth = async () => {
+      await initAuth()
+    }
+
+    fetchAuth()
   }, [])
 
   useEffect(() => {
@@ -138,11 +142,7 @@ const AuthProvider = ({ children }: Props) => {
 
           const returnUrl = router.query.returnUrl
 
-          const redirectURL = isMarketolog
-            ? '/lids'
-            : returnUrl && returnUrl !== '/'
-            ? returnUrl
-            : '/'
+          const redirectURL = isMarketolog ? '/lids' : returnUrl && returnUrl !== '/' ? returnUrl : '/'
           router.replace(redirectURL as string)
         } else {
           router.replace('/crm-payments')
