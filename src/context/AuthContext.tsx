@@ -140,9 +140,9 @@ const AuthProvider = ({ children }: Props) => {
 
           const redirectURL = isMarketolog
             ? '/lids'
-            : returnUrl && returnUrl !== '/dashboard'
+            : returnUrl && returnUrl !== '/'
             ? returnUrl
-            : '/dashboard'
+            : '/'
           router.replace(redirectURL as string)
         } else {
           router.replace('/crm-payments')
