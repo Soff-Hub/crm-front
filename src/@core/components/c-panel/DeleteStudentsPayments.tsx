@@ -61,7 +61,6 @@ export function StudentsPaymentsModal({
       })
       .catch((err: any) => {
         toast.error(err.response.data.msg)
-        console.log(err)
       })
 
     setSubmitting(false)

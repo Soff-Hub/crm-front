@@ -65,7 +65,6 @@ import {
         })
         .catch((err: any) => {
           toast.error(err.response?.data?.msg || "Xatolik yuz berdi")
-          console.log(err)
         })
   
       setSubmitting(false)

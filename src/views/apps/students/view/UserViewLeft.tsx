@@ -497,7 +497,6 @@ export const SendSMSModal = ({ handleEditClose, openEdit, setOpenEdit, userData,
       setIsActive(false)
       await dispatch(userData?.id)
     } catch (err: any) {
-      console.log(err)
 
       if (err.response.status) {
         setIsErrorText(err.response.data.message)
@@ -514,7 +513,6 @@ export const SendSMSModal = ({ handleEditClose, openEdit, setOpenEdit, userData,
       dispatch(fetchSmsListQuery(parent_id))
     }
   }, [parent_id])
-
   return (
     <Dialog
       open={openEdit === 'sms'}
@@ -524,7 +522,11 @@ export const SendSMSModal = ({ handleEditClose, openEdit, setOpenEdit, userData,
       aria-describedby='user-view-edit-description'
     >
       <DialogTitle id='user-view-edit' sx={{ textAlign: 'center', fontSize: '1.5rem !important' }}>
-        <Typography>{t(`Xabar (${`smslar soni:${usersData?.length}` || 'sms'})`)}</Typography>
+        {userData?.length ? (
+          <Typography>{t(`Xabar (${`smslar soni:${usersData?.length}` || 'sms'})`)}</Typography>
+        ) : (
+          <Typography>{t(`Xabar (sms)`)}</Typography>
+        )}
       </DialogTitle>
       <DialogContent>
         <form style={{ marginTop: 10 }} onSubmit={formik.handleSubmit}>

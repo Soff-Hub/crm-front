@@ -25,7 +25,6 @@ import GlobalPaymentModal from 'src/views/apps/students/GlobalPaymentModal'
 import { toggleQrCodeModal } from 'src/store/apps/page'
 import ceoConfigs from 'src/configs/ceo'
 import useDebounce from 'src/hooks/useDebounce'
-import QRCodeScanner from 'src/@core/components/qrCodeScanner'
 
 interface Props {
   hidden: boolean
@@ -221,7 +220,6 @@ const AppBarContent = (props: Props) => {
         />
       )}
       <GlobalPaymentModal />
-      <QRCodeScanner />
     </div>
   )
 }
