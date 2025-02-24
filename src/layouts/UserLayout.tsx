@@ -1,47 +1,26 @@
-// ** React Imports
-import { ReactNode, useContext } from 'react'
-
-// ** MUI Imports
+import { FC, PropsWithChildren, ReactNode, useContext } from 'react'
 import { Theme } from '@mui/material/styles'
 import useMediaQuery from '@mui/material/useMediaQuery'
-
-// ** Layout Imports
-// !Do not remove this Layout import
 import Layout from 'src/@core/layouts/Layout'
-
-// ** Navigation Imports
 import VerticalNavItems, { CPanelNavigation, StudentNavigation, TeacherNavigation } from 'src/navigation/vertical'
 import HorizontalNavItems from 'src/navigation/horizontal'
-
-// ** Component Import
-// Uncomment the below line (according to the layout type) when using server-side menu
-// import ServerSideVerticalNavItems from './components/vertical/ServerSideNavItems'
-// import ServerSideHorizontalNavItems from './components/horizontal/ServerSideNavItems'
-
 import VerticalAppBarContent from './components/vertical/AppBarContent'
 import HorizontalAppBarContent from './components/horizontal/AppBarContent'
-
-// ** Hook Import
 import { useSettings } from 'src/@core/hooks/useSettings'
 import { AuthContext } from 'src/context/AuthContext'
 import { useTranslation } from 'react-i18next'
 import { useRouter } from 'next/router'
-import { useAppDispatch } from 'src/store'
 
-interface Props {
-  children: ReactNode
+type Props = {
   contentHeightFixed?: boolean
 }
 
-const UserLayout = ({ children, contentHeightFixed }: Props) => {
-  // ** Hooks
+const UserLayout: FC<PropsWithChildren<Props>> = ({ children, contentHeightFixed }) => {
   const { settings, saveSettings } = useSettings()
   const { user } = useContext(AuthContext)
   const { t } = useTranslation()
-  const dispatch = useAppDispatch()
 
   const hidden = useMediaQuery((theme: Theme) => theme.breakpoints.down('lg'))
-
   const router = useRouter()
 
   if (hidden && settings.layout === 'horizontal') {
@@ -84,14 +63,11 @@ const UserLayout = ({ children, contentHeightFixed }: Props) => {
             navItems:
               router.pathname.split('/')?.[1] === 'c-panel'
                 ? CPanelNavigation(t)
-                : user?.currentRole === "teacher"
+                : user?.currentRole === 'teacher'
                 ? TeacherNavigation(t)
                 : user?.role.includes('student')
                 ? StudentNavigation(t)
                 : HorizontalNavItems(t)
-
-            // Uncomment the below line when using server-side menu in horizontal layout and comment the above line
-            // navItems: horizontalMenuItems
           },
           appBar: {
             content: () => <HorizontalAppBarContent hidden={hidden} settings={settings} saveSettings={saveSettings} />

@@ -154,7 +154,6 @@ export default function CompanyList() {
   ]
 
   const { push } = useRouter()
-  const [search, setSearch] = useState<string>('')
 
   const rowClick = (id: any) => {
     push(`/c-panel/company/${id}`)

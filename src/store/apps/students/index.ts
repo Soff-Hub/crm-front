@@ -115,6 +115,9 @@ export const studentsSlice = createSlice({
     },
     setGlobalPay: (state, action) => {
       state.global_pay = action.payload
+    },
+    resetStudentsState: () => {
+      return initialState
     }
   },
   extraReducers: builder => {
@@ -174,7 +177,8 @@ export const {
   setStudentData,
   updateStudentParams,
   clearStudentParams,
-  setGlobalPay
+  setGlobalPay,
+  resetStudentsState
 } = studentsSlice.actions
 
 export default studentsSlice.reducer
