@@ -29,16 +29,27 @@ const StaticsModal = () => {
 
   const currentDate = new Date().toISOString().split('T')[0]
   const yesterdayDate = new Date(new Date().setDate(new Date().getDate() - 1)).toISOString().split('T')[0]
-  const [userRole, setUserRole] = useState<string | null>(null)
-
-  useEffect(() => {
-    setUserRole(localStorage.getItem('userRole'))
-  }, [])
 
   const fetchAnalytics = async (date: string) => {
     try {
       const response = await api.get('auth/analytics/', { params: { date } })
-      dispatch(setSoffBotText(response.data))
+      dispatch(
+        setSoffBotText({
+          missed_attendance: response.data.missed_attendance,
+          groups: response.data.detail,
+          absent_students: response.data.absent_students,
+          income: response.data.income,
+          new_leads: response.data.new_leads,
+          robot_mood: response.data.robot_mood,
+          sms_limit: response.data.sms_limit,
+          unconnected_leads: response.data.unconnected_leads,
+          role: response.data.role,
+          summary: response.data?.summary,
+          added_students: response.data?.added_students,
+          left_students: response.data?.left_students,
+          not_using_platform: response.data.not_using_platform
+        })
+      )
     } catch (error) {
       console.error('Analytics yuklashda xatolik:', error)
     }
@@ -63,6 +74,7 @@ const StaticsModal = () => {
 
   const handleClose = () => {
     dispatch(toggleModal(false))
+    setSelectedDate("yesterday")
     setTypingComplete(false)
   }
 
@@ -74,7 +86,7 @@ const StaticsModal = () => {
   return (
     <Dialog fullWidth maxWidth='md' open={isModalOpen} onClose={handleClose}>
       <DialogTitle sx={{ color: 'black', position: 'relative', paddingRight: '30px' }}>
-        Hurmatli {user?.role?.includes('admin') ? 'admin' : ''} {user?.fullName}
+        Hurmatli {user?.currentRole == 'admin' ? 'admin' : ''} {user?.fullName}
         <img
           src={
             soffBotStatus === -1
