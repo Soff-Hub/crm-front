@@ -1,4 +1,4 @@
-import { ReactNode, useEffect } from 'react'
+import { useEffect } from 'react'
 import Head from 'next/head'
 import { Router } from 'next/router'
 import type { NextPage } from 'next'
@@ -15,15 +15,13 @@ import { Toaster } from 'react-hot-toast'
 import UserLayout from 'src/layouts/UserLayout'
 import AclGuard from 'src/@core/components/auth/AclGuard'
 import ThemeComponent from 'src/@core/theme/ThemeComponent'
-import AuthGuard from 'src/@core/components/auth/AuthGuard'
-import GuestGuard from 'src/@core/components/auth/GuestGuard'
 import WindowWrapper from 'src/@core/components/window-wrapper'
-import Spinner from 'src/@core/components/spinner'
 import { AuthProvider } from 'src/context/AuthContext'
 import { SettingsConsumer, SettingsProvider } from 'src/@core/context/settingsContext'
 import ReactHotToast from 'src/@core/styles/libs/react-hot-toast'
 import { createEmotionCache } from 'src/@core/utils/create-emotion-cache'
 import DisabledProvider from 'src/@core/layouts/DisabledProvider'
+import { Guard } from 'src/app/layouts'
 
 import 'prismjs'
 import 'prismjs/themes/prism-tomorrow.css'
@@ -39,10 +37,15 @@ type ExtendedAppProps = AppProps & {
   emotionCache: EmotionCache
 }
 
-type GuardProps = {
-  authGuard: boolean
-  guestGuard: boolean
-  children: ReactNode
+declare global {
+  interface Window {
+    IconifyProviders?: {
+      custom: {
+        resources: string[]
+        fetchOptions?: RequestInit
+      }
+    }
+  }
 }
 
 const clientSideEmotionCache = createEmotionCache()
@@ -51,12 +54,6 @@ if (themeConfig.routingLoader) {
   Router.events.on('routeChangeStart', NProgress.start)
   Router.events.on('routeChangeError', NProgress.done)
   Router.events.on('routeChangeComplete', NProgress.done)
-}
-
-const Guard = ({ children, authGuard, guestGuard }: GuardProps) => {
-  if (guestGuard) return <GuestGuard fallback={<Spinner />}>{children}</GuestGuard>
-  if (authGuard) return <AuthGuard fallback={<Spinner />}>{children}</AuthGuard>
-  return <>{children}</>
 }
 
 const App = ({ Component, emotionCache = clientSideEmotionCache, pageProps }: ExtendedAppProps) => {

@@ -1,4 +1,4 @@
-import { ReactNode, useState } from 'react'
+import { FC, PropsWithChildren, ReactNode, useState } from 'react'
 import { useRouter } from 'next/router'
 import type { ACLObj, AppAbility } from 'src/configs/acl'
 import { AbilityContext } from 'src/layouts/components/acl/Can'
@@ -7,14 +7,12 @@ import NotAuthorized from 'src/pages/401'
 import BlankLayout from 'src/@core/layouts/BlankLayout'
 import { useAuth } from 'src/hooks/useAuth'
 
-type AclGuardProps = {
-  children: ReactNode
+type Props = {
   guestGuard: boolean
   aclAbilities: ACLObj
 }
 
-const AclGuard = (props: AclGuardProps) => {
-  const { aclAbilities, children, guestGuard } = props
+const AclGuard: FC<PropsWithChildren<Props>> = ({ aclAbilities, children, guestGuard }) => {
   const [ability, setAbility] = useState<AppAbility | undefined>(undefined)
   const auth = useAuth()
   const router = useRouter()

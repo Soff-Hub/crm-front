@@ -1,4 +1,3 @@
-// ** Next Import
 import Document, { Html, Head, Main, NextScript } from 'next/document'
 
 class CustomDocument extends Document {
@@ -18,13 +17,11 @@ class CustomDocument extends Document {
           <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css' />
           <link rel='apple-touch-icon' sizes='180x180' href='/images/default-logo.jpg' />
 
-          {/* Google Analytics */}
-          {process.env.NODE_ENV === 'production' ? (
+          {process.env.NODE_ENV === 'production' && (
             <script defer src='https://www.googletagmanager.com/gtag/js?id=G-JNC979VFER'></script>
-          ) : (
-            ''
           )}
-          {process.env.NODE_ENV === 'production' ? (
+
+          {process.env.NODE_ENV === 'production' && (
             <script
               defer
               dangerouslySetInnerHTML={{
@@ -36,11 +33,9 @@ class CustomDocument extends Document {
               `
               }}
             />
-          ) : (
-            ''
           )}
 
-          {process.env.NODE_ENV === 'production' ? (
+          {process.env.NODE_ENV === 'production' && (
             <script
               defer
               dangerouslySetInnerHTML={{
@@ -59,52 +54,18 @@ class CustomDocument extends Document {
               `
               }}
             />
-          ) : (
-            ''
           )}
         </Head>
+
         <body>
           <Main />
           <NextScript />
+
           <script defer src='https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js'></script>
         </body>
       </Html>
     )
   }
 }
-
-// CustomDocument.getInitialProps = async ctx => {
-//   const originalRenderPage = ctx.renderPage
-//   const cache = createEmotionCache()
-//   const { extractCriticalToChunks } = createEmotionServer(cache)
-
-//   ctx.renderPage = () =>
-//     originalRenderPage({
-//       enhanceApp: App => props =>
-//       (
-//         <App
-//           {...props} // @ts-ignore
-//           emotionCache={cache}
-//         />
-//       )
-//     })
-
-//   const initialProps = await Document.getInitialProps(ctx)
-//   const emotionStyles = extractCriticalToChunks(initialProps.html)
-//   const emotionStyleTags = emotionStyles.styles.map(style => {
-//     return (
-//       <style
-//         key={style.key}
-//         dangerouslySetInnerHTML={{ __html: style.css }}
-//         data-emotion={`${style.key} ${style.ids.join(' ')}`}
-//       />
-//     )
-//   })
-
-//   return {
-//     ...initialProps,
-//     styles: [...Children.toArray(initialProps.styles), ...emotionStyleTags]
-//   }
-// }
 
 export default CustomDocument
