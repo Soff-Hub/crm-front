@@ -1,12 +1,12 @@
+'use client'
+
 import { useContext, useEffect, useState } from 'react'
-import { Box, Button, Card, CardContent, CardHeader, Chip, Grid, Skeleton, styled, Typography } from '@mui/material'
+import { Box, Card, CardContent, CardHeader, Chip, Grid, Skeleton, styled, Typography } from '@mui/material'
 import CustomAvatar from 'src/@core/components/mui/avatar'
 import { getInitials } from 'src/@core/utils/get-initials'
-import { addPeriodToThousands } from '../settings/office/courses'
 import IconifyIcon from 'src/@core/components/icon'
 import { useTranslation } from 'react-i18next'
 import Link from 'next/link'
-import getLessonDays from 'src/@core/utils/getLessonDays'
 import useResponsive from 'src/@core/hooks/useResponsive'
 import api from 'src/@core/utils/api'
 import { datatimeFormatCustome } from 'src/@core/utils/time-formatter'
@@ -14,7 +14,6 @@ import { AuthContext } from 'src/context/AuthContext'
 import EmptyContent from 'src/@core/components/empty-content'
 import { useRouter } from 'next/router'
 import { toast } from 'react-hot-toast'
-import UserIcon from 'src/layouts/components/UserIcon'
 import StudentEditProfileModal from './studentEditModal'
 import { formatCurrency } from 'src/@core/utils/format-currency'
 import { Icon } from '@iconify/react'
@@ -38,7 +37,7 @@ export default function StudentProfile() {
   const [groups, setGroups] = useState<any[]>([])
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [sms, setSms] = useState<any[]>([])
-  const { user, loading } = useContext(AuthContext)
+  const { user } = useContext(AuthContext)
   const { push } = useRouter()
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
@@ -61,7 +60,6 @@ export default function StudentProfile() {
     }
     Promise.all([getGroups(), getSmsHistory()])
   }, [])
-
 
   return (
     <div>
@@ -99,9 +97,7 @@ export default function StudentProfile() {
               )}
               <Box>
                 <Box display='flex' gap={2} alignItems='center'>
-                  <Typography variant='h6' >
-                    {user?.fullName}
-                  </Typography>
+                  <Typography variant='h6'>{user?.fullName}</Typography>
                   <Typography variant='body2' color='text.secondary'>
                     ID: {user?.id}
                   </Typography>

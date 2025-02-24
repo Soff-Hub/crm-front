@@ -1,14 +1,15 @@
 import { useLayoutEffect } from 'react'
 import { useRouter } from 'next/router'
+import { useAuth } from 'src/hooks/useAuth'
 
 const Home = () => {
   const router = useRouter()
-  const role = JSON.parse(localStorage.getItem('role') || '[]')
+  const { user } = useAuth()
 
   useLayoutEffect(() => {
-    if (role.includes('student')) {
+    if (user?.role.includes('student')) {
       router.replace('/student-profile')
-    } else if (role.includes('casher') && (!role.includes('ceo') || !role.includes('admin'))) {
+    } else if (user?.role.includes('casher') && (!user.role.includes('ceo') || !user.role.includes('admin'))) {
       router.replace('/finance')
     } else {
       router.replace('/dashboard')
