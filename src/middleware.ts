@@ -7,9 +7,8 @@ export function middleware(req: NextRequest) {
   const roles: string[] = rolesCookie ? JSON.parse(rolesCookie) : []
 
   const studentRole: any = roles.find((role: any) => role.name === 'STUDENT')
-  if (window.location.hostname.includes('c-panel')) {
-    return NextResponse.redirect(new URL('/c-panel', req.url))
-  }
+  const financeRole: any = roles.find((role: any) => role.name === 'CASHER')
+
   if (!token) {
     return NextResponse.redirect(new URL('/login', req.url))
   }
@@ -18,7 +17,7 @@ export function middleware(req: NextRequest) {
     return NextResponse.redirect(new URL('/student-profile', req.url))
   }
 
-  if (roles.includes('casher') && !roles.includes('ceo') && !roles.includes('admin')) {
+  if (financeRole && studentRole.exists) {
     return NextResponse.redirect(new URL('/finance', req.url))
   }
 
