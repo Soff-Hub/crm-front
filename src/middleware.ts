@@ -12,7 +12,7 @@ export function middleware(req: NextRequest) {
     return NextResponse.redirect(new URL('/login', req.url))
   }
 
-  if (studentRole && studentRole?.exists) {
+  if (studentRole && studentRole.exists) {
     return NextResponse.redirect(new URL('/student-profile', req.url))
   }
 
