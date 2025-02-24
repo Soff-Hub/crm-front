@@ -16,7 +16,7 @@ export function middleware(req: NextRequest) {
     return NextResponse.redirect(new URL('/finance', req.url))
   }
 
-  return NextResponse.next()
+  return NextResponse.redirect(new URL('/dashboard', req.url))
 }
 
 export const config = {
