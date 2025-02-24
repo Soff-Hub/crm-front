@@ -24,8 +24,8 @@ export function middleware(req: NextRequest) {
     return NextResponse.redirect(new URL('/login', req.url))
   }
 
-  if (dashboardRole) {
-    return NextResponse.redirect(new URL('/dashboard', req.url))
+  if (subdomain === 'c-panel') {
+    return NextResponse.redirect(new URL('/c-panel', req.url))
   }
 
   if (studentRole) {
@@ -36,8 +36,8 @@ export function middleware(req: NextRequest) {
     return NextResponse.redirect(new URL('/finance', req.url))
   }
 
-  if (subdomain === 'c-panel') {
-    return NextResponse.redirect(new URL('/c-panel', req.url))
+  if (dashboardRole) {
+    return NextResponse.redirect(new URL('/dashboard', req.url))
   }
 
   return NextResponse.rewrite(url)
