@@ -32,12 +32,11 @@ export function middleware(req: NextRequest) {
     return NextResponse.redirect(new URL('/student-profile', req.url))
   }
 
-  if (financeRole) {
-    return NextResponse.redirect(new URL('/finance', req.url))
-  }
-
   if (dashboardRole) {
     return NextResponse.redirect(new URL('/dashboard', req.url))
+  }
+  if (financeRole) {
+    return NextResponse.redirect(new URL('/finance', req.url))
   }
 
   return NextResponse.rewrite(url)
