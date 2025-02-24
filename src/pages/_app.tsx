@@ -80,6 +80,9 @@ const App = ({ Component, emotionCache = clientSideEmotionCache, pageProps }: Ex
     )
   }
 
+  console.log(guestGuard)
+  console.log(aclAbilities)
+
   return (
     <Provider store={store}>
       <CacheProvider value={emotionCache}>

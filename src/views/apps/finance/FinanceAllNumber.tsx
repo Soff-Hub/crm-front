@@ -8,8 +8,6 @@ import { fetchFinanceAllNumbers, updateNumberParams } from 'src/store/apps/finan
 import { formatDateString } from 'src/pages/finance'
 import { AuthContext } from 'src/context/AuthContext'
 import useResponsive from 'src/@core/hooks/useResponsive'
-import { Icon } from '@iconify/react'
-import { link } from 'fs'
 
 export const yearItems = [
   { label: 2021, value: 2021 },
@@ -73,132 +71,43 @@ const FinanceAllNumber = () => {
           color: Number(all_numbers?.label.active_balance) < 0 ? 'error' : 'success',
           stats: all_numbers?.label?.active_balance,
           trend: Number(all_numbers?.label.active_balance) < 0 ? 'negative' : 'positive',
-          icon: "mdi:wallet",
-          iconplus:'mdi:plus',
+          icon: 'mdi:wallet',
+          iconplus: 'mdi:plus',
           trendNumber: '12.6%',
           title: t('Aktiv balans'),
-            bgColor: Number(all_numbers?.label.active_balance) < 0 ? 'bg-red-500' : 'bg-green-500', // Added bgColor
-            id: '/finance/investment'
-
+          bgColor: Number(all_numbers?.label.active_balance) < 0 ? 'bg-red-500' : 'bg-green-500',
+          id: '/finance/investment'
         }
       ]
     : []
 
-  const handleChangeDate = async (e: any) => {
-    if (e) {
-      dispatch(updateNumberParams({ date_year: '', date_month: '' }))
-      dispatch(
-        updateNumberParams({
-          start_date: `${formatDateString(e[0])}`,
-          end_date: `${formatDateString(e[1])}`,
-          date_year: '',
-          date_month: ''
-        })
-      )
-      await dispatch(
-        fetchFinanceAllNumbers({
-          ...allNumbersParams,
-          start_date: `${formatDateString(e[0])}`,
-          end_date: `${formatDateString(e[1])}`,
-          date_year: '',
-          date_month: ''
-        })
-      )
-      dispatch(updateNumberParams({ date_month: '' }))
-    } else {
-      dispatch(updateNumberParams({ date_year: `${new Date().getFullYear()}-01-01`, start_date: ``, end_date: `` }))
-      await dispatch(
-        fetchFinanceAllNumbers({
-          ...allNumbersParams,
-          date_year: `${new Date().getFullYear()}-01-01`,
-          start_date: ``,
-          end_date: ``
-        })
-      )
-    }
-    setDate(e)
-  }
-
-  const handleYearDate = async (value: any, t: 'm' | 'y') => {
-    dispatch(updateNumberParams({ start_date: '', end_date: '' }))
-    setDate('')
-    if (!value) {
-      if (t === 'm') {
-        dispatch(updateNumberParams({ date_month: '' }))
-        await dispatch(fetchFinanceAllNumbers({ ...allNumbersParams, date_month: '', start_date: ``, end_date: `` }))
-      } else {
-        dispatch(updateNumberParams({ date_year: `${new Date().getFullYear()}-01-01` }))
-        await dispatch(fetchFinanceAllNumbers({ ...allNumbersParams, date_month: '', start_date: ``, end_date: `` }))
-      }
-      return
-    }
-    if (Number(value) > 100) {
-      dispatch(updateNumberParams({ date_year: `${value}-01-01` }))
-      await dispatch(
-        fetchFinanceAllNumbers({ ...allNumbersParams, date_year: `${value}-01-01`, start_date: ``, end_date: `` })
-      )
-    } else {
-      dispatch(updateNumberParams({ date_month: value }))
-      await dispatch(
-        fetchFinanceAllNumbers({
-          ...allNumbersParams,
-          date_year: allNumbersParams.date_year || `${new Date().getFullYear()}-01-01`,
-          date_month: value,
-          start_date: ``,
-          end_date: ``
-        })
-      )
-    }
-  }
-
-  const handleChangeBranch = async (branch: any) => {
-    if (branch) {
-      setActiveBranch(branch)
-      dispatch(updateNumberParams({ branch }))
-      await dispatch(fetchFinanceAllNumbers({ ...allNumbersParams, branch }))
-    } else {
-      setActiveBranch('')
-      dispatch(updateNumberParams({ branch: '' }))
-      await dispatch(fetchFinanceAllNumbers({ ...allNumbersParams, branch: '' }))
-    }
-  }
-
   return (
-    <div>
-      <Grid xs={12}>
-        <Box sx={{ display: 'flex', alignItems: 'center', marginBottom: '20px', gap: 1 }}>
-          <Typography sx={{ flexGrow: 1 }} variant='h5'>
-            {t('Umumiy raqamlar')}
-          </Typography>
-        </Box>
-              {numbersLoad ? (
-            
-          <Grid container spacing={isMobile ? 4 : 8}>
-            {[1, 2, 3, 4].map((_, index) => (
-              <Grid
-                item
-                xs={12}
-                md={3}
-                    key={index}
-             // Apply dynamic background color
-              >
-                <Skeleton
-                  variant='rounded'
-                  width={'100%'}
-                  height={'80px'}
-                  style={{ borderRadius: '10px' }}
-                  animation='wave'
-                />
-              </Grid>
-            ))}
-          </Grid>
-        ) : all_numbers ? (
-          <CardStatisticsHorizontal data={statsHorizontal} />
-        ) : (
-          <EmptyContent />
-        )}
-      </Grid>
-    </div>
+    <Grid>
+      <Box sx={{ display: 'flex', alignItems: 'center', marginBottom: '20px', gap: 1 }}>
+        <Typography sx={{ flexGrow: 1 }} variant='h5'>
+          {t('Umumiy raqamlar')}
+        </Typography>
+      </Box>
+      {numbersLoad ? (
+        <Grid container spacing={isMobile ? 4 : 8}>
+          {[1, 2, 3, 4].map((_, index) => (
+            <Grid key={`${_}-${index}`} item xs={12} md={3}>
+              <Skeleton
+                variant='rounded'
+                width={'100%'}
+                height={'80px'}
+                style={{ borderRadius: '10px' }}
+                animation='wave'
+              />
+            </Grid>
+          ))}
+        </Grid>
+      ) : all_numbers ? (
+        <CardStatisticsHorizontal data={statsHorizontal} />
+      ) : (
+        <EmptyContent />
+      )}
+    </Grid>
   )
 }
 

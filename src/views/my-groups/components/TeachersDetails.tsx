@@ -1,3 +1,5 @@
+'use client'
+
 import { Box, Button, Card, CardContent, Grid, Tooltip, Typography } from '@mui/material'
 import { useTranslation } from 'react-i18next'
 import CustomAvatar from 'src/@core/components/mui/avatar'
@@ -9,7 +11,7 @@ import IconifyIcon from 'src/@core/components/icon'
 import { useState } from 'react'
 import EditProfile from './EditProfile'
 
-interface ColorsType {
+type ColorsType = {
   [key: string]: ThemeColor
 }
 

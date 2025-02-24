@@ -1,10 +1,12 @@
+'use client'
+
 import { Box, Skeleton } from '@mui/material'
 import { useRouter } from 'next/router'
 import { ReactNode } from 'react'
 import { Placeholder } from 'react-bootstrap'
 import EmptyContent from '../empty-content'
 
-export interface customTableDataProps {
+export type customTableDataProps = {
   xs: number
   title: string | React.ReactNode
   dataIndex?: string | ReactNode
@@ -14,7 +16,7 @@ export interface customTableDataProps {
   renderSource?: (source: any, item: any) => any | undefined
 }
 
-interface DataTableProps {
+type DataTableProps = {
   columns: customTableDataProps[]
   data: any[]
   minWidth?: string | undefined
