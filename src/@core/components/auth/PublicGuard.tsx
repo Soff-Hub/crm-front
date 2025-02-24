@@ -17,7 +17,7 @@ export const PublicGuard: FC<PropsWithChildren> = ({ children }) => {
     }
 
     if (window.localStorage.getItem('userData')) {
-      router.replace('/dashboard')
+      router.replace('/')
     }
   }, [router.route])
 

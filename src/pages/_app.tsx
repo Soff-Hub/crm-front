@@ -20,6 +20,8 @@ import { AuthProvider } from 'src/context/AuthContext'
 import { SettingsConsumer, SettingsProvider } from 'src/@core/context/settingsContext'
 import ReactHotToast from 'src/@core/styles/libs/react-hot-toast'
 import { createEmotionCache } from 'src/@core/utils/create-emotion-cache'
+import DisabledProvider from 'src/@core/layouts/DisabledProvider'
+import { Guard } from 'src/app/layouts'
 
 import 'prismjs'
 import 'prismjs/themes/prism-tomorrow.css'
@@ -29,8 +31,6 @@ import 'react-perfect-scrollbar/dist/css/styles.css'
 import 'src/iconify-bundle/icons-bundle-react'
 
 import './globals.css'
-import DisabledProvider from 'src/@core/layouts/DisabledProvider'
-import { Guard } from 'src/app/layouts'
 
 type ExtendedAppProps = AppProps & {
   Component: NextPage
@@ -68,12 +68,6 @@ const App = ({ Component, emotionCache = clientSideEmotionCache, pageProps }: Ex
   function MyHead() {
     const { companyInfo } = useAppSelector(state => state.user)
 
-    useEffect(() => {
-      for (let i = 0; i < 100; i++) {
-        window.localStorage.removeItem(`iconify${i}`)
-      }
-    }, [])
-
     return (
       <Head>
         <meta name='robots' content='noindex, nofollow' />
@@ -87,6 +81,7 @@ const App = ({ Component, emotionCache = clientSideEmotionCache, pageProps }: Ex
     <Provider store={store}>
       <CacheProvider value={emotionCache}>
         <MyHead />
+
         <AuthProvider>
           <DisabledProvider>
             <SettingsProvider {...(setConfig ? { pageSettings: setConfig() } : {})}>

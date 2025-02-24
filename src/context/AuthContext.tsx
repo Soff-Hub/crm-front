@@ -1,7 +1,8 @@
-import { createContext, useEffect, useState, ReactNode } from 'react'
+import { createContext, useEffect, useState, ReactNode, useLayoutEffect } from 'react'
 
 import { useRouter } from 'next/router'
 
+import Cookie from 'js-cookie'
 import axios from 'axios'
 
 import authConfig from 'src/configs/auth'
@@ -11,11 +12,10 @@ import api from 'src/@core/utils/api'
 import { setCompanyInfo, setRoles } from 'src/store/apps/user'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch, useAppSelector } from 'src/store'
-import { useSettings } from 'src/@core/hooks/useSettings'
 
 const defaultProvider: AuthValuesType = {
   user: null,
-  loading: true,
+  loading: false,
   setUser: () => null,
   setLoading: () => Boolean,
   login: () => Promise.resolve(),
@@ -46,7 +46,6 @@ const AuthProvider = ({ children }: Props) => {
       i18n.changeLanguage(JSON.parse(settings)?.locale || 'uz')
 
       setLoading(true)
-
       await api
         .get(authConfig.meEndpoint, {
           headers: {
@@ -68,6 +67,7 @@ const AuthProvider = ({ children }: Props) => {
             fullName: response.data.first_name,
             username: response.data.phone,
             password: 'null',
+            currentRole: response.data.roles[0],
             avatar: response.data.image,
             payment_page: response.data.payment_page,
             role: response.data.roles.filter((el: any) => el.exists).map((el: any) => el.name?.toLowerCase()),
@@ -77,14 +77,13 @@ const AuthProvider = ({ children }: Props) => {
             qr_code: response.data.qr_code
           })
         })
-        .catch(() => {
-          localStorage.removeItem('userData')
-          localStorage.removeItem('refreshToken')
-          localStorage.removeItem('accessToken')
+        .catch(error => {
+          console.error('Auth Error:', error)
+          localStorage.clear()
           setUser(null)
           setLoading(false)
           if (authConfig.onTokenExpiration === 'logout' && !router.pathname.includes('login')) {
-            router.replace('/login')
+            router.push('/login')
           }
         })
 
@@ -103,7 +102,11 @@ const AuthProvider = ({ children }: Props) => {
   }
 
   useEffect(() => {
-    initAuth()
+    const fetchAuth = async () => {
+      await initAuth()
+    }
+
+    fetchAuth()
   }, [])
 
   useEffect(() => {
@@ -115,6 +118,8 @@ const AuthProvider = ({ children }: Props) => {
       .post(authConfig.loginEndpoint, params)
       .then(async response => {
         if (!params.rememberMe) {
+          Cookie.set('token', response.data.tokens.access)
+          Cookie.set('roles', JSON.stringify(response.data.roles))
           window.localStorage.setItem(authConfig.storageTokenKeyName, response.data.tokens.access)
           window.localStorage.setItem('userData', JSON.stringify({ ...response.data, role: 'admin', tokens: null }))
         }
@@ -167,8 +172,9 @@ const AuthProvider = ({ children }: Props) => {
 
   const handleLogout = () => {
     setUser(null)
-    window.localStorage.removeItem('userData')
-    window.localStorage.removeItem(authConfig.storageTokenKeyName)
+    localStorage.clear()
+    sessionStorage.clear()
+    Object.keys(Cookie.get()).forEach(cookie => Cookie.remove(cookie))
     router.push('/login')
   }
 

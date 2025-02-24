@@ -101,7 +101,9 @@ export function LidsDragonModal({ selectedLead, openModal, handleClose }: LidsDr
   }
 
   useEffect(() => {
-    handleGetUserDetails(value, selectedLead?.id)
+    if (openModal) {
+      handleGetUserDetails(value, selectedLead?.id)
+    }
   }, [selectedLead?.id])
 
   return (

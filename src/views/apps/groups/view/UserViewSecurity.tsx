@@ -217,7 +217,7 @@ const Item = ({
           </span>
         )}
 
-        <Dialog open={description === false} onClose={onClose}>
+        <Dialog maxWidth={'sm'} fullWidth open={description === false} onClose={onClose}>
           <DialogTitle>Izoh yozish</DialogTitle>
           <DialogContent>
             <Formik

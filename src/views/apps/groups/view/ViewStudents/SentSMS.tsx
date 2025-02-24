@@ -19,13 +19,12 @@ import {
 } from '@mui/material'
 import { toast } from 'react-hot-toast'
 import { useAppDispatch, useAppSelector } from 'src/store'
-import { fetchSmsList, fetchSmsListQuery } from 'src/store/apps/settings'
+import { fetchSmsListQuery } from 'src/store/apps/settings'
 
 export default function SentSMS({
   id,
   modalRef,
-  setModalRef,
-  smsTemps
+  setModalRef
 }: {
   id: string
   modalRef: string | null
@@ -58,14 +57,11 @@ export default function SentSMS({
     }
   })
 
-  //  useEffect(() => {
-  //     dispatch(fetchSmsList())
-  //   }, [])
-    useEffect(() => {
-      if (parent_id) {
-        dispatch(fetchSmsListQuery(parent_id))
-      }
-    }, [parent_id])
+  useEffect(() => {
+    if (parent_id) {
+      dispatch(fetchSmsListQuery(parent_id))
+    }
+  }, [parent_id])
 
   return (
     <Dialog
@@ -78,9 +74,10 @@ export default function SentSMS({
       <DialogTitle id='user-view-edit' sx={{ textAlign: 'center', fontSize: '1.5rem !important' }}>
         {t('Xabar yuborish (sms)')}
       </DialogTitle>
+
       <DialogContent>
         <form style={{ marginTop: 10 }} onSubmit={formik.handleSubmit}>
-        <FormControl fullWidth sx={{ marginBottom: 5 }}>
+          <FormControl fullWidth sx={{ marginBottom: 5 }}>
             <InputLabel size='small' id='demo-simple-select-outlined-label'>
               {t('Kategorya')}
             </InputLabel>
@@ -95,17 +92,18 @@ export default function SentSMS({
               }}
             >
               {sms_list.map((el: any) => (
-                <MenuItem value={el.id} sx={{ wordBreak: 'break-word' }}>
+                <MenuItem key={el.id} value={el.id} sx={{ wordBreak: 'break-word' }}>
                   <span style={{ maxWidth: '250px', wordBreak: 'break-word', fontSize: '10px' }}>{el.description}</span>
                 </MenuItem>
               ))}
             </Select>
           </FormControl>
           {parent_id && (
-            <FormControl fullWidth sx={{marginBottom:5}}>
+            <FormControl fullWidth sx={{ marginBottom: 5 }}>
               <InputLabel size='small' id='demo-simple-select-outlined-label'>
                 {t('Shablonlar')}
               </InputLabel>
+
               <Select
                 size='small'
                 label='Shablonlar'
@@ -113,12 +111,11 @@ export default function SentSMS({
                 id='demo-simple-select-outlined'
                 labelId='demo-simple-select-outlined-label'
                 onChange={e => {
-                  //   setSMS(true)
                   formik.setFieldValue('message', e.target.value)
                 }}
               >
-                {smschild_list.map((el: any) => (
-                  <MenuItem value={el.description} sx={{ wordBreak: 'break-word' }}>
+                {smschild_list.map((el: any, index: number) => (
+                  <MenuItem key={index} value={el.description} sx={{ wordBreak: 'break-word' }}>
                     <span style={{ maxWidth: '250px', wordBreak: 'break-word', fontSize: '10px' }}>
                       {el.description}
                     </span>
@@ -148,6 +145,7 @@ export default function SentSMS({
             <Button variant='outlined' type='button' color='secondary' onClick={() => setModalRef(null)}>
               {t('Bekor qilish')}
             </Button>
+
             <LoadingButton loading={isLoading} type='submit' variant='contained' sx={{ mr: 1 }}>
               {t('Yuborish')}
             </LoadingButton>

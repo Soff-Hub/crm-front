@@ -1,19 +1,18 @@
+'use client'
+
 import { Box, Grid, Pagination, Typography } from '@mui/material'
-import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
 import { useContext, useEffect } from 'react'
 import { toast } from 'react-hot-toast'
 import { useTranslation } from 'react-i18next'
-import { customTableDataProps } from 'src/@core/components/table'
+import DataTable, { customTableDataProps } from 'src/@core/components/table'
 import { formatCurrency } from 'src/@core/utils/format-currency'
 import { AuthContext } from 'src/context/AuthContext'
 import { useAppDispatch, useAppSelector } from 'src/store'
 import { fetchGroups, fetchTeacherSalaries, updateMyGroupParams } from 'src/store/apps/groups'
-
-const TeachersDetails = dynamic(() => import('./components/TeachersDetails'), { ssr: false })
-const GroupCard = dynamic(() => import('./components/GroupCard'), { ssr: false })
-const GroupSkeleton = dynamic(() => import('./components/Skeleton'), { ssr: false })
-const DataTable = dynamic(() => import('src/@core/components/table'), { ssr: false })
+import TeachersDetails from './components/TeachersDetails'
+import GroupSkeleton from './components/Skeleton'
+import GroupCard from './components/GroupCard'
 
 export default function MyGroups() {
   const { user } = useContext(AuthContext)
@@ -73,7 +72,7 @@ export default function MyGroups() {
 
   useEffect(() => {
     if (!user?.role.includes('teacher') && !user?.role.includes('watcher')) {
-      push('/dashboard')
+      push('/')
       toast.error("Sizda bu sahifaga kirish huquqi yo'q!")
     }
     ;(async function () {
@@ -108,16 +107,13 @@ export default function MyGroups() {
             {t('Mening guruhlarim')}
           </Typography>
           <Box sx={{ display: 'flex', gap: '15px', flexWrap: 'wrap' }}>
-            {isLoading ? (
-              <GroupSkeleton />
-            ) : (
-              groups && groups.map((group: any) => <GroupCard key={group.id} group={group} />)
-            )}
+            {isLoading ? <GroupSkeleton /> : groups && groups.map((group: any) => <GroupCard group={group} />)}
           </Box>
         </Grid>
       </Grid>
       <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 1 }}>
         <Typography variant='h6'>{t("Oylik to'lovlar tarixi")}</Typography>
+
         <DataTable
           loading={isTableLoading}
           columns={column}

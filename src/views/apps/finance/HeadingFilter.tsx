@@ -7,7 +7,6 @@ import {
   fetchFinanceAllNumbers,
   getExpenseCategories,
   getIncomeCategories,
-  // getGroupsFinance,
   updateNumberParams
 } from 'src/store/apps/finance'
 import { formatDateString } from 'src/pages/finance'
@@ -90,15 +89,6 @@ export default function HeadingFilter() {
             date_month: ''
           })
         )
-        // dispatch(
-        //   getGroupsFinance({
-        //     ...allNumbersParams,
-        //     start_date: `${formatDateString(e[0])}`,
-        //     end_date: `${formatDateString(e[1])}`,
-        //     date_year: '',
-        //     date_month: ''
-        //   })
-        // )
       ])
       dispatch(updateNumberParams({ date_month: '' }))
     } else {
@@ -120,14 +110,6 @@ export default function HeadingFilter() {
             end_date: ``
           })
         )
-        // dispatch(
-        //   getGroupsFinance({
-        //     ...allNumbersParams,
-        //     date_year: `${new Date().getFullYear()}-01-01`,
-        //     start_date: ``,
-        //     end_date: ``
-        //   })
-        // )
       ])
     }
     setDate(e)
@@ -143,7 +125,6 @@ export default function HeadingFilter() {
           dispatch(fetchFinanceAllNumbers({ ...allNumbersParams, date_month: '', start_date: ``, end_date: `` })),
           dispatch(getExpenseCategories({ ...allNumbersParams, date_month: '', start_date: ``, end_date: `` })),
           dispatch(getIncomeCategories({ ...allNumbersParams, date_month: '', start_date: ``, end_date: `` }))
-          // dispatch(getGroupsFinance({ ...allNumbersParams, date_month: '', start_date: ``, end_date: `` }))
         ])
       } else {
         dispatch(updateNumberParams({ date_year: `${new Date().getFullYear()}-01-01` }))
@@ -151,8 +132,6 @@ export default function HeadingFilter() {
           dispatch(fetchFinanceAllNumbers({ ...allNumbersParams, date_month: '', start_date: ``, end_date: `` })),
           dispatch(getExpenseCategories({ ...allNumbersParams, date_month: '', start_date: ``, end_date: `` })),
           dispatch(getIncomeCategories({ ...allNumbersParams, date_month: '', start_date: ``, end_date: `` }))
-
-          // dispatch(getGroupsFinance({ ...allNumbersParams, date_month: '', start_date: ``, end_date: `` }))
         ])
       }
       return
@@ -169,7 +148,6 @@ export default function HeadingFilter() {
         dispatch(
           getIncomeCategories({ ...allNumbersParams, date_year: `${value}-01-01`, start_date: ``, end_date: `` })
         )
-        // dispatch(getGroupsFinance({ ...allNumbersParams, date_year: `${value}-01-01`, start_date: ``, end_date: `` }))
       ])
     } else {
       dispatch(updateNumberParams({ date_month: value }))
@@ -201,15 +179,6 @@ export default function HeadingFilter() {
             end_date: ``
           })
         )
-        // dispatch(
-        //   getGroupsFinance({
-        //     ...allNumbersParams,
-        //     date_year: allNumbersParams.date_year || `${new Date().getFullYear()}-01-01`,
-        //     date_month: value,
-        //     start_date: ``,
-        //     end_date: ``
-        //   })
-        // )
       ])
     }
   }
@@ -222,8 +191,6 @@ export default function HeadingFilter() {
         dispatch(fetchFinanceAllNumbers({ ...allNumbersParams, branch })),
         dispatch(getExpenseCategories({ ...allNumbersParams, branch })),
         dispatch(getIncomeCategories({ ...allNumbersParams, branch }))
-
-        // dispatch(getGroupsFinance({ ...allNumbersParams, branch }))
       ])
     } else {
       setActiveBranch('')
@@ -232,7 +199,6 @@ export default function HeadingFilter() {
         dispatch(fetchFinanceAllNumbers({ ...allNumbersParams, branch: '' })),
         dispatch(getExpenseCategories({ ...allNumbersParams, branch: '' })),
         dispatch(getIncomeCategories({ ...allNumbersParams, branch }))
-        // dispatch(getGroupsFinance({ ...allNumbersParams, branch: '' }))
       ])
     }
   }
@@ -243,8 +209,6 @@ export default function HeadingFilter() {
         dispatch(fetchFinanceAllNumbers({ ...allNumbersParams, branch: activeBranch })),
         dispatch(getExpenseCategories({ ...allNumbersParams, branch: activeBranch })),
         dispatch(getIncomeCategories({ ...allNumbersParams, branch: activeBranch }))
-
-        // dispatch(getGroupsFinance({ ...allNumbersParams, branch: activeBranch }))
       ])
     })()
     dispatch(updateNumberParams({ branch: activeBranch }))
@@ -265,8 +229,6 @@ export default function HeadingFilter() {
     >
       {' '}
       <SelectPicker
-        
-        // sx={{ maxWidth: 180, width: '100%' }}
         onChange={handleChangeBranch}
         size='md'
         data={
@@ -282,25 +244,25 @@ export default function HeadingFilter() {
         placeholder={t('Filialni tanlang')}
         value={activeBranch}
         renderMenuItem={(label, item) => {
-          const [isHovered, setIsHovered] = useState(false);
-      
+          const [isHovered, setIsHovered] = useState(false)
+
           return (
             <div
-              key={item.value}  // Unique key for each item
+              key={item.value}
               style={{
                 padding: '10px',
-                backgroundColor: isHovered ? '#e0e0e0' : (item.index % 2 === 0 ? '#f0f0f0' : '#ffffff'), // Hover effect
-                color: '#333', // Text color
-                fontSize: '14px', // Font size
-                cursor: 'pointer', // Pointer cursor on hover
-                transition: 'background-color 0.3s', // Smooth transition
+                backgroundColor: isHovered ? '#e0e0e0' : item.index % 2 === 0 ? '#f0f0f0' : '#ffffff',
+                color: '#333',
+                fontSize: '14px',
+                cursor: 'pointer',
+                transition: 'background-color 0.3s'
               }}
-              onMouseEnter={() => setIsHovered(true)} // Set hover state to true
-              onMouseLeave={() => setIsHovered(false)} // Set hover state to false
+              onMouseEnter={() => setIsHovered(true)}
+              onMouseLeave={() => setIsHovered(false)}
             >
               {label}
             </div>
-          );
+          )
         }}
       />
       <SelectPicker
@@ -312,63 +274,61 @@ export default function HeadingFilter() {
         searchable={false}
         cleanable={false}
         placeholder={t('Yilni tanlang')}
-        menuStyle={{ maxHeight: 300, overflowY: 'auto' }} 
+        menuStyle={{ maxHeight: 300, overflowY: 'auto' }}
         renderMenuItem={(label, item) => {
-          const [isHovered, setIsHovered] = useState(false);
-      
+          const [isHovered, setIsHovered] = useState(false)
+
           return (
             <div
-              key={item.value}  // Unique key for each item
+              key={item.value}
               style={{
                 padding: '10px',
-                backgroundColor: isHovered ? '#e0e0e0' : (item.index % 2 === 0 ? '#f0f0f0' : '#ffffff'), // Hover effect
-                color: '#333', // Text color
-                fontSize: '14px', // Font size
-                cursor: 'pointer', // Pointer cursor on hover
-                transition: 'background-color 0.3s', // Smooth transition
+                backgroundColor: isHovered ? '#e0e0e0' : item.index % 2 === 0 ? '#f0f0f0' : '#ffffff',
+                color: '#333',
+                fontSize: '14px',
+                cursor: 'pointer',
+                transition: 'background-color 0.3s'
               }}
-              onMouseEnter={() => setIsHovered(true)} // Set hover state to true
-              onMouseLeave={() => setIsHovered(false)} // Set hover state to false
+              onMouseEnter={() => setIsHovered(true)}
+              onMouseLeave={() => setIsHovered(false)}
             >
               {label}
             </div>
-          );
+          )
         }}
       />
       <SelectPicker
         onChange={v => handleYearDate(v, 'm')}
         size='md'
         data={monthItems2}
-        style={{ width: isMobile ? 'auto' : 180, }}
-        menuStyle={{ maxHeight: 300, overflowY: 'auto' }} 
+        style={{ width: isMobile ? 'auto' : 180 }}
+        menuStyle={{ maxHeight: 300, overflowY: 'auto' }}
         value={allNumbersParams.date_month}
-        searchable={false} 
+        searchable={false}
         placeholder={t('Oyni tanlang')}
         renderMenuItem={(label, item) => {
-          const [isHovered, setIsHovered] = useState(false);
-      
+          const [isHovered, setIsHovered] = useState(false)
+
           return (
             <div
-              key={item.value}  // Unique key for each item
+              key={item.value}
               style={{
                 padding: '10px',
-                backgroundColor: isHovered ? '#e0e0e0' : (item.index % 2 === 0 ? '#f0f0f0' : '#ffffff'), // Hover effect
-                color: '#333', // Text color
-                fontSize: '14px', // Font size
-                cursor: 'pointer', // Pointer cursor on hover
-                transition: 'background-color 0.3s', // Smooth transition
+                backgroundColor: isHovered ? '#e0e0e0' : item.index % 2 === 0 ? '#f0f0f0' : '#ffffff',
+                color: '#333',
+                fontSize: '14px',
+                cursor: 'pointer',
+                transition: 'background-color 0.3s'
               }}
-              onMouseEnter={() => setIsHovered(true)} // Set hover state to true
-              onMouseLeave={() => setIsHovered(false)} // Set hover state to false
+              onMouseEnter={() => setIsHovered(true)}
+              onMouseLeave={() => setIsHovered(false)}
             >
               {label}
             </div>
-          );
+          )
         }}
       />
-      
       <DateRangePicker
-        
         showOneCalendar
         placement='bottomEnd'
         locale={{
