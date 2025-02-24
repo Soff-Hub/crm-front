@@ -84,6 +84,7 @@ const AppBarContent = (props: Props) => {
   }
 
   useEffect(() => {
+    setSearchLoading(true)
     handleSearch(debouncedSearch)
   }, [debouncedSearch])
 

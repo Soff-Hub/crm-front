@@ -12,7 +12,7 @@ import {
   DialogTitle,
   IconButton
 } from '@mui/material'
-import { ReactNode, useContext, useEffect, useState } from 'react'
+import { ReactNode, useContext, useEffect, useRef, useState } from 'react'
 import DataTable from 'src/@core/components/table'
 import { useTranslation } from 'react-i18next'
 import { useRouter } from 'next/router'
@@ -46,11 +46,11 @@ export default function GroupsPage() {
   const { user } = useContext(AuthContext)
   const [open, setOpen] = useState<boolean>(false)
   const dispatch = useAppDispatch()
-  const { students, isLoading, studentsCount, queryParams, total_debts } = useAppSelector(
-    state => state.students
-  )
+  const { students, isLoading, studentsCount, queryParams, total_debts } = useAppSelector(state => state.students)
   const [rowsPerPage, setRowsPerPage] = useState<number>(10)
   const queryString = new URLSearchParams({ ...queryParams } as Record<string, string>).toString()
+
+  const fileInputRef = useRef<HTMLInputElement | null>(null)
 
   const columns: customTableProps[] = [
     {
@@ -172,6 +172,20 @@ export default function GroupsPage() {
     }
   ]
 
+  const handleClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click()
+    }
+  }
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (file) {
+      console.log('Tanlangan fayl:', file)
+      // Fayl yuklash funksiyasini shu yerda ishlatish mumkin
+    }
+  }
+
   const handleRowsPerPageChange = async (value: number) => {
     setRowsPerPage(value)
 
@@ -246,14 +260,22 @@ export default function GroupsPage() {
             <Chip label={`${formatCurrency(total_debts)}` + " so'm"} variant='outlined' color='error' />
           )}
         </Box>
-        <Button
-          onClick={() => dispatch(setOpenEdit('create'))}
-          variant='contained'
-          size='small'
-          startIcon={<IconifyIcon icon='ic:baseline-plus' />}
-        >
-          {t("Yangi qo'shish")}
-        </Button>
+        <Box sx={{ display: 'flex', gap: 2 }}>
+          {/* <>
+            <input type='file' ref={fileInputRef} style={{ display: 'none' }} onChange={handleFileChange} />
+            <Button onClick={handleClick} variant='outlined' size='small'>
+              {t("O'quvchilarni import qilish")}
+            </Button>
+          </> */}
+          <Button
+            onClick={() => dispatch(setOpenEdit('create'))}
+            variant='contained'
+            size='small'
+            startIcon={<IconifyIcon icon='ic:baseline-plus' />}
+          >
+            {t("Yangi qo'shish")}
+          </Button>
+        </Box>
       </Box>
 
       {isMobile && (

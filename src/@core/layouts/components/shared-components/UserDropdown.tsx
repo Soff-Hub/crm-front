@@ -127,6 +127,9 @@ const UserDropdown = (props: Props) => {
     if (role == 'teacher') {
       router.push('dashboard')
     }
+    if (role == 'casher') {
+      router.push('finance')
+    }
     localStorage.setItem('currentRole', role)
     setAnchorEl(null)
   }
