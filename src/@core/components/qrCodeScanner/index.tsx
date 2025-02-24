@@ -6,8 +6,10 @@ export default function QRCodeScanner() {
   const [scannedCode, setScannedCode] = useState('')
   const [isProcessing, setIsProcessing] = useState(false)
 
+  const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+
   const handleSendQrCode = async (code: string) => {
-    if (!code) return
+    if (!uuidRegex.test(code)) return
 
     try {
       setIsProcessing(true)
@@ -34,20 +36,25 @@ export default function QRCodeScanner() {
     let timer: NodeJS.Timeout
 
     const handleKeyPress = (event: KeyboardEvent) => {
-      if (isProcessing) return // Avoid processing if already handling a code
+      if (isProcessing) return
       const key = event.key
 
       if (key === 'Enter') {
-        // Process scanned code
-        handleSendQrCode(scannedCode)
+        if (uuidRegex.test(scannedCode)) {
+          handleSendQrCode(scannedCode)
+        } else {
+          setScannedCode('')
+        }
       } else {
-        // Add the key to the scanned code
         setScannedCode(prev => prev + key)
 
-        // Automatically process the code after 500ms of inactivity
         clearTimeout(timer)
         timer = setTimeout(() => {
-          handleSendQrCode(scannedCode)
+          if (uuidRegex.test(scannedCode)) {
+            handleSendQrCode(scannedCode)
+          } else {
+            setScannedCode('')
+          }
         }, 500)
       }
     }
@@ -56,20 +63,9 @@ export default function QRCodeScanner() {
 
     return () => {
       window.removeEventListener('keypress', handleKeyPress)
-      clearTimeout(timer) // Clear timer on component unmount
+      clearTimeout(timer)
     }
   }, [scannedCode, isProcessing])
 
-  return (
-    <div>
-      {/* Optional UI for debugging or status */}
-      {/* <h1>QR Code Scanner</h1>
-      <p>
-        <strong>Status:</strong> {isProcessing ? 'Processing...' : 'Waiting for input...'}
-      </p>
-      <p>
-        <strong>Scanned Code:</strong> {scannedCode || 'None'}
-      </p> */}
-    </div>
-  )
+  return <div />
 }
