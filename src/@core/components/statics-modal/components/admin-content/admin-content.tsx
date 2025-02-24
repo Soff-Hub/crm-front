@@ -16,6 +16,9 @@ export const AdminContent = ({ soffBotText, date, setTypingComplete }: AdminCont
     setKey(prevKey => prevKey + 1)
     setTypingComplete(false)
   }, [soffBotText])
+
+  
+
   return (
     <DialogContent sx={{ textAlign: 'justify', padding: '20px', fontFamily: 'Inter, sans-serif' }}>
       {soffBotText?.role && (

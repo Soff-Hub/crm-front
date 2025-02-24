@@ -27,6 +27,8 @@ const UserLayout: FC<PropsWithChildren<Props>> = ({ children, contentHeightFixed
     settings.layout = 'vertical'
   }
 
+  
+
   return (
     <Layout
       hidden={hidden}

@@ -17,8 +17,6 @@ export default function Calendar() {
 
   const { t } = useTranslation()
   const { push } = useRouter()
-  const startTime = companyInfo?.work_start_time
-  const endTime = companyInfo?.work_end_time
   const mdAbove = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'))
 
   return (

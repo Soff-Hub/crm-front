@@ -12,11 +12,6 @@ export const TeacherNavigation = (t: any): any => {
       icon: 'mdi:home-outline',
       path: '/dashboard'
     }
-    // {
-    //   title: t("Profil"),
-    //   icon: 'mdi:receipt-text-edit-outline',
-    //   path: '/lids'
-    // }
   ]
 }
 
@@ -27,11 +22,6 @@ export const StudentNavigation = (t: any): any => {
       icon: 'et:profile-male',
       path: '/student-profile'
     }
-    // {
-    //   title: t("Guruhlar"),
-    //   icon: 'uil:layer-group',
-    //   path: '/student-profile/groups',
-    // }
   ]
 }
 
@@ -62,7 +52,7 @@ export const CPanelNavigation = (t: any): any => {
 
 const Navigation = (t: any): VerticalNavItemsType => {
   const { user } = useContext(AuthContext)
-  const dispatch = useDispatch()
+
   const items = [
     {
       title: t('Bosh sahifa'),

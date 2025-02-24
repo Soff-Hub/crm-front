@@ -23,7 +23,7 @@ const AppCalendar = () => {
       !user?.role.includes('watcher') &&
       !user?.role.includes('marketolog')
     ) {
-      router.back()
+      router.push('/')
       toast.error('Sahifaga kirish huquqingiz yoq!')
     }
     await Promise.all([dispatch(fetchStatistics()), dispatch(fetchLessons({ queryWeeks: weeks, interval: interval }))])
