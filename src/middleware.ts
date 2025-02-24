@@ -3,24 +3,18 @@ import type { NextRequest } from 'next/server'
 
 export function middleware(req: NextRequest) {
   const token = req.cookies.get('token')
-  const roles = req.cookies.get('roles')
-
-  const host = req.headers.get('host') || ''
-  const subdomain = host.split('.')[0]
+  const rolesCookie = req.cookies.get('roles')
+  const roles: string[] = rolesCookie ? JSON.parse(rolesCookie) : []
 
   if (!token) {
     return NextResponse.redirect(new URL('/login', req.url))
   }
 
-  if (subdomain === 'c-panel' && roles) {
-    return NextResponse.redirect(new URL('/c-panel', req.url))
-  }
-
-  if (roles?.includes('student')) {
+  if (roles.includes('student')) {
     return NextResponse.redirect(new URL('/student-profile', req.url))
   }
 
-  if (roles?.includes('casher') && !roles.includes('ceo') && !roles.includes('admin')) {
+  if (roles.includes('casher') && !roles.includes('ceo') && !roles.includes('admin')) {
     return NextResponse.redirect(new URL('/finance', req.url))
   }
 

@@ -12,7 +12,7 @@ export default function QRCodeScanner() {
 
     try {
       setIsProcessing(true)
-      const res = await api.post(`common/attendance/by-qr-code/${code}/`)
+      const res = await api.post(`common/attendance/by-qr-code?${code}/`)
       if (res.status === 200) {
         toast.success('Muvaffaqiyatli', { style: { zIndex: 999999999 } })
       }

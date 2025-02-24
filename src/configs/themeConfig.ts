@@ -1,14 +1,5 @@
-/**
- * Config
- * -------------------------------------------------------------------------------------
- * ! IMPORTANT: Make sure you clear the browser local storage in order to see the config changes in the template.
- * ! To clear local storage, you may refer https://www.leadshook.com/help/how-to-clear-local-storage-in-google-chrome-browser/.
- */
-
-// ** MUI Imports
 import { Direction } from '@mui/material'
 
-// ** Types
 import {
   Skin,
   Mode,
@@ -48,40 +39,36 @@ type ThemeConfig = {
 }
 
 const themeConfig: ThemeConfig = {
-  // ** Layout Configs
-  templateName: 'SOFF CRM' /* App Name */,
-  layout: 'horizontal' /* vertical | horizontal */,
-  mode: 'light' as Mode /* light | dark | semi-dark /*! Note: semi-dark value will only work for Vertical Layout */,
-  direction: 'ltr' /* ltr | rtl */,
-  skin: 'default' /* default | bordered */,
-  contentWidth: 'boxed' /* full | boxed */,
-  footer: 'static' /* fixed | static | hidden */,
+  templateName: 'SOFF CRM',
+  layout: 'horizontal',
+  mode: 'light' as Mode,
+  direction: 'ltr',
+  skin: 'default',
+  contentWidth: 'boxed',
+  footer: 'static',
 
-  // ** Routing Configs
-  routingLoader: true /* true | false */,
+  routingLoader: true,
 
-  // ** Navigation (Menu) Configs
-  navHidden: false /* true | false */,
-  menuTextTruncate: true /* true | false */,
-  navSubItemIcon: 'mdi:circle' /* Icon */,
-  verticalNavToggleType: 'accordion' /* accordion | collapse /*! Note: This is for Vertical navigation menu only */,
-  navCollapsed: false /* true | false /*! Note: This is for Vertical navigation menu only */,
-  navigationSize: 260 /* Number in px(Pixels) /*! Note: This is for Vertical navigation menu only */,
-  collapsedNavigationSize: 68 /* Number in px(Pixels) /*! Note: This is for Vertical navigation menu only */,
-  afterVerticalNavMenuContentPosition: 'fixed' /* fixed | static */,
-  beforeVerticalNavMenuContentPosition: 'fixed' /* fixed | static */,
-  horizontalMenuToggle: 'hover' /* click | hover /*! Note: This is for Horizontal navigation menu only */,
-  horizontalMenuAnimation: true /* true | false */,
+  navHidden: false,
+  menuTextTruncate: true,
+  navSubItemIcon: 'mdi:circle',
+  verticalNavToggleType: 'accordion',
+  navCollapsed: false,
+  navigationSize: 260,
+  collapsedNavigationSize: 68,
+  afterVerticalNavMenuContentPosition: 'fixed',
+  beforeVerticalNavMenuContentPosition: 'fixed',
+  horizontalMenuToggle: 'hover',
+  horizontalMenuAnimation: true,
 
-  // ** AppBar Configs
-  appBar: 'fixed' /* fixed | static | hidden /*! Note: hidden value will only work for Vertical Layout */,
-  appBarBlur: true /* true | false */,
+  appBar: 'fixed',
+  appBarBlur: true,
 
   // ** Other Configs
-  responsiveFontSizes: true /* true | false */,
-  disableRipple: false /* true | false */,
-  disableCustomizer: false /* true | false */,
-  toastPosition: 'top-center' /* top-left | top-center | top-right | bottom-left | bottom-center | bottom-right */
+  responsiveFontSizes: true,
+  disableRipple: false,
+  disableCustomizer: false,
+  toastPosition: 'top-center'
 }
 
 export default themeConfig
