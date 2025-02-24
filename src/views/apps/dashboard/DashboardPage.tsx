@@ -3,16 +3,14 @@
 import { useContext } from 'react'
 import { AuthContext } from 'src/context/AuthContext'
 import VideoHeader, { videoUrls } from 'src/@core/components/video-header/video-header'
-import dynamic from 'next/dynamic'
 import { Icon } from '@iconify/react'
 import { useAppDispatch, useAppSelector } from 'src/store'
 import { updateEyeVisible } from 'src/store/apps/dashboard'
-import { Box, Button, Typography } from '@mui/material'
+import { Box, Button } from '@mui/material'
 import useResponsive from 'src/@core/hooks/useResponsive'
-
-const Calendar = dynamic(() => import('./Calendar'), { ssr: false })
-const DashboardStats = dynamic(() => import('./DashboardStats'), { ssr: false })
-const DashboardNumbers = dynamic(() => import('./DashboardNumbers'), { ssr: false })
+import DashboardStats from './DashboardStats'
+import Calendar from './Calendar'
+import DashboardNumbers from './DashboardNumbers'
 
 export default function DashboardPage() {
   const { user } = useContext(AuthContext)

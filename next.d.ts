@@ -12,3 +12,14 @@ declare module 'next' {
     getLayout?: (page: ReactElement) => ReactNode
   }
 }
+
+declare global {
+  interface Window {
+    IconifyProviders?: {
+      custom: {
+        resources: string[]
+        fetchOptions?: RequestInit
+      }
+    }
+  }
+}

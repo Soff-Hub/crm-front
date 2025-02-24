@@ -1,10 +1,6 @@
-import { Button } from '@mui/material'
-import path from 'path'
 import { useContext } from 'react'
-import { useDispatch } from 'react-redux'
 import { HorizontalNavItemsType } from 'src/@core/layouts/types'
 import { AuthContext } from 'src/context/AuthContext'
-import { toggleAmoModal } from 'src/store/apps/page'
 
 const Navigation = (t: any): HorizontalNavItemsType => {
   const { user } = useContext(AuthContext)

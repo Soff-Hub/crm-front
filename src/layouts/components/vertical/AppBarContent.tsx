@@ -36,11 +36,10 @@ interface Props {
 
 const AppBarContent = (props: Props) => {
   const { hidden, settings, saveSettings, toggleNavVisibility } = props
-  const { companyInfo, notifications } = useAppSelector(state => state.user)
   const { user } = useContext(AuthContext)
   const [search, setSearch] = useState('')
   const [searchLoading, setSearchLoading] = useState(false)
-  const debouncedSearch = useDebounce(search, 1000)
+  const debouncedSearch = useDebounce(search, 10000)
   const { isMobile } = useResponsive()
   const { t } = useTranslation()
   const dispatch = useAppDispatch()

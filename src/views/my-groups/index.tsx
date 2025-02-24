@@ -1,3 +1,5 @@
+'use client'
+
 import { Box, Grid, Pagination, Typography } from '@mui/material'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
