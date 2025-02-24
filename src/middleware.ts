@@ -39,7 +39,6 @@ export function middleware(req: NextRequest) {
     return NextResponse.redirect(new URL('/finance', req.url))
   }
 
-
   return NextResponse.rewrite(url)
 }
 
