@@ -10,6 +10,7 @@ import { useSettings } from 'src/@core/hooks/useSettings'
 import { AuthContext } from 'src/context/AuthContext'
 import { useTranslation } from 'react-i18next'
 import { useRouter } from 'next/router'
+import QRCodeScanner from 'src/@core/components/qrCodeScanner'
 
 type Props = {
   contentHeightFixed?: boolean
@@ -26,8 +27,6 @@ const UserLayout: FC<PropsWithChildren<Props>> = ({ children, contentHeightFixed
   if (hidden && settings.layout === 'horizontal') {
     settings.layout = 'vertical'
   }
-
-  
 
   return (
     <Layout
@@ -78,6 +77,8 @@ const UserLayout: FC<PropsWithChildren<Props>> = ({ children, contentHeightFixed
       })}
     >
       {children}
+
+      <QRCodeScanner />
     </Layout>
   )
 }

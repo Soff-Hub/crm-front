@@ -221,7 +221,6 @@ const AppBarContent = (props: Props) => {
         />
       )}
       <GlobalPaymentModal />
-      <QRCodeScanner />
     </div>
   )
 }

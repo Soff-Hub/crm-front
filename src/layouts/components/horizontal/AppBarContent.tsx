@@ -178,7 +178,6 @@ const AppBarContent = (props: Props) => {
       <NotificationDropdown settings={settings} />
       <UserDropdown settings={settings} />
       <GlobalPaymentModal />
-      <QRCodeScanner />
     </Box>
   )
 }

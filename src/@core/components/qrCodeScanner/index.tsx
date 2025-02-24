@@ -43,6 +43,7 @@ export default function QRCodeScanner() {
         if (uuidRegex.test(scannedCode)) {
           handleSendQrCode(scannedCode)
         } else {
+          toast.error(`${scannedCode}`)
           setScannedCode('')
         }
       } else {
